@@ -27,11 +27,11 @@ from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.fs import FileName
-from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.comments import comment_datatype
+from ikaaro.datatypes import RReference
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
@@ -64,7 +64,7 @@ class Issue(Folder):
         comment=comment_datatype,
         # Other
         id=Integer(indexed=True, stored=True),
-        attachment=String(source='metadata', multiple=True))
+        attachment=RReference(source='metadata', multiple=True))
 
 
     def get_catalog_values(self):
@@ -77,37 +77,6 @@ class Issue(Folder):
 
     def get_document_types(self):
         return []
-
-
-    def get_links(self):
-        attachments = self.metadata.get_property('attachment')
-        if not attachments:
-            return set()
-
-        base = self.get_canonical_path()
-        return set([ str(base.resolve2(x.value)) for x in attachments ])
-
-
-    def update_links(self, source, target):
-        base = self.get_canonical_path()
-        resources_new2old = get_context().database.resources_new2old
-        base = str(base)
-        old_base = resources_new2old.get(base, base)
-        old_base = Path(old_base)
-        new_base = Path(base)
-
-        attachments = self.metadata.get_property('attachment')
-        new_attachments = []
-        for attachment in attachments:
-            path = old_base.resolve2(str(attachment.value))
-            if path == source:
-                value = str(new_base.get_pathto(target))
-                new_attachments.append(value)
-            else:
-                new_attachments.append(attachment)
-
-        self.set_property('attachment', new_attachments)
-        get_context().database.change_resource(self)
 
 
     #######################################################################

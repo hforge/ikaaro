@@ -30,7 +30,7 @@ from itools.web import Resource, get_context
 from itools.database import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from datatypes import Multilingual
+from datatypes import Multilingual, RReference
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -506,12 +506,93 @@ class DBResource(CatalogAware, IResource):
             resource.update_links(source, target)
 
 
+    def _get_references_from_schema(self):
+        """Returns the names of properties that are references to other
+        resources.
+
+        TODO This list should be calculated statically to avoid a performance
+        hit at run time.
+        """
+        schema = self.class_schema
+        for name in schema:
+            datatype = schema[name]
+            if issubclass(datatype, RReference):
+                source = getattr(datatype, 'source', None)
+                if source != 'metadata':
+                    raise ValueError, 'schema error'
+                multilingual = getattr(datatype, 'multilingual', False)
+                if multilingual:
+                    raise ValueError, 'schema error'
+                yield name
+
+
+    def get_links(self):
+        links = set()
+        base = self.get_canonical_path()
+
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            prop = self.metadata.get_property(name)
+            multiple = getattr(datatype, 'multiple', False)
+            if multiple:
+                # Multiple
+                for x in prop:
+                    link = base.resolve2(x.value)
+                    link = str(link)
+                    links.add(link)
+            elif prop is not None:
+                # Singleton
+                link = base.resolve2(prop.value)
+                link = str(link)
+                links.add(link)
+
+        return links
+
+
     def update_links(self, source, target):
         """The resource identified by 'source' is going to be moved to
         'target'.  Update our links to it.
 
         The parameters 'source' and 'target' are absolute 'Path' objects.
         """
+        database = get_context().database
+
+        base = self.get_canonical_path()
+        base = str(base)
+        old_base = database.resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
+
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            prop = self.metadata.get_property(name)
+            multiple = getattr(datatype, 'multiple', False)
+            if multiple:
+                # Multiple
+                new_value = []
+                for p in prop:
+                    path = old_base.resolve2(str(p.value))
+                    if path == source:
+                        value = str(new_base.get_pathto(target))
+                        new_value.append(value)
+                    else:
+                        new_value.append(p)
+
+                self.set_property(name, new_value)
+            elif prop is not None:
+                # Singleton
+                value = prop.value
+                if not value:
+                    continue
+                path = old_base.resolve2(value)
+                if path == source:
+                    # Hit the old name
+                    # Build the new reference with the right path
+                    self.set_property(name, new_base.get_pathto(target))
+
+        database.change_resource(self)
 
 
     def update_relative_links(self, source):
@@ -519,10 +600,29 @@ class DBResource(CatalogAware, IResource):
         was moved, so they are not broken. The old path is in parameter. The
         new path is "self.get_canonical_path()".
         """
+        target = self.get_canonical_path()
+        resources_old2new = get_context().database.resources_old2new
 
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            prop = self.metadata.get_property(name)
+            multiple = getattr(datatype, 'multiple', False)
+            if multiple:
+                # Multiple
+                raise NotImplementedError, 'update_relative_links multiple'
+            elif prop is not None:
+                # Singleton
+                value = prop.value
+                if not value:
+                    continue
+                # Calculate the old absolute path
+                old_abs_path = source.resolve2(value)
+                # Check if the target path has not been moved
+                new_abs_path = resources_old2new.get(old_abs_path,
+                                                     old_abs_path)
 
-    def get_links(self):
-        return set()
+                self.set_property(name, target.get_pathto(new_abs_path))
 
 
     ########################################################################

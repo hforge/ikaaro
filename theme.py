@@ -16,14 +16,12 @@
 
 # Import from itools
 from itools.core import merge_dicts, get_abspath
-from itools.datatypes import PathDataType
 from itools.gettext import MSG
 from itools.handlers import ro_database, File as FileHandler
-from itools.uri import Path
-from itools.web import get_context
 
 # Import from ikaaro
 from control_panel import ControlPanel
+from datatypes import RReference
 from file import Image
 from folder import Folder
 from folder_views import GoToSpecificDocument
@@ -60,8 +58,8 @@ class Theme(Folder):
     class_schema = merge_dicts(
         Folder.class_schema,
         # Metadata
-        favicon=PathDataType(source='metadata', default=''),
-        logo=PathDataType(source='metadata', default=''))
+        favicon=RReference(source='metadata', default=''),
+        logo=RReference(source='metadata', default=''))
 
     is_content = False
 
@@ -88,59 +86,6 @@ class Theme(Folder):
         self.make_resource('banner', Image, body=image.to_str(),
                            extension='jpg', filename='banner.jpg',
                            format='image/jpeg', state='public')
-
-
-    def get_links(self):
-        links = Folder.get_links(self)
-        base = self.get_canonical_path()
-
-        for key in ('favicon', 'logo'):
-            value = self.get_property(key)
-            if value:
-                links.add(str(base.resolve2(value)))
-
-        return links
-
-
-    def update_links(self, source, target):
-        Folder.update_links(self, source, target)
-        base = self.get_canonical_path()
-        resources_new2old = get_context().database.resources_new2old
-        base = str(base)
-        old_base = resources_new2old.get(base, base)
-        old_base = Path(old_base)
-        new_base = Path(base)
-
-        for key in ('favicon', 'logo'):
-            value = self.get_property(key)
-            if not value:
-                continue
-            path = old_base.resolve2(value)
-            if path == source:
-                # Hit the old name
-                # Build the new reference with the right path
-                self.set_property(key, new_base.get_pathto(target))
-
-        get_context().database.change_resource(self)
-
-
-    def update_relative_links(self, source):
-        Folder.update_relative_links(self, source)
-        target = self.get_canonical_path()
-        resources_old2new = get_context().database.resources_old2new
-
-        for key in ('favicon', 'logo'):
-            value = self.get_property(key)
-            if not value:
-                continue
-
-            # Calcul the old absolute path
-            old_abs_path = source.resolve2(value)
-            # Check if the target path has not been moved
-            new_abs_path = resources_old2new.get(old_abs_path,
-                                                 old_abs_path)
-
-            self.set_property(key, target.get_pathto(new_abs_path))
 
 
 
