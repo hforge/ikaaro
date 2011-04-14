@@ -177,7 +177,7 @@ class RegisterForm(AutoForm):
 
 
 class SubscribeButton(BrowseButton):
-    access = 'is_admin'
+    access = True
     name = 'subscribe'
     title = MSG(u"Subscribe")
 
