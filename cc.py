@@ -31,7 +31,11 @@ from views import CompositeForm
 
 
 MSG_USER_SUBSCRIBED = INFO(u'You are now subscribed to this resource.')
+MSG_USER_ALREADY_SUBSCRIBED = ERROR(u'You were already subscribed to this '
+        u'resource.')
 MSG_USER_UNSUBSCRIBED = INFO(u'You are now unsubscribed from this resource.')
+MSG_USER_ALREADY_UNSUBSCRIBED = ERROR(u'You were already unsubscribed from '
+        u'this resource.')
 MSG_SUBSCRIBED = INFO(u'The following users were subscribed: {users}.',
         format='replace_html')
 MSG_UNSUBSCRIBED = INFO(u'The following users were unsubscribed: {users}.',
@@ -163,6 +167,12 @@ class RegisterForm(AutoForm):
         root = context.root
         email = form['email']
         existing_user = root.get_user_from_login(email)
+
+        if existing_user is not None:
+            if resource.is_subscribed(existing_user.name):
+                context.message = MSG_USER_ALREADY_SUBSCRIBED
+                return
+
         user = resource.subscribe_user(email=email, user=existing_user)
 
         if existing_user is None:
@@ -180,11 +190,15 @@ class RegisterForm(AutoForm):
 
 
     def action_unregister(self, resource, context, form):
-        root = context.root
-        email = form['email']
-        user = root.get_user_from_login(email)
-        if user is not None:
+        user = context.root.get_user_from_login(form['email'])
+        if user is None:
+            context.message = MSG_USER_ALREADY_UNSUBSCRIBED
+            return
+        else:
             username = user.name
+            if not resource.is_subscribed(username):
+                context.message = MSG_USER_ALREADY_UNSUBSCRIBED
+                return
             resource.unsubscribe_user(username)
             resource.after_unregister(username)
 
