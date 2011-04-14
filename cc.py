@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, thingy_property
 from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
 from itools.gettext import MSG
 from itools.web import INFO, ERROR
@@ -106,10 +106,26 @@ class RegisterButton(Button):
     title = MSG(u'Subscribe')
 
 
+    @thingy_property
+    def show(cls):
+        if cls.context.user:
+            if cls.resource.is_subscribed(cls.context.user.name):
+                return False
+        return super(RegisterButton, cls).show
+
+
 
 class UnregisterButton(RegisterButton):
     name = 'unregister'
     title = MSG(u'Unsubscribe')
+
+
+    @thingy_property
+    def show(cls):
+        if cls.context.user:
+            if not cls.resource.is_subscribed(cls.context.user.name):
+                return False
+        return super(RegisterButton, cls).show
 
 
 
@@ -345,6 +361,10 @@ class Observable(object):
         body = message.gettext(resource_uri=uri, language=language)
         # And return
         return subject, body
+
+
+    def is_subscribed(self, username):
+        return username in self.get_property('cc_list')
 
 
     def is_subscription_allowed(self, username):
