@@ -20,22 +20,26 @@ from operator import itemgetter
 # Import from itools
 from itools.core import freeze, thingy_property
 from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.web import INFO, ERROR
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
+from autoform import HiddenWidget
 from buttons import Button, BrowseButton
+from messages import MSG_BAD_KEY
+from utils import generate_password
 from views import CompositeForm
 
 
-MSG_USER_SUBSCRIBED = INFO(u'You are now subscribed to this resource.')
-MSG_USER_ALREADY_SUBSCRIBED = ERROR(u'You were already subscribed to this '
-        u'resource.')
-MSG_USER_UNSUBSCRIBED = INFO(u'You are now unsubscribed from this resource.')
-MSG_USER_ALREADY_UNSUBSCRIBED = ERROR(u'You were already unsubscribed from '
-        u'this resource.')
+MSG_CONFIRMATION_SENT = INFO(u'A message has been sent to confirm your '
+        u'identity.')
+MSG_USER_SUBSCRIBED = INFO(u'You are now subscribed.')
+MSG_USER_ALREADY_SUBSCRIBED = ERROR(u'You were already subscribed.')
+MSG_USER_UNSUBSCRIBED = INFO(u'You are now unsubscribed.')
+MSG_USER_ALREADY_UNSUBSCRIBED = ERROR(u'You were already unsubscribed.')
 MSG_SUBSCRIBED = INFO(u'The following users were subscribed: {users}.',
         format='replace_html')
 MSG_UNSUBSCRIBED = INFO(u'The following users were unsubscribed: {users}.',
@@ -169,24 +173,21 @@ class RegisterForm(AutoForm):
         existing_user = root.get_user_from_login(email)
 
         if existing_user is not None:
-            if resource.is_subscribed(existing_user.name):
+            username = existing_user.name
+            if resource.is_subscribed(username, skip_unconfirmed=False):
                 context.message = MSG_USER_ALREADY_SUBSCRIBED
                 return
 
+        # Create user anyhow
         user = resource.subscribe_user(email=email, user=existing_user)
 
-        if existing_user is None:
-            # New user must confirm
-            user.send_confirmation(context, email)
+        if context.user is None:
+            # Anonymous subscription
+            resource.send_confirm_register(user, context)
+            context.message = MSG_CONFIRMATION_SENT
         else:
-            if context.user is None:
-                # Someone subscribed an existing user, warn him
-                user.send_registration(context, email)
-                # Else user subscribed himself, do nothing
-
-        resource.after_register(user.name)
-
-        context.message = MSG_USER_SUBSCRIBED
+            resource.after_register(user.name)
+            context.message = MSG_USER_SUBSCRIBED
 
 
     def action_unregister(self, resource, context, form):
@@ -194,15 +195,20 @@ class RegisterForm(AutoForm):
         if user is None:
             context.message = MSG_USER_ALREADY_UNSUBSCRIBED
             return
+
+        username = user.name
+        if not resource.is_subscribed(username, skip_unconfirmed=False):
+            context.message = MSG_USER_ALREADY_UNSUBSCRIBED
+            return
+
+        if context.user is None:
+            # Anonymous subscription
+            resource.send_confirm_register(user, context, unregister=True)
+            context.message = MSG_CONFIRMATION_SENT
         else:
-            username = user.name
-            if not resource.is_subscribed(username):
-                context.message = MSG_USER_ALREADY_UNSUBSCRIBED
-                return
             resource.unsubscribe_user(username)
             resource.after_unregister(username)
-
-        context.message = MSG_USER_UNSUBSCRIBED
+            context.message = MSG_USER_UNSUBSCRIBED
 
 
 
@@ -224,8 +230,9 @@ class ManageForm(RoleAware_BrowseUsers):
     title = MSG(u"Manage Subscriptions")
     description = None
 
-    table_columns = freeze(RoleAware_BrowseUsers.table_columns +
-            [('subscribed', MSG(u"Subscribed"))])
+    table_columns = freeze(RoleAware_BrowseUsers.table_columns[:-1] + [
+        ('subscribed', MSG(u"Subscribed")),
+        ('confirmed', MSG(u"Confirmed"))])
     table_actions = freeze([SubscribeButton, UnsubscribeButton])
 
 
@@ -236,8 +243,12 @@ class ManageForm(RoleAware_BrowseUsers):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'subscribed':
-            subscribed = item.name in resource.get_property('cc_list')
+            subscribed = resource.is_subscribed(item.name,
+                    skip_unconfirmed=False)
             return MSG(u"Yes") if subscribed else MSG(u"No")
+        elif column == 'confirmed':
+            confirmed = resource.is_confirmed(item.name)
+            return MSG(u"Yes") if confirmed else MSG(u"No")
         proxy = super(ManageForm, self)
         site_root = resource.get_site_root()
         return proxy.get_item_value(site_root, context, item, column)
@@ -355,9 +366,119 @@ class SubscribeForm(CompositeForm):
 
 
 
-class Observable(object):
+class ConfirmButton(Button):
+    access = True
+    title = MSG(u"Confirm")
 
-    class_schema = {'cc_list': Tokens(source='metadata')}
+
+
+class ConfirmRegister(AutoForm):
+    access = 'is_allowed_to_view'
+    title = MSG(u"Confirmation")
+    unregister = False
+
+    schema = freeze({
+        'key': String(mandatory=True),
+        'email': Email(mandatory=True)})
+    widgets = freeze([
+        HiddenWidget('key'),
+        ReadOnlyWidget('email', title=MSG(u"E-mail Address"))])
+    actions = [ConfirmButton]
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name in ('key', 'email'):
+            return context.get_query_value(name)
+        proxy = super(ConfirmRegister, self)
+        return proxy.get_value(resource, context, name, datatype)
+
+
+    def get_register_key(self, resource, username):
+        return resource.get_register_key(username, unregister=self.unregister)
+
+
+    def get_namespace(self, resource, context):
+        email = context.get_form_value('email')
+        user = context.root.get_user_from_login(email)
+        username = user.name
+        # Check register key
+        key = self.get_register_key(resource, username)
+        if key is None:
+            if self.unregister is False:
+                message = MSG_USER_ALREADY_SUBSCRIBED
+            else:
+                message = MSG_USER_ALREADY_UNSUBSCRIBED
+            return context.come_back(message, goto='./')
+        if key != context.get_form_value('key'):
+            return context.come_back(MSG_BAD_KEY, goto='./')
+
+        proxy = super(ConfirmRegister, self)
+        return proxy.get_namespace(resource, context)
+
+
+    def action(self, resource, context, form):
+        email = context.get_form_value('email')
+        user = context.root.get_user_from_login(email)
+        username = user.name
+        # Check register key
+        key = self.get_register_key(resource, username)
+        if key != form['key']:
+            context.message = MSG_BAD_KEY
+            return
+
+        # Validate register
+        if self.unregister is False:
+            resource.reset_register_key(username)
+            resource.after_register(username)
+            message = MSG_USER_SUBSCRIBED
+        else:
+            resource.unsubscribe_user(username)
+            resource.after_unregister(username)
+            message = MSG_USER_UNSUBSCRIBED
+
+        # Ok
+        return context.come_back(message, goto='./')
+
+
+
+class Subscribers(Tokens):
+
+    def decode(cls, data):
+        values = []
+        for value in super(Subscribers, cls).decode(data):
+            value = value.split("#")
+            username = value.pop(0)
+            values.append({
+                'username': username,
+                'status': value[0] if value else None,
+                'key': value[1] if value else None})
+        return tuple(values)
+
+
+    def encode(cls, values):
+        data = []
+        for value in values:
+            if value['status'] is not None:
+                values = (value['username'], value['status'], value['key'])
+            else:
+                values = (value['username'],)
+            data.append('#'.join(values))
+        return super(Subscribers, cls).encode(data)
+
+
+
+class Observable(object):
+    class_schema = freeze({'cc_list': Subscribers(source='metadata')})
+
+    confirm_register_subject = MSG(u"Confirmation required")
+    confirm_register_text = MSG(u"""To confirm subscription, click the link:
+
+ <{uri}>""")
+
+    confirm_unregister_subject = MSG(u"Confirmation required")
+    confirm_unregister_text = MSG(u"""To confirm unsubscription, click the link:"
+
+ <{uri}>""")
 
 
     def get_message(self, context, language=None):
@@ -377,12 +498,71 @@ class Observable(object):
         return subject, body
 
 
-    def is_subscribed(self, username):
-        return username in self.get_property('cc_list')
+    def get_subscribed_users(self, skip_unconfirmed=True):
+        for cc in self.get_property('cc_list'):
+            if skip_unconfirmed is True and cc['status'] == 'S':
+                continue
+            yield cc['username']
+
+
+    def is_subscribed(self, username, skip_unconfirmed=True):
+        return username in self.get_subscribed_users(
+                skip_unconfirmed=skip_unconfirmed)
+
+
+    def is_confirmed(self, username):
+        for cc in self.get_property('cc_list'):
+            if cc['username'] == username:
+                return cc['status'] is None
+        return False
 
 
     def is_subscription_allowed(self, username):
         return True
+
+
+    def get_register_key(self, username, unregister=False):
+        status = 'U' if unregister is True else 'S'
+        # TODO almost a duplicate of enumerate_get_value, reuse
+        for cc in self.get_property('cc_list'):
+            if cc['status'] == status:
+                return cc['key']
+        return None
+
+
+    def set_register_key(self, username, unregister=False):
+        cc_list = self.get_property('cc_list')
+        status = 'U' if unregister is True else 'S'
+        # Find existing key
+        for cc in cc_list:
+            if cc['status'] == status and cc['key'] is not None:
+                # Reuse found key
+                return cc['key']
+        # Generate key
+        key = generate_password(30)
+        # Filter out username
+        cc_list = [cc for cc in cc_list if cc['username'] != username]
+        # Create new dict to force metadata commit
+        cc_list.append({
+            'username': username,
+            'status': status,
+            'key': key})
+        print "set_register_key", unregister
+        print self.set_property('cc_list', tuple(cc_list))
+        return key
+
+
+    def reset_register_key(self, username):
+        cc_list = self.get_property('cc_list')
+        # Filter out username
+        cc_list = [cc for cc in cc_list if cc['username'] != username]
+        # Create new dict to force metadata commit
+        cc_list.append({
+            'username': username,
+            'status': None,
+            'key': None})
+        print "reset_register_key"
+        print self.set_property('cc_list', tuple(cc_list))
 
 
     def subscribe_user(self, email=None, user=None):
@@ -400,29 +580,28 @@ class Observable(object):
             # Add the user
             users = root.get_resource('users')
             user = users.set_user(email, password=None)
-            user_id = user.name
+            # Mark it as new
+            user.set_property('user_must_confirm', generate_password(30))
+            username = user.name
         else:
-            user_id = user.name
+            username = user.name
 
         # Set the role
-        if user_id not in site_root.get_members():
-            site_root.set_user_role(user_id, role='guests')
+        if username not in site_root.get_members():
+            site_root.set_user_role(username, role='guests')
 
         # Add to subscribers list
-        cc_list = set(self.get_property('cc_list'))
-        cc_list.add(user_id)
-        self.set_property('cc_list', tuple(cc_list))
+        self.reset_register_key(username)
 
         return user
 
 
     def unsubscribe_user(self, username):
-        cc_list = set(self.get_property('cc_list'))
-        try:
-            cc_list.remove(username)
-        except KeyError:
-            pass
-        self.set_property('cc_list', tuple(cc_list))
+        cc_list = self.get_property('cc_list')
+        # Filter out username
+        cc_list = [cc for cc in cc_list if cc['username'] != username]
+        print "unsubscribe_user"
+        print self.set_property('cc_list', tuple(cc_list))
 
 
     def after_register(self, username):
@@ -433,13 +612,35 @@ class Observable(object):
         pass
 
 
+    def send_confirm_register(self, user, context, unregister=False):
+        username = user.name
+        if unregister is False:
+            key = self.set_register_key(username)
+            view = ';confirm_register'
+            subject = self.confirm_register_subject
+            text = self.confirm_register_text
+        else:
+            key = self.set_register_key(username, unregister=True)
+            view = ';confirm_unregister'
+            subject = self.confirm_unregister_subject
+            text = self.confirm_unregister_text
+
+        # Build the confirmation link
+        confirm_url = context.uri.resolve2(view)
+        email = user.get_property('email')
+        confirm_url.query = {'key': key, 'email': email}
+        subject = subject.gettext()
+        text = text.gettext(uri=confirm_url)
+        context.root.send_email(email, subject, text=text)
+
+
     def notify_subscribers(self, context):
         # 1. Check the resource has been modified
         if not context.database.is_changed(self):
             return
 
         # 2. Get list of subscribed users
-        users = self.metadata.get_property('cc_list')
+        users = self.get_subscribed_users()
         if not users:
             return
 
@@ -453,8 +654,11 @@ class Observable(object):
                                                        language=language)
 
         # 4. Send the message
-        for user in users.value:
-            user = context.root.get_user(user)
+        for username in users:
+            # Not confirmed yet
+            if self.get_register_key(username) is not None:
+                continue
+            user = context.root.get_user(username)
             if user and not user.get_property('user_must_confirm'):
                 mail = user.get_property('email')
 
@@ -471,3 +675,5 @@ class Observable(object):
     #######################################################################
 
     subscribe = SubscribeForm()
+    confirm_register = ConfirmRegister()
+    confirm_unregister = ConfirmRegister(unregister=True)
