@@ -30,15 +30,15 @@ class Database(GitDatabase):
         root = context.root
 
         # 1. Update links when resources moved
+        # XXX With this code '_on_move_resource' is called for new resources,
+        # should this be done?
         old2new = [ (s, t) for s, t in self.resources_old2new.items()
-                    if s is not None ]
-        # Sort by target
-        old2new.sort(lambda x, y: cmp(x[1], y[1]))
+                    if t and s != t ]
+        old2new.sort(key=lambda x: x[1])     # Sort by target
         for source, target in old2new:
-            if target and source != target:
-                target = Path(target)
-                resource = root.get_resource(target)
-                resource._on_move_resource(source)
+            target = Path(target)
+            resource = root.get_resource(target)
+            resource._on_move_resource(source)
 
         # 2. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
