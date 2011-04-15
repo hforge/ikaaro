@@ -146,6 +146,13 @@ class RegisterForm(AutoForm):
         'email': Email})
     actions = [RegisterButton, UnregisterButton]
 
+    # Messages
+    msg_user_already_subscribed = MSG_USER_ALREADY_SUBSCRIBED
+    msg_confirmation_sent = MSG_CONFIRMATION_SENT
+    msg_user_subscribed = MSG_USER_SUBSCRIBED
+    msg_user_already_unsubscribed = MSG_USER_ALREADY_UNSUBSCRIBED
+    msg_user_unsubscribed = MSG_USER_UNSUBSCRIBED
+
 
     def get_widgets(self, resource, context):
         widgets = super(RegisterForm, self).get_widgets(resource, context)
@@ -175,7 +182,7 @@ class RegisterForm(AutoForm):
         if existing_user is not None:
             username = existing_user.name
             if resource.is_subscribed(username, skip_unconfirmed=False):
-                context.message = MSG_USER_ALREADY_SUBSCRIBED
+                context.message = self.msg_user_already_subscribed
                 return
 
         # Create user anyhow
@@ -184,31 +191,31 @@ class RegisterForm(AutoForm):
         if context.user is None:
             # Anonymous subscription
             resource.send_confirm_register(user, context)
-            context.message = MSG_CONFIRMATION_SENT
+            context.message = self.msg_confirmation_sent
         else:
             resource.after_register(user.name)
-            context.message = MSG_USER_SUBSCRIBED
+            context.message = self.msg_user_subscribed
 
 
     def action_unregister(self, resource, context, form):
         user = context.root.get_user_from_login(form['email'])
         if user is None:
-            context.message = MSG_USER_ALREADY_UNSUBSCRIBED
+            context.message = self.msg_user_already_unsubscribed
             return
 
         username = user.name
         if not resource.is_subscribed(username, skip_unconfirmed=False):
-            context.message = MSG_USER_ALREADY_UNSUBSCRIBED
+            context.message = self.msg_user_already_unsubscribed
             return
 
         if context.user is None:
             # Anonymous subscription
             resource.send_confirm_register(user, context, unregister=True)
-            context.message = MSG_CONFIRMATION_SENT
+            context.message = self.msg_confirmation_sent
         else:
             resource.unsubscribe_user(username)
             resource.after_unregister(username)
-            context.message = MSG_USER_UNSUBSCRIBED
+            context.message = self.msg_user_unsubscribed
 
 
 
@@ -385,6 +392,13 @@ class ConfirmRegister(AutoForm):
         ReadOnlyWidget('email', title=MSG(u"E-mail Address"))])
     actions = [ConfirmButton]
 
+    # Messages
+    msg_user_already_subscribed = MSG_USER_ALREADY_SUBSCRIBED
+    msg_user_already_unsubscribed = MSG_USER_ALREADY_UNSUBSCRIBED
+    msg_bad_key = MSG_BAD_KEY
+    msg_user_subscribed = MSG_USER_SUBSCRIBED
+    msg_user_unsubscribed = MSG_USER_UNSUBSCRIBED
+
 
     def get_value(self, resource, context, name, datatype):
         if name in ('key', 'email'):
@@ -405,12 +419,12 @@ class ConfirmRegister(AutoForm):
         key = self.get_register_key(resource, username)
         if key is None:
             if self.unregister is False:
-                message = MSG_USER_ALREADY_SUBSCRIBED
+                message = self.msg_user_already_subscribed
             else:
-                message = MSG_USER_ALREADY_UNSUBSCRIBED
+                message = self.msg_user_already_unsubscribed
             return context.come_back(message, goto='./')
         if key != context.get_form_value('key'):
-            return context.come_back(MSG_BAD_KEY, goto='./')
+            return context.come_back(self.msg_bad_key, goto='./')
 
         proxy = super(ConfirmRegister, self)
         return proxy.get_namespace(resource, context)
@@ -423,18 +437,18 @@ class ConfirmRegister(AutoForm):
         # Check register key
         key = self.get_register_key(resource, username)
         if key != form['key']:
-            context.message = MSG_BAD_KEY
+            context.message = self.msg_bad_key
             return
 
         # Validate register
         if self.unregister is False:
             resource.reset_register_key(username)
             resource.after_register(username)
-            message = MSG_USER_SUBSCRIBED
+            message = self.msg_user_subscribed
         else:
             resource.unsubscribe_user(username)
             resource.after_unregister(username)
-            message = MSG_USER_UNSUBSCRIBED
+            message = self.msg_user_unsubscribed
 
         # Ok
         return context.come_back(message, goto='./')
