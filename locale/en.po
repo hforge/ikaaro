@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2011-04-14 09:04+CET\n"
+"POT-Creation-Date: 2011-04-15 09:04+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -195,7 +195,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../cc.py:46
+#: ../cc.py:54
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -525,6 +525,10 @@ msgstr ""
 
 #: ../messages.py:49
 msgid "A given name already exists."
+msgstr ""
+
+#: ../cc.py:37
+msgid "A message has been sent to confirm your identity."
 msgstr ""
 
 #: ../messages.py:57
@@ -1008,11 +1012,15 @@ msgid ""
 "open web pages with the <g id='10'>application/x-restedit</g> mimetype"
 msgstr ""
 
-#: ../user_views.py:307
+#: ../cc.py:378 ../user_views.py:307
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:172
+#: ../cc.py:384
+msgid "Confirmation"
+msgstr ""
+
+#: ../cc.py:487 ../cc.py:492 ../user.py:172
 msgid "Confirmation required"
 msgstr ""
 
@@ -1020,7 +1028,7 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr ""
 
-#: ../calendar/event.py:49
+#: ../cc.py:242 ../calendar/event.py:49
 msgid "Confirmed"
 msgstr ""
 
@@ -1094,7 +1102,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../cc.py:340
+#: ../cc.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1207,11 +1215,11 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr ""
 
-#: ../cc.py:120 ../user_views.py:188
+#: ../cc.py:144 ../cc.py:392 ../user_views.py:188
 msgid "E-mail Address"
 msgstr ""
 
-#: ../cc.py:265
+#: ../cc.py:313
 msgid "E-mail addresses to subscribe"
 msgstr ""
 
@@ -1803,7 +1811,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr ""
 
-#: ../cc.py:194
+#: ../cc.py:237
 msgid "Manage Subscriptions"
 msgstr ""
 
@@ -1811,7 +1819,7 @@ msgstr ""
 msgid "March"
 msgstr ""
 
-#: ../cc.py:262
+#: ../cc.py:310
 msgid "Mass Subscription"
 msgstr ""
 
@@ -1983,7 +1991,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "No"
 msgstr ""
 
@@ -2054,7 +2062,7 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../buttons.py:37 ../cc.py:256
+#: ../buttons.py:37 ../cc.py:304
 msgid "OK"
 msgstr ""
 
@@ -2687,11 +2695,11 @@ msgstr ""
 msgid "Stored Searches"
 msgstr ""
 
-#: ../cc.py:106 ../cc.py:182
+#: ../cc.py:114 ../cc.py:225
 msgid "Subscribe"
 msgstr ""
 
-#: ../cc.py:198
+#: ../cc.py:241
 msgid "Subscribed"
 msgstr ""
 
@@ -2699,11 +2707,11 @@ msgstr ""
 msgid "Subscribers"
 msgstr ""
 
-#: ../cc.py:118
+#: ../cc.py:142
 msgid "Subscription"
 msgstr ""
 
-#: ../cc.py:322
+#: ../cc.py:370
 msgid "Subscriptions"
 msgstr ""
 
@@ -2804,19 +2812,19 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../cc.py:41
+#: ../cc.py:49
 msgid "The following users are prevented from subscribing: {users}."
 msgstr ""
 
-#: ../cc.py:39
+#: ../cc.py:47
 msgid "The following users were added: {users}."
 msgstr ""
 
-#: ../cc.py:35
+#: ../cc.py:43
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:37
+#: ../cc.py:45
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
@@ -2987,8 +2995,22 @@ msgid ""
 " {uri}"
 msgstr ""
 
+#: ../cc.py:490
+msgid ""
+"To confirm subscription, click the link:\n"
+"\n"
+" <{uri}>"
+msgstr ""
+
 #: ../user_views.py:198
 msgid "To confirm these changes, you must type your password"
+msgstr ""
+
+#: ../cc.py:495
+msgid ""
+"To confirm unsubscription, click the link:\"\n"
+"\n"
+" <{uri}>"
 msgstr ""
 
 #: ../user.py:173
@@ -3124,7 +3146,7 @@ msgstr ""
 msgid "Unpublish"
 msgstr ""
 
-#: ../cc.py:112 ../cc.py:188
+#: ../cc.py:128 ../cc.py:231
 msgid "Unsubscribe"
 msgstr ""
 
@@ -3321,7 +3343,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "Yes"
 msgstr ""
 
@@ -3345,12 +3367,12 @@ msgid ""
 "You can follow this link {site_uri} to access to the site."
 msgstr ""
 
-#: ../cc.py:33
-msgid "You are now subscribed to this resource."
+#: ../cc.py:39
+msgid "You are now subscribed."
 msgstr ""
 
-#: ../cc.py:34
-msgid "You are now unsubscribed from this resource."
+#: ../cc.py:41
+msgid "You are now unsubscribed."
 msgstr ""
 
 #: ../control_panel.py:343
@@ -3401,6 +3423,14 @@ msgid ""
 "this program."
 msgstr ""
 
+#: ../cc.py:40
+msgid "You were already subscribed."
+msgstr ""
+
+#: ../cc.py:42
+msgid "You were already unsubscribed."
+msgstr ""
+
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr ""
@@ -3447,7 +3477,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:337
+#: ../cc.py:502
 msgid "[{title}] has been modified"
 msgstr ""
 

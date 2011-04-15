@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-14 09:04+CET\n"
+"POT-Creation-Date: 2011-04-15 09:04+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -226,7 +226,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ":"
 
-#: ../cc.py:46
+#: ../cc.py:54
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -596,6 +596,10 @@ msgstr ""
 #: ../messages.py:49
 msgid "A given name already exists."
 msgstr "Le nom donné existe déjà."
+
+#: ../cc.py:37
+msgid "A message has been sent to confirm your identity."
+msgstr "Un message vous a été envoyé pour confirmer votre identité."
 
 #: ../messages.py:57
 msgid "A new resource has been added."
@@ -1092,11 +1096,15 @@ msgstr ""
 "py</g> pour ouvrir les pages webs avec le mimetype <g id='9'>application/x-"
 "restedit</g>"
 
-#: ../user_views.py:307
+#: ../cc.py:378 ../user_views.py:307
 msgid "Confirm"
 msgstr "Confirmation"
 
-#: ../user.py:172
+#: ../cc.py:384
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#: ../cc.py:487 ../cc.py:492 ../user.py:172
 msgid "Confirmation required"
 msgstr "Confirmation requise"
 
@@ -1104,7 +1112,7 @@ msgstr "Confirmation requise"
 msgid "Confirmation sent!"
 msgstr "Confirmation envoyée !"
 
-#: ../calendar/event.py:49
+#: ../cc.py:242 ../calendar/event.py:49
 msgid "Confirmed"
 msgstr "Confirmé"
 
@@ -1185,7 +1193,7 @@ msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE. Pour commenter cette fiche, allez sur :\n"
 "{issue_uri}"
 
-#: ../cc.py:340
+#: ../cc.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1300,11 +1308,11 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr "Télécharger toutes les pièces jointes"
 
-#: ../cc.py:120 ../user_views.py:188
+#: ../cc.py:144 ../cc.py:392 ../user_views.py:188
 msgid "E-mail Address"
 msgstr "Adresse de courriel"
 
-#: ../cc.py:265
+#: ../cc.py:313
 msgid "E-mail addresses to subscribe"
 msgstr "Adresses de courriel à inscrire"
 
@@ -1898,7 +1906,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "Faire un commentaire"
 
-#: ../cc.py:194
+#: ../cc.py:237
 msgid "Manage Subscriptions"
 msgstr "Gérer les inscriptions"
 
@@ -1906,7 +1914,7 @@ msgstr "Gérer les inscriptions"
 msgid "March"
 msgstr "Mars"
 
-#: ../cc.py:262
+#: ../cc.py:310
 msgid "Mass Subscription"
 msgstr "Inscriptions en masse"
 
@@ -2080,7 +2088,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr "Nicolas Deram (français)"
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "No"
 msgstr "Non"
 
@@ -2151,7 +2159,7 @@ msgstr "Classeur OpenDocument"
 msgid "ODT"
 msgstr "Texte OpenDocument"
 
-#: ../buttons.py:37 ../cc.py:256
+#: ../buttons.py:37 ../cc.py:304
 msgid "OK"
 msgstr "OK"
 
@@ -2788,11 +2796,11 @@ msgstr "Recherche enregistrée"
 msgid "Stored Searches"
 msgstr "Recherches enregistrées"
 
-#: ../cc.py:106 ../cc.py:182
+#: ../cc.py:114 ../cc.py:225
 msgid "Subscribe"
 msgstr "Inscrire"
 
-#: ../cc.py:198
+#: ../cc.py:241
 msgid "Subscribed"
 msgstr "Inscrit"
 
@@ -2800,11 +2808,11 @@ msgstr "Inscrit"
 msgid "Subscribers"
 msgstr "Inscrits"
 
-#: ../cc.py:118
+#: ../cc.py:142
 msgid "Subscription"
 msgstr "Inscription"
 
-#: ../cc.py:322
+#: ../cc.py:370
 msgid "Subscriptions"
 msgstr "Inscriptions"
 
@@ -2907,20 +2915,19 @@ msgstr "Le fichier « {filename} » n'existe pas."
 msgid "The file must be entered."
 msgstr "Le fichier doit être saisi."
 
-#: ../cc.py:41
-#, fuzzy
+#: ../cc.py:49
 msgid "The following users are prevented from subscribing: {users}."
-msgstr "Les utilisateurs suivants ont été inscrits : {users}."
+msgstr "Les utilisateurs suivants ne peuvent pas être inscrits : {users}."
 
-#: ../cc.py:39
+#: ../cc.py:47
 msgid "The following users were added: {users}."
 msgstr "Les utilisateurs suivants ont été ajoutés : {users}."
 
-#: ../cc.py:35
+#: ../cc.py:43
 msgid "The following users were subscribed: {users}."
 msgstr "Les utilisateurs suivants ont été inscrits : {users}."
 
-#: ../cc.py:37
+#: ../cc.py:45
 msgid "The following users were unsubscribed: {users}."
 msgstr "Les utilisateurs suivants ont été désinscrits : {users}."
 
@@ -3100,9 +3107,29 @@ msgstr ""
 "\n"
 " {uri}"
 
+#: ../cc.py:490
+msgid ""
+"To confirm subscription, click the link:\n"
+"\n"
+" <{uri}>"
+msgstr ""
+"Pour confirmer votre inscription, cliquez sur le lien :\n"
+"\n"
+" {uri}"
+
 #: ../user_views.py:198
 msgid "To confirm these changes, you must type your password"
 msgstr "Pour confirmez vos changements, vous devez saisir votre mot de passe"
+
+#: ../cc.py:495
+msgid ""
+"To confirm unsubscription, click the link:\"\n"
+"\n"
+" <{uri}>"
+msgstr ""
+"Pour confirmer votre désinscription, cliquez sur le lien :\n"
+"\n"
+" {uri}"
 
 #: ../user.py:173
 msgid ""
@@ -3249,7 +3276,7 @@ msgstr "Décompressez le tarball <g id='3'>restedit-last.tar.gz</g>"
 msgid "Unpublish"
 msgstr "Dépublier"
 
-#: ../cc.py:112 ../cc.py:188
+#: ../cc.py:128 ../cc.py:231
 msgid "Unsubscribe"
 msgstr "Désinscrire"
 
@@ -3449,7 +3476,7 @@ msgstr "Fichier XML"
 msgid "Yahoo site verification key"
 msgstr "Clé de vérification de Yahoo"
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "Yes"
 msgstr "Oui"
 
@@ -3475,14 +3502,13 @@ msgstr ""
 "Vous êtes maintenant enregistré comme utilisateur de: {site_name}.\n"
 "Vous pouvez suivre ce lien {site_uri} pour accéder au site."
 
-#: ../cc.py:33
-msgid "You are now subscribed to this resource."
-msgstr "Vous êtes désormais inscrit pour cette ressource."
+#: ../cc.py:39
+msgid "You are now subscribed."
+msgstr "Vous êtes désormais inscrit."
 
-#: ../cc.py:34
-#, fuzzy
-msgid "You are now unsubscribed from this resource."
-msgstr "Vous êtes désormais inscrit pour cette ressource."
+#: ../cc.py:41
+msgid "You are now unsubscribed."
+msgstr "Vous êtes désormais désinscrit."
 
 #: ../control_panel.py:343
 msgid "You can not remove the default language."
@@ -3541,6 +3567,14 @@ msgstr ""
 "You should have received a copy of the GNU General Public License along with "
 "this program."
 
+#: ../cc.py:40
+msgid "You were already subscribed."
+msgstr "Vous étiez déjà inscrit."
+
+#: ../cc.py:42
+msgid "You were already unsubscribed."
+msgstr "Vous étiez déjà désinscrit."
+
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr "Votre clé de confirmation est invalide."
@@ -3587,7 +3621,7 @@ msgstr ""
 msgid "[empty]"
 msgstr "[vide]"
 
-#: ../cc.py:337
+#: ../cc.py:502
 msgid "[{title}] has been modified"
 msgstr "[{title}] a été modifié"
 

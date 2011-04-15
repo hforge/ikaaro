@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-04-14 09:04+CET\n"
+"POT-Creation-Date: 2011-04-15 09:04+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -207,7 +207,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../cc.py:46
+#: ../cc.py:54
 #, fuzzy
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
@@ -542,6 +542,10 @@ msgstr ""
 
 #: ../messages.py:49
 msgid "A given name already exists."
+msgstr ""
+
+#: ../cc.py:37
+msgid "A message has been sent to confirm your identity."
 msgstr ""
 
 #: ../messages.py:57
@@ -1087,11 +1091,16 @@ msgid ""
 "open web pages with the <g id='10'>application/x-restedit</g> mimetype"
 msgstr ""
 
-#: ../user_views.py:307
+#: ../cc.py:378 ../user_views.py:307
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:172
+#: ../cc.py:384
+#, fuzzy
+msgid "Confirmation"
+msgstr "Anteprima"
+
+#: ../cc.py:487 ../cc.py:492 ../user.py:172
 msgid "Confirmation required"
 msgstr ""
 
@@ -1100,7 +1109,7 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr "Anteprima"
 
-#: ../calendar/event.py:49
+#: ../cc.py:242 ../calendar/event.py:49
 msgid "Confirmed"
 msgstr ""
 
@@ -1179,7 +1188,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../cc.py:340
+#: ../cc.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1306,12 +1315,12 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr "Commenti:"
 
-#: ../cc.py:120 ../user_views.py:188
+#: ../cc.py:144 ../cc.py:392 ../user_views.py:188
 #, fuzzy
 msgid "E-mail Address"
 msgstr "Utenti"
 
-#: ../cc.py:265
+#: ../cc.py:313
 #, fuzzy
 msgid "E-mail addresses to subscribe"
 msgstr "Utenti"
@@ -1974,7 +1983,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "Commenti:"
 
-#: ../cc.py:194
+#: ../cc.py:237
 #, fuzzy
 msgid "Manage Subscriptions"
 msgstr "Descrizione"
@@ -1984,7 +1993,7 @@ msgstr "Descrizione"
 msgid "March"
 msgstr "Cerca"
 
-#: ../cc.py:262
+#: ../cc.py:310
 #, fuzzy
 msgid "Mass Subscription"
 msgstr "Descrizione"
@@ -2180,7 +2189,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "No"
 msgstr ""
 
@@ -2258,7 +2267,7 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../buttons.py:37 ../cc.py:256
+#: ../buttons.py:37 ../cc.py:304
 #, fuzzy
 msgid "OK"
 msgstr "OK"
@@ -2987,12 +2996,12 @@ msgstr "Cerca"
 msgid "Stored Searches"
 msgstr ""
 
-#: ../cc.py:106 ../cc.py:182
+#: ../cc.py:114 ../cc.py:225
 #, fuzzy
 msgid "Subscribe"
 msgstr "Descrizione"
 
-#: ../cc.py:198
+#: ../cc.py:241
 #, fuzzy
 msgid "Subscribed"
 msgstr "Descrizione"
@@ -3002,12 +3011,12 @@ msgstr "Descrizione"
 msgid "Subscribers"
 msgstr "Descrizione"
 
-#: ../cc.py:118
+#: ../cc.py:142
 #, fuzzy
 msgid "Subscription"
 msgstr "Descrizione"
 
-#: ../cc.py:322
+#: ../cc.py:370
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Descrizione"
@@ -3123,19 +3132,19 @@ msgstr "L'utente \"%s\" non esiste"
 msgid "The file must be entered."
 msgstr "Deve essere inserito un file"
 
-#: ../cc.py:41
+#: ../cc.py:49
 msgid "The following users are prevented from subscribing: {users}."
 msgstr ""
 
-#: ../cc.py:39
+#: ../cc.py:47
 msgid "The following users were added: {users}."
 msgstr ""
 
-#: ../cc.py:35
+#: ../cc.py:43
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:37
+#: ../cc.py:45
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
@@ -3328,8 +3337,22 @@ msgid ""
 " {uri}"
 msgstr ""
 
+#: ../cc.py:490
+msgid ""
+"To confirm subscription, click the link:\n"
+"\n"
+" <{uri}>"
+msgstr ""
+
 #: ../user_views.py:198
 msgid "To confirm these changes, you must type your password"
+msgstr ""
+
+#: ../cc.py:495
+msgid ""
+"To confirm unsubscription, click the link:\"\n"
+"\n"
+" <{uri}>"
 msgstr ""
 
 #: ../user.py:173
@@ -3479,7 +3502,7 @@ msgstr ""
 msgid "Unpublish"
 msgstr "pubblicato"
 
-#: ../cc.py:112 ../cc.py:188
+#: ../cc.py:128 ../cc.py:231
 #, fuzzy
 msgid "Unsubscribe"
 msgstr "Descrizione"
@@ -3697,7 +3720,7 @@ msgstr "File"
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../cc.py:210 ../autoform.py:241
+#: ../cc.py:255 ../cc.py:258 ../autoform.py:241
 msgid "Yes"
 msgstr ""
 
@@ -3721,16 +3744,16 @@ msgid ""
 "You can follow this link {site_uri} to access to the site."
 msgstr ""
 
-#: ../cc.py:33
+#: ../cc.py:39
 #, fuzzy
-msgid "You are now subscribed to this resource."
+msgid "You are now subscribed."
 msgstr ""
 "Seleziona l'utente/gli utenti che desideri aggiungere nel gruppo  <b stl:"
 "content=\"name\"></b> :"
 
-#: ../cc.py:34
+#: ../cc.py:41
 #, fuzzy
-msgid "You are now unsubscribed from this resource."
+msgid "You are now unsubscribed."
 msgstr ""
 "Seleziona l'utente/gli utenti che desideri aggiungere nel gruppo  <b stl:"
 "content=\"name\"></b> :"
@@ -3788,6 +3811,14 @@ msgstr ""
 "and give any other recipients of the Program a copy of this License along "
 "with the Program."
 
+#: ../cc.py:40
+msgid "You were already subscribed."
+msgstr ""
+
+#: ../cc.py:42
+msgid "You were already unsubscribed."
+msgstr ""
+
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr ""
@@ -3835,7 +3866,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:337
+#: ../cc.py:502
 #, fuzzy
 msgid "[{title}] has been modified"
 msgstr "Il linguaggio predefinito è stato modificato."
