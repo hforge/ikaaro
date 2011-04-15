@@ -30,7 +30,11 @@ class Database(GitDatabase):
         root = context.root
 
         # 1. Update links when resources moved
-        for source, target in self.resources_old2new.items():
+        old2new = [ (s, t) for s, t in self.resources_old2new.items()
+                    if s is not None ]
+        # Sort by target
+        old2new.sort(lambda x, y: cmp(x[1], y[1]))
+        for source, target in old2new:
             if target and source != target:
                 target = Path(target)
                 resource = root.get_resource(target)
