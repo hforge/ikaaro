@@ -534,18 +534,18 @@ class DBResource(CatalogAware, IResource):
         for name in self._get_references_from_schema():
             datatype = schema[name]
             prop = self.metadata.get_property(name)
+            if prop is None:
+                continue
             multiple = getattr(datatype, 'multiple', False)
             if multiple:
                 # Multiple
                 for x in prop:
                     link = base.resolve2(x.value)
-                    link = str(link)
-                    links.add(link)
-            elif prop is not None:
+                    links.add(str(link))
+            else:
                 # Singleton
                 link = base.resolve2(prop.value)
-                link = str(link)
-                links.add(link)
+                links.add(str(link))
 
         return links
 
@@ -568,6 +568,8 @@ class DBResource(CatalogAware, IResource):
         for name in self._get_references_from_schema():
             datatype = schema[name]
             prop = self.metadata.get_property(name)
+            if prop is None:
+                continue
             multiple = getattr(datatype, 'multiple', False)
             if multiple:
                 # Multiple
@@ -575,13 +577,14 @@ class DBResource(CatalogAware, IResource):
                 for p in prop:
                     path = old_base.resolve2(str(p.value))
                     if path == source:
-                        value = str(new_base.get_pathto(target))
-                        new_value.append(value)
+                        # Explicitly call str because RReference.encode does
+                        # nothing
+                        new_value.append(str(new_base.get_pathto(target)))
                     else:
                         new_value.append(p)
 
                 self.set_property(name, new_value)
-            elif prop is not None:
+            else:
                 # Singleton
                 value = prop.value
                 if not value:
@@ -590,7 +593,9 @@ class DBResource(CatalogAware, IResource):
                 if path == source:
                     # Hit the old name
                     # Build the new reference with the right path
-                    self.set_property(name, new_base.get_pathto(target))
+                    # Explicitly call str because RReference.encode does
+                    # nothing
+                    self.set_property(name, str(new_base.get_pathto(target)))
 
         database.change_resource(self)
 
@@ -607,11 +612,13 @@ class DBResource(CatalogAware, IResource):
         for name in self._get_references_from_schema():
             datatype = schema[name]
             prop = self.metadata.get_property(name)
+            if prop is None:
+                continue
             multiple = getattr(datatype, 'multiple', False)
             if multiple:
                 # Multiple
                 raise NotImplementedError, 'update_relative_links multiple'
-            elif prop is not None:
+            else:
                 # Singleton
                 value = prop.value
                 if not value:
@@ -622,7 +629,8 @@ class DBResource(CatalogAware, IResource):
                 new_abs_path = resources_old2new.get(old_abs_path,
                                                      old_abs_path)
 
-                self.set_property(name, target.get_pathto(new_abs_path))
+                # Explicitly call str because RReference.encode does nothing
+                self.set_property(name, str(target.get_pathto(new_abs_path)))
 
 
     ########################################################################
