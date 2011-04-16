@@ -46,14 +46,13 @@ class Database(GitDatabase):
         self.resources_old2new.clear()
 
         # 3. Index
-        git_date = context.timestamp
         user = context.user
         userid = user.name if user else None
         docs_to_index = []
         for path in self.resources_new2old:
             resource = root.get_resource(path)
             if context.set_mtime:
-                resource.metadata.set_property('mtime', git_date)
+                resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
             values = resource.get_catalog_values()
             docs_to_index.append((resource, values))
@@ -74,6 +73,7 @@ class Database(GitDatabase):
             git_msg = git_msg.encode('utf-8')
 
         # Ok
+        git_date = context.fix_tzinfo(context.timestamp)
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
 
 
