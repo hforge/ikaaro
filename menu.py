@@ -562,7 +562,7 @@ class Menu(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_canonical_path()
         site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
         record_properties = handler.record_properties

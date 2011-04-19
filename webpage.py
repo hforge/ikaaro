@@ -270,7 +270,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     # FIXME These three methods are private, add the heading underscore
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_canonical_path()
         languages = self.get_site_root().get_property('website_languages')
         links = set()
         for language in languages:
@@ -280,7 +280,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
 
     def update_links(self,  source, target):
-        base = self.get_abspath()
+        base = self.get_canonical_path()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
         old_base = resources_new2old.get(base, base)
@@ -297,7 +297,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
 
     def update_relative_links(self, source):
-        target = self.get_abspath()
+        target = self.get_canonical_path()
         resources_old2new = get_context().database.resources_old2new
 
         def my_func(value):
