@@ -846,17 +846,10 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         row['checked'] = checked
                 elif name == 'abspath':
                     if type(value) is tuple:
-                        value, href = value
-                        href = get_reference(href)
-                        if row['is_folder']:
-                            href = href.resolve_name(';preview_content')
-                        href = href.replace(size=current_size, width=width,
-                                height=height)
-                        href = str(href)
+                        row['name'], row['href'] = value
                     else:
-                        href = None
-                    row['name'] = value
-                    row['href'] = href
+                        row['name'] = value
+                        row['href'] = None
                 else:
                     row[name] = value
             rows.append(row)
