@@ -4,13 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      var resolutions = new Array(${widths});
-      apply_best_resolution(resolutions);
-    });
-  </script>
-
   <table id="browse-list" class="${css}">
     <thead stl:if="columns">
       <tr>

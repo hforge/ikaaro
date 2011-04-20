@@ -39,7 +39,7 @@ from autoform import SelectWidget
 from buttons import PasteButton, PublishButton, RetireButton
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
-from datatypes import CopyCookie, ImageWidth
+from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from registry import get_resource_class
 from utils import generate_name, get_base_path_query, get_content_containers
@@ -861,15 +861,11 @@ class Folder_PreviewContent(Folder_BrowseContent):
                     row[name] = value
             rows.append(row)
 
-        widths = ", ".join([repr(o['name']) for o in ImageWidth.get_options()
-                            if o['name'].strip()])
-
         return {
             'root': resource.parent is None,
             'size': current_size,
             'width': width,
             'height': height,
-            'widths': widths,
             'css': self.table_css,
             'columns': table_head,
             'rows': rows,
