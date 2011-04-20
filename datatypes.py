@@ -101,15 +101,6 @@ class CopyCookie(DataType):
 
 
 
-class ImageWidth(Enumerate):
-    options = [{'name': '640', 'value': u"small"},
-               {'name': '800', 'value': u"medium"},
-               {'name': '1024', 'value': u"large"},
-               {'name': '1280', 'value': u"huge"},
-               {'name': '', 'value': u"original"}]
-
-
-
 class Multilingual(Unicode):
     multilingual = True
     # Used only for the metadata

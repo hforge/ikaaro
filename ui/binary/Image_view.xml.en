@@ -4,14 +4,12 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <p id="image-toolbar">
-    <a href="?width=${option/name}&amp;height=${option/name}"
+    <a href="?size=${option/size}"
       stl:omit-tag="option/selected"
-      stl:repeat="option widths">${option/value}</a>
+      stl:repeat="option widths">${option/title}</a>
     (${image_width}x${image_height})
   </p>
 
-  <a href="./;download">
-    <img src="./;thumb?width=${width}&amp;height=${height}" />
-  </a>
+  <a href="./;download"><img src="./${link}" /></a>
 
 </stl:block>

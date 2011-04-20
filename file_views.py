@@ -24,7 +24,8 @@ from os.path import basename, splitext
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Boolean, Integer, String, HTTPDate, PathDataType
+from itools.datatypes import Boolean, Enumerate, HTTPDate, Integer, String
+from itools.datatypes import PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
@@ -35,7 +36,7 @@ from itools.web import FormError
 from autoform import FileWidget, PathSelectorWidget, ReadOnlyWidget
 from autoform import file_widget, location_widget, timestamp_widget
 from autoform import title_widget, description_widget, subject_widget
-from datatypes import FileDataType, ImageWidth
+from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
@@ -327,20 +328,35 @@ class Image_View(STLView):
 
     # Image default size as a string (empty = full size)
     query_schema = {
-        'width': String(default='800'),
-        'height': String(default='600')}
+        'size': String(default='800x600')}
+
+    sizes = [
+        ('640x480', u"small"),
+        ('800x600', u"medium"),
+        ('1024x768', u"large"),
+        ('1280x1024', u"huge"),
+        ('original', u"original")]
 
 
     def get_namespace(self, resource, context):
-        width = context.query['width']
-        height = context.query['height']
+        size = context.query['size']
+
+        # Menu
+        widths = [
+            {'size': x, 'title': title, 'selected': x == size}
+            for (x, title) in self.sizes ]
+
+        # img
+        if size == 'original':
+            link = ';download'
+        else:
+            width, height = size.split('x')
+            link = ';thumb?width=%s&height=%s' % (width, height)
 
         # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
-
-        return {'width': width,
-                'height': height,
-                'widths': ImageWidth.get_namespace(width),
+        return {'widths': widths,
+                'link': link,
                 'image_width': image_width,
                 'image_height': image_height}
 
