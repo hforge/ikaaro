@@ -250,7 +250,6 @@ class ResourceWithHTML(Observable):
 
 
 
-
 class WebPage(ResourceWithHTML, Multilingual, Text):
 
     class_id = 'webpage'
@@ -270,9 +269,9 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     # FIXME These three methods are private, add the heading underscore
     def get_links(self):
+        links = super(WebPage, self).get_links()
         base = self.get_canonical_path()
         languages = self.get_site_root().get_property('website_languages')
-        links = set()
         for language in languages:
             handler = self.get_handler(language=language)
             links.update(_get_links(base, handler.events))
@@ -280,6 +279,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
 
     def update_links(self,  source, target):
+        super(WebPage, self).update_links(source, target)
         base = self.get_canonical_path()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
@@ -297,6 +297,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
 
     def update_relative_links(self, source):
+        super(WebPage, self).update_relative_links(source)
         target = self.get_canonical_path()
         resources_old2new = get_context().database.resources_old2new
 

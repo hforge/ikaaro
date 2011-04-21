@@ -562,12 +562,12 @@ class Menu(OrderedTable):
 
 
     def get_links(self):
+        links = super(Menu, self).get_links()
         base = self.get_canonical_path()
         site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
         record_properties = handler.record_properties
 
-        links = set()
         for record in handler.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
@@ -603,6 +603,7 @@ class Menu(OrderedTable):
 
 
     def update_links(self, source, target):
+        super(Menu, self).update_links(source, target)
         site_root_abspath = self.get_site_root().get_abspath()
         base = self.get_canonical_path()
         resources_new2old = get_context().database.resources_new2old
@@ -637,6 +638,7 @@ class Menu(OrderedTable):
 
 
     def update_relative_links(self, source):
+        super(Menu, self).update_relative_links(source)
         site_root_abspath = self.get_site_root().get_abspath()
         target = self.get_canonical_path()
         resources_old2new = get_context().database.resources_old2new

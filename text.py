@@ -96,7 +96,7 @@ class CSS(Text):
 
 
     def get_links(self):
-        links = Text.get_links(self)
+        links = super(CSS, self).get_links()
         base = self.get_canonical_path()
         site_root = self.get_site_root()
         site_root_base = site_root.get_abspath()
@@ -132,7 +132,7 @@ class CSS(Text):
 
 
     def update_links(self,  source, target):
-        Text.update_links(self,  source, target)
+        super(CSS, self).update_links(source, target)
         base = self.get_canonical_path()
         site_root = self.get_site_root()
         site_root_base = site_root.get_abspath()
@@ -190,6 +190,7 @@ class CSS(Text):
 
 
     def update_relative_links(self, source):
+        super(CSS, self).update_relative_links(source, target)
         target = self.get_canonical_path()
         site_root = self.get_site_root()
         site_root_base = site_root.get_abspath()
