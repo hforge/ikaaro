@@ -216,6 +216,7 @@ class Server(WebServer):
 
 
     def _smtp_send(self):
+        nb_max_mails_to_send = 2
         spool = lfs.open(self.spool)
 
         # Find out emails to send
@@ -231,13 +232,16 @@ class Server(WebServer):
                 names.add(name)
         names.difference_update(locks)
         # Is there something to send?
-        if len(names) == 0:
+        nb_mails_to_send = len(names)
+        if nb_mails_to_send == 0:
             return False
-
+        elif nb_mails_to_send > nb_max_mails_to_send:
+            try_again = True
+        else:
+            try_again = False
         # Send emails
-        try_again = False
         smtp_host = self.smtp_host
-        for name in names:
+        for name in list(names)[:nb_max_mails_to_send]:
             # 1. Open connection
             try:
                 smtp = SMTP(smtp_host)
