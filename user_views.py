@@ -61,7 +61,8 @@ class User_ConfirmRegistration(AutoForm):
         if name == 'username':
             return resource.get_login_name()
 
-        return AutoForm.get_value(self, resource, context, name, datatype)
+        proxy = super(User_ConfirmRegistration, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def get_namespace(self, resource, context):
@@ -75,7 +76,8 @@ class User_ConfirmRegistration(AutoForm):
             goto ='/;login?username=%s' % username
             return context.come_back(messages.MSG_BAD_KEY, goto=goto)
 
-        return AutoForm.get_namespace(self, resource, context)
+        proxy = super(User_ConfirmRegistration, self)
+        return proxy.get_namespace(resource, context)
 
 
     def action(self, resource, context, form):
