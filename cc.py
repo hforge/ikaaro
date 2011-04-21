@@ -22,7 +22,7 @@ from itools.core import freeze, thingy_property
 from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.web import INFO, ERROR, get_context
+from itools.web import INFO, ERROR
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers
@@ -46,16 +46,20 @@ MSG_SUBSCRIBED = INFO(u'The following users were subscribed: {users}.',
         format='replace_html')
 MSG_UNSUBSCRIBED = INFO(u'The following users were unsubscribed: {users}.',
         format='replace_html')
+MSG_INVALID = ERROR(u'The following addresses are invalid: {users}.',
+        format='replace_html')
 MSG_INVITED = INFO(u'The following users have been invited: {users}.',
         format='replace_html')
 MSG_UNALLOWED = ERROR(u'The following users are prevented from subscribing: '
         u'{users}.', format='replace_html')
 
 
-def add_subscribed_message(message, users, context):
+def add_subscribed_message(message, users, context, users_is_resources=True):
     if users:
-        format = u'<a href="{0}">{1}</a>'.format
-        users = [ format(context.get_link(x), x.get_title()) for x in users ]
+        if users_is_resources is True:
+            format = u'<a href="{0}">{1}</a>'.format
+            users = [ format(context.get_link(x), x.get_title())
+                        for x in users ]
         users = ', '.join(users)
         message = message(users=users)
         context.message.append(message)
@@ -325,20 +329,25 @@ class MassSubscriptionForm(AutoForm):
 
     def action_mass_subscribe(self, resource, context, form):
         root = context.root
-        site_root = resource.get_site_root()
 
         already = []
         unallowed = []
         invited = []
+        invalid = []
+        subscribed_users = resource.get_subscribed_users()
         for email in form['emails']:
             email = email.strip()
             if not email:
+                continue
+            # Check if email is valid
+            if not Email.is_valid(email):
+                invalid.append(email)
                 continue
 
             # Checks
             user = root.get_user_from_login(email)
             if user:
-                if user.name in self.get_property('cc_list'):
+                if user.name in subscribed_users:
                     already.append(user)
                     continue
                 if not resource.is_subscription_allowed(user.name):
@@ -354,10 +363,13 @@ class MassSubscriptionForm(AutoForm):
             confirm_url.query = {'key': key, 'email': email}
             text = resource.invitation_text.gettext(uri=confirm_url)
             root.send_email(email, subject, text=text)
+            invited.append(user)
 
         # Ok
         context.message = []
         add_subscribed_message(MSG_ALREADY, already, context)
+        add_subscribed_message(MSG_INVALID, invalid, context,
+                               users_is_resources=False)
         add_subscribed_message(MSG_INVITED, invited, context)
         add_subscribed_message(MSG_UNALLOWED, unallowed, context)
 
