@@ -548,10 +548,8 @@ class Observable(object):
 
 
     def get_subscribed_users(self, skip_unconfirmed=True):
-        for cc in self.get_property('cc_list'):
-            if skip_unconfirmed is True and cc['status'] == 'S':
-                continue
-            yield cc['username']
+        return [ cc['username'] for cc in self.get_property('cc_list')
+                 if skip_unconfirmed is False or cc['status'] == 'S' ]
 
 
     def is_subscribed(self, username, skip_unconfirmed=True):
