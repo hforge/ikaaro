@@ -246,8 +246,7 @@ class ManageForm(RoleAware_BrowseUsers):
     description = None
 
     table_columns = freeze(RoleAware_BrowseUsers.table_columns[:-1] + [
-        ('subscribed', MSG(u"Subscribed")),
-        ('confirmed', MSG(u"Confirmed"))])
+        ('state', MSG(u'State'))])
     table_actions = freeze([SubscribeButton, UnsubscribeButton])
 
 
@@ -257,13 +256,15 @@ class ManageForm(RoleAware_BrowseUsers):
 
 
     def get_item_value(self, resource, context, item, column):
-        if column == 'subscribed':
-            subscribed = resource.is_subscribed(item.name,
-                    skip_unconfirmed=False)
-            return MSG(u"Yes") if subscribed else MSG(u"No")
-        elif column == 'confirmed':
-            confirmed = resource.is_confirmed(item.name)
-            return MSG(u"Yes") if confirmed else MSG(u"No")
+        if column == 'state':
+            for cc in resource.get_property('cc_list'):
+                if item.name == cc['username']:
+                    if cc['status'] == 'S':
+                        return MSG(u'Pending confirmation')
+                    return MSG(u'Subscribed')
+
+            return MSG(u'Not subscribed')
+
         proxy = super(ManageForm, self)
         site_root = resource.get_site_root()
         return proxy.get_item_value(site_root, context, item, column)
