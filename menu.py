@@ -41,21 +41,10 @@ from revisions_views import DBResource_CommitLog
 from table import OrderedTableFile, OrderedTable
 from table_views import OrderedTable_View
 from table_views import Table_AddRecord, Table_EditRecord
+from utils import get_reference_and_path
 from workflow import get_workflow_preview
 import messages
 
-
-
-def get_reference_and_path(value):
-    """Return the reference associated to the path and the path
-    without query/fragment.
-    """
-    # Be robust if the path is multilingual
-    path = value
-    if type(path) is unicode:
-        path = Unicode.encode(value)
-    ref = get_reference(path)
-    return ref, str(ref.path)
 
 
 class NotAllowedError(Exception):

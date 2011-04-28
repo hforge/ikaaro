@@ -38,8 +38,9 @@ from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from workflow import WorkflowAware
+from utils import get_reference_and_path
 from views_new import NewInstance
+from workflow import WorkflowAware
 
 
 class IResource(Resource):
@@ -520,32 +521,43 @@ class DBResource(CatalogAware, IResource):
                 source = getattr(datatype, 'source', None)
                 if source != 'metadata':
                     raise ValueError, 'schema error'
-                multilingual = getattr(datatype, 'multilingual', False)
-                if multilingual:
-                    raise ValueError, 'schema error'
                 yield name
 
 
     def get_links(self):
         links = set()
         base = self.get_canonical_path()
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
 
         schema = self.class_schema
         for name in self._get_references_from_schema():
             datatype = schema[name]
-            prop = self.metadata.get_property(name)
-            if prop is None:
-                continue
+            languages = [ None ]
             multiple = getattr(datatype, 'multiple', False)
-            if multiple:
-                # Multiple
-                for x in prop:
-                    link = base.resolve2(x.value)
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
+                    continue
+                if multiple:
+                    # Multiple
+                    for x in prop:
+                        # Get the reference and path
+                        ref, path = get_reference_and_path(x.value)
+                        if ref.scheme or path.count(';'):
+                            continue
+                        link = base.resolve2(path)
+                        links.add(str(link))
+                else:
+                    # Get the reference and path
+                    ref, path = get_reference_and_path(prop.value)
+                    if ref.scheme or path.count(';'):
+                        continue
+                    # Singleton
+                    link = base.resolve2(path)
                     links.add(str(link))
-            else:
-                # Singleton
-                link = base.resolve2(prop.value)
-                links.add(str(link))
 
         return links
 
@@ -563,39 +575,53 @@ class DBResource(CatalogAware, IResource):
         old_base = database.resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
 
         schema = self.class_schema
         for name in self._get_references_from_schema():
             datatype = schema[name]
-            prop = self.metadata.get_property(name)
-            if prop is None:
-                continue
+            languages = [ None ]
             multiple = getattr(datatype, 'multiple', False)
-            if multiple:
-                # Multiple
-                new_value = []
-                for p in prop:
-                    path = old_base.resolve2(str(p.value))
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
+                    continue
+                if multiple:
+                    # Multiple
+                    new_value = []
+                    for p in prop:
+                        # Get the reference and path
+                        ref, path = get_reference_and_path(p.value)
+                        if ref.scheme or path.count(';'):
+                            continue
+                        path = old_base.resolve2(str(path))
+                        if path == source:
+                            # Explicitly call str because RReference.encode
+                            # does nothing
+                            new_value.append(str(new_base.get_pathto(target)))
+                        else:
+                            new_value.append(p)
+                    self.set_property(name, new_value, lang)
+                else:
+                    # Singleton
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference and path
+                    ref, path = get_reference_and_path(value)
+                    if ref.scheme or path.count(';'):
+                        continue
+                    path = old_base.resolve2(value)
                     if path == source:
+                        # Hit the old name
+                        # Build the new reference with the right path
                         # Explicitly call str because RReference.encode does
                         # nothing
-                        new_value.append(str(new_base.get_pathto(target)))
-                    else:
-                        new_value.append(p)
-
-                self.set_property(name, new_value)
-            else:
-                # Singleton
-                value = prop.value
-                if not value:
-                    continue
-                path = old_base.resolve2(value)
-                if path == source:
-                    # Hit the old name
-                    # Build the new reference with the right path
-                    # Explicitly call str because RReference.encode does
-                    # nothing
-                    self.set_property(name, str(new_base.get_pathto(target)))
+                        new_value = str(new_base.get_pathto(target))
+                        self.set_property(name, new_value, lang)
 
         database.change_resource(self)
 
@@ -607,30 +633,54 @@ class DBResource(CatalogAware, IResource):
         """
         target = self.get_canonical_path()
         resources_old2new = get_context().database.resources_old2new
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
 
         schema = self.class_schema
         for name in self._get_references_from_schema():
             datatype = schema[name]
-            prop = self.metadata.get_property(name)
-            if prop is None:
-                continue
+            languages = [ None ]
             multiple = getattr(datatype, 'multiple', False)
-            if multiple:
-                # Multiple
-                raise NotImplementedError, 'update_relative_links multiple'
-            else:
-                # Singleton
-                value = prop.value
-                if not value:
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
                     continue
-                # Calculate the old absolute path
-                old_abs_path = source.resolve2(value)
-                # Check if the target path has not been moved
-                new_abs_path = resources_old2new.get(old_abs_path,
-                                                     old_abs_path)
+                if multiple:
+                    # Multiple
+                    new_value = []
+                    for p in prop:
+                        # Get the reference and path
+                        ref, path = get_reference_and_path(p.value)
+                        if ref.scheme or path.count(';'):
+                            continue
+                        # Calculate the old absolute path
+                        old_abs_path = source.resolve2(str(path))
+                        # Check if the target path has not been moved
+                        new_abs_path = resources_old2new.get(old_abs_path,
+                                                             old_abs_path)
+                        new_value.append(str(target.get_pathto(new_abs_path)))
+                    self.set_property(name, new_value, lang)
+                else:
+                    # Singleton
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference and path
+                    ref, path = get_reference_and_path(value)
+                    if ref.scheme or path.count(';'):
+                        continue
+                    # Calculate the old absolute path
+                    old_abs_path = source.resolve2(path)
+                    # Check if the target path has not been moved
+                    new_abs_path = resources_old2new.get(old_abs_path,
+                                                         old_abs_path)
 
-                # Explicitly call str because RReference.encode does nothing
-                self.set_property(name, str(target.get_pathto(new_abs_path)))
+                    # Explicitly call str because RReference.encode does
+                    # nothing
+                    new_value = str(target.get_pathto(new_abs_path))
+                    self.set_property(name, new_value, lang)
 
 
     ########################################################################

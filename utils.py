@@ -23,7 +23,9 @@ from sys import platform
 
 # Import from itools
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
+from itools.datatypes import Unicode
 from itools.stl import STLTemplate, stl_namespaces
+from itools.uri import get_reference
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -262,3 +264,18 @@ def get_content_containers(context, skip_formats):
             ac = container.get_access_control()
             if ac.is_allowed_to_add(context.user, container):
                 yield container
+
+
+###########################################################################
+# Used by *_links and menu
+###########################################################################
+def get_reference_and_path(value):
+    """Return the reference associated to the path and the path
+    without query/fragment.
+    """
+    # Be robust if the path is multilingual
+    path = value
+    if type(path) is unicode:
+        path = Unicode.encode(value)
+    ref = get_reference(path)
+    return ref, str(ref.path)
