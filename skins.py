@@ -183,10 +183,10 @@ class Skin(UIFolder):
 
         # Choose the template
         if root is here:
-            template = MSG(u"{root_title} - {view_title}")
+            template = MSG(u"{view_title} - {root_title}")
             here_title = None
         else:
-            template = MSG(u"{root_title} - {here_title} - {view_title}")
+            template = MSG(u"{here_title} - {view_title} - {root_title}")
             here_title = here.get_title()
 
         # The view
