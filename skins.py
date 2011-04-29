@@ -182,7 +182,9 @@ class Skin(UIFolder):
         root_title = root.get_title()
 
         # Choose the template
-        if root is here:
+        if not root.is_allowed_to_view(context.user, here):
+            return ''
+        elif root is here:
             template = MSG(u"{view_title} - {root_title}")
             here_title = None
         else:
@@ -337,6 +339,11 @@ class Skin(UIFolder):
     def _get_page_title(self, context):
         resource = context.resource
         view = context.view
+
+        # Not allowed to view resource
+        root = resource.get_site_root()
+        if not root.is_allowed_to_view(context.user, resource):
+            return ''
 
         # Page title
         try:
