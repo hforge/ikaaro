@@ -17,7 +17,7 @@
     <button type="submit" class="button-ok">OK</button>
   </form>
 
-  <form action=";forget_search" method="post" stl:if="search_name">
+  <form action=";forget_search" method="post" stl:if="forget_search">
     <input type="hidden" name="search_name" value="${search_name}" />
     <button type="submit" class="button-delete"
       onclick="return confirm('Are you sure you want to forget this search?');"

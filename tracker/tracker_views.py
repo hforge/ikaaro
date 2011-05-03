@@ -135,6 +135,18 @@ class StoreSearchMenu(ContextMenu):
         return fields
 
 
+    def forget_search(self):
+        context = self.context
+        search_name = context.get_query_value('search_name')
+        if search_name is not None:
+            resource = context.resource
+            search = resource.get_resource(search_name, soft=True)
+            ac = resource.get_access_control()
+            if search and ac.is_allowed_to_edit(context.user, search):
+                return True
+        return False
+
+
 
 class StoredSearchesMenu(ContextMenu):
     """Provides links to every stored search.
