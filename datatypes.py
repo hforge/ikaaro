@@ -25,7 +25,6 @@ from zlib import compress, decompress
 from itools.core import freeze, guess_type
 from itools.datatypes import DataType, Enumerate, Unicode, String
 from itools.fs import FileName
-from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
@@ -146,16 +145,3 @@ class ExpireValue(DataType):
     @staticmethod
     def encode(value):
         return str(int(value.total_seconds() / 60))
-
-
-
-class RReference(String):
-
-    @staticmethod
-    def is_valid(value):
-        try:
-            Path(value)
-        except StandardError:
-            return False
-
-        return True

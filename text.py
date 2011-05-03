@@ -190,7 +190,7 @@ class CSS(Text):
 
 
     def update_relative_links(self, source):
-        super(CSS, self).update_relative_links(source, target)
+        super(CSS, self).update_relative_links(source)
         target = self.get_canonical_path()
         site_root = self.get_site_root()
         site_root_base = site_root.get_abspath()

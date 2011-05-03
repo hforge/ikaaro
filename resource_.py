@@ -23,14 +23,14 @@
 from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
-from itools.datatypes import Unicode, String, Boolean, DateTime, Integer
+from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource, get_context
 from itools.database import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from datatypes import Multilingual, RReference
+from datatypes import Multilingual
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -38,7 +38,7 @@ from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from utils import get_reference_and_path
+from utils import split_reference
 from views_new import NewInstance
 from workflow import WorkflowAware
 
@@ -517,7 +517,7 @@ class DBResource(CatalogAware, IResource):
         schema = self.class_schema
         for name in schema:
             datatype = schema[name]
-            if issubclass(datatype, RReference):
+            if issubclass(datatype, URI):
                 source = getattr(datatype, 'source', None)
                 if source != 'metadata':
                     raise ValueError, 'schema error'
@@ -533,10 +533,12 @@ class DBResource(CatalogAware, IResource):
         schema = self.class_schema
         for name in self._get_references_from_schema():
             datatype = schema[name]
-            languages = [ None ]
             multiple = getattr(datatype, 'multiple', False)
             if getattr(datatype, 'multilingual', False):
                 languages = available_languages
+            else:
+                languages = [ None ]
+
             for lang in languages:
                 prop = self.metadata.get_property(name, language=lang)
                 if prop is None:
@@ -544,16 +546,22 @@ class DBResource(CatalogAware, IResource):
                 if multiple:
                     # Multiple
                     for x in prop:
-                        # Get the reference and path
-                        ref, path = get_reference_and_path(x.value)
-                        if ref.scheme or path.count(';'):
+                        value = x.value
+                        if not value:
+                            continue
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
                             continue
                         link = base.resolve2(path)
                         links.add(str(link))
                 else:
-                    # Get the reference and path
-                    ref, path = get_reference_and_path(prop.value)
-                    if ref.scheme or path.count(';'):
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
                         continue
                     # Singleton
                     link = base.resolve2(path)
@@ -581,46 +589,51 @@ class DBResource(CatalogAware, IResource):
         schema = self.class_schema
         for name in self._get_references_from_schema():
             datatype = schema[name]
-            languages = [ None ]
             multiple = getattr(datatype, 'multiple', False)
             if getattr(datatype, 'multilingual', False):
                 languages = available_languages
+            else:
+                languages = [ None ]
+
             for lang in languages:
                 prop = self.metadata.get_property(name, language=lang)
                 if prop is None:
                     continue
                 if multiple:
                     # Multiple
-                    new_value = []
+                    new_values = []
                     for p in prop:
-                        # Get the reference and path
-                        ref, path = get_reference_and_path(p.value)
-                        if ref.scheme or path.count(';'):
+                        value = p.value
+                        if not value:
                             continue
-                        path = old_base.resolve2(str(path))
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
+                            continue
+                        path = old_base.resolve2(path)
                         if path == source:
-                            # Explicitly call str because RReference.encode
-                            # does nothing
-                            new_value.append(str(new_base.get_pathto(target)))
+                            # Explicitly call str because URI.encode does
+                            # nothing
+                            new_value = str(new_base.get_pathto(target)) + view
+                            new_values.append(new_value)
                         else:
-                            new_value.append(p)
-                    self.set_property(name, new_value, lang)
+                            new_values.append(p)
+                    self.set_property(name, new_values, lang)
                 else:
                     # Singleton
                     value = prop.value
                     if not value:
                         continue
-                    # Get the reference and path
-                    ref, path = get_reference_and_path(value)
-                    if ref.scheme or path.count(';'):
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
                         continue
-                    path = old_base.resolve2(value)
+                    path = old_base.resolve2(path)
                     if path == source:
                         # Hit the old name
                         # Build the new reference with the right path
-                        # Explicitly call str because RReference.encode does
-                        # nothing
-                        new_value = str(new_base.get_pathto(target))
+                        # Explicitly call str because URI.encode does nothing
+                        new_value = str(new_base.get_pathto(target)) + view
                         self.set_property(name, new_value, lang)
 
         database.change_resource(self)
@@ -649,27 +662,31 @@ class DBResource(CatalogAware, IResource):
                     continue
                 if multiple:
                     # Multiple
-                    new_value = []
+                    new_values = []
                     for p in prop:
-                        # Get the reference and path
-                        ref, path = get_reference_and_path(p.value)
-                        if ref.scheme or path.count(';'):
+                        value = p.value
+                        if not value:
+                            continue
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
                             continue
                         # Calculate the old absolute path
-                        old_abs_path = source.resolve2(str(path))
+                        old_abs_path = source.resolve2(path)
                         # Check if the target path has not been moved
                         new_abs_path = resources_old2new.get(old_abs_path,
                                                              old_abs_path)
-                        new_value.append(str(target.get_pathto(new_abs_path)))
-                    self.set_property(name, new_value, lang)
+                        new_value = str(target.get_pathto(new_abs_path)) + view
+                        new_values.append(new_value)
+                    self.set_property(name, new_values, lang)
                 else:
                     # Singleton
                     value = prop.value
                     if not value:
                         continue
-                    # Get the reference and path
-                    ref, path = get_reference_and_path(value)
-                    if ref.scheme or path.count(';'):
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
                         continue
                     # Calculate the old absolute path
                     old_abs_path = source.resolve2(path)
@@ -677,9 +694,8 @@ class DBResource(CatalogAware, IResource):
                     new_abs_path = resources_old2new.get(old_abs_path,
                                                          old_abs_path)
 
-                    # Explicitly call str because RReference.encode does
-                    # nothing
-                    new_value = str(target.get_pathto(new_abs_path))
+                    # Explicitly call str because URI.encode does nothing
+                    new_value = str(target.get_pathto(new_abs_path)) + view
                     self.set_property(name, new_value, lang)
 
 

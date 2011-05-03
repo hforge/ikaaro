@@ -23,7 +23,7 @@
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, String, Unicode, Tokens
+from itools.datatypes import Integer, String, Tokens, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.fs import FileName
@@ -31,7 +31,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.comments import comment_datatype
-from ikaaro.datatypes import RReference
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
@@ -64,7 +63,7 @@ class Issue(Folder):
         comment=comment_datatype,
         # Other
         id=Integer(indexed=True, stored=True),
-        attachment=RReference(source='metadata', multiple=True))
+        attachment=URI(source='metadata', multiple=True))
 
 
     def get_catalog_values(self):

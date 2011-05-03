@@ -16,12 +16,12 @@
 
 # Import from itools
 from itools.core import merge_dicts, get_abspath
+from itools.datatypes import URI
 from itools.gettext import MSG
 from itools.handlers import ro_database, File as FileHandler
 
 # Import from ikaaro
 from control_panel import ControlPanel
-from datatypes import RReference
 from file import Image
 from folder import Folder
 from folder_views import GoToSpecificDocument
@@ -58,8 +58,8 @@ class Theme(Folder):
     class_schema = merge_dicts(
         Folder.class_schema,
         # Metadata
-        favicon=RReference(source='metadata', default=''),
-        logo=RReference(source='metadata', default=''))
+        favicon=URI(source='metadata', default=''),
+        logo=URI(source='metadata', default=''))
 
     is_content = False
 

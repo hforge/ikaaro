@@ -18,10 +18,10 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.datatypes import String, Enumerate, Unicode, Integer
+from itools.datatypes import String, Enumerate, Integer
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.uri import Path, get_reference
+from itools.uri import Path
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -41,7 +41,7 @@ from revisions_views import DBResource_CommitLog
 from table import OrderedTableFile, OrderedTable
 from table_views import OrderedTable_View
 from table_views import Table_AddRecord, Table_EditRecord
-from utils import get_reference_and_path
+from utils import split_reference
 from workflow import get_workflow_preview
 import messages
 
@@ -118,11 +118,11 @@ class Menu_View(OrderedTable_View):
         if column == 'title':
             path = get_value(item, 'path')
             # Get the reference and path
-            ref, path = get_reference_and_path(path)
-            if ref.scheme or path.count(';'):
-                # External link or method
+            ref, path, view = split_reference(path)
+            if ref.scheme:
+                # External link
                 return value, path
-            if ref.path.is_absolute():
+            if path.is_absolute():
                 site_root = context.resource.get_site_root()
                 path = site_root.get_abspath().resolve2('.%s' % path)
             resource_item = resource.get_resource(path, soft=True)
@@ -146,11 +146,11 @@ class Menu_View(OrderedTable_View):
                 # Do not display a workflow state if there is no path defined.
                 return
             # Get the reference and path
-            ref, path = get_reference_and_path(path)
-            if ref.scheme or path.count(';'):
-                # External link or method
+            ref, path, view = split_reference(path)
+            if ref.scheme:
+                # External link
                 return None
-            if ref.path.is_absolute():
+            if path.is_absolute():
                 site_root = context.resource.get_site_root()
                 path = site_root.get_abspath().resolve2('.%s' % path)
             item_resource = resource.get_resource(path, soft=True)
@@ -341,7 +341,7 @@ class Menu(OrderedTable):
 
     def _is_allowed_to_access(self, context, uri):
         # Get the reference and path
-        ref, path = get_reference_and_path(uri)
+        ref, path, view = split_reference(uri)
         if ref.scheme:
             # External link
             return True
@@ -351,28 +351,26 @@ class Menu(OrderedTable):
         if ref is None or path == '':
             # Skip broken entry
             return False
-        elif path.count(';'):
-            path, method = path.split(';')
-            if ref.path.is_absolute():
-                path = site_root_abspath.resolve2('.%s' % path)
-            resource = self.get_resource(path, soft=True)
-            if resource is None:
-                return False
-            # Check ACL
-            ac = resource.get_access_control()
-            view = resource.get_view(method, ref.query)
-            if view:
-                return ac.is_access_allowed(user, resource, view)
-        else:
-            # Internal link
-            if ref.path.is_absolute():
-                path = site_root_abspath.resolve2('.%s' % path)
-            resource = self.get_resource(path, soft=True)
-            # Broken link
-            if resource is None:
-                return False
 
-            # Get the first view
+        # Internal link
+        if path.is_absolute():
+            path = site_root_abspath.resolve2('.%s' % path)
+        resource = self.get_resource(path, soft=True)
+        # Broken link
+        if resource is None:
+            return False
+
+        if view:
+            # remove the first '/;' of the view
+            view = resource.get_view(view[2:], ref.query)
+            if view:
+                # Check ACL
+                ac = resource.get_access_control()
+                return ac.is_access_allowed(user, resource, view)
+            # Broken view
+            return False
+        else:
+            # Check if the user can access to resource views
             # get_views checks ACLs with by calling is_access_allowed
             resource_views = list(resource.get_views())
             return len(resource_views) > 0
@@ -401,39 +399,13 @@ class Menu(OrderedTable):
             # Subtabs
             subtabs = {}
             # Get the reference and path
-            ref, path = get_reference_and_path(uri)
-            if ref.scheme or path.count(';'):
-                # Special case for external link and method
-                id = 'menu_'
+            ref, path, view = split_reference(uri)
+            if ref.scheme:
+                # Special case for external link
+                id = 'menu_%s' % record.id
                 css = None
-                if not ref.scheme:
-                    # FIXME We should check the ACL of the method
-                    # Get the resource associated to the method
-                    _path, method_name = path.split(';')
-                    if ref.path.is_absolute():
-                        real_path = site_root_abspath.resolve2('.%s' % _path)
-                    else:
-                        real_path = _path
-                    resource = self.get_resource(real_path)
-                    resource_abspath = resource.get_canonical_path()
-                    # add default view or view set in the menu
-                    default_view_name = resource.get_default_view_name()
-                    resource_method = method_name or default_view_name
-                    resource_abspath_and_view = '%s/;%s' % (resource_abspath,
-                                                            resource_method)
-                    if here_abspath_and_view == resource_abspath_and_view:
-                        css = 'in-path'
-                    id += method_name
-                    # Build the new reference with the right path
-                    ref2 = deepcopy(ref)
-                    ref2.path = '%s/;%s' % (context.get_link(resource),
-                                            method_name)
-                else:
-                    id += str(record.id)
-                    ref2 = ref
-
                 items.append({'id': id,
-                              'path': str(ref2),
+                              'path': str(ref),
                               'real_path': None,
                               'title': title,
                               'description': None,
@@ -443,13 +415,14 @@ class Menu(OrderedTable):
                               'target': target})
             else:
                 # Internal link
-                if ref.path.is_absolute():
+                if path.is_absolute():
                     path = site_root_abspath.resolve2('.%s' % path)
                 resource = self.get_resource(path, soft=True)
                 # Broken link
                 if resource is None:
                     continue
                 name = resource.name
+                item_id = 'menu_%s' % name
 
                 # Use first child by default we use the resource itself
                 resource_path = path
@@ -477,9 +450,13 @@ class Menu(OrderedTable):
                 active = False
                 resource_abspath = resource.get_canonical_path()
                 # add default view
-                default_view_name = resource.get_default_view_name()
+                if view:
+                    resource_method = view[2:]
+                    item_id += '_%s' % resource_method
+                else:
+                    resource_method = resource.get_default_view_name()
                 resource_abspath_and_view = '%s/;%s' % (resource_abspath,
-                                                        default_view_name)
+                                                        resource_method)
                 if here_abspath_and_view == resource_abspath_and_view:
                     active, in_path = True, False
                 else:
@@ -501,7 +478,10 @@ class Menu(OrderedTable):
                 ref2 = deepcopy(ref)
                 resource = self.get_resource(resource_path)
                 ref2.path = context.get_link(resource)
-                items.append({'id': 'menu_%s' % name,
+                if view:
+                    ref2.path += view
+
+                items.append({'id': item_id,
                               'path': str(ref2),
                               'real_path': resource.get_abspath(),
                               'title': title,
@@ -527,21 +507,16 @@ class Menu(OrderedTable):
             # Get the objects, check security
             uri = get_value(record, 'path')
             # Get the reference and path
-            ref, path = get_reference_and_path(uri)
+            ref, path, view = split_reference(uri)
             if ref.scheme:
                 # External link
                 uris.append(ref)
                 continue
             if self._is_allowed_to_access(context, uri) is False:
                 continue
-            if path.count(';'):
-                path, method = path.split(';')
-                if ref.path.is_absolute():
-                    path = site_root_abspath.resolve2('.%s' % path)
-                resource = self.get_resource(path)
-            else:
+            if path.is_absolute():
                 path = site_root_abspath.resolve2('.%s' % path)
-                resource = self.get_resource(path)
+            resource = self.get_resource(path)
             # Build the new reference with the right path
             ref2 = deepcopy(ref)
             ref2.path = context.get_link(resource)
@@ -560,22 +535,21 @@ class Menu(OrderedTable):
         for record in handler.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
-            ref, path = get_reference_and_path(path)
-            if not ref.scheme:
-                if path.count(';'):
-                    path, method = path.split(';')
-                if ref.path.is_absolute():
-                    uri = site_root_abspath.resolve2('.%s' % path)
-                else:
-                    uri = base.resolve2(path)
-                resource = self.get_resource(uri, soft=True)
-                if resource:
-                    # Use the canonical path instead of the uri stocked
-                    link = str(resource.get_canonical_path())
-                else:
-                    # If the resource does not exist, simply use the uri
-                    link = str(uri)
-                links.add(link)
+            ref, path, view = split_reference(path)
+            if ref.scheme:
+                continue
+            if path.is_absolute():
+                uri = site_root_abspath.resolve2('.%s' % path)
+            else:
+                uri = base.resolve2(path)
+            resource = self.get_resource(uri, soft=True)
+            if resource:
+                # Use the canonical path instead of the uri stocked
+                link = str(resource.get_canonical_path())
+            else:
+                # If the resource does not exist, simply use the uri
+                link = str(uri)
+            links.add(link)
 
             # Submenu resources
             if not 'child' in record_properties:
@@ -604,13 +578,10 @@ class Menu(OrderedTable):
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
-            ref, path = get_reference_and_path(path)
+            ref, path, view = split_reference(path)
             if ref.scheme:
                 continue
-            view = ''
-            if path.count(';'):
-                path, view = path.split(';')
-            if ref.path.is_absolute():
+            if path.is_absolute():
                 # Absolute links are resolved as links relative to the site
                 # root
                 uri = site_root_abspath.resolve2('.%s' % path)
@@ -635,12 +606,9 @@ class Menu(OrderedTable):
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
-            ref, path = get_reference_and_path(path)
+            ref, path, view = split_reference(path)
             if ref.scheme:
                 continue
-            view = ''
-            if path.count(';'):
-                path, view = path.split(';')
             # Calcul the old absolute path
             if ref.path.is_absolute():
                 # Absolute links are resolved as links relative to the site
