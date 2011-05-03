@@ -97,8 +97,12 @@ class LocationTemplate(CMSTemplate):
             resource = resource.get_resource(name, soft=True)
             if resource is None:
                 break
+            # Display resource title only if allowed
+            if not site_root.is_allowed_to_view(context.user, resource):
+                title = name
+            else:
+                title = resource.get_title()
             # Append
-            title = resource.get_title()
             breadcrumb.append({
                 'url': path,
                 'name': title,
