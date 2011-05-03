@@ -31,7 +31,7 @@ from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
-from ikaaro.comments import comment_datatype
+from ikaaro.comments import CommentsAware
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
@@ -41,7 +41,7 @@ from issue_views import Issue_DownloadAttachments, Issue_Edit
 from issue_views import Issue_History, IssueTrackerMenu
 
 
-class Issue(Folder):
+class Issue(CommentsAware, Folder):
 
     class_id = 'issue'
     class_version = '20100507'
@@ -52,6 +52,7 @@ class Issue(Folder):
 
     class_schema = merge_dicts(
         Folder.class_schema,
+        CommentsAware.class_schema,
         # Metadata
         product=Integer(source='metadata', indexed=True, stored=True),
         module=Integer(source='metadata', indexed=True, stored=True),
@@ -61,7 +62,6 @@ class Issue(Folder):
         priority=Integer(source='metadata', indexed=True, stored=True),
         assigned_to=String(source='metadata', indexed=True, stored=True),
         cc_list=Tokens(source='metadata'),
-        comment=comment_datatype,
         # Other
         id=Integer(indexed=True, stored=True),
         attachment=String(source='metadata', multiple=True))

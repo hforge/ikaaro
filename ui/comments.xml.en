@@ -7,16 +7,17 @@
 <stl:block stl:repeat="comment comments">
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr class="comment-header">
-      <td><a name="c${comment/number}"/></td>
-      <td>Comment <a href="#c${comment/number}">${comment/number}</a></td>
-      <td>${comment/user}</td>
-      <td align="right">${comment/datetime}</td>
+      <td><span class="comment-user">${comment/user}</span>
+          <span class="comment-datetime">${comment/datetime}</span></td>
       <td align="right">
-      &nbsp;[
-      <a href="#new_comment"
-        onclick="javascript:reply('${comment/number}');">
-        Reply
-      </a>]&nbsp;
+        <a name="c${comment/number}"/>
+        <span class="comment-number"><a href="#c${comment/number}">Comment ${comment/number}</a></span>
+        <span class="comment-reply">
+          [ <a href="#new_comment"
+            onclick="javascript:reply('${comment/number}');">
+            Reply
+          </a>]
+        </span>
       </td>
     </tr>
     <tr class="comment-body">

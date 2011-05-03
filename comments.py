@@ -28,7 +28,8 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
 comment_datatype = Unicode(source='metadata', multiple=True,
                            parameters_schema={'date': DateTime,
-                                              'author': String})
+                                              'author': String,
+                                              'state': String})
 
 
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
@@ -119,17 +120,39 @@ class CommentsView(STLView):
 
     template = '/ui/comments.xml'
 
+    comment_columns = ['user', 'datetime', 'comment']
+
+    def get_comment_columns(self, resource, context):
+        return self.comment_columns
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'user':
+            return context.root.get_user_title(item.get_parameter('author'))
+        elif column == 'datetime':
+            return context.format_datetime(item.get_parameter('date'))
+        elif column == 'comment':
+            return indent(item.value)
+        raise ValueError, 'unexpected "%s" column' % column
+
+
     def get_namespace(self, resource, context):
         root = context.root
+        _comments = resource.metadata.get_property('comment') or []
+        comments = []
+        columns = self.get_comment_columns(resource, context)
 
-
-        comments = resource.metadata.get_property('comment') or []
-        comments = [
-            {'number': i,
-             'user': root.get_user_title(x.get_parameter('author')),
-             'datetime': context.format_datetime(x.get_parameter('date')),
-             'comment': indent(x.value)}
-            for i, x in enumerate(comments) ]
+        for i, comment in enumerate(_comments):
+            ns = {'number': i}
+            for key in columns:
+                ns[key] = self.get_item_value(resource, context, comment, key)
+            comments.append(ns)
         comments.reverse()
 
         return {'comments': comments}
+
+
+
+class CommentsAware(object):
+
+    class_schema = {'comment': comment_datatype}

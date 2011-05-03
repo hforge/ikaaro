@@ -27,7 +27,7 @@ from itools.web import STLForm
 # Import from ikaaro
 from ikaaro.autoform import DateWidget, HTMLBody, RTEWidget
 from ikaaro.autoform import timestamp_widget, title_widget
-from ikaaro.comments import comment_datatype, CommentsView
+from ikaaro.comments import CommentsAware, CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
 from ikaaro.views_new import NewInstance
@@ -132,7 +132,7 @@ class Post_Edit(HTMLEditView):
 ###########################################################################
 # Resource
 ###########################################################################
-class Post(WebPage):
+class Post(CommentsAware, WebPage):
 
     class_id = 'blog-post'
     class_title = MSG(u'Post')
@@ -142,8 +142,8 @@ class Post(WebPage):
 
     class_schema = merge_dicts(
         WebPage.class_schema,
-        date=Date(source='metadata', stored=True),
-        comment=comment_datatype)
+        CommentsAware.class_schema,
+        date=Date(source='metadata', stored=True))
 
 
     # Views

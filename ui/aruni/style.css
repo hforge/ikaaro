@@ -231,12 +231,21 @@ div#page {
 
 
 /**************************************************************************
- * ui/commnets.xml.en
+ * ui/comments.xml.en
  *************************************************************************/
 
 .comment-header {
   background-color: #ddddff;
   font-weight: bold;
+}
+
+.comment-header .comment-datetime {
+  margin-left: 15px;
+}
+
+.comment-header .comment-number,
+.comment-header .comment-reply {
+  margin-right: 5px;
 }
 
 .comment-body {
