@@ -614,10 +614,13 @@ class Tracker_RememberSearch(BaseForm):
         search_name = form.get('search_name')
         title = form['search_title']
 
-        # Already a search name ?
+        # Already a (valid) search name ?
 
+        # Check the search was not deleted before
+        if search_name is not None:
+            search = resource.get_resource(search_name, soft=True)
         # No
-        if search_name is None:
+        if search_name is None or search is None:
             # Search for a search with the same title
             if isinstance(resource, Issue):
                 resource = resource.parent
@@ -635,7 +638,6 @@ class Tracker_RememberSearch(BaseForm):
                 message = MSG(u'The search has been stored.')
         # Yes
         else:
-            search = resource.get_resource(search_name)
             message = MSG(u'The search title has been changed.')
 
         # Reset the search
