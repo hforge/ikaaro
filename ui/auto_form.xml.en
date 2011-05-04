@@ -11,17 +11,20 @@ ${before}
   <fieldset>
     <legend>${title}</legend>
     <p stl:if="description">${description}</p>
-    <div stl:repeat="widget widgets">
-      <stl:block stl:if="widget/title">
-        <label class="title" for="${widget/name}">${widget/title}</label>
-        <span stl:if="widget/mandatory" class="field-is-missing"
-          title="This field is required">*</span>
-        <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
-        <br/>
-      </stl:block>
-      <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
-      <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
-    </div>
+    <stl:block stl:repeat="widget widgets">
+      <div>
+        <stl:block stl:if="widget/title">
+          <label class="title" for="${widget/name}">${widget/title}</label>
+          <span stl:if="widget/mandatory" class="field-is-missing"
+            title="This field is required">*</span>
+          <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
+          <br/>
+        </stl:block>
+        <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
+        <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
+      </div>
+      <div stl:if="widget/endline" class="clear" />
+    </stl:block>
     <p stl:if="actions">
       <stl:block stl:repeat="action actions">${action}</stl:block>
     </p>

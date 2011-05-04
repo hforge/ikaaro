@@ -628,6 +628,7 @@ class AutoForm(STLForm):
             ns_widget['is_date'] = issubclass(datatype, Date)
             ns_widget['suffix'] = widget.suffix
             ns_widget['tip'] = widget.tip
+            ns_widget['endline'] = getattr(widget, 'endline', None)
 
             # multilingual or monolingual
             value = ns_widget['value']
