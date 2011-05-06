@@ -245,8 +245,10 @@ class ManageForm(RoleAware_BrowseUsers):
     title = MSG(u"Manage Subscriptions")
     description = None
 
-    table_columns = freeze(RoleAware_BrowseUsers.table_columns[:-1] + [
-        ('state', MSG(u'State'))])
+    table_columns = freeze(
+            [('checkbox', None)]
+            + RoleAware_BrowseUsers.table_columns[2:-2]
+            + [('state', MSG(u'State'))])
     table_actions = freeze([SubscribeButton, UnsubscribeButton])
 
 
