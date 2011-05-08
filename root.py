@@ -236,7 +236,7 @@ class Root(WebSite):
             else:
                 if hasattr(version, '__call__'):
                     version = version()
-                if isinstance(version, tuple):
+                if type(version) is tuple or name == 'sys':
                     version = '.'.join([str(v) for v in version])
             # Ok
             versions[name] = version
