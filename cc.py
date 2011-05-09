@@ -551,8 +551,18 @@ class Observable(object):
 
 
     def get_subscribed_users(self, skip_unconfirmed=True):
-        return [ cc['username'] for cc in self.get_property('cc_list')
-                 if skip_unconfirmed is False or cc['status'] == 'S' ]
+        users = []
+        for cc in self.get_property('cc_list'):
+            # case 1: subscribed user or unsubscription pending user
+            if cc['status'] in (None, 'U'):
+                users.append(cc['username'])
+                continue
+
+            # other
+            if skip_unconfirmed is False or cc['status'] == 'S':
+                users.append(cc['username'])
+
+        return users
 
 
     def is_subscribed(self, username, skip_unconfirmed=True):
