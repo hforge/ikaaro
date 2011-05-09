@@ -573,7 +573,7 @@ class Observable(object):
 
     def get_register_key(self, username, status='S'):
         for cc in self.get_property('cc_list'):
-            if cc['status'] == status:
+            if cc['username'] == username and cc['status'] == status:
                 return cc['key']
         return None
 
