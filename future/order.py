@@ -355,13 +355,17 @@ class ResourcesOrderedTable(OrderedTable):
 
 
     def get_links(self):
+        links = super(ResourcesOrderedTable, self).get_links()
         base = self.get_order_root().get_canonical_path()
-        return set([
+        new_links = set([
             str(resolve_uri2(base, name))
             for name in self.get_ordered_names() ])
+        links.update(new_links)
+        return links
 
 
     def update_links(self, source, target):
+        super(ResourcesOrderedTable, self).update_links(source, target)
         base = self.get_order_root().get_canonical_path()
         handler = self.handler
 
@@ -383,6 +387,7 @@ class ResourcesOrderedTable(OrderedTable):
 
     def update_relative_links(self, source):
         """Links are relative to order root"""
+        super(ResourcesOrderedTable, self).update_relative_links(source)
         order_root_source = resolve_uri2(source, self.order_root_path)
         order_root_source = Path(order_root_source)
         order_root_target = self.get_order_root().get_canonical_path()

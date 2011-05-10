@@ -23,7 +23,9 @@ from sys import platform
 
 # Import from itools
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
+from itools.datatypes import Unicode
 from itools.stl import STLTemplate, stl_namespaces
+from itools.uri import get_reference, Reference
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -262,3 +264,31 @@ def get_content_containers(context, skip_formats):
             ac = container.get_access_control()
             if ac.is_allowed_to_add(context.user, container):
                 yield container
+
+
+###########################################################################
+# Used by *_links and menu
+###########################################################################
+def split_reference(ref):
+    """Return the reference associated to the path, the path and the optional
+    view without query/fragment.
+    ref: Reference
+    path: Path
+    view: string
+    """
+    # XXX specific case for the menu
+    # Be robust if the path is multilingual
+    type_ref = type(ref)
+    if type_ref is unicode:
+        ref = Unicode.encode(ref)
+    if type_ref is not Reference:
+        ref = get_reference(ref)
+    # Split path and view
+    path = ref.path
+    view = ''
+    name = path.get_name()
+    # Strip the view
+    if name and name[0] == ';':
+        view = '/' + name
+        path = path[:-1]
+    return ref, path, view

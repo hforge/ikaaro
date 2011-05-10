@@ -23,7 +23,7 @@
 from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
-from itools.datatypes import Unicode, String, Boolean, DateTime, Integer
+from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource, get_context
@@ -38,8 +38,9 @@ from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from workflow import WorkflowAware
+from utils import split_reference
 from views_new import NewInstance
+from workflow import WorkflowAware
 
 
 class IResource(Resource):
@@ -506,12 +507,136 @@ class DBResource(CatalogAware, IResource):
             resource.update_links(source, target)
 
 
+    def _get_references_from_schema(self):
+        """Returns the names of properties that are references to other
+        resources.
+
+        TODO This list should be calculated statically to avoid a performance
+        hit at run time.
+        """
+        schema = self.class_schema
+        for name in schema:
+            datatype = schema[name]
+            if issubclass(datatype, URI):
+                source = getattr(datatype, 'source', None)
+                if source != 'metadata':
+                    raise ValueError, 'schema error'
+                yield name
+
+
+    def get_links(self):
+        links = set()
+        base = self.get_canonical_path()
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
+
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            multiple = getattr(datatype, 'multiple', False)
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            else:
+                languages = [ None ]
+
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
+                    continue
+                if multiple:
+                    # Multiple
+                    for x in prop:
+                        value = x.value
+                        if not value:
+                            continue
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
+                            continue
+                        link = base.resolve2(path)
+                        links.add(str(link))
+                else:
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
+                        continue
+                    # Singleton
+                    link = base.resolve2(path)
+                    links.add(str(link))
+
+        return links
+
+
     def update_links(self, source, target):
         """The resource identified by 'source' is going to be moved to
         'target'.  Update our links to it.
 
         The parameters 'source' and 'target' are absolute 'Path' objects.
         """
+        database = get_context().database
+
+        base = self.get_canonical_path()
+        base = str(base)
+        old_base = database.resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
+
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            multiple = getattr(datatype, 'multiple', False)
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            else:
+                languages = [ None ]
+
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
+                    continue
+                if multiple:
+                    # Multiple
+                    new_values = []
+                    for p in prop:
+                        value = p.value
+                        if not value:
+                            continue
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
+                            continue
+                        path = old_base.resolve2(path)
+                        if path == source:
+                            # Explicitly call str because URI.encode does
+                            # nothing
+                            new_value = str(new_base.get_pathto(target)) + view
+                            new_values.append(new_value)
+                        else:
+                            new_values.append(p)
+                    self.set_property(name, new_values, lang)
+                else:
+                    # Singleton
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
+                        continue
+                    path = old_base.resolve2(path)
+                    if path == source:
+                        # Hit the old name
+                        # Build the new reference with the right path
+                        # Explicitly call str because URI.encode does nothing
+                        new_value = str(new_base.get_pathto(target)) + view
+                        self.set_property(name, new_value, lang)
+
+        database.change_resource(self)
 
 
     def update_relative_links(self, source):
@@ -519,10 +644,59 @@ class DBResource(CatalogAware, IResource):
         was moved, so they are not broken. The old path is in parameter. The
         new path is "self.get_canonical_path()".
         """
+        target = self.get_canonical_path()
+        resources_old2new = get_context().database.resources_old2new
+        site_root = self.get_site_root()
+        available_languages = site_root.get_property('website_languages')
 
+        schema = self.class_schema
+        for name in self._get_references_from_schema():
+            datatype = schema[name]
+            languages = [ None ]
+            multiple = getattr(datatype, 'multiple', False)
+            if getattr(datatype, 'multilingual', False):
+                languages = available_languages
+            for lang in languages:
+                prop = self.metadata.get_property(name, language=lang)
+                if prop is None:
+                    continue
+                if multiple:
+                    # Multiple
+                    new_values = []
+                    for p in prop:
+                        value = p.value
+                        if not value:
+                            continue
+                        # Get the reference, path and view
+                        ref, path, view = split_reference(value)
+                        if ref.scheme:
+                            continue
+                        # Calculate the old absolute path
+                        old_abs_path = source.resolve2(path)
+                        # Check if the target path has not been moved
+                        new_abs_path = resources_old2new.get(old_abs_path,
+                                                             old_abs_path)
+                        new_value = str(target.get_pathto(new_abs_path)) + view
+                        new_values.append(new_value)
+                    self.set_property(name, new_values, lang)
+                else:
+                    # Singleton
+                    value = prop.value
+                    if not value:
+                        continue
+                    # Get the reference, path and view
+                    ref, path, view = split_reference(value)
+                    if ref.scheme:
+                        continue
+                    # Calculate the old absolute path
+                    old_abs_path = source.resolve2(path)
+                    # Check if the target path has not been moved
+                    new_abs_path = resources_old2new.get(old_abs_path,
+                                                         old_abs_path)
 
-    def get_links(self):
-        return set()
+                    # Explicitly call str because URI.encode does nothing
+                    new_value = str(target.get_pathto(new_abs_path)) + view
+                    self.set_property(name, new_value, lang)
 
 
     ########################################################################
