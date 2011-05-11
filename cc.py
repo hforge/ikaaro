@@ -593,7 +593,8 @@ class Observable(object):
         status = 'U' if unregister is True else 'S'
         # Find existing key
         for cc in cc_list:
-            if cc['status'] == status and cc['key'] is not None:
+            if (cc['username'] == username  and cc['status'] == status and
+                cc['key'] is not None):
                 # Reuse found key
                 return cc['key']
         # Generate key
