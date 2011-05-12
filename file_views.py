@@ -285,8 +285,8 @@ class Image_Thumbnail(BaseView):
     access = 'is_allowed_to_view'
 
     query_schema = {
-        'width': Integer(default=48),
-        'height': Integer(default=48),
+        'width': Integer,
+        'height': Integer,
         'fit': Boolean(default=False),
         'lossy': Boolean(default=False)}
 
@@ -297,10 +297,15 @@ class Image_Thumbnail(BaseView):
     def GET(self, resource, context):
         handler = resource.handler
         image_width, image_height = handler.get_size()
-        width = context.query['width'] or image_width
-        height = context.query['height'] or image_height
         fit = context.query['fit']
         lossy = context.query['lossy']
+        width = context.query['width']
+        height = context.query['height']
+        # XXX Special case for backwards compatibility
+        if width is None and height is None:
+            width = height = 48
+        width = width or image_width
+        height = height or image_height
 
         format = 'jpeg' if lossy else None
         data, format = handler.get_thumbnail(width, height, format, fit)
