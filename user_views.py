@@ -138,17 +138,14 @@ class User_Profile(STLView):
     icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
+    items = ['edit_account', 'edit_preferences', 'edit_password', 'tasks']
 
-    def get_namespace(self, resource, context):
-        root = context.root
+
+    def get_items(self, resource, context):
         user = context.user
-
         ac = resource.get_access_control()
-
-        # The icons menu
         items = []
-        for name in ['edit_account', 'edit_preferences', 'edit_password',
-                     'tasks']:
+        for name in self.items:
             # Get the view & check access rights
             view = resource.get_view(name)
             if view is None:
@@ -162,6 +159,15 @@ class User_Profile(STLView):
                 'description': getattr(view, 'description', None),
                 'icon': resource.get_method_icon(view, size='48x48'),
             })
+        return items
+
+
+    def get_namespace(self, resource, context):
+        root = context.root
+        user = context.user
+
+        # The icons menu
+        items = self.get_items(resource, context)
 
         # Ok
         is_owner = user is not None and user.name == resource.name
