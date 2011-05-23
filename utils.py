@@ -23,6 +23,7 @@ from sys import platform
 
 # Import from itools
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
+from itools.database import RangeQuery
 from itools.datatypes import Unicode
 from itools.stl import STLTemplate, stl_namespaces
 from itools.uri import get_reference, Reference
@@ -220,10 +221,12 @@ def get_base_path_query(abspath, include_container=False, depth=0):
     content = PhraseQuery('parent_paths', str(abspath))
     if depth > 0:
         if type(abspath) is str:
-            depth += abspath.rstrip('/').count('/')
+            min_depth = abspath.rstrip('/').count('/')
         else:
-            depth += len(abspath)
-        content = AndQuery(content, PhraseQuery('abspath_depth', depth))
+            min_depth = len(abspath)
+        max_depth = min_depth + depth
+        content = AndQuery(content,
+                RangeQuery('abspath_depth', min_depth, max_depth))
     if include_container is False:
         return content
 
