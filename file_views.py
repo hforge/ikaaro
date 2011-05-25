@@ -346,6 +346,8 @@ class Image_View(STLView):
 
     def get_namespace(self, resource, context):
         size = context.query['size']
+        if not size:
+            size = self.get_query_schema()['size'].default
 
         # Menu
         widths = [
@@ -356,7 +358,10 @@ class Image_View(STLView):
         if size == 'original':
             link = ';download'
         else:
-            width, height = size.split('x')
+            try:
+                width, height = size.split('x')
+            except ValueError:
+                width = height = size
             link = ';thumb?width=%s&height=%s' % (width, height)
 
         # Real width and height (displayed for reference)
