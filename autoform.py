@@ -667,6 +667,7 @@ class AutoForm(STLForm):
             datatype = fields.get(widget.name, None)
             ns_widget = widgets_namespace.get(widget.name,
                                               {'name': widget.name,
+                                               'id': widget.id,
                                                'value': None,
                                                'error': None})
             ns_widget['title'] = getattr(widget, 'title', None)
