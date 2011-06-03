@@ -13,7 +13,7 @@ ${before}
     <legend>${title}</legend>
     <p stl:if="description">${description}</p>
     <stl:block stl:repeat="widget widgets">
-      <div class="block-widget-${widget/id}">
+      <div class="block-widget-${widget/name}">
         <stl:block stl:if="widget/title">
           <label class="title" for="${widget/name}">${widget/title}</label>
           <span stl:if="widget/mandatory" class="field-is-missing"
