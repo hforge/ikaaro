@@ -402,16 +402,14 @@ class Menu(OrderedTable):
             ref, path, view = split_reference(uri)
             if ref.scheme:
                 # Special case for external link
-                id = 'menu_%s' % record.id
-                css = None
-                items.append({'id': id,
+                items.append({'id': 'menu_%s' % record.id,
                               'path': str(ref),
                               'real_path': None,
                               'title': title,
                               'description': None,
                               'in_path': False,
                               'active': False,
-                              'class': css,
+                              'class': None,
                               'target': target})
             else:
                 # Internal link
@@ -447,7 +445,7 @@ class Menu(OrderedTable):
                                     resource_path = sub_path
 
                 # Set active, in_path
-                active = False
+                active = in_path = False
                 resource_abspath = resource.get_canonical_path()
                 # add default view
                 if view:
@@ -458,21 +456,17 @@ class Menu(OrderedTable):
                 resource_abspath_and_view = '%s/;%s' % (resource_abspath,
                                                         resource_method)
                 if here_abspath_and_view == resource_abspath_and_view:
-                    active, in_path = True, False
+                    active = True
                 else:
                     # Use the original path for the highlight
                     res_abspath = menu_abspath.resolve2(resource_original_path)
                     common_prefix = here_abspath.get_prefix(res_abspath)
-                    in_path = False
                     # Avoid to always set the site_root entree 'in_path'
-                    # If common prefix equals site root abspath
-                    # set in_path to False otherwise compare
-                    # common_prefix and res_abspath
+                    # If common prefix equals site root abspath set in_path
+                    # to False otherwise compare common_prefix and
+                    # res_abspath
                     if common_prefix != site_root_abspath:
                         in_path = (common_prefix == res_abspath)
-
-                # Set css class to 'active', 'in-path' or None
-                css = 'in-path' if (active or in_path) else None
 
                 # Build the new reference with the right path
                 ref2 = deepcopy(ref)
@@ -486,11 +480,24 @@ class Menu(OrderedTable):
                               'real_path': resource.get_abspath(),
                               'title': title,
                               'description': None, # FIXME
-                              'in_path': css == 'in-path' or active,
+                              'in_path': active or in_path,
                               'active': active,
-                              'class': css,
+                              'class': None,
                               'target': target})
             items[-1]['items'] = subtabs.get('items', [])
+
+        # Set class
+        x = None
+        for i, item in enumerate(items):
+            if item['active']:
+                x = i
+                break
+            if item['in_path'] and x is None:
+                x = i
+                break
+        if x is not None:
+            items[x]['class'] = 'in-path'
+
         tabs['items'] = items
         return tabs
 
@@ -720,34 +727,35 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
         url.append(';%s' % method)
 
     # Get the menu
-    tabs = {'items': []}
     if src:
-        site_root = resource.get_site_root()
-        menu = site_root.get_resource(src, soft=True)
-    if menu is not None:
-        tabs = menu.get_menu_namespace_level(context, url, depth,
-                                             show_first_child)
+        menu = resource.get_site_root().get_resource(src, soft=True)
 
-        if flat:
-            tabs['flat'] = {}
-            items = tabs['flat']['lvl0'] = tabs.get('items', None)
-            # initialize the levels
-            for i in range(1, depth):
-                tabs['flat']['lvl%s' % i] = None
-            exist_items = True
-            lvl = 1
-            while (items is not None) and exist_items:
-                exist_items = False
-                for item in items:
-                    if item['class'] in ['active', 'in-path']:
-                        if item['items']:
-                            items = exist_items = item['items']
-                            if items:
-                                tabs['flat']['lvl%s' % lvl] = items
-                                lvl += 1
-                            break
-                        else:
-                            items = None
-                            break
+    if menu is None:
+        return {'items': []}
+
+    tabs = menu.get_menu_namespace_level(context, url, depth,
+                                         show_first_child)
+
+    if flat:
+        tabs['flat'] = {}
+        items = tabs['flat']['lvl0'] = tabs.get('items', None)
+        # initialize the levels
+        for i in range(1, depth):
+            tabs['flat']['lvl%s' % i] = None
+        exist_items = True
+        lvl = 1
+        while (items is not None) and exist_items:
+            exist_items = False
+            for item in items:
+                if item['class'] in ['active', 'in-path']:
+                    if item['items']:
+                        items = exist_items = item['items']
+                        if items:
+                            tabs['flat']['lvl%s' % lvl] = items
+                            lvl += 1
+                        break
+                    else:
+                        items = None
+                        break
+
     return tabs
-
