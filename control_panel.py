@@ -34,58 +34,29 @@ from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from autoform import MultilineWidget, SelectWidget, TextWidget
 from autoform import timestamp_widget
-from folder_views import Folder_Orphans, GoToSpecificDocument
+from folder import Folder
 import messages
 from resource_views import DBResource_Edit
 from utils import get_base_path_query
-from views import IconsView, ContextMenu
+from views import IconsView
 
-
-
-###########################################################################
-# The menu
-###########################################################################
-class ControlPanelMenu(ContextMenu):
-
-    title = MSG(u'Configuration')
-
-    def get_items(self):
-        resource = self.resource
-        ac = resource.get_access_control()
-        user = self.context.user
-
-        items = []
-        for name in resource.class_control_panel:
-            view = resource.get_view(name)
-            if view is None:
-                continue
-            if not ac.is_access_allowed(user, resource, view):
-                continue
-            items.append({
-                'title': view.title,
-                'src': resource.get_method_icon(view, size='16x16'),
-                'href': ';%s' % name})
-
-        return items
-
-
-context_menus = [ControlPanelMenu()]
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class ControlPanel(IconsView):
+class Configuration_View(IconsView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Configuration')
-    context_menus = context_menus
 
 
     def get_namespace(self, resource, context):
         items = []
+
+        # Core views (non persistent)
         ac = resource.get_access_control()
-        for name in resource.class_control_panel:
+        for name in resource.class_core_views:
             view = resource.get_view(name)
             if view is None:
                 continue
@@ -97,6 +68,18 @@ class ControlPanel(IconsView):
                 'description': view.description,
                 'url': ';%s' % name})
 
+        # Plugins (persistent)
+        for name in resource._plugins:
+            plugin = resource.get_resource(name, soft=True)
+            if plugin is None:
+                raise NotImplementedError
+            items.append({
+                'icon': plugin.get_class_icon(48),
+                'title': plugin.class_title,
+                'description': plugin.class_description,
+                'url': name})
+
+        # Ok
         return {
             'title': MSG(u'Configuration'),
             'batch': None,
@@ -111,20 +94,21 @@ class CPEditVirtualHosts(STLForm):
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
-    context_menus = context_menus
     schema = {
         'vhosts': String}
 
 
     def get_namespace(self, resource, context):
+        resource = resource.get_site_root()
+
         vhosts = resource.get_property('vhosts')
-        return {
-            'vhosts': '\n'.join(vhosts)}
+        return {'vhosts': '\n'.join(vhosts)}
 
 
     def action(self, resource, context, form):
-        vhosts = form['vhosts']
-        vhosts = [ x.strip() for x in vhosts.splitlines() ]
+        resource = resource.get_site_root()
+
+        vhosts = [ x.strip() for x in form['vhosts'].splitlines() ]
         vhosts = [ x for x in vhosts if x ]
         resource.set_property('vhosts', vhosts)
         # Ok
@@ -139,12 +123,12 @@ class CPEditSecurityPolicy(STLForm):
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     template = '/ui/website/security_policy.xml'
-    context_menus = context_menus
     schema = {
         'security_policy': String(default='intranet')}
 
 
     def get_namespace(self, resource, context):
+        resource = resource.get_site_root()
         security_policy = resource.get_security_policy()
         return {
             'intranet': security_policy == 'intranet',
@@ -153,9 +137,9 @@ class CPEditSecurityPolicy(STLForm):
 
 
     def action(self, resource, context, form):
-        value = form['security_policy']
-        resource.set_property('website_is_open', value)
-        # Ok
+        resource = resource.get_site_root()
+
+        resource.set_property('website_is_open', form['security_policy'])
         context.message = messages.MSG_CHANGES_SAVED
 
 
@@ -190,7 +174,6 @@ class CPEditContactOptions(DBResource_Edit):
     title = MSG(u'Email options')
     icon = 'mail.png'
     description = MSG(u'Configure the website email options')
-    context_menus = context_menus
 
 
     widgets = [
@@ -204,6 +187,7 @@ class CPEditContactOptions(DBResource_Edit):
 
 
     def _get_schema(self, resource, context):
+        resource = resource.get_site_root()
         return {
           'timestamp': DateTime(readonly=True),
           'emails_from_addr': ContactsOptions(resource=resource),
@@ -214,6 +198,7 @@ class CPEditContactOptions(DBResource_Edit):
 
 
     def get_value(self, resource, context, name, datatype):
+        resource = resource.get_site_root()
         if name == 'contacts':
             return list(resource.get_property('contacts'))
         return DBResource_Edit.get_value(self, resource, context, name,
@@ -221,6 +206,7 @@ class CPEditContactOptions(DBResource_Edit):
 
 
     def set_value(self, resource, context, name, form):
+        resource = resource.get_site_root()
         if name == 'contacts':
             resource.set_property(name, tuple(form['contacts']))
             return False
@@ -235,7 +221,6 @@ class CPBrokenLinks(STLView):
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
-    context_menus = context_menus
 
 
     def get_namespace(self, resource, context):
@@ -283,12 +268,12 @@ class CPEditLanguages(STLForm):
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = '/ui/website/edit_languages.xml'
-    context_menus = context_menus
     schema = {
         'codes': String(multiple=True, mandatory=True)}
 
 
     def get_namespace(self, resource, context):
+        resource = resource.get_site_root()
         ws_languages = resource.get_property('website_languages')
 
         # Active languages
@@ -315,9 +300,10 @@ class CPEditLanguages(STLForm):
     #######################################################################
     # Actions / Edit
     def action_change_default_language(self, resource, context, form):
-        codes = form['codes']
+        resource = resource.get_site_root()
 
         # This action requires only one language to be selected
+        codes = form['codes']
         if len(codes) != 1:
             message = ERROR(u'You must select one and only one language.')
             context.message = message
@@ -334,9 +320,10 @@ class CPEditLanguages(STLForm):
 
 
     def action_remove_languages(self, resource, context, form):
-        codes = form['codes']
+        resource = resource.get_site_root()
 
         # Check the default language is not to be removed
+        codes = form['codes']
         languages = resource.get_property('website_languages')
         default = languages[0]
         if default in codes:
@@ -357,71 +344,57 @@ class CPEditLanguages(STLForm):
         'code': String(mandatory=True)}
 
     def action_add_language(self, resource, context, form):
-        code = form['code']
+        resource = resource.get_site_root()
 
         ws_languages = resource.get_property('website_languages')
-        resource.set_property('website_languages', ws_languages + (code,))
+        ws_languages = list(ws_languages)
+        ws_languages.append(form['code'])
+        resource.set_property('website_languages', tuple(ws_languages))
         # Ok
         context.message = INFO(u'Language added.')
 
 
 
-class CPEditSEO(DBResource_Edit):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Search engine optimization')
-    icon = 'search.png'
-    description = MSG(u"""
-      Optimize your website for better ranking in search engine results.""")
-    context_menus = context_menus
-
-
-    schema = {'timestamp': DateTime(readonly=True),
-              'google_site_verification': String,
-              'yahoo_site_verification': String,
-              'bing_site_verification': String}
-
-    widgets = [
-        timestamp_widget,
-        TextWidget('google_site_verification',
-            title=MSG(u'Google site verification key')),
-        TextWidget('yahoo_site_verification',
-            title=MSG(u'Yahoo site verification key')),
-        TextWidget('bing_site_verification',
-            title=MSG(u'Bing site verification key')),
-        ]
-
-
-
-class CPEditTheme(GoToSpecificDocument):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Theme')
-    icon = 'theme.png'
-    description = MSG(u"""Customize the theme and configure the menu""")
-
-    def get_specific_document(self, resource, context):
-        site_root = resource.get_site_root()
-        theme = site_root.get_resource('theme')
-        return context.resource.get_pathto(theme)
-
-
-
 ###########################################################################
-# Add the control panel menu to views defined somewhere else
+# Persistent object '/config'
 ###########################################################################
-class CPBrowseUsers(RoleAware_BrowseUsers):
-    context_menus = context_menus
+class Configuration(Folder):
+
+    class_id = 'configuration'
+    class_title = MSG(u'Configuration')
+    is_content = False
+
+    class_core_views = ['browse_users', 'add_user', 'edit_virtual_hosts',
+                        'edit_security_policy', 'edit_languages',
+                        'edit_contact_options', 'broken_links', 'orphans']
+
+    
+    _plugins = {}
+
+    @classmethod
+    def register_plugin(cls, name, plugin):
+        cls._plugins[name] = plugin
 
 
-class CPAddUser(RoleAware_AddUser):
-    context_menus = context_menus
+    def init_resource(self, **kw):
+        super(Configuration, self).init_resource(**kw)
+        for name, plugin in self._plugins.items():
+            self.make_resource(name, plugin)
 
 
-class CPEditMembership(RoleAware_EditMembership):
-    context_menus = context_menus
+    view = Configuration_View()
+
+    # Control Panel
+    browse_users = RoleAware_BrowseUsers()
+    add_user = RoleAware_AddUser()
+    edit_membership = RoleAware_EditMembership()
+    edit_virtual_hosts = CPEditVirtualHosts()
+    edit_security_policy = CPEditSecurityPolicy()
+    edit_contact_options = CPEditContactOptions()
+    edit_languages = CPEditLanguages()
+    broken_links = CPBrokenLinks()
 
 
-class CPOrphans(Folder_Orphans):
-    context_menus = context_menus
-
+# Import core config modules
+import config_seo
+import config_theme

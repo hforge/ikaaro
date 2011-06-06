@@ -96,6 +96,8 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
     def get_items(self, resource, context):
+        resource = resource.get_access_control()
+
         # Search
         search_query = PhraseQuery('format', 'user')
         search_term = context.query['search_term'].strip()
@@ -154,6 +156,8 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
     def get_item_value(self, resource, context, item, column):
+        resource = resource.get_access_control()
+
         if column == 'checkbox':
             return item.name, False
         elif column == 'user_id':
@@ -261,6 +265,7 @@ class RoleAware_AddUser(AutoForm):
 
 
     def get_schema(self, resource, context):
+        resource = resource.get_access_control()
         schema = {'email': Email(mandatory=True)}
 
         # Build role datatype
@@ -277,6 +282,7 @@ class RoleAware_AddUser(AutoForm):
 
 
     def get_widgets(self, resource, context):
+        resource = resource.get_access_control()
         widgets = [TextWidget('email', title=MSG(u'Email'))]
 
         # Admin can set user password

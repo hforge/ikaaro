@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2010 Henry Obein <henry@itaapy.com>
+# Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,19 +16,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, PathDataType
+from itools.core import merge_dicts, get_abspath
+from itools.csv import Property
+from itools.datatypes import DateTime, PathDataType, URI
 from itools.gettext import MSG
+from itools.handlers import ro_database, File as FileHandler
 from itools.web import ERROR, FormError
 
 # Import from ikaaro
 from autoform import timestamp_widget, ImageSelectorWidget
+from control_panel import Configuration
 from file import Image
+from folder import Folder
+from folder_views import GoToSpecificDocument
+from menu import MenuFolder
 from messages import MSG_UNEXPECTED_MIMETYPE
 from popup import DBResource_AddImage
 from resource_views import DBResource_Edit
+from text import CSS
 
 
-
+###########################################################################
+# Views
+###########################################################################
 class Theme_AddFavIcon(DBResource_AddImage):
 
     element_to_add = 'favicon'
@@ -125,3 +136,74 @@ class Theme_Edit(DBResource_Edit):
                 return FormError, message
 
         return form
+
+
+###########################################################################
+# Resource
+###########################################################################
+class Theme(Folder):
+
+    class_id = 'config-theme'
+    class_title = MSG(u'Theme')
+    class_description = MSG(u'Allow to customize ikaaro skin')
+    class_icon16 = 'icons/16x16/theme.png'
+    class_icon48 = 'icons/48x48/theme.png'
+    class_views = ['edit', 'edit_css', 'edit_menu', 'browse_content',
+                   'preview_content', 'links', 'backlinks', 'commit_log',
+                   'control_panel']
+    __fixed_handlers__ = ['style', 'menu']
+
+    add_favicon = Theme_AddFavIcon()
+    add_logo = Theme_AddLogo()
+    control_panel = GoToSpecificDocument(specific_document='../config',
+                                         title=Configuration.class_title)
+    edit = Theme_Edit()
+    edit_css = GoToSpecificDocument(specific_document='style',
+            access='is_allowed_to_edit', specific_view='edit',
+            title=MSG(u'Edit CSS'))
+    edit_menu = GoToSpecificDocument(specific_document='menu',
+            access='is_allowed_to_edit', title=MSG(u'Edit menu'))
+
+    class_schema = merge_dicts(
+        Folder.class_schema,
+        # Metadata
+        favicon=URI(source='metadata', default=''),
+        logo=URI(source='metadata', default=''))
+
+
+    def init_resource(self, **kw):
+        Folder.init_resource(self, **kw)
+        # Menu
+        menu = self.make_resource('menu', MenuFolder)
+        menu = menu.get_resource('menu')
+        menu.add_new_record({'path': '../../../..',
+                             'title': Property(u'Home', language='en'),
+                             'target': '_top'})
+        menu.add_new_record({'path': '../../../../;contact',
+                             'title': Property(u'Contact', language='en'),
+                             'target': '_top'})
+        # CSS file
+        path = get_abspath('ui/themes/style.css')
+        body = open(path).read()
+        self.make_resource('style', CSS, extension='css', body=body,
+                           state='public')
+        # Logo
+        path = get_abspath('ui/themes/logo.png')
+        image = ro_database.get_handler(path, FileHandler)
+        self.make_resource('logo', Image, body=image.to_str(),
+                           extension='png', filename='logo.png',
+                           format='image/png', state='public')
+        self.set_property('logo', 'logo')
+        # Banner
+        path = get_abspath('ui/themes/banner.jpg')
+        image = ro_database.get_handler(path, FileHandler)
+        self.make_resource('banner', Image, body=image.to_str(),
+                           extension='jpg', filename='banner.jpg',
+                           format='image/jpeg', state='public')
+
+
+
+###########################################################################
+# Register
+###########################################################################
+Configuration.register_plugin('theme', Theme)

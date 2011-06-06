@@ -33,15 +33,10 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
-from control_panel import CPEditMembership, CPEditSecurityPolicy
-from control_panel import CPEditVirtualHosts, CPOrphans, CPEditSEO
-from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
-from control_panel import CPEditTheme
+from control_panel import Configuration
 from folder import Folder
 from resource_views import LoginView
 from skins import UI, ui_path
-from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
@@ -51,18 +46,13 @@ from website_views import WebSite_NewInstance, UploadStatsView
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
-    class_version = '20100702'
+    class_version = '20110606'
     class_title = MSG(u'Web Site')
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
     class_views = Folder.class_views + ['control_panel']
-    class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
-                           'edit_security_policy', 'edit_languages',
-                           'edit_contact_options', 'broken_links', 'orphans',
-                           'edit_seo', 'edit_theme']
-    class_theme = Theme
 
 
     __fixed_handlers__ = ['skin', 'theme']
@@ -85,31 +75,19 @@ class WebSite(RoleAware, Folder):
         contacts=Tokens(source='metadata'),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
-        google_site_verification=String(source='metadata', default=''),
-        yahoo_site_verification=String(source='metadata', default=''),
-        bing_site_verification=String(source='metadata', default=''),
         website_languages=Tokens(source='metadata', default=('en',)),
         captcha_question=Unicode(source='metadata', default=u"2 + 3"),
         captcha_answer=Unicode(source='metadata', default=u"5"))
 
-    # XXX Usefull for the update method (i.e update_20100630)
+    # XXX Useful for the update method (i.e update_20100630)
     # To remove in ikaaro 0.70
     class_schema_extensible = True
 
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
-        # Theme folder
-        theme = self.make_resource('theme', self.class_theme,
-                                   title={'en': u'Theme'})
-        # Add home/contact links
-        menu = theme.get_resource('menu/menu')
-        menu.add_new_record({'path': '../../..',
-                             'title': Property(u'Home', language='en'),
-                             'target': '_top'})
-        menu.add_new_record({'path': '../../../;contact',
-                             'title': Property(u'Contact', language='en'),
-                             'target': '_top'})
+        # Configuration
+        self.make_resource('config', Configuration)
 
 
     ########################################################################
@@ -186,19 +164,6 @@ class WebSite(RoleAware, Folder):
     # UI
     #######################################################################
     new_instance = WebSite_NewInstance()
-    # Control Panel
-    control_panel = ControlPanel()
-    browse_users = CPBrowseUsers()
-    add_user = CPAddUser()
-    edit_membership = CPEditMembership()
-    edit_virtual_hosts = CPEditVirtualHosts()
-    edit_security_policy = CPEditSecurityPolicy()
-    edit_seo = CPEditSEO()
-    edit_theme = CPEditTheme()
-    edit_contact_options = CPEditContactOptions()
-    edit_languages = CPEditLanguages()
-    broken_links = CPBrokenLinks()
-    orphans = CPOrphans()
     # Public views
     contact = ContactForm()
     about = AboutView()
@@ -230,13 +195,14 @@ class WebSite(RoleAware, Folder):
 
 
     def update_20100702(self):
+        from theme import Theme
+
         theme = self.get_resource('theme', soft=True)
-        class_theme = self.class_theme
-        if theme and isinstance(theme, class_theme) is False:
+        if theme and isinstance(theme, Theme) is False:
             raise RuntimeError, 'A resource named theme already exists'
 
         # Theme folder
-        theme = self.make_resource('theme', class_theme, title={'en': u'Theme'})
+        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
         # Add home/contact links
         menu = theme.get_resource('menu/menu')
         menu.add_new_record({'path': '../../..',
@@ -245,3 +211,8 @@ class WebSite(RoleAware, Folder):
         menu.add_new_record({'path': '../../../;contact',
                              'title': Property(u'Contact', language='en'),
                              'target': '_top'})
+
+
+    def update_20110606(self):
+        self.make_resource('config', Configuration)
+        # TODO

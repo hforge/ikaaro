@@ -38,7 +38,7 @@
           <a stl:if="new_resource_allowed" id="links-menu-new"
              href="${container_uri}/;new_resource">Add content</a>
           <a stl:if="configuration" id="links-menu-configuration"
-             href="/;control_panel" title="Configuration">Configuration</a>
+             href="/config" title="Configuration">Configuration</a>
         </stl:block>
       </div>
       <!-- Languages & Searchbar -->

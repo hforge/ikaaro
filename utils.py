@@ -238,7 +238,7 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 # Used by the add-form
 ###########################################################################
 def get_content_containers(context, skip_formats):
-    from theme import Theme
+    from control_panel import Configuration
 
     query = AndQuery(
         get_base_path_query(context.site_root.get_canonical_path(), True),
@@ -259,7 +259,7 @@ def get_content_containers(context, skip_formats):
         # Exclude configuration
         resource = container
         while resource is not None:
-            if isinstance(resource, Theme):
+            if isinstance(resource, Configuration):
                 break
             resource = resource.parent
         else:

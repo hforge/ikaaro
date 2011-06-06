@@ -220,7 +220,7 @@ class Skin(UIFolder):
         styles.extend(extra)
 
         # Database style
-        db_style = context.site_root.get_resource('theme/style')
+        db_style = context.site_root.get_resource('config/theme/style')
         ac = db_style.get_access_control()
         if ac.is_allowed_to_view(context.user, db_style):
             styles.append('%s/;download' % context.get_link(db_style))
@@ -298,11 +298,12 @@ class Skin(UIFolder):
                              'content': value})
 
         # Search engine optimization
+        seo = root.get_resource('config/seo')
         for key, meta_name in [
             ('google_site_verification', 'google-site-verification'),
             ('yahoo_site_verification', 'y_key'),
             ('bing_site_verification', 'msvalidate.01')]:
-            verification_key = root.get_property(key)
+            verification_key = seo.get_property(key)
             if verification_key:
                 meta.append({'name': meta_name,
                              'lang': None,
@@ -415,7 +416,7 @@ class Skin(UIFolder):
 
         # The favicon.ico
         site_root = context.site_root
-        theme = site_root.get_resource('theme')
+        theme = site_root.get_resource('config/theme')
         path = theme.get_property('favicon')
         favicon_href = favicon_type = None
         if path:
@@ -472,7 +473,7 @@ class Skin(UIFolder):
         ac = container.get_access_control()
         new_resource_allowed = ac.is_access_allowed(user, container, view)
         # Configuration
-        view = site_root.get_view('control_panel')
+        view = site_root.get_resource('config').get_view('view')
         configuration = site_root.is_access_allowed(user, site_root, view)
 
         # Ok
