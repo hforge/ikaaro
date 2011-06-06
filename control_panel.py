@@ -181,9 +181,7 @@ class CPEditContactOptions(DBResource_Edit):
         SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
         MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
         SelectWidget('contacts', title=MSG(u'Select the contact accounts'),
-                     has_empty_option=False),
-        TextWidget('captcha_question', title=MSG(u"Captcha question")),
-        TextWidget('captcha_answer', title=MSG(u"Captcha answer"))]
+                     has_empty_option=False)]
 
 
     def _get_schema(self, resource, context):
@@ -192,9 +190,7 @@ class CPEditContactOptions(DBResource_Edit):
           'timestamp': DateTime(readonly=True),
           'emails_from_addr': ContactsOptions(resource=resource),
           'emails_signature': Unicode,
-          'contacts': ContactsOptions(multiple=True, resource=resource),
-          'captcha_question': Unicode(mandatory=True),
-          'captcha_answer': Unicode(mandatory=True)}
+          'contacts': ContactsOptions(multiple=True, resource=resource)}
 
 
     def get_value(self, resource, context, name, datatype):
@@ -396,5 +392,6 @@ class Configuration(Folder):
 
 
 # Import core config modules
+import config_captcha
 import config_seo
 import config_theme

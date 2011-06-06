@@ -33,9 +33,10 @@ from itools.fs import lfs
 from itools.web import BaseView, STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, CaptchaDatatype, CaptchaWidget
+from autoform import AutoForm
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
+from config_captcha import CaptchaDatatype, CaptchaWidget
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
 from views_new import NewInstance

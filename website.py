@@ -75,9 +75,7 @@ class WebSite(RoleAware, Folder):
         contacts=Tokens(source='metadata'),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
-        website_languages=Tokens(source='metadata', default=('en',)),
-        captcha_question=Unicode(source='metadata', default=u"2 + 3"),
-        captcha_answer=Unicode(source='metadata', default=u"5"))
+        website_languages=Tokens(source='metadata', default=('en',)))
 
     # XXX Useful for the update method (i.e update_20100630)
     # To remove in ikaaro 0.70
