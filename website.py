@@ -33,7 +33,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from control_panel import Configuration
+from config import Configuration
 from folder import Folder
 from resource_views import LoginView
 from skins import UI, ui_path

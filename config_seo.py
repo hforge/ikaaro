@@ -21,7 +21,7 @@ from itools.gettext import MSG
 
 # Import from ikaaro
 from autoform import TextWidget, timestamp_widget
-from control_panel import Configuration
+from config import Configuration
 from resource_ import DBResource
 from resource_views import DBResource_Edit
 

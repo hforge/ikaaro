@@ -25,7 +25,7 @@ from itools.web import ERROR, FormError
 
 # Import from ikaaro
 from autoform import timestamp_widget, ImageSelectorWidget
-from control_panel import Configuration
+from config import Configuration
 from file import Image
 from folder import Folder
 from folder_views import GoToSpecificDocument

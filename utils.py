@@ -238,7 +238,7 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 # Used by the add-form
 ###########################################################################
 def get_content_containers(context, skip_formats):
-    from control_panel import Configuration
+    from config import Configuration
 
     query = AndQuery(
         get_base_path_query(context.site_root.get_canonical_path(), True),

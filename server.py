@@ -33,8 +33,9 @@ from traceback import format_exc
 from glib import GError
 
 # Import from itools
-from itools.datatypes import Boolean
+from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.fs import vfs, lfs
+from itools.handlers import ConfigFile, ro_database
 from itools.http import SoupMessage
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
@@ -44,8 +45,8 @@ from itools.uri import get_host_from_authority
 from itools.web import WebServer, WebLogger, Context, set_context
 
 # Import from ikaaro
-from config import get_config
 from database import get_database
+from datatypes import ExpireValue
 from metadata import Metadata
 from registry import get_resource_class
 from utils import is_pid_running
@@ -352,3 +353,27 @@ class Server(WebServer):
         documents = results.get_documents()
         path = documents[0].abspath
         context.site_root = root.get_resource(path)
+
+
+
+class ServerConfig(ConfigFile):
+
+    schema = {
+        'modules': Tokens,
+        'listen-address': String(default=''),
+        'listen-port': Integer(default=None),
+        'smtp-host': String(default=''),
+        'smtp-from': String(default=''),
+        'smtp-login': String(default=''),
+        'smtp-password': String(default=''),
+        'log-level': String(default='warning'),
+        'database-size': String(default='4800:5200'),
+        'profile-time': Boolean(default=False),
+        'profile-space': Boolean(default=False),
+        'index-text': Boolean(default=True),
+        'auth-cookie-expires': ExpireValue(default=timedelta(0))
+    }
+
+
+def get_config(target):
+    return ro_database.get_handler('%s/config.conf' % target, ServerConfig)

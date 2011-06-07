@@ -35,12 +35,11 @@ from itools.handlers import ro_database
 from itools.web import get_context
 
 # Import from ikaaro
-from ikaaro.config import get_config
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.resource_ import DBResource
-from ikaaro.server import Server, ask_confirmation, get_fake_context, get_pid
-from ikaaro.server import load_modules
+from ikaaro.server import Server, ask_confirmation, get_config
+from ikaaro.server import get_fake_context, get_pid, load_modules
 
 
 def abort():

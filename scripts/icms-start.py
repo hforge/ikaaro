@@ -28,9 +28,8 @@ from itools.database import check_database
 from itools.loop import Loop
 
 # Import from ikaaro
-from ikaaro.config import get_config
 from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, get_pid
+from ikaaro.server import Server, get_config, get_pid
 
 
 def start(options, target):
