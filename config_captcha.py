@@ -16,15 +16,15 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DateTime, Unicode
+from itools.datatypes import Unicode
 from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import TextWidget, timestamp_widget
+from autoedit import AutoEdit
+from autoform import TextWidget
 from config import Configuration
 from resource_ import DBResource
-from resource_views import DBResource_Edit
 from utils import make_stl_template
 
 
@@ -56,23 +56,9 @@ class CaptchaWidget(TextWidget):
 
 
 ###########################################################################
-# Resource & View
+# Resource
 ###########################################################################
-class Captcha_Edit(DBResource_Edit):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit captcha')
-
-    schema = {
-        'timestamp': DateTime(readonly=True),
-        'captcha_question': Unicode(mandatory=True),
-        'captcha_answer': Unicode(mandatory=True)}
-
-    widgets = [
-        timestamp_widget,
-        TextWidget('captcha_question', title=MSG(u"Captcha question")),
-        TextWidget('captcha_answer', title=MSG(u"Captcha answer"))]
-
+captcha_datatype = Unicode(source='metadata', mandatory=True)
 
 
 class Captcha(DBResource):
@@ -80,16 +66,20 @@ class Captcha(DBResource):
     class_id = 'config-captcha'
     class_version = '20110606'
     class_title = MSG(u'Captcha')
-    class_description = MSG(u'...')
+    class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'
     class_views = ['edit']
 
     class_schema = merge_dicts(
         DBResource.class_schema,
-        captcha_question=Unicode(source='metadata', default=u"2 + 3"),
-        captcha_answer=Unicode(source='metadata', default=u"5"))
+        captcha_question=captcha_datatype(
+            default=u'2 + 3', title=MSG(u"Question")),
+        captcha_answer=captcha_datatype(
+            default=u'5', title=MSG(u"Answer")))
 
-    edit = Captcha_Edit()
+    edit = AutoEdit(
+        title=MSG(u'Edit captcha'),
+        fields=['captcha_question', 'captcha_answer'])
 
 
 Configuration.register_plugin('captcha', Captcha)

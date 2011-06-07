@@ -16,38 +16,16 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DateTime, String
+from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoform import TextWidget, timestamp_widget
+from autoedit import AutoEdit
 from config import Configuration
 from resource_ import DBResource
-from resource_views import DBResource_Edit
 
 
-class SEO_Edit(DBResource_Edit):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Search engine optimization')
-    icon = 'search.png'
-    description = MSG(u"""
-      Optimize your website for better ranking in search engine results.""")
-
-
-    schema = {'timestamp': DateTime(readonly=True),
-              'google_site_verification': String,
-              'yahoo_site_verification': String,
-              'bing_site_verification': String}
-
-    widgets = [
-        timestamp_widget,
-        TextWidget('google_site_verification',
-                   title=MSG(u'Google site verification key')),
-        TextWidget('yahoo_site_verification',
-                   title=MSG(u'Yahoo site verification key')),
-        TextWidget('bing_site_verification',
-                   title=MSG(u'Bing site verification key'))]
+site_verification = String(source='metadata', default='')
 
 
 class SEO(DBResource):
@@ -64,12 +42,21 @@ class SEO(DBResource):
     class_schema = merge_dicts(
         DBResource.class_schema,
         # Metadata
-        google_site_verification=String(source='metadata', default=''),
-        yahoo_site_verification=String(source='metadata', default=''),
-        bing_site_verification=String(source='metadata', default=''))
+        google_site_verification=site_verification(
+            title=MSG(u'Google site verification key')),
+        yahoo_site_verification=site_verification(
+            title=MSG(u'Yahoo site verification key')),
+        bing_site_verification=site_verification(
+            title=MSG(u'Bing site verification key')))
 
 
-    edit = SEO_Edit()
+    edit = AutoEdit(
+        title=MSG(u'Search engine optimization'),
+        description=MSG(u"Optimize your website for better ranking in search"
+                        u" engine results."),
+        fields=['google_site_verification',
+                'yahoo_site_verification',
+                'bing_site_verification'])
 
 
 # Register
