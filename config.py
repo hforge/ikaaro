@@ -18,11 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from operator
-from operator import itemgetter
-
 # Import from itools
-from itools.datatypes import DateTime, Enumerate, String, Unicode
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
@@ -32,11 +29,8 @@ from itools.database import PhraseQuery
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
-from autoform import MultilineWidget, SelectWidget, TextWidget
-from autoform import timestamp_widget
 from folder import Folder
 import messages
-from resource_views import DBResource_Edit
 from utils import get_base_path_query
 from views import IconsView
 
@@ -141,72 +135,6 @@ class CPEditSecurityPolicy(STLForm):
 
         resource.set_property('website_is_open', form['security_policy'])
         context.message = messages.MSG_CHANGES_SAVED
-
-
-
-class ContactsOptions(Enumerate):
-
-    @classmethod
-    def get_options(cls):
-        options = []
-        resource = cls.resource
-        users = resource.get_resource('/users')
-        for user_name in resource.get_members():
-            user = users.get_resource(user_name, soft=True)
-            if user is None:
-                continue
-            user_title = user.get_title()
-            user_email = user.get_property('email')
-            if user_title != user_email:
-                user_title = '%s <%s>' % (user_title, user_email)
-            else:
-                user_title = user_email
-            options.append({'name': user_name, 'value': user_title,
-                            'sort_value': user_title.lower()})
-        options.sort(key=itemgetter('sort_value'))
-        return options
-
-
-
-class CPEditContactOptions(DBResource_Edit):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Email options')
-    icon = 'mail.png'
-    description = MSG(u'Configure the website email options')
-
-
-    widgets = [
-        timestamp_widget,
-        SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
-        MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
-        SelectWidget('contacts', title=MSG(u'Select the contact accounts'),
-                     has_empty_option=False)]
-
-
-    def _get_schema(self, resource, context):
-        resource = resource.get_site_root()
-        return {
-          'timestamp': DateTime(readonly=True),
-          'emails_from_addr': ContactsOptions(resource=resource),
-          'emails_signature': Unicode,
-          'contacts': ContactsOptions(multiple=True, resource=resource)}
-
-
-    def get_value(self, resource, context, name, datatype):
-        resource = resource.get_site_root()
-        if name == 'contacts':
-            return list(resource.get_property('contacts'))
-        return DBResource_Edit.get_value(self, resource, context, name,
-                  datatype)
-
-
-    def set_value(self, resource, context, name, form):
-        resource = resource.get_site_root()
-        if name == 'contacts':
-            resource.set_property(name, tuple(form['contacts']))
-            return False
-        return DBResource_Edit.set_value(self, resource, context, name, form)
 
 
 
@@ -386,12 +314,12 @@ class Configuration(Folder):
     edit_membership = RoleAware_EditMembership()
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_security_policy = CPEditSecurityPolicy()
-    edit_contact_options = CPEditContactOptions()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
 
 
 # Import core config modules
 import config_captcha
+import config_mail
 import config_seo
 import config_theme

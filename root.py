@@ -270,13 +270,13 @@ class Root(WebSite):
         # Figure out the from address
         context = get_context()
         server = context.server
-        site_root = context.site_root
+        mail = context.site_root.get_resource('config/mail')
         if from_addr is None:
             user = context.user
             if user is not None:
                 from_addr = user.get_title(), user.get_property('email')
-            elif site_root.get_property('emails_from_addr'):
-                user_name = site_root.get_property('emails_from_addr')
+            elif mail.get_property('emails_from_addr'):
+                user_name = mail.get_property('emails_from_addr')
                 user = self.get_resource('/users/%s' % user_name)
                 from_addr = user.get_title(), user.get_property('email')
             else:
@@ -287,7 +287,7 @@ class Root(WebSite):
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
         # Add signature
-        signature = site_root.get_property('emails_signature')
+        signature = mail.get_property('emails_signature')
         if signature:
             signature = signature.strip()
             if not signature.startswith('--'):

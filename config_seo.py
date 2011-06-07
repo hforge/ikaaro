@@ -25,6 +25,8 @@ from config import Configuration
 from resource_ import DBResource
 
 
+seo_description = MSG(
+    u'Optimize your website for better ranking in search engine results.')
 site_verification = String(source='metadata', default='')
 
 
@@ -33,11 +35,10 @@ class SEO(DBResource):
     class_id = 'config-seo'
     class_version = '20110606'
     class_title = MSG(u'Search Engine Optimization')
-    class_description = MSG(u'Search Engine Optimization')
+    class_description = seo_description
     class_icon16 = 'icons/16x16/search.png'
     class_icon48 = 'icons/48x48/search.png'
     class_views = ['edit']
-
 
     class_schema = merge_dicts(
         DBResource.class_schema,
@@ -50,13 +51,11 @@ class SEO(DBResource):
             title=MSG(u'Bing site verification key')))
 
 
-    edit = AutoEdit(
-        title=MSG(u'Search engine optimization'),
-        description=MSG(u"Optimize your website for better ranking in search"
-                        u" engine results."),
-        fields=['google_site_verification',
-                'yahoo_site_verification',
-                'bing_site_verification'])
+    edit = AutoEdit(title=MSG(u'Search engine optimization'),
+                    description=seo_description,
+                    fields=['google_site_verification',
+                            'yahoo_site_verification',
+                            'bing_site_verification'])
 
 
 # Register

@@ -47,7 +47,9 @@ class AutoEdit(DBResource_Edit):
         for name in self.fields:
             datatype = schema[name]
             title = getattr(datatype, 'title', name)
-            widget = get_default_widget(datatype)
+            widget = getattr(datatype, 'widget', None)
+            if widget is None:
+                widget = get_default_widget(datatype)
             widget = widget(name, title=title)
             widgets.append(widget)
 

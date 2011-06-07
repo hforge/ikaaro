@@ -90,9 +90,12 @@ class ContactOptions(Enumerate):
 
     def get_options(cls):
         resource = cls.resource
+
         users = resource.get_resource('/users')
+        mail = resource.get_resource('config/mail')
+
         options = []
-        for name in resource.get_property('contacts'):
+        for name in mail.get_property('contacts'):
             user = users.get_resource(name, soft=True)
             if user is None:
                 continue

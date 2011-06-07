@@ -25,7 +25,7 @@ from types import GeneratorType
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import String, Tokens, Unicode
+from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView
@@ -72,9 +72,6 @@ class WebSite(RoleAware, Folder):
         RoleAware.class_schema,
         # Metadata
         vhosts=String(source='metadata', multiple=True, indexed=True),
-        contacts=Tokens(source='metadata'),
-        emails_from_addr=String(source='metadata'),
-        emails_signature=Unicode(source='metadata'),
         website_languages=Tokens(source='metadata', default=('en',)))
 
     # XXX Useful for the update method (i.e update_20100630)
