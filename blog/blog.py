@@ -25,7 +25,7 @@ from itools.gettext import MSG
 from itools.web import STLForm
 
 # Import from ikaaro
-from ikaaro.autoform import DateWidget, HTMLBody, RTEWidget
+from ikaaro.autoform import DateWidget, HTMLBody, ReadOnlyWidget, RTEWidget
 from ikaaro.autoform import timestamp_widget, title_widget
 from ikaaro.comments import CommentsAware, CommentsView
 from ikaaro.folder import Folder
@@ -48,17 +48,33 @@ rte = RTEWidget(
 
 class Post_NewInstance(NewInstance):
 
-    widgets = NewInstance.widgets + [
-        DateWidget('date', title=MSG(u'Date')),
-        rte]
-
-
     def get_schema(self, resource, context):
-        return merge_dicts(
-            NewInstance.schema,
-            title=Unicode(mandatory=True),
-            data=HTMLBody,
-            date=Date(default=date.today()))
+        schema = NewInstance.schema.copy()
+        del schema['path']
+        schema['title'] = Unicode(mandatory=True)
+        schema['data'] = HTMLBody
+        schema['date'] = Date(default=date.today())
+        return schema
+
+
+    widgets = freeze([
+        ReadOnlyWidget('cls_description'),
+        title_widget,
+        DateWidget('date', title=MSG(u'Date')),
+        rte])
+
+    def get_container(self, resource, context, form):
+        date = form['date']
+        names = ['%04d' % date.year, '%02d' % date.month]
+
+        container = context.site_root
+        for name in names:
+            folder = container.get_resource(name, soft=True)
+            if folder is None:
+                folder = container.make_resource(name, Folder)
+            container = folder
+
+        return container
 
 
     def action(self, resource, context, form):
@@ -135,8 +151,10 @@ class Post_Edit(HTMLEditView):
 class Post(CommentsAware, WebPage):
 
     class_id = 'blog-post'
-    class_title = MSG(u'Post')
+    class_title = MSG(u'Blog Post')
     class_description = MSG(u'Create and publish Post')
+    class_icon16 = 'blog/Blog16.png'
+    class_icon48 = 'blog/Blog48.png'
     class_views = ['view', 'edit', 'commit_log']
 
 
@@ -150,15 +168,3 @@ class Post(CommentsAware, WebPage):
     new_instance = Post_NewInstance()
     view = Post_View()
     edit = Post_Edit()
-
-
-
-class Blog(Folder):
-
-    class_id = 'blog'
-    class_title = MSG(u'Blog')
-    class_icon16 = 'blog/Blog16.png'
-    class_icon48 = 'blog/Blog48.png'
-
-    def get_document_types(self):
-        return [Post]

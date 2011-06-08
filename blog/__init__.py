@@ -21,7 +21,7 @@ from itools.core import get_abspath
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
 from ikaaro.website import WebSite
-from blog import Blog
+from blog import Post
 
 
 # Register skin
@@ -29,4 +29,4 @@ path = get_abspath('ui')
 register_skin('blog', path)
 
 # Add blogs to websites
-register_document_type(Blog, WebSite.class_id)
+register_document_type(Post)

@@ -94,10 +94,7 @@ class NewInstance(AutoForm):
         return form['name'].strip() or form['title']
 
 
-    def _get_form(self, resource, context):
-        form = super(NewInstance, self)._get_form(resource, context)
-
-        # 1. The container
+    def get_container(self, resource, context, form):
         container = resource
         path = form['path']
         if path is not None:
@@ -108,6 +105,15 @@ class NewInstance(AutoForm):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
             raise FormError, msg.gettext(path=path)
+
+        return container
+
+
+    def _get_form(self, resource, context):
+        form = super(NewInstance, self)._get_form(resource, context)
+
+        # 1. The container
+        container = self.get_container(resource, context, form)
         form['container'] = container
 
         # 2. Strip the title
