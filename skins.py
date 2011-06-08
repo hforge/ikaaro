@@ -318,8 +318,7 @@ class Skin(object):
                     logo_href = '%s/;download' % context.get_link(resource)
 
         # Menu
-        menu = theme.get_resource('menu')
-        # Get the menu namespace
+        menu = site_root.get_resource('config/menu')
         menu_ns = get_menu_namespace(context, 1, menu=menu)
 
         # The document language

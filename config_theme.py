@@ -17,7 +17,6 @@
 
 # Import from itools
 from itools.core import merge_dicts, get_abspath
-from itools.csv import Property
 from itools.datatypes import DateTime, PathDataType, URI
 from itools.gettext import MSG
 from itools.handlers import ro_database, File as FileHandler
@@ -29,7 +28,6 @@ from config import Configuration
 from file import Image
 from folder import Folder
 from folder_views import GoToSpecificDocument
-from menu import MenuFolder
 from messages import MSG_UNEXPECTED_MIMETYPE
 from popup import DBResource_AddImage
 from resource_views import DBResource_Edit
@@ -148,21 +146,16 @@ class Theme(Folder):
     class_description = MSG(u'Allow to customize ikaaro skin')
     class_icon16 = 'icons/16x16/theme.png'
     class_icon48 = 'icons/48x48/theme.png'
-    class_views = ['edit', 'edit_css', 'edit_menu', 'browse_content',
-                   'preview_content', 'links', 'backlinks', 'commit_log',
-                   'control_panel']
-    __fixed_handlers__ = ['style', 'menu']
+    class_views = ['edit', 'edit_css', 'browse_content', 'preview_content',
+                   'links', 'backlinks', 'commit_log']
+    __fixed_handlers__ = ['style']
 
     add_favicon = Theme_AddFavIcon()
     add_logo = Theme_AddLogo()
-    control_panel = GoToSpecificDocument(specific_document='../config',
-                                         title=Configuration.class_title)
     edit = Theme_Edit()
     edit_css = GoToSpecificDocument(specific_document='style',
             access='is_allowed_to_edit', specific_view='edit',
             title=MSG(u'Edit CSS'))
-    edit_menu = GoToSpecificDocument(specific_document='menu',
-            access='is_allowed_to_edit', title=MSG(u'Edit menu'))
 
     class_schema = merge_dicts(
         Folder.class_schema,
@@ -173,15 +166,6 @@ class Theme(Folder):
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
-        # Menu
-        menu = self.make_resource('menu', MenuFolder)
-        menu = menu.get_resource('menu')
-        menu.add_new_record({'path': '../../../..',
-                             'title': Property(u'Home', language='en'),
-                             'target': '_top'})
-        menu.add_new_record({'path': '../../../../;contact',
-                             'title': Property(u'Contact', language='en'),
-                             'target': '_top'})
         # CSS file
         path = get_abspath('ui/themes/style.css')
         body = open(path).read()

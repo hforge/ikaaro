@@ -292,5 +292,6 @@ class Configuration(Folder):
 import config_access
 import config_captcha
 import config_mail
+import config_menu
 import config_seo
 import config_theme
