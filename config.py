@@ -32,20 +32,19 @@ from access import RoleAware_EditMembership
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
-from views import IconsView
-
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class Configuration_View(IconsView):
+class Configuration_View(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Configuration')
-
+    template = '/ui/website/config.xml'
 
     def get_namespace(self, resource, context):
+        newplugins = []
         items = []
 
         # Core views (non persistent)
@@ -66,7 +65,8 @@ class Configuration_View(IconsView):
         for name in resource._plugins:
             plugin = resource.get_resource(name, soft=True)
             if plugin is None:
-                raise NotImplementedError
+                newplugins.append(name)
+                continue
             items.append({
                 'icon': plugin.get_class_icon(48),
                 'title': plugin.class_title,
@@ -74,10 +74,15 @@ class Configuration_View(IconsView):
                 'url': name})
 
         # Ok
-        return {
-            'title': MSG(u'Configuration'),
-            'batch': None,
-            'items': items}
+        return {'newplugins': newplugins, 'items': items}
+
+
+    def action(self, resource, context, form):
+        for name, plugin in resource._plugins.items():
+            if resource.get_resource(name, soft=True) is None:
+                resource.make_resource(name, plugin)
+
+        context.message = MSG(u'New plugins initialized.')
 
 
 
