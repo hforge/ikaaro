@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";edit_security_policy" method="post">
+<form action=";edit" method="post">
   <fieldset>
     <legend>Edit Security Policy</legend>
     <p>

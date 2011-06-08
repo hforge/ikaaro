@@ -30,7 +30,7 @@ from itools.database import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder import Folder
-import messages
+from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
 from views import IconsView
 
@@ -106,35 +106,7 @@ class CPEditVirtualHosts(STLForm):
         vhosts = [ x for x in vhosts if x ]
         resource.set_property('vhosts', vhosts)
         # Ok
-        context.message = messages.MSG_CHANGES_SAVED
-
-
-
-class CPEditSecurityPolicy(STLForm):
-
-    access = 'is_admin'
-    title = MSG(u'Security Policy')
-    icon = 'lock.png'
-    description = MSG(u'Choose the security policy.')
-    template = '/ui/website/security_policy.xml'
-    schema = {
-        'security_policy': String(default='intranet')}
-
-
-    def get_namespace(self, resource, context):
-        resource = resource.get_site_root()
-        security_policy = resource.get_security_policy()
-        return {
-            'intranet': security_policy == 'intranet',
-            'extranet': security_policy == 'extranet',
-            'community': security_policy == 'community'}
-
-
-    def action(self, resource, context, form):
-        resource = resource.get_site_root()
-
-        resource.set_property('website_is_open', form['security_policy'])
-        context.message = messages.MSG_CHANGES_SAVED
+        context.message = MSG_CHANGES_SAVED
 
 
 
@@ -240,7 +212,7 @@ class CPEditLanguages(STLForm):
         languages.insert(0, default)
         resource.set_property('website_languages', tuple(languages))
         # Ok
-        context.message = messages.MSG_CHANGES_SAVED
+        context.message = MSG_CHANGES_SAVED
 
 
     def action_remove_languages(self, resource, context, form):
@@ -289,8 +261,7 @@ class Configuration(Folder):
     is_content = False
 
     class_core_views = ['browse_users', 'add_user', 'edit_virtual_hosts',
-                        'edit_security_policy', 'edit_languages',
-                        'edit_contact_options', 'broken_links', 'orphans']
+                        'edit_languages', 'broken_links', 'orphans']
 
     
     _plugins = {}
@@ -313,12 +284,12 @@ class Configuration(Folder):
     add_user = RoleAware_AddUser()
     edit_membership = RoleAware_EditMembership()
     edit_virtual_hosts = CPEditVirtualHosts()
-    edit_security_policy = CPEditSecurityPolicy()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
 
 
 # Import core config modules
+import config_access
 import config_captcha
 import config_mail
 import config_seo

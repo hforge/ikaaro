@@ -461,9 +461,6 @@ class RoleAware(AccessControl):
 
     class_schema = freeze({
         # Metadata
-        # FIXME Rename 'website_is_open' to 'security_policy'
-        'website_is_open': String(source='metadata', default='intranet'),
-        # Metadata (roles)
         'guests': Tokens(source='metadata', title=MSG(u"Guest")),
         'members': Tokens(source='metadata', title=MSG(u"Member")),
         'reviewers': Tokens(source='metadata', title=MSG(u"Reviewer")),
@@ -477,22 +474,12 @@ class RoleAware(AccessControl):
         return set([ '/users/%s' % x for x in self.get_members() ])
 
 
-    # FIXME This method belongs to WebSite
-    def get_security_policy(self):
-        security_policy = self.get_property('website_is_open')
-        if security_policy == '1':
-            return 'community'
-        elif security_policy == '0':
-            return 'intranet'
-        return security_policy
-
-
     #########################################################################
     # Access Control
     #########################################################################
     def is_allowed_to_view(self, user, resource):
         # Get the variables to resolve the formula
-        security_policy = self.get_security_policy()
+        security_policy = resource.get_site_root().get_security_policy()
         # The role of the user
         if user is None:
             role = None

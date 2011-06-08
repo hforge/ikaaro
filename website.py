@@ -152,6 +152,11 @@ class WebSite(RoleAware, Folder):
         return self.get_security_policy() == 'community'
 
 
+    def get_security_policy(self):
+        access = self.get_resource('config/access')
+        return access.get_property('security_policy')
+
+
     #######################################################################
     # UI
     #######################################################################
