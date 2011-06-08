@@ -670,6 +670,7 @@ class AutoForm(STLForm):
                                                'value': None,
                                                'error': None})
             ns_widget['title'] = getattr(widget, 'title', None)
+            ns_widget['id'] = widget.id
             ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
             ns_widget['is_date'] = (datatype is not None and
                                     issubclass(datatype, Date))
