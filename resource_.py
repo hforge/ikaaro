@@ -340,7 +340,6 @@ class DBResource(Resource):
         'abspath_depth': Integer(indexed=True, stored=True),
         'format': String(indexed=True, stored=True),
         # Folder's view
-        'parent_path': String(indexed=True), # TODO remove in 0.70
         'parent_paths': String(multiple=True, indexed=True),
         'name': String(stored=True, indexed=True),
         # Referential integrity
