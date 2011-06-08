@@ -26,8 +26,8 @@ from itools.database import register_field
 from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
 from itools.log import log_warning
 from itools.uri import Path
-from itools.web import Resource, get_context
-from itools.database import CatalogAware, PhraseQuery
+from itools.web import AccessControl, BaseView, get_context
+from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
 from datatypes import Multilingual
@@ -43,120 +43,7 @@ from views_new import NewInstance
 from workflow import WorkflowAware
 
 
-class IResource(Resource):
 
-    class_views = []
-    context_menus = []
-
-
-    def get_site_root(self):
-        from website import WebSite
-        resource = self
-        while not isinstance(resource, WebSite):
-            resource = resource.parent
-        return resource
-
-
-    def get_default_view_name(self):
-        views = self.class_views
-        if not views:
-            return None
-        context = get_context()
-        user = context.user
-        ac = self.get_access_control()
-        for view_name in views:
-            view = getattr(self, view_name, None)
-            if ac.is_access_allowed(user, self, view):
-                return view_name
-        return views[0]
-
-
-    def get_context_menus(self):
-        return self.context_menus
-
-
-    ########################################################################
-    # Properties
-    ########################################################################
-    @classmethod
-    def get_property_datatype(cls, name):
-        return String
-
-
-    def _get_property(self, name, language=None):
-        return None
-
-
-    def get_property(self, name, language=None):
-        """Return the property value for the given property name.
-        """
-        property = self._get_property(name, language=language)
-        # Default
-        if not property:
-            datatype = self.get_property_datatype(name)
-            return datatype.get_default()
-
-        # Multiple
-        if type(property) is list:
-            return [ x.value for x in property ]
-
-        # Simple
-        return property.value
-
-
-    def get_title(self):
-        return unicode(self.name)
-
-
-    def get_page_title(self):
-        return self.get_title()
-
-
-    ########################################################################
-    # Icons
-    ########################################################################
-    @classmethod
-    def get_class_icon(cls, size=16):
-        icon = getattr(cls, 'class_icon%s' % size, None)
-        if icon is None:
-            return None
-        return '/ui/%s' % icon
-
-
-    @classmethod
-    def get_resource_icon(cls, size=16):
-        icon = getattr(cls, 'icon%s' % size, None)
-        if icon is None:
-            return cls.get_class_icon(size)
-        return ';icon%s' % size
-
-
-    def get_method_icon(self, view, size='16x16', **kw):
-        icon = getattr(view, 'icon', None)
-        if icon is None:
-            return None
-        if callable(icon):
-            icon = icon(self, **kw)
-        return '/ui/icons/%s/%s' % (size, icon)
-
-
-    ########################################################################
-    # User interface
-    ########################################################################
-    def get_views(self):
-        user = get_context().user
-        ac = self.get_access_control()
-        for name in self.class_views:
-            view_name = name.split('?')[0]
-            view = self.get_view(view_name)
-            if ac.is_access_allowed(user, self, view):
-                yield name, view
-
-
-
-###########################################################################
-# Database resources
-###########################################################################
 class FreeDatatype(String):
     """This datatype is used for properties not defined in the resource
     schema, when the schema is defined as extensible.
@@ -181,9 +68,14 @@ class DBResourceMetaclass(type):
 
 
 
-class DBResource(CatalogAware, IResource):
+class DBResource(Resource):
 
     __metaclass__ = DBResourceMetaclass
+    __hash__ = None
+
+    class_views = []
+    context_menus = []
+
 
     def __init__(self, metadata):
         self.metadata = metadata
@@ -191,6 +83,204 @@ class DBResource(CatalogAware, IResource):
         # The tree
         self.name = ''
         self.parent = None
+
+
+    def _get_names(self):
+        raise NotImplementedError
+
+
+    def _get_resource(self, name):
+        return None
+
+
+    def __eq__(self, resource):
+        if not isinstance(resource, DBResource):
+            raise TypeError, "cannot compare DBResource and %s" % type(resource)
+        return self.get_canonical_path() == resource.get_canonical_path()
+
+
+    def __ne__(self, node):
+        return not self.__eq__(node)
+
+
+    #######################################################################
+    # API / Tree
+    #######################################################################
+    def get_abspath(self):
+        if self.parent is None:
+            return Path('/')
+        parent_path = self.parent.get_abspath()
+
+        return parent_path.resolve_name(self.name)
+
+    abspath = property(get_abspath)
+
+
+    def get_canonical_path(self):
+        if self.parent is None:
+            return Path('/')
+        parent_path = self.parent.get_canonical_path()
+
+        return parent_path.resolve_name(self.name)
+
+
+    def get_real_resource(self):
+        cpath = self.get_canonical_path()
+        if cpath == self.get_abspath():
+            return self
+        return self.get_resource(cpath)
+
+
+    def get_root(self):
+        if self.parent is None:
+            return self
+        return self.parent.get_root()
+
+
+    def get_pathto(self, resource):
+        # XXX brain.abspath is the canonical path
+        # not the possible virtual path
+        return self.get_abspath().get_pathto(resource.abspath)
+
+
+    def get_names(self, path='.'):
+        resource = self.get_resource(path)
+        return resource._get_names()
+
+
+    def get_resource(self, path, soft=False):
+        if type(path) is not Path:
+            path = Path(path)
+
+        if path.is_absolute():
+            here = self.get_root()
+        else:
+            here = self
+
+        while path and path[0] == '..':
+            here = here.parent
+            path = path[1:]
+
+        for name in path:
+            resource = here._get_resource(name)
+            if resource is None:
+                if soft is True:
+                    return None
+                raise LookupError, 'resource "%s" not found' % path
+            resource.parent = here
+            resource.name = name
+            here = resource
+
+        return here
+
+
+    def get_resources(self, path='.'):
+        here = self.get_resource(path)
+        for name in here._get_names():
+            resource = here._get_resource(name)
+            resource.parent = here
+            resource.name = name
+            yield resource
+
+
+    def set_resource(self, path, resource):
+        raise NotImplementedError
+
+
+    def del_resource(self, path, soft=False):
+        raise NotImplementedError
+
+
+    def copy_resource(self, source, target):
+        raise NotImplementedError
+
+
+    def move_resource(self, source, target):
+        raise NotImplementedError
+
+
+    def traverse_resources(self):
+        yield self
+
+
+    def get_site_root(self):
+        from website import WebSite
+        resource = self
+        while not isinstance(resource, WebSite):
+            resource = resource.parent
+        return resource
+
+
+    #######################################################################
+    # API / Views
+    #######################################################################
+    def get_default_view_name(self):
+        views = self.class_views
+        if not views:
+            return None
+        context = get_context()
+        user = context.user
+        ac = self.get_access_control()
+        for view_name in views:
+            view = getattr(self, view_name, None)
+            if ac.is_access_allowed(user, self, view):
+                return view_name
+        return views[0]
+
+
+    def get_view(self, name, query=None):
+        # To define a default view, override this
+        if name is None:
+            name = self.get_default_view_name()
+            if name is None:
+                return None
+
+        # Explicit view, defined by name
+        view = getattr(self, name, None)
+        if view is None or not isinstance(view, BaseView):
+            return None
+
+        return view
+
+    def get_context_menus(self):
+        return self.context_menus
+
+
+    #######################################################################
+    # API / Security
+    #######################################################################
+    def get_access_control(self):
+        resource = self
+        while resource is not None:
+            if isinstance(resource, AccessControl):
+                return resource
+            resource = resource.parent
+
+        return None
+
+
+    ########################################################################
+    # Properties
+    ########################################################################
+    def get_property(self, name, language=None):
+        """Return the property value for the given property name.
+        """
+        property = self._get_property(name, language=language)
+        # Default
+        if not property:
+            datatype = self.get_property_datatype(name)
+            return datatype.get_default()
+
+        # Multiple
+        if type(property) is list:
+            return [ x.value for x in property ]
+
+        # Simple
+        return property.value
+
+
+    def get_page_title(self):
+        return self.get_title()
 
 
     def init_resource(self, **kw):
@@ -236,10 +326,6 @@ class DBResource(CatalogAware, IResource):
 
     def load_handlers(self):
         self.get_handlers()
-
-
-    def traverse_resources(self):
-        yield self
 
 
     ########################################################################
@@ -744,8 +830,46 @@ class DBResource(CatalogAware, IResource):
 
 
     ########################################################################
+    # Icons
+    ########################################################################
+    @classmethod
+    def get_class_icon(cls, size=16):
+        icon = getattr(cls, 'class_icon%s' % size, None)
+        if icon is None:
+            return None
+        return '/ui/%s' % icon
+
+
+    @classmethod
+    def get_resource_icon(cls, size=16):
+        icon = getattr(cls, 'icon%s' % size, None)
+        if icon is None:
+            return cls.get_class_icon(size)
+        return ';icon%s' % size
+
+
+    def get_method_icon(self, view, size='16x16', **kw):
+        icon = getattr(view, 'icon', None)
+        if icon is None:
+            return None
+        if callable(icon):
+            icon = icon(self, **kw)
+        return '/ui/icons/%s/%s' % (size, icon)
+
+
+    ########################################################################
     # User interface
     ########################################################################
+    def get_views(self):
+        user = get_context().user
+        ac = self.get_access_control()
+        for name in self.class_views:
+            view_name = name.split('?')[0]
+            view = self.get_view(view_name)
+            if ac.is_access_allowed(user, self, view):
+                yield name, view
+
+
     def get_title(self, language=None):
         title = self.get_property('title', language=language)
         if title:

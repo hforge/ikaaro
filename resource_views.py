@@ -24,11 +24,11 @@ from itools.core import merge_dicts, freeze
 from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Boolean, DateTime, Email, Integer, String
 from itools.gettext import MSG
-from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path, Reference
 from itools.web import BaseView, STLForm, INFO, ERROR
+from itools.web import Conflict, NotImplemented
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget

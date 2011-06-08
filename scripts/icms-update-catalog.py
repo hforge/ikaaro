@@ -36,7 +36,7 @@ def update_catalog(parser, options, target):
     from itools.database import check_database, get_register_fields
     from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
-    from itools.database import make_catalog, CatalogAware
+    from itools.database import make_catalog, Resource
     from ikaaro.server import Server, ask_confirmation
     from ikaaro.server import get_fake_context
 
@@ -76,7 +76,7 @@ def update_catalog(parser, options, target):
     if options.test:
         log = open('%s/log/update-catalog' % target, 'w').write
     for obj in root.traverse_resources():
-        if not isinstance(obj, CatalogAware):
+        if not isinstance(obj, Resource):
             continue
         if not options.quiet:
             print doc_n, obj.get_abspath()

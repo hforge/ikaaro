@@ -20,147 +20,23 @@
 
 # Import from the Standard Library
 from copy import deepcopy
+from os.path import isfile
 
 # Import from itools
 from itools.core import get_abspath
 from itools.datatypes import Unicode
-from itools.fs import lfs
 from itools.gettext import MSG
-from itools.handlers import File, Folder, Image, RODatabase
-from itools.http import NotFound
-from itools.i18n import has_language
 from itools.stl import stl
-from itools.uri import Path
-from itools.web import get_context, BaseView, ERROR, INFO
-from itools.xmlfile import XMLFile
+from itools.web import get_context, ERROR, INFO
 
 # Import from ikaaro
-from folder import Folder as iFolder
+from context import register_ui
+from folder import Folder
 from menu import get_menu_namespace
-from resource_ import IResource
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
-ui_database = RODatabase(fs=lfs)
-
-
-
-class FileGET(BaseView):
-
-    access = True
-
-
-    def get_mtime(self, resource):
-        return resource.get_mtime()
-
-
-    def GET(self, resource, context):
-        context.content_type = resource.get_mimetype()
-        return resource.to_str()
-
-
-
-class UIFile(IResource, File):
-
-    database = ui_database
-    clone_exclude = File.clone_exclude | frozenset(['parent', 'name'])
-
-
-    download = FileGET()
-
-    def get_view(self, name, query=None):
-        if name is None:
-            return self.download
-        raise NotFound
-
-
-
-class UIImage(Image, UIFile):
-    pass
-
-
-
-class UITemplate(UIFile, XMLFile):
-    pass
-
-
-
-map = {
-    'application/xml': UITemplate,
-    'application/xhtml+xml': UITemplate,
-    'text/xml': UITemplate,
-    'image/png': UIImage,
-    'image/jpeg': UIImage,
-}
-
-
-
-class UIFolder(IResource, Folder):
-
-    database = ui_database
-    class_title = MSG(u'UI')
-    class_icon48 = 'icons/48x48/folder.png'
-
-
-    def _get_names(self):
-        # FIXME May not be the right implementation
-        return self.get_handler_names()
-
-
-    def _get_resource(self, name):
-        cls = self.get_resource_cls(name)
-
-        # Not an exact match: trigger language negotiation
-        if self.get_handler(name, cls=cls, soft=True) is None:
-            name = '%s.' % name
-            n = len(name)
-            languages = []
-            for x in self.get_handler_names():
-                if x[:n] == name:
-                    language = x[n:]
-                    if has_language(language):
-                        languages.append(language)
-
-            if not languages:
-                return None
-
-            # Get the best variant
-            context = get_context()
-            if context is None:
-                language = None
-            else:
-                accept = context.accept_language
-                language = accept.select_language(languages)
-
-            # By default use whatever variant
-            # (XXX we need a way to define the default)
-            if language is None:
-                language = languages[0]
-            name = '%s%s' % (name, language)
-
-            # Is the class the same ?
-            cls = self.get_resource_cls(name)
-
-        # Ok
-        key = lfs.resolve2(self.key, name)
-        return self.database.get_handler(key, cls)
-
-
-    def get_resource_cls(self, name):
-        key = lfs.resolve2(self.key, name)
-        if lfs.is_folder(key):
-            return UIFolder
-        else:
-            format = lfs.get_mimetype(key)
-            return map.get(format, UIFile)
-
-
-    def traverse_resources(self):
-        yield self
-
-
-
-class Skin(UIFolder):
+class Skin(object):
 
     class_title = MSG(u'Skin')
     class_icon16 = 'icons/16x16/skin.png'
@@ -169,6 +45,10 @@ class Skin(UIFolder):
     # User Interface widgets
     languages_template = LanguagesTemplate
     location_template = LocationTemplate
+
+
+    def __init__(self, key):
+        self.key = key
 
 
     #######################################################################
@@ -206,10 +86,8 @@ class Skin(UIFolder):
             '/ui/js_calendar/calendar-aruni.css']
 
         # Skin
-        if self.get_handler('style.css',
-                            cls=self.get_resource_cls('style.css'),
-                            soft=True) is not None:
-            styles.append('%s/style.css' % self.get_canonical_path())
+        if isfile('%s/style.css' % self.key):
+            styles.append('%s/style.css' % self.base_path)
 
         # View
         get_styles = getattr(context.view, 'get_styles', None)
@@ -247,10 +125,8 @@ class Skin(UIFolder):
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
 
         # This skin's JavaScript
-        if self.get_handler('javascript.js',
-                            cls=self.get_resource_cls('javascript'),
-                            soft=True) is not None:
-            scripts.append('%s/javascript.js' % self.get_canonical_path())
+        if isfile('%s/javascript.js' % self.key):
+            scripts.append('%s/javascript.js' % self.base_path)
 
         # View
         get_scripts = getattr(context.view, 'get_scripts', None)
@@ -383,7 +259,7 @@ class Skin(UIFolder):
 
         namespace = {'messages': messages_ns}
 
-        template = context.root.get_resource('/ui/aruni/message.xml')
+        template = context.get_template('/ui/aruni/message.xml')
         return stl(template, namespace)
 
 
@@ -460,14 +336,10 @@ class Skin(UIFolder):
         # Top links
         # (TODO refactor to a method 'get_top_links', move from the template)
         # Login/Logout
-        if isinstance(here, (UIFile, UIFolder)):
-            # In case of UI objects, fallback to site root
-            base_path = ''
-        else:
-            base_path = context.get_link(here)
+        base_path = context.get_link(here)
         # Add content
         container = here
-        if isinstance(here, iFolder) is False:
+        if isinstance(here, Folder) is False:
             container = here.parent
         view = container.get_view('new_resource')
         ac = container.get_access_control()
@@ -510,13 +382,16 @@ class Skin(UIFolder):
         }
 
 
-    def get_template(self):
-        template = self.get_resource('template.xhtml', soft=True)
-        if template is not None:
-            return template
+    def get_template(self, context):
+        paths = [
+            '%s/template.xhtml' % self.base_path,
+            '/ui/aruni/template.xhtml']
+        for path in paths:
+            template = context.get_template(path)
+            if template:
+                return path, template
 
-        # Default: aruni
-        return self.get_resource('/ui/aruni/template.xhtml')
+        raise ValueError, 'XXX'
 
 
     def template(self, content):
@@ -529,13 +404,12 @@ class Skin(UIFolder):
         context.content_type = 'text/html; charset=UTF-8'
 
         # Load the template
-        handler = self.get_template()
+        prefix, handler = self.get_template(context)
 
         # Build the output
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
              '  "http://www.w3.org/TR/html4/strict.dtd">']
         # STL
-        prefix = handler.get_abspath()
         data = stl(handler, namespace, prefix=prefix, mode='html')
         s.append(data)
 
@@ -551,22 +425,12 @@ skin_registry = {}
 def register_skin(name, skin):
     if isinstance(skin, str):
         skin = Skin(skin)
+    skin.base_path = '/ui/%s' % name
     skin_registry[name] = skin
+    register_ui('/ui/%s/' % name, skin.key)
 
 
 # Register the built-in skins
 ui_path = get_abspath('ui')
 register_skin('aruni', '%s/aruni' % ui_path)
-
-
-class UI(UIFolder):
-
-    def _get_resource(self, name):
-        if name in skin_registry:
-            skin = skin_registry[name]
-            return skin
-        return UIFolder._get_resource(self, name)
-
-
-    def get_canonical_path(self):
-        return Path('/ui')
+register_ui('/ui/', ui_path)

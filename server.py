@@ -33,22 +33,25 @@ from traceback import format_exc
 from glib import GError
 
 # Import from itools
+from itools.core import get_abspath
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
-from itools.http import SoupMessage
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import cron
-from itools.uri import get_host_from_authority
-from itools.web import WebServer, WebLogger, Context, set_context
+from itools.web import WebServer, WebLogger
+from itools.web import StaticContext, set_context
+from itools.web import SoupMessage
 
 # Import from ikaaro
+from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
 from metadata import Metadata
 from registry import get_resource_class
+from skins import skin_registry
 from utils import is_pid_running
 
 
@@ -108,9 +111,10 @@ def get_root(database):
 
 def get_fake_context():
     soup_message = SoupMessage()
-    context = Context(soup_message, '/')
+    context = CMSContext(soup_message, '/')
     set_context(context)
     return context
+
 
 
 class Server(WebServer):
@@ -178,10 +182,47 @@ class Server(WebServer):
         logger.launch_rotate(timedelta(weeks=3))
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
-        register_logger(logger, 'itools.http', 'itools.web')
+        register_logger(logger, 'itools.web')
 
         # Authentication cookie timedelta
         self.auth_cookie_expires = get_value('auth-cookie-expires')
+
+
+    def get_pid(self):
+        return get_pid('%s/pid' % self.target)
+
+
+    def set_context(self, path, context):
+        context = super(Server, self).set_context(path, context)
+        context.database = self.database
+
+
+    def listen(self, address, port):
+        super(Server, self).listen(address, port)
+        # Set ui
+        context = StaticContext(local_path=get_abspath('ui'))
+        self.set_context('/ui', context)
+        for name in skin_registry:
+            skin = skin_registry[name]
+            context = StaticContext(local_path=skin.key)
+            self.set_context('/ui/%s' % name, context)
+
+
+    def is_running_in_rw_mode(self):
+        address = self.config.get_value('listen-address').strip()
+        if address == '*':
+            address = '127.0.0.1'
+        port = self.config.get_value('listen-port')
+
+        url = 'http://%s:%s/;_ctrl' % (address, port)
+        try:
+            h = vfs.open(url)
+        except GError:
+            # The server is not running
+            return False
+
+        data = h.read()
+        return loads(data)['read-only'] is False
 
 
     #######################################################################
@@ -293,66 +334,6 @@ class Server(WebServer):
         summary = 'Error sending email\n'
         details = format_exc()
         log_error(summary + details)
-
-
-    def is_running_in_rw_mode(self):
-        address = self.config.get_value('listen-address').strip()
-        if address == '*':
-            address = '127.0.0.1'
-        port = self.config.get_value('listen-port')
-
-        url = 'http://%s:%s/;_ctrl' % (address, port)
-        try:
-            h = vfs.open(url)
-        except GError:
-            # The server is not running
-            return False
-
-        data = h.read()
-        return loads(data)['read-only'] is False
-
-
-    #######################################################################
-    # Web
-    #######################################################################
-    def get_pid(self):
-        return get_pid('%s/pid' % self.target)
-
-
-    def init_context(self, context):
-        WebServer.init_context(self, context)
-        context.database = self.database
-        context.set_mtime = True
-        context.message = None
-        context.content_type = None
-
-
-    def find_site_root(self, context):
-        # Default to root
-        root = self.root
-        context.site_root = root
-
-        # Check we have a URI
-        uri = context.uri
-        if uri is None:
-            return
-
-        # The site root depends on the host
-        hostname = get_host_from_authority(uri.authority)
-
-        catalog = self.database.catalog
-        # This may happen with a broken or missing catalog in
-        # icms-update-catalog.py
-        if not catalog:
-            return
-
-        results = catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        context.site_root = root.get_resource(path)
 
 
 
