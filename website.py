@@ -55,9 +55,6 @@ class WebSite(RoleAware, Folder):
     class_views = Folder.class_views + ['control_panel']
 
 
-    __fixed_handlers__ = ['skin', 'theme']
-
-
     def _get_resource(self, name):
         if name in ('users', 'users.metadata'):
             return self.parent._get_resource(name)
@@ -80,6 +77,12 @@ class WebSite(RoleAware, Folder):
         Folder.init_resource(self, **kw)
         # Configuration
         self.make_resource('config', Configuration)
+
+
+    def make_resource(self, name, cls, **kw):
+        if name == 'ui':
+            raise ValueError, 'cannot add a resource with the name "ui"'
+        Folder.make_resource(self, name, cls, **kw)
 
 
     ########################################################################

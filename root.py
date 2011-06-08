@@ -83,8 +83,6 @@ class Root(WebSite):
     class_icon48 = 'icons/48x48/root.png'
     class_roles = freeze(['admins'])
 
-    __fixed_handlers__ = ['users', 'ui', 'theme']
-
     is_content = True
 
 
@@ -151,8 +149,7 @@ class Root(WebSite):
 
 
     def _get_names(self):
-        names = [ x for x in Folder._get_names(self) if x ]
-        return names + ['ui']
+        return [ x for x in Folder._get_names(self) if x ]
 
 
     ########################################################################

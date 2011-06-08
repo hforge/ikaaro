@@ -67,7 +67,6 @@ def update_catalog(parser, options, target):
     # Build a fake context
     context = get_fake_context()
     context.accept_language = AcceptLanguage()
-    server.init_context(context)
 
     # Update
     t0, v0 = time(), vmsize()

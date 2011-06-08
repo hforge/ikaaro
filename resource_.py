@@ -183,10 +183,6 @@ class DBResource(Resource):
             yield resource
 
 
-    def set_resource(self, path, resource):
-        raise NotImplementedError
-
-
     def del_resource(self, path, soft=False):
         raise NotImplementedError
 
