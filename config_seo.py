@@ -38,7 +38,6 @@ class SEO(DBResource):
     class_description = seo_description
     class_icon16 = 'icons/16x16/search.png'
     class_icon48 = 'icons/48x48/search.png'
-    class_views = ['edit']
 
     class_schema = merge_dicts(
         DBResource.class_schema,
@@ -51,12 +50,17 @@ class SEO(DBResource):
             title=MSG(u'Bing site verification key')))
 
 
+    # Views
+    class_views = ['edit']
     edit = AutoEdit(title=MSG(u'Search engine optimization'),
                     description=seo_description,
                     fields=['google_site_verification',
                             'yahoo_site_verification',
                             'bing_site_verification'])
 
+    # Configuration
+    config_name = 'seo'
+
 
 # Register
-Configuration.register_plugin('seo', SEO)
+Configuration.register_plugin(SEO)

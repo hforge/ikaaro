@@ -270,8 +270,8 @@ class Configuration(Folder):
     _plugins = {}
 
     @classmethod
-    def register_plugin(cls, name, plugin):
-        cls._plugins[name] = plugin
+    def register_plugin(cls, plugin):
+        cls._plugins[plugin.config_name] = plugin
 
 
     def init_resource(self, **kw):

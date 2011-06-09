@@ -144,18 +144,8 @@ class Theme(Folder):
     class_id = 'config-theme'
     class_title = MSG(u'Theme')
     class_description = MSG(u'Allow to customize ikaaro skin')
-    class_icon16 = 'icons/16x16/theme.png'
     class_icon48 = 'icons/48x48/theme.png'
-    class_views = ['edit', 'edit_css', 'browse_content', 'preview_content',
-                   'links', 'backlinks', 'commit_log']
     __fixed_handlers__ = ['style']
-
-    add_favicon = Theme_AddFavIcon()
-    add_logo = Theme_AddLogo()
-    edit = Theme_Edit()
-    edit_css = GoToSpecificDocument(specific_document='style',
-            access='is_allowed_to_edit', specific_view='edit',
-            title=MSG(u'Edit CSS'))
 
     class_schema = merge_dicts(
         Folder.class_schema,
@@ -185,9 +175,23 @@ class Theme(Folder):
                            extension='jpg', filename='banner.jpg',
                            format='image/jpeg', state='public')
 
+    # Views
+    class_views = ['edit', 'edit_css', 'browse_content', 'preview_content',
+                   'links', 'backlinks', 'commit_log']
+
+    add_favicon = Theme_AddFavIcon()
+    add_logo = Theme_AddLogo()
+    edit = Theme_Edit()
+    edit_css = GoToSpecificDocument(specific_document='style',
+            access='is_allowed_to_edit', specific_view='edit',
+            title=MSG(u'Edit CSS'))
+
+    # Configuration
+    config_name = 'theme'
+
 
 
 ###########################################################################
 # Register
 ###########################################################################
-Configuration.register_plugin('theme', Theme)
+Configuration.register_plugin(Theme)

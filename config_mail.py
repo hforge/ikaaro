@@ -85,7 +85,6 @@ class ConfigMail(DBResource):
     class_title = MSG(u'Email options')
     class_description = mail_description
     class_icon48 = 'icons/48x48/mail.png'
-    class_views = ['edit']
 
     class_schema = merge_dicts(
         DBResource.class_schema,
@@ -99,7 +98,12 @@ class ConfigMail(DBResource):
             source='metadata', title=MSG(u'Emails signature'),
             widget=MultilineWidget))
 
+    # Views
+    class_views = ['edit']
     edit = ConfigMail_Edit()
 
+    # Configuration
+    config_name = 'mail'
 
-Configuration.register_plugin('mail', ConfigMail)
+
+Configuration.register_plugin(ConfigMail)

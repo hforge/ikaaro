@@ -55,14 +55,17 @@ class ConfigAccess(DBResource):
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
     class_icon48 = 'icons/48x48/lock.png'
-    class_views = ['edit']
 
     class_schema = merge_dicts(
         DBResource.class_schema,
         security_policy=String(source='metadata', default='intranet'))
 
+    # Views
+    class_views = ['edit']
     edit = ConfigAccess_Edit()
 
+    # Configuration
+    config_name = 'access'
 
 
-Configuration.register_plugin('access', ConfigAccess)
+Configuration.register_plugin(ConfigAccess)

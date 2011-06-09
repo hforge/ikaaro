@@ -31,11 +31,16 @@ class ConfigUsers(DBResource):
     class_title = MSG(u'Users')
     class_description = MSG(u'Manage users.')
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = ['browse_users', 'add_user']
 
+    # Views
+    class_views = ['browse_users', 'add_user']
     browse_users = RoleAware_BrowseUsers()
     add_user = RoleAware_AddUser()
     edit_membership = RoleAware_EditMembership()
 
+    # Configuration
+    config_name = 'users'
 
-Configuration.register_plugin('users', ConfigUsers)
+
+# Register
+Configuration.register_plugin(ConfigUsers)

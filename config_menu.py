@@ -38,5 +38,8 @@ class ConfigMenu(MenuFolder):
                              'title': Property(u'Contact', language='en'),
                              'target': '_top'})
 
+    # Configuration
+    config_name = 'menu'
 
-Configuration.register_plugin('menu', ConfigMenu)
+
+Configuration.register_plugin(ConfigMenu)

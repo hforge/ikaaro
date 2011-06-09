@@ -68,7 +68,6 @@ class Captcha(DBResource):
     class_title = MSG(u'Captcha')
     class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'
-    class_views = ['edit']
 
     class_schema = merge_dicts(
         DBResource.class_schema,
@@ -77,9 +76,14 @@ class Captcha(DBResource):
         captcha_answer=captcha_datatype(
             default=u'5', title=MSG(u"Answer")))
 
+    # Views
+    class_views = ['edit']
     edit = AutoEdit(
         title=MSG(u'Edit captcha'),
         fields=['captcha_question', 'captcha_answer'])
 
+    # Configuration
+    config_name = 'captcha'
 
-Configuration.register_plugin('captcha', Captcha)
+
+Configuration.register_plugin(Captcha)
