@@ -84,6 +84,7 @@ class Captcha(DBResource):
 
     # Configuration
     config_name = 'captcha'
+    config_group = 'access'
 
 
 Configuration.register_plugin(Captcha)

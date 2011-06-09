@@ -28,6 +28,7 @@ from itools.database import PhraseQuery
 
 # Import from ikaaro
 from folder import Folder
+from folder_views import Folder_Orphans
 from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
 
@@ -35,6 +36,14 @@ from utils import get_base_path_query
 ###########################################################################
 # Views
 ###########################################################################
+GROUPS = [
+    ('access', MSG(u'Users, Access Control & Security')),
+    ('webmaster', MSG(u'Webmaster tools')),
+    ('extensions', MSG(u'Extensions')),
+    ('other', MSG(u'Other')),
+    ]
+
+
 class Configuration_View(STLForm):
 
     access = 'is_allowed_to_edit'
@@ -43,7 +52,7 @@ class Configuration_View(STLForm):
 
     def get_namespace(self, resource, context):
         newplugins = []
-        items = []
+        groups = {}
 
         # Core views (non persistent)
         ac = resource.get_access_control()
@@ -53,7 +62,8 @@ class Configuration_View(STLForm):
                 continue
             if not ac.is_access_allowed(context.user, resource, view):
                 continue
-            items.append({
+            group_name = getattr(view, 'config_group', 'other')
+            groups.setdefault(group_name, []).append({
                 'icon': resource.get_method_icon(view, size='48x48'),
                 'title': view.title,
                 'description': view.description,
@@ -65,14 +75,19 @@ class Configuration_View(STLForm):
             if plugin is None:
                 newplugins.append(name)
                 continue
-            items.append({
+            group_name = getattr(plugin, 'config_group', 'other')
+            groups.setdefault(group_name, []).append({
                 'icon': plugin.get_class_icon(48),
                 'title': plugin.class_title,
                 'description': plugin.class_description,
                 'url': name})
 
+        groups_ns = [
+            {'title': title, 'items': groups[name]}
+            for (name, title) in GROUPS if name in groups ]
+
         # Ok
-        return {'newplugins': newplugins, 'items': items}
+        return {'newplugins': newplugins, 'groups': groups_ns}
 
 
     def action(self, resource, context, form):
@@ -91,8 +106,9 @@ class CPEditVirtualHosts(STLForm):
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
-    schema = {
-        'vhosts': String}
+    schema = {'vhosts': String}
+
+    config_group = 'webmaster'
 
 
     def get_namespace(self, resource, context):
@@ -120,6 +136,8 @@ class CPBrokenLinks(STLView):
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
+
+    config_group = 'webmaster'
 
 
     def get_namespace(self, resource, context):
@@ -167,8 +185,9 @@ class CPEditLanguages(STLForm):
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = '/ui/website/edit_languages.xml'
-    schema = {
-        'codes': String(multiple=True, mandatory=True)}
+    schema = {'codes': String(multiple=True, mandatory=True)}
+
+    config_group = 'webmaster'
 
 
     def get_namespace(self, resource, context):
@@ -263,15 +282,8 @@ class Configuration(Folder):
     class_title = MSG(u'Configuration')
     is_content = False
 
-    class_core_views = ['browse_users', 'add_user', 'edit_virtual_hosts',
-                        'edit_languages', 'broken_links', 'orphans']
-
-    
-    _plugins = {}
-
-    @classmethod
-    def register_plugin(cls, plugin):
-        cls._plugins[plugin.config_name] = plugin
+    class_core_views = ['edit_virtual_hosts', 'edit_languages',
+                        'broken_links', 'orphans']
 
 
     def init_resource(self, **kw):
@@ -279,13 +291,21 @@ class Configuration(Folder):
         for name, plugin in self._plugins.items():
             self.make_resource(name, plugin)
 
+    
+    # Plugins
+    _plugins = {}
 
+    @classmethod
+    def register_plugin(cls, plugin):
+        cls._plugins[plugin.config_name] = plugin
+
+
+    # Views
     view = Configuration_View()
-
-    # Control Panel
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
+    orphans = Folder_Orphans(config_group='webmaster')
 
 
 # Import core config modules

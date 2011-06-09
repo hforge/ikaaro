@@ -66,6 +66,7 @@ class ConfigAccess(DBResource):
 
     # Configuration
     config_name = 'access'
+    config_group = 'access'
 
 
 Configuration.register_plugin(ConfigAccess)

@@ -76,7 +76,8 @@ class WebSite(RoleAware, Folder):
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
         # Configuration
-        self.make_resource('config', Configuration)
+        self.make_resource('config', Configuration,
+                           title={'en': u'Configuration'})
 
 
     def make_resource(self, name, cls, **kw):

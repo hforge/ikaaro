@@ -104,6 +104,7 @@ class ConfigMail(DBResource):
 
     # Configuration
     config_name = 'mail'
+    config_group = 'access'
 
 
 Configuration.register_plugin(ConfigMail)

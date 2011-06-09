@@ -40,6 +40,7 @@ class ConfigMenu(MenuFolder):
 
     # Configuration
     config_name = 'menu'
+    config_group = 'webmaster'
 
 
 Configuration.register_plugin(ConfigMenu)

@@ -188,6 +188,7 @@ class Theme(Folder):
 
     # Configuration
     config_name = 'theme'
+    config_group = 'webmaster'
 
 
 

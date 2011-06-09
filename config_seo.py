@@ -60,6 +60,7 @@ class SEO(DBResource):
 
     # Configuration
     config_name = 'seo'
+    config_group = 'webmaster'
 
 
 # Register

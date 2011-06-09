@@ -40,6 +40,7 @@ class ConfigUsers(DBResource):
 
     # Configuration
     config_name = 'users'
+    config_group = 'access'
 
 
 # Register
