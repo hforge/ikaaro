@@ -77,7 +77,7 @@ class EditLanguageMenu(ContextMenu):
         return items
 
 
-    def get_items(self):
+    def _get_items(self):
         multilingual = False
         schema = self.view._get_schema(self.resource, self.context)
         for key, datatype in schema.iteritems():
@@ -96,6 +96,14 @@ class EditLanguageMenu(ContextMenu):
             {'title': get_language_name(x), 'name': x,
              'selected': x in edit_languages}
             for x in languages ]
+
+
+    def get_items(self):
+        """Do not return item if unique."""
+        items = self._get_items()
+        if len(items) == 1:
+            return []
+        return items
 
 
     def get_hidden_fields(self):
