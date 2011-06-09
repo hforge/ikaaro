@@ -346,6 +346,7 @@ class DateWidget(Widget):
     format = '%Y-%m-%d'
     size = 10
     show_time = False
+    tip = MSG(u'Click on button "..." to choose a date.')
 
     def show_time_js(self):
         # True -> true for Javascript
@@ -400,6 +401,7 @@ class PathSelectorWidget(TextWidget):
 
     action = 'add_link'
     display_workflow = True
+    tip = MSG(u'Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
@@ -434,6 +436,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     action = 'add_image'
     width = 128
     height = 128
+    tip = MSG(u'Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
