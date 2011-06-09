@@ -377,7 +377,7 @@ class Menu(OrderedTable):
 
 
     def get_menu_namespace_level(self, context, url, depth=2,
-                                 use_first_child=False, flat=False):
+                                 use_first_child=False):
         parent = self.parent
         handler = self.handler
         menu_abspath = self.get_abspath()
@@ -435,7 +435,7 @@ class Menu(OrderedTable):
                             # Sub level
                             get_menu_ns_lvl = child.get_menu_namespace_level
                             subtabs = get_menu_ns_lvl(context, url, depth - 1,
-                                                      use_first_child, flat)
+                                                      use_first_child)
                             # use first child
                             if use_first_child and subtabs['items']:
                                 sub_path = subtabs['items'][0]['real_path']
@@ -671,10 +671,10 @@ class MenuFolder(Folder):
 
 
     def get_menu_namespace_level(self, context, url, depth=2,
-                                 use_first_child=False, flat=False):
+                                 use_first_child=False):
         menu_root = self.get_resource('menu')
         return menu_root.get_menu_namespace_level(context, url, depth,
-                                                  use_first_child, flat)
+                                                  use_first_child)
 
 
     def get_first_level_uris(self, context):
@@ -683,8 +683,8 @@ class MenuFolder(Folder):
 
 
 
-def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
-                       src=None, menu=None):
+def get_menu_namespace(context, depth=3, show_first_child=False, src=None,
+                       menu=None):
     """Return dict with the following structure:
 
     {'items': [item_dic01, ..., item_dic0N]}
@@ -700,15 +700,6 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
                     'path': '../python',
                     'target': '_top' or '_blank' or None,
                     'title': MSG(u'Python')}
-
-    If "flat" is true (the default), the menu is also represented with a
-    flattened structure:
-
-    {'items': [...],
-     'flat': {'lvl0': [item_dic01, ..., item_dic0N],
-              'lvl1': [item_dic11, ..., item_dic1N],
-              [...]
-              'lvlN': [item_dicN1, ..., item_dicNN]}}
 
     "items" contains the first level. Each item_dic contains in turn an 'items'
     with its children.
@@ -733,29 +724,5 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     if menu is None:
         return {'items': []}
 
-    tabs = menu.get_menu_namespace_level(context, url, depth,
+    return menu.get_menu_namespace_level(context, url, depth,
                                          show_first_child)
-
-    if flat:
-        tabs['flat'] = {}
-        items = tabs['flat']['lvl0'] = tabs.get('items', None)
-        # initialize the levels
-        for i in range(1, depth):
-            tabs['flat']['lvl%s' % i] = None
-        exist_items = True
-        lvl = 1
-        while (items is not None) and exist_items:
-            exist_items = False
-            for item in items:
-                if item['class'] in ['active', 'in-path']:
-                    if item['items']:
-                        items = exist_items = item['items']
-                        if items:
-                            tabs['flat']['lvl%s' % lvl] = items
-                            lvl += 1
-                        break
-                    else:
-                        items = None
-                        break
-
-    return tabs
