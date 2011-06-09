@@ -27,8 +27,6 @@ from itools.web import STLView, STLForm, INFO, ERROR
 from itools.database import PhraseQuery
 
 # Import from ikaaro
-from access import RoleAware_BrowseUsers, RoleAware_AddUser
-from access import RoleAware_EditMembership
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
@@ -285,9 +283,6 @@ class Configuration(Folder):
     view = Configuration_View()
 
     # Control Panel
-    browse_users = RoleAware_BrowseUsers()
-    add_user = RoleAware_AddUser()
-    edit_membership = RoleAware_EditMembership()
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
@@ -300,3 +295,4 @@ import config_mail
 import config_menu
 import config_seo
 import config_theme
+import config_users
