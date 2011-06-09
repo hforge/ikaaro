@@ -496,8 +496,6 @@ class DBResource(Resource):
         abspath = self.get_canonical_path()
         abspath_str = str(abspath)
         if abspath_str != '/':
-            parent_path = abspath.resolve2('..')
-            values['parent_path'] = str(parent_path)
             values['parent_paths'] = [str(abspath[:i])
                     for i in range(len(abspath))]
         values['abspath'] = abspath_str

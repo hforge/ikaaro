@@ -82,7 +82,7 @@ class WebSite(RoleAware, Folder):
     def make_resource(self, name, cls, **kw):
         if name == 'ui':
             raise ValueError, 'cannot add a resource with the name "ui"'
-        Folder.make_resource(self, name, cls, **kw)
+        return Folder.make_resource(self, name, cls, **kw)
 
 
     ########################################################################
