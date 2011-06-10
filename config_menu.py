@@ -17,6 +17,7 @@
 
 # Import from itools
 from itools.csv import Property
+from itools.gettext import MSG
 
 # Import from ikaaro
 from config import Configuration
@@ -26,6 +27,8 @@ from menu import MenuFolder
 class ConfigMenu(MenuFolder):
 
     class_id = 'config-menu'
+    class_description = MSG(u'Edit the global menu.')
+    class_icon48 = 'icons/48x48/menu.png'
 
     def init_resource(self, **kw):
         super(ConfigMenu, self).init_resource(**kw)
