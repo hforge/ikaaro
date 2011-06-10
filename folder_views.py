@@ -469,6 +469,8 @@ class Folder_BrowseContent(SearchForm):
         elif column == 'icon':
             # icon
             path_to_icon = item_resource.get_resource_icon(16)
+            if not path_to_icon:
+                return None
             if path_to_icon.startswith(';'):
                 path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
             return path_to_icon
@@ -863,44 +865,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
             'columns': table_head,
             'rows': rows,
             'actions': actions}
-
-
-
-class Folder_Orphans(Folder_BrowseContent):
-    """Orphans are files not referenced in another resource of the database.
-
-    Orphans folders generally don't make sense because they serve as
-    containers. TODO or list empty folders?
-    """
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Orphans")
-    icon = 'orphans.png'
-    description = MSG(u"Show resources not linked from anywhere.")
-
-
-    def get_items(self, resource, context):
-        # Make the base search
-        items = Folder_BrowseContent.get_items(self, resource, context)
-
-        # Find out the orphans
-        root = context.root
-        orphans = []
-        for item in items.get_documents():
-            query = PhraseQuery('links', item.abspath)
-            results = root.search(query)
-            if len(results) == 0:
-                orphans.append(item)
-
-        # Transform back the items found in a SearchResults object.
-        # FIXME This is required by 'get_item_value', we should change that,
-        # for better performance.
-        args = [ PhraseQuery('abspath', x.abspath) for x in orphans ]
-        query = OrQuery(*args)
-        items = root.search(query)
-
-        # Ok
-        return items
 
 
 

@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.database import OrQuery
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
@@ -28,7 +29,7 @@ from itools.database import PhraseQuery
 
 # Import from ikaaro
 from folder import Folder
-from folder_views import Folder_Orphans
+from folder_views import Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
 
@@ -99,7 +100,7 @@ class Configuration_View(STLForm):
 
 
 
-class CPEditVirtualHosts(STLForm):
+class Config_EditVirtualHosts(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Virtual Hosts')
@@ -129,7 +130,7 @@ class CPEditVirtualHosts(STLForm):
 
 
 
-class CPBrokenLinks(STLView):
+class Config_BrokenLinks(STLView):
 
     access = 'is_admin'
     title = MSG(u'Broken Links')
@@ -178,7 +179,50 @@ class CPBrokenLinks(STLView):
 
 
 
-class CPEditLanguages(STLForm):
+class Config_Orphans(Folder_BrowseContent):
+    """Orphans are files not referenced in another resource of the database.
+
+    Orphans folders generally don't make sense because they serve as
+    containers. TODO or list empty folders?
+    """
+
+    access = 'is_allowed_to_view'
+    title = MSG(u"Orphans")
+    icon = 'orphans.png'
+    description = MSG(u"Show resources not linked from anywhere.")
+
+
+    def search_content_only(self, resource, context):
+        return True
+
+
+    def get_items(self, resource, context):
+        # Make the base search
+        resource = resource.get_site_root()
+        items = super(Config_Orphans, self).get_items(resource, context)
+
+        # Find out the orphans
+        root = context.root
+        orphans = []
+        for item in items.get_documents():
+            query = PhraseQuery('links', item.abspath)
+            results = root.search(query)
+            if len(results) == 0:
+                orphans.append(item)
+
+        # Transform back the items found in a SearchResults object.
+        # FIXME This is required by 'get_item_value', we should change that,
+        # for better performance.
+        args = [ PhraseQuery('abspath', x.abspath) for x in orphans ]
+        query = OrQuery(*args)
+        items = root.search(query)
+
+        # Ok
+        return items
+
+
+
+class Config_EditLanguages(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Languages')
@@ -302,10 +346,10 @@ class Configuration(Folder):
 
     # Views
     view = Configuration_View()
-    edit_virtual_hosts = CPEditVirtualHosts()
-    edit_languages = CPEditLanguages()
-    broken_links = CPBrokenLinks()
-    orphans = Folder_Orphans(config_group='webmaster')
+    edit_virtual_hosts = Config_EditVirtualHosts()
+    edit_languages = Config_EditLanguages()
+    broken_links = Config_BrokenLinks()
+    orphans = Config_Orphans(config_group='webmaster')
 
 
 # Import core config modules

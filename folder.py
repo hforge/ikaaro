@@ -37,7 +37,7 @@ from itools.web import get_context, BaseView
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
-from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
+from folder_views import Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
@@ -475,7 +475,6 @@ class Folder(DBResource):
     browse_content = Folder_BrowseContent()
     rename = Folder_Rename()
     preview_content = Folder_PreviewContent()
-    orphans = Folder_Orphans()
     thumb = Folder_Thumbnail()
 
 

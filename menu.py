@@ -33,7 +33,7 @@ from datatypes import Multilingual
 from exceptions import ConsistencyError
 from folder import Folder
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
-from folder_views import Folder_Orphans, Folder_NewResource
+from folder_views import Folder_NewResource
 from folder_views import Folder_Rename, GoToSpecificDocument
 from folder_views import Folder_Thumbnail
 from popup import DBResource_AddLink
@@ -656,7 +656,6 @@ class MenuFolder(Folder):
     rename = Folder_Rename(access='is_admin')
     preview_content = Folder_PreviewContent(access='is_admin')
     commit_log = DBResource_CommitLog(access='is_admin')
-    orphans = Folder_Orphans(access='is_admin')
     thumb = Folder_Thumbnail(access='is_admin')
 
 
