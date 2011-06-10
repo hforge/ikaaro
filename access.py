@@ -494,7 +494,7 @@ class RoleAware(AccessControl):
             state = 'public'
 
         # Case 1: Extranet or Community
-        if security_policy in ('extranet', 'community'):
+        if security_policy == 'extranet':
             if state == 'public':
                 return True
             return role is not None

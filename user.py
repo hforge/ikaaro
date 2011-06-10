@@ -244,8 +244,6 @@ class User(AccessControl, Folder):
                 return False
         elif policy == 'extranet':
             pass
-        elif policy == 'community':
-            pass
 
         return super(User, self).is_allowed_to_view(user, resource)
 

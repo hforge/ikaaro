@@ -358,6 +358,7 @@ import config_captcha
 import config_groups
 import config_mail
 import config_menu
+import config_register
 import config_seo
 import config_theme
 import config_users

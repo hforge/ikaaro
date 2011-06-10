@@ -153,7 +153,7 @@ class WebSite(RoleAware, Folder):
 
 
     def is_allowed_to_register(self):
-        return self.get_security_policy() == 'community'
+        return self.get_resource('config/register').get_property('is_open')
 
 
     def get_security_policy(self):

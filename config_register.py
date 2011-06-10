@@ -16,56 +16,36 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String
+from itools.datatypes import Boolean
 from itools.gettext import MSG
-from itools.web import STLForm
 
 # Import from ikaaro
+from autoedit import AutoEdit
 from config import Configuration
-from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 
 
-class ConfigAccess_Edit(STLForm):
 
-    access = 'is_admin'
-    template = '/ui/website/security_policy.xml'
-    schema = {
-        'security_policy': String(default='intranet')}
+class ConfigRegister(DBResource):
 
-
-    def get_namespace(self, resource, context):
-        security_policy = resource.get_property('security_policy')
-        return {
-            'intranet': security_policy == 'intranet',
-            'extranet': security_policy == 'extranet'}
-
-
-    def action(self, resource, context, form):
-        resource.set_property('security_policy', form['security_policy'])
-        context.message = MSG_CHANGES_SAVED
-
-
-
-class ConfigAccess(DBResource):
-
-    class_id = 'config-access'
+    class_id = 'config-register'
     class_version = '20110606'
-    class_title = MSG(u'Access Control')
-    class_description = MSG(u'Choose the security policy.')
-    class_icon48 = 'icons/48x48/lock.png'
+    class_title = MSG(u'User registration')
+    class_description = MSG(u'Configuration the user registration process.')
+    class_icon48 = 'icons/48x48/signin.png'
 
     class_schema = merge_dicts(
         DBResource.class_schema,
-        security_policy=String(source='metadata', default='intranet'))
+        is_open=Boolean(source='metadata', default=False,
+                        title=MSG(u'Users can register by themselves')))
 
     # Views
     class_views = ['edit']
-    edit = ConfigAccess_Edit()
+    edit = AutoEdit(title=class_description, fields=['is_open'])
 
     # Configuration
-    config_name = 'access'
+    config_name = 'register'
     config_group = 'access'
 
 
-Configuration.register_plugin(ConfigAccess)
+Configuration.register_plugin(ConfigRegister)
