@@ -27,11 +27,16 @@ from itools.datatypes import Unicode, XMLContent
 from itools.gettext import MSG
 from itools.web import BaseView, STLForm, STLView
 from itools.xml import XMLParser
+from itools.web import get_context
+from itools.core import freeze, merge_dicts
 
 # Import from ikaaro
 from ikaaro.comments import CommentsView
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.views import ContextMenu
+from ikaaro.views import ContextMenu, CompositeView, CompositeForm
+from ikaaro.autoform import AutoForm, Widget, TextWidget, SelectWidget
+from ikaaro.autoform import ProgressBarWidget, FileWidget, MultilineWidget
+from ikaaro.utils import make_stl_template
 
 # Local import
 from datatypes import get_issue_fields
@@ -159,6 +164,141 @@ class Issue_Edit(STLForm):
         # Change
         context.database.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
+
+
+
+
+class ProductsSelectWidget(Widget):
+
+    template = make_stl_template("""
+    <script type="text/javascript">
+    var list_products = {<stl:inline stl:repeat="product products">
+        "${product/id}":
+            {'module':
+                [<stl:inline stl:repeat="module product/modules">
+                    {"id": "${module/id}", "value": "${module/value}"},
+                </stl:inline>],
+                'version':
+                [<stl:inline stl:repeat="version product/versions">
+                    {"id": "${version/id}", "value": "${version/value}"},
+                </stl:inline>]}
+            ,</stl:inline>
+        }
+    function update_tracker(){
+      update_tracker_list('version');
+      update_tracker_list('module');
+    }
+    </script>
+    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
+      class="${css}">
+      <option value="" stl:if="has_empty_option"></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>""")
+
+
+    css = None
+    has_empty_option = True
+    size = None
+
+
+    def multiple(self):
+        #print("multiple = %s" % self.datatype.multiple)
+        return self.datatype.multiple
+
+
+    def products(self):
+        context = get_context()
+        if context is None:
+            return
+        #print("context.uri = %s" % context.resource.parent)
+        tracker = context.resource.parent
+        #print("tracker.get_list_products_namespace() = %s" % tracker.get_list_products_namespace())
+        return tracker.get_list_products_namespace()
+
+
+    def options(self):
+        value = self.value
+        # Check whether the value is already a list of options
+        # FIXME This is done to avoid a bug when using a select widget in an
+        # auto-form, where the 'datatype.get_namespace' method is called
+        # twice (there may be a better way of handling this).
+        if type(value) is not list:
+            return self.datatype.get_namespace(value)
+        return value
+
+
+
+class Issue_Edit_AutoForm(AutoForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit Issue')
+    icon = 'edit.png'
+    styles = ['/ui/tracker/style.css']
+    scripts = ['/ui/tracker/tracker.js']
+
+    widgets = freeze([
+        TextWidget('title', title=MSG(u'Title:')),
+        SelectWidget('assigned_to', title=MSG(u'Assigned To:')),
+        ProductsSelectWidget('product', title=MSG(u'Product:')),
+        SelectWidget('type', title=MSG(u'Type:')),
+        SelectWidget('cc_list', title=MSG(u'CC:')),
+        SelectWidget('module', title=MSG(u'Module:')),
+        SelectWidget('version', title=MSG(u'Version:')),
+        SelectWidget('state', title=MSG(u'State:')),
+        SelectWidget('priority', title=MSG(u'Priority:')),
+        MultilineWidget('comment', title=MSG(u'New Comment:')),
+        FileWidget('attachment', title=MSG(u'Attachment:')),
+        ProgressBarWidget()
+        ])
+
+
+    def get_schema(self, resource, context):
+        tracker = resource.parent
+        return get_issue_fields(tracker)
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name in ('comment'):
+            return datatype.get_default()
+        return resource.get_property(name)
+
+
+    def get_namespace(self, resource, context):
+        namespace = AutoForm.get_namespace(self, resource, context)
+        return namespace
+
+
+    def action(self, resource, context, form):
+        # Edit
+        resource.add_comment(context, form)
+        # Change
+        context.database.change_resource(resource)
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class Issue_Edit_ProxyView(CompositeForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit Issue')
+    subviews = [ CommentsView(),
+            Issue_Edit_AutoForm()]
+
+    def get_namespace(self, resource, context):
+        views = []
+        views.append(CommentsView().GET(resource, context))
+        views.append(Issue_Edit_AutoForm().GET(resource, context))
+        return {'views': views}
+
+    def _get_edit_view(self):
+        return self.subviews[1]
+
+    def _get_query_fields(self, resource, context):
+        return self._get_edit_view()._get_query_fields(resource, context)
+
+    def _get_schema(self, resource, context):
+        return self._get_edit_view()._get_schema(resource, context)
 
 
 

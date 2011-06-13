@@ -570,7 +570,8 @@ class LocationWidget(SelectWidget):
 
 class ProgressBarWidget(Widget):
     name = 'progress-bar'
-    onsubmit = 'startProgressBar();'
+    onsubmit = 'startProgressBar()'
+    id = 'progress-bar'
 
     template = make_stl_template("""
     <div id ="progress-bar-widget">

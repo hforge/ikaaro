@@ -36,7 +36,8 @@ from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
-from issue_views import Issue_DownloadAttachments, Issue_Edit
+from issue_views import Issue_DownloadAttachments, Issue_Edit_AutoForm
+from issue_views import Issue_Edit_ProxyView
 from issue_views import Issue_History, IssueTrackerMenu
 
 
@@ -325,7 +326,7 @@ class Issue(CommentsAware, Folder):
 
 
     download_attachments = Issue_DownloadAttachments()
-    edit = Issue_Edit()
+    edit = Issue_Edit_ProxyView()
     history = Issue_History()
 
 

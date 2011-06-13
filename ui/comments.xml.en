@@ -11,9 +11,9 @@
           <span class="comment-datetime">${comment/datetime}</span></td>
       <td align="right">
         <a name="c${comment/number}"/>
-        <span class="comment-number"><a href="#c${comment/number}">Comment ${comment/number}</a></span>
+        <span class="comment-number"><a href="./#c${comment/number}">Comment ${comment/number}</a></span>
         <span class="comment-reply">
-          [ <a href="#new_comment"
+          [ <a href="./#new_comment"
             onclick="javascript:reply('${comment/number}');">
             Reply
           </a>]

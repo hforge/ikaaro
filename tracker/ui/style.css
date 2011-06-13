@@ -14,3 +14,33 @@
 .missing {
   text-decoration: line-through;
 }
+
+.block-widget-title {
+  width: 440px;
+  float: left;
+}
+.block-widget-assigned-to,
+.block-widget-cc-list
+{
+  width: 220px;
+  float: right;
+}
+.block-widget-product,
+.block-widget-module,
+.block-widget-version,
+.block-widget-type,
+.block-widget-state,
+.block-widget-priority
+{
+  width: 220px;
+  float: left;
+}
+.block-widget-comment,
+.block-widget-attachment,
+.block-widget-progressbar
+{
+  float: left;
+}
+.widget SELECT {
+  width: 95%;
+}
