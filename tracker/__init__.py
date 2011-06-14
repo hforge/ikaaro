@@ -24,7 +24,6 @@ from ikaaro.skins import register_skin
 from ikaaro.website import WebSite
 from tracker import Tracker
 
-
 # Register skin
 path = get_abspath('ui')
 register_skin('tracker', path)

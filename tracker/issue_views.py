@@ -40,7 +40,7 @@ from ikaaro.utils import make_stl_template
 
 # Local import
 from datatypes import get_issue_fields
-
+import issue
 
 def check_properties_differencies(prop1, prop2):
     "Check for differences of properties values"
@@ -211,9 +211,11 @@ class ProductsSelectWidget(Widget):
         context = get_context()
         if context is None:
             return
-        #print("context.uri = %s" % context.resource.parent)
-        tracker = context.resource.parent
-        #print("tracker.get_list_products_namespace() = %s" % tracker.get_list_products_namespace())
+        resource = context.resource
+        if isinstance(resource, issue.Issue):
+            tracker = resource.parent
+        else:
+            tracker = context.resource
         return tracker.get_list_products_namespace()
 
 

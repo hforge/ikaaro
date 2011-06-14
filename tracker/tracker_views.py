@@ -29,10 +29,12 @@ from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
+from itools.core import freeze
 
 # Import from ikaaro
 from ikaaro.access import Roles_Datatype
-from ikaaro.autoform import SelectWidget, TextWidget
+from ikaaro.autoform import SelectWidget, TextWidget, AutoForm
+from ikaaro.autoform import ProgressBarWidget, FileWidget, MultilineWidget
 from ikaaro.buttons import BrowseButton
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
@@ -45,7 +47,7 @@ from issue import Issue
 from datatypes import get_issue_fields, TrackerList, ProductInfoList
 from datatypes import Tracker_UsersList
 from stored import StoredSearch
-
+from issue_views import ProductsSelectWidget
 
 columns = [
     ('id', MSG(u'Id')),
@@ -277,14 +279,29 @@ class Tracker_Edit(DBResource_Edit):
 
 
 
-class Tracker_AddIssue(STLForm):
+class Tracker_AddIssue(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
     icon = 'new.png'
-    template = '/ui/tracker/add_issue.xml'
+    #template = '/ui/tracker/add_issue.xml'
     styles = ['/ui/tracker/style.css']
     scripts = ['/ui/tracker/tracker.js']
+
+    widgets = freeze([
+        TextWidget('title', title=MSG(u'Title:')),
+        SelectWidget('assigned_to', title=MSG(u'Assigned To:')),
+        ProductsSelectWidget('product', title=MSG(u'Product:')),
+        SelectWidget('type', title=MSG(u'Type:')),
+        SelectWidget('cc_list', title=MSG(u'CC:')),
+        SelectWidget('module', title=MSG(u'Module:')),
+        SelectWidget('version', title=MSG(u'Version:')),
+        SelectWidget('state', title=MSG(u'State:')),
+        SelectWidget('priority', title=MSG(u'Priority:')),
+        MultilineWidget('comment', title=MSG(u'New Comment:')),
+        FileWidget('attachment', title=MSG(u'Attachment:')),
+        ProgressBarWidget()
+        ])
 
 
     def get_schema(self, resource, context):
@@ -304,8 +321,8 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
-        namespace = STLForm.get_namespace(self, resource, context)
-        namespace['list_products'] = resource.get_list_products_namespace()
+        namespace = AutoForm.get_namespace(self, resource, context)
+        #namespace['list_products'] = resource.get_list_products_namespace()
         return namespace
 
 
