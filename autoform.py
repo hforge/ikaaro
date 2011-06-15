@@ -23,7 +23,8 @@ from random import randint
 
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
-from itools.datatypes import DataType, Date, Enumerate, Boolean, Unicode
+from itools.datatypes import Boolean, DataType, Date, DateTime, Enumerate
+from itools.datatypes import Unicode
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -92,6 +93,8 @@ def get_default_widget(datatype):
         return RadioWidget
     elif issubclass(datatype, Date):
         return DateWidget
+    elif issubclass(datatype, DateTime):
+        return DatetimeWidget
     elif issubclass(datatype, Enumerate):
         return SelectWidget
 
@@ -327,8 +330,6 @@ class SelectWidget(Widget):
 
 class DateWidget(Widget):
 
-    tip = MSG(u"Format: 'yyyy-mm-dd'")
-
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_}" id="${id}"
       class="dateField" size="${size}" />
@@ -346,7 +347,7 @@ class DateWidget(Widget):
     format = '%Y-%m-%d'
     size = 10
     show_time = False
-    tip = MSG(u'Click on button "..." to choose a date.')
+    tip = MSG(u'Click on button "..." to choose a date (Format: "yyyy-mm-dd").')
 
     def show_time_js(self):
         # True -> true for Javascript
