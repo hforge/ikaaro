@@ -570,7 +570,7 @@ class LocationWidget(SelectWidget):
 
 class ProgressBarWidget(Widget):
     name = 'progress-bar'
-    onsubmit = 'startProgressBar()'
+    onsubmit = 'startProgressBar(filled)'
     id = 'progress-bar'
 
     template = make_stl_template("""
@@ -588,8 +588,10 @@ class ProgressBarWidget(Widget):
     <script type="text/javascript">
       $('head').append('<link rel="stylesheet" href="/ui/progressbar/jquery-progressbar.css" type="text/css" />');
       var upload_id = ${upload_id};
+      var filled = new Boolean();
       $("INPUT:file").focus(function () {
         attachmentSelected($(this));
+        filled = true;
       });
     </script>
     <script  type="text/javascript" src="/ui/progressbar/jquery-progressbar.min.js"/>
