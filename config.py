@@ -344,6 +344,11 @@ class Configuration(Folder):
         cls._plugins[plugin.config_name] = plugin
 
 
+    @classmethod
+    def unregister_plugin(cls, name):
+        del cls._plugins[name]
+
+
     # Views
     view = Configuration_View()
     edit_virtual_hosts = Config_EditVirtualHosts()
