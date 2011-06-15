@@ -44,3 +44,6 @@
 .widget SELECT {
   width: 95%;
 }
+FORM#autoform {
+  margin-bottom: 20px;
+}
