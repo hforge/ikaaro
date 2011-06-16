@@ -237,15 +237,8 @@ class User(AccessControl, Folder):
 
 
     def is_allowed_to_view(self, user, resource):
-        root = get_context().site_root
-        policy = root.get_security_policy()
-        if policy == 'intranet':
-            if user is None:
-                return False
-        elif policy == 'extranet':
-            pass
-
-        return super(User, self).is_allowed_to_view(user, resource)
+        access = get_context().site_root.get_resource('config/access')
+        return access.has_permission(user, 'view_public')
 
 
     #######################################################################

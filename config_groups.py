@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String
+from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
 from itools.web import INFO
 
@@ -28,6 +28,19 @@ from config import Configuration
 from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
+
+
+
+class UserGroupsDatatype(Enumerate):
+
+    def get_options(self):
+        groups = [
+            {'name': 'everybody', 'value': MSG(u'Everybody')},
+            {'name': 'authenticated', 'value': MSG(u'Authenticated')} ]
+        groups.extend(
+            [ {'name': group.name, 'value': group.get_title()}
+              for group in self.config_groups.get_resources() ])
+        return groups
 
 
 
@@ -70,6 +83,10 @@ class Group(DBResource):
     class_schema = merge_dicts(
         DBResource.class_schema,
         members=String(source='metadata', multiple=True))
+
+    # API
+    def get_links(self):
+        return set([ '/users/%s' % x for x in self.get_property('members') ])
 
     # Views
     class_views = ['browse_users', 'edit']
@@ -135,6 +152,14 @@ class ConfigGroups(Folder):
     # Configuration
     config_name = 'groups'
     config_group = 'access'
+
+
+    def init_resource(self, **kw):
+        super(ConfigGroups, self).init_resource(**kw)
+        # Add default groups
+        self.make_resource('admins', Group, title={'en': u'Admins'})
+        self.make_resource('reviewers', Group, title={'en': u'Reviewers'})
+        self.make_resource('members', Group, title={'en': u'Members'})
 
 
 

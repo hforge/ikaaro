@@ -520,11 +520,11 @@ class DBResource(Resource):
         if isinstance(self, WorkflowAware):
             values['workflow_state'] = self.get_workflow_state()
 
-        # Role Aware
-        from access import RoleAware
-        is_role_aware = isinstance(self, RoleAware)
+        # users (duck typing)
+        get_members = getattr(self, 'get_members', None)
+        is_role_aware = get_members is not None
         values['is_role_aware'] = is_role_aware
-        values['users'] = self.get_members() if is_role_aware else None
+        values['users'] = get_members() if is_role_aware else None
 
         # Image
         from file import Image

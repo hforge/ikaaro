@@ -32,7 +32,7 @@ from itools.web import STLView
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from access import RoleAware
+from access import AccessControl
 from config import Configuration
 from folder import Folder
 from resource_views import LoginView
@@ -40,10 +40,11 @@ from skins import skin_registry
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
+from workflow import WorkflowAware
 
 
 
-class WebSite(RoleAware, Folder):
+class WebSite(AccessControl, Folder):
 
     class_id = 'WebSite'
     class_version = '20110606'
@@ -63,21 +64,39 @@ class WebSite(RoleAware, Folder):
 
     class_schema = merge_dicts(
         Folder.class_schema,
-        RoleAware.class_schema,
         # Metadata
         vhosts=String(source='metadata', multiple=True, indexed=True),
-        website_languages=Tokens(source='metadata', default=('en',)))
+        website_languages=Tokens(source='metadata', default=('en',)),
+        # Other
+        users=String(multiple=True, indexed=True))
 
     # XXX Useful for the update method (i.e update_20100630)
     # To remove in ikaaro 0.70
     class_schema_extensible = True
 
 
-    def init_resource(self, **kw):
+    def init_resource(self, admins=(), **kw):
         Folder.init_resource(self, **kw)
         # Configuration
-        self.make_resource('config', Configuration,
-                           title={'en': u'Configuration'})
+        config = self.make_resource('config', Configuration,
+                                    title={'en': u'Configuration'})
+        # Admins
+        if admins:
+            group = config.get_resource('groups/admins')
+            group.set_property('members', list(admins))
+        # Permissions
+        permissions = {
+            'view_public': ['authenticated'],
+            'view_private': ['authenticated'],
+            'edit_public': ['reviewers', 'admins'],
+            'edit_private': ['members', 'reviewers', 'admins'],
+            'wf_publish': ['reviewers', 'admins'],
+            'wf_request': ['members', 'reviewers', 'admins'],
+            'config': ['admins']}
+        access = config.get_resource('access').handler
+        for permission, groups in permissions.items():
+            for group in groups:
+                access.add_record({'permission': permission, 'group': group})
 
 
     def make_resource(self, name, cls, **kw):
@@ -152,13 +171,62 @@ class WebSite(RoleAware, Folder):
         context.content_type = 'text/html; charset=UTF-8'
 
 
+    #######################################################################
+    # Access control
+    #######################################################################
     def is_allowed_to_register(self):
         return self.get_resource('config/register').get_property('is_open')
 
 
-    def get_security_policy(self):
+    def get_members(self):
+        members = set()
+        for group in self.get_resources('config/groups'):
+            group_members = group.get_property('members')
+            members.update(group_members)
+
+        return members
+
+
+    def has_user_role(self, username, *group_names):
+        groups = self.get_resource('config/groups')
+        for group_name in group_names:
+            group = groups.get_resource(group_name)
+            if username in group.get_property('members'):
+                return True
+        return False
+
+
+    def is_allowed_to_view(self, user, resource):
+        # 1. Permission
+        state = getattr(resource, 'workflow_state', 'public')
+        permission = 'view_public' if state == 'public' else 'view_private'
+        # 2. Access
         access = self.get_resource('config/access')
-        return access.get_property('security_policy')
+        return access.has_permission(user, permission)
+
+
+    def is_allowed_to_edit(self, user, resource):
+        # 1. Permission
+        state = getattr(resource, 'workflow_state', 'private')
+        permission = 'edit_public' if state == 'public' else 'edit_private'
+        # 2. Access
+        access = self.get_resource('config/access')
+        return access.has_permission(user, permission)
+
+
+    def is_allowed_to_trans(self, user, resource, name):
+        if not isinstance(resource, WorkflowAware):
+            return False
+
+        # 1. Permission
+        if name in ('publish', 'retire'):
+            permission = 'wf_publish'
+        elif name in ('request', 'unrequest'):
+            permission = 'wf_request'
+
+        # 2. Access
+        access = self.get_resource('config/access')
+        return access.has_permission(user, permission)
 
 
     #######################################################################

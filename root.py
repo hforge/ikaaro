@@ -33,7 +33,7 @@ from email.header import Header
 import traceback
 
 # Import from itools
-from itools.core import freeze, get_abspath
+from itools.core import get_abspath
 from itools.database import GitDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
@@ -81,13 +81,12 @@ class Root(WebSite):
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
-    class_roles = freeze(['admins'])
 
     is_content = True
 
 
     def init_resource(self, email, password, admins=('0',)):
-        WebSite.init_resource(self, admins=admins)
+        super(Root, self).init_resource(admins=admins)
         # User folder
         users = self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User

@@ -15,57 +15,87 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import String
+from itools.csv import Table as TableFile
+from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.web import STLForm
 
 # Import from ikaaro
+from autoform import SelectWidget
 from config import Configuration
-from messages import MSG_CHANGES_SAVED
-from resource_ import DBResource
+from config_groups import UserGroupsDatatype
+from table import Table
 
 
-class ConfigAccess_Edit(STLForm):
+class PermissionsDatatype(Enumerate):
 
-    access = 'is_admin'
-    template = '/ui/website/security_policy.xml'
-    schema = {
-        'security_policy': String(default='intranet')}
-
-
-    def get_namespace(self, resource, context):
-        security_policy = resource.get_property('security_policy')
-        return {
-            'intranet': security_policy == 'intranet',
-            'extranet': security_policy == 'extranet'}
-
-
-    def action(self, resource, context, form):
-        resource.set_property('security_policy', form['security_policy'])
-        context.message = MSG_CHANGES_SAVED
+    options = [
+        {'name': 'view_public', 'value': MSG(u'View public content')},
+        {'name': 'view_private', 'value': MSG(u'View non public content')},
+        {'name': 'edit_public',
+         'value': MSG(u'Add, remove and modify public content')},
+        {'name': 'edit_private',
+         'value': MSG(u'Add, remove and modify non public content')},
+        {'name': 'wf_request',
+         'value': MSG(u'Request publication of content')},
+        {'name': 'wf_publish',
+         'value': MSG(u'Publish and unpublish content')},
+        {'name': 'config', 'value': MSG(u'Manage configuration')},
+    ]
 
 
 
-class ConfigAccess(DBResource):
+class ConfigAccess_Handler(TableFile):
+
+    record_properties = {
+        'permission': PermissionsDatatype(mandatory=True),
+        'group': String(mandatory=True)}
+
+
+
+class ConfigAccess(Table):
 
     class_id = 'config-access'
     class_version = '20110606'
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
     class_icon48 = 'icons/48x48/lock.png'
-
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        security_policy=String(source='metadata', default='intranet'))
-
-    # Views
-    class_views = ['edit']
-    edit = ConfigAccess_Edit()
+    class_handler = ConfigAccess_Handler
 
     # Configuration
     config_name = 'access'
     config_group = 'access'
+
+    # API
+    def has_permission(self, user, permission):
+        table = self.handler
+        for record in table.get_records():
+            if table.get_record_value(record, 'permission') == permission:
+                group_name = table.get_record_value(record, 'group')
+                # Special groups
+                if group_name == 'everybody':
+                    return True
+                if group_name == 'authenticated' and user:
+                    return True
+                # Normal groups
+                group = self.parent.get_resource('groups/%s' % group_name)
+                if user.name in group.get_property('members'):
+                    return True
+
+        return False
+
+
+    # User interface
+    def get_schema(self):
+        schema = super(ConfigAccess, self).get_schema()
+        config_groups = self.parent.get_resource('groups')
+        schema['group'] = UserGroupsDatatype(mandatory=True,
+                                             config_groups=config_groups)
+        return schema
+
+    form = [
+        SelectWidget('permission', title=MSG(u'Permission')),
+        SelectWidget('group', title=MSG(u'User group'))]
+
 
 
 Configuration.register_plugin(ConfigAccess)
