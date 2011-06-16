@@ -104,6 +104,7 @@ def get_default_widget(datatype):
 
 class Widget(CMSTemplate):
 
+    id = None
     language = None
     maxlength = None
     size = None
