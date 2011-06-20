@@ -71,15 +71,18 @@ class ConfigAccess(Table):
         for record in table.get_records():
             if table.get_record_value(record, 'permission') == permission:
                 group_name = table.get_record_value(record, 'group')
-                # Special groups
                 if group_name == 'everybody':
+                    # Anonymous
                     return True
-                if group_name == 'authenticated' and user:
-                    return True
-                # Normal groups
-                group = self.parent.get_resource('groups/%s' % group_name)
-                if user.name in group.get_property('members'):
-                    return True
+                elif group_name == 'authenticated':
+                    # Authenticated
+                    if user:
+                        return True
+                elif user:
+                    # Normal groups
+                    group = self.parent.get_resource('groups/%s' % group_name)
+                    if user.name in group.get_property('members'):
+                        return True
 
         return False
 
