@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.handlers.utils import transmap
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
+from itools.web import BaseView, BaseForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 from itools.core import freeze
 
@@ -284,7 +284,6 @@ class Tracker_AddIssue(AutoForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
     icon = 'new.png'
-    #template = '/ui/tracker/add_issue.xml'
     styles = ['/ui/tracker/style.css']
     scripts = ['/ui/tracker/tracker.js']
 

@@ -19,9 +19,8 @@ ${before}
           <span stl:if="widget/mandatory" class="field-is-missing"
             title="This field is required">*</span>
           <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
-          <br/>
         </stl:block>
-        <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
+        <span stl:if="widget/error" class="field-error">${widget/error}</span>
         <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
       </div>
       <div stl:if="widget/endline" class="clear" />

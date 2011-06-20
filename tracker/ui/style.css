@@ -35,12 +35,19 @@
   width: 220px;
   float: left;
 }
+.block-widget-product,
+.block-widget-module,
+.block-widget-state
+{
+  clear: left;
+}
 .block-widget-comment,
 .block-widget-attachment,
 .block-widget-progressbar
 {
   float: left;
 }
+.block-widget-attachment,
 .widget SELECT {
   width: 95%;
 }

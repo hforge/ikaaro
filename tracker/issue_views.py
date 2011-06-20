@@ -25,15 +25,15 @@
 from itools.csv import Property
 from itools.datatypes import Unicode, XMLContent
 from itools.gettext import MSG
-from itools.web import BaseView, STLForm, STLView
+from itools.web import BaseView, STLView
 from itools.xml import XMLParser
 from itools.web import get_context
-from itools.core import freeze, merge_dicts
+from itools.core import freeze
 
 # Import from ikaaro
 from ikaaro.comments import CommentsView
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.views import ContextMenu, CompositeView, CompositeForm
+from ikaaro.views import ContextMenu, CompositeForm
 from ikaaro.autoform import AutoForm, Widget, TextWidget, SelectWidget
 from ikaaro.autoform import ProgressBarWidget, FileWidget, MultilineWidget
 from ikaaro.utils import make_stl_template
