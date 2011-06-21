@@ -85,14 +85,16 @@ class Root(WebSite):
     is_content = True
 
 
-    def init_resource(self, email, password, admins=('0',)):
-        super(Root, self).init_resource(admins=admins)
+    def init_resource(self, email, password):
+        super(Root, self).init_resource()
         # User folder
         users = self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
         password = get_secure_hash(password)
         user_class = get_resource_class('user')
-        users.make_resource('0', user_class, email=email, password=password)
+        user = users.make_resource('0', user_class, email=email,
+                                   password=password)
+        user.set_property('groups', ['/config/groups/admins'])
 
 
     ########################################################################

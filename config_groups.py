@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
 from itools.web import INFO
@@ -60,16 +59,30 @@ class Group_BrowseUsers(RoleAware_BrowseUsers):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
-            members = resource.get_property('members')
-            return item.name, (item.name in members)
+            user = context.root.get_resource(item.abspath)
+            groups = user.get_property('groups')
+            resource.get_abspath()
+            return item.name, (resource.get_abspath() in groups)
 
         proxy = super(Group_BrowseUsers, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
     def action(self, resource, context, form):
-        members = form['ids']
-        resource.set_property('members', members)
+        group_id = str(resource.get_abspath())
+
+        users = context.root.get_resource('users')
+
+        ac = resource.get_access_control()
+        for username in ac.get_members():
+            user = users.get_resource(username)
+            groups = set(user.get_property('groups'))
+            if username in form['ids']:
+                groups.add(group_id)
+            else:
+                groups.discard(group_id)
+            user.set_property('groups', list(groups))
+
         context.message = MSG_CHANGES_SAVED
 
 
@@ -79,14 +92,6 @@ class Group(DBResource):
     class_id = 'config-group'
     class_version = '20110606'
     class_title = MSG(u'User Group')
-
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        members=String(source='metadata', multiple=True))
-
-    # API
-    def get_links(self):
-        return set([ '/users/%s' % x for x in self.get_property('members') ])
 
     # Views
     class_views = ['browse_users', 'edit']
@@ -129,8 +134,8 @@ class BrowseGroups(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
             brain, item_resource = item
-            members = item_resource.get_property('members')
-            return len(members)
+            results = context.database.catalog.search(groups=brain.abspath)
+            return len(results)
 
         proxy = super(BrowseGroups, self)
         return proxy.get_item_value(resource, context, item, column)

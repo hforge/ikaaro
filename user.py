@@ -66,6 +66,7 @@ class User(AccessControl, Folder):
         user_language=String(source='metadata'),
         user_timezone=String(source='metadata'),
         user_must_confirm=String(source='metadata'),
+        groups=String(source='metadata', multiple=True, indexed=True),
         # Metadata (backwards compatibility)
         username=String(source='metadata', indexed=True, stored=True),
         # Other
@@ -91,7 +92,14 @@ class User(AccessControl, Folder):
         # username (overrides default)
         values['username'] = self.get_login_name()
 
+        # groups
+        values['groups'] = self.get_property('groups')
+
         return values
+
+
+    def get_links(self):
+        return set(self.get_property('groups'))
 
 
     ########################################################################
@@ -152,13 +160,7 @@ class User(AccessControl, Folder):
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
-        root = self.get_root()
-        if root is None:
-            return ()
-
-        results = root.search(is_role_aware=True, users=self.name)
-        groups = [ x.abspath for x in results.get_documents() ]
-        return tuple(groups)
+        return tuple(self.get_property('groups'))
 
 
     def get_timezone(self):

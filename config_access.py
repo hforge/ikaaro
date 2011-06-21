@@ -67,22 +67,21 @@ class ConfigAccess(Table):
 
     # API
     def has_permission(self, user, permission):
+        user_groups = set(['everybody'])
+        if user:
+            user_groups.add('authenticated')
+            user_groups.update(user.get_property('groups'))
+
         table = self.handler
         for record in table.get_records():
             if table.get_record_value(record, 'permission') == permission:
                 group_name = table.get_record_value(record, 'group')
-                if group_name == 'everybody':
-                    # Anonymous
-                    return True
-                elif group_name == 'authenticated':
-                    # Authenticated
-                    if user:
-                        return True
-                elif user:
-                    # Normal groups
+                if group_name not in ('everybody', 'authenticated'):
                     group = self.parent.get_resource('groups/%s' % group_name)
-                    if user.name in group.get_property('members'):
-                        return True
+                    group_name = group.get_abspath()
+
+                if group_name in user_groups:
+                    return True
 
         return False
 

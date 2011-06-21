@@ -25,6 +25,7 @@ from types import GeneratorType
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
+from itools.database import AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -75,15 +76,11 @@ class WebSite(AccessControl, Folder):
     class_schema_extensible = True
 
 
-    def init_resource(self, admins=(), **kw):
+    def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
         # Configuration
         config = self.make_resource('config', Configuration,
                                     title={'en': u'Configuration'})
-        # Admins
-        if admins:
-            group = config.get_resource('groups/admins')
-            group.set_property('members', list(admins))
         # Permissions
         permissions = {
             'view_public': ['authenticated'],
@@ -178,21 +175,31 @@ class WebSite(AccessControl, Folder):
         return self.get_resource('config/register').get_property('is_open')
 
 
+    def get_groups(self):
+        return [
+            str(x.get_abspath())
+            for x in self.get_resources('config/groups') ]
+
+
     def get_members(self):
-        members = set()
-        for group in self.get_resources('config/groups'):
-            group_members = group.get_property('members')
-            members.update(group_members)
+        groups = self.get_groups()
+        query = AndQuery(
+            PhraseQuery('format', 'user'),
+            OrQuery(* [ PhraseQuery('groups', x) for x in groups ]))
 
-        return members
+        results = self.get_root().search(query)
+        return set([ x.name for x in results.get_documents() ])
 
 
-    def has_user_role(self, username, *group_names):
-        groups = self.get_resource('config/groups')
+    def has_user_role(self, user, *group_names):
+        user_groups = set(user.get_property('groups'))
+
+        path = str(self.get_resource('config/groups').get_abspath()) + '/'
         for group_name in group_names:
-            group = groups.get_resource(group_name)
-            if username in group.get_property('members'):
+            group_id = path + group_name
+            if group_id in user_groups:
                 return True
+
         return False
 
 

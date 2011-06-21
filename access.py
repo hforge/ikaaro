@@ -19,10 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
 from itools.database import TextQuery
-from itools.datatypes import Email, Enumerate, String, Tokens, Unicode
+from itools.datatypes import Email, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, ERROR, INFO
 
@@ -45,11 +45,11 @@ def is_admin(user, resource):
         return False
     # WebSite admin?
     root = resource.get_site_root()
-    if root.has_user_role(user.name, 'admins'):
+    if root.has_user_role(user, 'admins'):
         return True
     # Global admin?
     root = resource.get_root()
-    return root.has_user_role(user.name, 'admins')
+    return root.has_user_role(user, 'admins')
 
 
 
@@ -98,8 +98,12 @@ class RoleAware_BrowseUsers(SearchForm):
     def get_items(self, resource, context):
         resource = resource.get_access_control()
 
-        # Search
-        search_query = PhraseQuery('format', 'user')
+        # Build the Query
+        groups = resource.get_groups()
+        search_query = AndQuery(
+            PhraseQuery('format', 'user'),
+            OrQuery(* [ PhraseQuery('groups', x) for x in groups ]))
+
         search_term = context.query['search_term'].strip()
         if search_term:
             or_query = OrQuery(
@@ -107,20 +111,11 @@ class RoleAware_BrowseUsers(SearchForm):
                 TextQuery('firstname', search_term),
                 StartQuery('username', search_term),
                 StartQuery('email_domain', search_term))
-            search_query = AndQuery(search_query, or_query)
-        results = context.root.search(search_query)
-
-        # Show only users that belong to this group (FIXME Use the catalog)
-        users = []
-        roles = resource.get_members_classified_by_role()
-        for user in results.get_documents():
-            for role in roles:
-                if user.name in roles[role]:
-                    users.append(user)
-                    break
+            search_query.append(or_query)
 
         # Ok
-        return users
+        results = context.root.search(search_query)
+        return results.get_documents()
 
 
     def sort_and_batch(self, resource, context, items):
@@ -156,8 +151,6 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
     def get_item_value(self, resource, context, item, column):
-        resource = resource.get_access_control()
-
         if column == 'checkbox':
             return item.name, False
         elif column == 'user_id':
@@ -169,11 +162,15 @@ class RoleAware_BrowseUsers(SearchForm):
         elif column == 'lastname':
             return item.lastname
         elif column == 'role':
-            role = resource.get_user_role(item.name)
-            role = resource.get_role_title(role)
+            ac = resource.get_access_control()
+            user = context.root.get_resource(item.abspath)
+            user_groups = set(user.get_property('groups'))
+            groups = u', '.join([
+                x.get_title() for x in ac.get_resources('config/groups')
+                if x.get_abspath() in user_groups ])
             href = '/%s/;edit_membership?id=%s' % (
                     context.site_root.get_pathto(resource), item.name)
-            return role, href
+            return groups, href
         elif column == 'account_state':
             user = context.root.get_resource(item.abspath)
             if user.get_property('user_must_confirm'):
@@ -449,227 +446,3 @@ class AccessControl(BaseAccessControl):
         if index is None:
             return False
         return self.is_allowed_to_view(user, index)
-
-
-
-class RoleAware(AccessControl):
-    """This base class implements access control based on the concept of
-    roles.  Includes a user interface.
-    """
-
-    class_roles = freeze(['guests', 'members', 'reviewers', 'admins'])
-
-    class_schema = freeze({
-        # Metadata
-        'guests': Tokens(source='metadata', title=MSG(u"Guest")),
-        'members': Tokens(source='metadata', title=MSG(u"Member")),
-        'reviewers': Tokens(source='metadata', title=MSG(u"Reviewer")),
-        'admins': Tokens(source='metadata', title=MSG(u'Admin')),
-        # Other
-        'users': String(multiple=True, indexed=True),
-        })
-
-
-    def get_links(self):
-        return set([ '/users/%s' % x for x in self.get_members() ])
-
-
-    #########################################################################
-    # Access Control
-    #########################################################################
-    def is_allowed_to_view(self, user, resource):
-        # Get the variables to resolve the formula
-        security_policy = resource.get_site_root().get_security_policy()
-        # The role of the user
-        if user is None:
-            role = None
-        elif self.is_admin(user, resource):
-            role = 'admins'
-        else:
-            role = self.get_user_role(user.name)
-        # The state of the resource
-        if isinstance(resource, WorkflowAware):
-            state = resource.workflow_state
-        else:
-            state = 'public'
-
-        # Case 1: Extranet or Community
-        if security_policy == 'extranet':
-            if state == 'public':
-                return True
-            return role is not None
-
-        # Case 2: Intranet
-        if role in ('admins', 'reviewers', 'members'):
-            return True
-        elif role == 'guests':
-            return state == 'public'
-        return False
-
-
-    def is_allowed_to_edit(self, user, resource):
-        # Anonymous can touch nothing
-        if user is None:
-            return False
-
-        # Admins are all powerfull
-        if self.is_admin(user, resource):
-            return True
-
-        # Reviewers too
-        if self.has_user_role(user.name, 'reviewers'):
-            return True
-
-        # Members only can touch not-yet-published documents
-        if self.has_user_role(user.name, 'members'):
-            if isinstance(resource, WorkflowAware):
-                state = resource.workflow_state
-                # Public resources are frozen for members
-                if state != 'public':
-                    return True
-
-        return False
-
-
-    def is_allowed_to_add(self, user, resource, class_id=None):
-        # Anonymous can touch nothing
-        if user is None:
-            return False
-
-        # Admins are all powerfull
-        if self.is_admin(user, resource):
-            return True
-
-        # Reviewers too
-        return self.has_user_role(user.name, 'reviewers', 'members')
-
-
-    def is_allowed_to_trans(self, user, resource, name):
-        if not isinstance(resource, WorkflowAware):
-            return False
-
-        # Anonymous can touch nothing
-        if user is None:
-            return False
-
-        # Admins are all powerfull
-        if self.is_admin(user, resource):
-            return True
-
-        # Reviewers can do everything
-        username = user.name
-        if self.has_user_role(username, 'reviewers'):
-            return True
-
-        # Members only can request and retract
-        if self.has_user_role(username, 'members'):
-            return name in ('request', 'unrequest')
-
-        return False
-
-
-    #########################################################################
-    # API / Public
-    #########################################################################
-    @classmethod
-    def get_role_title(cls, name):
-        return cls.class_schema[name].title
-
-
-    @classmethod
-    def get_role_names(cls):
-        """Return the names of the roles available.
-        """
-        return cls.class_roles
-
-
-    def get_user_role(self, user_id):
-        """Return the role the user has here, or "None" if the user has not
-        any role.
-        """
-        for role in self.get_role_names():
-            value = self.get_property(role)
-            if value and user_id in value:
-                return role
-        return None
-
-
-    def has_user_role(self, user_id, *roles):
-        """Return True if the given user has any of the given roles,
-        False otherwise.
-        """
-        for role_name in roles:
-            role = self.get_property(role_name)
-            if role and user_id in role:
-                return True
-        return False
-
-
-    def set_user_role(self, user_ids, role):
-        """Sets the role for the given users. If "role" is None, removes the
-        role of the users.
-        """
-        # The input parameter "user_ids" should be a list
-        if isinstance(user_ids, str):
-            user_ids = [user_ids]
-        elif isinstance(user_ids, unicode):
-            user_ids = [str(user_ids)]
-
-        # Change "user_ids" to a set, to simplify the rest of the code
-        user_ids = set(user_ids)
-
-        # Build the list of roles from where the users will be removed
-        roles = [ x for x in self.get_role_names() if x != role ]
-
-        # Add the users to the given role
-        if role is not None:
-            users = self.get_property(role)
-            users = set(users)
-            if user_ids - users:
-                users = tuple(users | user_ids)
-                self.set_property(role, users)
-
-        # Remove the user from the other roles
-        for role in roles:
-            users = self.get_property(role)
-            users = set(users)
-            if users & user_ids:
-                users = tuple(users - user_ids)
-                self.set_property(role, users)
-
-
-    def get_members(self):
-        users = set()
-        for rolename in self.get_role_names():
-            usernames = self.get_property(rolename)
-            if usernames:
-                users.update(usernames)
-        return users
-
-
-    def get_members_classified_by_role(self):
-        roles = {}
-        for rolename in self.get_role_names():
-            usernames = self.get_property(rolename)
-            roles[rolename] = set(usernames)
-        return roles
-
-
-    #######################################################################
-    # User Interface
-    #######################################################################
-    def get_roles_namespace(self, username=None):
-        schema = self.class_schema
-        user_role = self.get_user_role(username) if username else None
-
-        return [
-            {'name': x, 'title': schema[x].title, 'selected': x == user_role}
-            for x in self.class_roles ]
-
-
-    #######################################################################
-    # UI / Views
-    #######################################################################
-    browse_users = RoleAware_BrowseUsers()
-    edit_membership = RoleAware_EditMembership()
-    add_user = RoleAware_AddUser()
