@@ -158,13 +158,17 @@ class ConfigGroups(Folder):
     config_name = 'groups'
     config_group = 'access'
 
+    default_groups = [
+        ('admins', {'en': u'Admins'}),
+        ('reviewers', {'en': u'Reviewers'}),
+        ('members', {'en': u'Members'})]
+
 
     def init_resource(self, **kw):
         super(ConfigGroups, self).init_resource(**kw)
         # Add default groups
-        self.make_resource('admins', Group, title={'en': u'Admins'})
-        self.make_resource('reviewers', Group, title={'en': u'Reviewers'})
-        self.make_resource('members', Group, title={'en': u'Members'})
+        for name, title in self.default_groups:
+            self.make_resource(name, Group, title=title)
 
 
 
