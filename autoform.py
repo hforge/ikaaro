@@ -114,10 +114,11 @@ class Widget(CMSTemplate):
     # Focus on it if the first one displayed
     focus = True
     onsubmit = None
+    css = None
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" />
+      maxlength="${maxlength}" size="${size}" class="${css}"/>
       <label class="language" for="${id}" stl:if="language"
       >${language}</label>""")
 
@@ -193,7 +194,7 @@ class MultilineWidget(Widget):
     <label class="language block" for="${id}" stl:if="language"
       >${language}</label>
     <textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
-    >${value}</textarea>""")
+      class="${css}">${value}</textarea>""")
 
     rows = 5
     cols = 60
