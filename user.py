@@ -59,9 +59,12 @@ class User(AccessControl, Folder):
     ########################################################################
     class_schema = merge_dicts(
         Folder.class_schema,
-        firstname=Unicode(source='metadata', indexed=True, stored=True),
-        lastname=Unicode(source='metadata', indexed=True, stored=True),
-        email=Email(source='metadata', indexed=True, stored=True),
+        firstname=Unicode(source='metadata', indexed=True, stored=True,
+                          title=MSG(u'First Name')),
+        lastname=Unicode(source='metadata', indexed=True, stored=True,
+                         title=MSG(u'Last Name')),
+        email=Email(source='metadata', indexed=True, stored=True,
+                    title=MSG(u'E-mail Address')),
         password=Password(source='metadata'),
         user_language=String(source='metadata'),
         user_timezone=String(source='metadata'),

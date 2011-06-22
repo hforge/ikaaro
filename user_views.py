@@ -19,7 +19,7 @@
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, String, Unicode, DateTime
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
@@ -29,11 +29,10 @@ from itools.database import PhraseQuery, AndQuery, OrQuery
 from pytz import common_timezones
 
 # Import from ikaaro
-from autoform import AutoForm, timestamp_widget
-from autoform import HiddenWidget, PasswordWidget, ReadOnlyWidget, TextWidget
+from autoedit import AutoEdit
+from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from folder import Folder_BrowseContent
 import messages
-from resource_views import DBResource_Edit
 from utils import get_base_path_query
 
 
@@ -178,55 +177,19 @@ class User_Profile(STLView):
 
 
 
-class User_EditAccount(DBResource_Edit):
+class User_EditAccount(AutoEdit):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
-    schema = {
-        'timestamp': DateTime(readonly=True),
-        'firstname': Unicode,
-        'lastname': Unicode,
-        'email': Email,
-        'password': String}
-    widgets = [timestamp_widget,
-               TextWidget('firstname', title=MSG(u"First Name")),
-               TextWidget('lastname', title=MSG(u"Last Name")),
-               TextWidget('email', title=MSG(u"E-mail Address"))]
 
 
-    def get_widgets(self, resource, context):
-        widgets = list(self.widgets)
-
-        # User must confirm?
-        if resource.name == context.user.name:
-            widgets.append(PasswordWidget('password',
-                mandatory=True,
-                title=MSG(u"To confirm these changes, "
-                          u"you must type your password")))
-
-        return widgets
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'password':
-            return None
-        return super(User_EditAccount, self).get_value(resource, context,
-                name, datatype)
-
+    # TODO The email address must be verified when changed. We should allow
+    # users to have several email addresses.
+    fields = ['firstname', 'lastname', 'email']
 
     def action(self, resource, context, form):
-        # Check password to confirm changes
-        is_same_user = (resource.name == context.user.name)
-        if is_same_user:
-            password = form['password']
-            if not resource.authenticate(password, clear=True):
-                context.message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-                return
-
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
         email = form['email']
@@ -239,14 +202,6 @@ class User_EditAccount(DBResource_Edit):
                 return
 
         return super(User_EditAccount, self).action(resource, context, form)
-
-
-    def set_value(self, resource, context, name, form):
-        # Skip password
-        if name == 'password':
-            return False
-        proxy = super(User_EditAccount, self)
-        return proxy.set_value(resource, context, name, form)
 
 
 
