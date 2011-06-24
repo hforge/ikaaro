@@ -46,7 +46,7 @@ from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
-from resource_views import Put_View, Delete_View
+from resource_views import Put_View, Delete_View, Rest_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import get_base_path_query
@@ -777,6 +777,7 @@ class DBResource(Resource):
     # Views / External editor
     http_put = Put_View
     http_delete = Delete_View
+    rest = Rest_View
 
 
 ###########################################################################
