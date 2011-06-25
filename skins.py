@@ -197,17 +197,52 @@ class Skin(object):
     #######################################################################
     # Authenticated user
     #######################################################################
-    def get_user_menu(self, context):
+    def get_usermenu(self, context):
         """Return a dict {'name': ..., 'title': ..., 'home': ...}
         """
+        here = context.resource
+        base_path = context.get_link(here)
+
+        # Case 1: Anonymous
         user = context.user
         if user is None:
-            return None
+            return [{'href': '%s/;login' % base_path,
+                     'title': MSG(u'Sign in'),
+                     'id': 'links-menu-login'}]
 
-        return {
-            'name': user.name,
-            'title': user.get_title(),
-            'home': '/users/%s' % user.name}
+        # Case 2: Authenticated
+        usermenu = [
+            # Home
+            {'href': '/users/%s' % user.name,
+             'title': user.get_title(),
+             'id': 'links-menu-profile'},
+            # Logout
+            {'href': '%s/;logout' % base_path,
+             'title': MSG(u'Log out'),
+             'id': 'links-menu-logout'}]
+
+        # Add content
+        container = here
+        if isinstance(here, Folder) is False:
+            container = here.parent
+        view = container.get_view('new_resource')
+        ac = container.get_access_control()
+        if ac.is_access_allowed(user, container, view):
+            usermenu.append({
+                'href': '%s/;new_resource' % context.get_link(container),
+                'title': MSG(u'Add content'),
+                'id': 'links-menu-new'})
+
+        # Configuration
+        site_root = context.site_root
+        view = site_root.get_resource('config').get_view('view')
+        if site_root.is_access_allowed(user, site_root, view):
+            usermenu.append({
+                'href': '/config',
+                'title': MSG(u'Configuration'),
+                'id': 'links-menu-configuration'})
+
+        return usermenu
 
 
     #######################################################################
@@ -332,21 +367,6 @@ class Skin(object):
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
-        # Top links
-        # (TODO refactor to a method 'get_top_links', move from the template)
-        # Login/Logout
-        base_path = context.get_link(here)
-        # Add content
-        container = here
-        if isinstance(here, Folder) is False:
-            container = here.parent
-        view = container.get_view('new_resource')
-        ac = container.get_access_control()
-        new_resource_allowed = ac.is_access_allowed(user, container, view)
-        # Configuration
-        view = site_root.get_resource('config').get_view('view')
-        configuration = site_root.is_access_allowed(user, site_root, view)
-
         # Ok
         return {
             # HTML head
@@ -357,13 +377,8 @@ class Skin(object):
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
-            # Top links
-            'login': '%s/;login' % base_path,
-            'logout': '%s/;logout' % base_path,
-            'user': self.get_user_menu(context),
-            'new_resource_allowed': new_resource_allowed,
-            'container_uri': context.get_link(container),
-            'configuration': configuration,
+            # Usermenu (the links at the top)
+            'usermenu': self.get_usermenu(context),
             # Location & Views
             'location': self.location_template(context=context),
             'languages': self.languages_template(context=context),

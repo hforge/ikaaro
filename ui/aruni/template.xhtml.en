@@ -27,19 +27,8 @@
     <!-- Header -->
     <div id="header">
       <div id="links">
-        <stl:block stl:if="not user">
-          <a href="${login}" title="Sign in" id="links-menu-login">Sign in</a>
-        </stl:block>
-        <stl:block stl:if="user">
-          <a href="${user/home}" title="${user/title}"
-             id="links-menu-profile">${user/title}</a>
-          <a href="${logout}" title="Log out" id="links-menu-logout"
-            >Log out</a>
-          <a stl:if="new_resource_allowed" id="links-menu-new"
-             href="${container_uri}/;new_resource">Add content</a>
-          <a stl:if="configuration" id="links-menu-configuration"
-             href="/config" title="Configuration">Configuration</a>
-        </stl:block>
+        <a stl:repeat="link usermenu" href="${link/href}" id="${link/id}"
+          title="${link/title}">${link/title}</a>
       </div>
       <!-- Languages & Searchbar -->
       <table cellpadding="0" cellspacing="0" class="header-toolbar">
