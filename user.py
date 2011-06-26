@@ -64,7 +64,7 @@ class User(AccessControl, Folder):
         lastname=Unicode(source='metadata', indexed=True, stored=True,
                          title=MSG(u'Last Name')),
         email=Email(source='metadata', indexed=True, stored=True,
-                    title=MSG(u'E-mail Address')),
+                    mandatory=True, title=MSG(u'E-mail Address')),
         password=Password(source='metadata'),
         user_language=String(source='metadata'),
         user_timezone=String(source='metadata'),
