@@ -36,6 +36,7 @@ from itools.xml import XMLParser
 from access import AccessControl
 from config import Configuration
 from folder import Folder
+from registry import get_resource_class
 from resource_views import LoginView
 from skins import skin_registry
 from website_views import AboutView, ContactForm, CreditsView
@@ -67,9 +68,7 @@ class WebSite(AccessControl, Folder):
         Folder.class_schema,
         # Metadata
         vhosts=String(source='metadata', multiple=True, indexed=True),
-        website_languages=Tokens(source='metadata', default=('en',)),
-        # Other
-        users=String(multiple=True, indexed=True))
+        website_languages=Tokens(source='metadata', default=('en',)))
 
     # XXX Useful for the update method (i.e update_20100630)
     # To remove in ikaaro 0.70
@@ -173,6 +172,36 @@ class WebSite(AccessControl, Folder):
     #######################################################################
     def is_allowed_to_register(self):
         return self.get_resource('config/register').get_property('is_open')
+
+
+    def make_user(self, email=None, password=None):
+        # Create the user
+        users = self.get_resource('/users')
+        user_id = users.get_next_user_id()
+        cls = get_resource_class('user')
+        user = users.make_resource(user_id, cls)
+
+        # Set the email and paswword
+        if email is not None:
+            user.set_property('email', email)
+        if password is not None:
+            user.set_password(password)
+
+        # Attach to website
+        self.attach_user(user)
+
+        # Return the user
+        return user
+
+
+    def attach_user(self, user, group=None):
+        website_id = str(self.get_abspath())
+        user.set_property('websites', website_id)
+        # Option: attach group
+        if group is not None:
+            group = self.get_resource('config/groups/%s' % group)
+            group_id = str(group.get_abspath())
+            user.set_property('groups', group_id)
 
 
     def get_groups(self):

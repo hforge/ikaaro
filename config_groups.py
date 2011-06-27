@@ -20,10 +20,10 @@ from itools.gettext import MSG
 from itools.web import INFO
 
 # Import from ikaaro
-from access import RoleAware_BrowseUsers
 from autoform import AutoForm, TextWidget
 from buttons import BrowseButton, RemoveButton, RenameButton
 from config import Configuration
+from config_users import BrowseUsers
 from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
@@ -43,7 +43,7 @@ class UserGroupsDatatype(Enumerate):
 
 
 
-class Group_BrowseUsers(RoleAware_BrowseUsers):
+class Group_BrowseUsers(BrowseUsers):
 
     schema = {'ids': String(multiple=True)}
 

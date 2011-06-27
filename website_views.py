@@ -257,7 +257,7 @@ class WebSite_NewInstance(NewInstance):
         vhosts = [ x for x in vhosts if x ]
         child.metadata.set_property('vhosts', vhosts)
         # Add initial user
-        child.set_user_role(context.user.name, 'admins')
+        child.attach_user(context.user, group='admins')
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)

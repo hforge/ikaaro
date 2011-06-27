@@ -70,6 +70,7 @@ class User(AccessControl, Folder):
         user_timezone=String(source='metadata'),
         user_must_confirm=String(source='metadata'),
         groups=String(source='metadata', multiple=True, indexed=True),
+        websites=String(source='metadata', multiple=True, indexed=True),
         # Metadata (backwards compatibility)
         username=String(source='metadata', indexed=True, stored=True),
         # Other
@@ -95,6 +96,8 @@ class User(AccessControl, Folder):
         # username (overrides default)
         values['username'] = self.get_login_name()
 
+        # websites
+        values['websites'] = self.get_property('websites')
         # groups
         values['groups'] = self.get_property('groups')
 
@@ -102,7 +105,10 @@ class User(AccessControl, Folder):
 
 
     def get_links(self):
-        return set(self.get_property('groups'))
+        links = set()
+        links.update(self.get_property('websites'))
+        links.update(self.get_property('groups'))
+        return links
 
 
     ########################################################################
@@ -296,22 +302,6 @@ class UserFolder(Folder):
         return user_id
 
 
-    def set_user(self, email=None, password=None):
-        # Calculate the user id
-        user_id = self.get_next_user_id()
-        # Add the user
-        cls = get_resource_class('user')
-        user = self.make_resource(user_id, cls)
-        # Set the email and paswword
-        if email is not None:
-            user.set_property('email', email)
-        if password is not None:
-            user.set_password(password)
-
-        # Return the user
-        return user
-
-
     def get_usernames(self):
         """Return all user names."""
         names = self._get_names()
@@ -333,4 +323,3 @@ class UserFolder(Folder):
         icon='view.png',
         message=INFO(u'To manage the users please go '
                      u'<a href="/;browse_users">here</a>.'))
-

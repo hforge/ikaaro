@@ -44,9 +44,7 @@ from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from folder import Folder
-from registry import get_resource_class
 from user import UserFolder
-from utils import get_secure_hash
 from website import WebSite
 
 
@@ -88,12 +86,9 @@ class Root(WebSite):
     def init_resource(self, email, password):
         super(Root, self).init_resource()
         # User folder
-        users = self.make_resource('users', UserFolder, title={'en': u'Users'})
+        self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
-        password = get_secure_hash(password)
-        user_class = get_resource_class('user')
-        user = users.make_resource('0', user_class, email=email,
-                                   password=password)
+        user = self.make_user(email, password)
         user.set_property('groups', ['/config/groups/admins'])
 
 

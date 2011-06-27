@@ -25,10 +25,10 @@ from itools.gettext import MSG
 from itools.web import INFO, ERROR
 
 # Import from ikaaro
-from access import RoleAware_BrowseUsers
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
 from autoform import HiddenWidget
 from buttons import Button, BrowseButton
+from config_users import BrowseUsers
 from messages import MSG_BAD_KEY
 from utils import generate_password
 from views import CompositeForm
@@ -240,14 +240,14 @@ class UnsubscribeButton(SubscribeButton):
 
 
 
-class ManageForm(RoleAware_BrowseUsers):
+class ManageForm(BrowseUsers):
     access = 'is_admin'
     title = MSG(u"Manage Subscriptions")
     description = None
 
     table_columns = freeze(
             [('checkbox', None)]
-            + RoleAware_BrowseUsers.table_columns[2:-2]
+            + BrowseUsers.table_columns[2:-2]
             + [('state', MSG(u'State'))])
     table_actions = freeze([SubscribeButton, UnsubscribeButton])
 
