@@ -356,13 +356,9 @@ class LoginView(STLForm):
 
 
     def _register(self, resource, context, email):
+        # Create the user
         site_root = context.site_root
-        # Add the user
-        users = site_root.get_resource('users')
-        user = users.set_user(email, None)
-        # Set the role
-        default_role = site_root.class_roles[0]
-        site_root.set_user_role(user.name, default_role)
+        user = site_root.make_user(email, None)
 
         # Send confirmation email
         user.send_confirmation(context, email)
