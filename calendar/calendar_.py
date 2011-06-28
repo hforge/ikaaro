@@ -30,7 +30,8 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
-from ikaaro.folder import Folder
+from ikaaro.config import Configuration
+from ikaaro.resource_ import DBResource
 from calendar_views import Calendar_Export, Calendar_ExportForm
 from calendar_views import Calendar_Import
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
@@ -91,15 +92,22 @@ class Timetables(DataType):
 
 
 
-class Calendar(Folder):
+class ConfigCalendar(DBResource):
 
     class_id = 'calendar'
+    class_version = '20110606'
     class_title = MSG(u'Calendar')
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['monthly_view', 'weekly_view', 'daily_view',
-                   'edit_timetables', 'import_', 'export_form']
+    class_views = ['edit_timetables',
+                   'monthly_view', 'weekly_view', 'daily_view',
+                   'import_', 'export_form']
+
+    # Configuration
+    config_name = 'calendar'
+    config_group = 'extensions'
+
 
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
                   ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
@@ -116,7 +124,7 @@ class Calendar(Folder):
 
 
     class_schema = merge_dicts(
-        Folder.class_schema,
+        DBResource.class_schema,
         timetables=Timetables(source='metadata'))
 
 
@@ -246,6 +254,10 @@ class Calendar(Folder):
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
+
+
+# Register
+Configuration.register_plugin(ConfigCalendar)
 
 
 

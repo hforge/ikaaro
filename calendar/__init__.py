@@ -21,9 +21,9 @@ from itools.core import get_abspath
 # Import from ikaaro
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from ikaaro.website import WebSite
-from calendar_ import Calendar
+import calendar_
 from calendar_views import MonthlyView, WeeklyView
+from event import Event
 
 
 __all__ = [
@@ -31,10 +31,6 @@ __all__ = [
     'WeeklyView']
 
 
-
-# Register skin
-path = get_abspath('ui')
-register_skin('calendar', path)
-
-# Add calendars to websites
-register_document_type(Calendar, WebSite.class_id)
+# Register
+register_document_type(Event)
+register_skin('calendar', get_abspath('ui'))

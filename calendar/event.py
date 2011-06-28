@@ -28,12 +28,13 @@ from itools.web import ERROR, FormError, get_context
 
 # Import from ikaaro
 from ikaaro.autoform import DatetimeWidget, MultilineWidget, ReadOnlyWidget
-from ikaaro.autoform import SelectWidget, TextWidget, location_widget
+from ikaaro.autoform import SelectWidget, TextWidget
 from ikaaro.autoform import timestamp_widget, title_widget
 from ikaaro.buttons import Button
 from ikaaro.cc import Observable, UsersList
 from ikaaro.datatypes import Multilingual
 from ikaaro.file import File
+from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import get_resource_class
 from ikaaro.resource_views import DBResource_Edit
@@ -215,8 +216,7 @@ class Event_NewInstance(NewInstance):
                                u' leave time fields empty.')),
         DatetimeWidget('end', title=MSG(u'End')),
         SelectWidget('cc_list', title=MSG(u'Subscribers'),
-                     has_empty_option=False),
-        location_widget(include_name=False)])
+                     has_empty_option=False)])
 
 
     def get_schema(self, resource, context):
@@ -224,8 +224,19 @@ class Event_NewInstance(NewInstance):
                            cc_list=UsersList(resource=resource, multiple=True))
 
 
-    def get_new_resource_name(self, form):
-        return form['container'].get_new_id()
+    def get_container(self, resource, context, form):
+        # XXX Copied from blog/blog.py
+        date = form['start']
+        names = ['%04d' % date.year, '%02d' % date.month]
+
+        container = context.site_root
+        for name in names:
+            folder = container.get_resource(name, soft=True)
+            if folder is None:
+                folder = container.make_resource(name, Folder)
+            container = folder
+
+        return container
 
 
     def get_value(self, resource, context, name, datatype):
@@ -322,7 +333,6 @@ class Event(File, Observable):
         dtstart=EventDateTime(source='metadata', indexed=True, stored=True),
         dtend=EventDateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
-        location=Unicode(source='metadata'),
         uid=Unicode(source='metadata'))
 
 
