@@ -36,13 +36,13 @@ from itools.xml import XMLParser
 from access import AccessControl
 from config import Configuration
 from folder import Folder
+from config_register import RegisterForm
 from registry import get_resource_class
 from resource_views import LoginView
 from skins import skin_registry
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
-from website_views import WebSite_Register
 from workflow import WorkflowAware
 
 
@@ -272,7 +272,7 @@ class WebSite(AccessControl, Folder):
     # UI
     #######################################################################
     new_instance = WebSite_NewInstance()
-    register = WebSite_Register()
+    register = RegisterForm()
     # Public views
     contact = ContactForm()
     about = AboutView()
