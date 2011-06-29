@@ -360,6 +360,7 @@ class Configuration(Folder):
 # Import core config modules
 import config_access
 import config_captcha
+import config_footer
 import config_groups
 import config_mail
 import config_menu

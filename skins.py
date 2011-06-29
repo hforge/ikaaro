@@ -317,6 +317,11 @@ class Skin(object):
             yield menu.render()
 
 
+    def get_footer(self, context):
+        footer = context.site_root.get_resource('config/footer')
+        return footer.get_html_data()
+
+
     #######################################################################
     # Main
     #######################################################################
@@ -377,8 +382,14 @@ class Skin(object):
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
+            'favicon_href': favicon_href,
+            'favicon_type': favicon_type,
+            # logo
+            'logo_href': logo_href,
             # Usermenu (the links at the top)
             'usermenu': self.get_usermenu(context),
+            # menu
+            'menu': menu_ns,
             # Location & Views
             'location': self.location_template(context=context),
             'languages': self.languages_template(context=context),
@@ -386,13 +397,8 @@ class Skin(object):
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),
             'context_menus': context_menus,
-            # favicon
-            'favicon_href': favicon_href,
-            'favicon_type': favicon_type,
-            # logo
-            'logo_href': logo_href,
-            # menu
-            'menu': menu_ns,
+            # Footer
+            'footer': self.get_footer(context),
         }
 
 

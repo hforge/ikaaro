@@ -76,11 +76,7 @@
     </div>
 
     <!-- Footer -->
-    <div id="footer">
-      <a href="/;about">About</a>
-      <a href="/;credits">Credits</a>
-      <a href="/;license">License</a>
-    </div>
+    <div id="footer">${footer}</div>
   </div>
   </body>
 </html>
