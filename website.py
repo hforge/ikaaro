@@ -42,6 +42,7 @@ from skins import skin_registry
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
+from website_views import WebSite_Register
 from workflow import WorkflowAware
 
 
@@ -170,7 +171,9 @@ class WebSite(AccessControl, Folder):
     #######################################################################
     # Access control
     #######################################################################
-    def is_allowed_to_register(self):
+    def is_allowed_to_register(self, user, resource):
+        if user:
+            return False
         return self.get_resource('config/register').get_property('is_open')
 
 
@@ -269,6 +272,7 @@ class WebSite(AccessControl, Folder):
     # UI
     #######################################################################
     new_instance = WebSite_NewInstance()
+    register = WebSite_Register()
     # Public views
     contact = ContactForm()
     about = AboutView()

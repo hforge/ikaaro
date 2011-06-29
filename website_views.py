@@ -33,7 +33,7 @@ from itools.fs import lfs
 from itools.web import BaseView, STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm
+from autoform import AutoForm, get_default_widget
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from config_captcha import CaptchaDatatype, CaptchaWidget
@@ -261,3 +261,62 @@ class WebSite_NewInstance(NewInstance):
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+
+
+
+class WebSite_Register(AutoForm):
+
+    access = 'is_allowed_to_register'
+    title = MSG(u'Create an account')
+
+    fields = ['firstname', 'lastname', 'email']
+
+
+    def get_schema(self, resource, context):
+        resource_schema = get_resource_class('user').class_schema
+
+        schema = {}
+        for name in self.fields:
+            schema[name] = resource_schema[name]
+
+        return schema
+
+
+    def get_widgets(self, resource, context):
+        resource_schema = get_resource_class('user').class_schema
+
+        widgets = []
+        for name in self.fields:
+            datatype = resource_schema[name]
+            title = getattr(datatype, 'title', name)
+            widget = getattr(datatype, 'widget', None)
+            if widget is None:
+                widget = get_default_widget(datatype)
+            widget = widget(name, title=title)
+            widgets.append(widget)
+
+        return widgets
+
+
+    def action(self, resource, context, form):
+        email = form['email'].strip()
+        results = context.root.search(format='user', email=email)
+        if len(results) == 0:
+            # Create the user
+            site_root = context.site_root
+            user = site_root.make_user()
+            for field in self.fields:
+                user.set_property(field, form[field])
+
+            # Send confirmation email
+            user.send_confirmation(context, email)
+        else:
+            user = results.get_documents()[0]
+            user = resource.get_resource(user.abspath)
+            # TODO Send specific email
+
+        # Bring the user to the login form
+        message = MSG(
+            u"An email has been sent to you, to finish the registration "
+            u"process follow the instructions detailed in it.")
+        return message.gettext().encode('utf-8')

@@ -7,11 +7,11 @@
 <div class="helpbox" stl:if="register">
   <img src="/ui/icons/48x48/help.png" class="helpbox-icon" />
   <div class="helpbox-text">
-  If you don't have an account, enter your email address and check the
-  checkbox below the password field. An email will be sent to you to confirm
-  your registration.
+  Don't have an account?<br/>
+  <a href="/;register">Create an account now</a>
   </div>
 </div>
+
 <form id="autoform" name="loginform" method="post" action=";login">
   <fieldset>
     <legend>Sign in</legend>
@@ -23,7 +23,7 @@
         <br/></span>
       <p class="widget">
         <input type="text" id="username" name="username"
-          value="${username/value}" size="40" />
+          value="${username/value}" size="30" />
       </p>
     </div>
     <div>
@@ -32,20 +32,13 @@
       <span stl:if="password/error" class="field-error">${password/error}
         <br/></span>
       <p class="widget">
-        <input type="password" id="password" name="password" size="40" />
+        <input type="password" id="password" name="password" size="30" />
+      <input type="checkbox" id="no_password" name="no_password" value="1"
+        onclick="disable_field(this, password)" />
+      <label for="no_password">I forgot my password.</label>
       </p>
     </div>
     <div>
-      <input type="checkbox" id="no_password" name="no_password" value="1"
-        onclick="disable_field(this, password)" />
-      <label for="no_password">
-      <stl:block stl:if="register">
-      I don't have an account or I forgot my password.
-      </stl:block>
-      <stl:block stl:if="not register">
-      I forgot my password.
-      </stl:block>
-      </label>
     </div>
     <p>
       <button type="submit" class="button-ok">Ok</button>

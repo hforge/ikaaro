@@ -328,7 +328,6 @@ class DBResource_Backlinks(DBResource_Links):
 ###########################################################################
 # Views / Login, Logout
 ###########################################################################
-
 class LoginView(STLForm):
 
     access = True
@@ -345,29 +344,18 @@ class LoginView(STLForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'username':
             return context.query['username']
-        return super(LoginView, self).get_value(resource, context, name,
-                datatype)
+        proxy = super(LoginView, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def get_namespace(self, resource, context):
         namespace = super(LoginView, self).get_namespace(resource, context)
-        namespace['register'] = context.site_root.is_allowed_to_register()
+
+        user = context.user
+        register = context.site_root.is_allowed_to_register(user, resource)
+        namespace['register'] = register
+
         return namespace
-
-
-    def _register(self, resource, context, email):
-        # Create the user
-        site_root = context.site_root
-        user = site_root.make_user(email, None)
-
-        # Send confirmation email
-        user.send_confirmation(context, email)
-
-        # Bring the user to the login form
-        message = MSG(
-            u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.")
-        return message.gettext().encode('utf-8')
 
 
     def action(self, resource, context, form):
@@ -375,29 +363,20 @@ class LoginView(STLForm):
         email = form['username'].strip()
         user = context.root.get_user_from_login(email)
 
+        # Case 1: Forgotten password
         if form['no_password']:
             if not Email.is_valid(email):
                 message = u'The given username is not an email address.'
                 context.message = ERROR(message)
                 return
 
-            # Case 1: Register
-            if user is None:
-                if context.site_root.is_allowed_to_register():
-                    return self._register(resource, context, email)
-                # FIXME This message does not protect privacy
-                error = u"You don't have an account, contact the site admin."
-                context.message = ERROR(error)
-                return
-
-            # Case 2: Forgotten password
             email = user.get_property('email')
             user.send_forgotten_password(context, email)
             path = '/ui/website/forgotten_password.xml'
             handler = resource.get_resource(path)
             return stl(handler)
 
-        # Case 3: Login
+        # Case 2: Login
         password = form['password']
         if user is None or not user.authenticate(password, clear=True):
             context.message = ERROR(u'The email or the password is incorrect.')
@@ -475,5 +454,3 @@ class Delete_View(BaseView):
         if str(resource.get_abspath()) in paths:
             context.del_cookie('ikaaro_cp')
             paths = []
-
-
