@@ -30,7 +30,6 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
-from ikaaro.config import Configuration
 from ikaaro.resource_ import DBResource
 from calendar_views import Calendar_Export, Calendar_ExportForm
 from calendar_views import Calendar_Import
@@ -254,10 +253,6 @@ class ConfigCalendar(DBResource):
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
-
-
-# Register
-Configuration.register_plugin(ConfigCalendar)
 
 
 

@@ -19,18 +19,24 @@
 from itools.core import get_abspath
 
 # Import from ikaaro
+from ikaaro.config import Configuration
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-import calendar_
-from calendar_views import MonthlyView, WeeklyView
+from ikaaro.website import WebSite
+
+# Import from ikaaro.calendar
+from calendar_ import ConfigCalendar
+from calendar_views import MonthlyView, WeeklyView, DailyView
 from event import Event
 
 
-__all__ = [
-    'MonthlyView',
-    'WeeklyView']
+__all__ = ['MonthlyView', 'WeeklyView']
 
 
 # Register
 register_document_type(Event)
 register_skin('calendar', get_abspath('ui'))
+Configuration.register_plugin(ConfigCalendar)
+WebSite.monthly_view = MonthlyView()
+WebSite.weekly_view = WeeklyView()
+WebSite.daily_view = DailyView()

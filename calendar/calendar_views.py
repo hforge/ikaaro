@@ -367,25 +367,30 @@ class CalendarView(STLView):
 
 
     def get_colors(self, resource):
-        return resource.colors
+        return resource.get_resource('config/calendar').colors
 
 
     def get_color(self, resource, event, colors=None):
-        cache_colors = getattr(self, 'cache_colors', {})
-        cache_used_colors = getattr(self, 'cache_used_colors', 0)
-        if cache_colors == {}:
-            # Initialize cache_colors
-            self.cache_colors = {}
         if colors is None:
             colors = self.get_colors(resource)
+
+        # Load or initialize the colors cache
+        cache_colors = getattr(self, 'cache_colors', None)
+        if cache_colors is None:
+            self.cache_colors = {}
+            cache_colors = self.cache_colors
+        cache_used_colors = getattr(self, 'cache_used_colors', 0)
+
+        # Cache lookup
         organizer = event.get_owner()
-        color = self.cache_colors.get(organizer, None)
+        color = cache_colors.get(organizer, None)
         if color is None:
             # Choose color for current organizer
             color = colors[cache_used_colors % len(colors)]
             # Update cache
-            self.cache_colors[organizer] = color
+            cache_colors[organizer] = color
             self.cache_used_colors = cache_used_colors + 1
+
         return color
 
 
@@ -407,7 +412,7 @@ class CalendarView(STLView):
         index = 0
         while index < len(events):
             event = events[index]
-            event = resource.get_resource(event.name)
+            event = resource.get_resource(event.abspath)
             e_dtstart = event.get_property('dtstart').date()
             e_dtend = event.get_property('dtend').date()
             color = self.get_color(resource, event, None)
@@ -431,15 +436,14 @@ class CalendarView(STLView):
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
-                with_edit_url = ac.is_allowed_to_view(user, event)
-                url = ('%s/;edit' % event.name) if with_edit_url else None
+                if ac.is_allowed_to_view(user, event):
+                    url = '%s/;edit' % context.get_link(event)
+                else:
+                    url = None
                 ns_event['url'] = url
                 ns_event['cal'] = 0
                 ns_event['color'] = color
-                if 'resource' in ns_event.keys():
-                    ns_event['resource']['color'] = 0
-                else:
-                    ns_event['resource'] = {'color': 0}
+                ns_event.setdefault('resource', {})['color'] = 0
                 ns_events.append(ns_event)
                 # Current event end on current date
                 if e_dtend == day:
@@ -460,7 +464,7 @@ class CalendarView(STLView):
         namespace = {}
         if method is not None and self.selector_template:
             # Add header to navigate into time
-            template_selector = resource.get_resource(self.selector_template)
+            template_selector = context.get_template(self.selector_template)
             selector_ns = self.get_selector_ns(c_date, method)
             namespace['cal_selector'] = stl(template_selector, selector_ns)
         return namespace
@@ -505,7 +509,7 @@ class MonthlyView(CalendarView):
         # Get a list of events to display on view
         events = self.get_events_to_display(resource, start, end)
         if isinstance(self.monthly_template, str):
-            template = resource.get_resource(self.monthly_template)
+            template = context.get_template(self.monthly_template)
         else:
             template = self.monthly_template
 
@@ -564,8 +568,10 @@ class WeeklyView(CalendarView):
     def get_timetables_grid_ns(self, resource, start_date):
         """Build namespace to give as grid to gridlayout factory.
         """
+        timetables = resource.get_resource('config/calendar').get_timetables()
+
         ns_timetables = []
-        for start, end in resource.get_timetables():
+        for start, end in timetables:
             for value in (start, end):
                 value = Time.encode(value)
                 if value not in ns_timetables:
@@ -684,7 +690,7 @@ class DailyView(CalendarView):
         events_by_index = {}
         results = self.search_events_in_date(calendar, c_date)
         for event in results.get_documents():
-            event = calendar.get_resource(event.name)
+            event = calendar.get_resource(event.abspath)
             event_start = event.get_property('dtstart')
             event_end = event.get_property('dtend')
             # Compute start and end indexes
@@ -702,7 +708,10 @@ class DailyView(CalendarView):
                     break
 
             uid = getattr(event, 'id', getattr(event, 'uid', None))
-            with_edit_url = ac.is_allowed_to_view(user, event)
+            if ac.is_allowed_to_view(user, event):
+                edit_url = '%s/;edit' % context.get_link(event)
+            else:
+                edit_url = None
             events_by_index.setdefault(tt_start, [])
             events_by_index[tt_start].append({
                 'name': event.name,
@@ -710,7 +719,7 @@ class DailyView(CalendarView):
                 'tt_start': tt_start,
                 'tt_end': tt_end,
                 'colspan': tt_end - tt_start + 1,
-                'with_edit_url': with_edit_url})
+                'edit_url': edit_url})
 
         # Organize events in rows
         # If a row index is busy, start a new row
@@ -765,11 +774,9 @@ class DailyView(CalendarView):
                            'evt_url': None}
                 # Add event
                 if event and tt_index == event['tt_start']:
-                    if event['with_edit_url']:
-                        go_url = '%s/;edit?%s'
-                        go_url = go_url % (event['name'], encode_query(args))
-                    else:
-                        go_url = None
+                    go_url = event['edit_url']
+                    if go_url:
+                        go_url = '%s?%s' % (go_url, encode_query(args))
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
                     else:
@@ -781,9 +788,7 @@ class DailyView(CalendarView):
                     # Set colspan
                     colspan = event['colspan'] - 1
                     # Delete added event
-                    event = None
-                    if events != []:
-                        event = events.pop(0)
+                    event = events.pop(0) if events else None
                 # Fields in template but not shown
                 for field in cal_fields:
                     if field not in column:
