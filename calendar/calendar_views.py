@@ -323,33 +323,28 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-    def search(self, calendar, query=None, **kw):
-        if query is None:
-            query = [ PhraseQuery(name, value) for name, value in kw.items() ]
-        else:
-            query = [query]
-
-        # Search only events
-        query.append(PhraseQuery('format', 'event'))
-        # Only in the current calendar
-        query.append(get_base_path_query(calendar.get_canonical_path()))
-        query = AndQuery(*query)
-
-        # Search
-        return get_context().root.search(query)
-
-
-    def search_events_in_range(self, calendar, start, end, **kw):
-        query = [ PhraseQuery(name, value) for name, value in kw.items() ]
+    def search(self, calendar, start, end, **kw):
         if type(start) is date:
             start = datetime.combine(start, time())
         if type(end) is date:
             end = datetime.combine(end, time())
-        query = AndQuery(
-            RangeQuery('dtstart', None, end),
-            RangeQuery('dtend', start, None),
-            *query)
-        return self.search(calendar, query)
+
+        # Build the query
+        query = AndQuery()
+        query.append(PhraseQuery('format', 'event'))
+        for name, value in kw.items():
+            query.append(PhraseQuery(name, value))
+
+        # Only in the current calendar
+        query.append(get_base_path_query(calendar.get_canonical_path()))
+
+        # Start/End
+        query.append(RangeQuery('dtstart', None, end))
+        query.append(RangeQuery('dtend', start, None))
+
+        # Search
+        results = get_context().root.search(query)
+        return results.get_documents(sort_by='dtstart')
 
 
     def search_events_in_date(self, calendar, date, **kw):
@@ -358,12 +353,7 @@ class CalendarView(STLView):
         """
         dtstart = datetime(date.year, date.month, date.day)
         dtend = dtstart + timedelta(days=1) - resolution
-        return self.search_events_in_range(calendar, dtstart, dtend, **kw)
-
-
-    def get_events_to_display(self, calendar, start, end):
-        events = self.search_events_in_range(calendar, start, end)
-        return events.get_documents(sort_by='dtstart')
+        return self.search(calendar, dtstart, dtend, **kw)
 
 
     def get_colors(self, resource):
@@ -412,51 +402,49 @@ class CalendarView(STLView):
         index = 0
         while index < len(events):
             event = events[index]
-            event = resource.get_resource(event.abspath)
-            e_dtstart = event.get_property('dtstart').date()
-            e_dtend = event.get_property('dtend').date()
-            color = self.get_color(resource, event, None)
+            e_dtstart = event.dtstart.date()
+            e_dtend = event.dtend.date()
+
+            # Exit loop if the start date is after the given date
+            if e_dtstart > day:
+                break
+
+            # Current event occurs only later, go to the next
+            if e_dtend < day:
+                index += 1
+                continue
+
             # Current event occurs on current date
-            # event begins during current tt
             starts_on = e_dtstart == day
-            # event ends during current tt
             ends_on = e_dtend == day
-            # event begins before and ends after
             out_on = (e_dtstart < day and e_dtend > day)
 
-            if starts_on or ends_on or out_on:
-                conflicts_list = set()
-                if show_conflicts:
-                    handler = resource.handler
-                    conflicts = handler.get_conflicts(e_dtstart, e_dtend)
-                    if conflicts:
-                        for uids in conflicts:
-                            conflicts_list.update(uids)
-                ns_event = event.get_ns_event(day,
-                                              conflicts_list=conflicts_list,
-                                              grid=grid, starts_on=starts_on,
-                                              ends_on=ends_on, out_on=out_on)
-                if ac.is_allowed_to_view(user, event):
-                    url = '%s/;edit' % context.get_link(event)
-                else:
-                    url = None
-                ns_event['url'] = url
-                ns_event['cal'] = 0
-                ns_event['color'] = color
-                ns_event.setdefault('resource', {})['color'] = 0
-                ns_events.append(ns_event)
-                # Current event end on current date
-                if e_dtend == day:
-                    events.remove(events[index])
-                    if events == []:
-                        break
-                else:
-                    index = index + 1
-            # Current event occurs only later
-            elif e_dtstart > day:
-                break
+            event = resource.get_resource(event.abspath)
+            conflicts_list = set()
+            if show_conflicts:
+                handler = resource.handler
+                conflicts = handler.get_conflicts(e_dtstart, e_dtend)
+                if conflicts:
+                    for uids in conflicts:
+                        conflicts_list.update(uids)
+            ns_event = event.get_ns_event(day, conflicts_list=conflicts_list,
+                                          grid=grid, starts_on=starts_on,
+                                          ends_on=ends_on, out_on=out_on)
+            if ac.is_allowed_to_view(user, event):
+                url = '%s/;edit' % context.get_link(event)
+            else:
+                url = None
+            ns_event['url'] = url
+            ns_event['cal'] = 0
+            ns_event['color'] = self.get_color(resource, event, None)
+            ns_event.setdefault('resource', {})['color'] = 0
+            ns_events.append(ns_event)
+            # Current event end on current date
+            if e_dtend == day:
+                events.remove(events[index])
             else:
                 index = index + 1
+
         return ns_events, events
 
 
@@ -507,11 +495,10 @@ class MonthlyView(CalendarView):
 
         ###################################################################
         # Get a list of events to display on view
-        events = self.get_events_to_display(resource, start, end)
-        if isinstance(self.monthly_template, str):
-            template = context.get_template(self.monthly_template)
-        else:
-            template = self.monthly_template
+        events = self.search(resource, start, end)
+        template = self.monthly_template
+        if type(template) is str:
+            template = context.get_template(template)
 
         ###################################################################
         namespace = super(MonthlyView, self).get_namespace(resource, context,
@@ -594,16 +581,12 @@ class WeeklyView(CalendarView):
         events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
-        events = self.get_events_to_display(resource, start_date, end)
+        events = self.search(resource, start_date, end)
         for header in headers:
-            ns_day = {}
-            # Add header if given
-            ns_day['header'] = header
             # Insert events
             ns_events, events = self.events_to_namespace(resource, events,
                                 current_date, grid=True)
-            ns_day['events'] = ns_events
-            ns_days.append(ns_day)
+            ns_days.append({'header': header, 'events': ns_events})
             current_date = current_date + step
 
         return ns_days
@@ -688,8 +671,7 @@ class DailyView(CalendarView):
         # Get a dict for each event, compute colspan
         handler = calendar.handler
         events_by_index = {}
-        results = self.search_events_in_date(calendar, c_date)
-        for event in results.get_documents():
+        for event in self.search_events_in_date(calendar, c_date):
             event = calendar.get_resource(event.abspath)
             event_start = event.get_property('dtstart')
             event_end = event.get_property('dtend')

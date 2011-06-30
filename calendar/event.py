@@ -52,6 +52,16 @@ class Status(Enumerate):
 
 
 
+class RRuleDataType(Enumerate):
+
+    options = [
+        {'name': 'daily', 'value': MSG(u'Daily')},
+        {'name': 'weekly', 'value': MSG(u'Weekly')},
+        {'name': 'monthly', 'value': MSG(u'Monthly')},
+        {'name': 'yearly', 'value': MSG(u'Yearly')}]
+
+
+
 class Event_Edit(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
@@ -67,6 +77,7 @@ class Event_Edit(DBResource_Edit):
                          start_time=Time,
                          end=Date(mandatory=True),
                          end_time=Time,
+                         rrule=RRuleDataType,
                          status=Status(mandatory=True))
     del schema['subject']
 
@@ -77,6 +88,7 @@ class Event_Edit(DBResource_Edit):
                        tip=MSG(u'To add an event lasting all day long,'
                                u' leave time fields empty.')),
         DatetimeWidget('end', title=MSG(u'End')),
+        SelectWidget('rrule', title=MSG(u'Recurrence')),
         MultilineWidget('description', title=MSG(u'Description'), rows=3),
         SelectWidget('status', title=MSG(u'State'), has_empty_option=False),
         ])
@@ -168,13 +180,7 @@ class Event_Edit(DBResource_Edit):
 
     def action_edit(self, resource, context, form):
         super(Event_Edit, self).action(resource, context, form)
-
-        # Send notifications
         resource.notify_subscribers(context)
-
-        # Goto calendar to prevent from reloading event with empty time
-        goto = context.get_link(resource.parent)
-        return context.come_back(context.message, goto)
 
 
     def action_remove(self, resource, context, form):
@@ -188,11 +194,6 @@ class Event_Edit(DBResource_Edit):
 
         message = ERROR(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
-
-
-    def action_cancel(self, resource, context, form):
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        return context.come_back(None, goto)
 
 
 
@@ -333,6 +334,7 @@ class Event(File, Observable):
         dtstart=EventDateTime(source='metadata', indexed=True, stored=True),
         dtend=EventDateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
+        rrule=RRuleDataType(source='metadata'),
         uid=Unicode(source='metadata'))
 
 
