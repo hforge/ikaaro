@@ -454,15 +454,3 @@ class ResourcesOrderedContainer(Folder):
             ac = resource.get_access_control()
             if ac.is_allowed_to_view(context.user, resource):
                 yield name
-
-
-
-###########################################################################
-# XXX migrate to "resource-ordered-table" in your project
-# TODO remove in 0.70
-###########################################################################
-
-class ChildrenOrderedTable(ResourcesOrderedTable):
-
-    class_id = 'children-ordered-table'
-

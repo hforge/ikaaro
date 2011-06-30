@@ -72,7 +72,7 @@ class WebSite(AccessControl, Folder):
         website_languages=Tokens(source='metadata', default=('en',)))
 
     # XXX Useful for the update method (i.e update_20100630)
-    # To remove in ikaaro 0.70
+    # To remove in ikaaro 0.71
     class_schema_extensible = True
 
 
