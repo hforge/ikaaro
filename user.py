@@ -22,7 +22,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, String, Unicode
+from itools.datatypes import Email, String, Unicode, URI
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
@@ -30,6 +30,7 @@ from itools.web import INFO, get_context
 
 # Import from ikaaro
 from access import AccessControl
+from autoform import ImageSelectorWidget
 from datatypes import Password
 from folder import Folder
 from registry import get_resource_class
@@ -63,6 +64,8 @@ class User(AccessControl, Folder):
                           title=MSG(u'First Name')),
         lastname=Unicode(source='metadata', indexed=True, stored=True,
                          title=MSG(u'Last Name')),
+        avatar=URI(source='metadata', title=MSG(u'Avatar'),
+                   widget=ImageSelectorWidget),
         email=Email(source='metadata', indexed=True, stored=True,
                     mandatory=True, title=MSG(u'E-mail Address')),
         password=Password(source='metadata'),

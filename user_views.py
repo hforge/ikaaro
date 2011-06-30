@@ -147,30 +147,34 @@ class User_Profile(STLView):
         for name in self.items:
             # Get the view & check access rights
             view = resource.get_view(name)
-            if view is None:
-                continue
-            if not ac.is_access_allowed(user, resource, view):
-                continue
-            # Append
-            items.append({
-                'url': ';%s' % name,
-                'title': view.title,
-                'description': getattr(view, 'description', None),
-                'icon': resource.get_method_icon(view, size='48x48'),
-            })
+            if view and ac.is_access_allowed(user, resource, view):
+                items.append({
+                    'url': ';%s' % name,
+                    'title': view.title,
+                    'description': getattr(view, 'description', None),
+                    'icon': resource.get_method_icon(view, size='48x48')})
         return items
 
 
     def get_namespace(self, resource, context):
-        root = context.root
-        user = context.user
+        # Personal data
+        firstname = resource.get_property('firstname')
+        lastname = resource.get_property('lastname')
+        avatar = resource.get_property('avatar')
 
         # The icons menu
         items = self.get_items(resource, context)
 
-        # Ok
+        # is_owner_or_admin
+        root = context.root
+        user = context.user
         is_owner = user is not None and user.name == resource.name
+
+        # Ok
         return {
+            'firstname': firstname,
+            'lastname': lastname,
+            'avatar': avatar,
             'items': items,
             'is_owner_or_admin': is_owner or root.is_admin(user, resource),
             'user_must_confirm': resource.has_property('user_must_confirm')}
@@ -187,7 +191,7 @@ class User_EditAccount(AutoEdit):
 
     # TODO The email address must be verified when changed. We should allow
     # users to have several email addresses.
-    fields = ['firstname', 'lastname', 'email']
+    fields = ['firstname', 'lastname', 'avatar', 'email']
 
     def action(self, resource, context, form):
         # If the user changes his email, check there is not already other
