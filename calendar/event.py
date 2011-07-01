@@ -30,7 +30,6 @@ from itools.web import ERROR, FormError, get_context
 from ikaaro.autoform import DatetimeWidget, MultilineWidget, ReadOnlyWidget
 from ikaaro.autoform import SelectWidget, TextWidget
 from ikaaro.autoform import timestamp_widget, title_widget
-from ikaaro.buttons import Button
 from ikaaro.cc import Observable, UsersList
 from ikaaro.datatypes import Multilingual
 from ikaaro.file import File
@@ -64,19 +63,18 @@ class RRuleDataType(Enumerate):
 
 class Event_Edit(DBResource_Edit):
 
-    access = 'is_allowed_to_edit'
     styles = ['/ui/calendar/style.css']
 
     query_schema = merge_dicts(DBResource_Edit.query_schema,
-                               start=Date, start_time=Time,
-                               end=Date, end_time=Time)
+                               dtstart=Date, dtstart_time=Time,
+                               dtend=Date, dtend_time=Time)
 
     schema = merge_dicts(DBResource_Edit.schema,
                          description=Multilingual,
-                         start=Date(mandatory=True),
-                         start_time=Time,
-                         end=Date(mandatory=True),
-                         end_time=Time,
+                         dtstart=Date(mandatory=True),
+                         dtstart_time=Time,
+                         dtend=Date(mandatory=True),
+                         dtend_time=Time,
                          rrule=RRuleDataType,
                          status=Status(mandatory=True))
     del schema['subject']
@@ -84,29 +82,22 @@ class Event_Edit(DBResource_Edit):
     widgets = freeze([
         timestamp_widget,
         title_widget,
-        DatetimeWidget('start', title=MSG(u'Start'),
+        DatetimeWidget('dtstart', title=MSG(u'Start'),
                        tip=MSG(u'To add an event lasting all day long,'
                                u' leave time fields empty.')),
-        DatetimeWidget('end', title=MSG(u'End')),
+        DatetimeWidget('dtend', title=MSG(u'End')),
         SelectWidget('rrule', title=MSG(u'Recurrence')),
         MultilineWidget('description', title=MSG(u'Description'), rows=3),
         SelectWidget('status', title=MSG(u'State'), has_empty_option=False),
         ])
-
-    actions = [
-        Button(access='is_owner_or_admin', name='edit', css='button-ok',
-               title=MSG(u'Save')),
-        Button(access='is_owner_or_admin', name='remove', css='button-delete',
-               title=MSG(u'Definitely remove'),
-               confirm=messages.MSG_DELETE_SELECTION)]
 
 
     def _get_query_fields(self, resource, context):
         # Insert time fields by hand
         proxy = super(Event_Edit, self)
         fields, to_keep = proxy._get_query_fields(resource, context)
-        to_keep.add('start_time')
-        to_keep.add('end_time')
+        to_keep.add('dtstart_time')
+        to_keep.add('dtend_time')
         return fields, to_keep
 
 
@@ -127,14 +118,12 @@ class Event_Edit(DBResource_Edit):
 
     def get_value(self, resource, context, name, datatype):
         proxy = super(Event_Edit, self)
-        if name in ('start', 'end'):
-            name = 'dt%s' % name
-        elif name == 'start_time':
+        if name == 'dtstart_time':
             value = proxy.get_value(resource, context, 'dtstart', DateTime)
             v_time = value.time()
             context.query[name] = v_time
             return v_time
-        elif name == 'end_time':
+        elif name == 'dtend_time':
             prop = resource.metadata.get_property('dtend')
             param_value  = prop.get_parameter('VALUE')
             if param_value and param_value == 'DATE':
@@ -143,30 +132,31 @@ class Event_Edit(DBResource_Edit):
             v_time = value.time()
             context.query[name] = v_time
             return v_time
-        value = proxy.get_value(resource, context, name, datatype)
-        return value
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def _get_form(self, resource, context):
         form = super(Event_Edit, self)._get_form(resource, context)
+        dtstart_time = form['dtstart_time']
+        dtend_time = form['dtend_time']
 
-        if ((form['start_time'] is None and form['end_time'] is not None)
-            or (form['start_time'] is not None and form['end_time'] is None)):
+        if ((dtstart_time is None and dtend_time is not None)
+            or (dtstart_time is not None and dtend_time is None)):
             msg = ERROR(u'Each time must be filled, or neither.')
             raise FormError(msg)
 
         # Start
-        start_time = form['start_time'] or time(0, 0)
-        start = datetime.combine(form['start'], start_time)
-        form['start'] = start
+        dtstart_time = dtstart_time or time(0)
+        dtstart = datetime.combine(form['dtstart'], dtstart_time)
+        form['dtstart'] = context.fix_tzinfo(dtstart)
         # End
-        end_time = form['end_time'] or time(0, 0)
-        end = datetime.combine(form['end'], end_time)
-        if form['end_time'] is None:
-            end = end + timedelta(days=1) - resolution
-        form['end'] = end
+        dtend_time = dtend_time or time(0)
+        dtend = datetime.combine(form['dtend'], dtend_time)
+        if dtend_time is None:
+            dtend = dtend + timedelta(days=1) - resolution
+        form['dtend'] = context.fix_tzinfo(dtend)
 
-        if start > end:
+        if dtstart > dtend:
             msg = ERROR(u'Invalid dates.')
             raise FormError(msg)
 
@@ -174,8 +164,13 @@ class Event_Edit(DBResource_Edit):
 
 
     def set_value(self, resource, context, name, form):
-        # set_value shared in resource with new_instance
-        return resource.set_value(self, context, name, form)
+        if name in ('dtstart_time', 'dtend_time'):
+            return False
+        if name in ('dtstart', 'dtend'):
+            return resource.set_date(name, form)
+
+        proxy = super(Event_Edit, self)
+        return proxy.set_value(resource, context, name, form)
 
 
     def action_edit(self, resource, context, form):
@@ -183,39 +178,26 @@ class Event_Edit(DBResource_Edit):
         resource.notify_subscribers(context)
 
 
-    def action_remove(self, resource, context, form):
-        # Remove
-        calendar = resource.parent
-        calendar.del_resource(resource.name)
-
-        # Ok
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = '../;%s?%s' % (method, date.today())
-
-        message = ERROR(u'Event definitely deleted.')
-        return context.come_back(message, goto=goto)
-
-
 
 class Event_NewInstance(NewInstance):
 
     query_schema = merge_dicts(NewInstance.query_schema,
-                               start=Date, start_time=Time,
-                               end=Date, end_time=Time)
+                               dtstart=Date, dtstart_time=Time,
+                               dtend=Date, dtend_time=Time)
 
     schema = merge_dicts(NewInstance.schema,
-                         start=Date(mandatory=True),
-                         start_time=Time,
-                         end=Date(mandatory=True),
-                         end_time=Time)
+                         dtstart=Date(mandatory=True),
+                         dtstart_time=Time,
+                         dtend=Date(mandatory=True),
+                         dtend_time=Time)
 
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         TextWidget('title', title=MSG(u'Title'), size=20),
-        DatetimeWidget('start', title=MSG(u'Start'),
+        DatetimeWidget('dtstart', title=MSG(u'Start'),
                        tip=MSG(u'To add an event lasting all day long,'
                                u' leave time fields empty.')),
-        DatetimeWidget('end', title=MSG(u'End')),
+        DatetimeWidget('dtend', title=MSG(u'End')),
         SelectWidget('cc_list', title=MSG(u'Subscribers'),
                      has_empty_option=False)])
 
@@ -227,7 +209,7 @@ class Event_NewInstance(NewInstance):
 
     def get_container(self, resource, context, form):
         # XXX Copied from blog/blog.py
-        date = form['start']
+        date = form['dtstart']
         names = ['%04d' % date.year, '%02d' % date.month]
 
         container = context.site_root
@@ -241,7 +223,7 @@ class Event_NewInstance(NewInstance):
 
 
     def get_value(self, resource, context, name, datatype):
-        if name in ('start', 'end'):
+        if name in ('dtstart', 'dtend'):
             return context.query[name] or date.today()
 
         proxy = super(Event_NewInstance, self)
@@ -250,24 +232,26 @@ class Event_NewInstance(NewInstance):
 
     def _get_form(self, resource, context):
         form = super(Event_NewInstance, self)._get_form(resource, context)
+        dtstart_time = form['dtstart_time']
+        dtend_time = form['dtend_time']
 
-        if ((form['start_time'] is None and form['end_time'] is not None)
-            or (form['start_time'] is not None and form['end_time'] is None)):
+        if ((dtstart_time is None and dtend_time is not None)
+            or (dtstart_time is not None and dtend_time is None)):
             msg = ERROR(u'Each time must be filled, or neither.')
             raise FormError(msg)
 
         # Start
-        start_time = form['start_time'] or time(0, 0)
-        start = datetime.combine(form['start'], start_time)
-        form['start'] = context.fix_tzinfo(start)
+        dtstart_time = dtstart_time or time(0)
+        dtstart = datetime.combine(form['dtstart'], dtstart_time)
+        form['dtstart'] = context.fix_tzinfo(dtstart)
         # End
-        end_time = form['end_time'] or time(0, 0)
-        end = datetime.combine(form['end'], end_time)
-        if form['end_time'] is None:
-            end = end + timedelta(days=1) - resolution
-        form['end'] = context.fix_tzinfo(end)
+        dtend_time = dtend_time or time(0)
+        dtend = datetime.combine(form['dtend'], dtend_time)
+        if form['dtend_time'] is None:
+            dtend = dtend + timedelta(days=1) - resolution
+        form['dtend'] = context.fix_tzinfo(dtend)
 
-        if start > end:
+        if dtstart > dtend:
             msg = ERROR(u'Invalid dates.')
             raise FormError(msg)
 
@@ -275,8 +259,13 @@ class Event_NewInstance(NewInstance):
 
 
     def set_value(self, resource, context, name, form):
-        # set start/end with time
-        return resource.set_value(self, context, name, form)
+        if name in ('dtstart_time', 'dtend_time'):
+            return False
+        if name in ('dtstart', 'dtend'):
+            return resource.set_date(name, form)
+
+        proxy = super(Event_NewInstance, self)
+        return proxy.set_value(resource, context, name, form)
 
 
     def action(self, resource, context, form):
@@ -292,8 +281,8 @@ class Event_NewInstance(NewInstance):
         child.metadata.set_property('title', title)
 
         # Set properties / start and end
-        self.set_value(child, context, 'start', form)
-        self.set_value(child, context, 'end', form)
+        child.set_date('dtstart', form)
+        child.set_date('dtend', form)
 
         # Set properties / cc_list
         child.set_property('cc_list', tuple(form['cc_list']))
@@ -428,26 +417,14 @@ class Event(File, Observable):
         return ns
 
 
-    def set_value(self, view, context, name, form):
+    def set_date(self, name, form):
         # Set values with time part for Event_Edit and Event_NewInstance
         # Used only with (start, end) by Event_NewInstance
-        if name in ('start', 'end'):
-            dt = form[name]
-            if form['%s_time' % name] is None:
-                if name == 'end':
-                    dt = datetime.combine(dt, time(0, 0))
-                    dt = dt + timedelta(days=1) - resolution
-                dt = context.fix_tzinfo(dt)
-                dt = Property(dt, VALUE='DATE')
-            else:
-                dt = context.fix_tzinfo(dt)
-                dt = Property(dt)
-            self.set_property('dt%s' % name, dt)
-            return False
-        elif name in ('start_time', 'end_time'):
-            return False
-        proxy = super(Event_Edit, view)
-        return proxy.set_value(self, context, name, form)
+        dt = form[name]
+        if form['%s_time' % name] is None:
+            dt = Property(dt, VALUE='DATE')
+        self.set_property(name, dt)
+        return False
 
 
     def get_message(self, context, language=None):

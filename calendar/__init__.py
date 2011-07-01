@@ -30,7 +30,10 @@ from calendar_views import MonthlyView, WeeklyView, DailyView
 from event import Event
 
 
-__all__ = ['MonthlyView', 'WeeklyView']
+__all__ = [
+    'Event',
+    'MonthlyView',
+    'WeeklyView']
 
 
 # Register
