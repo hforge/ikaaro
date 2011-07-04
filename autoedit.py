@@ -17,8 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import datetime, date
+
 # Import from itools
-from itools.datatypes import DateTime
+from itools.datatypes import DateTime, Date, Time
+from itools.web import get_context
 
 # Import from ikaaro
 from autoform import get_default_widget, timestamp_widget
@@ -30,12 +34,29 @@ class AutoEdit(DBResource_Edit):
     fields = []
 
 
+    def get_query_schema(self):
+        context = get_context()
+        resource = context.resource
+
+        schema = self._get_schema(resource, context)
+        for name, datatype in schema.items():
+            if getattr(datatype, 'mandatory', False) is True:
+                schema[name] = datatype(mandatory=False)
+
+        return schema
+
+
     def _get_schema(self, resource, context):
         schema = {'timestamp': DateTime(readonly=True)}
 
         # Add schema from the resource
         for name in self.fields:
-            schema[name] = resource.class_schema[name]
+            datatype = resource.class_schema[name]
+            if issubclass(datatype, DateTime):
+                schema[name] = Date
+                schema['%s_time' % name] = Time
+            else:
+                schema[name] = datatype
 
         return schema
 
@@ -54,3 +75,37 @@ class AutoEdit(DBResource_Edit):
             widgets.append(widget)
 
         return widgets
+
+
+    def _get_form(self, resource, context):
+        form = super(AutoEdit, self)._get_form(resource, context)
+        # Combine date & time
+        for name, value in form.items():
+            if type(value) is date:
+                value_time = form.get('%s_time' % name)
+                if value_time is not None:
+                    value = datetime.combine(value, value_time)
+                    form[name] = context.fix_tzinfo(value)
+
+        return form
+
+
+    def get_value(self, resource, context, name, datatype):
+        proxy = super(AutoEdit, self)
+        if name[-5:] == '_time' and issubclass(datatype, Time):
+            value = proxy.get_value(resource, context, name[:-5], DateTime)
+            if type(value) is not datetime:
+                return None
+            value = value.time()
+            context.query[name] = value
+            return value
+
+        return proxy.get_value(resource, context, name, datatype)
+
+
+    def set_value(self, resource, context, name, form):
+        if name[-5:] == '_time':
+            return False
+
+        proxy = super(AutoEdit, self)
+        return proxy.set_value(resource, context, name, form)

@@ -390,7 +390,7 @@ class DatetimeWidget(DateWidget):
         # FIXME A needed hack since this cannot be done properly with
         # ikaaro
         time = get_context().query['%s_time' % self.name]
-        if time:
+        if time is not None:
             return time.strftime('%H:%M')
         return ''
 
