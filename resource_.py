@@ -24,12 +24,14 @@ from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
 from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
+from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import AccessControl, BaseView, get_context
 from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
+from autoform import MultilineWidget
 from datatypes import Multilingual
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
@@ -332,8 +334,11 @@ class DBResource(Resource):
         # Metadata
         'mtime': DateTime(source='metadata', indexed=True, stored=True),
         'last_author': String(source='metadata', indexed=False, stored=True),
-        'title': Multilingual(source='metadata', indexed=True, stored=True),
-        'description': Multilingual(source='metadata', indexed=True),
+        'title': Multilingual(source='metadata', indexed=True, stored=True,
+                              title=MSG(u'Title')),
+        'description': Multilingual(source='metadata', indexed=True,
+                                    title=MSG(u'Description'),
+                                    widget=MultilineWidget),
         'subject': Multilingual(source='metadata', indexed=True),
         # Key & class id
         'abspath': String(indexed=True, stored=True),

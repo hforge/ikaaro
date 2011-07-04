@@ -402,8 +402,12 @@ class CalendarView(STLView):
         index = 0
         while index < len(events):
             event = events[index]
-            e_dtstart = event.dtstart.date()
-            e_dtend = event.dtend.date()
+            e_dtstart = event.dtstart
+            if type(e_dtstart) is datetime:
+                e_dtstart = e_dtstart.date()
+            e_dtend = event.dtend
+            if type(e_dtend) is datetime:
+                e_dtend = e_dtend.date()
 
             # Exit loop if the start date is after the given date
             if e_dtstart > day:

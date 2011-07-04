@@ -22,21 +22,20 @@ from datetime import date, datetime, time, timedelta
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import Date, DateTime, Enumerate, String, Time, Unicode
+from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
+from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.autoform import DatetimeWidget, MultilineWidget, ReadOnlyWidget
+from ikaaro.autoedit import AutoEdit
+from ikaaro.autoform import DatetimeWidget, ReadOnlyWidget
 from ikaaro.autoform import SelectWidget, TextWidget
-from ikaaro.autoform import timestamp_widget, title_widget
 from ikaaro.cc import Observable, UsersList
-from ikaaro.datatypes import Multilingual
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import get_resource_class
-from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views_new import NewInstance
 from calendar_views import resolution
 
@@ -61,45 +60,10 @@ class RRuleDataType(Enumerate):
 
 
 
-class Event_Edit(DBResource_Edit):
+class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
-
-    query_schema = merge_dicts(DBResource_Edit.query_schema,
-                               dtstart=Date, dtstart_time=Time,
-                               dtend=Date, dtend_time=Time)
-
-    schema = merge_dicts(DBResource_Edit.schema,
-                         description=Multilingual,
-                         dtstart=Date(mandatory=True),
-                         dtstart_time=Time,
-                         dtend=Date(mandatory=True),
-                         dtend_time=Time,
-                         rrule=RRuleDataType,
-                         status=Status(mandatory=True))
-    del schema['subject']
-
-    widgets = freeze([
-        timestamp_widget,
-        title_widget,
-        DatetimeWidget('dtstart', title=MSG(u'Start'),
-                       tip=MSG(u'To add an event lasting all day long,'
-                               u' leave time fields empty.')),
-        DatetimeWidget('dtend', title=MSG(u'End')),
-        SelectWidget('rrule', title=MSG(u'Recurrence')),
-        MultilineWidget('description', title=MSG(u'Description'), rows=3),
-        SelectWidget('status', title=MSG(u'State'), has_empty_option=False),
-        ])
-
-
-    def _get_query_fields(self, resource, context):
-        # Insert time fields by hand
-        proxy = super(Event_Edit, self)
-        fields, to_keep = proxy._get_query_fields(resource, context)
-        to_keep.add('dtstart_time')
-        to_keep.add('dtend_time')
-        return fields, to_keep
-
+    fields = ['title', 'dtstart', 'dtend', 'description', 'rrule', 'status']
 
     def get_namespace(self, resource, context):
         proxy = super(Event_Edit, self)
@@ -108,7 +72,6 @@ class Event_Edit(DBResource_Edit):
         # Set organizer infos in ${before}
         owner = resource.get_owner()
         owner = get_context().root.get_user_title(owner)
-        from itools.xml import XMLParser
         owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
         owner = owner.gettext().encode('utf-8')
         namespace['before'] = XMLParser(owner)
@@ -116,61 +79,20 @@ class Event_Edit(DBResource_Edit):
         return namespace
 
 
-    def get_value(self, resource, context, name, datatype):
-        proxy = super(Event_Edit, self)
-        if name == 'dtstart_time':
-            value = proxy.get_value(resource, context, 'dtstart', DateTime)
-            v_time = value.time()
-            context.query[name] = v_time
-            return v_time
-        elif name == 'dtend_time':
-            prop = resource.metadata.get_property('dtend')
-            param_value  = prop.get_parameter('VALUE')
-            if param_value and param_value == 'DATE':
-                return None
-            value = prop.value
-            v_time = value.time()
-            context.query[name] = v_time
-            return v_time
-        return proxy.get_value(resource, context, name, datatype)
-
-
     def _get_form(self, resource, context):
         form = super(Event_Edit, self)._get_form(resource, context)
-        dtstart_time = form['dtstart_time']
-        dtend_time = form['dtend_time']
 
-        if ((dtstart_time is None and dtend_time is not None)
-            or (dtstart_time is not None and dtend_time is None)):
+        dtstart = form['dtstart']
+        dtend = form['dtend']
+        if type(dtstart) is not type(dtend):
             msg = ERROR(u'Each time must be filled, or neither.')
             raise FormError(msg)
-
-        # Start
-        dtstart_time = dtstart_time or time(0)
-        dtstart = datetime.combine(form['dtstart'], dtstart_time)
-        form['dtstart'] = context.fix_tzinfo(dtstart)
-        # End
-        dtend_time = dtend_time or time(0)
-        dtend = datetime.combine(form['dtend'], dtend_time)
-        if dtend_time is None:
-            dtend = dtend + timedelta(days=1) - resolution
-        form['dtend'] = context.fix_tzinfo(dtend)
 
         if dtstart > dtend:
             msg = ERROR(u'Invalid dates.')
             raise FormError(msg)
 
         return form
-
-
-    def set_value(self, resource, context, name, form):
-        if name in ('dtstart_time', 'dtend_time'):
-            return False
-        if name in ('dtstart', 'dtend'):
-            return resource.set_date(name, form)
-
-        proxy = super(Event_Edit, self)
-        return proxy.set_value(resource, context, name, form)
 
 
     def action_edit(self, resource, context, form):
@@ -261,8 +183,6 @@ class Event_NewInstance(NewInstance):
     def set_value(self, resource, context, name, form):
         if name in ('dtstart_time', 'dtend_time'):
             return False
-        if name in ('dtstart', 'dtend'):
-            return resource.set_date(name, form)
 
         proxy = super(Event_NewInstance, self)
         return proxy.set_value(resource, context, name, form)
@@ -281,8 +201,8 @@ class Event_NewInstance(NewInstance):
         child.metadata.set_property('title', title)
 
         # Set properties / start and end
-        child.set_date('dtstart', form)
-        child.set_date('dtend', form)
+        child.set_property('dtstart', form['dtstart'])
+        child.set_property('dtend', form['dtend'])
 
         # Set properties / cc_list
         child.set_property('cc_list', tuple(form['cc_list']))
@@ -301,8 +221,11 @@ class Event_NewInstance(NewInstance):
 
 class EventDateTime(DateTime):
 
-    # TODO This comes from the iCal age, use something better
-    parameters_schema = {'VALUE': String(multiple=False)}
+    source = 'metadata'
+    indexed = True
+    stored = True
+    time_is_required = False
+    widget = DatetimeWidget
 
 
 
@@ -320,10 +243,10 @@ class Event(File, Observable):
         File.class_schema,
         Observable.class_schema,
         # Metadata
-        dtstart=EventDateTime(source='metadata', indexed=True, stored=True),
-        dtend=EventDateTime(source='metadata', indexed=True, stored=True),
-        status=Status(source='metadata'),
-        rrule=RRuleDataType(source='metadata'),
+        dtstart=EventDateTime(title=MSG(u'Start')),
+        dtend=EventDateTime(title=MSG(u'End')),
+        status=Status(source='metadata', title=MSG(u'State')),
+        rrule=RRuleDataType(source='metadata', title=MSG(u'Recurrence')),
         uid=Unicode(source='metadata'))
 
 
@@ -371,19 +294,27 @@ class Event(File, Observable):
         # appear into more than one cell
         dtstart = self.get_property('dtstart')
         dtend = self.get_property('dtend')
-        start_value_type = 'DATE-TIME' # FIXME
 
-        ns['start'] = Time.encode(dtstart.time())[:5]
-        ns['end'] = Time.encode(dtend.time())[:5]
+        dtstart_type = type(dtstart)
+        if dtstart_type is datetime:
+            ns['start'] = Time.encode(dtstart.time())[:5]
+        else:
+            ns['start'] = '00:00'
+
+        if type(dtend) is datetime:
+            ns['end'] = Time.encode(dtend.time())[:5]
+        else:
+            ns['end'] = '23:59'
+
         ns['TIME'] = None
         if grid:
             # Neither a full day event nor a multiple days event
-            if start_value_type != 'DATE' and dtstart.date() == dtend.date():
+            if dtstart_type is datetime and dtstart.date() == dtend.date():
                 ns['TIME'] = '%s - %s' % (ns['start'], ns['end'])
             else:
                 ns['start'] = ns['end'] = None
         elif not out_on:
-            if start_value_type != 'DATE':
+            if dtstart_type is datetime:
                 value = ''
                 if starts_on:
                     value = ns['start']
@@ -415,16 +346,6 @@ class Event(File, Observable):
         ns['id'] = id
 
         return ns
-
-
-    def set_date(self, name, form):
-        # Set values with time part for Event_Edit and Event_NewInstance
-        # Used only with (start, end) by Event_NewInstance
-        dt = form[name]
-        if form['%s_time' % name] is None:
-            dt = Property(dt, VALUE='DATE')
-        self.set_property(name, dt)
-        return False
 
 
     def get_message(self, context, language=None):
