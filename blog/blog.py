@@ -26,13 +26,12 @@ from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.autoform import DateWidget, HTMLBody, ReadOnlyWidget, RTEWidget
-from ikaaro.autoform import timestamp_widget, title_widget
+from ikaaro.autoform import title_widget
 from ikaaro.comments import CommentsAware, CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
 from ikaaro.views_new import NewInstance
 from ikaaro.webpage import HTMLEditView, WebPage
-from ikaaro.workflow import state_widget
 
 
 ###########################################################################
@@ -123,28 +122,6 @@ class Post_View(STLForm):
         context.message = MSG_CHANGES_SAVED
 
 
-
-class Post_Edit(HTMLEditView):
-
-    def _get_schema(self, resource, context):
-        return merge_dicts(HTMLEditView._get_schema(self, resource, context),
-                           date=Date)
-
-    widgets = freeze([
-        timestamp_widget,
-        title_widget,
-        DateWidget('date', title=MSG(u'Date')),
-        state_widget,
-        rte])
-
-
-    def set_value(self, resource, context, name, form):
-        if name == 'date':
-            resource.set_property('date', form['date'])
-            return False
-        return HTMLEditView.set_value(self, resource, context, name, form)
-
-
 ###########################################################################
 # Resource
 ###########################################################################
@@ -161,10 +138,10 @@ class Post(CommentsAware, WebPage):
     class_schema = merge_dicts(
         WebPage.class_schema,
         CommentsAware.class_schema,
-        date=Date(source='metadata', stored=True))
+        date=Date(source='metadata', stored=True, title=MSG(u'Date')))
 
 
     # Views
     new_instance = Post_NewInstance()
     view = Post_View()
-    edit = Post_Edit()
+    edit = HTMLEditView(fields=['title', 'date', 'state', 'data'])

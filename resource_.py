@@ -323,8 +323,10 @@ class DBResource(Resource):
                               title=MSG(u'Title')),
         'description': Multilingual(source='metadata', indexed=True,
                                     title=MSG(u'Description'),
-                                    widget=MultilineWidget),
-        'subject': Multilingual(source='metadata', indexed=True),
+                                    widget=MultilineWidget,
+                                    hidden_by_default=True),
+        'subject': Multilingual(source='metadata', indexed=True,
+                                hidden_by_default=True),
         # Key & class id
         'abspath': String(indexed=True, stored=True),
         'abspath_depth': Integer(indexed=True, stored=True),

@@ -24,7 +24,7 @@ from os.path import basename, splitext
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Boolean, Enumerate, HTTPDate, Integer, String
+from itools.datatypes import Boolean, HTTPDate, Integer, String
 from itools.datatypes import PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -33,15 +33,15 @@ from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
+from autoedit import AutoEdit
 from autoform import FileWidget, PathSelectorWidget, ReadOnlyWidget
-from autoform import file_widget, location_widget, timestamp_widget
-from autoform import title_widget, description_widget, subject_widget
+from autoform import file_widget, location_widget
+from autoform import title_widget
 from autoform import ProgressBarWidget
 from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
-from resource_views import DBResource_Edit
 from views_new import NewInstance
 from workflow import StateEnumerate, state_widget
 
@@ -140,25 +140,35 @@ class File_View(STLView):
 
 
 
-class File_Edit(DBResource_Edit):
+class File_Edit(AutoEdit):
 
-    def _get_schema(self, resource, context):
-        return merge_dicts(
-            DBResource_Edit.schema,
-            state=StateEnumerate(resource=resource, context=context),
-            file=FileDataType)
+    fields = ['title', 'state', 'file', 'description', 'subject']
 
 
-    widgets = [
-        timestamp_widget, title_widget, state_widget, file_widget,
-        description_widget, subject_widget]
+    def _get_datatype(self, resource, context, name):
+        if name == 'file':
+            return FileDataType
+        elif name == 'state':
+            return StateEnumerate(resource=resource, context=context)
+
+        return super(File_Edit, self)._get_datatype(resource, context, name)
+
+
+    def _get_widget(self, resource, context, name):
+        if name == 'file':
+            return file_widget
+        elif name == 'state':
+            return state_widget
+
+        return super(File_Edit, self)._get_widget(resource, context, name)
 
 
     def get_value(self, resource, context, name, datatype):
         if name == 'file':
             return None
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
+
+        proxy = super(File_Edit, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def set_value(self, resource, context, name, form):
@@ -209,7 +219,8 @@ class File_Edit(DBResource_Edit):
                 folder.move_handler(handler_name, filename)
 
             return False
-        return DBResource_Edit.set_value(self, resource, context, name, form)
+
+        return super(File_Edit, self).set_value(resource, context, name, form)
 
 
 

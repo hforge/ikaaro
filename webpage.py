@@ -32,16 +32,13 @@ from itools.web import BaseView, ERROR, get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import HTMLBody
-from autoform import title_widget, description_widget, subject_widget
-from autoform import rte_widget, timestamp_widget
+from autoform import HTMLBody, rte_widget
 from cc import Observable
 from file_views import File_Edit
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from workflow import state_widget
 
 
 def _get_links(base, events):
@@ -172,15 +169,21 @@ class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
 
-    def _get_schema(self, resource, context):
-        schema = File_Edit._get_schema(self, resource, context)
-        data = HTMLBody(multilingual=True, parameters_schema={'lang': String})
-        return merge_dicts(schema, data=data)
+    fields = ['title', 'state', 'data', 'description', 'subject']
+
+    def _get_datatype(self, resource, context, name):
+        if name == 'data':
+            return HTMLBody(multilingual=True,
+                            parameters_schema={'lang': String})
+
+        return super(HTMLEditView, self)._get_datatype(resource, context, name)
 
 
-    widgets = [
-        timestamp_widget, title_widget, state_widget, rte_widget,
-        description_widget, subject_widget]
+    def _get_widget(self, resource, context, name):
+        if name == 'data':
+            return rte_widget
+
+        return super(HTMLEditView, self)._get_widget(resource, context, name)
 
 
     def get_value(self, resource, context, name, datatype):

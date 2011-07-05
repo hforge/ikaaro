@@ -46,32 +46,42 @@ class AutoEdit(DBResource_Edit):
         return schema
 
 
+    def _get_datatype(self, resource, context, name):
+        return resource.class_schema[name]
+
+
     def _get_schema(self, resource, context):
         schema = {'timestamp': DateTime(readonly=True)}
 
         # Add schema from the resource
         for name in self.fields:
-            datatype = resource.class_schema[name]
+            datatype = self._get_datatype(resource, context, name)
+
+            # Special case: datetime
             if issubclass(datatype, DateTime):
                 schema[name] = Date
                 schema['%s_time' % name] = Time
-            else:
-                schema[name] = datatype
+                continue
+
+            # Standard case
+            schema[name] = datatype
 
         return schema
 
 
-    def _get_widgets(self, resource, context):
-        schema = resource.class_schema
+    def _get_widget(self, resource, context, name):
+        datatype = resource.class_schema[name]
+        title = getattr(datatype, 'title', name)
+        widget = getattr(datatype, 'widget', None)
+        if widget is None:
+            widget = get_default_widget(datatype)
+        return widget(name, title=title)
 
+
+    def _get_widgets(self, resource, context):
         widgets = [timestamp_widget]
         for name in self.fields:
-            datatype = schema[name]
-            title = getattr(datatype, 'title', name)
-            widget = getattr(datatype, 'widget', None)
-            if widget is None:
-                widget = get_default_widget(datatype)
-            widget = widget(name, title=title)
+            widget = self._get_widget(resource, context, name)
             widgets.append(widget)
 
         return widgets

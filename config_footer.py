@@ -18,15 +18,8 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoform import rte_widget, timestamp_widget
 from config import Configuration
 from webpage import WebPage, HTMLEditView
-
-
-class Footer_Edit(HTMLEditView):
-
-    widgets = [timestamp_widget, rte_widget]
-
 
 
 class Footer(WebPage):
@@ -42,7 +35,7 @@ class Footer(WebPage):
 
     # Views
     class_views = ['edit', 'externaledit', 'commit_log']
-    edit = Footer_Edit()
+    edit = HTMLEditView(fields=['data'])
 
 
     def init_resource(self, **kw):
