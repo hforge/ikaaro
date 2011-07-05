@@ -98,7 +98,7 @@ class DBResource(Resource):
     def __eq__(self, resource):
         if not isinstance(resource, DBResource):
             raise TypeError, "cannot compare DBResource and %s" % type(resource)
-        return self.get_canonical_path() == resource.get_canonical_path()
+        return self.get_abspath() == resource.get_abspath()
 
 
     def __ne__(self, node):
@@ -116,21 +116,6 @@ class DBResource(Resource):
         return parent_path.resolve_name(self.name)
 
     abspath = property(get_abspath)
-
-
-    def get_canonical_path(self):
-        if self.parent is None:
-            return Path('/')
-        parent_path = self.parent.get_canonical_path()
-
-        return parent_path.resolve_name(self.name)
-
-
-    def get_real_resource(self):
-        cpath = self.get_canonical_path()
-        if cpath == self.get_abspath():
-            return self
-        return self.get_resource(cpath)
 
 
     def get_root(self):
@@ -498,7 +483,7 @@ class DBResource(Resource):
         values['links'] = list(links)
 
         # Parent path
-        abspath = self.get_canonical_path()
+        abspath = self.get_abspath()
         abspath_str = str(abspath)
         if abspath_str != '/':
             values['parent_paths'] = [ str(abspath[:i])
@@ -575,7 +560,7 @@ class DBResource(Resource):
 
         # (2) Update resources that link to me
         database = get_context().database
-        target = self.get_canonical_path()
+        target = self.get_abspath()
         query = PhraseQuery('links', source)
         results = database.catalog.search(query).get_documents()
         for result in results:
@@ -604,7 +589,7 @@ class DBResource(Resource):
 
     def get_links(self):
         links = set()
-        base = self.get_canonical_path()
+        base = self.get_abspath()
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')
 
@@ -656,7 +641,7 @@ class DBResource(Resource):
         """
         database = get_context().database
 
-        base = self.get_canonical_path()
+        base = self.get_abspath()
         base = str(base)
         old_base = database.resources_new2old.get(base, base)
         old_base = Path(old_base)
@@ -720,9 +705,9 @@ class DBResource(Resource):
     def update_relative_links(self, source):
         """Update the relative links coming out from this resource after it
         was moved, so they are not broken. The old path is in parameter. The
-        new path is "self.get_canonical_path()".
+        new path is "self.get_abspath()".
         """
-        target = self.get_canonical_path()
+        target = self.get_abspath()
         resources_old2new = get_context().database.resources_old2new
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')

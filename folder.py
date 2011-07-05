@@ -300,7 +300,7 @@ class Folder(DBResource):
             # Check referencial-integrity
             catalog = database.catalog
             # FIXME Check sub-resources too
-            path = resource.get_canonical_path()
+            path = resource.get_abspath()
             path_str = str(path)
             query_base_path = get_base_path_query(path)
             query = AndQuery(PhraseQuery('links', path_str),
@@ -394,8 +394,8 @@ class Folder(DBResource):
         target_parent = self.get_resource(parent_path)
 
         # Cannot move a resource to a subdirectory of itself
-        abspath = self.get_canonical_path()
-        aux = source.get_canonical_path()
+        abspath = self.get_abspath()
+        aux = source.get_abspath()
         if aux.get_prefix(abspath) == aux:
             message = 'cannot move a resource to a subdirectory of itself'
             raise ConsistencyError, message
@@ -408,7 +408,7 @@ class Folder(DBResource):
 
         # Events, remove
         database = self.metadata.database
-        new_path = self.get_canonical_path().resolve2(target_path)
+        new_path = self.get_abspath().resolve2(target_path)
         database.move_resource(source, new_path)
 
         # Move the metadata

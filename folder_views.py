@@ -269,7 +269,7 @@ class Folder_BrowseContent(SearchForm):
 
     def get_search_types(self, resource, context):
         # 1. Build the query of all objects to search
-        path = resource.get_canonical_path()
+        path = resource.get_abspath()
         query = get_base_path_query(path)
         if self.search_content_only(resource, context) is True:
             content_query = PhraseQuery('is_content', True)
@@ -323,7 +323,7 @@ class Folder_BrowseContent(SearchForm):
         args = list(args)
 
         # Search in subtree
-        path = resource.get_canonical_path()
+        path = resource.get_abspath()
         query = get_base_path_query(path)
         args.append(query)
         if self.search_content_only(resource, context) is True:
@@ -463,7 +463,7 @@ class Folder_BrowseContent(SearchForm):
                 return None
             if item_resource.name in parent.__fixed_handlers__:
                 return None
-            id = resource.get_canonical_path().get_pathto(brain.abspath)
+            id = resource.get_abspath().get_pathto(brain.abspath)
             id = str(id)
             return id, False
         elif column == 'icon':
@@ -476,7 +476,7 @@ class Folder_BrowseContent(SearchForm):
             return path_to_icon
         elif column == 'abspath':
             # Name
-            id = resource.get_canonical_path().get_pathto(brain.abspath)
+            id = resource.get_abspath().get_pathto(brain.abspath)
             id = str(id)
             view = item_resource.get_view(None)
             if view is None:

@@ -179,7 +179,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_items_query(self, resource, context):
         # Only in the given root
-        parent_path = resource.get_order_root().get_canonical_path()
+        parent_path = resource.get_order_root().get_abspath()
         depth = 0 if resource.order_recursive else 1
         query = get_base_path_query(parent_path, depth=depth)
         # Only the given types
@@ -356,7 +356,7 @@ class ResourcesOrderedTable(OrderedTable):
 
     def get_links(self):
         links = super(ResourcesOrderedTable, self).get_links()
-        base = self.get_order_root().get_canonical_path()
+        base = self.get_order_root().get_abspath()
         new_links = set([
             str(resolve_uri2(base, name))
             for name in self.get_ordered_names() ])
@@ -366,7 +366,7 @@ class ResourcesOrderedTable(OrderedTable):
 
     def update_links(self, source, target):
         super(ResourcesOrderedTable, self).update_links(source, target)
-        base = self.get_order_root().get_canonical_path()
+        base = self.get_order_root().get_abspath()
         handler = self.handler
 
         for record in handler.get_records_in_order():
@@ -390,7 +390,7 @@ class ResourcesOrderedTable(OrderedTable):
         super(ResourcesOrderedTable, self).update_relative_links(source)
         order_root_source = resolve_uri2(source, self.order_root_path)
         order_root_source = Path(order_root_source)
-        order_root_target = self.get_order_root().get_canonical_path()
+        order_root_target = self.get_order_root().get_abspath()
         resources_old2new = get_context().database.resources_old2new
         new_order_root_target = resources_old2new.get(order_root_target,
                                                       order_root_target)

@@ -110,7 +110,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         brain, item_resource = item
         if column == 'checkbox':
             # radiobox
-            id = str(resource.get_canonical_path().get_pathto(brain.abspath))
+            id = str(resource.get_abspath().get_pathto(brain.abspath))
             id += self.resource_action
             return id, False
         elif column == 'name':

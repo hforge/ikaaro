@@ -232,7 +232,7 @@ class DBResource_Edit(AutoForm):
             return
 
         root = context.root
-        results = root.search(abspath=str(resource.get_canonical_path()))
+        results = root.search(abspath=str(resource.get_abspath()))
         brain = results.get_documents()[0]
         mtime = brain.mtime
         if mtime is not None and timestamp < mtime:
@@ -320,7 +320,7 @@ class DBResource_Backlinks(DBResource_Links):
     title = MSG(u"Backlinks")
 
     def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        query = PhraseQuery('links', str(resource.get_abspath()))
         return context.root.search(query)
 
 

@@ -382,7 +382,7 @@ class Menu(OrderedTable):
         handler = self.handler
         menu_abspath = self.get_abspath()
         here = context.resource
-        here_abspath = here.get_canonical_path()
+        here_abspath = here.get_abspath()
         here_view_name = url[-1]
         here_abspath_and_view = '%s/%s' % (here_abspath, here_view_name)
         site_root_abspath = here.get_site_root().get_abspath()
@@ -446,7 +446,7 @@ class Menu(OrderedTable):
 
                 # Set active, in_path
                 active = in_path = False
-                resource_abspath = resource.get_canonical_path()
+                resource_abspath = resource.get_abspath()
                 # add default view
                 if view:
                     resource_method = view[2:]
@@ -534,7 +534,7 @@ class Menu(OrderedTable):
 
     def get_links(self):
         links = super(Menu, self).get_links()
-        base = self.get_canonical_path()
+        base = self.get_abspath()
         site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
         record_properties = handler.record_properties
@@ -552,7 +552,7 @@ class Menu(OrderedTable):
             resource = self.get_resource(uri, soft=True)
             if resource:
                 # Use the canonical path instead of the uri stocked
-                link = str(resource.get_canonical_path())
+                link = str(resource.get_abspath())
             else:
                 # If the resource does not exist, simply use the uri
                 link = str(uri)
@@ -575,7 +575,7 @@ class Menu(OrderedTable):
     def update_links(self, source, target):
         super(Menu, self).update_links(source, target)
         site_root_abspath = self.get_site_root().get_abspath()
-        base = self.get_canonical_path()
+        base = self.get_abspath()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
         old_base = resources_new2old.get(base, base)
@@ -607,7 +607,7 @@ class Menu(OrderedTable):
     def update_relative_links(self, source):
         super(Menu, self).update_relative_links(source)
         site_root_abspath = self.get_site_root().get_abspath()
-        target = self.get_canonical_path()
+        target = self.get_abspath()
         resources_old2new = get_context().database.resources_old2new
         handler = self.handler
 

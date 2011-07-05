@@ -336,7 +336,7 @@ class CalendarView(STLView):
             query.append(PhraseQuery(name, value))
 
         # Only in the current calendar
-        query.append(get_base_path_query(calendar.get_canonical_path()))
+        query.append(get_base_path_query(calendar.get_abspath()))
 
         # Start/End
         query.append(RangeQuery('dtstart', None, end))

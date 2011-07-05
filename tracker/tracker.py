@@ -143,7 +143,7 @@ class Tracker(Folder):
 
 
     def get_issues_query_terms(self):
-        return [get_base_path_query(self.get_canonical_path()),
+        return [get_base_path_query(self.get_abspath()),
                 PhraseQuery('format', self.issue_class.class_id)]
 
 

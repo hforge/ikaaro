@@ -200,7 +200,7 @@ def generate_name(name, used, suffix='_'):
 ###########################################################################
 def get_base_path_query(abspath, include_container=False, depth=0):
     """Builds a query that will return all the objects within the given
-    absolute path, like it is returned by 'resource.get_canonical_path()'.
+    absolute path, like it is returned by 'resource.get_abspath()'.
 
     If 'include_container' is true the resource at the given path will be
     returned too.
@@ -240,7 +240,7 @@ def get_content_containers(context, skip_formats):
     from config import Configuration
 
     query = AndQuery(
-        get_base_path_query(context.site_root.get_canonical_path(), True),
+        get_base_path_query(context.site_root.get_abspath(), True),
         PhraseQuery('is_folder', True))
 
     for brain in context.root.search(query).get_documents():
