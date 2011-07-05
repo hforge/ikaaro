@@ -40,6 +40,7 @@ from config_register import RegisterForm
 from registry import get_resource_class
 from resource_views import LoginView
 from skins import skin_registry
+from user import UserFolder
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
@@ -59,12 +60,6 @@ class WebSite(AccessControl, Folder):
     class_views = Folder.class_views + ['control_panel']
 
 
-    def _get_resource(self, name):
-        if name in ('users', 'users.metadata'):
-            return self.parent._get_resource(name)
-        return Folder._get_resource(self, name)
-
-
     class_schema = merge_dicts(
         Folder.class_schema,
         # Metadata
@@ -75,9 +70,13 @@ class WebSite(AccessControl, Folder):
     # To remove in ikaaro 0.71
     class_schema_extensible = True
 
+    is_content = True
+
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
+        # Users
+        self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Configuration
         config = self.make_resource('config', Configuration,
                                     title={'en': u'Configuration'})
@@ -190,21 +189,8 @@ class WebSite(AccessControl, Folder):
         if password is not None:
             user.set_password(password)
 
-        # Attach to website
-        self.attach_user(user)
-
         # Return the user
         return user
-
-
-    def attach_user(self, user, group=None):
-        website_id = str(self.get_abspath())
-        user.set_property('websites', website_id)
-        # Option: attach group
-        if group is not None:
-            group = self.get_resource('config/groups/%s' % group)
-            group_id = str(group.get_abspath())
-            user.set_property('groups', group_id)
 
 
     def get_groups(self):
@@ -221,18 +207,6 @@ class WebSite(AccessControl, Folder):
 
         results = self.get_root().search(query)
         return set([ x.name for x in results.get_documents() ])
-
-
-    def has_user_role(self, user, *group_names):
-        user_groups = set(user.get_property('groups'))
-
-        path = str(self.get_resource('config/groups').get_abspath()) + '/'
-        for group_name in group_names:
-            group_id = path + group_name
-            if group_id in user_groups:
-                return True
-
-        return False
 
 
     def is_allowed_to_view(self, user, resource):
@@ -266,6 +240,31 @@ class WebSite(AccessControl, Folder):
         # 2. Access
         access = self.get_resource('config/access')
         return access.has_permission(user, permission)
+
+
+    def get_user(self, name):
+        return self.get_resource('users/%s' % name, soft=True)
+
+
+    def get_user_from_login(self, username):
+        """Return the user identified by its unique e-mail or username, or
+        return None.
+        """
+        # Search the user by username (login name)
+        base_path = '%s/users' % self.get_abspath()
+        query = AndQuery(PhraseQuery('username', username),
+                         PhraseQuery('parent_paths', base_path))
+        results = self.parent.search(query)
+        n = len(results)
+        print n
+        if n == 0:
+            return None
+        if n > 1:
+            error = 'There are %s users in the database identified as "%s"'
+            raise ValueError, error % (n, username)
+        # Get the user
+        brain = results.get_documents()[0]
+        return self.get_user(brain.name)
 
 
     #######################################################################

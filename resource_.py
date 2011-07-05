@@ -501,8 +501,8 @@ class DBResource(Resource):
         abspath = self.get_canonical_path()
         abspath_str = str(abspath)
         if abspath_str != '/':
-            values['parent_paths'] = [str(abspath[:i])
-                    for i in range(len(abspath))]
+            values['parent_paths'] = [ str(abspath[:i])
+                                       for i in range(len(abspath)) ]
         values['abspath'] = abspath_str
         values['abspath_depth'] = len(abspath)
 

@@ -29,6 +29,7 @@ from buttons import Button, RemoveButton
 from config import Configuration
 from messages import MSG_PASSWORD_MISMATCH
 from resource_ import DBResource
+from utils import get_base_path_query
 from views import SearchForm
 
 
@@ -56,10 +57,10 @@ class BrowseUsers(SearchForm):
 
     def get_items(self, resource, context):
         # Build the Query
-        website_id = resource.get_site_root().get_abspath()
+        website_abspath = resource.get_site_root().get_abspath()
         search_query = AndQuery(
             PhraseQuery('format', 'user'),
-            PhraseQuery('websites', str(website_id)))
+            get_base_path_query(website_abspath))
 
         search_term = context.query['search_term'].strip()
         if search_term:

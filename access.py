@@ -32,13 +32,12 @@ from workflow import WorkflowAware
 def is_admin(user, resource):
     if user is None or resource is None:
         return False
-    # WebSite admin?
-    root = resource.get_site_root()
-    if root.has_user_role(user, 'admins'):
-        return True
-    # Global admin?
-    root = resource.get_root()
-    return root.has_user_role(user, 'admins')
+
+    if (resource.get_site_root().get_abspath() !=
+        user.get_site_root().get_abspath()):
+        return False
+
+    return 'admins' in user.get_property('groups')
 
 
 

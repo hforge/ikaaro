@@ -380,6 +380,7 @@ class Folder(DBResource):
         # Events, add
         resource = self.get_resource(target_path)
         database.add_resource(resource)
+        return resource
 
 
     def move_resource(self, source_path, target_path):

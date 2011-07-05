@@ -76,10 +76,6 @@ class ConfigAccess(Table):
         for record in table.get_records():
             if table.get_record_value(record, 'permission') == permission:
                 group_name = table.get_record_value(record, 'group')
-                if group_name not in ('everybody', 'authenticated'):
-                    group = self.parent.get_resource('groups/%s' % group_name)
-                    group_name = group.get_abspath()
-
                 if group_name in user_groups:
                     return True
 

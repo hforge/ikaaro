@@ -361,7 +361,7 @@ class LoginView(STLForm):
     def action(self, resource, context, form):
         # Get the user
         email = form['username'].strip()
-        user = context.root.get_user_from_login(email)
+        user = context.site_root.get_user_from_login(email)
 
         # Case 1: Forgotten password
         if form['no_password']:

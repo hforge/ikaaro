@@ -43,8 +43,6 @@ from itools.uri import Path
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
-from folder import Folder
-from user import UserFolder
 from website import WebSite
 
 
@@ -80,42 +78,17 @@ class Root(WebSite):
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
 
-    is_content = True
-
 
     def init_resource(self, email, password):
         super(Root, self).init_resource()
-        # User folder
-        self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
         user = self.make_user(email, password)
-        user.set_property('groups', ['/config/groups/admins'])
+        user.set_property('groups', ['admins'])
 
 
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
-    def get_user(self, name):
-        return self.get_resource('users/%s' % name, soft=True)
-
-
-    def get_user_from_login(self, username):
-        """Return the user identified by its unique e-mail or username, or
-        return None.
-        """
-        # Search the user by username (login name)
-        results = self.search(username=username)
-        n = len(results)
-        if n == 0:
-            return None
-        if n > 1:
-            error = 'There are %s users in the database identified as "%s"'
-            raise ValueError, error % (n, username)
-        # Get the user
-        brain = results.get_documents()[0]
-        return self.get_user(brain.name)
-
-
     def get_user_title(self, username):
         if not username:
             return None
@@ -140,12 +113,8 @@ class Root(WebSite):
     ########################################################################
     # Traverse
     ########################################################################
-    def _get_resource(self, name):
-        return Folder._get_resource(self, name)
-
-
     def _get_names(self):
-        return [ x for x in Folder._get_names(self) if x ]
+        return [ x for x in super(Root, self)._get_names() if x ]
 
 
     ########################################################################
