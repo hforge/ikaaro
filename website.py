@@ -25,7 +25,7 @@ from types import GeneratorType
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.database import AndQuery, OrQuery, PhraseQuery
+from itools.database import AndQuery, PhraseQuery
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -194,19 +194,11 @@ class WebSite(AccessControl, Folder):
 
 
     def get_groups(self):
-        return [
-            str(x.get_abspath())
-            for x in self.get_resources('config/groups') ]
+        return [ x.name for x in self.get_resources('config/groups') ]
 
 
     def get_members(self):
-        groups = self.get_groups()
-        query = AndQuery(
-            PhraseQuery('format', 'user'),
-            OrQuery(* [ PhraseQuery('groups', x) for x in groups ]))
-
-        results = self.get_root().search(query)
-        return set([ x.name for x in results.get_documents() ])
+        return set(self.get_names('users'))
 
 
     def is_allowed_to_view(self, user, resource):
