@@ -251,12 +251,11 @@ class WebSite(AccessControl, Folder):
         return None.
         """
         # Search the user by username (login name)
-        base_path = '%s/users' % self.get_abspath()
+        base_path = str(self.get_resource('users').get_abspath())
         query = AndQuery(PhraseQuery('username', username),
                          PhraseQuery('parent_paths', base_path))
-        results = self.parent.search(query)
+        results = self.get_root().search(query)
         n = len(results)
-        print n
         if n == 0:
             return None
         if n > 1:
