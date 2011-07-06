@@ -31,14 +31,14 @@ from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
-from ikaaro.access import Roles_Datatype
+from ikaaro.autoedit import AutoEdit
 from ikaaro.autoform import SelectWidget, TextWidget
 from ikaaro.buttons import BrowseButton
+from ikaaro.config_groups import UserGroupsDatatype
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
-from ikaaro.resource_views import DBResource_Edit
 
 # Import from ikaaro.tracker
 from issue import Issue
@@ -244,18 +244,27 @@ class Tracker_NewInstance(NewInstance):
 
 
 
-class Tracker_Edit(DBResource_Edit):
+class Tracker_Edit(AutoEdit):
 
-    widgets = (DBResource_Edit.widgets + [
-        SelectWidget('included_roles',
-            title=MSG(u"Authorized roles for 'Assigned to' and 'CC' fields"),
-            has_empty_option=False)])
+    fields = ['title', 'description', 'subject', 'included_roles']
+
+    def _get_datatype(self, resource, context, name):
+        if name == 'included_roles':
+            groups = resource.get_site_root().get_resource('config/groups')
+            return UserGroupsDatatype(mandatory=True, multiple=True,
+                                      special_groups=None,
+                                      config_groups=groups)
+
+        return super(Tracker_Edit, self)._get_datatype(resource, context, name)
 
 
-    def _get_schema(self, resource, context):
-        roles = Roles_Datatype(resource=resource, multiple=True,
-                               mandatory=True)
-        return merge_dicts(DBResource_Edit.schema, included_roles=roles)
+    def _get_widget(self, resource, context, name):
+        if name == 'included_roles':
+            title = MSG(u"Authorized roles for 'Assigned to' and 'CC' fields")
+            return SelectWidget('included_roles', title=title,
+                                has_empty_option=False)
+
+        return super(Tracker_Edit, self)._get_widget(resource, context, name)
 
 
     def get_value(self, resource, context, name, datatype):
@@ -599,7 +608,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
 
     def get_namespace(self, resource, context):
-        search_template = resource.get_resource(self.search_template)
+        search_template = context.get_template(self.search_template)
         search_namespace = self.get_search_namespace(resource, context)
         return {
             'batch': None,

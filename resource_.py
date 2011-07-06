@@ -31,12 +31,13 @@ from itools.web import AccessControl, BaseView, get_context
 from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
+from autoedit import AutoEdit
 from autoform import MultilineWidget
 from datatypes import Multilingual
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
-from resource_views import DBResource_Edit, DBResource_Backlinks
+from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
@@ -894,7 +895,7 @@ class DBResource(Resource):
     new_instance = NewInstance()
     login = LoginView()
     logout = LogoutView()
-    edit = DBResource_Edit()
+    edit = AutoEdit()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
     add_media = DBResource_AddMedia()

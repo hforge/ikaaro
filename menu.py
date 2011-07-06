@@ -27,7 +27,6 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
-from autoform import TextWidget
 from buttons import BrowseButton, Button
 from datatypes import Multilingual
 from exceptions import ConsistencyError
@@ -58,14 +57,20 @@ class Target(Enumerate):
                {'name': '_blank', 'value': MSG(u'New page')}]
 
 
+class TargetWidget(SelectWidget):
+    has_empty_option = False
+
+
 
 class MenuFile(OrderedTableFile):
 
     record_properties = {
-        'title': Multilingual(mandatory=True),
-        'path': String(mandatory=True),
-        'target': Target(mandatory=True, default='_top'),
-        'child': String}
+        'title': Multilingual(mandatory=True, title=MSG(u'Title')),
+        'path': String(mandatory=True, title=MSG(u'Path'),
+                       widget=PathSelectorWidget),
+        'target': Target(mandatory=True, default='_top', title=MSG(u'Target'),
+                         widget=TargetWidget),
+        'child': String(title=None, widget=ReadOnlyWidget)}
 
 
 
@@ -250,9 +255,12 @@ class Menu_AddLink(DBResource_AddLink):
 
 class Menu_AddRecord(Table_AddRecord):
 
+    fields = ['title', 'path', 'target', 'child']
+
     actions = (Table_AddRecord.actions
-               + [Button(access=True, name='add_and_return',
-                         css='button-ok', title=MSG(u'Add and return'))])
+               + [Button(access=True, name='add_and_return', css='button-ok',
+                         title=MSG(u'Add and return'))])
+
 
     def action_add_and_return(self, resource, context, record):
         proxy = super(Menu_AddRecord, self)
@@ -270,6 +278,8 @@ class Menu_AddRecord(Table_AddRecord):
 
 
 class Menu_EditRecord(Table_EditRecord):
+
+    fields = ['title', 'path', 'target', 'child']
 
     actions = (Table_EditRecord.actions
                + [Button(access=True, name='edit_and_return',
@@ -302,13 +312,6 @@ class Menu(OrderedTable):
     add_record = Menu_AddRecord()
     edit_record = Menu_EditRecord()
     view = Menu_View()
-
-
-    form = [TextWidget('title', title=MSG(u'Title')),
-            PathSelectorWidget('path', title=MSG(u'Path')),
-            SelectWidget('target', title=MSG(u'Target'),
-                         has_empty_option=False),
-            ReadOnlyWidget('child')]
 
 
     def del_record(self, id):

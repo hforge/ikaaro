@@ -25,9 +25,9 @@ from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
+from autoedit import AutoEdit
 from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton, AddButton
-from resource_views import DBResource_Edit
 from views import BrowseForm
 import messages
 
@@ -158,17 +158,13 @@ class Table_View(BrowseForm):
 ###########################################################################
 # Add/Edit records
 ###########################################################################
-class Table_AddEditRecord(DBResource_Edit):
+class Table_AddEditRecord(AutoEdit):
 
     access = 'is_allowed_to_edit'
 
 
-    def _get_schema(self, resource, context):
+    def _get_resource_schema(self, resource):
         return resource.get_schema()
-
-
-    def _get_widgets(self, resource, context):
-        return resource.get_form()
 
 
     def get_value(self, resource, context, name, datatype):
@@ -253,13 +249,17 @@ class Table_AddRecord(Table_AddEditRecord):
 class Table_EditRecord(Table_AddEditRecord):
 
     title = MSG(u'Edit record {id}')
-    query_schema = {'id': Integer(mandatory=True)}
+
+
+    def get_query_schema(self):
+        schema = super(Table_EditRecord, self).get_query_schema()
+        schema['id'] = Integer(mandatory=True)
+        return schema
 
 
     def _get_query_to_keep(self, resource, context):
         """Keep id"""
-        id = context.query['id']
-        return [{'name': 'id', 'value': id}]
+        return [{'name': 'id', 'value': context.query['id']}]
 
 
     def get_query(self, context):
@@ -277,6 +277,10 @@ class Table_EditRecord(Table_AddEditRecord):
 
 
     def get_value(self, resource, context, name, datatype):
+        if name == 'timestamp':
+            proxy = super(Table_EditRecord, self)
+            return proxy.get_value(resource, context, name, datatype)
+
         handler = resource.get_handler()
         # Get the record
         id = context.query['id']

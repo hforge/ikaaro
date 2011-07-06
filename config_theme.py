@@ -17,20 +17,20 @@
 
 # Import from itools
 from itools.core import merge_dicts, get_abspath
-from itools.datatypes import DateTime, PathDataType, URI
+from itools.datatypes import PathDataType, URI
 from itools.gettext import MSG
 from itools.handlers import ro_database, File as FileHandler
 from itools.web import ERROR, FormError
 
 # Import from ikaaro
-from autoform import timestamp_widget, ImageSelectorWidget
+from autoedit import AutoEdit
+from autoform import ImageSelectorWidget
 from config import Configuration
 from file import Image
 from folder import Folder
 from folder_views import GoToSpecificDocument
 from messages import MSG_UNEXPECTED_MIMETYPE
 from popup import DBResource_AddImage
-from resource_views import DBResource_Edit
 from text import CSS
 
 
@@ -84,21 +84,29 @@ class Theme_AddLogo(DBResource_AddImage):
 
 
 
-class Theme_Edit(DBResource_Edit):
+class Theme_Edit(AutoEdit):
 
     context_menus = []
-    schema = {
-            'timestamp': DateTime(readonly=True),
-            'favicon': PathDataType,
-            'logo': PathDataType}
-    widgets = [ timestamp_widget,
-                ImageSelectorWidget('favicon', action='add_favicon',
-                    title=MSG(u'Replace favicon file (ICO 32x32 only)')),
-                ImageSelectorWidget('logo', action='add_logo',
-                    title=MSG(u'Replace logo file')) ]
+    fields = ['favicon', 'logo']
+
+    def _get_datatype(self, resource, context, name):
+        return PathDataType
+
+
+    def _get_widget(self, resource, context, name):
+        if name == 'favicon':
+            title = MSG(u'Replace favicon file (ICO 32x32 only)')
+            return ImageSelectorWidget('favicon', action='add_favicon',
+                                       title=title)
+        elif name == 'logo':
+            return ImageSelectorWidget('logo', action='add_logo',
+                                       title=MSG(u'Replace logo file'))
+
+        return super(Theme_Edit, self)._get_widget(resource, context, name)
+
 
     def _get_form(self, resource, context):
-        form = DBResource_Edit._get_form(self, resource, context)
+        form = super(Theme_Edit, self)._get_form(resource, context)
         # Use form.get(xxx) because favicon and logo can be not defined
         # Check favicon
         path = form.get('favicon')

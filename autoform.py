@@ -624,7 +624,8 @@ class AutoForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        widgets_namespace = STLForm.get_namespace(self, resource, context)
+        proxy = super(AutoForm, self)
+        widgets_namespace = proxy.get_namespace(resource, context)
 
         # Local Variables
         fields = self.get_schema(resource, context)

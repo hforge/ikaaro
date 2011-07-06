@@ -32,13 +32,18 @@ from resource_ import DBResource
 
 class UserGroupsDatatype(Enumerate):
 
+    special_groups = [
+        {'name': 'everybody', 'value': MSG(u'Everybody')},
+        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+
     def get_options(self):
-        groups = [
-            {'name': 'everybody', 'value': MSG(u'Everybody')},
-            {'name': 'authenticated', 'value': MSG(u'Authenticated')} ]
-        groups.extend(
-            [ {'name': group.name, 'value': group.get_title()}
-              for group in self.config_groups.get_resources() ])
+        groups = [ {'name': group.name, 'value': group.get_title()}
+                   for group in self.config_groups.get_resources() ]
+
+        # Special groups
+        if self.special_groups:
+            return self.special_groups + groups
+
         return groups
 
 

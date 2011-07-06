@@ -30,11 +30,11 @@ from itools.web import INFO, get_context
 
 # Import from ikaaro
 from access import AccessControl
+from autoedit import AutoEdit
 from autoform import ImageSelectorWidget
 from datatypes import Password
 from folder import Folder
 from registry import get_resource_class
-from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
@@ -305,7 +305,7 @@ class UserFolder(Folder):
     # Back-Office
     #######################################################################
     browse_content = UserFolder_BrowseContent()
-    edit = DBResource_Edit(access='is_admin')
+    edit = AutoEdit(access='is_admin')
 
 
     #######################################################################

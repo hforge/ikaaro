@@ -31,7 +31,7 @@ from resource_views import DBResource_Edit
 
 class AutoEdit(DBResource_Edit):
 
-    fields = []
+    fields = ['title', 'description', 'subject']
 
 
     def get_query_schema(self):
@@ -46,8 +46,12 @@ class AutoEdit(DBResource_Edit):
         return schema
 
 
+    def _get_resource_schema(self, resource):
+        return resource.class_schema
+
+
     def _get_datatype(self, resource, context, name):
-        return resource.class_schema[name]
+        return self._get_resource_schema(resource)[name]
 
 
     def _get_schema(self, resource, context):
@@ -70,7 +74,7 @@ class AutoEdit(DBResource_Edit):
 
 
     def _get_widget(self, resource, context, name):
-        datatype = resource.class_schema[name]
+        datatype = self._get_resource_schema(resource)[name]
         title = getattr(datatype, 'title', name)
         widget = getattr(datatype, 'widget', None)
         if widget is None:
