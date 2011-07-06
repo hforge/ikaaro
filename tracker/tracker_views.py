@@ -31,13 +31,13 @@ from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
+from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import SelectWidget, TextWidget
+from ikaaro.autoform import SelectWidget
 from ikaaro.buttons import BrowseButton
 from ikaaro.config_groups import UserGroupsDatatype
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
-from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
@@ -214,11 +214,18 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Tracker_NewInstance(NewInstance):
+class Tracker_NewInstance(AutoAdd):
 
-    schema = merge_dicts(NewInstance.schema, product=Unicode(mandatory=True))
-    widgets = NewInstance.widgets + [
-        TextWidget('product', title=MSG(u'Give the title of one Product'))]
+    fields = ['title', 'location', 'product']
+
+
+    def _get_datatype(self, resource, context, name):
+        if name == 'product':
+            title = MSG(u'Give the title of one Product')
+            return Unicode(mandatory=True, title=title)
+
+        proxy = super(Tracker_NewInstance, self)
+        return proxy._get_datatype(resource, context, name)
 
 
     def action(self, resource, context, form):
@@ -230,9 +237,7 @@ class Tracker_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = container.make_resource(name, cls)
         # The metadata
-        language = container.get_edit_languages(context)[0]
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
+        self.set_value(child, context, 'title', form)
         # Add the initial product
         product = form['product']
         table = container.get_resource('%s/product' % name).get_handler()

@@ -24,8 +24,7 @@ from json import dumps
 from socket import gethostname
 
 # Import from itools
-from itools.core import get_abspath, merge_dicts
-from itools.csv import Property
+from itools.core import get_abspath
 from itools.datatypes import Email, String, Unicode, Integer
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -33,13 +32,13 @@ from itools.fs import lfs
 from itools.web import BaseView, STLView, INFO
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoform import AutoForm
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from config_captcha import CaptchaDatatype, CaptchaWidget
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
-from views_new import NewInstance
 
 
 
@@ -235,11 +234,9 @@ vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
     tip=MSG(u'Type the hostnames this website will apply to, each one in a'
             u' different line.'))
 
-class WebSite_NewInstance(NewInstance):
+class WebSite_NewInstance(AutoAdd):
 
-    schema = merge_dicts(NewInstance.schema, vhosts=String)
-    widgets = NewInstance.widgets + [vhosts_widget]
-
+    fields = ['title', 'location', 'vhosts']
 
     def action(self, resource, context, form):
         # Get the container
@@ -249,11 +246,8 @@ class WebSite_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties
-        language = container.get_edit_languages(context)[0]
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
-        vhosts = form['vhosts']
-        vhosts = [ x.strip() for x in vhosts.splitlines() ]
+        self.set_value(child, context, 'title', form)
+        vhosts = [ x.strip() for x in form['vhosts'] ]
         vhosts = [ x for x in vhosts if x ]
         child.metadata.set_property('vhosts', vhosts)
         # Add initial user

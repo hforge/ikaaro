@@ -22,8 +22,6 @@
 from os.path import basename, splitext
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.csv import Property
 from itools.datatypes import Boolean, HTTPDate, Integer, String
 from itools.datatypes import PathDataType
 from itools.fs import FileName
@@ -33,43 +31,49 @@ from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import FileWidget, PathSelectorWidget, ReadOnlyWidget
-from autoform import file_widget, location_widget
-from autoform import title_widget
+from autoform import FileWidget, PathSelectorWidget, file_widget
 from autoform import ProgressBarWidget
 from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
-from views_new import NewInstance
 from workflow import StateEnumerate, state_widget
 
 
-class File_NewInstance(NewInstance):
+class File_NewInstance(AutoAdd):
 
     title = MSG(u'Upload File')
-    schema = merge_dicts(NewInstance.schema,
-        file=FileDataType(mandatory=True))
+    fields = ['file', 'title', 'location', 'progressbar']
 
-    widgets = [
-        ReadOnlyWidget('cls_description'),
-        FileWidget('file', title=MSG(u'File'), size=35),
-        title_widget,
-        location_widget,
-        ProgressBarWidget()]
+    def _get_datatype(self, resource, context, name):
+        if name == 'file':
+            widget = FileWidget('file', title=MSG(u'File'), size=35)
+            return FileDataType(mandatory=True, widget=widget)
+        if name == 'progressbar':
+            return None
+
+        proxy = super(File_NewInstance, self)
+        return proxy._get_datatype(resource, context, name)
+
+
+    def _get_widget(self, resource, context, name):
+        if name == 'progressbar':
+            return ProgressBarWidget()
+
+        proxy = super(File_NewInstance, self)
+        return proxy._get_widget(resource, context, name)
 
 
     def get_new_resource_name(self, form):
-        # If the name is not explicitly given, use the title
-        # or get it from the file
-        name = form['name']
+        name = super(File_NewInstance, self).get_new_resource_name(form)
         if name:
             return name
+
         filename, mimetype, body = form['file']
         name, type, language = FileName.decode(filename)
-
-        return form['title'] or name
+        return name
 
 
     def action(self, resource, context, form):
@@ -81,8 +85,7 @@ class File_NewInstance(NewInstance):
         language = container.get_edit_languages(context)[0]
         child = container._make_file(name, filename, mimetype, body, language)
         # Set properties
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
+        self.set_value(child, context, 'title', form)
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)

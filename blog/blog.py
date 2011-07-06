@@ -18,19 +18,18 @@
 from datetime import date
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Date, Unicode
 from itools.gettext import MSG
 from itools.web import STLForm
 
 # Import from ikaaro
-from ikaaro.autoform import DateWidget, HTMLBody, ReadOnlyWidget, RTEWidget
-from ikaaro.autoform import title_widget
+from ikaaro.autoadd import AutoAdd
+from ikaaro.autoform import HTMLBody, RTEWidget
 from ikaaro.comments import CommentsAware, CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
-from ikaaro.views_new import NewInstance
 from ikaaro.webpage import HTMLEditView, WebPage
 
 
@@ -45,22 +44,20 @@ rte = RTEWidget(
     width='500px')
 
 
-class Post_NewInstance(NewInstance):
+class Post_NewInstance(AutoAdd):
 
-    def get_schema(self, resource, context):
-        schema = NewInstance.schema.copy()
-        del schema['path']
-        schema['title'] = Unicode(mandatory=True)
-        schema['data'] = HTMLBody
-        schema['date'] = Date(default=date.today())
-        return schema
+    fields = ['title', 'data', 'date']
 
 
-    widgets = freeze([
-        ReadOnlyWidget('cls_description'),
-        title_widget,
-        DateWidget('date', title=MSG(u'Date')),
-        rte])
+    def _get_datatype(self, resource, context, name):
+        if name == 'data':
+            return HTMLBody(widget=rte)
+        elif name == 'date':
+            return Date(default=date.today())
+
+        proxy = super(Post_NewInstance, self)
+        return proxy._get_datatype(resource, context, name)
+
 
     def get_container(self, resource, context, form):
         date = form['date']
@@ -85,9 +82,8 @@ class Post_NewInstance(NewInstance):
         # Set properties
         handler = child.get_handler(language=language)
         handler.set_body(form['data'])
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
-        child.metadata.set_property('date', form['date'])
+        self.set_value(child, context, 'title', form)
+        self.set_value(child, context, 'date', form)
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -139,6 +135,7 @@ class Post(CommentsAware, WebPage):
         WebPage.class_schema,
         CommentsAware.class_schema,
         date=Date(source='metadata', stored=True, title=MSG(u'Date')))
+    class_schema['title'] = class_schema['title'](mandatory=True)
 
 
     # Views

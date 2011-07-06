@@ -34,6 +34,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import AccessControl
+from autoform import MultilineWidget
 from config import Configuration
 from folder import Folder
 from config_register import RegisterForm
@@ -63,7 +64,9 @@ class WebSite(AccessControl, Folder):
     class_schema = merge_dicts(
         Folder.class_schema,
         # Metadata
-        vhosts=String(source='metadata', multiple=True, indexed=True),
+        vhosts=String(source='metadata', multiple=True, indexed=True,
+                      title=MSG(u'Domain names'),
+                      widget=MultilineWidget),
         website_languages=Tokens(source='metadata', default=('en',)))
 
     # XXX Useful for the update method (i.e update_20100630)

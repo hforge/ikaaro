@@ -31,6 +31,7 @@ from itools.web import AccessControl, BaseView, get_context
 from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import MultilineWidget
 from datatypes import Multilingual
@@ -42,7 +43,6 @@ from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import split_reference
-from views_new import NewInstance
 from workflow import WorkflowAware
 
 
@@ -892,7 +892,7 @@ class DBResource(Resource):
 
 
     # Views
-    new_instance = NewInstance()
+    new_instance = AutoAdd()
     login = LoginView()
     logout = LogoutView()
     edit = AutoEdit()

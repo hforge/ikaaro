@@ -84,10 +84,9 @@ class EditLanguageMenu(ContextMenu):
         site_root = self.resource.get_site_root()
         languages = site_root.get_property('website_languages')
         edit_languages = self.resource.get_edit_languages(self.context)
-        return [
-            {'title': get_language_name(x), 'name': x,
-             'selected': x in edit_languages}
-            for x in languages ]
+        return [ {'title': get_language_name(x), 'name': x,
+                  'selected': x in edit_languages}
+                 for x in languages ]
 
 
     def get_hidden_fields(self):
@@ -125,6 +124,9 @@ class AutoEdit(AutoForm):
         return context_menus
 
 
+    #######################################################################
+    # GET
+    #######################################################################
     def get_query_schema(self):
         context = get_context()
         resource = context.resource
@@ -234,19 +236,6 @@ class AutoEdit(AutoForm):
                  if widget.name in fields or widget.name in to_keep ]
 
 
-    def _get_form(self, resource, context):
-        form = super(AutoEdit, self)._get_form(resource, context)
-        # Combine date & time
-        for name, value in form.items():
-            if type(value) is date:
-                value_time = form.get('%s_time' % name)
-                if value_time is not None:
-                    value = datetime.combine(value, value_time)
-                    form[name] = context.fix_tzinfo(value)
-
-        return form
-
-
     def get_value(self, resource, context, name, datatype):
         # Timestamp
         if name == 'timestamp':
@@ -270,6 +259,22 @@ class AutoEdit(AutoForm):
         for language in resource.get_edit_languages(context):
             value[language] = resource.get_property(name, language=language)
         return value
+
+
+    #######################################################################
+    # POST
+    #######################################################################
+    def _get_form(self, resource, context):
+        form = super(AutoEdit, self)._get_form(resource, context)
+        # Combine date & time
+        for name, value in form.items():
+            if type(value) is date:
+                value_time = form.get('%s_time' % name)
+                if value_time is not None:
+                    value = datetime.combine(value, value_time)
+                    form[name] = context.fix_tzinfo(value)
+
+        return form
 
 
     def check_edit_conflict(self, resource, context, form):

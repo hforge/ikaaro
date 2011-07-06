@@ -21,22 +21,20 @@ from datetime import date, datetime, time, timedelta
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.csv import Property
-from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
+from itools.datatypes import DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import DatetimeWidget, ReadOnlyWidget
-from ikaaro.autoform import SelectWidget, TextWidget
+from ikaaro.autoform import DatetimeWidget, SelectWidget
 from ikaaro.cc import Observable, UsersList
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import get_resource_class
-from ikaaro.views_new import NewInstance
 from calendar_views import resolution
 
 
@@ -101,32 +99,18 @@ class Event_Edit(AutoEdit):
 
 
 
-class Event_NewInstance(NewInstance):
+class Event_NewInstance(AutoAdd):
 
-    query_schema = merge_dicts(NewInstance.query_schema,
-                               dtstart=Date, dtstart_time=Time,
-                               dtend=Date, dtend_time=Time)
+    fields = ['title', 'dtstart', 'dtend', 'cc_list']
 
-    schema = merge_dicts(NewInstance.schema,
-                         dtstart=Date(mandatory=True),
-                         dtstart_time=Time,
-                         dtend=Date(mandatory=True),
-                         dtend_time=Time)
+    def _get_datatype(self, resource, context, name):
+        if name == 'cc_list':
+            widget = SelectWidget('cc_list', has_empty_option=False,
+                                  title=MSG(u'Subscribers'))
+            return UsersList(resource=resource, multiple=True, widget=widget)
 
-    widgets = freeze([
-        ReadOnlyWidget('cls_description'),
-        TextWidget('title', title=MSG(u'Title'), size=20),
-        DatetimeWidget('dtstart', title=MSG(u'Start'),
-                       tip=MSG(u'To add an event lasting all day long,'
-                               u' leave time fields empty.')),
-        DatetimeWidget('dtend', title=MSG(u'End')),
-        SelectWidget('cc_list', title=MSG(u'Subscribers'),
-                     has_empty_option=False)])
-
-
-    def get_schema(self, resource, context):
-        return merge_dicts(self.schema,
-                           cc_list=UsersList(resource=resource, multiple=True))
+        proxy = super(Event_NewInstance, self)
+        return proxy._get_datatype(resource, context, name)
 
 
     def get_container(self, resource, context, form):
@@ -196,14 +180,9 @@ class Event_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties
-        language = container.get_edit_languages(context)[0]
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
-
-        # Set properties / start and end
-        child.set_property('dtstart', form['dtstart'])
-        child.set_property('dtend', form['dtend'])
-
+        self.set_value(child, context, 'title', form)
+        self.set_value(child, context, 'dtstart', form)
+        self.set_value(child, context, 'dtend', form)
         # Set properties / cc_list
         child.set_property('cc_list', tuple(form['cc_list']))
 

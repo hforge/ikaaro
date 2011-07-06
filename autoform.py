@@ -513,8 +513,8 @@ class RTEWidget(Widget):
 
 
 class LocationWidget(SelectWidget):
-    """This widget is only used in NewInstance forms. It is a hack because
-    it is a composite widget and ikaaro does not allow to do this easily.
+    """This widget is only used in add forms. It is a hack because it is a
+    composite widget and ikaaro does not allow to do this easily.
     """
 
     template = make_stl_template("""
