@@ -21,17 +21,108 @@
 from datetime import datetime, date
 
 # Import from itools
-from itools.datatypes import DateTime, Date, Time
+from itools.datatypes import DateTime, Date, Time, String
+from itools.gettext import MSG
+from itools.i18n import get_language_name
+from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import get_default_widget, timestamp_widget
-from resource_views import DBResource_Edit
+from autoform import AutoForm, get_default_widget, timestamp_widget
+import messages
+from views import ContextMenu
 
 
-class AutoEdit(DBResource_Edit):
+class EditLanguageMenu(ContextMenu):
+
+    title = MSG(u'Configuration')
+    template = '/ui/generic/edit_language_menu.xml'
+    view = None
+
+    def action(self):
+        uri = self.context.uri
+        return Reference(uri.scheme, uri.authority, uri.path, {}, None)
+
+
+    def get_fields(self):
+        context = self.context
+        resource = self.resource
+        view = self.view
+
+        widgets = view._get_widgets(resource, context)
+        # Build widgets list
+        fields, to_keep = view._get_query_fields(resource, context)
+
+        return [ {'name': widget.name,
+                  'title': getattr(widget, 'title', 'name'),
+                  'selected': widget.name in fields}
+                 for widget in widgets if widget.name not in to_keep ]
+
+
+    def fields(self):
+        items = self.get_fields()
+        # Defaults
+        for item in items:
+            for name in ['class', 'src', 'items']:
+                item.setdefault(name, None)
+
+        return items
+
+
+    def get_items(self):
+        multilingual = False
+        schema = self.view._get_schema(self.resource, self.context)
+        for key, datatype in schema.iteritems():
+            if getattr(datatype, 'multilingual', False):
+                multilingual = True
+                break
+
+        if multilingual is False:
+            # No multilingual fields
+            return []
+
+        site_root = self.resource.get_site_root()
+        languages = site_root.get_property('website_languages')
+        edit_languages = self.resource.get_edit_languages(self.context)
+        return [
+            {'title': get_language_name(x), 'name': x,
+             'selected': x in edit_languages}
+            for x in languages ]
+
+
+    def get_hidden_fields(self):
+        return self.view._get_query_to_keep(self.resource, self.context)
+
+
+    def hidden_fields(self):
+        return self.get_hidden_fields()
+
+
+    def display(self):
+        """Do not display the form is there is nothing to show"""
+        items = self.get_items()
+        if len(items):
+            return True
+        fields = self.get_fields()
+        if len(fields):
+            return True
+        return len(self.hidden_fields())
+
+
+
+class AutoEdit(AutoForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit')
 
     fields = ['title', 'description', 'subject']
+
+
+    context_menus = []
+    def get_context_menus(self):
+        context_menus = self.context_menus[:] # copy
+        context_menus.append(EditLanguageMenu(view=self))
+        return context_menus
 
 
     def get_query_schema(self):
@@ -44,6 +135,33 @@ class AutoEdit(DBResource_Edit):
                 schema[name] = datatype(mandatory=False)
 
         return schema
+
+
+    # XXX method name sucks
+    def _get_query_to_keep(self, resource, context):
+        """Return a list of dict {'name': name, 'value': value}"""
+        return []
+
+
+    def _get_query_fields(self, resource, context):
+        """Return query fields and readonly or mandatory fields
+        """
+        schema = self._get_schema(resource, context)
+        default = set()
+        to_keep = set()
+
+        for key, datatype in schema.iteritems():
+            if getattr(datatype, 'hidden_by_default', False):
+                continue
+            # Keep readonly and mandatory widgets
+            if getattr(datatype, 'mandatory', False):
+                to_keep.add(key)
+            if getattr(datatype, 'readonly', False):
+                to_keep.add(key)
+            default.add(key)
+        fields = context.get_query_value('fields', type=String(multiple=True),
+                                         default=default)
+        return set(fields), to_keep
 
 
     def _get_resource_schema(self, resource):
@@ -73,6 +191,19 @@ class AutoEdit(DBResource_Edit):
         return schema
 
 
+    def get_schema(self, resource, context):
+        """Return reduced schema
+           i.e. schema without 'hidden by default' datatypes.
+        """
+        base_schema = self._get_schema(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+        schema = {}
+        for key in fields | to_keep:
+            schema[key] = base_schema[key]
+
+        return schema
+
+
     def _get_widget(self, resource, context, name):
         datatype = self._get_resource_schema(resource)[name]
         title = getattr(datatype, 'title', name)
@@ -91,6 +222,18 @@ class AutoEdit(DBResource_Edit):
         return widgets
 
 
+    def get_widgets(self, resource, context):
+        """Return reduced widgets
+           i.e. skip hide by default widgets.
+        """
+        base_widgets = self._get_widgets(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+
+        # Reduce widgets
+        return [ widget for widget in base_widgets
+                 if widget.name in fields or widget.name in to_keep ]
+
+
     def _get_form(self, resource, context):
         form = super(AutoEdit, self)._get_form(resource, context)
         # Combine date & time
@@ -105,21 +248,84 @@ class AutoEdit(DBResource_Edit):
 
 
     def get_value(self, resource, context, name, datatype):
-        proxy = super(AutoEdit, self)
+        # Timestamp
+        if name == 'timestamp':
+            return context.timestamp
+
+        # Datetime
         if name[-5:] == '_time' and issubclass(datatype, Time):
-            value = proxy.get_value(resource, context, name[:-5], DateTime)
+            value = self.get_value(resource, context, name[:-5], DateTime)
             if type(value) is not datetime:
                 return None
             value = value.time()
             context.query[name] = value
             return value
 
-        return proxy.get_value(resource, context, name, datatype)
+        # Standard
+        if not getattr(datatype, 'multilingual', False):
+            return resource.get_property(name)
+
+        # Multilingual
+        value = {}
+        for language in resource.get_edit_languages(context):
+            value[language] = resource.get_property(name, language=language)
+        return value
+
+
+    def check_edit_conflict(self, resource, context, form):
+        context.edit_conflict = False
+
+        timestamp = form['timestamp']
+        if timestamp is None:
+            context.message = messages.MSG_EDIT_CONFLICT
+            context.edit_conflict = True
+            return
+
+        root = context.root
+        results = root.search(abspath=str(resource.get_abspath()))
+        brain = results.get_documents()[0]
+        mtime = brain.mtime
+        if mtime is not None and timestamp < mtime:
+            # Conflict unless we are overwriting our own work
+            last_author = resource.get_property('last_author')
+            if last_author != context.user.name:
+                user = root.get_user_title(last_author)
+                context.message = messages.MSG_EDIT_CONFLICT2(user=user)
+                context.edit_conflict = True
 
 
     def set_value(self, resource, context, name, form):
+        """Return True if an error occurs otherwise False. If an error
+        occurs, the context.message must be an ERROR instance.
+        """
         if name[-5:] == '_time':
             return False
 
-        proxy = super(AutoEdit, self)
-        return proxy.set_value(resource, context, name, form)
+        value = form[name]
+        if type(value) is dict:
+            for language, data in value.iteritems():
+                resource.set_property(name, data, language=language)
+        else:
+            resource.set_property(name, value)
+        return False
+
+
+    def action(self, resource, context, form):
+        # Check edit conflict
+        self.check_edit_conflict(resource, context, form)
+        if context.edit_conflict:
+            return
+
+        # Get submit field names
+        schema = self._get_schema(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+
+        # Save changes
+        for key in fields | to_keep:
+            datatype = schema[key]
+            if getattr(datatype, 'readonly', False):
+                continue
+            if self.set_value(resource, context, key, form):
+                return
+        # Ok
+        context.message = messages.MSG_CHANGES_SAVED
