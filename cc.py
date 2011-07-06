@@ -19,6 +19,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import freeze, thingy_property
+from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
@@ -76,11 +77,10 @@ class UsersList(Enumerate):
         # Members
         included_roles = self.included_roles
         if included_roles:
-            members = set()
-            for rolename in site_root.get_role_names():
-                if rolename in included_roles:
-                    usernames = site_root.get_property(rolename)
-                    members.update(usernames)
+            query = [ PhraseQuery('groups', x) for x in included_roles ]
+            query = OrQuery(*query)
+            results = site_root.search_users(query)
+            members = set([ x.name for x in results.get_documents() ])
         else:
             members = site_root.get_members()
 

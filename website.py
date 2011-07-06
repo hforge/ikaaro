@@ -194,7 +194,7 @@ class WebSite(AccessControl, Folder):
 
 
     def get_groups(self):
-        return [ x.name for x in self.get_resources('config/groups') ]
+        return self.get_names('config/groups')
 
 
     def get_members(self):
@@ -243,10 +243,8 @@ class WebSite(AccessControl, Folder):
         return None.
         """
         # Search the user by username (login name)
-        base_path = str(self.get_resource('users').get_abspath())
-        query = AndQuery(PhraseQuery('username', username),
-                         PhraseQuery('parent_paths', base_path))
-        results = self.get_root().search(query)
+        query = PhraseQuery('username', username)
+        results = self.search_users(query)
         n = len(results)
         if n == 0:
             return None
@@ -256,6 +254,12 @@ class WebSite(AccessControl, Folder):
         # Get the user
         brain = results.get_documents()[0]
         return self.get_user(brain.name)
+
+
+    def search_users(self, query):
+        base_path = str(self.get_resource('users').get_abspath())
+        query = AndQuery(PhraseQuery('parent_paths', base_path), query)
+        return self.get_root().search(query)
 
 
     #######################################################################
