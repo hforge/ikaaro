@@ -335,8 +335,10 @@ class CalendarView(STLView):
         for name, value in kw.items():
             query.append(PhraseQuery(name, value))
 
-        # Only in the current calendar
-        query.append(get_base_path_query(calendar.get_abspath()))
+        # Only in the current site
+        site_root = calendar.get_site_root()
+        if site_root.parent:
+            query.append(get_base_path_query(site_root.get_abspath()))
 
         # Start/End
         query.append(RangeQuery('dtstart', None, end))
@@ -356,8 +358,12 @@ class CalendarView(STLView):
         return self.search(calendar, dtstart, dtend, **kw)
 
 
+    def get_config_calendar(self, resource):
+        return resource.get_site_root().get_resource('config/calendar')
+
+
     def get_colors(self, resource):
-        return resource.get_resource('config/calendar').colors
+        return self.get_config_calendar(resource).colors
 
 
     def get_color(self, resource, event, colors=None):
@@ -559,7 +565,7 @@ class WeeklyView(CalendarView):
     def get_timetables_grid_ns(self, resource, start_date):
         """Build namespace to give as grid to gridlayout factory.
         """
-        timetables = resource.get_resource('config/calendar').get_timetables()
+        timetables = self.get_config_calendar(resource).get_timetables()
 
         ns_timetables = []
         for start, end in timetables:
