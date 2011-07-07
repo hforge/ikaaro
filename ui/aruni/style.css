@@ -251,3 +251,12 @@ div#page {
 .comment-body {
   font-family: "Arial", "DejaVu Sans", sans-serif;
 }
+
+/**************************************************************************
+ * Login
+ *************************************************************************/
+
+#registration-end-msg{
+  font-size: 1.8em;
+  margin: 10px 0;
+}

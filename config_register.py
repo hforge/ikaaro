@@ -125,8 +125,9 @@ class RegisterForm(AutoForm):
 
         # Bring the user to the login form
         message = MSG(
-            u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.")
+            u'<div id="registration-end-msg">'
+            u'An email has been sent to you, to finish the registration '
+            u'process follow the instructions detailed in it.</div>')
         return message.gettext().encode('utf-8')
 
 
