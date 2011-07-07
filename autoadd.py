@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, Date, Time, String, Unicode
+from itools.datatypes import DateTime, Time, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
@@ -93,9 +93,7 @@ class AutoAdd(AutoForm):
 
             # Special case: datetime
             if issubclass(datatype, DateTime):
-                schema[name] = Date
                 schema['%s_time' % name] = Time
-                continue
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
                 schema[name] = BirthDate
@@ -209,8 +207,7 @@ class AutoAdd(AutoForm):
         """Return True if an error occurs otherwise False. If an error
         occurs, the context.message must be an ERROR instance.
         """
-        if (name[-5:] in ('_time', '_year') or name[-4:] == '_day' or
-            name[-6:] == '_month'):
+        if name.endswith(('_time', '_year', '_day', '_month')):
             return False
 
         value = form[name]

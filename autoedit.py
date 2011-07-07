@@ -21,7 +21,7 @@
 from datetime import datetime, date
 
 # Import from itools
-from itools.datatypes import DateTime, Date, Time, String
+from itools.datatypes import DateTime, Time, String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.uri import Reference
@@ -185,9 +185,7 @@ class AutoEdit(AutoForm):
 
             # Special case: datetime
             if issubclass(datatype, DateTime):
-                schema[name] = Date
                 schema['%s_time' % name] = Time
-                continue
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
                 schema[name] = BirthDate
@@ -254,9 +252,7 @@ class AutoEdit(AutoForm):
             value = self.get_value(resource, context, name[:-5], DateTime)
             if type(value) is not datetime:
                 return None
-            value = value.time()
-            context.query[name] = value
-            return value
+            return value.time()
         # BirthDate
         elif name[-4:] == '_day' and issubclass(datatype, Days):
             value = self.get_value(resource, context, name[:-4], BirthDate)
@@ -319,8 +315,7 @@ class AutoEdit(AutoForm):
         """Return True if an error occurs otherwise False. If an error
         occurs, the context.message must be an ERROR instance.
         """
-        if (name[-5:] in ('_time', '_year') or name[-4:] == '_day' or
-            name[-6:] == '_month'):
+        if name.endswith(('_time', '_year', '_day', '_month')):
             return False
         value = form[name]
         if type(value) is dict:

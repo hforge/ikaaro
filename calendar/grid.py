@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Standard Library
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 # Import from itools
-from itools.datatypes import Date
+from itools.datatypes import DateTime, ISOTime
 from itools.stl import stl
 from itools.html import XHTMLFile
 
@@ -81,33 +81,11 @@ def mcm(l):
 
 
 
-class Time(object):
-    """
-    This class represents a positive amount of time with a precision of
-    minutes. Internally time is represented as a pair of values, hours
-    and minutes.
-    """
-
-    @staticmethod
-    def decode(time):
-        """
-        The constructor takes an string with the format "hh:mm", it
-        parses the string and internally stores the hours and minutes
-        as a tuple of integers.
-        """
-        x = time.split(':')
-
-        if len(x) != 2:
-            raise ValueError, time
-
-        return int(x[0]), int(x[1])
+class Time(ISOTime):
 
     @staticmethod
     def encode(value):
-        """
-        Textual representation of a Time object, it's "hh:mm".
-        """
-        return "%02d:%02d" % value
+        return value.strftime('%H:%M')
 
 
 
@@ -142,18 +120,17 @@ class Cell(object):
 
 
     def to_dict(self):
-        namespace = {}
-        namespace['new'] = self.type == Cell.new
-        namespace['busy'] = self.type == Cell.busy
-        namespace['free'] = self.type == Cell.free
-        namespace['start'] = namespace['end'] = None
-        if self.start:
-            namespace['start'] = Time.encode(self.start)
-        if self.end:
-            namespace['end'] = Time.encode(self.end)
-        for name in ('content', 'rowspan', 'colspan', 'cal'):
-            namespace[name] = getattr(self, name)
-        return namespace
+        return {
+            'new': self.type == Cell.new,
+            'busy': self.type == Cell.busy,
+            'free': self.type == Cell.free,
+            'start': Time.encode(self.start) if self.start else None,
+            'end': Time.encode(self.end) if self.end else None,
+            'content': self.content,
+            'rowspan': self.rowspan,
+            'colspan': self.colspan,
+            'cal': self.cal,
+            'newurl': None}
 
 
 
@@ -167,7 +144,7 @@ def insert_item(items, start, end, item, cal):
     items.insert(index, (start, end, item, cal))
 
 
-def render_namespace(items, times, with_new_url):
+def render_namespace(items, times, with_new_url, current_date):
     nitems, iitems = len(items), 0
     # blocks = [(nrows, ncols), ..]
     blocks, table, state = [], [], []
@@ -335,16 +312,16 @@ def render_namespace(items, times, with_new_url):
             if cell.type == Cell.busy:
                 continue
             ns_cell = cell.to_dict()
-            new_url = None
             if with_new_url is True:
                 # Add start time to url used to add events
-                if cell.start:
-                    new_url = '%sstart_time=%s' % (url,
-                                                   Time.encode(cell.start))
-                if cell.end:
-                    new_url = '%s&end_time=%s' %(new_url,
-                                                 Time.encode(cell.end))
-            ns_cell['newurl'] = new_url
+                query = []
+                if cell.start is not None:
+                    x = datetime.combine(current_date, cell.start)
+                    query.append('dtstart=%s' % DateTime.encode(x))
+                if cell.end is not None:
+                    x = datetime.combine(current_date, cell.end)
+                    query.append('dtend=%s' % DateTime.encode(x))
+                ns_cell['newurl'] = '%s%s' % (url, '&'.join(query))
             ns_cells.append(ns_cell)
         ns_rows.append({'cells': ns_cells})
 
@@ -412,7 +389,7 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
     cols = []
     for i in range(len(events_with_time)):
         table, ncols = render_namespace(events_with_time[i], grid,
-                                        with_new_url)
+                                        with_new_url, current_date)
         if headers is not None:
             if current_date == today:
                 h_class = 'cal_day_selected'
@@ -427,24 +404,18 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
         # Add date to newurl for each cell having this parameter
         # Build namespace for the content of cells containing event (new)
         if start_date is not None:
-            str_date = Date.encode(current_date)
-            url = '{{0}}&dtstart={date}&dtend={date}'.format(date=str_date)
             for column in table:
                 for cell in column['cells']:
-                    if cell['newurl'] is not None:
-                        cell['newurl'] = url.format(cell['newurl'])
                     if cell['new']:
                         cell['ns'] = stl(template, {'cell': cell,
                                                     'add_icon': add_icon})
             current_date = current_date + timedelta(1)
         cols.append(table)
 
-    body = []
-    for i in range(len(grid)-1):
-        body.append({'start': Time.encode(grid[i]),
-                     'end': Time.encode(grid[i+1]),
-                     'items': [col[i] for col in cols]})
+    body = [
+        {'start': Time.encode(grid[i]), 'end': Time.encode(grid[i+1]),
+         'items': [col[i] for col in cols]}
+        for i in range(len(grid)-1) ]
 
-    namespace = {'headers': ns_headers, 'body': body,
-                 'full_day_events': ns_full_day}
-    return namespace
+    return {'headers': ns_headers, 'body': body,
+            'full_day_events': ns_full_day}

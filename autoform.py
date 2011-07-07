@@ -377,7 +377,7 @@ class DateWidget(Widget):
 class DatetimeWidget(DateWidget):
 
     template = make_stl_template("""
-    <input type="text" name="${name}" value="${value_}" id="${id}"
+    <input type="text" name="${name}" value="${value_date}" id="${id}"
       class="dateField" size="10" />
     <button class="${css} button-selector">...</button>
     <input type="text" name="${name}_time" value="${value_time}" size="5" />
@@ -388,15 +388,26 @@ class DatetimeWidget(DateWidget):
         button: ".next()" });
     </script>""")
 
+    @thingy_lazy_property
+    def value_date(self):
+        if self.value is None:
+            return ''
+
+        value = self.datatype.decode(self.value)
+        if type(value) is datetime:
+            value = value.date()
+        return Date.encode(value)
+
 
     @thingy_lazy_property
     def value_time(self):
-        # FIXME A needed hack since this cannot be done properly with
-        # ikaaro
-        time = get_context().query['%s_time' % self.name]
-        if time is not None:
-            return time.strftime('%H:%M')
-        return ''
+        if self.value is None:
+            return ''
+
+        value = self.datatype.decode(self.value)
+        if type(value) is date:
+            return ''
+        return value.time().strftime('%H:%M')
 
 
 
