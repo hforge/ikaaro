@@ -242,7 +242,8 @@ class CalendarView(STLView):
     def get_selector_ns(self, c_date, method):
         """Set header used to navigate into time.
         """
-        link = ';{method}?start={{date}}&end={{date}}'.format(method=method)
+        link = ';{method}?start={{date}}&end={{date}}'
+        link = link.format(method=method)
         make_link = lambda x: link.format(date=Date.encode(x))
 
         # Week
@@ -519,16 +520,17 @@ class MonthlyView(CalendarView):
         namespace['weeks'] = []
         day = start
         # 5 weeks
-        link = ';new_resource?type=event&start={date}&end={date}'
+        link = ';new_resource?type=event&dtstart={date}&dtend={date}'
         for w in range(5):
             ns_week = {'days': [], 'month': u''}
             # 7 days a week
             for d in range(7):
                 # day in timetable
                 if d < ndays:
-                    ns_day = {'url': None}
-                    ns_day['nday'] = day.day
-                    ns_day['selected'] = (day == today_date)
+                    ns_day = {
+                        'url': None,
+                        'nday': day.day,
+                        'selected': (day == today_date)}
                     if with_new_url:
                         ns_day['url'] = link.format(date=Date.encode(day))
                     # Insert events

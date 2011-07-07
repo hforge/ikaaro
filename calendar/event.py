@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime
 
 # Import from itools
 from itools.core import freeze, merge_dicts
@@ -35,7 +35,6 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import get_resource_class
-from calendar_views import resolution
 
 
 class Status(Enumerate):
@@ -138,24 +137,12 @@ class Event_NewInstance(AutoAdd):
 
     def _get_form(self, resource, context):
         form = super(Event_NewInstance, self)._get_form(resource, context)
-        dtstart_time = form['dtstart_time']
-        dtend_time = form['dtend_time']
 
-        if ((dtstart_time is None and dtend_time is not None)
-            or (dtstart_time is not None and dtend_time is None)):
+        dtstart = form['dtstart']
+        dtend = form['dtend']
+        if type(dtstart) is not type(dtend):
             msg = ERROR(u'Each time must be filled, or neither.')
             raise FormError(msg)
-
-        # Start
-        dtstart_time = dtstart_time or time(0)
-        dtstart = datetime.combine(form['dtstart'], dtstart_time)
-        form['dtstart'] = context.fix_tzinfo(dtstart)
-        # End
-        dtend_time = dtend_time or time(0)
-        dtend = datetime.combine(form['dtend'], dtend_time)
-        if form['dtend_time'] is None:
-            dtend = dtend + timedelta(days=1) - resolution
-        form['dtend'] = context.fix_tzinfo(dtend)
 
         if dtstart > dtend:
             msg = ERROR(u'Invalid dates.')

@@ -428,7 +428,7 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
         # Build namespace for the content of cells containing event (new)
         if start_date is not None:
             str_date = Date.encode(current_date)
-            url = '{{0}}&start={date}&end={date}'.format(date=str_date)
+            url = '{{0}}&dtstart={date}&dtend={date}'.format(date=str_date)
             for column in table:
                 for cell in column['cells']:
                     if cell['newurl'] is not None:
