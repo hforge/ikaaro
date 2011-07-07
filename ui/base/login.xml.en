@@ -16,14 +16,14 @@
   <fieldset>
     <legend>Sign in</legend>
     <div>
-      <label for="username">E-mail Address</label>
+      <label for="loginname">${login_name_title}</label>
       <span class="field-is-missing" title="This field is required">*</span>
       <br/>
-      <span stl:if="username/error" class="field-error">${username/error}
+      <span stl:if="loginname/error" class="field-error">${loginname/error}
         <br/></span>
       <p class="widget">
-        <input type="text" id="username" name="username"
-          value="${username/value}" size="30" />
+        <input type="text" id="loginname" name="loginname"
+          value="${loginname/value}" size="30" />
       </p>
     </div>
     <div>
@@ -46,8 +46,8 @@
   </fieldset>
 
   <script type="text/javascript">
-    <stl:inline stl:if="not username/value">$("#username").focus();</stl:inline>
-    <stl:inline stl:if="username/value">$("#password").focus();</stl:inline>
+    <stl:inline stl:if="not loginname/value">$("#loginname").focus();</stl:inline>
+    <stl:inline stl:if="loginname/value">$("#password").focus();</stl:inline>
   </script>
 </form>
 

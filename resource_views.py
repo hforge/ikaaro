@@ -22,7 +22,7 @@
 # Import from itools
 from itools.core import merge_dicts
 from itools.database import OrQuery, PhraseQuery
-from itools.datatypes import Boolean, Email, Integer, String
+from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
@@ -33,6 +33,7 @@ from itools.web import Conflict, NotImplemented
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
+from registry import get_resource_class
 
 
 
@@ -89,17 +90,17 @@ class LoginView(STLForm):
     access = True
     title = MSG(u'Login')
     template = '/ui/base/login.xml'
-    query_schema = {'username': String}
+    query_schema = {'loginname': String}
     schema = {
-        'username': String(mandatory=True),
+        'loginname': String(mandatory=True),
         'password': String,
         'no_password': Boolean}
     meta = [('robots', 'noindex, follow', None)]
 
 
     def get_value(self, resource, context, name, datatype):
-        if name == 'username':
-            return context.query['username']
+        if name == 'loginname':
+            return context.query['loginname']
         proxy = super(LoginView, self)
         return proxy.get_value(resource, context, name, datatype)
 
@@ -110,19 +111,24 @@ class LoginView(STLForm):
         user = context.user
         register = context.site_root.is_allowed_to_register(user, resource)
         namespace['register'] = register
+        cls = get_resource_class('user')
+        login_name_property = cls.login_name_property
+        login_name_datatype = cls.class_schema[login_name_property]
+        namespace['login_name_title'] = login_name_datatype.title
 
         return namespace
 
 
     def action(self, resource, context, form):
         # Get the user
-        email = form['username'].strip()
-        user = context.site_root.get_user_from_login(email)
+        loginname = form['loginname'].strip()
+        user = context.site_root.get_user_from_login(loginname)
 
         # Case 1: Forgotten password
         if form['no_password']:
-            if not Email.is_valid(email):
-                message = u'The given username is not an email address.'
+            login_name_datatype = user.class_schema[user.login_name_property]
+            if not login_name_datatype.is_valid(loginname):
+                message = u'The given login name is not valid.'
                 context.message = ERROR(message)
                 return
 
@@ -135,7 +141,7 @@ class LoginView(STLForm):
         # Case 2: Login
         password = form['password']
         if user is None or not user.authenticate(password, clear=True):
-            context.message = ERROR(u'The email or the password is incorrect.')
+            context.message = ERROR(u'The login name or the password is incorrect.')
             return
 
         context.login(user)

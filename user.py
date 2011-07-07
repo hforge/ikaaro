@@ -155,12 +155,13 @@ class User(AccessControl, Folder):
         return self.get_login_name().decode('utf-8')
 
 
+    login_name_property = 'email'
     def get_login_name(self):
         # FIXME Check first the username (for compatibility with 0.14)
         username = self.get_property('username')
         if username:
             return username
-        return self.get_property('email')
+        return self.get_property(self.login_name_property)
 
 
     def get_groups(self):
