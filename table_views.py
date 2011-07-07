@@ -25,6 +25,7 @@ from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton, AddButton
@@ -158,13 +159,19 @@ class Table_View(BrowseForm):
 ###########################################################################
 # Add/Edit records
 ###########################################################################
-class Table_AddEditRecord(AutoEdit):
+class Table_AddRecord(AutoAdd):
 
-    access = 'is_allowed_to_edit'
+    title = MSG(u'Add Record')
+    icon = 'new.png'
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
 
 
     def _get_resource_schema(self, resource):
         return resource.get_schema()
+
+
+    def _get_form(self, resource, context):
+        return super(AutoAdd, self)._get_form(resource, context)
 
 
     def get_value(self, resource, context, name, datatype):
@@ -192,14 +199,12 @@ class Table_AddEditRecord(AutoEdit):
         """Code shared by the add & edit actions.  It builds a new record
         from the form.
         """
-
         # Get submit field names
-        schema = self._get_schema(resource, context)
-        fields, to_keep = self._get_query_fields(resource, context)
+        schema = self.get_schema(resource, context)
 
         # Builds a new record from the form.
         record = {}
-        for name in schema:
+        for name in self.fields:
             datatype = schema[name]
             value = form[name]
             if is_multilingual(datatype):
@@ -214,29 +219,15 @@ class Table_AddEditRecord(AutoEdit):
 
         # Change
         try:
-            self.action_add_or_edit(resource, context, record)
+            resource.handler.add_record(record)
+            context.database.change_resource(resource) # Reindex
         except UniqueError, error:
             title = self.get_field_title(resource, error.name)
             context.message = ERROR(str(error), field=title, value=error.value)
         except ValueError, error:
-            message = ERROR(u'Error: {msg}', msg=str(error))
-            context.message = message
+            context.message = ERROR(u'Error: {msg}', msg=str(error))
         else:
             return self.action_on_success(resource, context)
-
-
-
-class Table_AddRecord(Table_AddEditRecord):
-
-    title = MSG(u'Add Record')
-    icon = 'new.png'
-    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
-
-
-    def action_add_or_edit(self, resource, context, record):
-        resource.handler.add_record(record)
-        # Reindex the resource
-        context.database.change_resource(resource)
 
 
     def action_on_success(self, resource, context):
@@ -246,9 +237,13 @@ class Table_AddRecord(Table_AddEditRecord):
 
 
 
-class Table_EditRecord(Table_AddEditRecord):
+class Table_EditRecord(AutoEdit):
 
     title = MSG(u'Edit record {id}')
+
+
+    def _get_resource_schema(self, resource):
+        return resource.get_schema()
 
 
     def get_query_schema(self):
@@ -263,7 +258,7 @@ class Table_EditRecord(Table_AddEditRecord):
 
 
     def get_query(self, context):
-        query = Table_AddEditRecord.get_query(self, context)
+        query = super(Table_EditRecord, self).get_query(context)
         # Test the id is valid
         id = query['id']
         resource = context.resource
@@ -303,11 +298,50 @@ class Table_EditRecord(Table_AddEditRecord):
         return self.title.gettext(id=id)
 
 
-    def action_add_or_edit(self, resource, context, record):
-        id = context.query['id']
-        resource.handler.update_record(id, **record)
-        # Reindex the resource
-        context.database.change_resource(resource)
+    def get_field_title(self, resource, name):
+        for widget in resource.get_form():
+            if widget.name == name:
+                title = getattr(widget, 'title', None)
+                if title:
+                    return title.gettext()
+                return name
+        return name
+
+
+    def action(self, resource, context, form):
+        """Code shared by the add & edit actions.  It builds a new record
+        from the form.
+        """
+        # Get submit field names
+        schema = self._get_schema(resource, context)
+
+        # Builds a new record from the form.
+        record = {}
+        for name in self.fields:
+            datatype = schema[name]
+            value = form[name]
+            if is_multilingual(datatype):
+                value = [ Property(data, language=language)
+                          for language, data in value.iteritems() ]
+            elif datatype.multiple:
+                # textarea -> string
+                if not issubclass(datatype, Enumerate):
+                    value = [ x.strip() for x in value.splitlines() ]
+                    value = [ datatype.decode(x) for x in value if x ]
+            record[name] = value
+
+        # Change
+        try:
+            id = context.query['id']
+            resource.handler.update_record(id, **record)
+            context.database.change_resource(resource) # Reindex
+        except UniqueError, error:
+            title = self.get_field_title(resource, error.name)
+            context.message = ERROR(str(error), field=title, value=error.value)
+        except ValueError, error:
+            context.message = ERROR(u'Error: {msg}', msg=str(error))
+        else:
+            return self.action_on_success(resource, context)
 
 
     def action_on_success(self, resource, context):

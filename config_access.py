@@ -16,18 +16,19 @@
 
 # Import from itools
 from itools.csv import Table as TableFile
-from itools.datatypes import Enumerate, String
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoform import SelectWidget
 from config import Configuration
 from config_groups import UserGroupsDatatype
 from table import Table
+from table_views import Table_AddRecord, Table_EditRecord
 
 
 class PermissionsDatatype(Enumerate):
 
+    title = MSG(u'Permission')
     options = [
         {'name': 'view_public', 'value': MSG(u'View public content')},
         {'name': 'view_private', 'value': MSG(u'View non public content')},
@@ -48,7 +49,7 @@ class ConfigAccess_Handler(TableFile):
 
     record_properties = {
         'permission': PermissionsDatatype(mandatory=True),
-        'group': String(mandatory=True)}
+        'group': UserGroupsDatatype(mandatory=True, title=MSG(u'User group'))}
 
 
 
@@ -86,13 +87,11 @@ class ConfigAccess(Table):
     def get_schema(self):
         schema = super(ConfigAccess, self).get_schema()
         config_groups = self.parent.get_resource('groups')
-        schema['group'] = UserGroupsDatatype(mandatory=True,
-                                             config_groups=config_groups)
+        schema['group'] = schema['group'](config_groups=config_groups)
         return schema
 
-    form = [
-        SelectWidget('permission', title=MSG(u'Permission')),
-        SelectWidget('group', title=MSG(u'User group'))]
+    add_record = Table_AddRecord(fields=['permission', 'group'])
+    edit_record = Table_EditRecord(fields=['permission', 'group'])
 
 
 

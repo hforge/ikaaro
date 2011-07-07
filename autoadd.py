@@ -56,13 +56,13 @@ class AutoAdd(AutoForm):
         return title.gettext(class_title=class_title)
 
 
-    def _get_resource_schema(self):
+    def _get_resource_schema(self, resource):
         class_id = get_context().query['type']
         return get_resource_class(class_id).class_schema
 
 
     def _get_datatype(self, resource, context, name):
-        return self._get_resource_schema()[name]
+        return self._get_resource_schema(resource)[name]
 
 
     def get_query_schema(self):
@@ -195,6 +195,7 @@ class AutoAdd(AutoForm):
             name = None
         if name is None:
             raise FormError, messages.MSG_BAD_NAME
+
         # Check the name is free
         if container.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
