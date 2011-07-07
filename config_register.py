@@ -16,13 +16,15 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Unicode
+from itools.datatypes import Boolean, DateTime, Date, Time, Unicode
 from itools.gettext import MSG
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import AutoForm, Widget, MultilineWidget, get_default_widget
 from config import Configuration
+from datatypes import BirthDate
+from enumerates import Days, Months, Years
 from registry import get_resource_class
 from resource_ import DBResource
 from utils import make_stl_template
@@ -57,7 +59,19 @@ class RegisterForm(AutoForm):
 
         schema = {}
         for name in self.fields:
-            schema[name] = resource_schema[name]
+            datatype = resource_schema[name]
+            schema[name] = datatype
+            # Special case: datetime
+            if issubclass(datatype, DateTime):
+                schema[name] = Date
+                schema['%s_time' % name] = Time
+                continue
+            # Special case: birthdate
+            elif issubclass(datatype, BirthDate):
+                schema[name] = BirthDate
+                schema['%s_day' % name] = Days
+                schema['%s_month' % name] = Months
+                schema['%s_year' % name] = Years
 
         # Terms of service
         config_register = resource.get_resource('config/register')

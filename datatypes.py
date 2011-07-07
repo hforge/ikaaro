@@ -23,7 +23,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Enumerate, Unicode, String
+from itools.datatypes import DataType, Date, Enumerate, Unicode, String
 from itools.fs import FileName
 from itools.web import get_context
 
@@ -145,3 +145,8 @@ class ExpireValue(DataType):
     @staticmethod
     def encode(value):
         return str(int(value.total_seconds() / 60))
+
+
+class BirthDate(Date):
+
+    pass

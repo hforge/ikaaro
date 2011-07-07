@@ -19,11 +19,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import datetime, date
 from random import randint
 
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
-from itools.datatypes import DataType, Date, Enumerate, Boolean
+from itools.datatypes import DateTime, DataType, Date, Enumerate, Boolean
+from itools.datatypes import Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -34,6 +36,8 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from buttons import Button
+from datatypes import BirthDate
+from enumerates import Days, Months, Years
 from utils import CMSTemplate, make_stl_template
 
 
@@ -449,6 +453,36 @@ class ImageSelectorWidget(PathSelectorWidget):
 
 
 
+class BirthDateWidget(Widget):
+
+    template = make_stl_template("""
+        ${year} ${month} ${day}
+        <input type="hidden" name="${name}" value="1900-01-01"/>
+         """)
+
+    def get_widget(self, widget_name, datatype, value=None):
+        context = get_context()
+        name = '%s_%s' % (self.name, widget_name)
+        value = context.get_form_value(name)
+        if value is None and context.query.has_key(name):
+            value = context.query.get(name)
+        return SelectWidget(name=name, datatype=datatype, value=value,
+                            has_empty_option=False).render()
+
+
+    def day(self):
+        return self.get_widget('day', Days)
+
+
+    def month(self):
+        return self.get_widget('month', Months)
+
+
+    def year(self):
+        return self.get_widget('year', Years)
+
+
+
 class RTEWidget(Widget):
 
     template = '/ui/tiny_mce/rte.xml'
@@ -622,6 +656,53 @@ class AutoForm(STLForm):
             actions.append(button(resource=resource, context=context))
         return actions
 
+    #########################
+    # Hack for datatypes
+    #########################
+
+    def _get_form(self, resource, context):
+        form = super(AutoForm, self)._get_form(resource, context)
+        # Combine date & time
+        for name, value in form.items():
+            if type(value) is date:
+                value_time = form.get('%s_time' % name)
+                if value_time is not None:
+                    value = datetime.combine(value, value_time)
+                    form[name] = context.fix_tzinfo(value)
+        # Hack for BirthDate
+        schema = self.get_schema(resource, context)
+        for name, datatype in schema.items():
+            if issubclass(datatype, BirthDate):
+                value_day = int(form.get('%s_day' % name))
+                value_month = int(form.get('%s_month' % name))
+                value_year = int(form.get('%s_year' % name))
+                if value_day and value_month and value_year:
+                    form[name] = date(value_year, value_month, value_day)
+        return form
+
+
+    def get_schema(self, resource, context):
+        proxy = super(AutoForm, self)
+        schema = proxy.get_schema(resource, context)
+        # Hack for some Datatypes
+        for name, datatype in schema.items():
+            # Special case: datetime
+            if issubclass(datatype, DateTime):
+                schema[name] = Date
+                schema['%s_time' % name] = Time
+                continue
+            # Special case: birthdate
+            elif issubclass(datatype, BirthDate):
+                schema[name] = BirthDate
+                schema['%s_day' % name] = Days
+                schema['%s_month' % name] = Months
+                schema['%s_year' % name] = Years
+        return schema
+
+
+    #########################
+    # End hack for datatypes
+    #########################
 
     def get_namespace(self, resource, context):
         proxy = super(AutoForm, self)

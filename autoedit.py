@@ -29,6 +29,8 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoform import AutoForm, get_default_widget, timestamp_widget
+from datatypes import BirthDate
+from enumerates import Days, Months, Years
 import messages
 from views import ContextMenu
 
@@ -186,6 +188,12 @@ class AutoEdit(AutoForm):
                 schema[name] = Date
                 schema['%s_time' % name] = Time
                 continue
+            # Special case: birthdate
+            elif issubclass(datatype, BirthDate):
+                schema[name] = BirthDate
+                schema['%s_day' % name] = Days
+                schema['%s_month' % name] = Months
+                schema['%s_year' % name] = Years
 
             # Standard case
             schema[name] = datatype
@@ -249,7 +257,28 @@ class AutoEdit(AutoForm):
             value = value.time()
             context.query[name] = value
             return value
-
+        # BirthDate
+        elif name[-4:] == '_day' and issubclass(datatype, Days):
+            value = self.get_value(resource, context, name[:-4], BirthDate)
+            if type(value) is not date:
+                return None
+            value = str(value.day)
+            context.query[name] = value
+            return value
+        elif name[-6:] == '_month' and issubclass(datatype, Months):
+            value = self.get_value(resource, context, name[:-6], BirthDate)
+            if type(value) is not date:
+                return None
+            value = str(value.month)
+            context.query[name] = value
+            return value
+        elif name[-5:] == '_year' and issubclass(datatype, Years):
+            value = self.get_value(resource, context, name[:-5], BirthDate)
+            if type(value) is not date:
+                return None
+            value = str(value.year)
+            context.query[name] = value
+            return value
         # Standard
         if not getattr(datatype, 'multilingual', False):
             return resource.get_property(name)
@@ -264,19 +293,6 @@ class AutoEdit(AutoForm):
     #######################################################################
     # POST
     #######################################################################
-    def _get_form(self, resource, context):
-        form = super(AutoEdit, self)._get_form(resource, context)
-        # Combine date & time
-        for name, value in form.items():
-            if type(value) is date:
-                value_time = form.get('%s_time' % name)
-                if value_time is not None:
-                    value = datetime.combine(value, value_time)
-                    form[name] = context.fix_tzinfo(value)
-
-        return form
-
-
     def check_edit_conflict(self, resource, context, form):
         context.edit_conflict = False
 
@@ -303,9 +319,9 @@ class AutoEdit(AutoForm):
         """Return True if an error occurs otherwise False. If an error
         occurs, the context.message must be an ERROR instance.
         """
-        if name[-5:] == '_time':
+        if (name[-5:] in ('_time', '_year') or name[-4:] == '_day' or
+            name[-6:] == '_month'):
             return False
-
         value = form[name]
         if type(value) is dict:
             for language, data in value.iteritems():

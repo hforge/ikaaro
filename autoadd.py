@@ -23,8 +23,10 @@ from itools.web import get_context, ERROR, FormError
 # Import from ikaaro
 from autoform import AutoForm
 from autoform import ReadOnlyWidget, get_default_widget, location_widget
+from datatypes import BirthDate
 from buttons import Button
 from datatypes import ContainerPathDatatype, FileDataType
+from enumerates import Days, Months, Years
 import messages
 from registry import get_resource_class
 
@@ -94,6 +96,12 @@ class AutoAdd(AutoForm):
                 schema[name] = Date
                 schema['%s_time' % name] = Time
                 continue
+            # Special case: birthdate
+            elif issubclass(datatype, BirthDate):
+                schema[name] = BirthDate
+                schema['%s_day' % name] = Days
+                schema['%s_month' % name] = Months
+                schema['%s_year' % name] = Years
 
             # Standard case
             schema[name] = datatype
@@ -200,7 +208,8 @@ class AutoAdd(AutoForm):
         """Return True if an error occurs otherwise False. If an error
         occurs, the context.message must be an ERROR instance.
         """
-        if name[-5:] == '_time':
+        if (name[-5:] in ('_time', '_year') or name[-4:] == '_day' or
+            name[-6:] == '_month'):
             return False
 
         value = form[name]
