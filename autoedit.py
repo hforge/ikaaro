@@ -188,7 +188,6 @@ class AutoEdit(AutoForm):
                 schema['%s_time' % name] = Time
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
-                schema[name] = BirthDate
                 schema['%s_day' % name] = Days
                 schema['%s_month' % name] = Months
                 schema['%s_year' % name] = Years

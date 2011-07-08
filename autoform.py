@@ -699,12 +699,9 @@ class AutoForm(STLForm):
         for name, datatype in schema.items():
             # Special case: datetime
             if issubclass(datatype, DateTime):
-                schema[name] = Date
                 schema['%s_time' % name] = Time
-                continue
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
-                schema[name] = BirthDate
                 schema['%s_day' % name] = Days
                 schema['%s_month' % name] = Months
                 schema['%s_year' % name] = Years
