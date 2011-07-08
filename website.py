@@ -179,16 +179,16 @@ class WebSite(AccessControl, Folder):
         return self.get_resource('config/register').get_property('is_open')
 
 
-    def make_user(self, email=None, password=None):
+    def make_user(self, loginname=None, password=None):
         # Create the user
         users = self.get_resource('/users')
         user_id = users.get_next_user_id()
         cls = get_resource_class('user')
         user = users.make_resource(user_id, cls)
 
-        # Set the email and paswword
-        if email is not None:
-            user.set_property('email', email)
+        # Set login name and paswword
+        if loginname is not None:
+            user.set_property(user.login_name_property, loginname)
         if password is not None:
             user.set_password(password)
 

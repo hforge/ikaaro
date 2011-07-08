@@ -200,7 +200,8 @@ class AddUser(AutoForm):
                 # so the user must activate its account
                 password = None
             # Add the user
-            user = website.make_user(email, password)
+            user = website.make_user(password=password)
+            user.set_property('email', email)
             user_id = user.name
             if password is None:
                 # Send confirmation email to activate the account
