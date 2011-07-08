@@ -199,9 +199,9 @@ class Event_NewInstance(AutoAdd):
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties
-        self.set_value(child, context, 'title', form)
-        self.set_value(child, context, 'dtstart', form)
-        self.set_value(child, context, 'dtend', form)
+        for key in self.fields:
+            if key != 'cc_list':
+                self.set_value(child, context, key, form)
         # Set properties / cc_list
         if form.has_key('cc_list'):
             child.set_property('cc_list', tuple(form['cc_list']))
