@@ -103,9 +103,8 @@ class Table_View(BrowseForm):
             return id, '%s/;edit_record?id=%s' % (link, id)
 
         # Columns
-        handler = resource.handler
-        value = handler.get_record_value(item, column)
-        datatype = handler.get_record_datatype(column)
+        value = resource.handler.get_record_value(item, column)
+        datatype = resource.get_schema()[column]
 
         # Multilingual
         if is_multilingual(datatype):
