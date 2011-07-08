@@ -37,6 +37,37 @@ from ikaaro import messages
 from ikaaro.registry import get_resource_class
 
 
+# Recurrence
+MAX_DELTA = timedelta(3650) # we cannot index an infinite number of values
+
+def next_day(x, delta=timedelta(1)):
+    return x + delta
+
+def next_week(x, delta=timedelta(7)):
+    return x + delta
+
+def next_month(x):
+    year = x.year
+    month = x.month + 1
+    if month == 13:
+        month = 1
+        year = year + 1
+    # FIXME handle invalid dates (like 31 April)
+    return date(year, month, x.day)
+
+def next_year(x):
+    # FIXME handle 29 February
+    return date(x.year + 1, x.month, x.day)
+
+
+rrules = {
+    'daily': next_day,
+    'weekly': next_week,
+    'monthly': next_month,
+    'yearly': next_year}
+
+
+
 class Status(Enumerate):
 
     default = 'TENTATIVE'
@@ -230,32 +261,40 @@ class Event(File, Observable):
 
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
-        # dates
-        oneday = timedelta(1)
+
+        # Dates
         start = self.get_property('dtstart')
         if type(start) is datetime:
             start = start.date()
         end = self.get_property('dtend')
         if type(end) is datetime:
             end = end.date()
-        dates = []
-        while start <= end:
-            dates.append(start)
-            start += oneday
-        values['dates'] = dates
+        days = range((end - start).days + 1)
 
+        dates = set()
+        f = lambda date: dates.update([ date + timedelta(x) for x in days ])
+
+        rrule = self.get_property('rrule')
+        rrule = rrules.get(rrule)
+        if rrule:
+            top = max(start, date.today()) + MAX_DELTA
+            while start < top:
+                f(start)
+                start = rrule(start)
+        else:
+            f(start)
+
+        values['dates'] = sorted(dates)
+
+        # Ok
         return values
 
 
-    def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),
-                     timetable=None, grid=False, starts_on=True, ends_on=True,
-                     out_on=True):
+    def get_ns_event(self, conflicts_list, grid, starts_on, ends_on, out_on):
         """Specify the namespace given on views to represent an event.
 
-        day: date selected XXX not used for now
         conflicts_list: list of conflicting uids for current resource, [] if
             not used
-        timetable: timetable index or None
         grid: current calculated view uses gridlayout
         starts_on, ends_on and out_on are used to adjust display.
 
@@ -317,6 +356,8 @@ class Event(File, Observable):
         ###############################################################
         # Set class for conflicting events or just from status value
         id = self.get_abspath()
+        ns['id'] = str(id)
+
         if id in conflicts_list:
             ns['status'] = 'cal_conflict'
         else:
@@ -324,12 +365,6 @@ class Event(File, Observable):
             status = self.get_property('status')
             if status:
                 ns['status'] = status
-
-        if not resource_name:
-            id = str(id)
-        else:
-            id = '%s/%s' % (resource_name, id)
-        ns['id'] = id
 
         return ns
 

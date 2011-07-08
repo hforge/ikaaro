@@ -409,9 +409,8 @@ class CalendarView(STLView):
                     for uids in conflicts:
                         conflicts_list.update(uids)
             event = resource.get_resource(event.abspath)
-            ns_event = event.get_ns_event(day, conflicts_list=conflicts_list,
-                                          grid=grid, starts_on=starts_on,
-                                          ends_on=ends_on, out_on=out_on)
+            ns_event = event.get_ns_event(conflicts_list, grid, starts_on,
+                                          ends_on, out_on)
             if ac.is_allowed_to_view(user, event):
                 url = '%s/;edit' % context.get_link(event)
             else:
