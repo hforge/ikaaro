@@ -88,20 +88,6 @@ class HTMLBody(XHTMLBody):
 # Widgets
 ###########################################################################
 
-def get_default_widget(datatype):
-    if issubclass(datatype, Boolean):
-        return RadioWidget
-    elif issubclass(datatype, Date):
-        return DateWidget
-    elif issubclass(datatype, DateTime):
-        return DatetimeWidget
-    elif issubclass(datatype, Enumerate):
-        return SelectWidget
-
-    return TextWidget
-
-
-
 class Widget(CMSTemplate):
 
     id = None
@@ -735,3 +721,20 @@ class AutoForm(STLForm):
             'first_widget': first_widget,
             'widgets': ns_widgets,
             'after': None}
+
+
+# Registry with {datatype: widget, ...}
+widgets_registry = {
+        Boolean: RadioWidget,
+        Date: DateWidget,
+        DateTime: DatetimeWidget,
+        Enumerate: SelectWidget}
+
+def get_default_widget(datatype):
+    """Returns widget class from registry, TextWidget is default."""
+    widget = widgets_registry.get(datatype, None)
+    if widget is None:
+        for d, w in widgets_registry.iteritems():
+            if issubclass(datatype, d):
+                return w
+    return widget or TextWidget
