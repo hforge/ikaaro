@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import DateTime, Enumerate, Time, Unicode
+from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
@@ -188,7 +188,6 @@ class Event_NewInstance(AutoAdd):
 class EventDateTime(DateTime):
 
     source = 'metadata'
-    indexed = True
     stored = True
     time_is_required = False
     widget = DatetimeWidget
@@ -213,7 +212,9 @@ class Event(File, Observable):
         dtend=EventDateTime(title=MSG(u'End')),
         status=Status(source='metadata', title=MSG(u'State')),
         rrule=RRuleDataType(source='metadata', title=MSG(u'Recurrence')),
-        uid=Unicode(source='metadata'))
+        uid=Unicode(source='metadata'),
+        # Other
+        dates=Date(indexed=True, multiple=True))
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
@@ -224,7 +225,26 @@ class Event(File, Observable):
             uid = str(path) + '@%s' % authority
             kw['uid'] = uid
         File.init_resource(self, body=body, filename=filename,
-                    extension=extension, **kw)
+                           extension=extension, **kw)
+
+
+    def get_catalog_values(self):
+        values = super(Event, self).get_catalog_values()
+        # dates
+        oneday = timedelta(1)
+        start = self.get_property('dtstart')
+        if type(start) is datetime:
+            start = start.date()
+        end = self.get_property('dtend')
+        if type(end) is datetime:
+            end = end.date()
+        dates = []
+        while start <= end:
+            dates.append(start)
+            start += oneday
+        values['dates'] = dates
+
+        return values
 
 
     def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),

@@ -30,7 +30,7 @@ from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
-from itools.database import AndQuery, PhraseQuery, RangeQuery
+from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
 from grid import get_grid_data
@@ -273,26 +273,25 @@ class CalendarView(STLView):
             delta = 366
         next_year = make_link(c_date + timedelta(delta))
         # Set value into namespace
-        namespace = {}
-        namespace['current_week'] = current_week
-        namespace['previous_week'] = previous_week
-        namespace['next_week'] = next_week
-        namespace['current_month'] = current_month
-        namespace['previous_month'] = previous_month
-        namespace['next_month'] = next_month
-        namespace['current_year'] = c_date.year
-        namespace['previous_year'] = previous_year
-        namespace['next_year'] = next_year
-        # Add monthly/weekly/daily/today goto links
         link = ';{method}?start={date}&end={date}'
         make_link = lambda x,y: link.format(date=Date.encode(x), method=y)
-        namespace['goto_monthly'] = make_link(c_date, 'monthly_view')
-        namespace['goto_weekly'] = make_link(c_date, 'weekly_view')
-        namespace['goto_daily'] = make_link(c_date, 'daily_view')
-        namespace['goto_today'] = make_link(date.today(), method)
-        namespace['start'] = Date.encode(c_date)
-        namespace['firstday'] = self.get_first_day()
-        return namespace
+        return {
+            'current_week': current_week,
+            'previous_week': previous_week,
+            'next_week': next_week,
+            'current_month': current_month,
+            'previous_month': previous_month,
+            'next_month': next_month,
+            'current_year': c_date.year,
+            'previous_year': previous_year,
+            'next_year': next_year,
+            # Add monthly/weekly/daily/today goto links
+            'goto_monthly': make_link(c_date, 'monthly_view'),
+            'goto_weekly': make_link(c_date, 'weekly_view'),
+            'goto_daily': make_link(c_date, 'daily_view'),
+            'goto_today': make_link(date.today(), method),
+            'start': Date.encode(c_date),
+            'firstday': self.get_first_day()}
 
 
     # Get days of week based on get_first_day's result for start
@@ -324,12 +323,7 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-    def search(self, calendar, start, end, **kw):
-        if type(start) is date:
-            start = datetime.combine(start, time())
-        if type(end) is date:
-            end = datetime.combine(end, time())
-
+    def search(self, calendar, **kw):
         # Build the query
         query = AndQuery()
         query.append(PhraseQuery('format', 'event'))
@@ -341,22 +335,8 @@ class CalendarView(STLView):
         if site_root.parent:
             query.append(get_base_path_query(site_root.get_abspath()))
 
-        # Start/End
-        query.append(RangeQuery('dtstart', None, end))
-        query.append(RangeQuery('dtend', start, None))
-
         # Search
-        results = get_context().root.search(query)
-        return results.get_documents(sort_by='dtstart')
-
-
-    def search_events_in_date(self, calendar, date, **kw):
-        """Return a list of Component objects of type 'VEVENT' matching the
-        given date and sorted if requested.
-        """
-        dtstart = datetime(date.year, date.month, date.day)
-        dtend = dtstart + timedelta(days=1) - resolution
-        return self.search(calendar, dtstart, dtend, **kw)
+        return get_context().root.search(query)
 
 
     def get_config_calendar(self, resource):
@@ -405,10 +385,10 @@ class CalendarView(STLView):
         context = get_context()
         user = context.user
         ac = resource.get_access_control()
+
         ns_events = []
-        index = 0
-        while index < len(events):
-            event = events[index]
+        events = events.search(dates=day)
+        for event in events.get_documents(sort_by='dtstart'):
             e_dtstart = event.dtstart
             if type(e_dtstart) is datetime:
                 e_dtstart = e_dtstart.date()
@@ -416,21 +396,11 @@ class CalendarView(STLView):
             if type(e_dtend) is datetime:
                 e_dtend = e_dtend.date()
 
-            # Exit loop if the start date is after the given date
-            if e_dtstart > day:
-                break
-
-            # Current event occurs only later, go to the next
-            if e_dtend < day:
-                index += 1
-                continue
-
             # Current event occurs on current date
             starts_on = e_dtstart == day
             ends_on = e_dtend == day
             out_on = (e_dtstart < day and e_dtend > day)
 
-            event = resource.get_resource(event.abspath)
             conflicts_list = set()
             if show_conflicts:
                 handler = resource.handler
@@ -438,6 +408,7 @@ class CalendarView(STLView):
                 if conflicts:
                     for uids in conflicts:
                         conflicts_list.update(uids)
+            event = resource.get_resource(event.abspath)
             ns_event = event.get_ns_event(day, conflicts_list=conflicts_list,
                                           grid=grid, starts_on=starts_on,
                                           ends_on=ends_on, out_on=out_on)
@@ -450,13 +421,8 @@ class CalendarView(STLView):
             ns_event['color'] = self.get_color(resource, event, None)
             ns_event.setdefault('resource', {})['color'] = 0
             ns_events.append(ns_event)
-            # Current event end on current date
-            if e_dtend == day:
-                events.remove(events[index])
-            else:
-                index = index + 1
 
-        return ns_events, events
+        return ns_events
 
 
     def get_namespace(self, resource, context, c_date, method=None, ndays=7):
@@ -501,12 +467,10 @@ class MonthlyView(CalendarView):
         start = c_date - timedelta(7 + weekday)
         if self.get_first_day() == 0:
             start = start - timedelta(1)
-        # Calculate last date to take in account as we display  5*7 = 35 days
-        end = start + timedelta(35)
 
         ###################################################################
         # Get a list of events to display on view
-        events = self.search(resource, start, end)
+        events = self.search(resource)
         template = self.monthly_template
         if type(template) is str:
             template = context.get_template(template)
@@ -534,8 +498,8 @@ class MonthlyView(CalendarView):
                     if with_new_url:
                         ns_day['url'] = link.format(date=Date.encode(day))
                     # Insert events
-                    ns_events, events = self.events_to_namespace(resource,
-                        events, day)
+                    ns_events = self.events_to_namespace(resource, events,
+                                                         day)
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
@@ -578,13 +542,12 @@ class WeeklyView(CalendarView):
         return ns_timetables
 
 
-    def get_grid_events(self, resource, start_date, ndays=7, headers=None,
+    def get_grid_events(self, resource, current_date, ndays=7, headers=None,
                         step=timedelta(1)):
         """Build namespace to give as data to gridlayout factory.
         """
         # Get events by day
         ns_days = []
-        current_date = start_date
 
         if headers is None:
             headers = [None] * ndays
@@ -592,14 +555,13 @@ class WeeklyView(CalendarView):
         # For each found calendar (or self), get events
         events = []
         # Get a list of events to display on view
-        end = start_date + timedelta(days=ndays)
-        events = self.search(resource, start_date, end)
+        events = self.search(resource)
         for header in headers:
             # Insert events
-            ns_events, events = self.events_to_namespace(resource, events,
-                                current_date, grid=True)
+            ns_events = self.events_to_namespace(resource, events,
+                                                 current_date, grid=True)
             ns_days.append({'header': header, 'events': ns_events})
-            current_date = current_date + step
+            current_date += step
 
         return ns_days
 
@@ -681,9 +643,9 @@ class DailyView(CalendarView):
         args = {'start': Date.encode(c_date), 'method': method}
 
         # Get a dict for each event, compute colspan
-        handler = calendar.handler
         events_by_index = {}
-        for event in self.search_events_in_date(calendar, c_date):
+        events = self.search(calendar, dates=c_date)
+        for event in events.get_documents(sort_by='dtstart'):
             event = calendar.get_resource(event.abspath)
             event_start = event.get_property('dtstart')
             event_end = event.get_property('dtend')
@@ -740,7 +702,7 @@ class DailyView(CalendarView):
         # Get the list of conflicting events if activated
         if show_conflicts:
             conflicts_list = set()
-            conflicts = handler.get_conflicts(c_date)
+            conflicts = calendar.handler.get_conflicts(c_date)
             if conflicts:
                 for uids in conflicts:
                     uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
