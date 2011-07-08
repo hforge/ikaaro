@@ -24,8 +24,8 @@ from random import randint
 
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
-from itools.datatypes import DateTime, DataType, Date, Enumerate, Boolean
-from itools.datatypes import Time
+from itools.datatype import DataType, Boolean, Enumerate
+from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -91,20 +91,9 @@ class HTMLBody(XHTMLBody):
 # Widgets
 ###########################################################################
 
-def get_default_widget(datatype):
-    if issubclass(datatype, Boolean):
-        return RadioWidget
-    elif issubclass(datatype, Date):
-        return DateWidget
-    elif issubclass(datatype, Enumerate):
-        return SelectWidget
-
-    return TextWidget
-
-
-
 class Widget(CMSTemplate):
 
+    id = None
     language = None
     maxlength = None
     size = None
@@ -114,10 +103,11 @@ class Widget(CMSTemplate):
     # Focus on it if the first one displayed
     focus = True
     onsubmit = None
+    css = None
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" />
+      maxlength="${maxlength}" size="${size}" class="${css}"/>
       <label class="language" for="${id}" stl:if="language"
       >${language}</label>""")
 
@@ -193,7 +183,7 @@ class MultilineWidget(Widget):
     <label class="language block" for="${id}" stl:if="language"
       >${language}</label>
     <textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
-    >${value}</textarea>""")
+      class="${css}">${value}</textarea>""")
 
     rows = 5
     cols = 60
@@ -331,8 +321,6 @@ class SelectWidget(Widget):
 
 class DateWidget(Widget):
 
-    tip = MSG(u"Format: 'yyyy-mm-dd'")
-
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_}" id="${id}"
       class="dateField" size="${size}" />
@@ -350,6 +338,7 @@ class DateWidget(Widget):
     format = '%Y-%m-%d'
     size = 10
     show_time = False
+    tip = MSG(u'Click on button "..." to choose a date (Format: "yyyy-mm-dd").')
 
     def show_time_js(self):
         # True -> true for Javascript
@@ -415,6 +404,7 @@ class PathSelectorWidget(TextWidget):
 
     action = 'add_link'
     display_workflow = True
+    tip = MSG(u'Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
@@ -449,6 +439,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     action = 'add_image'
     width = 128
     height = 128
+    tip = MSG(u'Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
@@ -732,6 +723,7 @@ class AutoForm(STLForm):
                                                'value': None,
                                                'error': None})
             ns_widget['title'] = getattr(widget, 'title', None)
+            ns_widget['id'] = widget.id
             ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
             ns_widget['is_date'] = (datatype is not None and
                                     issubclass(datatype, Date))
@@ -790,3 +782,20 @@ class AutoForm(STLForm):
             'first_widget': first_widget,
             'widgets': ns_widgets,
             'after': None}
+
+
+# Registry with {datatype: widget, ...}
+widgets_registry = {
+        Boolean: RadioWidget,
+        Date: DateWidget,
+        DateTime: DatetimeWidget,
+        Enumerate: SelectWidget}
+
+def get_default_widget(datatype):
+    """Returns widget class from registry, TextWidget is default."""
+    widget = widgets_registry.get(datatype, None)
+    if widget is None:
+        for d, w in widgets_registry.iteritems():
+            if issubclass(datatype, d):
+                return w
+    return widget or TextWidget
