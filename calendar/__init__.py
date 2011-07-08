@@ -27,6 +27,7 @@ from ikaaro.website import WebSite
 # Import from ikaaro.calendar
 from calendar_ import ConfigCalendar
 from calendar_views import MonthlyView, WeeklyView, DailyView
+from calendar_views import Calendar_NewEvent
 from event import Event
 
 
@@ -43,3 +44,4 @@ Configuration.register_plugin(ConfigCalendar)
 WebSite.monthly_view = MonthlyView()
 WebSite.weekly_view = WeeklyView()
 WebSite.daily_view = DailyView()
+WebSite.new_event = Calendar_NewEvent()

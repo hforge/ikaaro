@@ -33,6 +33,7 @@ from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
+from event import Events_Enumerate
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.datatypes import FileDataType
@@ -483,7 +484,7 @@ class MonthlyView(CalendarView):
         namespace['weeks'] = []
         day = start
         # 5 weeks
-        link = ';new_resource?type=event&dtstart={date}&dtend={date}'
+        link = ';new_event?dtstart={date}&dtend={date}'
         for w in range(5):
             ns_week = {'days': [], 'month': u''}
             # 7 days a week
@@ -756,7 +757,7 @@ class DailyView(CalendarView):
         # '+' for daily_view)
         with_new_url = self.get_with_new_url(calendar, context)
         if with_new_url:
-            url = ';new_resource?type=event&%s' % encode_query(args)
+            url = ';new_event?%s' % encode_query(args)
             url = get_reference(url).replace(resource=calendar_name)
             header_columns = [
                 url.replace(start_time=Time.encode(x), end_time=Time.encode(y))
@@ -865,3 +866,35 @@ class Calendar_Export(BaseView):
         context.set_content_type('text/calendar')
         context.set_content_disposition('inline', '%s.ics' % resource.name)
         return ical
+
+
+
+class Calendar_NewEvent(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'Create a new event')
+    template = '/ui/calendar/new_event.xml'
+
+
+    def GET(self, resource, context):
+        options = Events_Enumerate.get_options()
+        # If only one type of event, we redirect on it
+        if len(options) == 1:
+            return self.get_new_event_uri(options[0]['name'], context)
+        proxy = super(Calendar_NewEvent, self)
+        return proxy.GET(resource, context)
+
+
+    def get_new_event_uri(self, event_name, context):
+        uri = context.uri.resolve('./;new_resource?type=%s' % event_name)
+        uri.query.update(context.uri.query)
+        return uri
+
+
+    def get_namespace(self, resource, context):
+        events = []
+        for option in Events_Enumerate.get_options():
+            events.append(
+                {'uri': self.get_new_event_uri(option['name'], context),
+                 'title': option['value']})
+        return {'events': events}

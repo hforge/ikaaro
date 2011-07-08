@@ -34,7 +34,7 @@ from ikaaro.cc import Observable, UsersList
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
-from ikaaro.registry import get_resource_class
+from ikaaro.registry import get_resource_class, resources_registry
 
 
 # Recurrence
@@ -395,3 +395,15 @@ class Event(File, Observable):
     # Views
     new_instance = Event_NewInstance()
     edit = Event_Edit()
+
+
+
+class Events_Enumerate(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        options = []
+        for name, the_cls in resources_registry.items():
+            if issubclass(the_cls, Event):
+                options.append({'name': name ,'value': the_cls.class_title})
+        return options
