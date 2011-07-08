@@ -203,7 +203,8 @@ class Event_NewInstance(AutoAdd):
         self.set_value(child, context, 'dtstart', form)
         self.set_value(child, context, 'dtend', form)
         # Set properties / cc_list
-        child.set_property('cc_list', tuple(form['cc_list']))
+        if form.has_key('cc_list'):
+            child.set_property('cc_list', tuple(form['cc_list']))
 
         # Notify the subscribers
         user = context.user
