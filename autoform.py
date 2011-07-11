@@ -24,7 +24,7 @@ from random import randint
 
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
-from itools.datatypes import DataType, Boolean, Enumerate
+from itools.datatypes import DataType, Boolean, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
@@ -789,7 +789,8 @@ widgets_registry = {
         Boolean: RadioWidget,
         Date: DateWidget,
         DateTime: DatetimeWidget,
-        Enumerate: SelectWidget}
+        Enumerate: SelectWidget,
+        PathDataType: PathSelectorWidget}
 
 def get_default_widget(datatype):
     """Returns widget class from registry, TextWidget is default."""
