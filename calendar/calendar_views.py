@@ -327,7 +327,7 @@ class CalendarView(STLView):
     def search(self, calendar, **kw):
         # Build the query
         query = AndQuery()
-        query.append(PhraseQuery('format', 'event'))
+        query.append(PhraseQuery('is_event', True))
         for name, value in kw.items():
             query.append(PhraseQuery(name, value))
 

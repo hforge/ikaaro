@@ -22,7 +22,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
+from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
@@ -247,7 +247,8 @@ class Event(File, Observable):
         rrule=RRuleDataType(source='metadata', title=MSG(u'Recurrence')),
         uid=Unicode(source='metadata'),
         # Other
-        dates=Date(indexed=True, multiple=True))
+        dates=Date(indexed=True, multiple=True),
+        is_event=Boolean(indexed=True))
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
@@ -263,6 +264,7 @@ class Event(File, Observable):
 
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
+        values['is_event'] = True
 
         # Dates
         start = self.get_property('dtstart')
