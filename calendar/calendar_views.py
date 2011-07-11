@@ -892,9 +892,8 @@ class Calendar_NewEvent(STLView):
 
 
     def get_namespace(self, resource, context):
-        events = []
-        for option in Events_Enumerate.get_options():
-            events.append(
-                {'uri': self.get_new_event_uri(option['name'], context),
-                 'title': option['value']})
+        events = [ {'uri': self.get_new_event_uri(option['name'], context),
+                    'title': option['value']}
+                   for option in Events_Enumerate.get_options() ]
+
         return {'events': events}

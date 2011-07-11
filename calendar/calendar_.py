@@ -127,10 +127,6 @@ class ConfigCalendar(DBResource):
         timetables=Timetables(source='metadata'))
 
 
-    def get_document_types(self):
-        return [Event]
-
-
     #######################################################################
     # User Interface
     #######################################################################

@@ -407,7 +407,7 @@ class Events_Enumerate(Enumerate):
         options = []
         for name, the_cls in resources_registry.items():
             if issubclass(the_cls, Event):
-                options.append({'name': name ,
+                options.append({'name': name,
                                 'value': the_cls.class_title.gettext()})
         options.sort(key=itemgetter('value'))
         return options
