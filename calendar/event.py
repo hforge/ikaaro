@@ -262,11 +262,7 @@ class Event(File, Observable):
                            extension=extension, **kw)
 
 
-    def get_catalog_values(self):
-        values = super(Event, self).get_catalog_values()
-        values['is_event'] = True
-
-        # Dates
+    def get_dates(self):
         start = self.get_property('dtstart')
         if type(start) is datetime:
             start = start.date()
@@ -288,9 +284,13 @@ class Event(File, Observable):
         else:
             f(start)
 
-        values['dates'] = sorted(dates)
+        return sorted(dates)
 
-        # Ok
+
+    def get_catalog_values(self):
+        values = super(Event, self).get_catalog_values()
+        values['is_event'] = True
+        values['dates'] = self.get_dates()
         return values
 
 
