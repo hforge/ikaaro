@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, Time, String, Unicode
+from itools.datatypes import DateTime, Time, String, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
-from autoform import AutoForm
-from autoform import ReadOnlyWidget, get_default_widget, location_widget
+from autoform import AutoForm, HiddenWidget, ReadOnlyWidget
+from autoform import get_default_widget, location_widget
 from datatypes import BirthDate
 from buttons import Button
 from datatypes import ContainerPathDatatype, FileDataType
@@ -79,7 +79,9 @@ class AutoAdd(AutoForm):
 
 
     def get_schema(self, resource, context):
-        schema = {'cls_description': Unicode}
+        schema = {
+            'cls_description': Unicode,
+            'referrer': URI}
         for name in self.fields:
             # Special case: location
             if name == 'location':
@@ -119,7 +121,9 @@ class AutoAdd(AutoForm):
 
 
     def get_widgets(self, resource, context):
-        widgets = [ReadOnlyWidget('cls_description')]
+        widgets = [
+            ReadOnlyWidget('cls_description'),
+            HiddenWidget('referrer')]
         for name in self.fields:
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
@@ -132,6 +136,9 @@ class AutoAdd(AutoForm):
             class_id = context.query['type']
             cls = get_resource_class(class_id)
             return cls.class_description.gettext()
+        elif name == 'referrer':
+            referrer = context.query.get('referrer')
+            return referrer or context.get_referrer()
 #       elif name == 'path':
 #           return context.site_root.get_pathto(resource)
 #       elif name in self.get_query_schema():

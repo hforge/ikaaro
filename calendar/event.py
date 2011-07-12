@@ -203,7 +203,7 @@ class Event_NewInstance(AutoAdd):
             if key != 'cc_list':
                 self.set_value(child, context, key, form)
         # Set properties / cc_list
-        if form.has_key('cc_list'):
+        if 'cc_list' in form:
             child.set_property('cc_list', tuple(form['cc_list']))
 
         # Notify the subscribers
@@ -213,7 +213,9 @@ class Event_NewInstance(AutoAdd):
         child.notify_subscribers(context)
 
         # Ok
-        goto = str(resource.get_pathto(child))
+        goto = form['referrer']
+        if goto.endswith('/;new_resource'):
+            goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 

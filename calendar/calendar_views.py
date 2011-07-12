@@ -886,9 +886,11 @@ class Calendar_NewEvent(STLView):
 
 
     def get_new_event_uri(self, event_name, context):
-        uri = context.uri.resolve('./;new_resource?type=%s' % event_name)
-        uri.query.update(context.uri.query)
-        return uri
+        query = context.uri.query.copy()
+        query['type'] = event_name
+        query['referrer'] = context.get_referrer()
+        uri = context.uri.resolve('./;new_resource')
+        return '%s?%s' % (uri, encode_query(query))
 
 
     def get_namespace(self, resource, context):
