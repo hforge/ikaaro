@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, PathDataType
+from itools.datatypes import DateTime, URI
 from itools.gettext import MSG
 from itools.web import ERROR, FormError
 
@@ -80,8 +80,8 @@ class Theme_Edit(DBResource_Edit):
     context_menus = []
     schema = {
             'timestamp': DateTime(readonly=True),
-            'favicon': PathDataType,
-            'logo': PathDataType}
+            'favicon': URI,
+            'logo': URI}
     widgets = [ timestamp_widget,
                 ImageSelectorWidget('favicon', action='add_favicon',
                     title=MSG(u'Replace favicon file (ICO 32x32 only)')),
