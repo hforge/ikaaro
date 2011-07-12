@@ -126,16 +126,19 @@ class LoginView(STLForm):
 
         # Case 1: Forgotten password
         if form['no_password']:
-            login_name_datatype = user.class_schema[user.login_name_property]
-            if not login_name_datatype.is_valid(loginname):
-                message = u'The given login name is not valid.'
-                context.message = ERROR(message)
-                return
+            if user:
+                login_name_datatype = user.class_schema[user.login_name_property]
+                if not login_name_datatype.is_valid(loginname):
+                    message = u'The given login name is not valid.'
+                    context.message = ERROR(message)
+                    return
+                email = user.get_property('email')
+                user.send_forgotten_password(context, email)
 
-            email = user.get_property('email')
-            user.send_forgotten_password(context, email)
+            # We send the same message even if the user does not exist
+            # (privacy wins over usability).
             path = '/ui/website/forgotten_password.xml'
-            handler = resource.get_resource(path)
+            handler = context.get_template(path)
             return stl(handler)
 
         # Case 2: Login
