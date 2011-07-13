@@ -162,7 +162,6 @@ def init(parser, options, target):
     database.save_changes()
     # Index the root
     catalog = database.catalog
-    catalog.index_document(root)
     catalog.save_changes()
 
     # Bravo!
