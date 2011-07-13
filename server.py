@@ -102,11 +102,7 @@ def get_pid(target):
 def get_root(database):
     metadata = database.get_handler('.metadata', cls=Metadata)
     cls = get_resource_class(metadata.format)
-    # Build the root resource
-    root = cls(metadata)
-    # FIXME Should be None
-    root.name = root.class_title.message.encode('utf_8')
-    return root
+    return cls(metadata)
 
 
 def get_fake_context():

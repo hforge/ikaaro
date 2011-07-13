@@ -84,11 +84,12 @@ class LocationTemplate(CMSTemplate):
         # Initialize the breadcrumb with the root resource
         path = '/'
         title = site_root.get_title()
+        if not title:
+            title = site_root.class_title.message.encode('utf_8')
         breadcrumb = [{
             'url': path,
             'name': title,
-            'short_name': reduce_string(title, 15, 30),
-            }]
+            'short_name': reduce_string(title, 15, 30)}]
 
         # Complete the breadcrumb
         resource = site_root
@@ -106,8 +107,7 @@ class LocationTemplate(CMSTemplate):
             breadcrumb.append({
                 'url': path,
                 'name': title,
-                'short_name': reduce_string(title, 15, 30),
-            })
+                'short_name': reduce_string(title, 15, 30)})
 
         return breadcrumb
 

@@ -79,6 +79,9 @@ class Root(WebSite):
     class_icon48 = 'icons/48x48/root.png'
 
 
+    abspath = Path('/')
+
+
     def init_resource(self, email, password):
         super(Root, self).init_resource()
         # Default User

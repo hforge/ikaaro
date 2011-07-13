@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, lazy
 from itools.csv import Property
 from itools.database import register_field
 from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
@@ -38,6 +38,7 @@ from datatypes import Multilingual
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
+from registry import _lookup_class_id, resources_registry
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
@@ -83,17 +84,10 @@ class DBResource(Resource):
     def __init__(self, metadata):
         self.metadata = metadata
         self._handler = None
-        # The tree
-        self.name = ''
-        self.parent = None
 
 
     def _get_names(self):
         raise NotImplementedError
-
-
-    def _get_resource(self, name):
-        return None
 
 
     def __eq__(self, resource):
@@ -110,19 +104,24 @@ class DBResource(Resource):
     # API / Tree
     #######################################################################
     def get_abspath(self):
-        if self.parent is None:
-            return Path('/')
-        parent_path = self.parent.get_abspath()
+        return self.abspath
 
-        return parent_path.resolve_name(self.name)
 
-    abspath = property(get_abspath)
+    @lazy
+    def parent(self):
+        abspath = self.abspath
+        if len(abspath) == 0:
+            return None
+        return self.get_resource(abspath[:-1])
+
+
+    @property
+    def name(self):
+        return self.abspath.get_name()
 
 
     def get_root(self):
-        if self.parent is None:
-            return self
-        return self.parent.get_root()
+        return self.get_resource('/')
 
 
     def get_pathto(self, resource):
@@ -140,35 +139,46 @@ class DBResource(Resource):
         if type(path) is not Path:
             path = Path(path)
 
+        # 1. Get the metadata
         if path.is_absolute():
-            here = self.get_root()
+            abspath = path
         else:
-            here = self
+            abspath = self.get_abspath().resolve2(path)
+        path = str(abspath)[1:]
+        path_to_metadata = '%s.metadata' % path
 
-        while path and path[0] == '..':
-            here = here.parent
-            path = path[1:]
+        database = self.metadata.database
+        metadata = database.get_handler(path_to_metadata, soft=soft)
+        if metadata is None:
+            return None
 
-        for name in path:
-            resource = here._get_resource(name)
-            if resource is None:
-                if soft is True:
-                    return None
-                raise LookupError, 'resource "%s" not found' % path
-            resource.parent = here
-            resource.name = name
-            here = resource
+        # 2. Class id
+        format = metadata.format
+        class_id = _lookup_class_id(format)
+        if class_id is None:
+            fs = metadata.database.fs
+            if fs.exists(path):
+                is_file = fs.is_file(path)
+            else:
+                # FIXME This is just a guess, it may fail.
+                is_file = '/' in format
 
-        return here
+            if is_file:
+                class_id = 'application/octet-stream'
+            else:
+                class_id = 'application/x-not-regular-file'
+
+        # Ok
+        cls = resources_registry[class_id]
+        resource = cls(metadata)
+        resource.abspath = abspath
+        return resource
 
 
     def get_resources(self, path='.'):
         here = self.get_resource(path)
         for name in here._get_names():
-            resource = here._get_resource(name)
-            resource.parent = here
-            resource.name = name
-            yield resource
+            yield here.get_resource(name)
 
 
     def del_resource(self, path, soft=False):

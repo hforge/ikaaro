@@ -26,9 +26,6 @@ class Multilingual(DBResource):
     def __init__(self, metadata):
         self.metadata = metadata
         self.handlers = {}
-        # The tree
-        self.name = ''
-        self.parent = None
 
 
     def init_resource(self, body=None, filename=None, language=None, **kw):

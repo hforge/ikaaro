@@ -43,7 +43,6 @@ from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
 from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
-from registry import _lookup_class_id, resources_registry
 from resource_ import DBResource
 from utils import get_base_path_query
 
@@ -252,36 +251,6 @@ class Folder(DBResource):
                  if x[-9:] == '.metadata' ]
 
 
-    def _get_resource(self, name):
-        # (1) Metadata
-        folder = self.handler
-        try:
-            metadata = folder.get_handler('%s.metadata' % name)
-        except LookupError:
-            return None
-
-        # (2) Class id
-        format = metadata.format
-        class_id = _lookup_class_id(format)
-        if class_id is None:
-            fs = metadata.database.fs
-            key = fs.resolve2(folder.key, name)
-            if fs.exists(key):
-                is_file = fs.is_file(key)
-            else:
-                # FIXME This is just a guess, it may fail.
-                is_file = '/' in format
-
-            if is_file:
-                class_id = 'application/octet-stream'
-            else:
-                class_id = 'application/x-not-regular-file'
-
-        # Ok
-        cls = resources_registry[class_id]
-        return cls(metadata)
-
-
     def del_resource(self, name, soft=False, ref_action='restrict'):
         """ref_action allows to specify which action is done before deleting
         the resource.
@@ -467,7 +436,7 @@ class Folder(DBResource):
                         return view
 
         # Default
-        return DBResource.get_view(self, name, query)
+        return super(Folder, self).get_view(name, query)
 
 
     # Views
