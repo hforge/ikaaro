@@ -112,7 +112,6 @@ class ContainerPathDatatype(Enumerate):
 
     def get_options(cls):
         context = get_context()
-        resource = context.resource
         class_id = context.query['type']
 
         skip_formats = set()

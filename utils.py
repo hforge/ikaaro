@@ -237,8 +237,6 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 # Used by the add-form
 ###########################################################################
 def get_content_containers(context, skip_formats):
-    from config import Configuration
-
     query = AndQuery(
         get_base_path_query(context.site_root.get_abspath(), True),
         PhraseQuery('is_folder', True))
@@ -247,18 +245,13 @@ def get_content_containers(context, skip_formats):
         if brain.format in skip_formats:
             continue
 
-        # Exclude users
-        abspath = brain.abspath
-        if abspath == '/users' or abspath.startswith('/users/'):
-            continue
-
         # Get the resource
-        container = context.root.get_resource(abspath)
+        container = context.root.get_resource(brain.abspath)
 
-        # Exclude configuration
+        # Exclude /config, /users, ...
         resource = container
         while resource is not None:
-            if isinstance(resource, Configuration):
+            if resource.is_content is False:
                 break
             resource = resource.parent
         else:
