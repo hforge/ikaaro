@@ -23,7 +23,6 @@ from itools.gettext import MSG
 from itools.web import ERROR, INFO
 
 # Import from ikaaro
-from access import is_admin
 from autoform import AutoForm, TextWidget, PasswordWidget
 from buttons import Button, RemoveButton
 from config import Configuration
@@ -132,9 +131,8 @@ class BrowseUsers(SearchForm):
         # Verify if after this operation, all is ok
         user = context.user
         if str(user.name) in usernames:
-            if not is_admin(user, resource.parent):
-                context.message = ERROR(u'You cannot remove yourself.')
-                return
+            context.message = ERROR(u'You cannot remove yourself.')
+            return
 
         # Make the operation
         resource.set_user_role(usernames, None)

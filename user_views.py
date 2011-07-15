@@ -157,26 +157,11 @@ class User_Profile(STLView):
 
 
     def get_namespace(self, resource, context):
-        # Personal data
-        firstname = resource.get_property('firstname')
-        lastname = resource.get_property('lastname')
-        avatar = resource.get_property('avatar')
-
-        # The icons menu
-        items = self.get_items(resource, context)
-
-        # is_owner_or_admin
-        root = context.root
-        user = context.user
-        is_owner = user is not None and user.name == resource.name
-
-        # Ok
         return {
-            'firstname': firstname,
-            'lastname': lastname,
-            'avatar': avatar,
-            'items': items,
-            'is_owner_or_admin': is_owner or root.is_admin(user, resource),
+            'firstname': resource.get_property('firstname'),
+            'lastname': resource.get_property('lastname'),
+            'avatar': resource.get_property('avatar'),
+            'items': self.get_items(resource, context),
             'user_must_confirm': resource.has_property('user_must_confirm')}
 
 

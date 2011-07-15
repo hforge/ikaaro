@@ -29,11 +29,10 @@ from itools.database import AndQuery, PhraseQuery
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
-from itools.web import STLView
+from itools.web import AccessControl, STLView
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from access import AccessControl
 from autoform import MultilineWidget
 from config import Configuration
 from folder import Folder
@@ -50,6 +49,24 @@ from workflow import WorkflowAware
 
 
 
+###########################################################################
+# Utility
+###########################################################################
+def is_admin(user, resource):
+    if user is None or resource is None:
+        return False
+
+    if (resource.get_site_root().get_abspath() !=
+        user.get_site_root().get_abspath()):
+        return False
+
+    return 'admins' in user.get_property('groups')
+
+
+
+###########################################################################
+# Resource
+###########################################################################
 class WebSite(AccessControl, Folder):
 
     class_id = 'WebSite'
@@ -195,12 +212,6 @@ class WebSite(AccessControl, Folder):
     #######################################################################
     # Access control
     #######################################################################
-    def is_allowed_to_register(self, user, resource):
-        if user:
-            return False
-        return self.get_resource('config/register').get_property('is_open')
-
-
     def make_user(self, loginname=None, password=None):
         # Create the user
         users = self.get_resource('/users')
@@ -224,6 +235,16 @@ class WebSite(AccessControl, Folder):
 
     def get_members(self):
         return set(self.get_names('users'))
+
+
+    def is_allowed_to_register(self, user, resource):
+        if user:
+            return False
+        return self.get_resource('config/register').get_property('is_open')
+
+
+    def is_admin(self, user, resource):
+        return is_admin(user, resource)
 
 
     def is_allowed_to_view(self, user, resource):
@@ -254,6 +275,39 @@ class WebSite(AccessControl, Folder):
         # 2. Access
         access = self.get_resource('config/access')
         return access.has_permission(user, permission)
+
+
+    # By default all other change operations (add, remove, copy, etc.)
+    # are equivalent to "edit".
+    def is_allowed_to_put(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
+
+
+    def is_allowed_to_remove(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
+
+
+    def is_allowed_to_copy(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
+
+
+    def is_allowed_to_move(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
+
+
+    def is_allowed_to_publish(self, user, resource):
+        return self.is_allowed_to_trans(user, resource, 'publish')
+
+
+    def is_allowed_to_retire(self, user, resource):
+        return self.is_allowed_to_trans(user, resource, 'retire')
+
+
+    def is_allowed_to_view_folder(self, user, resource):
+        index = resource.get_resource('index', soft=True)
+        if index is None:
+            return False
+        return self.is_allowed_to_view(user, index)
 
 
     def get_user(self, name):

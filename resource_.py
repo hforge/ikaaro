@@ -434,10 +434,7 @@ class DBResource(Resource):
 
 
     def get_owner(self):
-        revisions = self.get_revisions()
-        if not revisions:
-            return None
-        return revisions[-1]['username']
+        return None
 
 
     def get_mtime(self):

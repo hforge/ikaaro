@@ -101,6 +101,11 @@ class ConfigAccess(Table):
 
     # API
     def has_permission(self, user, permission, resource=None):
+        # 1. Ownership
+        if user and resource and user.name == resource.get_owner():
+            return True
+
+        # 2. Configuration
         searches = self.get_resource('../searches')
 
         user_groups = set(['everybody'])

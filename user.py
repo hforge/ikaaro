@@ -26,10 +26,9 @@ from itools.datatypes import Email, String, Unicode, URI
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
-from itools.web import INFO, get_context
+from itools.web import INFO
 
 # Import from ikaaro
-from access import AccessControl
 from autoedit import AutoEdit
 from autoform import ImageSelectorWidget
 from datatypes import Password
@@ -44,7 +43,7 @@ from views import MessageView
 
 
 
-class User(AccessControl, Folder):
+class User(Folder):
 
     class_id = 'user'
     class_version = '20081217'
@@ -88,7 +87,7 @@ class User(AccessControl, Folder):
     # Indexing
     ########################################################################
     def get_catalog_values(self):
-        values = Folder.get_catalog_values(self)
+        values = super(User, self).get_catalog_values()
 
         # email domain
         email = self.get_property('email')
@@ -143,6 +142,10 @@ class User(AccessControl, Folder):
     ########################################################################
     # API
     ########################################################################
+    def get_owner(self):
+        return self.name
+
+
     def get_title(self, language=None):
         firstname = self.get_property('firstname')
         lastname = self.get_property('lastname')
@@ -222,28 +225,6 @@ class User(AccessControl, Folder):
         confirm_url = str(confirm_url)
         text = text.gettext(uri=confirm_url)
         context.root.send_email(email, subject.gettext(), text=text)
-
-    ########################################################################
-    # Access control
-    def is_self_or_admin(self, user, resource):
-        # You are nobody here, ha ha ha
-        if user is None:
-            return False
-
-        # In my home I am the king
-        if self.name == user.name:
-            return True
-
-        # The all-powerfull
-        return self.is_admin(user, resource)
-
-
-    is_allowed_to_edit = is_self_or_admin
-
-
-    def is_allowed_to_view(self, user, resource):
-        access = get_context().site_root.get_resource('config/access')
-        return access.has_permission(user, 'view', user)
 
 
     #######################################################################
