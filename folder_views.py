@@ -14,9 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from urllib import quote
-
 # Import from the Python Image Library
 try:
     from PIL import Image as PILImage
@@ -112,8 +109,25 @@ class Folder_NewResource(IconsView):
     icon = 'new.png'
 
 
-    def get_namespace(self, resource, context):
-        # 1. Find out the resource classes we can add
+    def GET(self, resource, context):
+        # If only one type of event, we redirect on it
+        items = self.get_items(resource, context)
+        if len(items) == 1:
+            return self.get_url(items[0].class_id, context)
+
+        return super(Folder_NewResource, self).GET(resource, context)
+
+
+    def get_url(self, class_id, context):
+        query = context.uri.query.copy()
+        query['type'] = class_id
+        query['referrer'] = context.get_referrer()
+        uri = context.uri.resolve('./;new_resource')
+        uri.query = query
+        return uri
+
+
+    def get_items(self, resource, context):
         document_types = []
         skip_formats = set()
         for resource in get_content_containers(context, skip_formats):
@@ -122,17 +136,18 @@ class Folder_NewResource(IconsView):
                 if cls not in document_types:
                     document_types.append(cls)
 
-        # 2. Build the namespace
+        return document_types
+
+
+    def get_namespace(self, resource, context):
         items = [
             {'icon': '/ui/' + cls.class_icon48,
              'title': cls.class_title.gettext(),
              'description': cls.class_description.gettext(),
-             'url': ';new_resource?type=%s' % quote(cls.class_id)}
-            for cls in document_types ]
+             'url': self.get_url(cls.class_id, context)}
+            for cls in self.get_items(resource, context) ]
 
-        return {
-            'batch': None,
-            'items': items}
+        return {'batch': None, 'items': items}
 
 
 

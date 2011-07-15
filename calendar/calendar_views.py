@@ -37,6 +37,8 @@ from event import Events_Enumerate
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.datatypes import FileDataType
+from ikaaro.folder_views import Folder_NewResource
+from ikaaro.registry import get_resource_class
 from ikaaro.utils import get_base_path_query
 
 
@@ -869,33 +871,11 @@ class Calendar_Export(BaseView):
 
 
 
-class Calendar_NewEvent(STLView):
+class Calendar_NewEvent(Folder_NewResource):
 
-    access = 'is_allowed_to_view'
     title = MSG(u'Create a new event')
-    template = '/ui/calendar/new_event.xml'
 
 
-    def GET(self, resource, context):
-        options = Events_Enumerate.get_options()
-        # If only one type of event, we redirect on it
-        if len(options) == 1:
-            return self.get_new_event_uri(options[0]['name'], context)
-        proxy = super(Calendar_NewEvent, self)
-        return proxy.GET(resource, context)
-
-
-    def get_new_event_uri(self, event_name, context):
-        query = context.uri.query.copy()
-        query['type'] = event_name
-        query['referrer'] = context.get_referrer()
-        uri = context.uri.resolve('./;new_resource')
-        return '%s?%s' % (uri, encode_query(query))
-
-
-    def get_namespace(self, resource, context):
-        events = [ {'uri': self.get_new_event_uri(option['name'], context),
-                    'title': option['value']}
-                   for option in Events_Enumerate.get_options() ]
-
-        return {'events': events}
+    def get_items(self, resource, context):
+        return [ get_resource_class(option['name'])
+                 for option in Events_Enumerate.get_options() ]
