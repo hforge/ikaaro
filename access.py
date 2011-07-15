@@ -85,7 +85,7 @@ class AccessControl(BaseAccessControl):
         return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_add(self, user, resource, class_id=None):
+    def is_allowed_to_add(self, user, resource):
         return self.is_allowed_to_edit(user, resource)
 
 

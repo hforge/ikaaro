@@ -196,7 +196,6 @@ captcha_datatype = Unicode(source='metadata')
 class Captcha(DBResource):
 
     class_id = 'config-captcha'
-    class_version = '20110606'
     class_title = MSG(u'Captcha')
     class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'

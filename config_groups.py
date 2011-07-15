@@ -38,7 +38,7 @@ class UserGroupsDatatype(Enumerate):
 
     def get_options(self):
         groups = [ {'name': group.name, 'value': group.get_title()}
-                   for group in self.config_groups.get_resources() ]
+                   for group in self.config.get_resources('groups') ]
 
         # Special groups
         if self.special_groups:
@@ -66,15 +66,14 @@ class Group_BrowseUsers(BrowseUsers):
         if column == 'checkbox':
             user = context.root.get_resource(item.abspath)
             groups = user.get_property('groups')
-            resource.get_abspath()
-            return item.name, (resource.get_abspath() in groups)
+            return item.name, (resource.name in groups)
 
         proxy = super(Group_BrowseUsers, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
     def action(self, resource, context, form):
-        group_id = str(resource.get_abspath())
+        group_id = resource.name
 
         users = context.root.get_resource('users')
 
@@ -95,7 +94,6 @@ class Group_BrowseUsers(BrowseUsers):
 class Group(DBResource):
 
     class_id = 'config-group'
-    class_version = '20110606'
     class_title = MSG(u'User Group')
 
     # Views
@@ -139,7 +137,7 @@ class BrowseGroups(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
             brain, item_resource = item
-            results = context.database.catalog.search(groups=brain.abspath)
+            results = context.database.catalog.search(groups=brain.name)
             return len(results)
 
         proxy = super(BrowseGroups, self)

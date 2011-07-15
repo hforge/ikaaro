@@ -333,13 +333,12 @@ class Folder_BrowseContent(SearchForm):
             'hidden_widgets': hidden_widgets}
 
 
-    def get_items(self, resource, context, *args):
+    def get_items_query(self, resource, context, *args):
         # Query
         args = list(args)
 
         # Search in subtree
-        path = resource.get_abspath()
-        query = get_base_path_query(path)
+        query = get_base_path_query(resource.abspath)
         args.append(query)
         if self.search_content_only(resource, context) is True:
             # Exclude non-content
@@ -364,11 +363,11 @@ class Folder_BrowseContent(SearchForm):
                                 PhraseQuery('name', search_text)))
 
         # Ok
-        if len(args) == 1:
-            query = args[0]
-        else:
-            query = AndQuery(*args)
+        return args[0] if len(args) == 1 else AndQuery(*args)
 
+
+    def get_items(self, resource, context, *args):
+        query = self.get_items_query(resource, context, *args)
         return context.root.search(query)
 
 

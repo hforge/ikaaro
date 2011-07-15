@@ -77,14 +77,13 @@ class File_NewInstance(AutoAdd):
 
 
     def action(self, resource, context, form):
-        # Get the container
+        # 1. Make the resource
         container = form['container']
-        # Make the resource
         name = form['name']
         filename, mimetype, body = form['file']
         language = container.get_edit_languages(context)[0]
         child = container._make_file(name, filename, mimetype, body, language)
-        # Set properties
+        # 2. Set properties
         self.set_value(child, context, 'title', form)
         # Ok
         goto = str(resource.get_pathto(child))

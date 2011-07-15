@@ -77,6 +77,7 @@ class DBResource(Resource):
     __metaclass__ = DBResourceMetaclass
     __hash__ = None
 
+    class_version = '20071215'
     class_views = []
     context_menus = []
 
@@ -93,7 +94,7 @@ class DBResource(Resource):
     def __eq__(self, resource):
         if not isinstance(resource, DBResource):
             raise TypeError, "cannot compare DBResource and %s" % type(resource)
-        return self.get_abspath() == resource.get_abspath()
+        return self.abspath == resource.abspath
 
 
     def __ne__(self, node):
@@ -496,7 +497,7 @@ class DBResource(Resource):
         values['links'] = list(links)
 
         # Parent path
-        abspath = self.get_abspath()
+        abspath = self.abspath
         abspath_str = str(abspath)
         if abspath_str != '/':
             values['parent_paths'] = [ str(abspath[:i])
@@ -520,8 +521,12 @@ class DBResource(Resource):
                 log_warning(log, domain='ikaaro')
 
         # Workflow state
-        if isinstance(self, WorkflowAware):
-            values['workflow_state'] = self.get_workflow_state()
+        is_content = self.is_content
+        if is_content:
+            if isinstance(self, WorkflowAware):
+                values['workflow_state'] = self.get_workflow_state()
+            else:
+                values['workflow_state'] = 'public'
 
         # Image
         from file import Image
@@ -532,7 +537,7 @@ class DBResource(Resource):
         values['is_folder'] = isinstance(self, Folder)
 
         # Content
-        values['is_content'] = self.is_content
+        values['is_content'] = is_content
 
         # Ok
         return values

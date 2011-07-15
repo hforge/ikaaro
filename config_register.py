@@ -135,7 +135,6 @@ class RegisterForm(AutoForm):
 class ConfigRegister(DBResource):
 
     class_id = 'config-register'
-    class_version = '20110606'
     class_title = MSG(u'User registration')
     class_description = MSG(u'Configuration the user registration process.')
     class_icon48 = 'icons/48x48/signin.png'

@@ -33,7 +33,6 @@ site_verification = String(source='metadata', default='')
 class SEO(DBResource):
 
     class_id = 'config-seo'
-    class_version = '20110606'
     class_title = MSG(u'Search Engine Optimization')
     class_description = seo_description
     class_icon16 = 'icons/16x16/search.png'

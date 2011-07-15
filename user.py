@@ -243,7 +243,7 @@ class User(AccessControl, Folder):
 
     def is_allowed_to_view(self, user, resource):
         access = get_context().site_root.get_resource('config/access')
-        return access.has_permission(user, 'view_public')
+        return access.has_permission(user, 'view', user)
 
 
     #######################################################################

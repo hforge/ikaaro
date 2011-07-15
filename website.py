@@ -37,6 +37,7 @@ from access import AccessControl
 from autoform import MultilineWidget
 from config import Configuration
 from folder import Folder
+from config_access import SavedSearch_Content
 from config_register import RegisterForm
 from registry import get_resource_class
 from resource_views import LoginView
@@ -83,19 +84,40 @@ class WebSite(AccessControl, Folder):
         # Configuration
         config = self.make_resource('config', Configuration,
                                     title={'en': u'Configuration'})
+        # Saved searches
+        searches = config.get_resource('searches')
+        items = [('any-content', None),
+                 ('public-content', ['public']),
+                 ('private-content', ['private', 'pending'])]
+        for name, value in items:
+            search = searches.make_resource(name, SavedSearch_Content)
+            search.set_property('search_workflow_state', value)
+
         # Permissions
-        permissions = {
-            'view_public': ['authenticated'],
-            'view_private': ['authenticated'],
-            'edit_public': ['reviewers', 'admins'],
-            'edit_private': ['members', 'reviewers', 'admins'],
-            'wf_publish': ['reviewers', 'admins'],
-            'wf_request': ['members', 'reviewers', 'admins'],
-            'config': ['admins']}
+        permissions = [
+            # Authenticated users can see any content
+            ('authenticated', 'view', 'any-content'),
+            # Members can add new content, edit private content and request
+            # publication
+            ('members', 'add', 'any-content'),
+            ('members', 'edit', 'private-content'),
+            ('members', 'wf_request', None),
+            # Reviewers can add new content, edit any content and publish
+            ('reviewers', 'add', 'any-content'),
+            ('reviewers', 'edit', 'any-content'),
+            ('reviewers', 'wf_request', 'any-content'),
+            ('reviewers', 'wf_publish', 'any-content'),
+            # Admins can do anything
+            ('admins', 'view', None),
+            ('admins', 'edit', None),
+            ('admins', 'add', None),
+            ('admins', 'wf_request', None),
+            ('admins', 'wf_publish', None),
+        ]
         access = config.get_resource('access').handler
-        for permission, groups in permissions.items():
-            for group in groups:
-                access.add_record({'permission': permission, 'group': group})
+        for group, permission, resources in permissions:
+            access.add_record({'group': group, 'permission': permission,
+                               'resources': resources})
 
 
     def make_resource(self, name, cls, **kw):
@@ -205,21 +227,18 @@ class WebSite(AccessControl, Folder):
 
 
     def is_allowed_to_view(self, user, resource):
-        # 1. Permission
-        state = getattr(resource, 'workflow_state', 'public')
-        permission = 'view_public' if state == 'public' else 'view_private'
-        # 2. Access
         access = self.get_resource('config/access')
-        return access.has_permission(user, permission)
+        return access.has_permission(user, 'view', resource)
 
 
     def is_allowed_to_edit(self, user, resource):
-        # 1. Permission
-        state = getattr(resource, 'workflow_state', 'private')
-        permission = 'edit_public' if state == 'public' else 'edit_private'
-        # 2. Access
         access = self.get_resource('config/access')
-        return access.has_permission(user, permission)
+        return access.has_permission(user, 'edit', resource)
+
+
+    def is_allowed_to_add(self, user, resource):
+        access = self.get_resource('config/access')
+        return access.has_permission(user, 'add', resource)
 
 
     def is_allowed_to_trans(self, user, resource, name):

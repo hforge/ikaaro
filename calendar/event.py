@@ -191,13 +191,12 @@ class Event_NewInstance(AutoAdd):
 
 
     def action(self, resource, context, form):
-        # Get the container
+        # 1. Make the resource
         container = form['container']
-        # Make the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
-        # Set properties
+        # 2. Set properties
         for key in self.fields:
             if key != 'cc_list':
                 self.set_value(child, context, key, form)
@@ -205,7 +204,7 @@ class Event_NewInstance(AutoAdd):
         if 'cc_list' in form:
             child.set_property('cc_list', tuple(form['cc_list']))
 
-        # Notify the subscribers
+        # 3. Notify the subscribers
         user = context.user
         if user:
             child.set_property('last_author', user.name)

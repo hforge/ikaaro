@@ -74,16 +74,16 @@ class Post_NewInstance(AutoAdd):
 
 
     def action(self, resource, context, form):
-        # Get the container
+        # 1. Make the resource
         container = form['container']
-        # Make resource
         language = container.get_edit_languages(context)[0]
         child = container.make_resource(form['name'], Post, language=language)
-        # Set properties
+        # 2. Set properties
         handler = child.get_handler(language=language)
         handler.set_body(form['data'])
         self.set_value(child, context, 'title', form)
         self.set_value(child, context, 'date', form)
+
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)

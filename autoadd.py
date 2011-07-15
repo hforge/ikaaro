@@ -163,8 +163,7 @@ class AutoAdd(AutoForm):
         if path is not None:
             container = context.site_root.get_resource(path)
         ac = container.get_access_control()
-        class_id = context.query['type']
-        if not ac.is_allowed_to_add(context.user, container, class_id):
+        if not ac.is_allowed_to_add(context.user, container):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
             raise FormError, msg.gettext(path=path)
@@ -226,14 +225,19 @@ class AutoAdd(AutoForm):
 
 
     def action(self, resource, context, form):
-        # Get the container
+        # 1. Make the resource
         container = form['container']
-        # Make the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
-        # Set properties
-        self.set_value(child, context, 'title', form)
+        # 2. Set properties
+        schema = self.get_schema(resource, context)
+        for name in self.fields:
+            datatype = schema.get(name)
+            if datatype and not getattr(datatype, 'readonly', False):
+                if self.set_value(child, context, name, form):
+                    return
+
         # Ok
         goto = str(resource.get_pathto(child))
         if self.goto_view:

@@ -229,16 +229,15 @@ class Tracker_NewInstance(AutoAdd):
 
 
     def action(self, resource, context, form):
-        # Get the container
+        # 1. Make the resource
         container = form['container']
-        # Make the resource
         name = form['name']
         class_id = context.query['type']
         cls = get_resource_class(class_id)
         child = container.make_resource(name, cls)
-        # The metadata
+        # 2. Set properties
         self.set_value(child, context, 'title', form)
-        # Add the initial product
+        # 3. Add the initial product
         product = form['product']
         table = container.get_resource('%s/product' % name).get_handler()
         product = Property(product, language='en')
@@ -255,10 +254,9 @@ class Tracker_Edit(AutoEdit):
 
     def _get_datatype(self, resource, context, name):
         if name == 'included_roles':
-            groups = resource.get_site_root().get_resource('config/groups')
+            config = resource.get_site_root().get_resource('config')
             return UserGroupsDatatype(mandatory=True, multiple=True,
-                                      special_groups=None,
-                                      config_groups=groups)
+                                      special_groups=None, config=config)
 
         return super(Tracker_Edit, self)._get_datatype(resource, context, name)
 

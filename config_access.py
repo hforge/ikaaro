@@ -16,32 +16,63 @@
 
 # Import from itools
 from itools.csv import Table as TableFile
+from itools.database import PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 
 # Import from ikaaro
+from autoedit import AutoEdit
+from autoform import SelectWidget
 from config import Configuration
 from config_groups import UserGroupsDatatype
+from config_searches import Config_Searches, SavedSearch, SavedSearch_New
+from registry import register_document_type
 from table import Table
 from table_views import Table_AddRecord, Table_EditRecord
+from workflow import StaticStateEnumerate
 
 
 class PermissionsDatatype(Enumerate):
 
     title = MSG(u'Permission')
     options = [
-        {'name': 'view_public', 'value': MSG(u'View public content')},
-        {'name': 'view_private', 'value': MSG(u'View non public content')},
-        {'name': 'edit_public',
-         'value': MSG(u'Add, remove and modify public content')},
-        {'name': 'edit_private',
-         'value': MSG(u'Add, remove and modify non public content')},
-        {'name': 'wf_request',
-         'value': MSG(u'Request publication of content')},
-        {'name': 'wf_publish',
-         'value': MSG(u'Publish and unpublish content')},
-        {'name': 'config', 'value': MSG(u'Manage configuration')},
-    ]
+        {'name': 'view', 'value': MSG(u'View')},
+        {'name': 'edit', 'value': MSG(u'Remove and modify')},
+        {'name': 'add', 'value': MSG(u'Add')},
+        {'name': 'wf_request', 'value': MSG(u'Request publication')},
+        {'name': 'wf_publish', 'value': MSG(u'Publish and unpublish')}]
+
+
+class SearchWorkflowState_Widget(SelectWidget):
+    multiple = True
+    has_empty_option = False
+
+
+class SavedSearch_Content(SavedSearch):
+
+    class_id = 'saved-search-content'
+    class_title = MSG(u'Saved Search - Content')
+
+    class_schema = SavedSearch.class_schema.copy()
+    class_schema['search_workflow_state'] = StaticStateEnumerate(
+        source='metadata', multiple=True, widget=SearchWorkflowState_Widget)
+
+    # Views
+    fields = ['title', 'search_workflow_state']
+    edit = AutoEdit(fields=fields)
+    new_instance = SavedSearch_New(fields=fields)
+
+    def get_search_query(self):
+        query = super(SavedSearch_Content, self).get_search_query()
+        query.append(PhraseQuery('is_content', True))
+        return query
+
+
+class SavedSearchesDatatype(Enumerate):
+
+    def get_options(self):
+        return [ {'name': x.name, 'value': x.get_title()}
+                 for x in self.config.get_resources('searches') ]
 
 
 
@@ -49,7 +80,9 @@ class ConfigAccess_Handler(TableFile):
 
     record_properties = {
         'permission': PermissionsDatatype(mandatory=True),
-        'group': UserGroupsDatatype(mandatory=True, title=MSG(u'User group'))}
+        'group': UserGroupsDatatype(mandatory=True, title=MSG(u'User group')),
+        'resources': SavedSearchesDatatype(title=MSG(u'Content')),
+        }
 
 
 
@@ -67,7 +100,9 @@ class ConfigAccess(Table):
     config_group = 'access'
 
     # API
-    def has_permission(self, user, permission):
+    def has_permission(self, user, permission, resource=None):
+        searches = self.get_resource('../searches')
+
         user_groups = set(['everybody'])
         if user:
             user_groups.add('authenticated')
@@ -78,7 +113,14 @@ class ConfigAccess(Table):
             if table.get_record_value(record, 'permission') == permission:
                 group_name = table.get_record_value(record, 'group')
                 if group_name in user_groups:
-                    return True
+                    if resource is None:
+                        return True
+                    search = table.get_record_value(record, 'resources')
+                    if search is None:
+                        return True
+                    search = searches.get_resource(search, soft=True)
+                    if search and search.match_resource(resource):
+                        return True
 
         return False
 
@@ -86,13 +128,17 @@ class ConfigAccess(Table):
     # User interface
     def get_schema(self):
         schema = super(ConfigAccess, self).get_schema()
-        config_groups = self.parent.get_resource('groups')
-        schema['group'] = schema['group'](config_groups=config_groups)
+        config = self.parent
+        schema['group'] = schema['group'](config=config)
+        schema['resources'] = schema['resources'](config=config)
         return schema
 
-    add_record = Table_AddRecord(fields=['permission', 'group'])
-    edit_record = Table_EditRecord(fields=['permission', 'group'])
+    fields = ['permission', 'group', 'resources']
+    add_record = Table_AddRecord(fields=fields)
+    edit_record = Table_EditRecord(fields=fields)
 
 
 
+# Register
 Configuration.register_plugin(ConfigAccess)
+register_document_type(SavedSearch_Content, Config_Searches.class_id)
