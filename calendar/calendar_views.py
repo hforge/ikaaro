@@ -33,12 +33,12 @@ from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from event import Events_Enumerate
+from event import Event
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.datatypes import FileDataType
 from ikaaro.folder_views import Folder_NewResource
-from ikaaro.registry import get_resource_class
+from ikaaro.registry import resources_registry
 from ikaaro.utils import get_base_path_query
 
 
@@ -877,5 +877,5 @@ class Calendar_NewEvent(Folder_NewResource):
 
 
     def get_items(self, resource, context):
-        return [ get_resource_class(option['name'])
-                 for option in Events_Enumerate.get_options() ]
+        return [
+            x for x in resources_registry.values() if issubclass(x, Event) ]

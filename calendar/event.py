@@ -18,10 +18,9 @@
 
 # Import from the Standard Library
 from datetime import date, datetime, timedelta
-from operator import itemgetter
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
@@ -35,7 +34,7 @@ from ikaaro.cc import Observable, UsersList
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
-from ikaaro.registry import get_resource_class, resources_registry
+from ikaaro.registry import get_resource_class
 
 
 # Recurrence
@@ -214,7 +213,8 @@ class Event_NewInstance(AutoAdd):
 
         # Ok
         goto = form['referrer']
-        if goto.endswith('/;new_resource'):
+        views = ('/;monthly_view', '/;weekly_view', '/;daily_view')
+        if not goto.endswith(views):
             goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
@@ -401,17 +401,3 @@ class Event(File, Observable):
     # Views
     new_instance = Event_NewInstance()
     edit = Event_Edit()
-
-
-
-class Events_Enumerate(Enumerate):
-
-    @classmethod
-    def get_options(cls):
-        options = []
-        for name, the_cls in resources_registry.items():
-            if issubclass(the_cls, Event):
-                options.append({'name': name,
-                                'value': the_cls.class_title.gettext()})
-        options.sort(key=itemgetter('value'))
-        return options
