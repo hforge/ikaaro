@@ -21,7 +21,8 @@ from datetime import date, datetime, timedelta
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time, Unicode
+from itools.datatypes import Boolean, Enumerate, String, Unicode
+from itools.datatypes import Date, DateTime, Time
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
@@ -242,6 +243,7 @@ class Event(File, Observable):
         File.class_schema,
         Observable.class_schema,
         # Metadata
+        owner=String(source='metadata'),
         dtstart=EventDateTime(title=MSG(u'Start')),
         dtend=EventDateTime(title=MSG(u'End')),
         status=Status(source='metadata', title=MSG(u'State')),
@@ -261,6 +263,14 @@ class Event(File, Observable):
             kw['uid'] = uid
         File.init_resource(self, body=body, filename=filename,
                            extension=extension, **kw)
+        # Set owner
+        user = get_context().user
+        if user:
+            self.set_property('owner', user.name)
+
+
+    def get_owner(self):
+        return self.get_property('owner')
 
 
     def get_dates(self):
