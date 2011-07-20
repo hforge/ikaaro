@@ -30,7 +30,7 @@ from ikaaro.autoform import HTMLBody, RTEWidget
 from ikaaro.comments import CommentsAware, CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
-from ikaaro.webpage import HTMLEditView, WebPage
+from ikaaro.webpage import WebPage, WebPage_Edit
 
 
 ###########################################################################
@@ -141,4 +141,4 @@ class Post(CommentsAware, WebPage):
     # Views
     new_instance = Post_NewInstance()
     view = Post_View()
-    edit = HTMLEditView(fields=['title', 'date', 'state', 'data'])
+    edit = WebPage_Edit(fields=['title', 'date', 'state', 'data'])

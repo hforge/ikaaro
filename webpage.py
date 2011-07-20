@@ -165,7 +165,7 @@ class WebPage_View(BaseView):
 
 
 
-class HTMLEditView(File_Edit):
+class WebPage_Edit(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
 
@@ -176,14 +176,14 @@ class HTMLEditView(File_Edit):
             return HTMLBody(multilingual=True,
                             parameters_schema={'lang': String})
 
-        return super(HTMLEditView, self)._get_datatype(resource, context, name)
+        return super(WebPage_Edit, self)._get_datatype(resource, context, name)
 
 
     def _get_widget(self, resource, context, name):
         if name == 'data':
             return rte_widget
 
-        return super(HTMLEditView, self)._get_widget(resource, context, name)
+        return super(WebPage_Edit, self)._get_widget(resource, context, name)
 
 
     def get_value(self, resource, context, name, datatype):
@@ -222,38 +222,7 @@ class HTMLEditView(File_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class ResourceWithHTML(Observable):
-    """A mixin class for handlers implementing HTML editing.
-    """
-
-    edit = HTMLEditView()
-
-
-    def get_html_document(self, language=None):
-        # Implement it in your editable handler
-        raise NotImplementedError
-
-
-    def get_html_data(self, language=None):
-        document = self.get_html_document(language=language)
-        body = document.get_body()
-        if body is None:
-            return None
-        return body.get_content_elements()
-
-
-    def to_text(self, languages=None):
-        if languages is None:
-            languages = self.get_site_root().get_property('website_languages')
-        result = {}
-        for language in languages:
-            handler = self.get_html_document(language=language)
-            result[language] = handler.to_text()
-        return result
-
-
-
-class WebPage(ResourceWithHTML, Multilingual, Text):
+class WebPage(Observable, Multilingual, Text):
 
     class_id = 'webpage'
     class_title = MSG(u'Web Page')
@@ -351,11 +320,31 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         return self.get_handler(language=language)
 
 
+    def get_html_data(self, language=None):
+        document = self.get_html_document(language=language)
+        body = document.get_body()
+        if body is None:
+            return None
+        return body.get_content_elements()
+
+
+    def to_text(self, languages=None):
+        if languages is None:
+            languages = self.get_site_root().get_property('website_languages')
+        result = {}
+        for language in languages:
+            handler = self.get_html_document(language=language)
+            result[language] = handler.to_text()
+        return result
+
+
+
     #######################################################################
-    # UI
+    # Views
     #######################################################################
     new_instance = DBResource.new_instance
     view = WebPage_View()
+    edit = WebPage_Edit()
 
 
 

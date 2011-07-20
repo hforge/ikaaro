@@ -19,7 +19,7 @@ from itools.gettext import MSG
 
 # Import from ikaaro
 from config import Configuration
-from webpage import WebPage, HTMLEditView
+from webpage import WebPage, WebPage_Edit
 
 
 class Footer(WebPage):
@@ -35,7 +35,7 @@ class Footer(WebPage):
 
     # Views
     class_views = ['edit', 'externaledit', 'commit_log']
-    edit = HTMLEditView(fields=['data'])
+    edit = WebPage_Edit(fields=['data'])
 
 
     def init_resource(self, **kw):
