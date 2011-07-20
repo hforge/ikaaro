@@ -41,7 +41,6 @@ from folder_views import Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
-from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
 from resource_ import DBResource
 from utils import get_base_path_query
@@ -108,6 +107,8 @@ class Folder(DBResource):
 
 
     def _make_file(self, name, filename, mimetype, body, default_language):
+        from webpage import WebPage
+
         kk, extension, language = FileName.decode(filename)
         name = name or kk
         # Web Pages are first class citizens
@@ -120,9 +121,9 @@ class Folder(DBResource):
             class_id = mimetype
         cls = get_resource_class(class_id)
 
-        # Multilingual resources, find out the language
+        # Special case: web pages
         kw = {'format': class_id, 'filename': filename}
-        if issubclass(cls, Multilingual):
+        if issubclass(cls, WebPage):
             if language is None:
                 text = cls.class_handler(string=body).to_text()
                 language = guess_language(text) or default_language

@@ -24,6 +24,7 @@ from copy import deepcopy
 # Import from itools
 from itools.core import merge_dicts, is_thingy
 from itools.datatypes import String
+from itools.fs import FileName
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
@@ -35,7 +36,6 @@ from itools.xml import START_ELEMENT
 from autoform import HTMLBody, rte_widget
 from cc import Observable
 from file_views import File_Edit
-from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
@@ -222,7 +222,7 @@ class WebPage_Edit(File_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class WebPage(Observable, Multilingual, Text):
+class WebPage(Observable, Text):
 
     class_id = 'webpage'
     class_title = MSG(u'Web Page')
@@ -237,6 +237,67 @@ class WebPage(Observable, Multilingual, Text):
         Text.class_schema,
         Observable.class_schema)
 
+
+
+    def __init__(self, metadata):
+        self.metadata = metadata
+        self.handlers = {}
+
+
+    def init_resource(self, body=None, filename=None, language=None, **kw):
+        DBResource.init_resource(self, filename=filename, **kw)
+        if body:
+            handler = self.class_handler(string=body)
+            extension = handler.class_extension
+            name = FileName.encode((self.name, extension, language))
+            self.parent.handler.set_handler(name, handler)
+
+
+    def get_handler(self, language=None):
+        # Content language
+        if language is None:
+            site_root = self.get_site_root()
+            ws_languages = site_root.get_property('website_languages')
+            handlers = [
+                (x, self.get_handler(language=x)) for x in ws_languages ]
+            languages = [ x for (x, y) in handlers if not y.is_empty() ]
+            language = select_language(languages)
+            # Default
+            if language is None:
+                language = ws_languages[0]
+        # Hit
+        if language in self.handlers:
+            return self.handlers[language]
+        # Miss
+        cls = self.class_handler
+        metadata = self.metadata
+        database = metadata.database
+        name = FileName.encode((self.name, cls.class_extension, language))
+        key = database.fs.resolve(metadata.key, name)
+        handler = database.get_handler(key, cls=cls, soft=True)
+        if handler is None:
+            handler = cls()
+            database.push_phantom(key, handler)
+
+        self.handlers[language] = handler
+        return handler
+
+    handler = property(get_handler, None, None, '')
+
+
+    def get_handlers(self):
+        languages = self.get_site_root().get_property('website_languages')
+        return [ self.get_handler(language=x) for x in languages ]
+
+
+    def rename_handlers(self, new_name):
+        old_name = self.name
+        extension = self.class_handler.class_extension
+        langs = self.get_site_root().get_property('website_languages')
+
+        return [ (FileName.encode((old_name, extension, x)),
+                  FileName.encode((new_name, extension, x)))
+                 for x in langs ]
 
 
     # FIXME These three methods are private, add the heading underscore
@@ -316,12 +377,8 @@ class WebPage(Observable, Multilingual, Text):
         return 'application/xhtml+xml; charset=UTF-8'
 
 
-    def get_html_document(self, language=None):
-        return self.get_handler(language=language)
-
-
     def get_html_data(self, language=None):
-        document = self.get_html_document(language=language)
+        document = self.get_handler(language=language)
         body = document.get_body()
         if body is None:
             return None
@@ -333,7 +390,7 @@ class WebPage(Observable, Multilingual, Text):
             languages = self.get_site_root().get_property('website_languages')
         result = {}
         for language in languages:
-            handler = self.get_html_document(language=language)
+            handler = self.get_handler(language=language)
             result[language] = handler.to_text()
         return result
 
