@@ -260,7 +260,7 @@ class DBResource(Resource):
     def get_property(self, name, language=None):
         """Return the property value for the given property name.
         """
-        property = self._get_property(name, language=language)
+        property = self.metadata.get_property(name, language=language)
         # Default
         if not property:
             datatype = self.get_property_datatype(name)
@@ -376,10 +376,6 @@ class DBResource(Resource):
 
     def has_property(self, name, language=None):
         return self.metadata.has_property(name, language=language)
-
-
-    def _get_property(self, name, language=None):
-        return self.metadata.get_property(name, language=language)
 
 
     def set_property(self, name, value, language=None):

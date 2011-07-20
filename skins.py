@@ -150,7 +150,7 @@ class Skin(object):
         meta = []
         # Set description
         try:
-            property = here._get_property('description')
+            property = here.metadata.get_property('description')
         except ValueError:
             pass
         else:
