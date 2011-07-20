@@ -29,8 +29,8 @@ from itools.web import INFO, ERROR
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
 from autoform import HiddenWidget
 from buttons import Button, BrowseButton
-from config_users import BrowseUsers
 from messages import MSG_BAD_KEY
+from user_views import BrowseUsers
 from utils import generate_password
 from views import CompositeForm
 

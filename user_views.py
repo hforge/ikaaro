@@ -19,11 +19,12 @@
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import String
+from itools.database import PhraseQuery, StartQuery, TextQuery
+from itools.database import AndQuery, OrQuery
+from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
-from itools.database import PhraseQuery, AndQuery, OrQuery
 
 # Import from pytz
 from pytz import common_timezones
@@ -31,9 +32,11 @@ from pytz import common_timezones
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
+from buttons import RemoveButton
 from folder import Folder_BrowseContent
 import messages
 from utils import get_base_path_query
+from views import SearchForm
 
 
 class User_ConfirmRegistration(AutoForm):
@@ -349,3 +352,112 @@ class UserFolder_BrowseContent(Folder_BrowseContent):
                      + [('username', MSG(u'Login')),
                         ('lastname', MSG(u'Last Name')),
                         ('firstname', MSG(u'First Name'))])
+
+
+
+class BrowseUsers(SearchForm):
+
+    access = 'is_admin'
+    title = MSG(u'Browse Members')
+    icon = 'userfolder.png'
+    description = MSG(u'See the users.')
+
+    schema = {'ids': String(multiple=True, mandatory=True)}
+
+    def get_query_schema(self):
+        schema = super(BrowseUsers, self).get_query_schema()
+        return merge_dicts(schema, sort_by=String(default='login_name'))
+
+
+    search_schema = {
+        'search_field': String,
+        'search_term': Unicode}
+
+    search_fields = []
+
+
+    def get_items(self, resource, context):
+        # Build the Query
+        website_abspath = resource.get_site_root().get_abspath()
+        search_query = AndQuery(
+            PhraseQuery('format', 'user'),
+            get_base_path_query(website_abspath))
+
+        search_term = context.query['search_term'].strip()
+        if search_term:
+            or_query = OrQuery(
+                TextQuery('lastname', search_term),
+                TextQuery('firstname', search_term),
+                StartQuery('username', search_term),
+                StartQuery('email_domain', search_term))
+            search_query.append(or_query)
+
+        # Ok
+        results = context.root.search(search_query)
+        return results.get_documents()
+
+
+    def sort_and_batch(self, resource, context, items):
+        # Sort
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+        if sort_by in ('user_id', 'login_name'):
+            f = lambda x: self.get_item_value(resource, context, x, sort_by)
+        elif sort_by == 'account_state':
+            f = lambda x: self.get_item_value(resource, context, x,
+                                              sort_by)[0].gettext()
+        else:
+            f = lambda x: getattr(x, sort_by)
+
+        items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+        # Batch
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
+
+
+    table_columns = [
+        ('checkbox', None),
+        ('user_id', MSG(u'User ID')),
+        ('login_name', MSG(u'Login')),
+        ('firstname', MSG(u'First Name')),
+        ('lastname', MSG(u'Last Name')),
+        ('account_state', MSG(u'State'))]
+
+
+    table_actions = [RemoveButton]
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'checkbox':
+            return item.name, False
+        elif column == 'user_id':
+            return item.name, '/users/%s' % item.name
+        elif column == 'login_name':
+            return item.username
+        elif column == 'firstname':
+            return item.firstname
+        elif column == 'lastname':
+            return item.lastname
+        elif column == 'account_state':
+            user = context.root.get_resource(item.abspath)
+            if user.get_property('user_must_confirm'):
+                href = '/users/%s/;resend_confirmation' % item.name
+                return MSG(u'Resend Confirmation'), href
+            return MSG(u'Active'), None
+
+
+    def action_remove(self, resource, context, form):
+        usernames = form['ids']
+
+        # Verify if after this operation, all is ok
+        user = context.user
+        if str(user.name) in usernames:
+            context.message = ERROR(u'You cannot remove yourself.')
+            return
+
+        # Make the operation
+        resource.set_user_role(usernames, None)
+
+        # Ok
+        context.message = u"Members deleted."

@@ -32,6 +32,7 @@ from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
+from cc import Observable
 from registry import register_resource_class
 from resource_ import DBResource
 from workflow import WorkflowAware
@@ -45,7 +46,7 @@ from file_views import Flash_View
 ###########################################################################
 # Base File
 ###########################################################################
-class File(WorkflowAware, DBResource):
+class File(Observable, WorkflowAware, DBResource):
 
     class_id = 'file'
     class_version = '20090122'
@@ -136,6 +137,7 @@ class File(WorkflowAware, DBResource):
     class_schema = merge_dicts(
         DBResource.class_schema,
         WorkflowAware.class_schema,
+        Observable.class_schema,
         # Metadata
         filename=String(source='metadata'))
 

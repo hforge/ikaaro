@@ -22,7 +22,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import merge_dicts, is_thingy
+from itools.core import is_thingy
 from itools.datatypes import String
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -34,7 +34,6 @@ from itools.xml import START_ELEMENT
 
 # Import from ikaaro
 from autoform import HTMLBody, rte_widget
-from cc import Observable
 from file_views import File_Edit
 from text import Text
 from registry import register_resource_class
@@ -222,7 +221,7 @@ class WebPage_Edit(File_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class WebPage(Observable, Text):
+class WebPage(Text):
 
     class_id = 'webpage'
     class_title = MSG(u'Web Page')
@@ -232,11 +231,6 @@ class WebPage(Observable, Text):
     class_views = ['view', 'edit', 'externaledit', 'subscribe', 'links',
                    'backlinks', 'commit_log']
     class_handler = XHTMLFile
-
-    class_schema = merge_dicts(
-        Text.class_schema,
-        Observable.class_schema)
-
 
 
     def __init__(self, metadata):

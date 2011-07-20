@@ -23,10 +23,10 @@ from itools.web import INFO
 from autoform import AutoForm, TextWidget
 from buttons import BrowseButton, RemoveButton, RenameButton
 from config import Configuration
-from config_users import BrowseUsers
 from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
+from user_views import BrowseUsers
 
 
 

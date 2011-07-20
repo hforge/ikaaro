@@ -31,7 +31,7 @@ from itools.xml import XMLParser
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.autoform import DatetimeWidget, SelectWidget
-from ikaaro.cc import Observable, UsersList
+from ikaaro.cc import UsersList
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
@@ -229,7 +229,7 @@ class EventDateTime(DateTime):
 
 
 
-class Event(File, Observable):
+class Event(File):
 
     class_id = 'event'
     class_title = MSG(u'Event')
@@ -241,7 +241,6 @@ class Event(File, Observable):
 
     class_schema = merge_dicts(
         File.class_schema,
-        Observable.class_schema,
         # Metadata
         owner=String(source='metadata'),
         dtstart=EventDateTime(title=MSG(u'Start')),
