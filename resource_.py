@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, lazy
+from itools.core import freeze, lazy, thingy_type
 from itools.csv import Property
 from itools.database import register_field
 from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
@@ -35,6 +35,7 @@ from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import MultilineWidget
 from datatypes import Multilingual
+from fields import Field, FileField
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -42,6 +43,7 @@ from registry import _lookup_class_id, resources_registry
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
+from resource_views import DBResource_FileFieldView
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import split_reference
 from workflow import WorkflowAware
@@ -257,6 +259,51 @@ class DBResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
+    def get_value(self, name, language=None):
+        field = getattr(self, name, None)
+
+        # Fallback to old API
+        if not (type(field) is thingy_type and issubclass(field, Field)):
+            return self.get_property(name, language)
+
+        # File fields
+        if issubclass(field, FileField):
+            cls = field.class_handler
+            database = self.metadata.database
+            key = '%s.%s' % (self.metadata.key[:-9], name)
+            handler = database.get_handler(key, cls=cls, soft=True)
+            if handler is None:
+                handler = cls()
+                database.push_phantom(key, handler)
+            return handler
+
+        # XXX We only support file fields for now
+        raise NotImplementedError, 'only file fields are supported for now'
+
+
+    def set_value(self, name, value, language=None):
+        field = getattr(self, name, None)
+
+        # Fallback to old API
+        if not (type(field) is thingy_type and issubclass(field, Field)):
+            return self.set_property(name, value, language)
+
+        # File fields
+        if issubclass(field, FileField):
+            filename, mimetype, body = value
+            # TODO Do nothing and return False if the file does not change
+            handler = self.get_value(name, language)
+            try:
+                handler.load_state_from_string(body)
+            except Exception:
+                handler.load_state()
+                raise
+            return True
+
+        # XXX We only support file fields for now
+        raise NotImplementedError, 'only file fields are supported for now'
+
+
     def get_property(self, name, language=None):
         """Return the property value for the given property name.
         """
@@ -913,3 +960,4 @@ class DBResource(Resource):
     links = DBResource_Links()
     http_put = Put_View()
     http_delete = Delete_View()
+    file_field = DBResource_FileFieldView()

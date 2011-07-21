@@ -24,7 +24,7 @@
   </table>
   </div>
 
-  <img src="${avatar}/;download" />
+  <img src=";file_field?name=avatar" stl:if="avatar" />
   <p>${firstname}</p>
   <p>${lastname}</p>
 

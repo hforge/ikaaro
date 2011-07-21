@@ -22,7 +22,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, String, Unicode, URI
+from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
@@ -30,10 +30,11 @@ from itools.web import INFO
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import ImageSelectorWidget
 from datatypes import Password
+from fields import FileField
 from folder import Folder
 from registry import get_resource_class
+from resource_ import DBResource
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
@@ -43,7 +44,7 @@ from views import MessageView
 
 
 
-class User(Folder):
+class User(DBResource):
 
     class_id = 'user'
     class_version = '20081217'
@@ -58,13 +59,11 @@ class User(Folder):
     # Metadata
     ########################################################################
     class_schema = merge_dicts(
-        Folder.class_schema,
+        DBResource.class_schema,
         firstname=Unicode(source='metadata', indexed=True, stored=True,
                           title=MSG(u'First Name')),
         lastname=Unicode(source='metadata', indexed=True, stored=True,
                          title=MSG(u'Last Name')),
-        avatar=URI(source='metadata', title=MSG(u'Avatar'),
-                   widget=ImageSelectorWidget),
         email=Email(source='metadata', indexed=True, stored=True,
                     mandatory=True, title=MSG(u'E-mail Address')),
         password=Password(source='metadata'),
@@ -81,6 +80,9 @@ class User(Folder):
     del class_schema['subject']
     del class_schema['text']
     class_schema = freeze(class_schema)
+
+
+    avatar = FileField(title=MSG(u'Avatar'))
 
 
     ########################################################################

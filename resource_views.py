@@ -19,13 +19,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from python-magic
+import magic
+
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import guess_extension, merge_dicts
 from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
+from itools.web import get_context
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.web import Conflict, NotImplemented
 
@@ -34,6 +38,59 @@ from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from registry import get_resource_class
+
+
+magic = magic.open(magic.MIME_TYPE)
+magic.load()
+
+
+class DBResource_FileFieldView(BaseView):
+
+    access = 'is_allowed_to_view'
+
+
+    def get_field_name(self, context):
+        return context.get_query_value('name')
+
+
+    def get_handler(self, resource, context):
+        name = context.get_query_value('name')
+        return resource.get_value(name)
+
+
+    def get_mtime(self, resource):
+        context = get_context()
+        return self.get_handler(resource, context).get_mtime()
+
+
+    def get_content_type(self, resource, context):
+        bytes = self.get_bytes(resource, context)
+        return magic.buffer(bytes)
+
+
+    def get_filename(self, resource, context):
+        field_name = context.get_query_value('name')
+        mimetype = self.get_content_type(resource, context)
+        extension = guess_extension(mimetype)
+        return '%s.%s%s' % (resource.name, field_name, extension)
+
+
+    def get_bytes(self, resource, context):
+        return self.get_handler(resource, context).to_str()
+
+
+    def GET(self, resource, context):
+        # Content-Type
+        content_type = self.get_content_type(resource, context)
+        context.set_content_type(content_type)
+        # Content-Disposition
+        disposition = 'inline'
+        if content_type.startswith('application/vnd.oasis.opendocument.'):
+            disposition = 'attachment'
+        filename = self.get_filename(resource, context)
+        context.set_content_disposition(disposition, filename)
+        # Ok
+        return self.get_bytes(resource, context)
 
 
 
@@ -144,7 +201,8 @@ class LoginView(STLForm):
         # Case 2: Login
         password = form['password']
         if user is None or not user.authenticate(password, clear=True):
-            context.message = ERROR(u'The login name or the password is incorrect.')
+            message = ERROR(u'The login name or the password is incorrect.')
+            context.message = message
             return
 
         context.login(user)

@@ -181,7 +181,17 @@ class AutoEdit(AutoForm):
 
 
     def _get_datatype(self, resource, context, name):
-        return self._get_resource_schema(resource)[name]
+        schema = self._get_resource_schema(resource)
+        if name in schema:
+            return schema[name]
+
+        # Fallback to support fields
+        field = getattr(resource, name, None)
+        if field is None:
+            raise ValueError, 'schema error'
+
+        return field.datatype(widget=field.widget, title=field.title)
+
 
 
     def _get_schema(self, resource, context):
@@ -220,7 +230,7 @@ class AutoEdit(AutoForm):
 
 
     def _get_widget(self, resource, context, name):
-        datatype = self._get_resource_schema(resource)[name]
+        datatype = self._get_datatype(resource, context, name)
         title = getattr(datatype, 'title', name)
         widget = getattr(datatype, 'widget', None)
         if widget is None:
@@ -282,9 +292,10 @@ class AutoEdit(AutoForm):
             value = str(value.year)
             context.query[name] = value
             return value
+
         # Standard
         if not getattr(datatype, 'multilingual', False):
-            return resource.get_property(name)
+            return resource.get_value(name)
 
         # Multilingual
         value = {}
@@ -329,7 +340,7 @@ class AutoEdit(AutoForm):
             for language, data in value.iteritems():
                 resource.set_property(name, data, language=language)
         else:
-            resource.set_property(name, value)
+            resource.set_value(name, value)
         return False
 
 

@@ -160,10 +160,11 @@ class User_Profile(STLView):
 
 
     def get_namespace(self, resource, context):
+        avatar = resource.get_value('avatar').to_str()
         return {
             'firstname': resource.get_property('firstname'),
             'lastname': resource.get_property('lastname'),
-            'avatar': resource.get_property('avatar'),
+            'avatar': len(avatar),
             'items': self.get_items(resource, context),
             'user_must_confirm': resource.has_property('user_must_confirm')}
 
