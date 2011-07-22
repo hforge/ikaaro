@@ -82,6 +82,7 @@ class User(DBResource):
     class_schema = freeze(class_schema)
 
 
+    fields = ['avatar']
     avatar = File_Field(title=MSG(u'Avatar'))
 
 

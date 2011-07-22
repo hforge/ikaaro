@@ -64,6 +64,28 @@ class Folder(DBResource):
     __fixed_handlers__ = []
 
 
+    @property
+    def handler(self):
+        cls = self.class_handler
+        database = self.metadata.database
+        key = self.metadata.key[:-9]
+        handler = database.get_handler(key, cls=cls, soft=True)
+        if handler is None:
+            handler = cls()
+            database.push_phantom(key, handler)
+
+        return handler
+
+
+    def get_handlers(self):
+        """Return all the handlers attached to this resource, except the
+        metadata.
+        """
+        handlers = super(Folder, self).get_handlers()
+        handlers.append(self.handler)
+        return handlers
+
+
     #########################################################################
     # Gallery properties
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
@@ -128,10 +150,10 @@ class Folder(DBResource):
                 text = cls.class_handler(string=body).to_text()
                 language = guess_language(text) or default_language
             kw['language'] = language
-        else:
-            kw['extension'] = extension
+#       else:
+#           kw['extension'] = extension
 
-        return self.make_resource(name, cls, body=body, **kw)
+        return self.make_resource(name, cls, data=body, **kw)
 
 
     def export_zip(self, paths):

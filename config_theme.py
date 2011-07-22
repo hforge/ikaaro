@@ -33,7 +33,7 @@ class Theme(DBResource):
     class_description = MSG(u'Allow to customize ikaaro skin')
     class_icon48 = 'icons/48x48/theme.png'
 
-
+    fields = ['logo', 'favicon', 'banner', 'style']
     logo = File_Field(title=MSG(u'Logo'))
     favicon = File_Field(title=MSG(u'Favicon'))
     banner = File_Field(title=MSG(u'Banner'))

@@ -261,8 +261,7 @@ class Table_EditRecord(AutoEdit):
         # Test the id is valid
         id = query['id']
         resource = context.resource
-        handler = resource.get_handler()
-        record = handler.get_record(id)
+        record = resource.get_record(id)
         if record is None:
             context.query = query
             raise FormError, MSG(u'The {id} record is missing.', id=id)
@@ -275,11 +274,10 @@ class Table_EditRecord(AutoEdit):
             proxy = super(Table_EditRecord, self)
             return proxy.get_value(resource, context, name, datatype)
 
-        handler = resource.get_handler()
         # Get the record
         id = context.query['id']
-        record = handler.get_record(id)
-        get_record_value = handler.get_record_value
+        record = resource.get_record(id)
+        get_record_value = resource.handler.get_record_value
 
         # Monolingual
         if not is_multilingual(datatype):

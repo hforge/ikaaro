@@ -99,7 +99,7 @@ class Menu_View(OrderedTable_View):
 
 
     def get_items(self, resource, context):
-        items = resource.handler.get_records_in_order()
+        items = resource.get_records_in_order()
         return list(items)
 
 
@@ -304,10 +304,11 @@ class Menu(OrderedTable):
 
     class_id = 'ikaaro-menu'
     class_title = MSG(u'Menu item')
-    class_handler = MenuFile
-    class_views = ['view', 'add_record']
+
+    table = OrderedTable.table(class_handler=MenuFile)
 
     # Views
+    class_views = ['view', 'add_record']
     add_link = Menu_AddLink()
     add_record = Menu_AddRecord()
     edit_record = Menu_EditRecord()
@@ -317,10 +318,10 @@ class Menu(OrderedTable):
     def del_record(self, id):
         handler = self.handler
         record = handler.get_record(id)
-        record_properties = handler.record_properties
+        schema = self.get_schema()
 
         # Delete submenu
-        if 'child' in record_properties:
+        if 'child' in schema:
             child_path = handler.get_record_value(record, 'child')
             if child_path:
                 container = self.parent
@@ -392,7 +393,7 @@ class Menu(OrderedTable):
         items = []
         tabs = {}
         get_value = handler.get_record_value
-        for record in handler.get_records_in_order():
+        for record in self.get_records_in_order():
             # Get the objects, check security
             uri = get_value(record, 'path')
             if self._is_allowed_to_access(context, uri) is False:
@@ -508,12 +509,11 @@ class Menu(OrderedTable):
     def get_first_level_uris(self, context):
         """Return a list of the URI of all entries in the first level
         """
-        handler = self.handler
         site_root = context.resource.get_site_root()
         site_root_abspath = site_root.get_abspath()
-        get_value = handler.get_record_value
+        get_value = self.handler.get_record_value
         uris = []
-        for record in handler.get_records_in_order():
+        for record in self.get_records_in_order():
             # Get the objects, check security
             uri = get_value(record, 'path')
             # Get the reference and path
@@ -539,10 +539,10 @@ class Menu(OrderedTable):
         links = super(Menu, self).get_links()
         base = self.get_abspath()
         site_root_abspath = self.get_site_root().get_abspath()
-        handler = self.handler
-        record_properties = handler.record_properties
+        schema = self.get_schema()
+        handler = self.get_table()
 
-        for record in handler.get_records_in_order():
+        for record in self.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
             ref, path, view = split_reference(path)
@@ -562,7 +562,7 @@ class Menu(OrderedTable):
             links.add(link)
 
             # Submenu resources
-            if not 'child' in record_properties:
+            if not 'child' in schema:
                 continue
             path = handler.get_record_value(record, 'child')
             if path:
@@ -586,7 +586,7 @@ class Menu(OrderedTable):
         new_base = Path(base)
         handler = self.handler
 
-        for record in handler.get_records_in_order():
+        for record in self.get_records_in_order():
             path = handler.get_record_value(record, 'path')
             ref, path, view = split_reference(path)
             if ref.scheme:
@@ -614,7 +614,7 @@ class Menu(OrderedTable):
         resources_old2new = get_context().database.resources_old2new
         handler = self.handler
 
-        for record in handler.get_records_in_order():
+        for record in self.get_records_in_order():
             path = handler.get_record_value(record, 'path')
             ref, path, view = split_reference(path)
             if ref.scheme:

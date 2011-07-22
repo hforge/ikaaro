@@ -33,13 +33,15 @@ from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
 from cc import Observable
+from fields import File_Field
+from file_views import File_NewInstance, File_View
+from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
+from file_views import Image_View, Video_View, Archive_View
+from file_views import Flash_View
 from registry import register_resource_class
 from resource_ import DBResource
+from resource_views import DBResource_GetFile, DBResource_GetImage
 from workflow import WorkflowAware
-from file_views import File_NewInstance, File_Download, File_View
-from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
-from file_views import Image_Thumbnail, Image_View, Video_View, Archive_View
-from file_views import Flash_View
 
 
 
@@ -59,15 +61,9 @@ class File(Observable, WorkflowAware, DBResource):
                    'commit_log']
     class_handler = FileHandler
 
-
-    def init_resource(self, body=None, filename=None, extension=None, **kw):
-        DBResource.init_resource(self, filename=filename, **kw)
-        if body:
-            handler = self.class_handler(string=body)
-            extension = (
-                extension.lower() if extension else handler.class_extension)
-            name = FileName.encode((self.name, extension, None))
-            self.parent.handler.set_handler(name, handler)
+    # Fields
+    fields = ['data']
+    data = File_Field(title=MSG(u'File'))
 
 
     def get_all_extensions(self):
@@ -85,39 +81,6 @@ class File(Observable, WorkflowAware, DBResource):
                 extensions.remove(cls.class_extension)
             extensions.insert(0, cls.class_extension)
         return extensions
-
-
-    def get_handler(self):
-        # Already loaded
-        if self._handler is not None:
-            return self._handler
-
-        # Not yet loaded
-        database = self.metadata.database
-        fs = database.fs
-        base = self.metadata.key
-        cls = self.class_handler
-
-        # Check the handler exists
-        extensions = self.get_all_extensions()
-        for extension in extensions:
-            name = FileName.encode((self.name, extension, None))
-            key = fs.resolve(base, name)
-            # Found
-            handler = database.get_handler(key, cls=cls, soft=True)
-            if handler is not None:
-                self._handler = handler
-                return handler
-
-        # Not found, build a dummy one
-        name = FileName.encode((self.name, cls.class_extension, None))
-        key = fs.resolve(base, name)
-        handler = cls()
-        database.push_phantom(key, handler)
-        self._handler = handler
-        return handler
-
-    handler = property(get_handler, None, None, '')
 
 
     def rename_handlers(self, new_name):
@@ -146,7 +109,7 @@ class File(Observable, WorkflowAware, DBResource):
     # Versioning & Indexing
     #######################################################################
     def to_text(self):
-        return self.handler.to_text()
+        return self.get_value('data').to_text()
 
 
     def get_files_to_archive(self, content=False):
@@ -162,11 +125,11 @@ class File(Observable, WorkflowAware, DBResource):
     # User Interface
     #######################################################################
     def get_content_type(self):
-        return self.handler.get_mimetype()
+        return self.get_value('data').get_mimetype()
 
     # Views
     new_instance = File_NewInstance()
-    download = File_Download()
+    download = DBResource_GetFile(field_name='data', title=MSG(u'Download'))
     view = File_View()
     edit = File_Edit()
     externaledit = File_ExternalEdit_View()
@@ -187,7 +150,7 @@ class Image(File):
     class_handler = ImageHandler
 
     # Views
-    thumb = Image_Thumbnail()
+    thumb = DBResource_GetImage(field_name='data')
     view = Image_View()
 
 

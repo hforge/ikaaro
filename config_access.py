@@ -93,7 +93,8 @@ class ConfigAccess(Table):
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
     class_icon48 = 'icons/48x48/lock.png'
-    class_handler = ConfigAccess_Handler
+
+    table = Table.table(class_handler=ConfigAccess_Handler)
 
     # Configuration
     config_name = 'access'

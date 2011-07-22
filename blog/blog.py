@@ -28,9 +28,10 @@ from itools.web import STLForm
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoform import HTMLBody, RTEWidget
 from ikaaro.comments import CommentsAware, CommentsView
+from file_views import File_Edit
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
-from ikaaro.webpage import WebPage, WebPage_Edit
+from ikaaro.webpage import WebPage
 
 
 ###########################################################################
@@ -141,4 +142,4 @@ class Post(CommentsAware, WebPage):
     # Views
     new_instance = Post_NewInstance()
     view = Post_View()
-    edit = WebPage_Edit(fields=['title', 'date', 'state', 'data'])
+    edit = File_Edit(fields=['title', 'date', 'state', 'data'])

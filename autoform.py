@@ -28,11 +28,12 @@ from itools.datatypes import DataType, Boolean, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
+from itools.handlers import Image
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
 from itools.stl import stl
 from itools.web import STLForm, get_context
-from itools.xml import XMLParser
+from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
 from buttons import Button
@@ -83,6 +84,8 @@ class HTMLBody(XHTMLBody):
     def encode(value):
         if value is None:
             return ''
+        if not is_xml_stream(value):
+            value = value.get_body().get_content_elements()
         return stream_to_str_as_html(value)
 
 
@@ -134,7 +137,19 @@ class HiddenWidget(Widget):
 
 class FileWidget(Widget):
 
-    type = 'file'
+    template = make_stl_template("""
+    <input type="file" id="${id}" name="${name}" maxlength="${maxlength}"
+      size="${size}" class="${css}" />
+    <label class="language" for="${id}" stl:if="language" >${language}</label>
+    <br/>
+    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}"
+      stl:if="thumb"/>""")
+
+    width = 128
+    height = 128
+
+    def thumb(self):
+        return isinstance(self.value, Image)
 
 
 

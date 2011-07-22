@@ -22,19 +22,16 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import is_thingy
-from itools.datatypes import String
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.html import xhtml_uri, XHTMLFile
+from itools.html import xhtml_uri
 from itools.stl import rewrite_uris
 from itools.uri import Path, Reference, get_reference
-from itools.web import BaseView, ERROR, get_context
+from itools.web import BaseView, get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import HTMLBody, rte_widget
-from file_views import File_Edit
+from fields import HTMLFile_Field
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
@@ -150,9 +147,7 @@ def _change_link(source, target, old_base, new_base, stream):
         yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
 
-###########################################################################
-# Views
-###########################################################################
+
 class WebPage_View(BaseView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -162,60 +157,6 @@ class WebPage_View(BaseView):
     def GET(self, resource, context):
         return resource.get_html_data()
 
-
-
-class WebPage_Edit(File_Edit):
-    """WYSIWYG editor for HTML documents.
-    """
-
-    fields = ['title', 'state', 'data', 'description', 'subject']
-
-    def _get_datatype(self, resource, context, name):
-        if name == 'data':
-            return HTMLBody(multilingual=True,
-                            parameters_schema={'lang': String})
-
-        return super(WebPage_Edit, self)._get_datatype(resource, context, name)
-
-
-    def _get_widget(self, resource, context, name):
-        if name == 'data':
-            return rte_widget
-
-        return super(WebPage_Edit, self)._get_widget(resource, context, name)
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'data':
-            value = {}
-            for language in resource.get_edit_languages(context):
-                value[language] = resource.get_html_data(language=language)
-            return value
-
-        return File_Edit.get_value(self, resource, context, name, datatype)
-
-
-    def action(self, resource, context, form):
-        File_Edit.action(self, resource, context, form)
-        if context.edit_conflict or is_thingy(context.message, ERROR):
-            return
-
-        # Send notifications
-        resource.notify_subscribers(context)
-
-
-    def set_value(self, resource, context, name, form):
-        if name == 'data':
-            changed = False
-            for language, data in form['data'].iteritems():
-                handler = resource.get_handler(language=language)
-                if handler.set_body(data):
-                    changed = True
-            if changed:
-                context.database.change_resource(resource)
-            return False
-
-        return File_Edit.set_value(self, resource, context, name, form)
 
 
 ###########################################################################
@@ -230,58 +171,9 @@ class WebPage(Text):
     class_icon48 = 'icons/48x48/html.png'
     class_views = ['view', 'edit', 'externaledit', 'subscribe', 'links',
                    'backlinks', 'commit_log']
-    class_handler = XHTMLFile
 
 
-    def __init__(self, metadata):
-        self.metadata = metadata
-        self.handlers = {}
-
-
-    def init_resource(self, body=None, filename=None, language=None, **kw):
-        DBResource.init_resource(self, filename=filename, **kw)
-        if body:
-            handler = self.class_handler(string=body)
-            extension = handler.class_extension
-            name = FileName.encode((self.name, extension, language))
-            self.parent.handler.set_handler(name, handler)
-
-
-    def get_handler(self, language=None):
-        # Content language
-        if language is None:
-            site_root = self.get_site_root()
-            ws_languages = site_root.get_property('website_languages')
-            handlers = [
-                (x, self.get_handler(language=x)) for x in ws_languages ]
-            languages = [ x for (x, y) in handlers if not y.is_empty() ]
-            language = select_language(languages)
-            # Default
-            if language is None:
-                language = ws_languages[0]
-        # Hit
-        if language in self.handlers:
-            return self.handlers[language]
-        # Miss
-        cls = self.class_handler
-        metadata = self.metadata
-        database = metadata.database
-        name = FileName.encode((self.name, cls.class_extension, language))
-        key = database.fs.resolve(metadata.key, name)
-        handler = database.get_handler(key, cls=cls, soft=True)
-        if handler is None:
-            handler = cls()
-            database.push_phantom(key, handler)
-
-        self.handlers[language] = handler
-        return handler
-
-    handler = property(get_handler, None, None, '')
-
-
-    def get_handlers(self):
-        languages = self.get_site_root().get_property('website_languages')
-        return [ self.get_handler(language=x) for x in languages ]
+    data = HTMLFile_Field(title=MSG(u'Body'))
 
 
     def rename_handlers(self, new_name):
@@ -297,11 +189,12 @@ class WebPage(Text):
     # FIXME These three methods are private, add the heading underscore
     def get_links(self):
         links = super(WebPage, self).get_links()
-        base = self.get_abspath()
+        base = self.abspath
         languages = self.get_site_root().get_property('website_languages')
         for language in languages:
-            handler = self.get_handler(language=language)
-            links.update(_get_links(base, handler.events))
+            handler = self.get_value('data', language=language)
+            if handler:
+                links.update(_get_links(base, handler.events))
         return links
 
 
@@ -372,9 +265,12 @@ class WebPage(Text):
 
 
     def get_html_data(self, language=None):
-        document = self.get_handler(language=language)
+        document = self.get_value('data', language=language)
+        if not document:
+            document = self.data.class_handler()
+
         body = document.get_body()
-        if body is None:
+        if not body:
             return None
         return body.get_content_elements()
 
@@ -384,7 +280,7 @@ class WebPage(Text):
             languages = self.get_site_root().get_property('website_languages')
         result = {}
         for language in languages:
-            handler = self.get_handler(language=language)
+            handler = self.get_value('data', language=language)
             result[language] = handler.to_text()
         return result
 
@@ -395,7 +291,6 @@ class WebPage(Text):
     #######################################################################
     new_instance = DBResource.new_instance
     view = WebPage_View()
-    edit = WebPage_Edit()
 
 
 

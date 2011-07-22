@@ -41,15 +41,24 @@ class DBResource_GetFile(BaseView):
 
     access = 'is_allowed_to_view'
 
-    query_schema = {
-        'name': String(mandatory=True)}
+    query_schema = {'name': String}
+    field_name = None
+
+
+    def get_field_name(self, context=None):
+        if self.field_name:
+            return self.field_name
+        if context is None:
+            context = get_context()
+        return context.query['name']
+
 
     def get_handler(self, resource, name):
         return resource.get_value(name)
 
 
     def get_mtime(self, resource):
-        field_name = get_context().query['name']
+        field_name = self.get_field_name()
         return self.get_handler(resource, field_name).get_mtime()
 
 
@@ -68,7 +77,7 @@ class DBResource_GetFile(BaseView):
 
 
     def GET(self, resource, context):
-        field_name = context.query['name']
+        field_name = self.get_field_name(context)
         handler = self.get_handler(resource, field_name)
 
         # Content-Type
@@ -84,6 +93,44 @@ class DBResource_GetFile(BaseView):
 
         # Ok
         return handler.to_str()
+
+
+
+class DBResource_GetImage(DBResource_GetFile):
+
+    query_schema = {
+        'name': String,
+        'width': Integer,
+        'height': Integer,
+        'fit': Boolean(default=False),
+        'lossy': Boolean(default=False)}
+
+
+    def GET(self, resource, context):
+        field_name = self.get_field_name(context)
+        handler = self.get_handler(resource, field_name)
+
+        image_width, image_height = handler.get_size()
+        fit = context.query['fit']
+        lossy = context.query['lossy']
+        width = context.query['width'] or image_width
+        height = context.query['height'] or image_height
+
+        format = 'jpeg' if lossy else None
+        data, format = handler.get_thumbnail(width, height, format, fit)
+        if data is None:
+            default = context.get_template('/ui/icons/48x48/image.png')
+            data = default.to_str()
+            format = 'png'
+
+        # Headers
+        context.set_content_type('image/%s' % format)
+#       filename = resource.get_property('filename')
+#       if filename:
+#           context.set_content_disposition('inline', filename)
+
+        # Ok
+        return data
 
 
 

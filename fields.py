@@ -16,16 +16,31 @@
 
 # Impor from itools
 from itools.core import thingy
+from itools.database import magic
 from itools.datatypes import String
-from itools.handlers import File
+from itools.handlers import get_handler_class_by_mimetype
+from itools.html import XHTMLFile
 
 # Import from ikaaro
-from autoform import FileWidget, MultilineWidget
+from autoform import HTMLBody
+from autoform import FileWidget, MultilineWidget, rte_widget
 
 
 
 class Field(thingy):
-    pass
+    multilingual = False
+
+    def get_value(self, resource, name, language=None):
+        raise NotImplementedError
+
+    def set_value(self, resource, name, value, language=None):
+        """This method must return a boolean:
+
+        - True if the value has changed
+        - False if the value has NOT changed
+        """
+        raise NotImplementedError
+
 
 
 class File_Field(Field):
@@ -34,39 +49,100 @@ class File_Field(Field):
     datatype = String
     widget = FileWidget
 
+
+    def _get_key(self, resource, name, language):
+        base = resource.metadata.key[:-9]
+        if language:
+            return '%s.%s.%s' % (base, name, language)
+
+        return '%s.%s' % (base, name)
+
+
     def get_value(self, resource, name, language=None):
         cls = self.class_handler
-        database = resource.metadata.database
-        key = '%s.%s' % (resource.metadata.key[:-9], name)
-        return database.get_handler(key, cls=cls, soft=True)
+        get_handler = resource.metadata.database.get_handler
+
+        # Language negotiation
+        if self.multilingual and language is None:
+            root = resource.get_site_root()
+            languages = []
+            for lang in root.get_property('website_languages'):
+                key = self._get_key(resource, name, lang)
+                handler = get_handler(key, cls, soft=True)
+                if handler:
+                    languages.append(lang)
+
+            language = select_language(languages)
+            if language is None:
+                if not languages:
+                    return None
+                language = languages[0]
+
+        # Ok
+        key = self._get_key(resource, name, language)
+        return get_handler(key, cls=cls, soft=True)
 
 
     def set_value(self, resource, name, value, language=None):
+        """
+        value may be:
+
+        - None
+        - a handler
+        - a byte string
+        - a tuple
+        - something else
+        """
+        if self.multilingual and not language:
+            raise ValueError, 'expected "language" param not found'
+
+        # Case 1: None (XXX should remove instead?)
         if value is None:
-            return
-        if type(value) is not str:
+            return False
+
+        # Case 2: Set handler
+        handler = self._get_handler_from_value(value)
+        key = self._get_key(resource, name, language)
+        database = resource.metadata.database
+        if database.get_handler(key, soft=True):
+            database.del_handler(key)
+        database.set_handler(key, handler)
+        return True # XXX It may be False
+
+
+    def _get_handler_from_value(self, value):
+        if type(value) is tuple:
             filename, mimetype, value = value
 
-        handler = self.get_value(resource, name, language)
+        if type(value) is str:
+            cls = self.class_handler
+            if cls is None:
+                mimetype = magic.buffer(value)
+                cls = get_handler_class_by_mimetype(mimetype)
+            return cls(string=value)
 
-        # Case 1: set a new handler
-        if handler is None:
-            database = resource.metadata.database
-            key = '%s.%s' % (resource.metadata.key[:-9], name)
-            if type(value) is str:
-                value = File(string=value)
-            database.set_handler(key, value)
-            return
-
-        # Case 2: modify an existing handler
-        try:
-            handler.load_state_from_string(value)
-        except Exception:
-            handler.load_state()
-            raise
+        return value
 
 
 
 class TextFile_Field(File_Field):
 
     widget = MultilineWidget
+
+
+
+class HTMLFile_Field(File_Field):
+
+    class_handler = XHTMLFile
+    datatype = HTMLBody
+    multilingual = True
+    widget = rte_widget
+
+
+    def _get_handler_from_value(self, value):
+        if type(value) is list:
+            handler = self.class_handler()
+            handler.set_body(value)
+            return handler
+
+        return super(HTMLFile_Field, self)._get_handler_from_value(value)

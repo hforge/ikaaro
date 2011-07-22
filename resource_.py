@@ -44,7 +44,7 @@ from registry import _lookup_class_id, resources_registry
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
-from resource_views import DBResource_GetFile
+from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import split_reference
 from workflow import WorkflowAware
@@ -87,7 +87,6 @@ class DBResource(Resource):
 
     def __init__(self, metadata):
         self.metadata = metadata
-        self._handler = None
 
 
     def _get_names(self):
@@ -96,7 +95,9 @@ class DBResource(Resource):
 
     def __eq__(self, resource):
         if not isinstance(resource, DBResource):
-            raise TypeError, "cannot compare DBResource and %s" % type(resource)
+            error = "cannot compare DBResource and %s" % type(resource)
+            raise TypeError, error
+
         return self.abspath == resource.abspath
 
 
@@ -291,9 +292,7 @@ class DBResource(Resource):
             return self.set_property(name, value, language)
 
         # File fields
-        # TODO Do nothing and return False if the file does not change
-        field.set_value(self, name, value, language)
-        return True
+        return field.set_value(self, name, value, language)
 
 
     def get_property(self, name, language=None):
@@ -326,8 +325,7 @@ class DBResource(Resource):
             value = kw[key]
             if type(value) is dict:
                 for lang in value:
-                    property = Property(value[lang], lang=lang)
-                    metadata._set_property(key, property)
+                    self.set_value(key, value[lang], lang)
             else:
                 self.set_value(key, value)
 
@@ -338,24 +336,6 @@ class DBResource(Resource):
             if state is None:
                 state  = self.workflow.initstate
             metadata._set_property('state', state)
-
-
-    def get_handler(self):
-        if self._handler is None:
-            cls = getattr(self, 'class_handler', None)
-            if cls is None:
-                return None
-            database = self.metadata.database
-            key = self.metadata.key[:-9]
-            handler = database.get_handler(key, cls=cls, soft=True)
-            if handler is None:
-                handler = cls()
-                database.push_phantom(key, handler)
-
-            self._handler = handler
-        return self._handler
-
-    handler = property(get_handler)
 
 
     def load_handlers(self):
@@ -578,14 +558,20 @@ class DBResource(Resource):
     ########################################################################
     # API
     ########################################################################
+    fields = []
+
     def get_handlers(self):
         """Return all the handlers attached to this resource, except the
         metadata.
         """
-        handler = self.handler
-        if handler is None:
-            return []
-        return [handler]
+        handlers = []
+        for field_name in self.fields:
+            field = self.get_field(field_name)
+            if issubclass(field, File_Field):
+                handler = self.get_value(field_name)
+                handlers.append(handler)
+
+        return handlers
 
 
     def rename_handlers(self, new_name):
@@ -943,13 +929,17 @@ class DBResource(Resource):
     login = LoginView()
     logout = LogoutView()
     edit = AutoEdit()
+    get_file = DBResource_GetFile()
+    get_image = DBResource_GetImage()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
     add_media = DBResource_AddMedia()
+    # Views / Commit log
     commit_log = DBResource_CommitLog()
     changes = DBResource_Changes()
+    # Views / Links
     backlinks = DBResource_Backlinks()
     links = DBResource_Links()
+    # Views / External editor
     http_put = Put_View()
     http_delete = Delete_View()
-    get_file = DBResource_GetFile()

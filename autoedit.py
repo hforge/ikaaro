@@ -190,8 +190,9 @@ class AutoEdit(AutoForm):
         if field is None:
             raise ValueError, 'schema error'
 
-        return field.datatype(widget=field.widget, title=field.title)
-
+        title = getattr(field, 'title', name)
+        return field.datatype(widget=field.widget, title=title,
+                              multilingual=field.multilingual)
 
 
     def _get_schema(self, resource, context):
@@ -300,7 +301,7 @@ class AutoEdit(AutoForm):
         # Multilingual
         value = {}
         for language in resource.get_edit_languages(context):
-            value[language] = resource.get_property(name, language=language)
+            value[language] = resource.get_value(name, language=language)
         return value
 
 
@@ -338,7 +339,7 @@ class AutoEdit(AutoForm):
         value = form[name]
         if type(value) is dict:
             for language, data in value.iteritems():
-                resource.set_property(name, data, language=language)
+                resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)
         return False

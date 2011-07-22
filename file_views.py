@@ -19,26 +19,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from os.path import basename, splitext
+from os.path import splitext
 
 # Import from itools
-from itools.datatypes import Boolean, HTTPDate, Integer, String
-from itools.datatypes import PathDataType
+from itools.datatypes import Boolean, HTTPDate, PathDataType, String
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.handlers import get_handler_class_by_mimetype
 from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import FileWidget, PathSelectorWidget, file_widget
-from autoform import ProgressBarWidget
+from autoform import FileWidget, PathSelectorWidget, ProgressBarWidget
 from datatypes import FileDataType
 from folder import Folder
-from messages import MSG_NAME_CLASH
-from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
+from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 from workflow import StateEnumerate, state_widget
 
 
@@ -91,43 +87,6 @@ class File_NewInstance(AutoAdd):
 
 
 
-class File_Download(BaseView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Download")
-
-
-    def get_mtime(self, resource):
-        return resource.handler.get_mtime()
-
-
-    def get_content_type(self, resource, context):
-        return resource.get_content_type()
-
-
-    def get_filename(self, resource, context):
-        return resource.get_property('filename')
-
-
-    def get_bytes(self, resource, context):
-        return resource.handler.to_str()
-
-
-    def GET(self, resource, context):
-        # Content-Type
-        content_type = self.get_content_type(resource, context)
-        context.set_content_type(content_type)
-        # Content-Disposition
-        disposition = 'inline'
-        if content_type.startswith('application/vnd.oasis.opendocument.'):
-            disposition = 'attachment'
-        filename = self.get_filename(resource, context)
-        context.set_content_disposition(disposition, filename)
-        # Ok
-        return self.get_bytes(resource, context)
-
-
-
 class File_View(STLView):
 
     access = 'is_allowed_to_view'
@@ -144,85 +103,21 @@ class File_View(STLView):
 
 class File_Edit(AutoEdit):
 
-    fields = ['title', 'state', 'file', 'description', 'subject']
+    fields = ['title', 'state', 'data', 'description', 'subject']
 
 
     def _get_datatype(self, resource, context, name):
-        if name == 'file':
-            return FileDataType
-        elif name == 'state':
+        if name == 'state':
             return StateEnumerate(resource=resource, context=context)
 
         return super(File_Edit, self)._get_datatype(resource, context, name)
 
 
     def _get_widget(self, resource, context, name):
-        if name == 'file':
-            return file_widget
-        elif name == 'state':
+        if name == 'state':
             return state_widget
 
         return super(File_Edit, self)._get_widget(resource, context, name)
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'file':
-            return None
-
-        proxy = super(File_Edit, self)
-        return proxy.get_value(resource, context, name, datatype)
-
-
-    def set_value(self, resource, context, name, form):
-        if name == 'file':
-            # Upload file
-            file = form['file']
-            if file is None:
-                return False
-
-            filename, mimetype, body = file
-            # Check whether the uploaded file matches the handler
-            handler = resource.handler
-            metadata = resource.metadata
-            if mimetype != metadata.format:
-                cls = get_handler_class_by_mimetype(mimetype, soft=True)
-                if cls is None or not isinstance(handler, cls):
-                    context.message = MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
-                    return True
-
-            # Replace
-            try:
-                handler.load_state_from_string(body)
-            except Exception, e:
-                handler.load_state()
-                message = ERROR(u'Failed to load the file: {error}',
-                                error=str(e))
-                context.message = message
-                return True
-
-            # Update "filename" property
-            resource.set_property("filename", filename)
-            # Update metadata format
-            if '/' in metadata.format:
-                if mimetype != metadata.format:
-                    metadata.format = mimetype
-
-            # Update handler name
-            handler_name = basename(handler.key)
-            old_name, old_extension, old_lang = FileName.decode(handler_name)
-            new_name, new_extension, new_lang = FileName.decode(filename)
-            # FIXME Should 'FileName.decode' return lowercase extensions?
-            if new_extension is not None:
-                new_extension = new_extension.lower()
-            if old_extension != new_extension:
-                # "handler.png" -> "handler.jpg"
-                folder = resource.parent.handler
-                filename = FileName.encode((old_name, new_extension, old_lang))
-                folder.move_handler(handler_name, filename)
-
-            return False
-
-        return super(File_Edit, self).set_value(resource, context, name, form)
 
 
 
@@ -295,51 +190,6 @@ class File_ExternalEdit(BaseView):
 
 
 
-class Image_Thumbnail(BaseView):
-
-    access = 'is_allowed_to_view'
-
-    query_schema = {
-        'width': Integer,
-        'height': Integer,
-        'fit': Boolean(default=False),
-        'lossy': Boolean(default=False)}
-
-    def get_mtime(self, resource):
-        return resource.handler.get_mtime()
-
-
-    def GET(self, resource, context):
-        handler = resource.handler
-        image_width, image_height = handler.get_size()
-        fit = context.query['fit']
-        lossy = context.query['lossy']
-        width = context.query['width']
-        height = context.query['height']
-        # XXX Special case for backwards compatibility
-        if width is None and height is None:
-            width = height = 48
-        width = width or image_width
-        height = height or image_height
-
-        format = 'jpeg' if lossy else None
-        data, format = handler.get_thumbnail(width, height, format, fit)
-        if data is None:
-            default = context.get_template('/ui/icons/48x48/image.png')
-            data = default.to_str()
-            format = 'png'
-
-        # Headers
-        context.set_content_type('image/%s' % format)
-        filename = resource.get_property('filename')
-        if filename:
-            context.set_content_disposition('inline', filename)
-
-        # Ok
-        return data
-
-
-
 class Image_View(STLView):
 
     access = 'is_allowed_to_view'
@@ -380,7 +230,7 @@ class Image_View(STLView):
             link = ';thumb?width=%s&height=%s' % (width, height)
 
         # Real width and height (displayed for reference)
-        image_width, image_height = resource.handler.get_size()
+        image_width, image_height = resource.get_value('data').get_size()
         return {'widths': widths,
                 'link': link,
                 'image_width': image_width,
@@ -397,7 +247,7 @@ class Video_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        return {'format': resource.handler.get_mimetype()}
+        return {'format': resource.get_value('data').get_mimetype()}
 
 
 
@@ -411,7 +261,7 @@ class Archive_View(STLForm):
 
     def get_namespace(self, resource, context):
         filename = resource.get_property('filename') or resource.get_title()
-        contents = resource.handler.get_contents()
+        contents = resource.get_value('data').get_contents()
         contents = '\n'.join(contents)
         # Extract archive
         ac = resource.get_access_control()
@@ -441,7 +291,7 @@ class Archive_View(STLForm):
 
     def action(self, resource, context, form):
         # Get the list of paths to extract
-        handler = resource.handler
+        handler = resource.get_value('data')
         paths = handler.get_contents()
         paths.sort()
 

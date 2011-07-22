@@ -26,6 +26,7 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoform import get_default_widget
+from fields import File_Field
 from file import File
 from resource_ import DBResource
 from table_views import Table_View, Table_AddRecord, Table_EditRecord
@@ -36,38 +37,57 @@ from table_views import OrderedTable_View, Table_ExportCSV
 class Table(File):
 
     class_views = ['view', 'add_record', 'edit', 'commit_log']
-    class_handler = TableFile
     record_class = Record
     form = []
 
+    fields = ['table']
+    table = File_Field(class_handler=TableFile)
 
-    def get_schema(self):
-        return self.handler.record_properties
+
+    def get_table(self):
+        table = self.get_value('table')
+        if table is None:
+            table = self.table.class_handler()
+            self.set_value('table', table)
+        return table
+
+    handler = property(get_table) # XXX Backwards compatibility
 
 
     @classmethod
-    def get_form(cls):
-        if cls.form:
-            return cls.form
-        record_properties = cls.class_handler.record_properties
-        return [
-            get_default_widget(datatype)(name)
-            for name, datatype in record_properties.items() ]
+    def get_schema(self):
+        return self.table.class_handler.record_properties
+
+
+    @classmethod
+    def get_form(self):
+        if self.form:
+            return self.form
+        schema = self.table.class_handler.record_properties
+        return [ get_default_widget(datatype)(name)
+                 for name, datatype in schema.items() ]
+
+
+    def get_record(self, id):
+        table = self.get_value('table')
+        if table is None:
+            return None
+        return table.get_record(id)
 
 
     def add_new_record(self, record):
         get_context().database.change_resource(self)
-        return self.handler.add_record(record)
+        return self.get_table().add_record(record)
 
 
     def update_record(self, id, **kw):
         get_context().database.change_resource(self)
-        self.handler.update_record(id, **kw)
+        self.get_table().update_record(id, **kw)
 
 
     def del_record(self, id):
         get_context().database.change_resource(self)
-        self.handler.del_record(id)
+        self.get_table().del_record(id)
 
 
     # Views
@@ -100,11 +120,6 @@ class OrderedTableFile(TableFile):
         for id in record_ids:
             if id not in ordered_set:
                 yield id
-
-
-    def get_records_in_order(self):
-        for id in self.get_record_ids_in_order():
-            yield self.get_record(id)
 
 
     def order_up(self, ids):
@@ -154,7 +169,15 @@ class OrderedTableFile(TableFile):
 class OrderedTable(Table):
 
     class_title = MSG(u'Ordered Table')
-    class_handler = OrderedTableFile
+
+    table = Table.table(class_handler=OrderedTableFile)
+
+    def get_records_in_order(self):
+        table = self.get_value('table')
+        if table:
+            for id in table.get_record_ids_in_order():
+                yield table.get_record(id)
+
 
     # Views
     view = OrderedTable_View()
