@@ -2,7 +2,7 @@
 #header {
   min-height: 90px;
   background-color: #0467BA;
-  background-image: url(../;file_field?name=banner);
+  background-image: url(../;get_file?name=banner);
   background-position: right;
   background-repeat: no-repeat;
 }

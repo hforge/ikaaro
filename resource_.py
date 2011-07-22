@@ -44,7 +44,7 @@ from registry import _lookup_class_id, resources_registry
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
-from resource_views import DBResource_FileFieldView
+from resource_views import DBResource_GetFile
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import split_reference
 from workflow import WorkflowAware
@@ -952,4 +952,4 @@ class DBResource(Resource):
     links = DBResource_Links()
     http_put = Put_View()
     http_delete = Delete_View()
-    file_field = DBResource_FileFieldView()
+    get_file = DBResource_GetFile()

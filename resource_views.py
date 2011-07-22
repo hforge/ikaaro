@@ -37,7 +37,7 @@ from folder_views import Folder_BrowseContent
 from registry import get_resource_class
 
 
-class DBResource_FileFieldView(BaseView):
+class DBResource_GetFile(BaseView):
 
     access = 'is_allowed_to_view'
 

@@ -98,7 +98,7 @@ class Skin(object):
         styles.extend(extra)
 
         # Database style
-        styles.append('/config/theme/;file_field?name=style')
+        styles.append('/config/theme/;get_file?name=style')
 
         # Ok
         return styles
@@ -331,7 +331,7 @@ class Skin(object):
         theme = site_root.get_resource('config/theme')
         favicon = theme.get_value('favicon')
         if favicon:
-            favicon_href = '/config/theme/;file_field?name=favicon'
+            favicon_href = '/config/theme/;get_file?name=favicon'
             favicon_type = favicon.get_mimetype()
         else:
             favicon_href = '/ui/favicon.ico'
@@ -339,7 +339,7 @@ class Skin(object):
 
         # Logo
         logo = theme.get_value('logo')
-        logo_href = '/config/theme/;file_field?name=logo' if logo else None
+        logo_href = '/config/theme/;get_file?name=logo' if logo else None
 
         # Menu
         menu = site_root.get_resource('config/menu')
