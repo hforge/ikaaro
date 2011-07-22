@@ -98,7 +98,7 @@ class Skin(object):
         styles.extend(extra)
 
         # Database style
-        styles.append('/config/theme/;get_file?name=style')
+        styles.append('/config/theme/;get_file?name=style&mimetype=text/css')
 
         # Ok
         return styles

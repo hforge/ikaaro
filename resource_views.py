@@ -41,49 +41,49 @@ class DBResource_GetFile(BaseView):
 
     access = 'is_allowed_to_view'
 
+    query_schema = {
+        'name': String(mandatory=True)}
 
-    def get_field_name(self, context):
-        return context.get_query_value('name')
-
-
-    def get_handler(self, resource, context):
-        name = context.get_query_value('name')
+    def get_handler(self, resource, name):
         return resource.get_value(name)
 
 
     def get_mtime(self, resource):
-        context = get_context()
-        return self.get_handler(resource, context).get_mtime()
+        field_name = get_context().query['name']
+        return self.get_handler(resource, field_name).get_mtime()
 
 
-    def get_content_type(self, resource, context):
-        handler = self.get_handler(resource, context)
+    def get_content_type(self, handler):
+        mimetype = get_context().get_query_value('mimetype')
+        if mimetype:
+            return mimetype
         return handler.get_mimetype()
 
 
-    def get_filename(self, resource, context):
-        field_name = context.get_query_value('name')
-        mimetype = self.get_content_type(resource, context)
+    def get_filename(self, handler, field_name, resource):
+        mimetype = self.get_content_type(handler)
         extension = guess_extension(mimetype)
+
         return '%s.%s%s' % (resource.name, field_name, extension)
 
 
-    def get_bytes(self, resource, context):
-        return self.get_handler(resource, context).to_str()
-
-
     def GET(self, resource, context):
+        field_name = context.query['name']
+        handler = self.get_handler(resource, field_name)
+
         # Content-Type
-        content_type = self.get_content_type(resource, context)
+        content_type = self.get_content_type(handler)
         context.set_content_type(content_type)
+
         # Content-Disposition
         disposition = 'inline'
         if content_type.startswith('application/vnd.oasis.opendocument.'):
             disposition = 'attachment'
-        filename = self.get_filename(resource, context)
+        filename = self.get_filename(handler, field_name, resource)
         context.set_content_disposition(disposition, filename)
+
         # Ok
-        return self.get_bytes(resource, context)
+        return handler.to_str()
 
 
 
