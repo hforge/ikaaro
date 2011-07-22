@@ -98,10 +98,7 @@ class Skin(object):
         styles.extend(extra)
 
         # Database style
-        db_style = context.site_root.get_resource('config/theme/style')
-        ac = db_style.get_access_control()
-        if ac.is_allowed_to_view(context.user, db_style):
-            styles.append('%s/;download' % context.get_link(db_style))
+        styles.append('/config/theme/;file_field?name=style')
 
         # Ok
         return styles
@@ -328,34 +325,21 @@ class Skin(object):
     def build_namespace(self, context):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
-        user = context.user
 
         # The favicon.ico
         site_root = context.site_root
         theme = site_root.get_resource('config/theme')
-        path = theme.get_property('favicon')
-        favicon_href = favicon_type = None
-        if path:
-            resource = theme.get_resource(path, soft=True)
-            if resource:
-                ac = resource.get_access_control()
-                if ac.is_allowed_to_view(user, resource):
-                    favicon_href = '%s/;download' % context.get_link(resource)
-                    favicon_type = resource.metadata.format
-        if favicon_href is None:
-            # Fallback to default favicon
+        favicon = theme.get_value('favicon')
+        if favicon:
+            favicon_href = '/config/theme/;file_field?name=favicon'
+            favicon_type = favicon.get_mimetype()
+        else:
             favicon_href = '/ui/favicon.ico'
             favicon_type = 'image/x-icon'
 
         # Logo
-        path = theme.get_property('logo')
-        logo_href = None
-        if path:
-            resource = theme.get_resource(path, soft=True)
-            if resource:
-                ac = resource.get_access_control()
-                if ac.is_allowed_to_view(user, resource):
-                    logo_href = '%s/;download' % context.get_link(resource)
+        logo = theme.get_value('logo')
+        logo_href = '/config/theme/;file_field?name=logo' if logo else None
 
         # Menu
         menu = site_root.get_resource('config/menu')

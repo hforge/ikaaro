@@ -35,7 +35,8 @@ from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import MultilineWidget
 from datatypes import Multilingual
-from fields import Field, FileField
+from fields import Field, File_Field
+from metadata import Metadata
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -151,7 +152,7 @@ class DBResource(Resource):
         path_to_metadata = '%s.metadata' % path
 
         database = self.metadata.database
-        metadata = database.get_handler(path_to_metadata, soft=soft)
+        metadata = database.get_handler(path_to_metadata, Metadata, soft=soft)
         if metadata is None:
             return None
 
@@ -259,49 +260,40 @@ class DBResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
-    def get_value(self, name, language=None):
+    def get_field(self, name):
         field = getattr(self, name, None)
 
+        if type(field) is not thingy_type or not issubclass(field, Field):
+            return None
+
+        if not issubclass(field, File_Field):
+            raise NotImplementedError, 'only file fields are implemented'
+
+        return field
+
+
+    def get_value(self, name, language=None):
+        field = self.get_field(name)
+
         # Fallback to old API
-        if not (type(field) is thingy_type and issubclass(field, Field)):
+        if field is None:
             return self.get_property(name, language)
 
-        # File fields
-        if issubclass(field, FileField):
-            cls = field.class_handler
-            database = self.metadata.database
-            key = '%s.%s' % (self.metadata.key[:-9], name)
-            handler = database.get_handler(key, cls=cls, soft=True)
-            if handler is None:
-                handler = cls()
-                database.push_phantom(key, handler)
-            return handler
-
-        # XXX We only support file fields for now
-        raise NotImplementedError, 'only file fields are supported for now'
+        # New API: fields
+        return field.get_value(self, name)
 
 
     def set_value(self, name, value, language=None):
-        field = getattr(self, name, None)
+        field = self.get_field(name)
 
         # Fallback to old API
-        if not (type(field) is thingy_type and issubclass(field, Field)):
+        if field is None:
             return self.set_property(name, value, language)
 
         # File fields
-        if issubclass(field, FileField):
-            filename, mimetype, body = value
-            # TODO Do nothing and return False if the file does not change
-            handler = self.get_value(name, language)
-            try:
-                handler.load_state_from_string(body)
-            except Exception:
-                handler.load_state()
-                raise
-            return True
-
-        # XXX We only support file fields for now
-        raise NotImplementedError, 'only file fields are supported for now'
+        # TODO Do nothing and return False if the file does not change
+        field.set_value(self, name, value, language)
+        return True
 
 
     def get_property(self, name, language=None):
@@ -337,7 +329,7 @@ class DBResource(Resource):
                     property = Property(value[lang], lang=lang)
                     metadata._set_property(key, property)
             else:
-                metadata._set_property(key, value)
+                self.set_value(key, value)
 
         # Workflow State (default)
         if kw.get('state') is None and isinstance(self, WorkflowAware):

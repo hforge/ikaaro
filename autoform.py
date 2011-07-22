@@ -183,10 +183,17 @@ class MultilineWidget(Widget):
     <label class="language block" for="${id}" stl:if="language"
       >${language}</label>
     <textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
-      class="${css}">${value}</textarea>""")
+      class="${css}">${value_}</textarea>""")
 
     rows = 5
     cols = 60
+
+    @thingy_lazy_property
+    def value_(self):
+        value = self.value
+        if type(value) is str:
+            return value
+        return value.to_str()
 
 
 

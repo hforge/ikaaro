@@ -31,7 +31,7 @@ from itools.web import INFO
 # Import from ikaaro
 from autoedit import AutoEdit
 from datatypes import Password
-from fields import FileField
+from fields import File_Field
 from folder import Folder
 from registry import get_resource_class
 from resource_ import DBResource
@@ -82,7 +82,7 @@ class User(DBResource):
     class_schema = freeze(class_schema)
 
 
-    avatar = FileField(title=MSG(u'Avatar'))
+    avatar = File_Field(title=MSG(u'Avatar'))
 
 
     ########################################################################

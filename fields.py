@@ -20,7 +20,7 @@ from itools.datatypes import String
 from itools.handlers import File
 
 # Import from ikaaro
-from autoform import FileWidget
+from autoform import FileWidget, MultilineWidget
 
 
 
@@ -28,8 +28,45 @@ class Field(thingy):
     pass
 
 
-class FileField(Field):
+class File_Field(Field):
 
-    class_handler = File
+    class_handler = None
     datatype = String
     widget = FileWidget
+
+    def get_value(self, resource, name, language=None):
+        cls = self.class_handler
+        database = resource.metadata.database
+        key = '%s.%s' % (resource.metadata.key[:-9], name)
+        return database.get_handler(key, cls=cls, soft=True)
+
+
+    def set_value(self, resource, name, value, language=None):
+        if value is None:
+            return
+        if type(value) is not str:
+            filename, mimetype, value = value
+
+        handler = self.get_value(resource, name, language)
+
+        # Case 1: set a new handler
+        if handler is None:
+            database = resource.metadata.database
+            key = '%s.%s' % (resource.metadata.key[:-9], name)
+            if type(value) is str:
+                value = File(string=value)
+            database.set_handler(key, value)
+            return
+
+        # Case 2: modify an existing handler
+        try:
+            handler.load_state_from_string(value)
+        except Exception:
+            handler.load_state()
+            raise
+
+
+
+class TextFile_Field(File_Field):
+
+    widget = MultilineWidget

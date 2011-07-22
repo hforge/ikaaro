@@ -19,9 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from python-magic
-import magic
-
 # Import from itools
 from itools.core import guess_extension, merge_dicts
 from itools.database import OrQuery, PhraseQuery
@@ -38,10 +35,6 @@ from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from registry import get_resource_class
-
-
-magic = magic.open(magic.MIME_TYPE)
-magic.load()
 
 
 class DBResource_FileFieldView(BaseView):
@@ -64,8 +57,8 @@ class DBResource_FileFieldView(BaseView):
 
 
     def get_content_type(self, resource, context):
-        bytes = self.get_bytes(resource, context)
-        return magic.buffer(bytes)
+        handler = self.get_handler(resource, context)
+        return handler.get_mimetype()
 
 
     def get_filename(self, resource, context):
