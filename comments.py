@@ -278,14 +278,15 @@ class CommentsAware(object):
         """ Get any comment matching given state.
             state may be a string, a tuple or a list.
         """
+        _comments = self.metadata.get_property('comment') or []
         if state is None:
-            return list(self.get_property('comment'))
+            return list(_comments)
 
         if not isinstance(state, (tuple, list)):
             state = [state]
 
         comments = []
-        for comment in self.metadata.get_property('comment'):
+        for comment in _comments:
             if comment.get_parameter('state') in state:
                 comments.append(comment)
         return comments
