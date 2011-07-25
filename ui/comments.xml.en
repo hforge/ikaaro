@@ -4,29 +4,19 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<stl:block stl:repeat="comment comments">
-  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr class="comment-header">
-      <td><span class="comment-user">${comment/user}</span>
-          <span class="comment-datetime">${comment/datetime}</span></td>
-      <td align="right">
-        <a name="c${comment/number}"/>
-        <span class="comment-number"><a href="#c${comment/number}">Comment ${comment/number}</a></span>
-        <span class="comment-reply">
-          [ <a href="#new_comment"
-            onclick="javascript:reply('${comment/number}');">
-            Reply
-          </a>]
-        </span>
-      </td>
-    </tr>
-    <tr class="comment-body">
-      <td colspan="5">
-      <pre id="comment${comment/number}" >${comment/comment}</pre>
-      </td>
-    </tr>
-  </table>
-  <br/>
-</stl:block>
-
+<form name="autoform" action="${action}" method="get"
+    enctype="multipart/form-data" stl:if="edit_mode">
+  <div>Display comments filtered by state ${filter}
+    <button type="submit" class="button-ok">Update</button>
+  </div>
+</form>
+<form id="autoform" name="autoform" action="${action}" method="post"
+  enctype="multipart/form-data" stl:omit-tag="not edit_mode">
+  <stl:block stl:if="edit_mode">
+    <p stl:if="actions">
+      <stl:block stl:repeat="action actions">${action}</stl:block>
+    </p>
+  </stl:block>
+  <stl:block stl:repeat="comment comments">${comment}</stl:block>
+</form>
 </stl:block>
