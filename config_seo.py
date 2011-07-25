@@ -15,19 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from config import Configuration
+from fields import Char_Field
 from resource_ import DBResource
 
 
 seo_description = MSG(
     u'Optimize your website for better ranking in search engine results.')
-site_verification = String(source='metadata', default='')
 
 
 class SEO(DBResource):
@@ -38,15 +36,15 @@ class SEO(DBResource):
     class_icon16 = 'icons/16x16/search.png'
     class_icon48 = 'icons/48x48/search.png'
 
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        # Metadata
-        google_site_verification=site_verification(
-            title=MSG(u'Google site verification key')),
-        yahoo_site_verification=site_verification(
-            title=MSG(u'Yahoo site verification key')),
-        bing_site_verification=site_verification(
-            title=MSG(u'Bing site verification key')))
+    fields = DBResource.fields + ['google_site_verification',
+                                  'yahoo_site_verification',
+                                  'bing_site_verification']
+    google_site_verification = Char_Field(
+        title=MSG(u'Google site verification key'))
+    yahoo_site_verification = Char_Field(
+        title=MSG(u'Yahoo site verification key'))
+    bing_site_verification = Char_Field(
+        title=MSG(u'Bing site verification key'))
 
 
     # Views

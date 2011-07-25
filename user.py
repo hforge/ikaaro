@@ -21,8 +21,8 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, String, Unicode
+from itools.database import register_field
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
@@ -30,7 +30,7 @@ from itools.web import INFO
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from datatypes import Password
+from fields import Char_Field, Email_Field, Password_Field, Text_Field
 from fields import File_Field
 from folder import Folder
 from registry import get_resource_class
@@ -58,32 +58,29 @@ class User(DBResource):
     ########################################################################
     # Metadata
     ########################################################################
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        firstname=Unicode(source='metadata', indexed=True, stored=True,
-                          title=MSG(u'First Name')),
-        lastname=Unicode(source='metadata', indexed=True, stored=True,
-                         title=MSG(u'Last Name')),
-        email=Email(source='metadata', indexed=True, stored=True,
-                    mandatory=True, title=MSG(u'E-mail Address')),
-        password=Password(source='metadata'),
-        user_language=String(source='metadata'),
-        user_timezone=String(source='metadata'),
-        user_must_confirm=String(source='metadata'),
-        groups=String(source='metadata', multiple=True, indexed=True),
-        # Metadata (backwards compatibility)
-        username=String(source='metadata', indexed=True, stored=True),
-        # Other
-        email_domain=String(indexed=True, stored=True))
-    del class_schema['title']
-    del class_schema['description']
-    del class_schema['subject']
-    del class_schema['text']
-    class_schema = freeze(class_schema)
-
-
-    fields = ['avatar']
+    fields = ['firstname', 'lastname', 'email', 'password', 'avatar',
+              'user_language', 'user_timezone', 'user_must_confirm',
+              'groups', 'username']
+    firstname = Text_Field(multilingual=False, indexed=True, stored=True,
+                           title=MSG(u'First Name'))
+    lastname = Text_Field(multilingual=False, indexed=True, stored=True,
+                          title=MSG(u'Last Name'))
+    email = Email_Field(indexed=True, stored=True, required=True,
+                        title=MSG(u'E-mail Address'))
+    password = Password_Field
     avatar = File_Field(title=MSG(u'Avatar'))
+    user_language = Char_Field
+    user_timezone = Char_Field
+    user_must_confirm = Char_Field
+    groups = Char_Field(multiple=True, indexed=True)
+    # Metadata (backwards compatibility)
+    username = Char_Field(indexed=True, stored=True)
+
+    # Remove some fields
+    title = None
+    description = None
+    subject = None
+    text = None
 
 
     ########################################################################
@@ -150,7 +147,7 @@ class User(DBResource):
 
 
     def get_title(self, language=None):
-        firstname = self.get_property('firstname')
+        firstname = self.get_value('firstname')
         lastname = self.get_property('lastname')
         if firstname:
             if lastname:
@@ -297,3 +294,7 @@ class UserFolder(Folder):
         icon='view.png',
         message=INFO(u'To manage the users please go '
                      u'<a href="/;browse_users">here</a>.'))
+
+
+# Register
+register_field('email_domain', String(indexed=True, stored=True))

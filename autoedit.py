@@ -176,23 +176,8 @@ class AutoEdit(AutoForm):
         return set(fields), to_keep
 
 
-    def _get_resource_schema(self, resource):
-        return resource.class_schema
-
-
     def _get_datatype(self, resource, context, name):
-        schema = self._get_resource_schema(resource)
-        if name in schema:
-            return schema[name]
-
-        # Fallback to support fields
-        field = getattr(resource, name, None)
-        if field is None:
-            raise ValueError, 'schema error'
-
-        title = getattr(field, 'title', name)
-        return field.datatype(widget=field.widget, title=title,
-                              multilingual=field.multilingual)
+        return resource.get_field(name).get_datatype()
 
 
     def _get_schema(self, resource, context):

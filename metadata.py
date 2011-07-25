@@ -25,21 +25,6 @@ from itools.web import get_context
 from registry import get_resource_class
 
 
-def is_multiple(datatype):
-    return getattr(datatype, 'multiple', False)
-
-
-def is_multilingual(datatype):
-    return getattr(datatype, 'multilingual', False)
-
-
-def get_parameters_schema(datatype):
-    schema = getattr(datatype, 'parameters_schema', {})
-    default = getattr(datatype, 'parameters_schema_default', None)
-    return schema, default
-
-
-
 class Metadata(File):
 
     class_mimetypes = ['text/x-metadata']
@@ -83,37 +68,37 @@ class Metadata(File):
                 raise ValueError, 'unexpected "format" property'
 
             # 1. Get the datatype
-            datatype = resource_class.get_property_datatype(name)
+            field = resource_class.get_field(name)
 
             # 2. Deserialize the parameters
-            params_schema, params_default = get_parameters_schema(datatype)
+            params_schema = field.parameters_schema
+            params_default = field.parameters_schema_default
             try:
                 deserialize_parameters(parameters, params_schema,
-                        params_default)
+                                       params_default)
             except ValueError, e:
                 msg = 'in class "{0}" property "{1}": {2}'
                 raise ValueError, msg.format(resource_class, name, e)
 
             # 3. Get the datatype properties
-            multiple = is_multiple(datatype)
-            multilingual = is_multilingual(datatype)
-            if multiple and multilingual:
+            if field.multiple and field.multilingual:
                 error = 'property "%s" is both multilingual and multiple'
                 raise ValueError, error % name
 
             # 4. Build the property
+            datatype = field.datatype
             value = datatype.decode(value)
             property = Property(value, **parameters)
 
             # Case 1: Multilingual
-            if multilingual:
+            if field.multilingual:
                 language = parameters.get('lang')
                 if language is None:
                     err = 'multilingual property "%s" is missing the language'
                     raise ValueError, err % name
                 properties.setdefault(name, {})[language] = property
             # Case 2: multiple
-            elif multiple:
+            elif field.multiple:
                 properties.setdefault(name, []).append(property)
             # Case 3: simple
             else:
@@ -135,8 +120,9 @@ class Metadata(File):
         # Properties
         for name in names:
             property = properties[name]
-            datatype = resource_class.get_property_datatype(name)
-            params_schema, params_default = get_parameters_schema(datatype)
+            field = resource_class.get_field(name)
+            datatype = field.datatype
+            params_schema = field.parameters_schema
             is_empty = datatype.is_empty
             p_type = type(property)
             if p_type is dict:
@@ -185,7 +171,7 @@ class Metadata(File):
 
         # Consider only the properties with a non empty value
         cls = get_resource_class(self.format)
-        datatype = cls.get_property_datatype(name)
+        datatype = cls.get_field(name).datatype
         languages = [
             x for x in property if not datatype.is_empty(property[x].value) ]
         if not languages:
@@ -243,15 +229,13 @@ class Metadata(File):
 
         # Case 4: Simple
         cls = get_resource_class(self.format)
-        datatype = cls.get_property_datatype(name)
-        if datatype is None or getattr(datatype, 'multiple', False) is False:
+        field = cls.get_field(name)
+        if field is None or field.multiple is False:
             properties[name] = value
             return
 
         # Case 5: Multiple (append)
-        cls = get_resource_class(self.format)
-        datatype = cls.get_property_datatype(name)
-        if not datatype.is_empty(value.value):
+        if not field.datatype.is_empty(value.value):
             properties.setdefault(name, []).append(value)
 
 

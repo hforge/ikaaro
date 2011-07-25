@@ -23,7 +23,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Date, Enumerate, Unicode, String
+from itools.datatypes import DataType, Date, Enumerate
 from itools.fs import FileName
 from itools.web import get_context
 
@@ -98,13 +98,6 @@ class CopyCookie(DataType):
     @staticmethod
     def decode(str):
         return loads(decompress(unquote(str)))
-
-
-
-class Multilingual(Unicode):
-    multilingual = True
-    # Used only for the metadata
-    parameters_schema = {'lang': String}
 
 
 

@@ -20,10 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, lazy, thingy_type
-from itools.csv import Property
+from itools.core import lazy, thingy_type
 from itools.database import register_field
-from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
+from itools.datatypes import Boolean, Integer, String, URI, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path
@@ -33,9 +32,8 @@ from itools.database import PhraseQuery, Resource
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import MultilineWidget
-from datatypes import Multilingual
-from fields import Field, File_Field
+from fields import Char_Field, Datetime_Field, Field, File_Field, Text_Field
+from fields import Textarea_Field
 from metadata import Metadata
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
@@ -51,26 +49,20 @@ from workflow import WorkflowAware
 
 
 
-class FreeDatatype(String):
-    """This datatype is used for properties not defined in the resource
-    schema, when the schema is defined as extensible.
-    """
-
-    multiple = True
-    parameters_schema = freeze({})
-    parameters_schema_default = String(multiple=True)
-
-
-
 class DBResourceMetaclass(type):
 
     def __new__(mcs, name, bases, dict):
         cls = type.__new__(mcs, name, bases, dict)
         if 'class_id' in dict:
             register_resource_class(cls)
-        for name, dt in cls.class_schema.iteritems():
-            if getattr(dt, 'indexed', False) or getattr(dt, 'stored', False):
-                register_field(name, dt)
+
+        # Register fields in the catalog
+        for name in cls.fields:
+            field = cls.get_field(name)
+            if field.indexed or field.stored:
+                datatype = field.get_datatype()
+                register_field(name, datatype)
+
         return cls
 
 
@@ -261,55 +253,28 @@ class DBResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
+    @classmethod
     def get_field(self, name):
         field = getattr(self, name, None)
+        if type(field) is thingy_type and issubclass(field, Field):
+            return field
 
-        if type(field) is not thingy_type or not issubclass(field, Field):
-            return None
-
-        if not issubclass(field, File_Field):
-            raise NotImplementedError, 'only file fields are implemented'
-
-        return field
+        return None
 
 
     def get_value(self, name, language=None):
         field = self.get_field(name)
-
-        # Fallback to old API
-        if field is None:
-            return self.get_property(name, language)
-
-        # New API: fields
         return field.get_value(self, name)
 
 
     def set_value(self, name, value, language=None):
         field = self.get_field(name)
-
-        # Fallback to old API
-        if field is None:
-            return self.set_property(name, value, language)
-
-        # File fields
         return field.set_value(self, name, value, language)
 
 
-    def get_property(self, name, language=None):
-        """Return the property value for the given property name.
-        """
-        property = self.metadata.get_property(name, language=language)
-        # Default
-        if not property:
-            datatype = self.get_property_datatype(name)
-            return datatype.get_default()
-
-        # Multiple
-        if type(property) is list:
-            return [ x.value for x in property ]
-
-        # Simple
-        return property.value
+    # XXX Backwards compatibility
+    get_property = get_value
+    set_property = set_value
 
 
     def get_page_title(self):
@@ -319,7 +284,6 @@ class DBResource(Resource):
     def init_resource(self, **kw):
         """Return a Metadata object with sensible default values.
         """
-        metadata = self.metadata
         # Properties
         for key in kw:
             value = kw[key]
@@ -331,11 +295,10 @@ class DBResource(Resource):
 
         # Workflow State (default)
         if kw.get('state') is None and isinstance(self, WorkflowAware):
-            datatype = self.get_property_datatype('state')
-            state = datatype.get_default()
+            state = self.get_field('state').datatype.get_default()
             if state is None:
-                state  = self.workflow.initstate
-            metadata._set_property('state', state)
+                state = self.workflow.initstate
+            self.set_value('state', state)
 
 
     def load_handlers(self):
@@ -343,79 +306,25 @@ class DBResource(Resource):
 
 
     ########################################################################
-    # Metadata
+    # Fields
     ########################################################################
-    class_schema_extensible = False
-    class_schema = freeze({
-        # Metadata
-        'mtime': DateTime(source='metadata', indexed=True, stored=True),
-        'last_author': String(source='metadata', indexed=False, stored=True),
-        'title': Multilingual(source='metadata', indexed=True, stored=True,
-                              title=MSG(u'Title')),
-        'description': Multilingual(source='metadata', indexed=True,
-                                    title=MSG(u'Description'),
-                                    widget=MultilineWidget,
-                                    hidden_by_default=True),
-        'subject': Multilingual(source='metadata', indexed=True,
-                                hidden_by_default=True),
-        # Key & class id
-        'abspath': String(indexed=True, stored=True),
-        'abspath_depth': Integer(indexed=True, stored=True),
-        'format': String(indexed=True, stored=True),
-        # Folder's view
-        'parent_paths': String(multiple=True, indexed=True),
-        'name': String(stored=True, indexed=True),
-        # Referential integrity
-        'links': String(multiple=True, indexed=True),
-        # Full text search
-        'text': Unicode(indexed=True),
-        # Various classifications
-        'is_role_aware': Boolean(indexed=True),
-        'is_image': Boolean(indexed=True),
-        'is_folder': Boolean(indexed=True),
-        'is_content': Boolean(indexed=True),
-        })
+    fields = ['mtime', 'last_author', 'title', 'description', 'subject']
 
+    mtime = Datetime_Field(indexed=True, stored=True)
+    last_author = Char_Field(indexed=False, stored=True)
+    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
+    description = Textarea_Field(indexed=True, title=MSG(u'Description'),
+                                 hidden_by_default=True)
+    subject = Text_Field(indexed=True, title=MSG(u'Keywords'),
+                         hidden_by_default=True)
 
     @property
     def is_content(self):
         return self.parent.is_content
 
 
-    @classmethod
-    def get_property_datatype(cls, name):
-        datatype = cls.class_schema.get(name)
-        if datatype and getattr(datatype, 'source', None) == 'metadata':
-            return datatype
-        if cls.class_schema_extensible:
-            return FreeDatatype
-        msg = 'in class "{0}" unexpected property "{1}"'
-        raise ValueError, msg.format(cls, name)
-
-
     def has_property(self, name, language=None):
         return self.metadata.has_property(name, language=language)
-
-
-    def set_property(self, name, value, language=None):
-        """If value == old value then return False
-           else make the change and return True
-        """
-
-        # Check the new value is different from the old value
-        old_value = self.get_property(name, language=language)
-
-        if value == old_value:
-            return False
-
-        # Set property
-        if language:
-            value = Property(value, lang=language)
-
-        get_context().database.change_resource(self)
-        self.metadata.set_property(name, value)
-
-        return True
 
 
     def del_property(self, name):
@@ -474,31 +383,20 @@ class DBResource(Resource):
     def get_catalog_values(self):
         values = {}
 
-        # Step 1. Automatically index metadata properties
+        # Step 1. Automatically index fields
         languages = self.get_site_root().get_property('website_languages')
-        schema = self.class_schema
-        for name in schema:
-            datatype = schema[name]
-            indexed = getattr(datatype, 'indexed', False)
-            stored = getattr(datatype, 'stored', False)
-            if not indexed and not stored:
+        for name in self.fields:
+            field = self.get_field(name)
+            if not field.indexed and not field.stored:
                 continue
 
-            # Skip non-metadata sources
-            source = getattr(datatype, 'source', None)
-            if source != 'metadata':
-                # TODO We should have a hook here (to avoid Step 2)
-                continue
-
-            # Metadata properties
-            multilingual = getattr(datatype, 'multilingual', False)
-            if multilingual:
+            if field.multilingual:
                 value = {}
                 for language in languages:
-                    value[language] = self.get_property(name, language)
+                    value[language] = field.get_value(self, name, language)
                 values[name] = value
             else:
-                values[name] = self.get_property(name)
+                values[name] = field.get_value(self, name)
 
         # Step 2. Index non-metadata properties
         values['name'] = self.name
@@ -558,8 +456,6 @@ class DBResource(Resource):
     ########################################################################
     # API
     ########################################################################
-    fields = []
-
     def get_handlers(self):
         """Return all the handlers attached to this resource, except the
         metadata.
@@ -613,13 +509,9 @@ class DBResource(Resource):
         TODO This list should be calculated statically to avoid a performance
         hit at run time.
         """
-        schema = self.class_schema
-        for name in schema:
-            datatype = schema[name]
-            if issubclass(datatype, URI):
-                source = getattr(datatype, 'source', None)
-                if source != 'metadata':
-                    raise ValueError, 'schema error'
+        for name in self.fields:
+            field = self.get_field(name)
+            if issubclass(field.datatype, URI):
                 yield name
 
 
@@ -629,20 +521,15 @@ class DBResource(Resource):
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')
 
-        schema = self.class_schema
         for name in self._get_references_from_schema():
-            datatype = schema[name]
-            multiple = getattr(datatype, 'multiple', False)
-            if getattr(datatype, 'multilingual', False):
-                languages = available_languages
-            else:
-                languages = [ None ]
+            field = self.get_field(name)
+            languages = available_languages if field.multilingual else [None]
 
             for lang in languages:
                 prop = self.metadata.get_property(name, language=lang)
                 if prop is None:
                     continue
-                if multiple:
+                if field.multiple:
                     # Multiple
                     for x in prop:
                         value = x.value
@@ -685,20 +572,15 @@ class DBResource(Resource):
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')
 
-        schema = self.class_schema
         for name in self._get_references_from_schema():
-            datatype = schema[name]
-            multiple = getattr(datatype, 'multiple', False)
-            if getattr(datatype, 'multilingual', False):
-                languages = available_languages
-            else:
-                languages = [ None ]
+            field = self.get_field(name)
+            languages = available_languages if field.multilingual else [None]
 
             for lang in languages:
                 prop = self.metadata.get_property(name, language=lang)
                 if prop is None:
                     continue
-                if multiple:
+                if field.multiple:
                     # Multiple
                     new_values = []
                     for p in prop:
@@ -748,18 +630,15 @@ class DBResource(Resource):
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')
 
-        schema = self.class_schema
         for name in self._get_references_from_schema():
-            datatype = schema[name]
-            languages = [ None ]
-            multiple = getattr(datatype, 'multiple', False)
-            if getattr(datatype, 'multilingual', False):
-                languages = available_languages
+            field = self.get_field(name)
+            languages = available_languages if field.multilingual else [None]
+
             for lang in languages:
                 prop = self.metadata.get_property(name, language=lang)
                 if prop is None:
                     continue
-                if multiple:
+                if field.multiple:
                     # Multiple
                     new_values = []
                     for p in prop:
@@ -943,3 +822,25 @@ class DBResource(Resource):
     # Views / External editor
     http_put = Put_View()
     http_delete = Delete_View()
+
+
+###########################################################################
+# Register read-only fields
+###########################################################################
+
+# Key & class id
+register_field('abspath', String(indexed=True, stored=True))
+register_field('abspath_depth', Integer(indexed=True, stored=True))
+register_field('format', String(indexed=True, stored=True))
+# Folder's view
+register_field('parent_paths', String(multiple=True, indexed=True))
+register_field('name', String(stored=True, indexed=True))
+# Referential integrity
+register_field('links', String(multiple=True, indexed=True))
+# Full text search
+register_field('text', Unicode(indexed=True))
+# Various classifications
+register_field('is_role_aware', Boolean(indexed=True))
+register_field('is_image', Boolean(indexed=True))
+register_field('is_folder', Boolean(indexed=True))
+register_field('is_content', Boolean(indexed=True))

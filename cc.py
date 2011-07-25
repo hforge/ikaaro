@@ -29,6 +29,7 @@ from itools.web import INFO, ERROR
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
 from autoform import HiddenWidget
 from buttons import Button, BrowseButton
+from fields import Char_Field
 from messages import MSG_BAD_KEY
 from user_views import BrowseUsers
 from utils import generate_password
@@ -495,30 +496,27 @@ class AcceptInvitation(ConfirmSubscription):
 
 
 
-class Subscribers(Tokens):
+class Subscribers(String):
 
     def decode(cls, data):
-        values = []
-        for value in super(Subscribers, cls).decode(data):
-            value = value.split("#")
-            username = value.pop(0)
-            values.append({
-                'username': username,
+        value = data.split("#")
+        username = value.pop(0)
+        return {'username': username,
                 'status': value[0] if value else None,
-                'key': value[1] if value else None})
-        return tuple(values)
+                'key': value[1] if value else None}
 
 
-    def encode(cls, values):
-        format = '{username}#{status}#{key}'.format
-        data = [ format(**x) if x['status'] else x['username']
-                 for x in values ]
-        return super(Subscribers, cls).encode(data)
+    def encode(cls, value):
+        if value['status']:
+            return '{username}#{status}#{key}'.format(**value)
+        return value['username']
 
 
 
 class Observable(object):
-    class_schema = freeze({'cc_list': Subscribers(source='metadata')})
+
+    fields = ['cc_list']
+    cc_list = Char_Field(datatype=Subscribers, multiple=True)
 
     confirm_register_subject = MSG(u"Confirmation required")
     confirm_register_text = MSG(

@@ -18,7 +18,7 @@
 import urllib, urllib2
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
+from itools.core import thingy_lazy_property
 from itools.datatypes import Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.web import get_context
@@ -27,6 +27,7 @@ from itools.web import get_context
 from autoedit import AutoEdit
 from autoform import TextWidget, Widget
 from config import Configuration
+from fields import Select_Field, Text_Field
 from resource_ import DBResource
 from utils import make_stl_template
 
@@ -190,7 +191,7 @@ class CaptchaType(Enumerate):
                  'recaptcha': RecaptchaDatatype}
 
 
-captcha_datatype = Unicode(source='metadata')
+captcha_field = Text_Field(multilingual=False)
 
 
 class Captcha(DBResource):
@@ -200,20 +201,18 @@ class Captcha(DBResource):
     class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'
 
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        captcha_type=CaptchaType(source='metadata', mandatory=True,
-            title=MSG(u"Captcha type")),
-        # Question captcha
-        captcha_question=captcha_datatype(
-            default=u'2 + 3', title=MSG(u"Question")),
-        captcha_answer=captcha_datatype(
-            default=u'5', title=MSG(u"Answer")),
-        # ReCaptcha
-        recaptcha_public_key=captcha_datatype(
-                                title=MSG(u"Recaptcha public key")),
-        recaptcha_private_key=captcha_datatype(
-                                title=MSG(u"Recaptcha private key")))
+    fields = DBResource.fields + ['captcha_type',
+                                  'captcha_question', 'captcha_answer',
+                                  'recaptcha_public_key',
+                                  'recaptcha_private_key']
+    captcha_type = Select_Field(required=True, title=MSG(u"Captcha type"),
+                                datatype=CaptchaType)
+    # Question captcha
+    captcha_question = captcha_field(default=u'2 + 3', title=MSG(u"Question"))
+    captcha_answer = captcha_field(default=u'5', title=MSG(u"Answer"))
+    # ReCaptcha
+    recaptcha_public_key = captcha_field(title=MSG(u"Recaptcha public key"))
+    recaptcha_private_key = captcha_field(title=MSG(u"Recaptcha private key"))
 
     # Views
     class_views = ['edit']

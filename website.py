@@ -23,10 +23,8 @@ from decimal import Decimal
 from types import GeneratorType
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.csv import Property
 from itools.database import AndQuery, PhraseQuery
-from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import AccessControl, STLView
@@ -35,6 +33,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from autoform import MultilineWidget
 from config import Configuration
+from fields import Char_Field
 from folder import Folder
 from config_access import SavedSearch_Content
 from config_register import RegisterForm
@@ -79,17 +78,10 @@ class WebSite(AccessControl, Folder):
     class_views = Folder.class_views + ['control_panel']
 
 
-    class_schema = merge_dicts(
-        Folder.class_schema,
-        # Metadata
-        vhosts=String(source='metadata', multiple=True, indexed=True,
-                      title=MSG(u'Domain names'),
-                      widget=MultilineWidget),
-        website_languages=Tokens(source='metadata', default=('en',)))
-
-    # XXX Useful for the update method (i.e update_20100630)
-    # To remove in ikaaro 0.71
-    class_schema_extensible = True
+    fields = Folder.fields + ['vhosts', 'website_languages']
+    vhosts = Char_Field(multiple=True, indexed=True,
+                        title=MSG(u'Domain names'), widget=MultilineWidget)
+    website_languages = Char_Field(multiple=True, default=['en'])
 
     is_content = True
 

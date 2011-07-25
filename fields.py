@@ -15,23 +15,38 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Impor from itools
-from itools.core import thingy
+from itools.core import freeze, thingy
+from itools.csv import Property
 from itools.database import magic
-from itools.datatypes import String
+from itools.datatypes import Boolean, DateTime, Email, Enumerate, Integer
+from itools.datatypes import String, Unicode
 from itools.handlers import get_handler_class_by_mimetype
 from itools.html import XHTMLFile
+from itools.web import get_context
 
 # Import from ikaaro
 from autoform import HTMLBody
-from autoform import FileWidget, MultilineWidget, rte_widget
+from autoform import Widget, DatetimeWidget, FileWidget, MultilineWidget
+from autoform import SelectWidget, TextWidget, rte_widget
+from datatypes import Password
 
 
 
 class Field(thingy):
+
+    datatype = None
+    default = None
     multilingual = False
+    multiple = False
+    indexed = False
+    stored = False
+    required = False
+    title = None
+    hidden_by_default = False
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
+
 
     def set_value(self, resource, name, value, language=None):
         """This method must return a boolean:
@@ -42,7 +57,126 @@ class Field(thingy):
         raise NotImplementedError
 
 
+    # XXX For backwards compatibility
+    def get_datatype(self):
+        keys = ['default']
+        kw = {}
+        for key in keys:
+            value = getattr(self, key)
+            if value is not None:
+                kw[key] = value
 
+        return self.datatype(mandatory=self.required, multiple=self.multiple,
+                             multilingual=self.multilingual,
+                             indexed=self.indexed, stored=self.stored,
+                             title=self.title, widget=self.widget,
+                             hidden_by_default=self.hidden_by_default,
+                             **kw)
+
+
+    def get_default(self):
+        if self.default is not None:
+            return self.default
+        return self.get_datatype().get_default()
+
+
+
+###########################################################################
+# Metadata properties
+###########################################################################
+class Metadata_Field(Field):
+
+    parameters_schema = freeze({})
+    parameters_schema_default = None
+    widget = Widget
+
+
+    def get_value(self, resource, name, language=None):
+        property = resource.metadata.get_property(name, language=language)
+        if not property:
+            return self.get_default()
+
+        # Multiple
+        if type(property) is list:
+            return [ x.value for x in property ]
+
+        # Simple
+        return property.value
+
+
+    def set_value(self, resource, name, value, language=None):
+        """If value == old value then return False
+           else make the change and return True
+        """
+        # Check the new value is different from the old value
+        old_value = self.get_value(resource, name, language)
+        if value == old_value:
+            return False
+
+        # Set property
+        if language:
+            value = Property(value, lang=language)
+
+        get_context().database.change_resource(resource)
+        resource.metadata.set_property(name, value)
+        return True
+
+
+
+class Boolean_Field(Metadata_Field):
+    datatype = Boolean
+
+
+
+class Char_Field(Metadata_Field):
+    datatype = String
+    widget = TextWidget
+
+
+
+class Datetime_Field(Metadata_Field):
+    datatype = DateTime
+    widget = DatetimeWidget
+
+
+
+class Email_Field(Metadata_Field):
+    datatype = Email
+
+
+
+class Integer_Field(Metadata_Field):
+    datatype = Integer
+
+
+
+class Password_Field(Metadata_Field):
+    datatype = Password
+
+
+
+class Select_Field(Metadata_Field):
+    datatype = Enumerate
+    widget = SelectWidget
+
+
+
+class Text_Field(Metadata_Field):
+    datatype = Unicode
+    multilingual = True
+    parameters_schema = {'lang': String} # useful only when multilingual
+    widget = TextWidget
+
+
+
+class Textarea_Field(Text_Field):
+    widget = MultilineWidget
+
+
+
+###########################################################################
+# File handlers
+###########################################################################
 class File_Field(Field):
 
     class_handler = None
@@ -66,7 +200,7 @@ class File_Field(Field):
         if self.multilingual and language is None:
             root = resource.get_site_root()
             languages = []
-            for lang in root.get_property('website_languages'):
+            for lang in root.get_value('website_languages'):
                 key = self._get_key(resource, name, lang)
                 handler = get_handler(key, cls, soft=True)
                 if handler:

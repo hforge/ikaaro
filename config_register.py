@@ -15,16 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import Boolean, DateTime, Date, Time, Unicode
+from itools.datatypes import Boolean, DateTime, Date, Time
 from itools.gettext import MSG
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import AutoForm, Widget, MultilineWidget, get_default_widget
+from autoform import AutoForm, Widget
 from config import Configuration
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
+from fields import Boolean_Field, Textarea_Field
 from registry import get_resource_class
 from resource_ import DBResource
 from utils import make_stl_template
@@ -55,11 +55,11 @@ class RegisterForm(AutoForm):
 
 
     def get_schema(self, resource, context):
-        resource_schema = get_resource_class('user').class_schema
+        cls = get_resource_class('user')
 
         schema = {}
         for name in self.fields:
-            datatype = resource_schema[name]
+            datatype = cls.get_field(name).get_datatype()
             schema[name] = datatype
             # Special case: datetime
             if issubclass(datatype, DateTime):
@@ -83,16 +83,12 @@ class RegisterForm(AutoForm):
 
 
     def get_widgets(self, resource, context):
-        resource_schema = get_resource_class('user').class_schema
+        cls = get_resource_class('user')
 
         widgets = []
         for name in self.fields:
-            datatype = resource_schema[name]
-            title = getattr(datatype, 'title', name)
-            widget = getattr(datatype, 'widget', None)
-            if widget is None:
-                widget = get_default_widget(datatype)
-            widget = widget(name, title=title)
+            field = cls.get_field(name)
+            widget = field.widget(name, title=field.title)
             widgets.append(widget)
 
         # Terms of service
@@ -139,13 +135,10 @@ class ConfigRegister(DBResource):
     class_description = MSG(u'Configuration the user registration process.')
     class_icon48 = 'icons/48x48/signin.png'
 
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        is_open=Boolean(source='metadata', default=False,
-                        title=MSG(u'Users can register by themselves')),
-        terms_of_service=Unicode(source='metadata',
-                                 title=MSG(u"Terms of service"),
-                                 widget=MultilineWidget))
+    fields = DBResource.fields + ['is_open', 'terms_of_service']
+    is_open = Boolean_Field(default=False,
+                            title=MSG(u'Users can register by themselves'))
+    terms_of_service = Textarea_Field(title=MSG(u"Terms of service"))
 
     # Views
     class_views = ['edit']

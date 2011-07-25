@@ -19,8 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import guess_all_extensions, merge_dicts
-from itools.datatypes import String
+from itools.core import guess_all_extensions
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler
 from itools.handlers import Image as ImageHandler, SVGFile
@@ -33,7 +32,7 @@ from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
 from cc import Observable
-from fields import File_Field
+from fields import Char_Field, File_Field
 from file_views import File_NewInstance, File_View
 from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import Image_View, Video_View, Archive_View
@@ -97,12 +96,9 @@ class File(Observable, WorkflowAware, DBResource):
     #######################################################################
     # Metadata
     #######################################################################
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        WorkflowAware.class_schema,
-        Observable.class_schema,
-        # Metadata
-        filename=String(source='metadata'))
+    fields = (DBResource.fields + Observable.fields + WorkflowAware.fields
+              + ['filename'])
+    filename = Char_Field
 
 
     #######################################################################

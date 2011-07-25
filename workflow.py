@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.database import register_field
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
@@ -25,6 +25,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from autoform import SelectWidget
+from fields import Char_Field
 
 
 
@@ -77,13 +78,8 @@ class WorkflowAware(BaseWorkflowAware):
     class_version = '20090122'
     workflow = workflow
 
-
-    class_schema = freeze({
-        # Metadata
-        'state': String(source='metadata'),
-        # Other
-        'workflow_state': String(stored=True, indexed=True),
-        })
+    fields = ['state']
+    state = Char_Field
 
 
     def get_workflow_state(self):
@@ -95,7 +91,7 @@ class WorkflowAware(BaseWorkflowAware):
     def set_workflow_state(self, value):
         self.set_property('state', value)
 
-    workflow_state = property(get_workflow_state, set_workflow_state, None, '')
+    workflow_state = property(get_workflow_state, set_workflow_state, None)
 
 
 
@@ -109,6 +105,8 @@ def get_workflow_preview(resource, context):
     state = '<span class="wf-%s">%s</span>' % (statename, msg)
     return XMLParser(state)
 
+
+register_field('workflow_state', String(stored=True, indexed=True))
 
 ###########################################################################
 # Datatypes and widgets

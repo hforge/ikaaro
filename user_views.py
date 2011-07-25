@@ -162,7 +162,7 @@ class User_Profile(STLView):
     def get_namespace(self, resource, context):
         avatar = resource.get_value('avatar')
         return {
-            'firstname': resource.get_property('firstname'),
+            'firstname': resource.get_value('firstname'),
             'lastname': resource.get_property('lastname'),
             'avatar': avatar is not None,
             'items': self.get_items(resource, context),

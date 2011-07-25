@@ -69,16 +69,15 @@ class SavedSearch(DBResource):
                                          include_container=True))
 
         # Search values
-        schema = self.class_schema
-        for name in schema:
+        for name in self.fields:
             if not name.startswith('search_'):
                 continue
-            value = self.get_property(name)
+            value = self.get_value(name)
             if not value:
                 continue
-            datatype = schema[name]
+            field = self.get_field(name)
             name = name[7:]
-            if getattr(datatype, 'multiple', False):
+            if field.multiple:
                 subquery = [ PhraseQuery(name, x) for x in value ]
                 if len(subquery) == 1:
                     subquery = subquery[0]

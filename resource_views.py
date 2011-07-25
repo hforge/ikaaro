@@ -208,10 +208,10 @@ class LoginView(STLForm):
         user = context.user
         register = context.site_root.is_allowed_to_register(user, resource)
         namespace['register'] = register
+
         cls = get_resource_class('user')
-        login_name_property = cls.login_name_property
-        login_name_datatype = cls.class_schema[login_name_property]
-        namespace['login_name_title'] = login_name_datatype.title
+        field = cls.get_field(cls.login_name_property)
+        namespace['login_name_title'] = field.title
 
         return namespace
 
@@ -224,8 +224,8 @@ class LoginView(STLForm):
         # Case 1: Forgotten password
         if form['no_password']:
             if user:
-                login_name_datatype = user.class_schema[user.login_name_property]
-                if not login_name_datatype.is_valid(loginname):
+                datatype = user.get_field(user.login_name_property).datatype
+                if not datatype.is_valid(loginname):
                     message = u'The given login name is not valid.'
                     context.message = ERROR(message)
                     return

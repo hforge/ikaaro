@@ -20,16 +20,13 @@ from textwrap import TextWrapper
 import unicodedata
 
 # Import from itools
-from itools.datatypes import Unicode, String, DateTime
+from itools.datatypes import String, DateTime
 from itools.html import xhtml_uri
 from itools.web import STLView
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
-
-comment_datatype = Unicode(source='metadata', multiple=True,
-                           parameters_schema={'date': DateTime,
-                                              'author': String,
-                                              'state': String})
+# Import from ikaaro
+from fields import Text_Field
 
 
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
@@ -137,7 +134,6 @@ class CommentsView(STLView):
 
 
     def get_namespace(self, resource, context):
-        root = context.root
         _comments = resource.metadata.get_property('comment') or []
         comments = []
         columns = self.get_comment_columns(resource, context)
@@ -155,4 +151,7 @@ class CommentsView(STLView):
 
 class CommentsAware(object):
 
-    class_schema = {'comment': comment_datatype}
+    comment = Text_Field(multilingual=False, multiple=True,
+                         parameters_schema={'date': DateTime,
+                                            'author': String,
+                                            'state': String})

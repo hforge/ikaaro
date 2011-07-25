@@ -18,14 +18,14 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import Enumerate, String, Tokens, Unicode
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import MultilineWidget, SelectWidget
+from autoform import SelectWidget
 from config import Configuration
+from fields import Select_Field, Textarea_Field
 from resource_ import DBResource
 
 
@@ -85,17 +85,13 @@ class ConfigMail(DBResource):
     class_description = mail_description
     class_icon48 = 'icons/48x48/mail.png'
 
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        contacts=Tokens(
-            source='metadata', title=MSG(u'Select the contact accounts'),
-            widget=SelectWidgetWithoutEmptyOption),
-        emails_from_addr=String(
-            source='metadata', title=MSG(u'Emails from addr'),
-            widget=SelectWidget),
-        emails_signature=Unicode(
-            source='metadata', title=MSG(u'Emails signature'),
-            widget=MultilineWidget))
+    fields = DBResource.fields + ['contacts', 'emails_from_addr',
+                                  'emails_signature']
+    contacts = Select_Field(multiple=True,
+                            title=MSG(u'Select the contact accounts'),
+                            widget=SelectWidgetWithoutEmptyOption)
+    emails_from_addr = Select_Field(title=MSG(u'Emails from addr'))
+    emails_signature = Textarea_Field(title=MSG(u'Emails signature'))
 
     # Views
     class_views = ['edit']

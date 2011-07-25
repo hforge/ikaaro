@@ -18,7 +18,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.datatypes import String, Enumerate, Integer
+from itools.datatypes import String, Enumerate, Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.uri import Path
@@ -28,7 +28,6 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
 from buttons import BrowseButton, Button
-from datatypes import Multilingual
 from exceptions import ConsistencyError
 from folder import Folder
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
@@ -65,7 +64,8 @@ class TargetWidget(SelectWidget):
 class MenuFile(OrderedTableFile):
 
     record_properties = {
-        'title': Multilingual(mandatory=True, title=MSG(u'Title')),
+        'title': Unicode(mandatory=True, multilingual=True,
+                         title=MSG(u'Title')),
         'path': String(mandatory=True, title=MSG(u'Path'),
                        widget=PathSelectorWidget),
         'target': Target(mandatory=True, default='_top', title=MSG(u'Target'),

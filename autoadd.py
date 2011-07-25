@@ -44,25 +44,32 @@ class AutoAdd(AutoForm):
     #######################################################################
     # GET
     #######################################################################
+    def _get_resource_class(self, context=None):
+        if context is None:
+            context = get_context()
+
+        class_id = context.query['type']
+        if not class_id:
+            return None
+        return get_resource_class(class_id)
+
+
     def get_title(self, context):
         if self.title is not None:
             return self.title
-        type = context.query['type']
-        if not type:
-            return MSG(u'Add resource').gettext()
-        cls = get_resource_class(type)
-        class_title = cls.class_title.gettext()
-        title = MSG(u'Add {class_title}')
-        return title.gettext(class_title=class_title)
 
+        cls = self._get_resource_class(context)
+        if cls:
+            class_title = cls.class_title.gettext()
+            title = MSG(u'Add {class_title}')
+            return title.gettext(class_title=class_title)
 
-    def _get_resource_schema(self, resource):
-        class_id = get_context().query['type']
-        return get_resource_class(class_id).class_schema
+        return MSG(u'Add resource').gettext()
 
 
     def _get_datatype(self, resource, context, name):
-        return self._get_resource_schema(resource)[name]
+        cls = self._get_resource_class(context)
+        return cls.get_field(name).get_datatype()
 
 
     def get_query_schema(self):
@@ -133,8 +140,7 @@ class AutoAdd(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'cls_description':
-            class_id = context.query['type']
-            cls = get_resource_class(class_id)
+            cls = self._get_resource_class(context)
             return cls.class_description.gettext()
         elif name == 'referrer':
             referrer = context.query.get('referrer')
@@ -227,8 +233,7 @@ class AutoAdd(AutoForm):
     def action(self, resource, context, form):
         # 1. Make the resource
         container = form['container']
-        class_id = context.query['type']
-        cls = get_resource_class(class_id)
+        cls = self._get_resource_class(context)
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
         schema = self.get_schema(resource, context)

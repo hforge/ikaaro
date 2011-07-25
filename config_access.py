@@ -26,6 +26,7 @@ from autoform import SelectWidget
 from config import Configuration
 from config_groups import UserGroupsDatatype
 from config_searches import Config_Searches, SavedSearch, SavedSearch_New
+from fields import Select_Field
 from registry import register_document_type
 from table import Table
 from table_views import Table_AddRecord, Table_EditRecord
@@ -53,14 +54,15 @@ class SavedSearch_Content(SavedSearch):
     class_id = 'saved-search-content'
     class_title = MSG(u'Saved Search - Content')
 
-    class_schema = SavedSearch.class_schema.copy()
-    class_schema['search_workflow_state'] = StaticStateEnumerate(
-        source='metadata', multiple=True, widget=SearchWorkflowState_Widget)
+    fields = SavedSearch.fields + ['search_workflow_state']
+    search_workflow_state = Select_Field(multiple=True,
+                                         datatype=StaticStateEnumerate,
+                                         widget=SearchWorkflowState_Widget)
 
     # Views
-    fields = ['title', 'search_workflow_state']
-    edit = AutoEdit(fields=fields)
-    new_instance = SavedSearch_New(fields=fields)
+    _fields = ['title', 'search_workflow_state']
+    edit = AutoEdit(fields=_fields)
+    new_instance = SavedSearch_New(fields=_fields)
 
     def get_search_query(self):
         query = super(SavedSearch_Content, self).get_search_query()
@@ -139,9 +141,9 @@ class ConfigAccess(Table):
         schema['resources'] = schema['resources'](config=config)
         return schema
 
-    fields = ['permission', 'group', 'resources']
-    add_record = Table_AddRecord(fields=fields)
-    edit_record = Table_EditRecord(fields=fields)
+    _fields = ['permission', 'group', 'resources']
+    add_record = Table_AddRecord(fields=_fields)
+    edit_record = Table_EditRecord(fields=_fields)
 
 
 
