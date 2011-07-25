@@ -26,9 +26,10 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoform import HTMLBody, Widget
-from autoform import DateWidget, DatetimeWidget, FileWidget, MultilineWidget
-from autoform import RadioWidget, SelectWidget, TextWidget, rte_widget
-from datatypes import Password
+from autoform import BirthDateWidget, DateWidget, DatetimeWidget, FileWidget
+from autoform import MultilineWidget, RadioWidget, SelectWidget, TextWidget
+from autoform import rte_widget
+from datatypes import BirthDate, Password
 
 
 
@@ -120,6 +121,12 @@ class Metadata_Field(Field):
         get_context().database.change_resource(resource)
         resource.metadata.set_property(name, value)
         return True
+
+
+
+class Birthdate_Field(Metadata_Field):
+    datatype = BirthDate
+    widget = BirthDateWidget
 
 
 

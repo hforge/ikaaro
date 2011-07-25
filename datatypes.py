@@ -140,5 +140,4 @@ class ExpireValue(DataType):
 
 
 class BirthDate(Date):
-
     pass
