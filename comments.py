@@ -251,9 +251,17 @@ class CommentWorkflow(Enumerate):
 
 
 class CommentsAware(object):
+    """ - Add "comment" to class_schema.
+        - Define a default workflow to be overwritten if necessary, as an
+          Enumerate until now.
+        - Define a default view to display a comment ("comment_view").
+        - Add comments view which displays comments on edit_mode, so that you
+          can filter by workflow state and change state on any comment(s).
+        - Method "is_allowed_to_view_comment" can be overwritten to define
+          access to comments on specific criteria.
+    """
     class_schema = {'comment': comment_datatype}
 
-    comment_workflow = None
     comment_workflow = CommentWorkflow
 
     comments = CommentsView(access='is_allowed_to_edit', edit_mode=True)
