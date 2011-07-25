@@ -264,6 +264,8 @@ class DBResource(Resource):
 
     def get_value(self, name, language=None):
         field = self.get_field(name)
+        if field is None:
+            return None
         return field.get_value(self, name)
 
 

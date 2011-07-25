@@ -276,7 +276,7 @@ class Config_EditLanguages(STLForm):
         languages = resource.get_property('website_languages')
         languages = [ x for x in languages if x != default ]
         languages.insert(0, default)
-        resource.set_property('website_languages', tuple(languages))
+        resource.set_property('website_languages', languages)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -295,7 +295,7 @@ class Config_EditLanguages(STLForm):
 
         # Remove the languages
         languages = [ x for x in languages if x not in codes ]
-        resource.set_property('website_languages', tuple(languages))
+        resource.set_property('website_languages', languages)
         # Ok
         context.message = INFO(u'Languages removed.')
 
@@ -311,7 +311,7 @@ class Config_EditLanguages(STLForm):
         ws_languages = resource.get_property('website_languages')
         ws_languages = list(ws_languages)
         ws_languages.append(form['code'])
-        resource.set_property('website_languages', tuple(ws_languages))
+        resource.set_property('website_languages', ws_languages)
         # Ok
         context.message = INFO(u'Language added.')
 

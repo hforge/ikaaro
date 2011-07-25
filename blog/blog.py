@@ -18,7 +18,6 @@
 from datetime import date
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Date, Unicode
 from itools.gettext import MSG
@@ -26,11 +25,12 @@ from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
-from ikaaro.autoform import HTMLBody, RTEWidget
+from ikaaro.autoform import RTEWidget
 from ikaaro.comments import CommentsAware, CommentsView
-from file_views import File_Edit
+from ikaaro.fields import Date_Field
+from ikaaro.file_views import File_Edit
 from ikaaro.folder import Folder
-from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
+from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.webpage import WebPage
 
 
@@ -51,10 +51,8 @@ class Post_NewInstance(AutoAdd):
 
 
     def _get_datatype(self, resource, context, name):
-        if name == 'data':
-            return HTMLBody(widget=rte)
-        elif name == 'date':
-            return Date(default=date.today())
+        if name == 'date':
+           return Date(default=date.today())
 
         proxy = super(Post_NewInstance, self)
         return proxy._get_datatype(resource, context, name)
@@ -72,22 +70,6 @@ class Post_NewInstance(AutoAdd):
             container = folder
 
         return container
-
-
-    def action(self, resource, context, form):
-        # 1. Make the resource
-        container = form['container']
-        language = container.get_edit_languages(context)[0]
-        child = container.make_resource(form['name'], Post, language=language)
-        # 2. Set properties
-        handler = child.get_handler(language=language)
-        handler.set_body(form['data'])
-        self.set_value(child, context, 'title', form)
-        self.set_value(child, context, 'date', form)
-
-        # Ok
-        goto = str(resource.get_pathto(child))
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
 
@@ -132,12 +114,11 @@ class Post(CommentsAware, WebPage):
     class_views = ['view', 'edit', 'commit_log']
 
 
-    class_schema = merge_dicts(
-        WebPage.class_schema,
-        CommentsAware.class_schema,
-        date=Date(source='metadata', stored=True, title=MSG(u'Date')))
-    class_schema['title'] = class_schema['title'](mandatory=True)
-
+    # Fields
+    fields = WebPage.fields + CommentsAware.fields + ['date']
+    date = Date_Field(stored=True, title=MSG(u'Date'))
+    title = WebPage.title(required=True)
+    data = WebPage.data(widget=rte)
 
     # Views
     new_instance = Post_NewInstance()

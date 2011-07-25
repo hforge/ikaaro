@@ -84,6 +84,8 @@ class HTMLBody(XHTMLBody):
     def encode(value):
         if value is None:
             return ''
+        if type(value) is unicode:
+            return value.encode('utf-8')
         if not is_xml_stream(value):
             value = value.get_body().get_content_elements()
         return stream_to_str_as_html(value)

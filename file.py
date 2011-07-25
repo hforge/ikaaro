@@ -61,7 +61,8 @@ class File(Observable, WorkflowAware, DBResource):
     class_handler = FileHandler
 
     # Fields
-    fields = ['data']
+    fields = (DBResource.fields + WorkflowAware.fields + Observable.fields
+              + ['data'])
     data = File_Field(title=MSG(u'File'))
 
 

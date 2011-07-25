@@ -151,6 +151,7 @@ class CommentsView(STLView):
 
 class CommentsAware(object):
 
+    fields = ['comment']
     comment = Text_Field(multilingual=False, multiple=True,
                          parameters_schema={'date': DateTime,
                                             'author': String,

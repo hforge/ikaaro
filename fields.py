@@ -18,16 +18,16 @@
 from itools.core import freeze, thingy
 from itools.csv import Property
 from itools.database import magic
-from itools.datatypes import Boolean, DateTime, Email, Enumerate, Integer
-from itools.datatypes import String, Unicode
+from itools.datatypes import Boolean, Date, DateTime, Email, Enumerate
+from itools.datatypes import Integer, String, Unicode
 from itools.handlers import get_handler_class_by_mimetype
 from itools.html import XHTMLFile
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import HTMLBody
-from autoform import Widget, DatetimeWidget, FileWidget, MultilineWidget
-from autoform import SelectWidget, TextWidget, rte_widget
+from autoform import HTMLBody, Widget
+from autoform import DateWidget, DatetimeWidget, FileWidget, MultilineWidget
+from autoform import RadioWidget, SelectWidget, TextWidget, rte_widget
 from datatypes import Password
 
 
@@ -125,12 +125,19 @@ class Metadata_Field(Field):
 
 class Boolean_Field(Metadata_Field):
     datatype = Boolean
+    widget = RadioWidget
 
 
 
 class Char_Field(Metadata_Field):
     datatype = String
     widget = TextWidget
+
+
+
+class Date_Field(Metadata_Field):
+    datatype = Date
+    widget = DateWidget
 
 
 
