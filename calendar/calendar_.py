@@ -25,11 +25,12 @@ from datetime import time
 from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
-from itools.datatypes import DataType, Integer, String
+from itools.datatypes import Integer, String
 from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
+from ikaaro.fields import Char_Field
 from ikaaro.resource_ import DBResource
 from calendar_views import Calendar_Export, Calendar_ExportForm
 from calendar_views import Calendar_Import
@@ -50,44 +51,40 @@ ikaaro_to_ics = [
 ics_to_ikaaro = dict([(y, x) for x, y in ikaaro_to_ics])
 
 
-class Timetables(DataType):
+class Timetables(String):
     """Timetables are tuples of time objects (start, end) used by cms.ical.
 
     Example with 3 timetables as saved into metadata:
-        (8,0),(10,0);(10,0),(12,0);(15,30),(17,30)
+        timetables:8:0 10:0
+        timetables:10:0 12:0
+        timetables:15:30 17:30
 
     Decoded value are:
         [(time(8,0), time(10,0)), (time(10,0), time(12, 0)),
          (time(15,30), time(17, 30))]
     """
 
-    default = ()
-
     @staticmethod
     def decode(value):
         if not value:
-            return ()
-        timetables = []
-        for timetable in value.strip().split(';'):
-            start, end = timetable[1:-1].split('),(')
-            hours, minutes = start.split(',')
-            hours, minutes = int(hours), int(minutes)
-            start = time(hours, minutes)
-            hours, minutes = end.split(',')
-            hours, minutes = int(hours), int(minutes)
-            end = time(hours, minutes)
-            timetables.append((start, end))
-        return tuple(timetables)
+            return None
+
+        start, end = value.split()
+        hours, minutes = start.split(':')
+        hours, minutes = int(hours), int(minutes)
+        start = time(hours, minutes)
+        hours, minutes = end.split(':')
+        hours, minutes = int(hours), int(minutes)
+        end = time(hours, minutes)
+        return (start, end)
 
 
     @staticmethod
     def encode(value):
-        timetables = []
-        for start, end in value:
-            start = '(' + str(start.hour) + ',' + str(start.minute) + ')'
-            end = '(' + str(end.hour) + ',' + str(end.minute) + ')'
-            timetables.append(start + ',' + end)
-        return ';'.join(timetables)
+        print value
+        start, end = value
+        template = '%s:%s %s:%s'
+        return template % (start.hour, start.minute, end.hour, end.minute)
 
 
 
@@ -108,12 +105,6 @@ class ConfigCalendar(DBResource):
     config_group = 'extensions'
 
 
-    timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
-                  ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
-                  ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
-                  ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
-                  ((19,0),(20,0)), ((20,0),(21,0))]
-
     colors = ['#AC81A1', '#719C71', '#C1617C', '#A0A5B5', '#A59580']
 
 
@@ -122,9 +113,38 @@ class ConfigCalendar(DBResource):
         return str(max(ids) + 1) if ids else '0'
 
 
-    class_schema = merge_dicts(
-        DBResource.class_schema,
-        timetables=Timetables(source='metadata'))
+    fields = DBResource.fields + ['timetables']
+    timetables = Char_Field(datatype=Timetables, multiple=True)
+    timetables_default = [
+        (time( 7,0), time( 8,0)),
+        (time( 8,0), time( 9,0)),
+        (time( 9,0), time(10,0)),
+        (time(10,0), time(11,0)),
+        (time(11,0), time(12,0)),
+        (time(12,0), time(13,0)),
+        (time(13,0), time(14,0)),
+        (time(14,0), time(15,0)),
+        (time(15,0), time(16,0)),
+        (time(16,0), time(17,0)),
+        (time(17,0), time(18,0)),
+        (time(18,0), time(19,0)),
+        (time(19,0), time(20,0)),
+        (time(20,0), time(21,0))]
+
+
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        timetables = self.get_property('timetables')
+        if timetables:
+            return timetables
+
+        # From class value
+        return self.timetables_default
 
 
     #######################################################################
@@ -140,24 +160,6 @@ class ConfigCalendar(DBResource):
             return organizer and username == organizer
         ac = self.parent.get_access_control()
         return ac.is_allowed_to_edit(context.user, self.parent)
-
-
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
-        """
-        timetables = self.get_property('timetables')
-        if timetables:
-            return timetables
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
 
 
     def to_ical(self, context):

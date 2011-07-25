@@ -85,11 +85,6 @@ class UsersList(Enumerate):
         else:
             members = site_root.get_members()
 
-        # Root admins are inherited (TODO Remove once we change this)
-        if not included_roles or 'root-admins' in included_roles:
-            root_admins = self.resource.get_root().get_property('admins')
-            members.update(root_admins)
-
         users = site_root.get_resource('/users')
         options = []
         for name in members:
@@ -601,7 +596,7 @@ class Observable(object):
         cc_list = [ cc for cc in cc_list if cc['username'] != username ]
         # Create new dict to force metadata commit
         cc_list.append({'username': username, 'status': status, 'key': key})
-        self.set_property('cc_list', tuple(cc_list))
+        self.set_property('cc_list', cc_list)
         return key
 
 
@@ -611,7 +606,7 @@ class Observable(object):
         cc_list = [ cc for cc in cc_list if cc['username'] != username ]
         # Create new dict to force metadata commit
         cc_list.append({'username': username, 'status': None, 'key': None})
-        self.set_property('cc_list', tuple(cc_list))
+        self.set_property('cc_list', cc_list)
 
 
     def subscribe_user(self, email=None, user=None):
@@ -647,7 +642,7 @@ class Observable(object):
         cc_list = self.get_property('cc_list')
         # Filter out username
         cc_list = [ cc for cc in cc_list if cc['username'] != username ]
-        self.set_property('cc_list', tuple(cc_list))
+        self.set_property('cc_list', cc_list)
 
 
     def after_register(self, username):

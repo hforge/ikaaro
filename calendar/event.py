@@ -20,9 +20,8 @@
 from datetime import date, datetime, timedelta
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import Boolean, Enumerate, String, Unicode
-from itools.datatypes import Date, DateTime, Time
+from itools.database import register_field
+from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
@@ -30,8 +29,9 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import DatetimeWidget, SelectWidget
+from ikaaro.autoform import SelectWidget
 from ikaaro.cc import UsersList
+from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
@@ -203,7 +203,7 @@ class Event_NewInstance(AutoAdd):
                 self.set_value(child, context, key, form)
         # Set properties / cc_list
         if 'cc_list' in form:
-            child.set_property('cc_list', tuple(form['cc_list']))
+            child.set_property('cc_list', form['cc_list'])
 
         # 3. Notify the subscribers
         user = context.user
@@ -219,13 +219,10 @@ class Event_NewInstance(AutoAdd):
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
+class EventDatetime_Field(Datetime_Field):
 
-class EventDateTime(DateTime):
-
-    source = 'metadata'
+    datatype = DateTime(time_is_required=False)
     stored = True
-    time_is_required = False
-    widget = DatetimeWidget
 
 
 
@@ -239,33 +236,29 @@ class Event(File):
     class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
 
-    class_schema = merge_dicts(
-        File.class_schema,
-        # Metadata
-        owner=String(source='metadata'),
-        dtstart=EventDateTime(title=MSG(u'Start')),
-        dtend=EventDateTime(title=MSG(u'End')),
-        status=Status(source='metadata', title=MSG(u'State')),
-        rrule=RRuleDataType(source='metadata', title=MSG(u'Recurrence')),
-        uid=Unicode(source='metadata'),
-        # Other
-        dates=Date(indexed=True, multiple=True),
-        is_event=Boolean(indexed=True))
+    fields = File.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
+                            'uid']
+    data = None
+    owner = Char_Field
+    dtstart = EventDatetime_Field(title=MSG(u'Start'))
+    dtend = EventDatetime_Field(title=MSG(u'End'))
+    status = Select_Field(datatype=Status, title=MSG(u'State'))
+    rrule = Select_Field(datatype=RRuleDataType, title=MSG(u'Recurrence'))
+    uid = Char_Field
 
 
-    def init_resource(self, body=None, filename=None, extension=None, **kw):
+    def init_resource(self, **kw):
+        super(Event, self).init_resource(**kw)
+
+        # uid
+        context = get_context()
         if 'uid' not in kw:
-            path =  self.get_abspath()
-            context = get_context()
-            authority = context.uri.authority
-            uid = str(path) + '@%s' % authority
-            kw['uid'] = uid
-        File.init_resource(self, body=body, filename=filename,
-                           extension=extension, **kw)
+            uid = '%s@%s' % (self.abspath, context.uri.authority)
+            self.set_value('uid', uid)
+
         # Set owner
-        user = get_context().user
-        if user:
-            self.set_property('owner', user.name)
+        if context.user:
+            self.set_value('owner', context.user.name)
 
 
     def get_owner(self):
@@ -409,3 +402,9 @@ class Event(File):
     # Views
     new_instance = Event_NewInstance()
     edit = Event_Edit()
+
+
+
+# Register
+register_field('dates', Date(indexed=True, multiple=True))
+register_field('is_event', Boolean(indexed=True))

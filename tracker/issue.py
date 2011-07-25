@@ -114,7 +114,7 @@ class Issue(CommentsAware, Folder):
             self.set_property(name, value)
         # CCs
         cc_list = form['cc_list']
-        self.set_property('cc_list', tuple(cc_list))
+        self.set_property('cc_list', cc_list)
 
         # Attachment
         attachment = form['attachment']

@@ -140,16 +140,15 @@ class TimetablesForm(STLForm):
             return
 
         # Check the given range is not defined yet
-        timetables = resource.get_property('timetables')
+        timetables = resource.get_value('timetables')
         if (start, end) in timetables:
             context.message = ERROR(u'The given range is already defined.')
             return
 
         # Add new range
-        timetables = list(timetables)
         timetables.append((start, end))
         timetables.sort()
-        resource.set_property('timetables', tuple(timetables))
+        resource.set_value('timetables', timetables)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
@@ -166,7 +165,7 @@ class TimetablesForm(STLForm):
         timetables = [
             timetable for index, timetable in enumerate(timetables)
             if index not in ids ]
-        resource.set_property('timetables', tuple(timetables))
+        resource.set_property('timetables', timetables)
         # Ok
         context.message = INFO(u'Timetable(s) removed successfully.')
 
@@ -195,7 +194,7 @@ class TimetablesForm(STLForm):
             new_timetables.append((start, end))
 
         new_timetables.sort()
-        resource.set_property('timetables', tuple(new_timetables))
+        resource.set_property('timetables', new_timetables)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
