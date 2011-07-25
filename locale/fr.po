@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 12:07+CET\n"
+"POT-Creation-Date: 2011-07-19 17:07+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -235,12 +235,6 @@ msgctxt "link"
 msgid "<g id='1'> ${event/title}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
 
-#: ../ui/comments.xml.en:10
-#, fuzzy
-msgctxt "span"
-msgid "<g id='1'>${comment/user}</g>  <g id='2'>${comment/datetime}</g>"
-msgstr "<g id='7'>${action/title}</g>  <g id='8'>${action/title}</g>"
-
 #: ../ui/tiny_mce/rte.xml.en:54
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
@@ -249,6 +243,11 @@ msgstr ""
 #: ../ui/binary/Image_view.xml.en:7
 msgctxt "link"
 msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
+msgstr ""
+
+#: ../ui/comment_view.xml.en:10
+msgctxt "span"
+msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
 msgstr ""
 
 #: ../ui/auto_form.xml.en:18
@@ -487,14 +486,14 @@ msgctxt "label"
 msgid "<g id='4'>${column/title}</g>  "
 msgstr ""
 
-#: ../ui/comments.xml.en:14
-#, fuzzy
+#: ../ui/comment_view.xml.en:14
 msgctxt "link"
 msgid ""
-"<g id='4'><g id='5'>Comment ${comment/number}</g></g>  <g id='6'> [ <g "
-"id='7'> Reply </g>] </g>"
+"<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
+"g>]</g> ${workflow} ${index}"
 msgstr ""
-"<g id='4'>Commentaire</g><x id='5'/>  <x id='6'/>  <g id='7'>Rechercher</g>"
+"<g id='4'><g id='5'>Commentaire ${number}</g></g>  <g id='6'>[<g id='7'>"
+"Répondre</g>]</g> ${workflow} ${index}"
 
 #: ../ui/revisions/browse_search.xml.en:17
 msgctxt "label"
@@ -1143,18 +1142,16 @@ msgid "Confirm"
 msgstr "Confirmation"
 
 #: ../cc.py:404
-#, fuzzy
 msgid "Confirm subscription"
-msgstr "Inscription"
+msgstr "Confirmer l'inscription"
 
 #: ../cc.py:464
 msgid "Confirm to stop receiving emails every time this resource is modified."
 msgstr ""
 
 #: ../cc.py:468
-#, fuzzy
 msgid "Confirm unsubscription"
-msgstr "Inscription"
+msgstr "Confirmer la désinscription"
 
 #: ../cc.py:523 ../cc.py:527 ../user.py:172
 msgid "Confirmation required"
@@ -1323,6 +1320,11 @@ msgstr "Détails"
 #: ../revisions_views.py:144
 msgid "Diff between selected revisions"
 msgstr "Différentiel entre les versions sélectionnées"
+
+#: ../ui/comments.xml.en:9
+msgctxt "div"
+msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
 #: ../tracker/ui/change_bugs.xml.en:57 ../tracker/ui/change_bugs.xml.en:68
@@ -1805,9 +1807,8 @@ msgid "Invalid title."
 msgstr "Titre invalide."
 
 #: ../cc.py:489 ../cc.py:531
-#, fuzzy
 msgid "Invitation"
-msgstr "Navigation"
+msgstr ""
 
 #: ../tracker/issue.py:47 ../tracker/issue.py:48
 msgid "Issue"
@@ -2176,9 +2177,8 @@ msgid "Not Found"
 msgstr "Introuvable"
 
 #: ../cc.py:268
-#, fuzzy
 msgid "Not subscribed"
-msgstr "Pas inscrit :"
+msgstr "Pas inscrit"
 
 #: ../calendar/ui/upload.xml.en:10
 msgctxt "paragraph"
@@ -2366,14 +2366,13 @@ msgstr "Coller"
 msgid "Path"
 msgstr "Chemin"
 
-#: ../workflow.py:46
+#: ../comments.py:249 ../workflow.py:46
 msgid "Pending"
 msgstr "En attente de validation"
 
 #: ../cc.py:265
-#, fuzzy
 msgid "Pending confirmation"
-msgstr "Réenvoyer la demande de confirmation"
+msgstr "En attente de confirmation"
 
 #: ../tracker/tracker.py:54
 msgid "Performance Improvement"
@@ -2455,7 +2454,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr "Priorité :"
 
-#: ../workflow.py:41
+#: ../comments.py:248 ../workflow.py:41
 msgid "Private"
 msgstr "Privé"
 
@@ -2478,7 +2477,7 @@ msgstr "Produit :"
 msgid "Profile"
 msgstr "Profil"
 
-#: ../workflow.py:50
+#: ../comments.py:247 ../workflow.py:50
 msgid "Public"
 msgstr "Public"
 
@@ -2976,23 +2975,20 @@ msgid "The file must be entered."
 msgstr "Le fichier doit être saisi."
 
 #: ../cc.py:49
-#, fuzzy
 msgid "The following addresses are invalid: {users}."
-msgstr "Les utilisateurs suivants ont été ajoutés : {users}."
+msgstr "Les adresses suivantes sont invalides : {users}."
 
 #: ../cc.py:43
-#, fuzzy
 msgid "The following users are already subscribed: {users}."
-msgstr "Les utilisateurs suivants ont été inscrits : {users}."
+msgstr "Les utilisateurs suivants sont déjà inscrits : {users}."
 
 #: ../cc.py:53
 msgid "The following users are prevented from subscribing: {users}."
 msgstr "Les utilisateurs suivants ne peuvent pas être inscrits : {users}."
 
 #: ../cc.py:51
-#, fuzzy
 msgid "The following users have been invited: {users}."
-msgstr "Les utilisateurs suivants ont été ajoutés : {users}."
+msgstr "Les utilisateurs suivants ont été invités : {users}."
 
 #: ../cc.py:45
 msgid "The following users were subscribed: {users}."
@@ -3159,15 +3155,14 @@ msgid "Title:"
 msgstr "Titre :"
 
 #: ../cc.py:533
-#, fuzzy
 msgid ""
 "To accept the invitation, click the link\n"
 "\n"
 " {uri}\n"
 msgstr ""
-"Pour choisir un nouveau mot de passe, cliquez sur le lien :\n"
+"Pour accepter l'invitation, cliquez sur le lien :\n"
 "\n"
-" {uri}"
+" {uri}\n"
 
 #: ../user_views.py:44
 msgid "To activate your account, please type a password."
@@ -3190,7 +3185,6 @@ msgstr ""
 " {uri}"
 
 #: ../cc.py:525
-#, fuzzy
 msgid ""
 "To confirm subscription, click the link:\n"
 "\n"
@@ -3198,14 +3192,13 @@ msgid ""
 msgstr ""
 "Pour confirmer votre inscription, cliquez sur le lien :\n"
 "\n"
-" {uri}"
+" {uri}\n"
 
 #: ../user_views.py:206
 msgid "To confirm these changes, you must type your password"
 msgstr "Pour confirmez vos changements, vous devez saisir votre mot de passe"
 
 #: ../cc.py:529
-#, fuzzy
 msgid ""
 "To confirm unsubscription, click the link:\n"
 "\n"
@@ -3213,7 +3206,7 @@ msgid ""
 msgstr ""
 "Pour confirmer votre désinscription, cliquez sur le lien :\n"
 "\n"
-" {uri}"
+" {uri}\n"
 
 #: ../user.py:173
 msgid ""
@@ -3796,6 +3789,10 @@ msgid ""
 msgstr ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
+
+#: ../comments.py:240
+msgid "xxx"
+msgstr ""
 
 #: ../ui/root/license.xml.en:8
 msgctxt "paragraph"

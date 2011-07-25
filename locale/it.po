@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-07-11 12:07+CET\n"
+"POT-Creation-Date: 2011-07-19 17:07+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -219,12 +219,6 @@ msgctxt "link"
 msgid "<g id='1'> ${event/title}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
 
-#: ../ui/comments.xml.en:10
-#, fuzzy
-msgctxt "span"
-msgid "<g id='1'>${comment/user}</g>  <g id='2'>${comment/datetime}</g>"
-msgstr "Titolo"
-
 #: ../ui/tiny_mce/rte.xml.en:54
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
@@ -234,6 +228,12 @@ msgstr ""
 msgctxt "link"
 msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
 msgstr ""
+
+#: ../ui/comment_view.xml.en:10
+#, fuzzy
+msgctxt "span"
+msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr "Titolo"
 
 #: ../ui/auto_form.xml.en:18
 msgctxt "label"
@@ -449,11 +449,11 @@ msgctxt "label"
 msgid "<g id='4'>${column/title}</g>  "
 msgstr "Titolo"
 
-#: ../ui/comments.xml.en:14
+#: ../ui/comment_view.xml.en:14
 msgctxt "link"
 msgid ""
-"<g id='4'><g id='5'>Comment ${comment/number}</g></g>  <g id='6'> [ <g "
-"id='7'> Reply </g>] </g>"
+"<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
+"g>]</g> ${workflow} ${index}"
 msgstr ""
 
 #: ../ui/revisions/browse_search.xml.en:17
@@ -1322,6 +1322,11 @@ msgstr "Dettagli"
 #, fuzzy
 msgid "Diff between selected revisions"
 msgstr "Devi scegliere una o due revisioni."
+
+#: ../ui/comments.xml.en:9
+msgctxt "div"
+msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
 #: ../tracker/ui/change_bugs.xml.en:57 ../tracker/ui/change_bugs.xml.en:68
@@ -2485,7 +2490,7 @@ msgstr "Incolla"
 msgid "Path"
 msgstr "Incolla"
 
-#: ../workflow.py:46
+#: ../comments.py:249 ../workflow.py:46
 #, fuzzy
 msgid "Pending"
 msgstr "in attesa di pubblicazione"
@@ -2584,7 +2589,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
-#: ../workflow.py:41
+#: ../comments.py:248 ../workflow.py:41
 #, fuzzy
 msgid "Private"
 msgstr "privato"
@@ -2611,7 +2616,7 @@ msgstr "Nuovo utente"
 msgid "Profile"
 msgstr ""
 
-#: ../workflow.py:50
+#: ../comments.py:247 ../workflow.py:50
 #, fuzzy
 msgid "Public"
 msgstr "pubblicato"
@@ -4029,6 +4034,10 @@ msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
+msgstr ""
+
+#: ../comments.py:240
+msgid "xxx"
 msgstr ""
 
 #: ../ui/root/license.xml.en:8
