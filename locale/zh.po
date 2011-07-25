@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2011-07-19 17:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -980,6 +980,11 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "改变内设"
 
+#: ../comments.py:223
+#, fuzzy
+msgid "Change state"
+msgstr "语言被改变."
+
 #: ../user_views.py:307
 #, fuzzy
 msgid "Change your password."
@@ -1305,7 +1310,8 @@ msgstr "必须选择一或二个修正版."
 
 #: ../ui/comments.xml.en:9
 msgctxt "div"
-msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgid ""
+"Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
@@ -2452,7 +2458,7 @@ msgstr "粘贴"
 msgid "Path"
 msgstr "粘贴"
 
-#: ../comments.py:249 ../workflow.py:46
+#: ../comments.py:250 ../workflow.py:46
 msgid "Pending"
 msgstr ""
 
@@ -2551,7 +2557,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
-#: ../comments.py:248 ../workflow.py:41
+#: ../comments.py:249 ../workflow.py:41
 #, fuzzy
 msgid "Private"
 msgstr "隐私"
@@ -2578,7 +2584,7 @@ msgstr "新用户"
 msgid "Profile"
 msgstr ""
 
-#: ../comments.py:247 ../workflow.py:50
+#: ../comments.py:248 ../workflow.py:50
 #, fuzzy
 msgid "Public"
 msgstr "公共"
@@ -3973,7 +3979,7 @@ msgid ""
 "PARTICULAR PURPOSE."
 msgstr ""
 
-#: ../comments.py:240
+#: ../comments.py:241
 msgid "xxx"
 msgstr ""
 
@@ -4983,10 +4989,6 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Change you password"
 #~ msgstr "改变内设"
-
-#, fuzzy
-#~ msgid "Changes saved."
-#~ msgstr "语言被改变."
 
 #, fuzzy
 #~ msgid "Children Ordered Table"

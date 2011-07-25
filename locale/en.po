@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2011-07-19 17:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -932,6 +932,10 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr ""
 
+#: ../comments.py:223
+msgid "Change state"
+msgstr ""
+
 #: ../user_views.py:307
 msgid "Change your password."
 msgstr ""
@@ -1228,7 +1232,8 @@ msgstr ""
 
 #: ../ui/comments.xml.en:9
 msgctxt "div"
-msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgid ""
+"Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
@@ -2265,7 +2270,7 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
-#: ../comments.py:249 ../workflow.py:46
+#: ../comments.py:250 ../workflow.py:46
 msgid "Pending"
 msgstr ""
 
@@ -2353,7 +2358,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
-#: ../comments.py:248 ../workflow.py:41
+#: ../comments.py:249 ../workflow.py:41
 msgid "Private"
 msgstr ""
 
@@ -2376,7 +2381,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: ../comments.py:247 ../workflow.py:50
+#: ../comments.py:248 ../workflow.py:50
 msgid "Public"
 msgstr ""
 
@@ -3636,7 +3641,7 @@ msgid ""
 "PARTICULAR PURPOSE."
 msgstr ""
 
-#: ../comments.py:240
+#: ../comments.py:241
 msgid "xxx"
 msgstr ""
 

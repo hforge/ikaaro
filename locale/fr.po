@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-19 17:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -492,8 +492,8 @@ msgid ""
 "<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
 "g>]</g> ${workflow} ${index}"
 msgstr ""
-"<g id='4'><g id='5'>Commentaire ${number}</g></g>  <g id='6'>[<g id='7'>"
-"Répondre</g>]</g> ${workflow} ${index}"
+"<g id='4'><g id='5'>Commentaire ${number}</g></g>  <g id='6'>[<g "
+"id='7'>Répondre</g>]</g> ${workflow} ${index}"
 
 #: ../ui/revisions/browse_search.xml.en:17
 msgctxt "label"
@@ -1012,6 +1012,10 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "Modifier les métadonnées"
 
+#: ../comments.py:223
+msgid "Change state"
+msgstr "Modifier l'état"
+
 #: ../user_views.py:307
 msgid "Change your password."
 msgstr "Modifiez votre mot de passe."
@@ -1323,8 +1327,11 @@ msgstr "Différentiel entre les versions sélectionnées"
 
 #: ../ui/comments.xml.en:9
 msgctxt "div"
-msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgid ""
+"Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
+"Afficher les commentaires dont l'état est ${filter} <g id='1'>Mettre à "
+"jour l'affichage</g>"
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
 #: ../tracker/ui/change_bugs.xml.en:57 ../tracker/ui/change_bugs.xml.en:68
@@ -2366,7 +2373,7 @@ msgstr "Coller"
 msgid "Path"
 msgstr "Chemin"
 
-#: ../comments.py:249 ../workflow.py:46
+#: ../comments.py:250 ../workflow.py:46
 msgid "Pending"
 msgstr "En attente de validation"
 
@@ -2454,7 +2461,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr "Priorité :"
 
-#: ../comments.py:248 ../workflow.py:41
+#: ../comments.py:249 ../workflow.py:41
 msgid "Private"
 msgstr "Privé"
 
@@ -2477,7 +2484,7 @@ msgstr "Produit :"
 msgid "Profile"
 msgstr "Profil"
 
-#: ../comments.py:247 ../workflow.py:50
+#: ../comments.py:248 ../workflow.py:50
 msgid "Public"
 msgstr "Public"
 
@@ -3790,7 +3797,7 @@ msgstr ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 
-#: ../comments.py:240
+#: ../comments.py:241
 msgid "xxx"
 msgstr ""
 

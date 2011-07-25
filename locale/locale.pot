@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-07-19 17:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -360,6 +360,10 @@ msgstr ""
 #: ../tracker/tracker_views.py:205
 #: ../tracker/tracker_views.py:856
 msgid "Change Several Issues"
+msgstr ""
+
+#: ../comments.py:223
+msgid "Change state"
 msgstr ""
 
 #: ../user_views.py:307
@@ -1263,7 +1267,7 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
-#: ../comments.py:249
+#: ../comments.py:250
 #: ../workflow.py:46
 msgid "Pending"
 msgstr ""
@@ -1334,7 +1338,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: ../comments.py:248
+#: ../comments.py:249
 #: ../workflow.py:41
 msgid "Private"
 msgstr ""
@@ -1351,7 +1355,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: ../comments.py:247
+#: ../comments.py:248
 #: ../workflow.py:50
 msgid "Public"
 msgstr ""
@@ -2281,7 +2285,7 @@ msgstr ""
 msgid "undefined"
 msgstr ""
 
-#: ../comments.py:240
+#: ../comments.py:241
 msgid "xxx"
 msgstr ""
 
@@ -2439,7 +2443,7 @@ msgstr ""
 
 #: ../ui/comments.xml.en:9
 msgctxt "div"
-msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgid "Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
 #: ../ui/base/login.xml.en:10

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-07-19 17:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -998,6 +998,11 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "Modifica l'impostazione predefinita"
 
+#: ../comments.py:223
+#, fuzzy
+msgid "Change state"
+msgstr "Linguaggi rimossi"
+
 #: ../user_views.py:307
 #, fuzzy
 msgid "Change your password."
@@ -1325,7 +1330,8 @@ msgstr "Devi scegliere una o due revisioni."
 
 #: ../ui/comments.xml.en:9
 msgctxt "div"
-msgid "Display comments filtered by state ${filter} <g id='1'>Update</g>"
+msgid ""
+"Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
@@ -2490,7 +2496,7 @@ msgstr "Incolla"
 msgid "Path"
 msgstr "Incolla"
 
-#: ../comments.py:249 ../workflow.py:46
+#: ../comments.py:250 ../workflow.py:46
 #, fuzzy
 msgid "Pending"
 msgstr "in attesa di pubblicazione"
@@ -2589,7 +2595,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
-#: ../comments.py:248 ../workflow.py:41
+#: ../comments.py:249 ../workflow.py:41
 #, fuzzy
 msgid "Private"
 msgstr "privato"
@@ -2616,7 +2622,7 @@ msgstr "Nuovo utente"
 msgid "Profile"
 msgstr ""
 
-#: ../comments.py:247 ../workflow.py:50
+#: ../comments.py:248 ../workflow.py:50
 #, fuzzy
 msgid "Public"
 msgstr "pubblicato"
@@ -4036,7 +4042,7 @@ msgid ""
 "PARTICULAR PURPOSE."
 msgstr ""
 
-#: ../comments.py:240
+#: ../comments.py:241
 msgid "xxx"
 msgstr ""
 
@@ -5513,10 +5519,6 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "Change your account information;"
 #~ msgstr "Informazioni personali"
-
-#, fuzzy
-#~ msgid "Changes saved."
-#~ msgstr "Linguaggi rimossi"
 
 #, fuzzy
 #~ msgid "Check Groups"
