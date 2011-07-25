@@ -29,6 +29,7 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 # Import from ikaaro
 from autoform import HiddenWidget, SelectWidget
 from buttons import Button
+from messages import MSG_CHANGES_SAVED
 
 
 comment_datatype = Unicode(source='metadata', multiple=True,
@@ -238,7 +239,7 @@ class CommentsView(STLForm):
 
         resource.del_property('comment')
         resource.set_property('comment', comments)
-        context.message = MSG(u'xxx')
+        context.message = MSG_CHANGES_SAVED
 
 
 
@@ -271,3 +272,20 @@ class CommentsAware(object):
 
     def is_allowed_to_view_comment(self, user, comment):
         return True
+
+
+    def get_comments(self, state=None):
+        """ Get any comment matching given state.
+            state may be a string, a tuple or a list.
+        """
+        if state is None:
+            return list(self.get_property('comment'))
+
+        if not isinstance(state, (tuple, list)):
+            state = [state]
+
+        comments = []
+        for comment in self.metadata.get_property('comment'):
+            if comment.get_parameter('state') in state:
+                comments.append(comment)
+        return comments
