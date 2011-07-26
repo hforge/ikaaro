@@ -29,6 +29,7 @@ from itools.csv import Property
 from itools.datatypes import Email, String, Unicode, Integer
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
+from itools.i18n import get_languages
 from itools.fs import lfs
 from itools.web import BaseView, STLView, INFO
 
@@ -226,15 +227,24 @@ class CreditsView(STLView):
         return {'hackers': names}
 
 
+class LanguagesEnumerate(Enumerate):
 
+    def get_options(cls):
+        return [{'value': x['name'], 'name': x['code']} for x in get_languages()]
+
+
+languages_widget = SelectWidget('language', title=MSG(u'Default language'),
+                                tip=MSG(u'Select the default language'))
 vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
-    tip=MSG(u'Type the hostnames this website will apply to, each one in a'
-            u' different line.'))
+                                tip=MSG(u'Type the hostnames this website will'
+                                        u' apply to, each one in a different line.'))
 
 class WebSite_NewInstance(NewInstance):
 
-    schema = merge_dicts(NewInstance.schema, vhosts=String)
-    widgets = NewInstance.widgets + [vhosts_widget]
+    schema = merge_dicts(NewInstance.schema, vhosts=String,
+                         language=LanguagesEnumerate(default='en',
+                                                     mandatory=True))
+    widgets = NewInstance.widgets + [vhosts_widget, languages_widget]
 
 
     def action(self, resource, context, form):
@@ -245,7 +255,8 @@ class WebSite_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties
-        language = container.get_edit_languages(context)[0]
+        language = form['language']
+        child.metadata.set_property('website_languages', [language])
         title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
         vhosts = form['vhosts']
