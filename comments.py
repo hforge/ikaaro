@@ -20,13 +20,16 @@ from textwrap import TextWrapper
 import unicodedata
 
 # Import from itools
-from itools.datatypes import String, DateTime
+from itools.datatypes import DateTime, Enumerate, Integer, String
 from itools.html import xhtml_uri
-from itools.web import STLView
+from itools.web import STLForm, STLView
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
+from autoform import HiddenWidget, SelectWidget
+from buttons import Button
 from fields import Text_Field
+from messages import MSG_CHANGES_SAVED
 
 
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
@@ -113,11 +116,14 @@ def indent(text):
 
 
 
-class CommentsView(STLView):
+class CommentView(STLView):
+    template = '/ui/comment_view.xml'
+    comment_columns = ('user', 'datetime', 'comment', 'workflow', 'index')
+    # Configuration
+    comment = None
+    comment_index = None
+    edit_mode = False
 
-    template = '/ui/comments.xml'
-
-    comment_columns = ['user', 'datetime', 'comment']
 
     def get_comment_columns(self, resource, context):
         return self.comment_columns
@@ -130,29 +136,156 @@ class CommentsView(STLView):
             return context.format_datetime(item.get_parameter('date'))
         elif column == 'comment':
             return indent(item.value)
+        elif column == 'workflow':
+            datatype = resource.comment_workflow
+            if self.edit_mode is False or datatype is None:
+                return None
+            state = item.get_parameter('state', datatype.get_default())
+            widget = SelectWidget('state', datatype=datatype, value=state,
+                                  has_empty_option=False)
+            return widget
+        elif column == 'index':
+            if self.edit_mode is False:
+                return None
+            widget = HiddenWidget('index', value=self.comment_index)
+            return widget
         raise ValueError, 'unexpected "%s" column' % column
 
 
+    def get_comment_value(self, resource, context, column):
+        item = self.comment
+        return self.get_item_value(resource, context, item, column)
+
+
     def get_namespace(self, resource, context):
-        _comments = resource.metadata.get_property('comment') or []
-        comments = []
+        namespace = {'number': self.comment_index}
         columns = self.get_comment_columns(resource, context)
 
+        for key in columns:
+            namespace[key] = self.get_comment_value(resource, context, key)
+
+        return namespace
+
+
+
+class CommentsView(STLForm):
+    template = '/ui/comments.xml'
+    schema = {
+        'state': String(multiple=True),
+        'index': Integer(multiple=True)}
+    query_schema = {'filter': String()}
+    edit_mode = False
+
+
+    def get_namespace(self, resource, context):
+        # Filter
+        workflow_datatype = resource.comment_workflow
+        if workflow_datatype is None:
+            filter_widget = None
+            filter_comment = None
+        else:
+            filter_state = context.get_query_value('filter')
+            filter_widget = SelectWidget('filter',
+                    datatype=workflow_datatype,
+                    value=filter_state, has_empty_option=True)
+            default_state = workflow_datatype.get_default()
+            def filter_comment(x):
+                if not filter_state:
+                    return False
+                state = x.get_parameter('state', default_state)
+                return state != filter_state
+
+        # Comments
+        _comments = resource.metadata.get_property('comment') or []
+        comments = []
+        comment_view = resource.comment_view
+        user = context.user
+
         for i, comment in enumerate(_comments):
-            ns = {'number': i}
-            for key in columns:
-                ns[key] = self.get_item_value(resource, context, comment, key)
-            comments.append(ns)
+            if resource.is_allowed_to_view_comment(user, comment) is False:
+                continue
+            if filter_comment and filter_comment(comment):
+                continue
+            view = comment_view(comment=comment, comment_index=i,
+                                edit_mode=self.edit_mode)
+            comments.append(view.GET(resource, context))
         comments.reverse()
 
-        return {'comments': comments}
+        namespace = {}
+        namespace['edit_mode'] = self.edit_mode
+        namespace['action'] = None
+        namespace['actions'] = [Button(access='is_allowed_to_edit',
+            title=u'Change state', resource=resource, context=context,
+            name='update')]
+        namespace['comments'] = comments
+        namespace['filter'] = filter_widget
+
+        return namespace
+
+
+    def action_update(self, resource, context, form):
+        comments = resource.metadata.get_property('comment') or []
+        states = form['state']
+        for i, comment_index in enumerate(form['index']):
+            new_state = states[i]
+            comment = comments[comment_index]
+            comment.set_parameter('state', new_state)
+
+        resource.del_property('comment')
+        resource.set_property('comment', comments)
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class CommentWorkflow(Enumerate):
+    default = 'private'
+    options = [
+            {'name': 'public', 'value': u'Public'},
+            {'name': 'private', 'value': u'Private'},
+            {'name': 'pending', 'value': u'Pending'}]
 
 
 
 class CommentsAware(object):
+    """ - Add "comment" to class_schema.
+        - Define a default workflow to be overwritten if necessary, as an
+          Enumerate until now.
+        - Define a default view to display a comment ("comment_view").
+        - Add comments view which displays comments on edit_mode, so that you
+          can filter by workflow state and change state on any comment(s).
+        - Method "is_allowed_to_view_comment" can be overwritten to define
+          access to comments on specific criteria.
+    """
 
     fields = ['comment']
     comment = Text_Field(multilingual=False, multiple=True,
                          parameters_schema={'date': DateTime,
                                             'author': String,
                                             'state': String})
+
+    comment_workflow = CommentWorkflow
+
+    comments = CommentsView(access='is_allowed_to_edit', edit_mode=True)
+    comment_view = CommentView
+
+
+    def is_allowed_to_view_comment(self, user, comment):
+        return True
+
+
+    def get_comments(self, state=None):
+        """ Get any comment matching given state.
+            state may be a string, a tuple or a list.
+        """
+        _comments = self.metadata.get_property('comment') or []
+        if state is None:
+            return list(_comments)
+
+        if not isinstance(state, (tuple, list)):
+            state = [state]
+
+        comments = []
+        for comment in _comments:
+            if comment.get_parameter('state') in state:
+                comments.append(comment)
+        return comments

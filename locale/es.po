@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2011-07-11 12:07+CET\n"
+"POT-Creation-Date: 2011-07-25 15:07+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -214,12 +214,6 @@ msgctxt "link"
 msgid "<g id='1'> ${event/title}</g>  <g id='2'>${event/TIME}</g>"
 msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
 
-#: ../ui/comments.xml.en:10
-#, fuzzy
-msgctxt "span"
-msgid "<g id='1'>${comment/user}</g>  <g id='2'>${comment/datetime}</g>"
-msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
-
 #: ../ui/tiny_mce/rte.xml.en:54
 #, fuzzy
 msgctxt "label"
@@ -230,6 +224,12 @@ msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
 msgctxt "link"
 msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
 msgstr ""
+
+#: ../ui/comment_view.xml.en:10
+#, fuzzy
+msgctxt "span"
+msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
 
 #: ../ui/auto_form.xml.en:18
 #, fuzzy
@@ -495,12 +495,12 @@ msgctxt "label"
 msgid "<g id='4'>${column/title}</g>  "
 msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
 
-#: ../ui/comments.xml.en:14
+#: ../ui/comment_view.xml.en:14
 #, fuzzy
 msgctxt "link"
 msgid ""
-"<g id='4'><g id='5'>Comment ${comment/number}</g></g>  <g id='6'> [ <g "
-"id='7'> Reply </g>] </g>"
+"<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
+"g>]</g> ${workflow} ${index}"
 msgstr ""
 "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
 
@@ -1033,6 +1033,11 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "Modificar"
 
+#: ../comments.py:223
+#, fuzzy
+msgid "Change state"
+msgstr "Modificar"
+
 #: ../user_views.py:307
 msgid "Change your password."
 msgstr "Modificar clave de acceso."
@@ -1339,6 +1344,12 @@ msgstr ""
 
 #: ../revisions_views.py:144
 msgid "Diff between selected revisions"
+msgstr ""
+
+#: ../ui/comments.xml.en:9
+msgctxt "div"
+msgid ""
+"Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:40 ../tracker/ui/change_bugs.xml.en:48
@@ -2439,7 +2450,7 @@ msgstr "Pegar"
 msgid "Path"
 msgstr "Pegar"
 
-#: ../workflow.py:46
+#: ../comments.py:250 ../workflow.py:46
 msgid "Pending"
 msgstr ""
 
@@ -2531,7 +2542,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr "Prioridad:"
 
-#: ../workflow.py:41
+#: ../comments.py:249 ../workflow.py:41
 msgid "Private"
 msgstr "Privado"
 
@@ -2555,7 +2566,7 @@ msgstr "Producto:"
 msgid "Profile"
 msgstr "Perfil"
 
-#: ../workflow.py:50
+#: ../comments.py:248 ../workflow.py:50
 msgid "Public"
 msgstr "Público"
 
@@ -3914,6 +3925,10 @@ msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
+msgstr ""
+
+#: ../comments.py:241
+msgid "xxx"
 msgstr ""
 
 #: ../ui/root/license.xml.en:8
