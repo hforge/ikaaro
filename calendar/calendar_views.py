@@ -36,9 +36,9 @@ from itools.database import AndQuery, PhraseQuery
 from event import Event
 from grid import get_grid_data
 from ikaaro import messages
+from ikaaro.database import Database
 from ikaaro.datatypes import FileDataType
 from ikaaro.folder_views import Folder_NewResource
-from ikaaro.registry import resources_registry
 from ikaaro.utils import get_base_path_query
 
 
@@ -876,5 +876,5 @@ class Calendar_NewEvent(Folder_NewResource):
 
 
     def get_items(self, resource, context):
-        return [
-            x for x in resources_registry.values() if issubclass(x, Event) ]
+        return [ x for x in Database.resources_registry.values()
+                 if issubclass(x, Event) ]

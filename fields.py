@@ -59,20 +59,17 @@ class Field(thingy):
 
 
     # XXX For backwards compatibility
+    datatype_keys = [
+        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'widget',
+        'hidden_by_default']
     def get_datatype(self):
-        keys = ['default']
         kw = {}
-        for key in keys:
+        for key in self.datatype_keys:
             value = getattr(self, key)
             if value is not None:
                 kw[key] = value
 
-        return self.datatype(mandatory=self.required, multiple=self.multiple,
-                             multilingual=self.multilingual,
-                             indexed=self.indexed, stored=self.stored,
-                             title=self.title, widget=self.widget,
-                             hidden_by_default=self.hidden_by_default,
-                             **kw)
+        return self.datatype(mandatory=self.required, title=self.title, **kw)
 
 
     def get_default(self):
@@ -172,6 +169,9 @@ class Password_Field(Metadata_Field):
 class Select_Field(Metadata_Field):
     datatype = Enumerate
     widget = SelectWidget
+    options = None # Must be overriden by subclasses: [{}, ...]
+
+    datatype_keys = Metadata_Field.datatype_keys + ['options']
 
 
 

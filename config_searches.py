@@ -20,21 +20,12 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoadd import AutoAdd
 from config import Configuration
+from config_common import NewResource_Local, NewInstance_Local
 from resource_ import DBResource
 from folder import Folder
-from folder_views import Folder_NewResource, Folder_BrowseContent
-from registry import get_resource_class
+from folder_views import Folder_BrowseContent
 from utils import get_base_path_query
-
-
-class SavedSearch_New(AutoAdd):
-
-    fields = ['title']
-
-    def get_container(self, resource, context, form):
-        return resource
 
 
 class SavedSearch_Results(Folder_BrowseContent):
@@ -56,7 +47,7 @@ class SavedSearch(DBResource):
 
     # Views
     class_views = ['edit', 'results']
-    new_instance = SavedSearch_New()
+    new_instance = NewInstance_Local()
     results = SavedSearch_Results()
 
 
@@ -98,13 +89,6 @@ class SavedSearch(DBResource):
 
 
 
-class Config_Searches_New(Folder_NewResource):
-
-    def get_items(self, resource, context):
-        return resource.get_document_types()
-
-
-
 class Config_Searches(Folder):
 
     class_id = 'config-searches'
@@ -117,13 +101,14 @@ class Config_Searches(Folder):
     config_group = 'access'
 
     # Views
-    class_views = ['browse_content', 'new_search', 'edit', 'commit_log']
-    new_search = Config_Searches_New()
+    class_views = ['browse_content', 'add_search', 'edit', 'commit_log']
+    add_search = NewResource_Local(title=MSG(u'Add search'))
 
 
     def get_document_types(self):
-        return [
-            get_resource_class(x) for x in self._register_document_types ]
+        database = self.database
+        return [ database.get_resource_class(x)
+                 for x in self._register_document_types ]
 
 
 

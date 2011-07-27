@@ -31,9 +31,9 @@ from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
+from database import Database
 from file import File
 from file_views import File_Edit
-from registry import register_resource_class
 from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
@@ -320,9 +320,8 @@ class CSV(Text):
 ###########################################################################
 for js_mime in ['application/x-javascript', 'text/javascript',
                 'application/javascript']:
-    register_resource_class(JS, js_mime)
+    Database.register_resource_class(JS, js_mime)
     add_type(js_mime, '.js')
-register_resource_class(XML, format='application/xml')
-register_resource_class(CSV, 'text/x-comma-separated-values')
-register_resource_class(CSV, 'text/csv')
-
+Database.register_resource_class(XML, 'application/xml')
+Database.register_resource_class(CSV, 'text/x-comma-separated-values')
+Database.register_resource_class(CSV, 'text/csv')

@@ -50,7 +50,6 @@ from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
 from metadata import Metadata
-from registry import get_resource_class
 from skins import skin_registry
 from utils import is_pid_running
 
@@ -101,7 +100,7 @@ def get_pid(target):
 
 def get_root(database):
     metadata = database.get_handler('.metadata', cls=Metadata)
-    cls = get_resource_class(metadata.format)
+    cls = database.get_resource_class(metadata.format)
     return cls(metadata)
 
 

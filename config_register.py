@@ -25,7 +25,6 @@ from config import Configuration
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
 from fields import Boolean_Field, Textarea_Field
-from registry import get_resource_class
 from resource_ import DBResource
 from utils import make_stl_template
 
@@ -55,7 +54,7 @@ class RegisterForm(AutoForm):
 
 
     def get_schema(self, resource, context):
-        cls = get_resource_class('user')
+        cls = context.database.get_resource_class('user')
 
         schema = {}
         for name in self.fields:
@@ -83,7 +82,7 @@ class RegisterForm(AutoForm):
 
 
     def get_widgets(self, resource, context):
-        cls = get_resource_class('user')
+        cls = context.database.get_resource_class('user')
 
         widgets = []
         for name in self.fields:

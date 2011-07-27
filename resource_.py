@@ -20,25 +20,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import lazy, thingy_type
+from itools.core import lazy, is_thingy
 from itools.database import register_field
+from itools.database import PhraseQuery, Resource
 from itools.datatypes import Boolean, Integer, String, URI, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import AccessControl, BaseView, get_context
-from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
+from database import Database
 from fields import Char_Field, Datetime_Field, Field, File_Field, Text_Field
 from fields import Textarea_Field
-from metadata import Metadata
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
-from registry import register_resource_class
-from registry import _lookup_class_id, resources_registry
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
@@ -54,7 +52,7 @@ class DBResourceMetaclass(type):
     def __new__(mcs, name, bases, dict):
         cls = type.__new__(mcs, name, bases, dict)
         if 'class_id' in dict:
-            register_resource_class(cls)
+            Database.register_resource_class(cls)
 
         # Register fields in the catalog
         for name in cls.fields:
@@ -100,6 +98,11 @@ class DBResource(Resource):
     #######################################################################
     # API / Tree
     #######################################################################
+    @property
+    def database(self):
+        return self.metadata.database
+
+
     def get_abspath(self):
         return self.abspath
 
@@ -140,36 +143,9 @@ class DBResource(Resource):
         if path.is_absolute():
             abspath = path
         else:
-            abspath = self.get_abspath().resolve2(path)
-        path = str(abspath)[1:]
-        path_to_metadata = '%s.metadata' % path
+            abspath = self.abspath.resolve2(path)
 
-        database = self.metadata.database
-        metadata = database.get_handler(path_to_metadata, Metadata, soft=soft)
-        if metadata is None:
-            return None
-
-        # 2. Class id
-        format = metadata.format
-        class_id = _lookup_class_id(format)
-        if class_id is None:
-            fs = metadata.database.fs
-            if fs.exists(path):
-                is_file = fs.is_file(path)
-            else:
-                # FIXME This is just a guess, it may fail.
-                is_file = '/' in format
-
-            if is_file:
-                class_id = 'application/octet-stream'
-            else:
-                class_id = 'application/x-not-regular-file'
-
-        # Ok
-        cls = resources_registry[class_id]
-        resource = cls(metadata)
-        resource.abspath = abspath
-        return resource
+        return self.database.get_resource(abspath, soft=soft)
 
 
     def get_resources(self, path='.'):
@@ -256,7 +232,7 @@ class DBResource(Resource):
     @classmethod
     def get_field(self, name):
         field = getattr(self, name, None)
-        if type(field) is thingy_type and issubclass(field, Field):
+        if is_thingy(field, Field):
             return field
 
         return None
@@ -331,7 +307,7 @@ class DBResource(Resource):
 
     def del_property(self, name):
         if self.has_property(name):
-            get_context().database.change_resource(self)
+            self.database.change_resource(self)
             self.metadata.del_property(name)
 
 
@@ -349,14 +325,13 @@ class DBResource(Resource):
         else:
             files = self.get_files_to_archive(content)
 
-        database = get_context().database
+        database = self.database
         return database.get_revisions(files, n, author_pattern, grep_pattern)
 
 
     def get_last_revision(self):
         files = self.get_files_to_archive()
-        database = get_context().database
-        return database.get_last_revision(files)
+        return self.database.get_last_revision(files)
 
 
     def get_owner(self):
@@ -493,7 +468,7 @@ class DBResource(Resource):
         self.update_relative_links(Path(source))
 
         # (2) Update resources that link to me
-        database = get_context().database
+        database = self.database
         target = self.get_abspath()
         query = PhraseQuery('links', source)
         results = database.catalog.search(query).get_documents()
@@ -564,11 +539,9 @@ class DBResource(Resource):
 
         The parameters 'source' and 'target' are absolute 'Path' objects.
         """
-        database = get_context().database
-
         base = self.get_abspath()
         base = str(base)
-        old_base = database.resources_new2old.get(base, base)
+        old_base = self.database.resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
         site_root = self.get_site_root()
@@ -619,7 +592,7 @@ class DBResource(Resource):
                         new_value = str(new_base.get_pathto(target)) + view
                         self.set_property(name, new_value, lang)
 
-        database.change_resource(self)
+        self.database.change_resource(self)
 
 
     def update_relative_links(self, source):
@@ -628,7 +601,7 @@ class DBResource(Resource):
         new path is "self.get_abspath()".
         """
         target = self.get_abspath()
-        resources_old2new = get_context().database.resources_old2new
+        resources_old2new = self.database.resources_old2new
         site_root = self.get_site_root()
         available_languages = site_root.get_property('website_languages')
 

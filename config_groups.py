@@ -17,12 +17,11 @@
 # Import from itools
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.web import INFO
 
 # Import from ikaaro
-from autoform import AutoForm, TextWidget
 from buttons import BrowseButton, RemoveButton, RenameButton
 from config import Configuration
+from config_common import NewResource_Local, NewInstance_Local
 from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
@@ -95,27 +94,13 @@ class Group(DBResource):
 
     class_id = 'config-group'
     class_title = MSG(u'User Group')
+    class_description = MSG(u'...')
 
     # Views
     class_views = ['browse_users', 'edit']
     browse_users = Group_BrowseUsers()
+    new_instance = NewInstance_Local()
 
-
-
-class AddGroup(AutoForm):
-
-    access = 'is_admin'
-    title = MSG(u'Add group')
-
-    schema = {'name': String}
-    widgets = [TextWidget('name', title=MSG(u'Name'))]
-
-
-    def action(self, resource, context, form):
-        name = form['name']
-        resource.make_resource(form['name'], Group)
-        message = INFO(u'Group "{name}" added.', name=name)
-        return context.come_back(message, goto=';browse_content')
 
 
 class BrowseGroups(Folder_BrowseContent):
@@ -152,14 +137,14 @@ class ConfigGroups(Folder):
     class_description = MSG(u'Manage user groups.')
     class_icon48 = 'icons/48x48/groups.png'
 
-    # Views
-    class_views = ['browse_content', 'add_group', 'edit', 'commit_log']
-    browse_content = BrowseGroups()
-    add_group = AddGroup()
-
     # Configuration
     config_name = 'groups'
     config_group = 'access'
+
+    # Views
+    class_views = ['browse_content', 'add_group', 'edit', 'commit_log']
+    browse_content = BrowseGroups()
+    add_group = NewResource_Local(title=MSG(u'Add group'))
 
     default_groups = [
         ('admins', {'en': u'Admins'}),
@@ -173,6 +158,9 @@ class ConfigGroups(Folder):
         for name, title in self.default_groups:
             self.make_resource(name, Group, title=title)
 
+
+    def get_document_types(self):
+        return [Group]
 
 
 Configuration.register_plugin(ConfigGroups)

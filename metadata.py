@@ -21,9 +21,6 @@ from itools.csv import deserialize_parameters
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 
-# Import from ikaaro
-from registry import get_resource_class
-
 
 class Metadata(File):
 
@@ -60,7 +57,7 @@ class Metadata(File):
             raise ValueError, 'unexpected parameters for the format property'
         self.format = value
         # Get the schema
-        resource_class = get_resource_class(value)
+        resource_class = self.database.get_resource_class(value)
 
         # Parse
         for name, value, parameters in parser:
@@ -106,7 +103,7 @@ class Metadata(File):
 
 
     def to_str(self):
-        resource_class = get_resource_class(self.format)
+        resource_class = self.database.get_resource_class(self.format)
 
         if self.version is None:
             lines = ['format:%s\n' % self.format]
@@ -170,7 +167,7 @@ class Metadata(File):
             return property.get(language)
 
         # Consider only the properties with a non empty value
-        cls = get_resource_class(self.format)
+        cls = self.database.get_resource_class(self.format)
         datatype = cls.get_field(name).datatype
         languages = [
             x for x in property if not datatype.is_empty(property[x].value) ]
@@ -228,7 +225,7 @@ class Metadata(File):
             value = Property(value)
 
         # Case 4: Simple
-        cls = get_resource_class(self.format)
+        cls = self.database.get_resource_class(self.format)
         field = cls.get_field(name)
         if field is None or field.multiple is False:
             properties[name] = value

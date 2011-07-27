@@ -36,7 +36,6 @@ from buttons import AddButton
 from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
-from registry import get_resource_class
 from utils import reduce_string, make_stl_template
 from workflow import state_widget, StaticStateEnumerate, WorkflowAware
 
@@ -418,7 +417,7 @@ class DBResource_AddBase(STLForm):
             return
 
         # Check it is of the expected type
-        cls = get_resource_class(mimetype)
+        cls = context.database.get_resource_class(mimetype)
         if not self.can_upload(cls):
             error = u'The given file is not of the expected type.'
             context.message = ERROR(error)

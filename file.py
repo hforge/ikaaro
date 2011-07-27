@@ -32,12 +32,12 @@ from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
 from cc import Observable
+from database import Database
 from fields import Char_Field, File_Field
 from file_views import File_NewInstance, File_View
 from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import Image_View, Video_View, Archive_View
 from file_views import Flash_View
-from registry import register_resource_class
 from resource_ import DBResource
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from workflow import WorkflowAware
@@ -347,4 +347,4 @@ class Bzip2(File):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(File, format="application/octet-stream")
+Database.register_resource_class(File, 'application/octet-stream')

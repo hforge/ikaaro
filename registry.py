@@ -15,47 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-resources_registry = {}
-
-def register_resource_class(resource_class, format=None):
-    if format is None:
-        format = resource_class.class_id
-    resources_registry[format] = resource_class
-
-
-def unregister_resource_class(resource_class):
-    for class_id, cls in resources_registry.items():
-        if resource_class is cls:
-            del resources_registry[class_id]
-
-
-def _lookup_class_id(class_id):
-    if class_id in resources_registry:
-        return class_id
-
-    if '/' in class_id:
-        class_id = class_id.split('/')[0]
-        if class_id in resources_registry:
-            return class_id
-
-    return None
-
-
-def get_resource_class(class_id):
-    if type(class_id) is not str:
-        raise TypeError, 'expected byte string, got %s' % class_id
-
-    class_id = _lookup_class_id(class_id)
-    if class_id is None:
-        class_id = 'application/octet-stream'
-
-    return resources_registry[class_id]
+# Import from ikaaro
+from database import Database
 
 
 def register_document_type(resource_class, container_cls_id='folder'):
     class_id = resource_class.class_id
-    container_cls = get_resource_class(container_cls_id)
+    container_cls = Database.resources_registry[container_cls_id]
 
     # Check if the resource class is already registered
     for cls in container_cls.__mro__:
@@ -74,7 +40,7 @@ def register_document_type(resource_class, container_cls_id='folder'):
 
 def unregister_document_type(resource_class, container_cls_id='folder'):
     class_id = resource_class.class_id
-    container_cls = get_resource_class(container_cls_id)
+    container_cls = Database.resources_registry[container_cls_id]
 
     # Check if the resource class is already registered
     for cls in container_cls.__mro__:

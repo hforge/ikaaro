@@ -28,7 +28,6 @@ from buttons import Button
 from datatypes import ContainerPathDatatype, FileDataType
 from enumerates import Days, Months, Years
 import messages
-from registry import get_resource_class
 
 
 
@@ -51,7 +50,7 @@ class AutoAdd(AutoForm):
         class_id = context.query['type']
         if not class_id:
             return None
-        return get_resource_class(class_id)
+        return context.database.get_resource_class(class_id)
 
 
     def get_title(self, context):

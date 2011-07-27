@@ -34,7 +34,6 @@ from itools.web import Conflict, NotImplemented
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
-from registry import get_resource_class
 
 
 class DBResource_GetFile(BaseView):
@@ -209,7 +208,7 @@ class LoginView(STLForm):
         register = context.site_root.is_allowed_to_register(user, resource)
         namespace['register'] = register
 
-        cls = get_resource_class('user')
+        cls = context.database.get_resource_class('user')
         field = cls.get_field(cls.login_name_property)
         namespace['login_name_title'] = field.title
 

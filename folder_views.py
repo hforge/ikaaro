@@ -38,7 +38,6 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
-from registry import get_resource_class
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
@@ -135,6 +134,12 @@ class Folder_NewResource(IconsView):
             for cls in resource.get_document_types():
                 if cls not in document_types:
                     document_types.append(cls)
+
+        # XXX Add dynamic models
+        models = context.site_root.get_resource('config/models')
+        for model in models.get_resources():
+            cls = model.build_resource_class()
+            document_types.append(cls)
 
         return document_types
 
@@ -298,7 +303,7 @@ class Folder_BrowseContent(SearchForm):
         # 3. Do not show two options with the same title
         formats = {}
         for type in children_formats:
-            cls = get_resource_class(type)
+            cls = context.database.get_resource_class(type)
             title = cls.class_title.gettext()
             formats.setdefault(title, []).append(type)
 
@@ -382,11 +387,12 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_key_sorted_by_format(self):
+        database = get_context().database
         def key(item, cache={}):
             format = item.format
             if format in cache:
                 return cache[format]
-            cls = get_resource_class(format)
+            cls = database.get_resource_class(format)
             value = cls.class_title.gettext().lower().translate(transmap)
             cache[format] = value
             return value
@@ -410,6 +416,7 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_key_sorted_by_workflow_state(self):
+        database = get_context().database
         def key(item, cache={}):
             # Don't cache by state name because the same name could be
             # translated differently in two workflows
@@ -418,7 +425,7 @@ class Folder_BrowseContent(SearchForm):
             cache_key = (format, workflow_state)
             if cache_key in cache:
                 return cache[cache_key]
-            cls = get_resource_class(format)
+            cls = database.get_resource_class(format)
             if issubclass(cls, WorkflowAware):
                 state = cls.workflow.states[workflow_state]
                 value = state['title'].gettext().lower().translate(transmap)

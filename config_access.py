@@ -24,8 +24,9 @@ from itools.gettext import MSG
 from autoedit import AutoEdit
 from autoform import SelectWidget
 from config import Configuration
+from config_common import NewInstance_Local
 from config_groups import UserGroupsDatatype
-from config_searches import Config_Searches, SavedSearch, SavedSearch_New
+from config_searches import Config_Searches, SavedSearch
 from fields import Select_Field
 from registry import register_document_type
 from table import Table
@@ -62,7 +63,7 @@ class SavedSearch_Content(SavedSearch):
     # Views
     _fields = ['title', 'search_workflow_state']
     edit = AutoEdit(fields=_fields)
-    new_instance = SavedSearch_New(fields=_fields)
+    new_instance = NewInstance_Local(fields=_fields)
 
     def get_search_query(self):
         query = super(SavedSearch_Content, self).get_search_query()

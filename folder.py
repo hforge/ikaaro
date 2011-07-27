@@ -34,6 +34,7 @@ from itools.uri import Path
 from itools.web import get_context, BaseView
 
 # Import from ikaaro
+from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
@@ -41,7 +42,6 @@ from folder_views import Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
-from registry import register_resource_class, get_resource_class
 from resource_ import DBResource
 from utils import get_base_path_query
 
@@ -67,12 +67,11 @@ class Folder(DBResource):
     @property
     def handler(self):
         cls = self.class_handler
-        database = self.metadata.database
         key = self.metadata.key[:-9]
-        handler = database.get_handler(key, cls=cls, soft=True)
+        handler = self.database.get_handler(key, cls=cls, soft=True)
         if handler is None:
             handler = cls()
-            database.push_phantom(key, handler)
+            self.database.push_phantom(key, handler)
 
         return handler
 
@@ -99,7 +98,9 @@ class Folder(DBResource):
                 document_types.extend(items)
 
         # class_id to class
-        return [ get_resource_class(class_id) for class_id in document_types ]
+        database = self.database
+        return [ database.get_resource_class(class_id)
+                 for class_id in document_types ]
 
 
     def get_files_to_archive(self, content=False):
@@ -116,15 +117,14 @@ class Folder(DBResource):
     def make_resource(self, name, cls, **kw):
         context = get_context()
         # Make the metadata
-        format = kw.pop('format', None)
-        metadata = Metadata(cls=cls, format=format)
-        metadata.set_property('mtime', context.timestamp)
+        metadata = Metadata(cls=cls)
         self.handler.set_handler('%s.metadata' % name, metadata)
+        metadata.set_property('mtime', context.timestamp)
         # Initialize
         resource = self.get_resource(name)
         resource.init_resource(**kw)
         # Ok
-        context.database.add_resource(resource)
+        self.database.add_resource(resource)
         return resource
 
 
@@ -141,10 +141,10 @@ class Folder(DBResource):
             class_id = 'webpage'
         else:
             class_id = mimetype
-        cls = get_resource_class(class_id)
+        cls = self.database.get_resource_class(class_id)
 
         # Special case: web pages
-        kw = {'format': class_id, 'filename': filename}
+        kw = {'filename': filename}
         if issubclass(cls, WebPage):
             if language is None:
                 text = cls.class_handler(string=body).to_text()
@@ -186,7 +186,7 @@ class Folder(DBResource):
 
     def extract_archive(self, handler, default_language, filter=None,
                         postproc=None, update=False):
-        change_resource = get_context().database.change_resource
+        change_resource = self.database.change_resource
         for u_path in handler.get_contents():
             # 1. Skip folders
             path_str = Unicode.encode(u_path)
@@ -282,7 +282,7 @@ class Folder(DBResource):
         - 'force': do nothing
         """
 
-        database = get_context().database
+        database = self.database
         resource = self.get_resource(name, soft=soft)
         if soft and resource is None:
             return
@@ -358,7 +358,7 @@ class Folder(DBResource):
                             '%s.metadata' % target_path)
 
         # Copy the content
-        database = self.metadata.database
+        database = self.database
         fs =  database.fs
         new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
@@ -399,7 +399,7 @@ class Folder(DBResource):
             raise ConsistencyError, message % (source, target_parent)
 
         # Events, remove
-        database = self.metadata.database
+        database = self.database
         new_path = self.get_abspath().resolve2(target_path)
         database.move_resource(source, new_path)
 
@@ -454,9 +454,9 @@ class Folder(DBResource):
             if query:
                 class_id = query.get('type')
                 if class_id:
-                    view = get_resource_class(class_id).new_instance
-                    if isinstance(view, BaseView):
-                        return view
+                    cls = self.database.get_resource_class(class_id)
+                    if isinstance(cls.new_instance, BaseView):
+                        return cls.new_instance
 
         # Default
         return super(Folder, self).get_view(name, query)
@@ -475,4 +475,4 @@ class Folder(DBResource):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(Folder, format="application/x-not-regular-file")
+Database.register_resource_class(Folder, 'application/x-not-regular-file')

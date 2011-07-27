@@ -37,7 +37,6 @@ from fields import Char_Field
 from folder import Folder
 from config_access import SavedSearch_Content
 from config_register import RegisterForm
-from registry import get_resource_class
 from resource_views import LoginView
 from skins import skin_registry
 from user import UserFolder
@@ -208,7 +207,7 @@ class WebSite(AccessControl, Folder):
         # Create the user
         users = self.get_resource('/users')
         user_id = users.get_next_user_id()
-        cls = get_resource_class('user')
+        cls = self.database.get_resource_class('user')
         user = users.make_resource(user_id, cls)
 
         # Set login name and paswword

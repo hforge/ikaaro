@@ -35,7 +35,6 @@ from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
-from ikaaro.registry import get_resource_class
 
 
 # Recurrence
@@ -195,7 +194,7 @@ class Event_NewInstance(AutoAdd):
         # 1. Make the resource
         container = form['container']
         class_id = context.query['type']
-        cls = get_resource_class(class_id)
+        cls = context.database.get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
         for key in self.fields:

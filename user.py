@@ -33,7 +33,6 @@ from autoedit import AutoEdit
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
 from fields import File_Field
 from folder import Folder
-from registry import get_resource_class
 from resource_ import DBResource
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
@@ -252,7 +251,7 @@ class UserFolder(Folder):
 
 
     def get_document_types(self):
-        return [get_resource_class('user')]
+        return [self.database.get_resource_class('user')]
 
 
     #######################################################################

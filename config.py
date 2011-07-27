@@ -40,7 +40,7 @@ from utils import get_base_path_query
 GROUPS = [
     ('access', MSG(u'Users, Access Control & Security')),
     ('webmaster', MSG(u'Webmaster tools')),
-    ('extensions', MSG(u'Extensions')),
+    ('content', MSG(u'Content')),
     ('other', MSG(u'Other')),
     ]
 
@@ -364,6 +364,7 @@ import config_footer
 import config_groups
 import config_mail
 import config_menu
+import config_models
 import config_register
 import config_seo
 import config_searches

@@ -38,7 +38,6 @@ from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from config_captcha import CaptchaDatatype, CaptchaWidget
 from messages import MSG_NEW_RESOURCE
-from registry import get_resource_class
 
 
 
@@ -242,7 +241,7 @@ class WebSite_NewInstance(AutoAdd):
         # 1. Make the resource
         container = form['container']
         class_id = context.query['type']
-        cls = get_resource_class(class_id)
+        cls = context.database.get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
         self.set_value(child, context, 'title', form)

@@ -31,9 +31,9 @@ from itools.web import BaseView, get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
+from database import Database
 from fields import HTMLFile_Field
 from text import Text
-from registry import register_resource_class
 from resource_ import DBResource
 
 
@@ -297,4 +297,4 @@ class WebPage(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(WebPage, format='application/xhtml+xml')
+Database.register_resource_class(WebPage, 'application/xhtml+xml')

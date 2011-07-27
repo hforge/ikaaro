@@ -102,7 +102,7 @@ class ConfigCalendar(DBResource):
 
     # Configuration
     config_name = 'calendar'
-    config_group = 'extensions'
+    config_group = 'content'
 
 
     colors = ['#AC81A1', '#719C71', '#C1617C', '#A0A5B5', '#A59580']
