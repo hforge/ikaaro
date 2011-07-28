@@ -249,6 +249,9 @@ class DBResource(Resource):
             return property
 
         field = self.get_field(name)
+        if field is None:
+            return None
+
         default = field.get_default()
         if field.multiple:
             return [ Property(x) for x in default ]

@@ -33,7 +33,7 @@ from itools.xml import START_ELEMENT
 # Import from ikaaro
 from database import Database
 from fields import HTMLFile_Field
-from text import Text
+from file import File
 from resource_ import DBResource
 
 
@@ -162,7 +162,7 @@ class WebPage_View(BaseView):
 ###########################################################################
 # Model
 ###########################################################################
-class WebPage(Text):
+class WebPage(File):
 
     class_id = 'webpage'
     class_title = MSG(u'Web Page')
