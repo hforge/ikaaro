@@ -85,9 +85,9 @@ class Post_View(STLForm):
 
     def get_namespace(self, resource, context):
         return {
-            'title': resource.get_property('title'),
+            'title': resource.get_value('title'),
             'data': resource.get_html_data(),
-            'date': resource.get_property('date'),
+            'date': resource.get_value('date'),
             'comments': CommentsView().GET(resource, context)}
 
 

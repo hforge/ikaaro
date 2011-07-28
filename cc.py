@@ -19,17 +19,17 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import freeze, thingy_property
-from itools.database import OrQuery, PhraseQuery
-from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
+from itools.csv import Property
+from itools.datatypes import Email, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.web import INFO, ERROR
+from itools.web import get_context, INFO, ERROR
 
 # Import from ikaaro
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
-from autoform import HiddenWidget
+from autoform import HiddenWidget, SelectWidget
 from buttons import Button, BrowseButton
-from fields import Char_Field
+from fields import Select_Field
 from messages import MSG_BAD_KEY
 from user_views import BrowseUsers
 from utils import generate_password
@@ -65,50 +65,6 @@ def add_subscribed_message(message, users, context, users_is_resources=True):
         users = ', '.join(users)
         message = message(users=users)
         context.message.append(message)
-
-
-
-class UsersList(Enumerate):
-
-    included_roles = None
-
-    def get_options(self):
-        site_root = self.resource.get_site_root()
-
-        # Members
-        included_roles = self.included_roles
-        if included_roles:
-            query = [ PhraseQuery('groups', x) for x in included_roles ]
-            query = OrQuery(*query)
-            results = site_root.search_users(query)
-            members = set([ x.name for x in results.get_documents() ])
-        else:
-            members = site_root.get_members()
-
-        users = site_root.get_resource('/users')
-        options = []
-        for name in members:
-            user = users.get_resource(name, soft=True)
-            if user is None:
-                continue
-            value = user.get_title()
-            options.append({'name': name, 'value': value})
-
-        options.sort(key=itemgetter('value'))
-        return options
-
-
-
-class UsersRawList(Tokens):
-
-    @staticmethod
-    def is_valid(value):
-        if not value:
-            return True
-        for email in value:
-            if not Email.is_valid(email):
-                return False
-        return True
 
 
 
@@ -172,7 +128,7 @@ class RegisterForm(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'email':
             if context.user:
-                return context.user.get_property('email')
+                return context.user.get_value('email')
             return context.query['email']
         proxy = super(RegisterForm, self)
         return proxy.get_value(self, resource, context, name, datatype)
@@ -256,8 +212,9 @@ class ManageForm(BrowseUsers):
     def get_item_value(self, resource, context, item, column):
         if column == 'state':
             for cc in resource.get_property('cc_list'):
-                if item.name == cc['username']:
-                    if cc['status'] == 'S':
+                if item.name == cc.value:
+                    status = cc.get_parameter('status')
+                    if status == 'S':
                         return MSG(u'Pending confirmation')
                     return MSG(u'Subscribed')
 
@@ -491,27 +448,33 @@ class AcceptInvitation(ConfirmSubscription):
 
 
 
-class Subscribers(String):
-
-    def decode(cls, data):
-        value = data.split("#")
-        username = value.pop(0)
-        return {'username': username,
-                'status': value[0] if value else None,
-                'key': value[1] if value else None}
+class Followers_Widget(SelectWidget):
+    has_empty_option = False
 
 
-    def encode(cls, value):
-        if value['status']:
-            return '{username}#{status}#{key}'.format(**value)
-        return value['username']
+class Followers_Field(Select_Field):
+
+    parameters_schema = {'status': String, 'key': String}
+    widget = Followers_Widget
+
+    @thingy_property
+    def options(self):
+        root = get_context().root
+
+        options = []
+        for user in root.get_resources('/users'):
+            value = user.get_title()
+            options.append({'name': user.name, 'value': value})
+
+        options.sort(key=itemgetter('value'))
+        return options
 
 
 
 class Observable(object):
 
     fields = ['cc_list']
-    cc_list = Char_Field(datatype=Subscribers, multiple=True)
+    cc_list = Followers_Field(multiple=True, title=MSG(u'Followers'))
 
     confirm_register_subject = MSG(u"Confirmation required")
     confirm_register_text = MSG(
@@ -547,13 +510,14 @@ class Observable(object):
         users = []
         for cc in self.get_property('cc_list'):
             # case 1: subscribed user or unsubscription pending user
-            if cc['status'] in (None, 'U'):
-                users.append(cc['username'])
+            status = cc.get_parameter('status')
+            if status in (None, 'U'):
+                users.append(cc.value)
                 continue
 
             # other
-            if skip_unconfirmed is False or cc['status'] == 'S':
-                users.append(cc['username'])
+            if skip_unconfirmed is False or status == 'S':
+                users.append(cc.value)
 
         return users
 
@@ -565,8 +529,9 @@ class Observable(object):
 
     def is_confirmed(self, username):
         for cc in self.get_property('cc_list'):
-            if cc['username'] == username:
-                return cc['status'] is None
+            if cc.value == username:
+                status = cc.get_parameter('status')
+                return status is None
         return False
 
 
@@ -576,8 +541,8 @@ class Observable(object):
 
     def get_register_key(self, username, status='S'):
         for cc in self.get_property('cc_list'):
-            if cc['username'] == username and cc['status'] == status:
-                return cc['key']
+            if cc.value == username and cc.get_parameter('status') == status:
+                return cc.get_parameter('key')
         return None
 
 
@@ -586,16 +551,17 @@ class Observable(object):
         status = 'U' if unregister is True else 'S'
         # Find existing key
         for cc in cc_list:
-            if (cc['username'] == username  and cc['status'] == status and
-                cc['key'] is not None):
+            key = cc.get_parameter('key')
+            if (cc.value == username and cc.get_parameter('status') == status
+                and key is not None):
                 # Reuse found key
-                return cc['key']
+                return key
         # Generate key
         key = generate_password(30)
         # Filter out username
-        cc_list = [ cc for cc in cc_list if cc['username'] != username ]
+        cc_list = [ cc for cc in cc_list if cc.value != username ]
         # Create new dict to force metadata commit
-        cc_list.append({'username': username, 'status': status, 'key': key})
+        cc_list.append(Property(username, status=status, key=key))
         self.set_property('cc_list', cc_list)
         return key
 
@@ -603,9 +569,9 @@ class Observable(object):
     def reset_register_key(self, username):
         cc_list = self.get_property('cc_list')
         # Filter out username
-        cc_list = [ cc for cc in cc_list if cc['username'] != username ]
+        cc_list = [ cc for cc in cc_list if cc.value != username ]
         # Create new dict to force metadata commit
-        cc_list.append({'username': username, 'status': None, 'key': None})
+        cc_list.append(Property(username))
         self.set_property('cc_list', cc_list)
 
 
@@ -641,7 +607,7 @@ class Observable(object):
     def unsubscribe_user(self, username):
         cc_list = self.get_property('cc_list')
         # Filter out username
-        cc_list = [ cc for cc in cc_list if cc['username'] != username ]
+        cc_list = [ cc for cc in cc_list if cc.value != username ]
         self.set_property('cc_list', cc_list)
 
 
@@ -668,7 +634,7 @@ class Observable(object):
 
         # Build the confirmation link
         confirm_url = context.uri.resolve(view)
-        email = user.get_property('email')
+        email = user.get_value('email')
         confirm_url.query = {'key': key, 'email': email}
         subject = subject.gettext()
         text = text.gettext(uri=confirm_url)
@@ -687,7 +653,7 @@ class Observable(object):
 
         # 3. Build the message for each language
         site_root = self.get_site_root()
-        website_languages = site_root.get_property('website_languages')
+        website_languages = site_root.get_value('website_languages')
         default_language = site_root.get_default_language()
         messages_dict = {}
         for language in website_languages:
@@ -700,10 +666,10 @@ class Observable(object):
             if self.get_register_key(username) is not None:
                 continue
             user = context.root.get_user(username)
-            if user and not user.get_property('user_must_confirm'):
-                mail = user.get_property('email')
+            if user and not user.get_value('user_must_confirm'):
+                mail = user.get_value('email')
 
-                language = user.get_property('user_language')
+                language = user.get_value('user_language')
                 if language not in website_languages:
                     language = default_language
                 subject, body = messages_dict[language]

@@ -58,7 +58,7 @@ def is_admin(user, resource):
         user.get_site_root().get_abspath()):
         return False
 
-    return 'admins' in user.get_property('groups')
+    return 'admins' in user.get_value('groups')
 
 
 
@@ -138,7 +138,7 @@ class WebSite(AccessControl, Folder):
     # API
     ########################################################################
     def get_default_language(self):
-        return self.get_property('website_languages')[0]
+        return self.get_value('website_languages')[0]
 
 
     def get_default_edit_languages(self):
@@ -162,7 +162,7 @@ class WebSite(AccessControl, Folder):
         # User Profile (2.0)
         user = context.user
         if user is not None:
-            language = user.get_property('user_language')
+            language = user.get_value('user_language')
             if language is not None:
                 accept.set(language, 2.0)
         # Cookie (2.5)
@@ -231,7 +231,7 @@ class WebSite(AccessControl, Folder):
     def is_allowed_to_register(self, user, resource):
         if user:
             return False
-        return self.get_resource('config/register').get_property('is_open')
+        return self.get_resource('config/register').get_value('is_open')
 
 
     def is_admin(self, user, resource):
@@ -351,7 +351,7 @@ class WebSite(AccessControl, Folder):
     # Upgrade
     #######################################################################
     def update_20100430(self):
-        vhosts = self.get_property('vhosts')
+        vhosts = self.get_value('vhosts')
         if len(vhosts) == 1:
             vhosts = vhosts[0].split()
             if len(vhosts) > 1:
@@ -359,7 +359,7 @@ class WebSite(AccessControl, Folder):
 
 
     def update_20100630(self):
-        value = self.get_property('google-site-verification')
+        value = self.get_value('google-site-verification')
         self.set_property('google_site_verification', value)
         self.del_property('google-site-verification')
 

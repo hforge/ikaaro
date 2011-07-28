@@ -115,7 +115,7 @@ class Config_EditVirtualHosts(STLForm):
     def get_namespace(self, resource, context):
         resource = resource.get_site_root()
 
-        vhosts = resource.get_property('vhosts')
+        vhosts = resource.get_value('vhosts')
         return {'vhosts': '\n'.join(vhosts)}
 
 
@@ -236,7 +236,7 @@ class Config_EditLanguages(STLForm):
 
     def get_namespace(self, resource, context):
         resource = resource.get_site_root()
-        ws_languages = resource.get_property('website_languages')
+        ws_languages = resource.get_value('website_languages')
 
         # Active languages
         default = ws_languages[0]
@@ -273,7 +273,7 @@ class Config_EditLanguages(STLForm):
         default = codes[0]
 
         # Change the default language
-        languages = resource.get_property('website_languages')
+        languages = resource.get_value('website_languages')
         languages = [ x for x in languages if x != default ]
         languages.insert(0, default)
         resource.set_property('website_languages', languages)
@@ -286,7 +286,7 @@ class Config_EditLanguages(STLForm):
 
         # Check the default language is not to be removed
         codes = form['codes']
-        languages = resource.get_property('website_languages')
+        languages = resource.get_value('website_languages')
         default = languages[0]
         if default in codes:
             message = ERROR(u'You can not remove the default language.')
@@ -308,7 +308,7 @@ class Config_EditLanguages(STLForm):
     def action_add_language(self, resource, context, form):
         resource = resource.get_site_root()
 
-        ws_languages = resource.get_property('website_languages')
+        ws_languages = resource.get_value('website_languages')
         ws_languages = list(ws_languages)
         ws_languages.append(form['code'])
         resource.set_property('website_languages', ws_languages)

@@ -42,7 +42,7 @@ class ContactsOptions(Enumerate):
             if user is None:
                 continue
             user_title = user.get_title()
-            user_email = user.get_property('email')
+            user_email = user.get_value('email')
             if user_title != user_email:
                 user_title = '%s <%s>' % (user_title, user_email)
             else:

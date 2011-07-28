@@ -115,7 +115,7 @@ class ConfigAccess(Table):
         user_groups = set(['everybody'])
         if user:
             user_groups.add('authenticated')
-            user_groups.update(user.get_property('groups'))
+            user_groups.update(user.get_value('groups'))
 
         table = self.handler
         for record in table.get_records():

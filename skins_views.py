@@ -42,7 +42,7 @@ class LanguagesTemplate(CMSTemplate):
         context = self.context
         # Website languages
         site_root = context.site_root
-        ws_languages = site_root.get_property('website_languages')
+        ws_languages = site_root.get_value('website_languages')
         if len(ws_languages) == 1:
             return []
 

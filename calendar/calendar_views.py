@@ -114,7 +114,7 @@ class TimetablesForm(STLForm):
     def get_namespace(self, resource, context):
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
-            timetables = resource.get_property('timetables')
+            timetables = resource.get_value('timetables')
             timetables_ns = [
                 {'index': index,
                  'startname': '%s_start' % index,
@@ -161,7 +161,7 @@ class TimetablesForm(STLForm):
             return
 
         # New timetables
-        timetables = resource.get_property('timetables')
+        timetables = resource.get_value('timetables')
         timetables = [
             timetable for index, timetable in enumerate(timetables)
             if index not in ids ]
@@ -171,7 +171,7 @@ class TimetablesForm(STLForm):
 
 
     def action_update(self, resource, context, form):
-        timetables = resource.get_property('timetables')
+        timetables = resource.get_value('timetables')
         if len(timetables) == 0:
             context.message = ERROR(u'Nothing to change.')
             return
@@ -648,8 +648,8 @@ class DailyView(CalendarView):
         events = self.search(calendar, dates=c_date)
         for event in events.get_documents(sort_by='dtstart'):
             event = calendar.get_resource(event.abspath)
-            event_start = event.get_property('dtstart')
-            event_end = event.get_property('dtend')
+            event_start = event.get_value('dtstart')
+            event_end = event.get_value('dtend')
             # Compute start and end indexes
             tt_start = 0
             tt_end = len(timetables) - 1
@@ -672,7 +672,7 @@ class DailyView(CalendarView):
             events_by_index.setdefault(tt_start, [])
             events_by_index[tt_start].append({
                 'name': event.name,
-                'title': event.get_property('title'),
+                'title': event.get_value('title'),
                 'tt_start': tt_start,
                 'tt_end': tt_end,
                 'colspan': tt_end - tt_start + 1,

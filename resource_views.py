@@ -124,7 +124,7 @@ class DBResource_GetImage(DBResource_GetFile):
 
         # Headers
         context.set_content_type('image/%s' % format)
-#       filename = resource.get_property('filename')
+#       filename = resource.get_value('filename')
 #       if filename:
 #           context.set_content_disposition('inline', filename)
 
@@ -228,7 +228,7 @@ class LoginView(STLForm):
                     message = u'The given login name is not valid.'
                     context.message = ERROR(message)
                     return
-                email = user.get_property('email')
+                email = user.get_value('email')
                 user.send_forgotten_password(context, email)
 
             # We send the same message even if the user does not exist

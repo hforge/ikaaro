@@ -89,7 +89,7 @@ class User(DBResource):
         values = super(User, self).get_catalog_values()
 
         # email domain
-        email = self.get_property('email')
+        email = self.get_value('email')
         if email and '@' in email:
             values['email_domain'] = email.split('@', 1)[1]
 
@@ -97,13 +97,13 @@ class User(DBResource):
         values['username'] = self.get_login_name()
 
         # groups
-        values['groups'] = self.get_property('groups')
+        values['groups'] = self.get_value('groups')
 
         return values
 
 
     def get_links(self):
-        return set(self.get_property('groups'))
+        return set(self.get_value('groups'))
 
 
     ########################################################################
@@ -116,7 +116,7 @@ class User(DBResource):
 
     def get_auth_token(self):
         # Used by itools.web
-        return self.get_property('password')
+        return self.get_value('password')
 
 
     def set_password(self, password):
@@ -129,7 +129,7 @@ class User(DBResource):
             log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
 
         secure_hash = get_secure_hash(password)
-        return secure_hash == self.get_property('password')
+        return secure_hash == self.get_value('password')
 
 
     def set_auth_cookie(self, context, password):
@@ -147,7 +147,7 @@ class User(DBResource):
 
     def get_title(self, language=None):
         firstname = self.get_value('firstname')
-        lastname = self.get_property('lastname')
+        lastname = self.get_value('lastname')
         if firstname:
             if lastname:
                 return '%s %s' % (firstname, lastname)
@@ -159,17 +159,17 @@ class User(DBResource):
 
     login_name_property = 'email'
     def get_login_name(self):
-        return self.get_property(self.login_name_property)
+        return self.get_value(self.login_name_property)
 
 
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
-        return tuple(self.get_property('groups'))
+        return tuple(self.get_value('groups'))
 
 
     def get_timezone(self):
-        return self.get_property('user_timezone')
+        return self.get_value('user_timezone')
 
 
     ########################################################################
@@ -211,7 +211,7 @@ class User(DBResource):
     def send_confirm_url(self, context, email, subject, text, view):
         # Set the confirmation key
         if self.has_property('user_must_confirm'):
-            key = self.get_property('user_must_confirm')
+            key = self.get_value('user_must_confirm')
         else:
             key = generate_password(30)
             self.set_property('user_must_confirm', key)

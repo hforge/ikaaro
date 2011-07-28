@@ -522,7 +522,7 @@ class Folder_BrowseContent(SearchForm):
         try:
             return getattr(brain, column)
         except AttributeError:
-            return item_resource.get_property(column)
+            return item_resource.get_value(column)
 
 
     #######################################################################

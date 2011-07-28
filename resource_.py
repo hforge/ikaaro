@@ -21,6 +21,7 @@
 
 # Import from itools
 from itools.core import lazy, is_thingy
+from itools.csv import Property
 from itools.database import register_field
 from itools.database import PhraseQuery, Resource
 from itools.datatypes import Boolean, Integer, String, URI, Unicode
@@ -250,8 +251,19 @@ class DBResource(Resource):
         return field.set_value(self, name, value, language)
 
 
+    def get_property(self, name, language=None):
+        property = self.metadata.get_property(name, language=language)
+        if property:
+            return property
+
+        field = self.get_field(name)
+        default = field.get_default()
+        if field.multiple:
+            return [ Property(x) for x in default ]
+        return Property(default)
+
+
     # XXX Backwards compatibility
-    get_property = get_value
     set_property = set_value
 
 
@@ -361,7 +373,7 @@ class DBResource(Resource):
         values = {}
 
         # Step 1. Automatically index fields
-        languages = self.get_site_root().get_property('website_languages')
+        languages = self.get_site_root().get_value('website_languages')
         for name in self.fields:
             field = self.get_field(name)
             if not field.indexed and not field.stored:
@@ -496,14 +508,14 @@ class DBResource(Resource):
         links = set()
         base = self.get_abspath()
         site_root = self.get_site_root()
-        available_languages = site_root.get_property('website_languages')
+        available_languages = site_root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
             languages = available_languages if field.multilingual else [None]
 
             for lang in languages:
-                prop = self.metadata.get_property(name, language=lang)
+                prop = self.get_property(name, language=lang)
                 if prop is None:
                     continue
                 if field.multiple:
@@ -545,14 +557,14 @@ class DBResource(Resource):
         old_base = Path(old_base)
         new_base = Path(base)
         site_root = self.get_site_root()
-        available_languages = site_root.get_property('website_languages')
+        available_languages = site_root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
             languages = available_languages if field.multilingual else [None]
 
             for lang in languages:
-                prop = self.metadata.get_property(name, language=lang)
+                prop = self.get_property(name, language=lang)
                 if prop is None:
                     continue
                 if field.multiple:
@@ -603,14 +615,14 @@ class DBResource(Resource):
         target = self.get_abspath()
         resources_old2new = self.database.resources_old2new
         site_root = self.get_site_root()
-        available_languages = site_root.get_property('website_languages')
+        available_languages = site_root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
             languages = available_languages if field.multilingual else [None]
 
             for lang in languages:
-                prop = self.metadata.get_property(name, language=lang)
+                prop = self.get_property(name, language=lang)
                 if prop is None:
                     continue
                 if field.multiple:
@@ -738,7 +750,7 @@ class DBResource(Resource):
 
 
     def get_title(self, language=None):
-        title = self.get_property('title', language=language)
+        title = self.get_value('title', language=language)
         if title:
             return title
         # Fallback to the resource's name
@@ -747,7 +759,7 @@ class DBResource(Resource):
 
     def get_edit_languages(self, context):
         site_root = self.get_site_root()
-        site_languages = site_root.get_property('website_languages')
+        site_languages = site_root.get_value('website_languages')
         default = site_root.get_default_edit_languages()
 
         # Can not use context.query[] because edit_language is not necessarily

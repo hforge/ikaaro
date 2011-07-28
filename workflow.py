@@ -83,7 +83,7 @@ class WorkflowAware(BaseWorkflowAware):
 
 
     def get_workflow_state(self):
-        state = self.get_property('state')
+        state = self.get_value('state')
         if state:
             return state
         return self.workflow.initstate

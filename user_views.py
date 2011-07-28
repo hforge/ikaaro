@@ -59,7 +59,7 @@ class User_ConfirmRegistration(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'key':
-            return resource.get_property('user_must_confirm')
+            return resource.get_value('user_must_confirm')
         if name == 'username':
             return resource.get_login_name()
 
@@ -69,7 +69,7 @@ class User_ConfirmRegistration(AutoForm):
 
     def get_namespace(self, resource, context):
         # Check register key
-        must_confirm = resource.get_property('user_must_confirm')
+        must_confirm = resource.get_value('user_must_confirm')
         username = context.get_form_value('username', default='')
         if must_confirm is None:
             goto = '/;login?username=%s' % username
@@ -84,7 +84,7 @@ class User_ConfirmRegistration(AutoForm):
 
     def action(self, resource, context, form):
         # Check register key
-        must_confirm = resource.get_property('user_must_confirm')
+        must_confirm = resource.get_value('user_must_confirm')
         if form['key'] != must_confirm:
             context.message = messages.MSG_BAD_KEY
             return
@@ -125,7 +125,7 @@ class User_ResendConfirmation(BaseView):
             return context.come_back(msg)
 
         # Resend confirmation
-        resource.send_confirmation(context, resource.get_property('email'))
+        resource.send_confirmation(context, resource.get_value('email'))
         # Ok
         msg = MSG(u'Confirmation sent!')
         return context.come_back(msg)
@@ -163,7 +163,7 @@ class User_Profile(STLView):
         avatar = resource.get_value('avatar')
         return {
             'firstname': resource.get_value('firstname'),
-            'lastname': resource.get_property('lastname'),
+            'lastname': resource.get_value('lastname'),
             'avatar': avatar is not None,
             'items': self.get_items(resource, context),
             'user_must_confirm': resource.has_property('user_must_confirm')}
@@ -186,7 +186,7 @@ class User_EditAccount(AutoEdit):
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
         email = form['email']
-        if email != resource.get_property('email'):
+        if email != resource.get_value('email'):
             results = context.root.search(email=email)
             if len(results):
                 context.message = ERROR(
@@ -214,7 +214,7 @@ class User_EditPreferences(STLForm):
         root = context.root
 
         # Languages
-        user_language = resource.get_property('user_language')
+        user_language = resource.get_value('user_language')
         languages = [
             {'code': code,
              'name': get_language_name(code),
@@ -222,7 +222,7 @@ class User_EditPreferences(STLForm):
             for code in root.get_available_languages() ]
 
         # Timezone
-        user_timezone = resource.get_property('user_timezone')
+        user_timezone = resource.get_value('user_timezone')
         timezones = [
             {'name': name,
              'is_selected': name == user_timezone}
@@ -442,7 +442,7 @@ class BrowseUsers(SearchForm):
             return item.lastname
         elif column == 'account_state':
             user = context.root.get_resource(item.abspath)
-            if user.get_property('user_must_confirm'):
+            if user.get_value('user_must_confirm'):
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Resend Confirmation'), href
             return MSG(u'Active'), None

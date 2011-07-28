@@ -240,7 +240,7 @@ def update(parser, options, target):
     database = server.database
     root = server.root
 
-    mtime = root.get_property('mtime')
+    mtime = root.get_value('mtime')
     if mtime is None or options.mtime:
         message = 'STAGE 0: Set mtime and author in the metadata (y/N)? '
         if ask_confirmation(message, confirm) is False:

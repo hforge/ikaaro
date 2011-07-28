@@ -29,8 +29,6 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import SelectWidget
-from ikaaro.cc import UsersList
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.file import File
 from ikaaro.folder import Folder
@@ -132,16 +130,6 @@ class Event_Edit(AutoEdit):
 class Event_NewInstance(AutoAdd):
 
     fields = ['title', 'dtstart', 'dtend', 'cc_list']
-
-    def _get_datatype(self, resource, context, name):
-        if name == 'cc_list':
-            widget = SelectWidget('cc_list', has_empty_option=False,
-                                  title=MSG(u'Subscribers'))
-            return UsersList(resource=resource, multiple=True, widget=widget)
-
-        proxy = super(Event_NewInstance, self)
-        return proxy._get_datatype(resource, context, name)
-
 
     def get_container(self, resource, context, form):
         # XXX Copied from blog/blog.py
@@ -261,14 +249,14 @@ class Event(File):
 
 
     def get_owner(self):
-        return self.get_property('owner')
+        return self.get_value('owner')
 
 
     def get_dates(self):
-        start = self.get_property('dtstart')
+        start = self.get_value('dtstart')
         if type(start) is datetime:
             start = start.date()
-        end = self.get_property('dtend')
+        end = self.get_value('dtend')
         if type(end) is datetime:
             end = end.date()
         days = range((end - start).days + 1)
@@ -276,7 +264,7 @@ class Event(File):
         dates = set()
         f = lambda date: dates.update([ date + timedelta(x) for x in days ])
 
-        rrule = self.get_property('rrule')
+        rrule = self.get_value('rrule')
         rrule = rrules.get(rrule)
         if rrule:
             top = max(start, date.today()) + MAX_DELTA
@@ -317,14 +305,14 @@ class Event(File):
         """
         ns = {
             'title': self.get_title(),
-            'description': self.get_property('description'),
+            'description': self.get_value('description'),
             'ORGANIZER': self.get_owner()}
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
         # appear into more than one cell
-        dtstart = self.get_property('dtstart')
-        dtend = self.get_property('dtend')
+        dtstart = self.get_value('dtstart')
+        dtend = self.get_value('dtend')
 
         dtstart_type = type(dtstart)
         if dtstart_type is datetime:
@@ -368,7 +356,7 @@ class Event(File):
             ns['status'] = 'cal_conflict'
         else:
             ns['status'] = 'cal_busy'
-            status = self.get_property('status')
+            status = self.get_value('status')
             if status:
                 ns['status'] = status
 
@@ -389,7 +377,7 @@ class Event(File):
         uri = context.get_link(self)
         uri = str(context.uri.resolve(uri))
         uri += '/;edit'
-        last_author = self.get_property('last_author')
+        last_author = self.get_value('last_author')
         last_author = context.root.get_user_title(last_author)
         body = message.gettext(last_author=last_author, resource_uri=uri,
                                title=title, language=language)

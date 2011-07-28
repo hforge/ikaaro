@@ -64,7 +64,7 @@ class Group_BrowseUsers(BrowseUsers):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             user = context.root.get_resource(item.abspath)
-            groups = user.get_property('groups')
+            groups = user.get_value('groups')
             return item.name, (resource.name in groups)
 
         proxy = super(Group_BrowseUsers, self)
@@ -79,7 +79,7 @@ class Group_BrowseUsers(BrowseUsers):
         ac = resource.get_access_control()
         for username in ac.get_members():
             user = users.get_resource(username)
-            groups = set(user.get_property('groups'))
+            groups = set(user.get_value('groups'))
             if username in form['ids']:
                 groups.add(group_id)
             else:

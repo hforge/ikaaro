@@ -139,7 +139,7 @@ class ConfigCalendar(DBResource):
         Example of metadata:
           <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
         """
-        timetables = self.get_property('timetables')
+        timetables = self.get_value('timetables')
         if timetables:
             return timetables
 
@@ -174,18 +174,14 @@ class ConfigCalendar(DBResource):
         for event in self.search_resources(cls=Event):
             lines.append('BEGIN:VEVENT\n')
             for ikaaro_name, ics_name in ikaaro_to_ics:
-                datatype = event.get_property_datatype(ikaaro_name)
-                property = event.metadata.get_property(ikaaro_name)
-                if property:
-                    lang = property.get_parameter('lang')
-                    if lang:
-                        property = Property(property.value, LANGUAGE=lang)
+                property = event.get_property(ikaaro_name)
+                lang = property.get_parameter('lang')
+                if lang:
+                    property = Property(property.value, LANGUAGE=lang)
                     p_schema = {'LANGUAGE': String(multiple=False)}
-                # Assume default value
                 else:
-                    value = datatype.get_default()
-                    property = Property(value)
                     p_schema = None
+                datatype = event.get_field(ikaaro_name).datatype
                 line = property_to_str(ics_name, property, datatype, p_schema)
                 lines.append(line)
 

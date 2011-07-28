@@ -74,7 +74,7 @@ class RegisterForm(AutoForm):
 
         # Terms of service
         config_register = resource.get_resource('config/register')
-        terms_of_service = config_register.get_property('terms_of_service')
+        terms_of_service = config_register.get_value('terms_of_service')
         if terms_of_service:
             schema['terms_of_service'] = Boolean(mandatory=True)
 
@@ -92,7 +92,7 @@ class RegisterForm(AutoForm):
 
         # Terms of service
         config_register = resource.get_resource('config/register')
-        terms_of_service = config_register.get_property('terms_of_service')
+        terms_of_service = config_register.get_value('terms_of_service')
         if terms_of_service:
             widget = TermsOfService_Widget('terms_of_service',
                                            terms_of_service=terms_of_service)

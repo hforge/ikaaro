@@ -93,7 +93,7 @@ class ContactOptions(Enumerate):
         mail = resource.get_resource('config/mail')
 
         options = []
-        for name in mail.get_property('contacts'):
+        for name in mail.get_value('contacts'):
             user = users.get_resource(name, soft=True)
             if user is None:
                 continue
@@ -148,7 +148,7 @@ class ContactForm(AutoForm):
         if name == 'from':
             user = context.user
             if user is not None:
-                return user.get_property('email')
+                return user.get_value('email')
             return datatype.get_default()
 
         query = context.query
@@ -168,7 +168,7 @@ class ContactForm(AutoForm):
         # Find out the "to" address
         contact = resource.get_resource('/users/%s' % contact)
         contact_title = contact.get_title()
-        contact = contact.get_property('email')
+        contact = contact.get_value('email')
         if contact_title != contact:
             contact = (contact_title, contact)
         # Send the email

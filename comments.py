@@ -196,7 +196,7 @@ class CommentsView(STLForm):
                 return state != filter_state
 
         # Comments
-        _comments = resource.metadata.get_property('comment') or []
+        _comments = resource.get_property('comment')
         comments = []
         comment_view = resource.comment_view
         user = context.user
@@ -224,7 +224,7 @@ class CommentsView(STLForm):
 
 
     def action_update(self, resource, context, form):
-        comments = resource.metadata.get_property('comment') or []
+        comments = resource.get_property('comment')
         states = form['state']
         for i, comment_index in enumerate(form['index']):
             new_state = states[i]
@@ -277,7 +277,7 @@ class CommentsAware(object):
         """ Get any comment matching given state.
             state may be a string, a tuple or a list.
         """
-        _comments = self.metadata.get_property('comment') or []
+        _comments = self.get_property('comment')
         if state is None:
             return list(_comments)
 

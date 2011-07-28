@@ -96,7 +96,7 @@ class File_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        filename = resource.get_property('filename') or resource.get_title()
+        filename = resource.get_value('filename') or resource.get_title()
         return {'filename': filename}
 
 
@@ -158,7 +158,7 @@ class File_ExternalEdit(BaseView):
             'include-X-User-Agent:%s' % context.get_header('User-Agent')]
 
         # Try to guess the extension (optional)
-        filename = resource.get_property('filename')
+        filename = resource.get_value('filename')
         if filename:
             extension = splitext(filename)[1]
             if extension:
@@ -260,7 +260,7 @@ class Archive_View(STLForm):
     schema = {'target': PathDataType, 'update': Boolean}
 
     def get_namespace(self, resource, context):
-        filename = resource.get_property('filename') or resource.get_title()
+        filename = resource.get_value('filename') or resource.get_title()
         contents = resource.get_value('data').get_contents()
         contents = '\n'.join(contents)
         # Extract archive

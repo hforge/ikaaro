@@ -235,11 +235,11 @@ class Root(WebSite):
         if from_addr is None:
             user = context.user
             if user is not None:
-                from_addr = user.get_title(), user.get_property('email')
-            elif mail.get_property('emails_from_addr'):
-                user_name = mail.get_property('emails_from_addr')
+                from_addr = user.get_title(), user.get_value('email')
+            elif mail.get_value('emails_from_addr'):
+                user_name = mail.get_value('emails_from_addr')
                 user = self.get_resource('/users/%s' % user_name)
-                from_addr = user.get_title(), user.get_property('email')
+                from_addr = user.get_title(), user.get_value('email')
             else:
                 from_addr = server.smtp_from
 
@@ -248,7 +248,7 @@ class Root(WebSite):
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
         # Add signature
-        signature = mail.get_property('emails_signature')
+        signature = mail.get_value('emails_signature')
         if signature:
             signature = signature.strip()
             if not signature.startswith('--'):
