@@ -136,9 +136,11 @@ class Folder_NewResource(IconsView):
                     document_types.append(cls)
 
         # XXX Add dynamic models
+        database = resource.database
         models = context.site_root.get_resource('config/models')
         for model in models.get_resources():
-            cls = model.build_resource_class()
+            class_id = str(model.abspath)
+            cls = database.get_resource_class(class_id)
             document_types.append(cls)
 
         return document_types
