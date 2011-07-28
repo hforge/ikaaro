@@ -23,7 +23,6 @@ from decimal import Decimal
 from types import GeneratorType
 
 # Import from itools
-from itools.csv import Property
 from itools.database import AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -345,44 +344,3 @@ class WebSite(AccessControl, Folder):
     unauthorized = LoginView()
     not_found = NotFoundView()
     upload_stats = UploadStatsView()
-
-
-    #######################################################################
-    # Upgrade
-    #######################################################################
-    def update_20100430(self):
-        vhosts = self.get_value('vhosts')
-        if len(vhosts) == 1:
-            vhosts = vhosts[0].split()
-            if len(vhosts) > 1:
-                self.set_property('vhosts', vhosts)
-
-
-    def update_20100630(self):
-        value = self.get_value('google-site-verification')
-        self.set_property('google_site_verification', value)
-        self.del_property('google-site-verification')
-
-
-    def update_20100702(self):
-        from config_theme import Theme
-
-        theme = self.get_resource('theme', soft=True)
-        if theme and isinstance(theme, Theme) is False:
-            raise RuntimeError, 'A resource named theme already exists'
-
-        # Theme folder
-        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
-        # Add home/contact links
-        menu = theme.get_resource('menu/menu')
-        menu.add_new_record({'path': '../../..',
-                             'title': Property(u'Home', language='en'),
-                             'target': '_top'})
-        menu.add_new_record({'path': '../../../;contact',
-                             'title': Property(u'Contact', language='en'),
-                             'target': '_top'})
-
-
-    def update_20110606(self):
-        self.make_resource('config', Configuration)
-        # TODO

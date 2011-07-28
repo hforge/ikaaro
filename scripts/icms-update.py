@@ -20,23 +20,16 @@
 from cProfile import runctx
 from datetime import datetime
 from optparse import OptionParser
-from subprocess import Popen, PIPE
 from sys import exit, stdout
-from time import time
 from traceback import print_exc
 
 # Import from itools
 import itools
 from itools.core import fixed_offset, start_subprocess, send_subprocess
-from itools.csv import Property
 from itools.database import check_database
-from itools.fs import lfs
-from itools.handlers import ro_database
 from itools.web import get_context
 
 # Import from ikaaro
-from ikaaro.metadata import Metadata
-from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_config
 from ikaaro.server import get_fake_context, get_pid, load_modules
@@ -177,59 +170,7 @@ def update(parser, options, target):
     load_modules(config)
 
     #######################################################################
-    # STAGE 0: Change format of the metadata
-    # XXX Specific to the migration from 0.61 to 0.62
-    #######################################################################
-    metadata = ro_database.get_handler('%s/.metadata' % path, Metadata)
-    try:
-        metadata.load_state()
-    except SyntaxError:
-        ro_database.cache.clear()
-        message = 'STAGE 0: Update metadata to the new format (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        print 'STAGE 0: Updating metadata (may take a while)'
-        t0 = time()
-
-        for filename in lfs.traverse(path):
-            if not filename.endswith('.metadata'):
-                continue
-            # Load the old metadata
-            old_metadata = ro_database.get_handler(filename, OldMetadata)
-            old_metadata.load_state()
-            # Make the new metadata
-            format = old_metadata.format
-            version = old_metadata.version
-            new_metadata = Metadata(format=format, version=version)
-            # Copy properties
-            for name in old_metadata.properties:
-                value = old_metadata.properties[name]
-                if type(value) is dict:
-                    for lang in value:
-                        property = Property(value[lang], lang=lang)
-                        new_metadata.set_property(name, property)
-                elif type(value) is list:
-                    property = [ Property(x) for x in value ]
-                    new_metadata.set_property(name, property)
-                else:
-                    property = Property(value)
-                    new_metadata.set_property(name, property)
-            # Save
-            del old_metadata
-            lfs.remove(filename)
-            new_metadata.save_state_to(filename)
-        print '       : %f seconds' % (time() - t0)
-        # Commit
-        print 'STAGE 0: Committing changes to git (may take a while)'
-        t0 = time()
-        command = ['git', 'commit', '-a', '--author=nobody <>',
-                   '-m', 'Update metadata to new format']
-        p = Popen(command, cwd=path, stdout=PIPE)
-        p.communicate()
-        print '       : %f seconds' % (time() - t0)
-
-    #######################################################################
-    # STAGE 0 (follow-up): Set mtime/author
+    # STAGE 0: Set mtime/author
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
     server = Server(target)

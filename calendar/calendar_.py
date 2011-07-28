@@ -22,10 +22,9 @@
 from datetime import time
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
-from itools.datatypes import Integer, String
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.ical import iCalendar
 
@@ -247,59 +246,3 @@ class ConfigCalendar(DBResource):
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
-
-
-
-###########################################################################
-# XXX Upgrade code, to remove in 0.71
-###########################################################################
-from itools.csv import Table as TableFile
-from itools.ical.datatypes import record_properties
-from ikaaro.table import Table
-
-
-class icalendarTable(TableFile):
-    """The old handler class for table base calendars.
-    """
-
-    record_properties = merge_dicts(
-        record_properties,
-        type=String(indexed=True),
-        inner=Integer(multiple=True))
-
-
-
-class CalendarTable(Table):
-
-    class_id = 'calendarTable'
-    class_version = '20100602'
-    class_handler = icalendarTable
-
-
-    def update_20100602(self):
-        from ikaaro.metadata import is_multilingual
-
-        # Remove myself
-        handler = self.handler.clone()
-        parent = self.parent
-        parent.del_resource(self.name, ref_action='force')
-
-        # New calendar
-        self = parent.make_resource(self.name, Calendar)
-        # Import old data
-        lang = parent.get_site_root().get_default_language()
-        for i, event in enumerate(handler.records):
-            # deleted record or not an event
-            if event is None or event['type'].value != 'VEVENT':
-                continue
-            filename = str(i)
-            properties = {}
-            for name, property in event.items():
-                if name in ics_to_ikaaro:
-                    name = ics_to_ikaaro[name]
-                    datatype = Event.get_property_datatype(name)
-                    if is_multilingual(datatype):
-                        property = Property(property.value, lang=lang)
-                    properties[name] = property
-            properties['uid'] = event['UID']
-            self.make_resource(filename, Event, **properties)

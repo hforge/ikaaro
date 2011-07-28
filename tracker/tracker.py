@@ -254,10 +254,3 @@ class Tracker(Folder):
     export_to_csv_form = Tracker_ExportToCSVForm()
     export_to_csv = Tracker_ExportToCSV()
     change_several_bugs = Tracker_ChangeSeveralBugs()
-
-
-    #######################################################################
-    # User Interface
-    #######################################################################
-    def update_20100429(self):
-        self.del_resource('calendar', soft=True)

@@ -31,15 +31,15 @@ class Button(STLTemplate):
         <button type="submit" id="${id}" name="${action}" value="${name}"
             class="${css}" onclick="${onclick}">${title}</button>''')
     id = None
-    # TODO rename to "value" in 0.70
+    # TODO rename to "value" in 0.75
     name = None
-    # TODO rename to "content" in 0.70, add "title" attribute
+    # TODO rename to "content" in 0.75, add "title" attribute
     title = MSG(u"OK")
     css = 'button-ok'
     confirm = None
 
 
-    # TODO rename to "name" in 0.70
+    # TODO rename to "name" in 0.75
     @thingy_property
     def action(cls):
         if cls.name is None:
