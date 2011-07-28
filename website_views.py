@@ -230,14 +230,15 @@ class CreditsView(STLView):
 class LanguagesEnumerate(Enumerate):
 
     def get_options(cls):
-        return [{'value': x['name'], 'name': x['code']} for x in get_languages()]
+        return [ {'value': x['name'], 'name': x['code']}
+                 for x in get_languages()]
 
 
 languages_widget = SelectWidget('language', title=MSG(u'Default language'),
                                 tip=MSG(u'Select the default language'))
 vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
-                                tip=MSG(u'Type the hostnames this website will'
-                                        u' apply to, each one in a different line.'))
+    tip=MSG(u'Type the hostnames this website will apply to, each one in a'
+            u' different line.'))
 
 class WebSite_NewInstance(NewInstance):
 
