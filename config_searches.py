@@ -25,7 +25,6 @@ from config_common import NewResource_Local, NewInstance_Local
 from resource_ import DBResource
 from folder import Folder
 from folder_views import Folder_BrowseContent
-from utils import get_base_path_query
 
 
 class SavedSearch_Results(Folder_BrowseContent):
@@ -52,14 +51,8 @@ class SavedSearch(DBResource):
 
 
     def get_search_query(self):
-        query = AndQuery()
-
-        # Search in website
-        site_root = self.get_site_root()
-        query.append(get_base_path_query(site_root.abspath,
-                                         include_container=True))
-
         # Search values
+        query = AndQuery()
         for name in self.fields:
             if not name.startswith('search_'):
                 continue

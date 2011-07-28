@@ -20,6 +20,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -34,20 +35,17 @@ class ContactsOptions(Enumerate):
 
     @classmethod
     def get_options(cls):
+        root = get_context().root
+
         options = []
-        resource = cls.resource
-        users = resource.get_resource('/users')
-        for user_name in resource.get_members():
-            user = users.get_resource(user_name, soft=True)
-            if user is None:
-                continue
+        for user in root.get_resources('/users'):
             user_title = user.get_title()
             user_email = user.get_value('email')
             if user_title != user_email:
                 user_title = '%s <%s>' % (user_title, user_email)
             else:
                 user_title = user_email
-            options.append({'name': user_name, 'value': user_title,
+            options.append({'name': user.name, 'value': user_title,
                             'sort_value': user_title.lower()})
         options.sort(key=itemgetter('sort_value'))
         return options
@@ -65,11 +63,8 @@ class ConfigMail_Edit(AutoEdit):
 
     def _get_schema(self, resource, context):
         schema = super(ConfigMail_Edit, self)._get_schema(resource, context)
-
-        resource = resource.get_site_root()
-        schema['emails_from_addr'] = ContactsOptions(resource=resource)
-        schema['contacts'] = ContactsOptions(multiple=True, resource=resource)
-
+        schema['emails_from_addr'] = ContactsOptions
+        schema['contacts'] = ContactsOptions(multiple=True)
         return schema
 
 

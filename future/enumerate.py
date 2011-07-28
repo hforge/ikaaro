@@ -49,9 +49,7 @@ class TableEnumerate(Enumerate):
 
 
     def get_options(cls):
-        context = get_context()
-        here = context.resource
-        table = here.get_site_root().get_resource(cls.table_path)
+        table = get_context().root.get_resource(cls.table_path)
         handler = table.handler
         options = []
         for record in handler.get_records_in_order():

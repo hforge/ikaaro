@@ -62,7 +62,7 @@ class Post_NewInstance(AutoAdd):
         date = form['date']
         names = ['%04d' % date.year, '%02d' % date.month]
 
-        container = context.site_root
+        container = context.root
         for name in names:
             folder = container.get_resource(name, soft=True)
             if folder is None:

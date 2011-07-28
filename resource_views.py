@@ -205,7 +205,7 @@ class LoginView(STLForm):
         namespace = super(LoginView, self).get_namespace(resource, context)
 
         user = context.user
-        register = context.site_root.is_allowed_to_register(user, resource)
+        register = context.root.is_allowed_to_register(user, resource)
         namespace['register'] = register
 
         cls = context.database.get_resource_class('user')
@@ -218,7 +218,7 @@ class LoginView(STLForm):
     def action(self, resource, context, form):
         # Get the user
         loginname = form['loginname'].strip()
-        user = context.site_root.get_user_from_login(loginname)
+        user = context.root.get_user_from_login(loginname)
 
         # Case 1: Forgotten password
         if form['no_password']:

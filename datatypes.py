@@ -117,8 +117,8 @@ class ContainerPathDatatype(Enumerate):
                 skip_formats.add(resource.class_id)
                 continue
 
-            path = context.site_root.get_pathto(resource)
-            title = '/' if not path else ('/%s/' % path)
+            path = resource.abspath
+            title = '/' if not path else ('%s/' % path)
             # Next
             items.append({'name': path, 'value': title, 'selected': False})
 

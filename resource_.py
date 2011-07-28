@@ -171,14 +171,6 @@ class DBResource(Resource):
         yield self
 
 
-    def get_site_root(self):
-        from website import WebSite
-        resource = self
-        while not isinstance(resource, WebSite):
-            resource = resource.parent
-        return resource
-
-
     #######################################################################
     # API / Views
     #######################################################################
@@ -373,7 +365,7 @@ class DBResource(Resource):
         values = {}
 
         # Step 1. Automatically index fields
-        languages = self.get_site_root().get_value('website_languages')
+        languages = self.get_root().get_value('website_languages')
         for name in self.fields:
             field = self.get_field(name)
             if not field.indexed and not field.stored:
@@ -507,8 +499,8 @@ class DBResource(Resource):
     def get_links(self):
         links = set()
         base = self.get_abspath()
-        site_root = self.get_site_root()
-        available_languages = site_root.get_value('website_languages')
+        root = self.get_root()
+        available_languages = root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
@@ -556,8 +548,8 @@ class DBResource(Resource):
         old_base = self.database.resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
-        site_root = self.get_site_root()
-        available_languages = site_root.get_value('website_languages')
+        root = self.get_root()
+        available_languages = root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
@@ -614,8 +606,8 @@ class DBResource(Resource):
         """
         target = self.get_abspath()
         resources_old2new = self.database.resources_old2new
-        site_root = self.get_site_root()
-        available_languages = site_root.get_value('website_languages')
+        root = self.get_root()
+        available_languages = root.get_value('website_languages')
 
         for name in self._get_references_from_schema():
             field = self.get_field(name)
@@ -758,9 +750,9 @@ class DBResource(Resource):
 
 
     def get_edit_languages(self, context):
-        site_root = self.get_site_root()
-        site_languages = site_root.get_value('website_languages')
-        default = site_root.get_default_edit_languages()
+        root = self.get_root()
+        site_languages = root.get_value('website_languages')
+        default = root.get_default_edit_languages()
 
         # Can not use context.query[] because edit_language is not necessarily
         # defined

@@ -237,10 +237,7 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 # Used by the add-form
 ###########################################################################
 def get_content_containers(context, skip_formats):
-    query = AndQuery(
-        get_base_path_query(context.site_root.get_abspath(), True),
-        PhraseQuery('is_folder', True))
-
+    query = PhraseQuery('is_folder', True)
     for brain in context.root.search(query).get_documents():
         if brain.format in skip_formats:
             continue

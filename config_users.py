@@ -61,7 +61,6 @@ class AddUser(AutoForm):
         root = context.root
         user = context.user
         users = root.get_resource('users')
-        website = resource.get_site_root()
 
         # Check whether the user already exists
         email = form['email'].strip()
@@ -85,7 +84,7 @@ class AddUser(AutoForm):
                 # so the user must activate its account
                 password = None
             # Add the user
-            user = website.make_user(password=password)
+            user = root.make_user(password=password)
             user.set_property('email', email)
             user_id = user.name
             if password is None:
@@ -96,7 +95,7 @@ class AddUser(AutoForm):
         else:
             user = users.get_resource(user_id)
             # Check the user is not yet in the group
-            if user_id in website.get_members():
+            if user_id in root.get_members():
                 context.message = ERROR(u'The user is already here.')
                 return None
             user.send_registration(context, email)

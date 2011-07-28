@@ -102,12 +102,13 @@ class RegisterForm(AutoForm):
 
 
     def action(self, resource, context, form):
+        root = context.root
+
         email = form['email'].strip()
-        results = context.root.search(format='user', email=email)
+        results = root.search(format='user', email=email)
         if len(results) == 0:
             # Create the user
-            site_root = context.site_root
-            user = site_root.make_user()
+            user = root.make_user()
             for field in self.fields:
                 user.set_property(field, form[field])
 

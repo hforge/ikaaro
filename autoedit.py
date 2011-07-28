@@ -83,8 +83,8 @@ class EditLanguageMenu(ContextMenu):
             # No multilingual fields
             return []
 
-        site_root = self.resource.get_site_root()
-        languages = site_root.get_value('website_languages')
+        root = self.resource.get_root()
+        languages = root.get_value('website_languages')
         edit_languages = self.resource.get_edit_languages(self.context)
         return [ {'title': get_language_name(x), 'name': x,
                   'selected': x in edit_languages}

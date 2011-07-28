@@ -61,8 +61,8 @@ class RecaptchaWidget(Widget):
 
 
     def public_key(self):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         return captcha.get_value('recaptcha_public_key')
 
 
@@ -77,8 +77,7 @@ class RecaptchaDatatype(String):
         context = get_context()
         if getattr(context, 'recaptcha_return_code', None) == 'true':
             return True
-        website = context.site_root
-        captcha = website.get_resource('config/captcha')
+        captcha = context.root.get_resource('config/captcha')
         private_key = captcha.get_value('recaptcha_private_key')
         # Get remote ip
         remote_ip = context.get_remote_ip() or '127.0.0.1'
@@ -108,6 +107,7 @@ class RecaptchaDatatype(String):
         context.recaptcha_return_code = return_code = return_values[0]
         return return_code == 'true'
 
+
 ###########################################################################
 # Question Captcha
 ###########################################################################
@@ -118,8 +118,8 @@ class QuestionCaptchaDatatype(Unicode):
 
     @staticmethod
     def is_valid(value):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         return captcha.get_value('captcha_answer') == value
 
 
@@ -133,8 +133,8 @@ class QuestionCaptchaWidget(TextWidget):
 
 
     def question(self):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         return captcha.get_value('captcha_question')
 
 
@@ -147,8 +147,8 @@ class CaptchaDatatype(Unicode):
 
     @staticmethod
     def is_valid(value):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         captcha_type = captcha.get_value('captcha_type')
         return CaptchaType.datatypes[captcha_type].is_valid(value)
 
@@ -158,15 +158,15 @@ class CaptchaWidget(Widget):
 
     @thingy_lazy_property
     def title(self):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         captcha_type = captcha.get_value('captcha_type')
         return CaptchaType.widgets[captcha_type].title
 
 
     def render(self, mode='events'):
-        website = get_context().site_root
-        captcha = website.get_resource('config/captcha')
+        root = get_context().root
+        captcha = root.get_resource('config/captcha')
         captcha_type = captcha.get_value('captcha_type')
         widget = CaptchaType.widgets[captcha_type]
         return widget(name=self.name, value=self.value).render()

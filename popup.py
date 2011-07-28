@@ -115,8 +115,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         elif column == 'name':
             target = self.target
             if self.is_folder(item_resource):
-                site_root = resource.get_site_root()
-                path_to_item = site_root.get_pathto(item_resource)
+                path_to_item = context.root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
                            'search_text': None,
@@ -276,7 +275,7 @@ class DBResource_AddBase(STLForm):
 
 
     def get_root(self, context):
-        return context.resource.get_site_root()
+        return context.root
 
 
     def get_start(self, resource):
@@ -346,7 +345,7 @@ class DBResource_AddBase(STLForm):
         context.content_type = 'text/html; charset=UTF-8'
 
         # Build and return the namespace
-        site_root = resource.get_site_root()
+        root = context.root
         namespace = self.get_configuration()
         additional_javascript = self.get_additional_javascript(context)
         namespace['text'] = self.text_values
@@ -362,7 +361,7 @@ class DBResource_AddBase(STLForm):
         widget = state_widget(datatype=StaticStateEnumerate, value='private')
         namespace['state_widget'] = widget
         namespace['scripts'] = self.get_scripts(context)
-        namespace['styles'] = site_root.get_skin(context).get_styles(context)
+        namespace['styles'] = root.get_skin(context).get_styles(context)
         browse_content = self.browse_content_class(\
                            element_to_add=self.element_to_add,
                            resource_action=self.get_resource_action(context),

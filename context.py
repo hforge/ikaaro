@@ -33,31 +33,8 @@ class CMSContext(Context):
 
 
     def find_site_root(self):
-        # Default to root
-        root = self.root
-        self.site_root = root
+        self.site_root = self.root
 
-        # Check we have a URI
-        uri = self.uri
-        if uri is None:
-            return
-
-        # The site root depends on the host
-        hostname = get_host_from_authority(uri.authority)
-
-        catalog = self.database.catalog
-        # This may happen with a broken or missing catalog in
-        # icms-update-catalog.py
-        if not catalog:
-            return
-
-        results = catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        self.site_root = root.get_resource(path)
 
     def get_template(self, web_path):
         web_path = normalize_path(web_path)

@@ -39,7 +39,6 @@ from ikaaro import messages
 from ikaaro.database import Database
 from ikaaro.datatypes import FileDataType
 from ikaaro.folder_views import Folder_NewResource
-from ikaaro.utils import get_base_path_query
 
 
 resolution = timedelta.resolution
@@ -332,17 +331,12 @@ class CalendarView(STLView):
         for name, value in kw.items():
             query.append(PhraseQuery(name, value))
 
-        # Only in the current site
-        site_root = calendar.get_site_root()
-        if site_root.parent:
-            query.append(get_base_path_query(site_root.get_abspath()))
-
         # Search
         return get_context().root.search(query)
 
 
     def get_config_calendar(self, resource):
-        return resource.get_site_root().get_resource('config/calendar')
+        return resource.get_resource('/config/calendar')
 
 
     def get_colors(self, resource):

@@ -212,7 +212,7 @@ class File_Field(Field):
 
         # Language negotiation
         if self.multilingual and language is None:
-            root = resource.get_site_root()
+            root = resource.get_root()
             languages = []
             for lang in root.get_value('website_languages'):
                 key = self._get_key(resource, name, lang)

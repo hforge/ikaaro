@@ -22,7 +22,7 @@ from itools.core import get_abspath
 from ikaaro.config import Configuration
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from ikaaro.website import WebSite
+from ikaaro.root import Root
 
 # Import from ikaaro.calendar
 from calendar_ import ConfigCalendar
@@ -41,10 +41,10 @@ __all__ = [
 register_document_type(Event)
 register_skin('calendar', get_abspath('ui'))
 Configuration.register_plugin(ConfigCalendar)
-WebSite.monthly_view = MonthlyView()
-WebSite.weekly_view = WeeklyView()
-WebSite.daily_view = DailyView()
-WebSite.new_event = Calendar_NewEvent()
+Root.monthly_view = MonthlyView()
+Root.weekly_view = WeeklyView()
+Root.daily_view = DailyView()
+Root.new_event = Calendar_NewEvent()
 
 # Silent pyflakes
 Event_Edit, Event_NewInstance

@@ -58,7 +58,7 @@ class Skin(object):
         """Return the title to give to the template document.
         """
         here = context.resource
-        root = here.get_site_root()
+        root = context.root
         root_title = root.get_title()
 
         # Choose the template
@@ -142,7 +142,7 @@ class Skin(object):
         document.
         """
         here = context.resource
-        root = here.get_site_root()
+        root = context.root
 
         meta = []
         # Set description
@@ -231,9 +231,9 @@ class Skin(object):
                 'id': 'links-menu-new'})
 
         # Configuration
-        site_root = context.site_root
-        view = site_root.get_resource('config').get_view('view')
-        if site_root.is_access_allowed(user, site_root, view):
+        root = context.root
+        view = root.get_resource('config').get_view('view')
+        if root.is_access_allowed(user, root, view):
             usermenu.append({
                 'href': '/config',
                 'title': MSG(u'Configuration'),
@@ -250,7 +250,7 @@ class Skin(object):
         view = context.view
 
         # Not allowed to view resource
-        root = resource.get_site_root()
+        root = context.root
         if not root.is_allowed_to_view(context.user, resource):
             return ''
 
@@ -315,7 +315,7 @@ class Skin(object):
 
 
     def get_footer(self, context):
-        footer = context.site_root.get_resource('config/footer')
+        footer = context.root.get_resource('config/footer')
         return footer.get_html_data()
 
 
@@ -327,8 +327,8 @@ class Skin(object):
         context_menus = list(context_menus)
 
         # The favicon.ico
-        site_root = context.site_root
-        theme = site_root.get_resource('config/theme')
+        root = context.root
+        theme = root.get_resource('config/theme')
         favicon = theme.get_value('favicon')
         if favicon:
             favicon_href = '/config/theme/;get_file?name=favicon'
@@ -342,12 +342,12 @@ class Skin(object):
         logo_href = '/config/theme/;get_file?name=logo' if logo else None
 
         # Menu
-        menu = site_root.get_resource('config/menu')
+        menu = root.get_resource('config/menu')
         menu_ns = get_menu_namespace(context, 1, menu=menu)
 
         # The document language
         here = context.resource
-        languages = here.get_site_root().get_value('website_languages')
+        languages = root.get_value('website_languages')
         language = context.accept_language.select_language(languages)
 
         # The base URI

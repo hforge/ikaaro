@@ -145,7 +145,7 @@ class AutoAdd(AutoForm):
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()
 #       elif name == 'path':
-#           return context.site_root.get_pathto(resource)
+#           return context.root.get_pathto(resource)
 #       elif name in self.get_query_schema():
 #           return context.query[name]
 
@@ -166,7 +166,7 @@ class AutoAdd(AutoForm):
         container = resource
         path = form['path']
         if path is not None:
-            container = context.site_root.get_resource(path)
+            container = context.root.get_resource(path)
         ac = container.get_access_control()
         if not ac.is_allowed_to_add(context.user, container):
             path = '/' if path == '.' else '/%s/' % path
@@ -182,7 +182,7 @@ class AutoAdd(AutoForm):
         if name:
             return name
 
-        lang = get_context().resource.get_site_root().get_default_language()
+        lang = get_context().root.get_default_language()
         return form['title'][lang]
 
 

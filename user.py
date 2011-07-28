@@ -190,7 +190,7 @@ class User(DBResource):
                            u"You can follow this link {site_uri} to access "
                            u"to the site.")
     def send_registration(self, context, email):
-        site_name = context.site_root.get_title()
+        site_name = context.root.get_title()
         uri = context.uri
         site_uri = Reference(uri.scheme, uri.authority, '/', {}, None)
         text = self.registration_txt.gettext(site_name=site_name,

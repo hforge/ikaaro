@@ -113,18 +113,14 @@ class Config_EditVirtualHosts(STLForm):
 
 
     def get_namespace(self, resource, context):
-        resource = resource.get_site_root()
-
-        vhosts = resource.get_value('vhosts')
+        vhosts = context.root.get_value('vhosts')
         return {'vhosts': '\n'.join(vhosts)}
 
 
     def action(self, resource, context, form):
-        resource = resource.get_site_root()
-
         vhosts = [ x.strip() for x in form['vhosts'].splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-        resource.set_property('vhosts', vhosts)
+        context.root.set_property('vhosts', vhosts)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -198,8 +194,7 @@ class Config_Orphans(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Make the base search
-        resource = resource.get_site_root()
-        items = super(Config_Orphans, self).get_items(resource, context)
+        items = super(Config_Orphans, self).get_items(context.root, context)
 
         # Find out the orphans
         root = context.root
@@ -235,8 +230,7 @@ class Config_EditLanguages(STLForm):
 
 
     def get_namespace(self, resource, context):
-        resource = resource.get_site_root()
-        ws_languages = resource.get_value('website_languages')
+        ws_languages = context.root.get_value('website_languages')
 
         # Active languages
         default = ws_languages[0]
@@ -262,7 +256,7 @@ class Config_EditLanguages(STLForm):
     #######################################################################
     # Actions / Edit
     def action_change_default_language(self, resource, context, form):
-        resource = resource.get_site_root()
+        resource = context.root
 
         # This action requires only one language to be selected
         codes = form['codes']
@@ -282,7 +276,7 @@ class Config_EditLanguages(STLForm):
 
 
     def action_remove_languages(self, resource, context, form):
-        resource = resource.get_site_root()
+        resource = context.root
 
         # Check the default language is not to be removed
         codes = form['codes']
@@ -306,7 +300,7 @@ class Config_EditLanguages(STLForm):
         'code': String(mandatory=True)}
 
     def action_add_language(self, resource, context, form):
-        resource = resource.get_site_root()
+        resource = context.root
 
         ws_languages = resource.get_value('website_languages')
         ws_languages = list(ws_languages)

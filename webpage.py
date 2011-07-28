@@ -179,7 +179,7 @@ class WebPage(Text):
     def rename_handlers(self, new_name):
         old_name = self.name
         extension = self.class_handler.class_extension
-        langs = self.get_site_root().get_value('website_languages')
+        langs = self.get_root().get_value('website_languages')
 
         return [ (FileName.encode((old_name, extension, x)),
                   FileName.encode((new_name, extension, x)))
@@ -190,7 +190,7 @@ class WebPage(Text):
     def get_links(self):
         links = super(WebPage, self).get_links()
         base = self.abspath
-        languages = self.get_site_root().get_value('website_languages')
+        languages = self.get_root().get_value('website_languages')
         for language in languages:
             handler = self.get_value('data', language=language)
             if handler:
@@ -277,7 +277,7 @@ class WebPage(Text):
 
     def to_text(self, languages=None):
         if languages is None:
-            languages = self.get_site_root().get_value('website_languages')
+            languages = self.get_root().get_value('website_languages')
         result = {}
         for language in languages:
             handler = self.get_value('data', language=language)

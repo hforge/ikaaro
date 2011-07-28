@@ -163,9 +163,9 @@ class Issue(CommentsAware, Folder):
         else:
             uri = context.uri.resolve('%s/;edit' % self.name)
         # Notify / Build the message for each language
-        site_root = self.get_site_root()
-        website_languages = site_root.get_property('website_languages')
-        default_language = site_root.get_default_language()
+        root = context.root
+        website_languages = root.get_property('website_languages')
+        default_language = root.get_default_language()
         messages_dict = {}
         for language in website_languages:
             message = MSG(u'DO NOT REPLY TO THIS EMAIL. To comment on this '
@@ -197,7 +197,6 @@ class Issue(CommentsAware, Folder):
             # OK
             messages_dict[language] = subject, body
         # Notify / Send
-        root = context.root
         for to_addr in to_addrs:
             user = root.get_user(to_addr)
             if not user:

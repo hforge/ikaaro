@@ -254,7 +254,7 @@ class Tracker_Edit(AutoEdit):
 
     def _get_datatype(self, resource, context, name):
         if name == 'included_roles':
-            config = resource.get_site_root().get_resource('config')
+            config = resource.get_resource('/config')
             return UserGroupsDatatype(mandatory=True, multiple=True,
                                       special_groups=None, config=config)
 
@@ -584,15 +584,13 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
         # is_admin
         ac = resource.get_access_control()
-        pathto_website = resource.get_pathto(resource.get_site_root())
-
         return  {
            'search_name': search_name,
            'search_title': search_title,
            'text': get_value('text'),
            'mtime': get_value('mtime'),
            'is_admin': ac.is_admin(context.user, resource),
-           'manage_assigned': '%s/;browse_users' % pathto_website,
+           'manage_assigned': '/;browse_users',
            'products': TrackerList(element='product',
                                    tracker=resource).get_namespace(product),
            'modules': ProductInfoList(element='module',
@@ -964,9 +962,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
 
         # Send mails
         root = context.root
-        site_root = resource.get_site_root()
-        website_languages = site_root.get_property('website_languages')
-        default_language = site_root.get_default_language()
+        website_languages = root.get_property('website_languages')
+        default_language = root.get_default_language()
         if user is None:
             user_title = MSG(u'ANONYMOUS').gettext()
         else:

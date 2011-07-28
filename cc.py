@@ -205,8 +205,7 @@ class ManageForm(BrowseUsers):
 
 
     def get_items(self, resource, context):
-        site_root = resource.get_site_root()
-        return super(ManageForm, self).get_items(site_root, context)
+        return super(ManageForm, self).get_items(context.root, context)
 
 
     def get_item_value(self, resource, context, item, column):
@@ -221,8 +220,7 @@ class ManageForm(BrowseUsers):
             return MSG(u'Not subscribed')
 
         proxy = super(ManageForm, self)
-        site_root = resource.get_site_root()
-        return proxy.get_item_value(site_root, context, item, column)
+        return proxy.get_item_value(context.root, context, item, column)
 
 
     def action_subscribe(self, resource, context, form):
@@ -577,7 +575,6 @@ class Observable(object):
 
     def subscribe_user(self, email=None, user=None):
         root = self.get_root()
-        site_root = self.get_site_root()
 
         # Get the user
         if user is None:
@@ -595,8 +592,8 @@ class Observable(object):
 
         # Set the role
         username = user.name
-        if username not in site_root.get_members():
-            site_root.set_user_role(username, role='guests')
+        if username not in root.get_members():
+            root.set_user_role(username, role='guests')
 
         # Add to subscribers list
         self.reset_register_key(username)
@@ -652,9 +649,9 @@ class Observable(object):
             return
 
         # 3. Build the message for each language
-        site_root = self.get_site_root()
-        website_languages = site_root.get_value('website_languages')
-        default_language = site_root.get_default_language()
+        root = context.root
+        website_languages = root.get_value('website_languages')
+        default_language = root.get_default_language()
         messages_dict = {}
         for language in website_languages:
             messages_dict[language] = self.get_message(context,

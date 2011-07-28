@@ -35,7 +35,6 @@ from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from buttons import RemoveButton
 from folder import Folder_BrowseContent
 import messages
-from utils import get_base_path_query
 from views import SearchForm
 
 
@@ -320,16 +319,7 @@ class User_Tasks(STLView):
 
 
     def get_namespace(self, resource, context):
-        # 1. Build the query
         query = PhraseQuery('workflow_state', 'pending')
-        site_root = context.site_root
-        if site_root.parent is not None:
-            q2 = OrQuery(
-                get_base_path_query(site_root.get_abspath()),
-                get_base_path_query(resource.get_abspath()))
-            query = AndQuery(query, q2)
-
-        # 2. Build the list of documents
         root = context.root
         documents = []
         for brain in root.search(query).get_documents():
@@ -379,13 +369,11 @@ class BrowseUsers(SearchForm):
 
     def get_items(self, resource, context):
         # Build the Query
-        website_abspath = resource.get_site_root().get_abspath()
-        search_query = AndQuery(
-            PhraseQuery('format', 'user'),
-            get_base_path_query(website_abspath))
+        search_query = PhraseQuery('format', 'user')
 
         search_term = context.query['search_term'].strip()
         if search_term:
+            search_query = AndQuery(search_query)
             or_query = OrQuery(
                 TextQuery('lastname', search_term),
                 TextQuery('firstname', search_term),

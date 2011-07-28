@@ -137,7 +137,7 @@ class Folder_NewResource(IconsView):
 
         # XXX Add dynamic models
         database = resource.database
-        models = context.site_root.get_resource('config/models')
+        models = context.root.get_resource('config/models')
         for model in models.get_resources():
             class_id = str(model.abspath)
             cls = database.get_resource_class(class_id)

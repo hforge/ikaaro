@@ -128,8 +128,7 @@ class Menu_View(OrderedTable_View):
                 # External link
                 return value, path
             if path.is_absolute():
-                site_root = context.resource.get_site_root()
-                path = site_root.get_abspath().resolve2('.%s' % path)
+                path = context.root.abspath.resolve2('.%s' % path)
             resource_item = resource.get_resource(path, soft=True)
             # Broken link
             if resource_item is None:
@@ -156,8 +155,7 @@ class Menu_View(OrderedTable_View):
                 # External link
                 return None
             if path.is_absolute():
-                site_root = context.resource.get_site_root()
-                path = site_root.get_abspath().resolve2('.%s' % path)
+                path = context.root.abspath.resolve2('.%s' % path)
             item_resource = resource.get_resource(path, soft=True)
             # Broken link
             if item_resource is None:
@@ -249,7 +247,7 @@ class Menu_View(OrderedTable_View):
 class Menu_AddLink(DBResource_AddLink):
 
     def get_start(self, resource):
-        return resource.get_site_root()
+        return resource.get_root()
 
 
 
@@ -351,14 +349,11 @@ class Menu(OrderedTable):
             return True
 
         user = context.user
-        site_root_abspath = context.resource.get_site_root().get_abspath()
         if ref is None or path == '':
             # Skip broken entry
             return False
 
         # Internal link
-        if path.is_absolute():
-            path = site_root_abspath.resolve2('.%s' % path)
         resource = self.get_resource(path, soft=True)
         # Broken link
         if resource is None:
@@ -389,7 +384,6 @@ class Menu(OrderedTable):
         here_abspath = here.get_abspath()
         here_view_name = url[-1]
         here_abspath_and_view = '%s/%s' % (here_abspath, here_view_name)
-        site_root_abspath = here.get_site_root().get_abspath()
         items = []
         tabs = {}
         get_value = handler.get_record_value
@@ -417,8 +411,6 @@ class Menu(OrderedTable):
                               'target': target})
             else:
                 # Internal link
-                if path.is_absolute():
-                    path = site_root_abspath.resolve2('.%s' % path)
                 resource = self.get_resource(path, soft=True)
                 # Broken link
                 if resource is None:
@@ -465,11 +457,10 @@ class Menu(OrderedTable):
                     # Use the original path for the highlight
                     res_abspath = menu_abspath.resolve2(resource_original_path)
                     common_prefix = here_abspath.get_prefix(res_abspath)
-                    # Avoid to always set the site_root entree 'in_path'
-                    # If common prefix equals site root abspath set in_path
-                    # to False otherwise compare common_prefix and
-                    # res_abspath
-                    if common_prefix != site_root_abspath:
+                    # Avoid to always set the root entree 'in_path'
+                    # If common prefix equals root abspath set in_path to
+                    # False otherwise compare common_prefix and res_abspath
+                    if common_prefix != Path('/'):
                         in_path = (common_prefix == res_abspath)
 
                 # Build the new reference with the right path
@@ -509,8 +500,6 @@ class Menu(OrderedTable):
     def get_first_level_uris(self, context):
         """Return a list of the URI of all entries in the first level
         """
-        site_root = context.resource.get_site_root()
-        site_root_abspath = site_root.get_abspath()
         get_value = self.handler.get_record_value
         uris = []
         for record in self.get_records_in_order():
@@ -524,8 +513,6 @@ class Menu(OrderedTable):
                 continue
             if self._is_allowed_to_access(context, uri) is False:
                 continue
-            if path.is_absolute():
-                path = site_root_abspath.resolve2('.%s' % path)
             resource = self.get_resource(path)
             # Build the new reference with the right path
             ref2 = deepcopy(ref)
@@ -538,7 +525,7 @@ class Menu(OrderedTable):
     def get_links(self):
         links = super(Menu, self).get_links()
         base = self.get_abspath()
-        site_root_abspath = self.get_site_root().get_abspath()
+        root_abspath = Path('/')
         schema = self.get_schema()
         handler = self.get_table()
 
@@ -549,7 +536,7 @@ class Menu(OrderedTable):
             if ref.scheme:
                 continue
             if path.is_absolute():
-                uri = site_root_abspath.resolve2('.%s' % path)
+                uri = path
             else:
                 uri = base.resolve2(path)
             resource = self.get_resource(uri, soft=True)
@@ -569,7 +556,7 @@ class Menu(OrderedTable):
                 container = self.parent
                 child = container.get_resource(path, soft=True)
                 if child is not None:
-                    uri = site_root_abspath.resolve(path)
+                    uri = root_abspath.resolve(path)
                     links.add(str(uri))
 
         return links
@@ -577,7 +564,6 @@ class Menu(OrderedTable):
 
     def update_links(self, source, target):
         super(Menu, self).update_links(source, target)
-        site_root_abspath = self.get_site_root().get_abspath()
         base = self.get_abspath()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
@@ -592,9 +578,7 @@ class Menu(OrderedTable):
             if ref.scheme:
                 continue
             if path.is_absolute():
-                # Absolute links are resolved as links relative to the site
-                # root
-                uri = site_root_abspath.resolve2('.%s' % path)
+                uri = path
             else:
                 uri = old_base.resolve2(path)
             if str(uri) == source:
@@ -609,7 +593,6 @@ class Menu(OrderedTable):
 
     def update_relative_links(self, source):
         super(Menu, self).update_relative_links(source)
-        site_root_abspath = self.get_site_root().get_abspath()
         target = self.get_abspath()
         resources_old2new = get_context().database.resources_old2new
         handler = self.handler
@@ -621,9 +604,7 @@ class Menu(OrderedTable):
                 continue
             # Calcul the old absolute path
             if ref.path.is_absolute():
-                # Absolute links are resolved as links relative to the site
-                # root
-                old_abs_path = site_root_abspath.resolve2('.%s' % path)
+                old_abs_path = path
             else:
                 old_abs_path = source.resolve2(path)
             # Check if the target path has not been moved
@@ -721,7 +702,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, src=None,
 
     # Get the menu
     if src:
-        menu = resource.get_site_root().get_resource(src, soft=True)
+        menu = context.root.get_resource(src, soft=True)
 
     if menu is None:
         return {'items': []}

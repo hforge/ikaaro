@@ -41,8 +41,7 @@ class LanguagesTemplate(CMSTemplate):
     def languages(self):
         context = self.context
         # Website languages
-        site_root = context.site_root
-        ws_languages = site_root.get_value('website_languages')
+        ws_languages = context.root.get_value('website_languages')
         if len(ws_languages) == 1:
             return []
 
@@ -79,27 +78,27 @@ class LocationTemplate(CMSTemplate):
         """Return a list of dicts [{name, url}...]
         """
         context = self.context
-        site_root = context.site_root
+        root = context.root
 
         # Initialize the breadcrumb with the root resource
         path = '/'
-        title = site_root.get_title()
+        title = root.get_title()
         if not title:
-            title = site_root.class_title.message.encode('utf_8')
+            title = root.class_title.message.encode('utf_8')
         breadcrumb = [{
             'url': path,
             'name': title,
             'short_name': reduce_string(title, 15, 30)}]
 
         # Complete the breadcrumb
-        resource = site_root
+        resource = root
         for name in context.uri.path:
             path = path + ('%s/' % name)
             resource = resource.get_resource(name, soft=True)
             if resource is None:
                 break
             # Display resource title only if allowed
-            if not site_root.is_allowed_to_view(context.user, resource):
+            if not root.is_allowed_to_view(context.user, resource):
                 title = name
             else:
                 title = resource.get_title()
