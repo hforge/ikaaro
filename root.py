@@ -109,8 +109,8 @@ class Root(AccessControl, Folder):
 
     # Fields
     fields = Folder.fields + ['vhosts', 'website_languages']
-    vhosts = Char_Field(multiple=True, indexed=True,
-                        title=MSG(u'Domain names'), widget=MultilineWidget)
+    vhosts = Char_Field(multiple=True, title=MSG(u'Domain names'),
+                        widget=MultilineWidget)
     website_languages = Char_Field(multiple=True, default=['en'])
 
     is_content = True
