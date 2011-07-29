@@ -35,19 +35,30 @@ class FieldType_Field(Select_Field):
 
 
 
-class ModelField(DBResource):
+class ModelField_Base(DBResource):
 
-    class_id = 'model-field'
     class_title = MSG(u'...')
     class_description = MSG(u'...')
     class_icon48 = 'icons/48x48/folder.png' # XXX
+    class_views = ['edit', 'commit_log']
+
+
+
+class ModelField_Inherited(ModelField_Base):
+
+    class_id = 'model-field-inherited'
+
+
+
+class ModelField_Standard(ModelField_Base):
+
+    class_id = 'model-field-standard'
 
     # Fields
     fields = DBResource.fields + ['field_type']
     field_type = FieldType_Field(required=True, title=MSG(u'Field type'))
 
     # Views
-    class_views = ['edit', 'commit_log']
     new_instance = NewInstance_Local(fields=['field_type', 'title'])
     edit = AutoEdit(fields=['field_type', 'title'])
 
@@ -63,10 +74,38 @@ class ModelField(DBResource):
 
 
 
+###########################################################################
+# The model resource
+###########################################################################
 class BaseClass_Field(Select_Field):
 
     options = [
         {'name': 'event', 'value': MSG(u'Event')}]
+
+
+
+class Model_NewInstance(NewInstance_Local):
+
+    fields = ['base_class', 'title']
+
+    def make_new_resource(self, resource, context, form):
+        proxy = super(Model_NewInstance, self)
+        child = proxy.make_new_resource(resource, context, form)
+        if child is None:
+            return
+
+        # Create the inherited fields
+        class_id = child.get_value('base_class')
+        cls = child.database.get_resource_class(class_id)
+        for field_name in cls.fields:
+            field = cls.get_field(field_name)
+            if field.readonly:
+                continue
+            child.make_resource(field_name, ModelField_Inherited)
+
+        # Ok
+        return child
+
 
 
 class Model(Folder):
@@ -82,11 +121,17 @@ class Model(Folder):
 
     # Views
     class_views = ['browse_content', 'add_field', 'edit', 'commit_log']
-    new_instance = NewInstance_Local(fields=['base_class', 'title'])
+    new_instance = Model_NewInstance()
     add_field = NewResource_Local(title=MSG(u'Add field'))
 
     def get_document_types(self):
-        return [ModelField]#, ModelField_Choice]
+        return [ModelField_Standard]#, ModelField_Choice]
+
+
+    @property
+    def __fixed_handlers__(self):
+        return [ x.name for x in self.get_resources()
+                 if isinstance(x, ModelField_Inherited) ]
 
 
     def build_resource_class(self):
@@ -104,6 +149,8 @@ class Model(Folder):
             'class_title': MSG(self.get_value('title'))}
         fields = []
         for field in self.get_resources():
+            if isinstance(field, ModelField_Inherited):
+                continue
             field_type = field.get_value('field_type')
             class_dict[field.name] = fields_map[field_type]
             fields.append(field.name)

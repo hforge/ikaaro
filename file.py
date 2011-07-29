@@ -31,23 +31,21 @@ from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
-from cc import Observable
+from content import Content
 from database import Database
 from fields import Char_Field, File_Field
 from file_views import File_NewInstance, File_View
 from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import Image_View, Video_View, Archive_View
 from file_views import Flash_View
-from resource_ import DBResource
 from resource_views import DBResource_GetFile, DBResource_GetImage
-from workflow import WorkflowAware
 
 
 
 ###########################################################################
 # Base File
 ###########################################################################
-class File(Observable, WorkflowAware, DBResource):
+class File(Content):
 
     class_id = 'file'
     class_version = '20090122'
@@ -61,9 +59,9 @@ class File(Observable, WorkflowAware, DBResource):
     class_handler = FileHandler
 
     # Fields
-    fields = (DBResource.fields + WorkflowAware.fields + Observable.fields
-              + ['data'])
+    fields = Content.fields + ['data', 'filename']
     data = File_Field(title=MSG(u'File'))
+    filename = Char_Field
 
 
     def get_all_extensions(self):
@@ -92,14 +90,6 @@ class File(Observable, WorkflowAware, DBResource):
                                   soft=True) is not None:
                 return [(old, FileName.encode((new_name, extension, None)))]
         return [(None, None)]
-
-
-    #######################################################################
-    # Metadata
-    #######################################################################
-    fields = (DBResource.fields + Observable.fields + WorkflowAware.fields
-              + ['filename'])
-    filename = Char_Field
 
 
     #######################################################################

@@ -29,8 +29,8 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
+from ikaaro.content import Content
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro import messages
 
@@ -213,7 +213,7 @@ class EventDatetime_Field(Datetime_Field):
 
 
 
-class Event(File):
+class Event(Content):
 
     class_id = 'event'
     class_title = MSG(u'Event')
@@ -223,15 +223,14 @@ class Event(File):
     class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
 
-    fields = File.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
-                            'uid']
-    data = None
-    owner = Char_Field
+    fields = Content.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
+                               'uid']
+    owner = Char_Field(readonly=True)
     dtstart = EventDatetime_Field(title=MSG(u'Start'))
     dtend = EventDatetime_Field(title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = Select_Field(datatype=RRuleDataType, title=MSG(u'Recurrence'))
-    uid = Char_Field
+    uid = Char_Field(readonly=True)
 
 
     def init_resource(self, **kw):

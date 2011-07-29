@@ -229,7 +229,10 @@ class AutoAdd(AutoForm):
         return False
 
 
-    def action(self, resource, context, form):
+    def make_new_resource(self, resource, context, form):
+        """Returns None if there is an error, otherwise return the new
+        resource.
+        """
         # 1. Make the resource
         container = form['container']
         cls = self._get_resource_class(context)
@@ -240,7 +243,16 @@ class AutoAdd(AutoForm):
             datatype = schema.get(name)
             if datatype and not getattr(datatype, 'readonly', False):
                 if self.set_value(child, context, name, form):
-                    return
+                    return None
+
+        # Ok
+        return child
+
+
+    def action(self, resource, context, form):
+        child = self.make_new_resource(resource, context, form)
+        if child is None:
+            return
 
         # Ok
         goto = str(resource.get_pathto(child))

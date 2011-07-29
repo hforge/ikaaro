@@ -44,6 +44,7 @@ class Field(thingy):
     required = False
     title = None
     hidden_by_default = False
+    readonly = False # Means the field should not be editable by the user
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
