@@ -35,7 +35,7 @@ from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from buttons import RemoveButton
 from folder import Folder_BrowseContent
 import messages
-from views import SearchForm
+from views import BrowseForm
 
 
 class User_ConfirmRegistration(AutoForm):
@@ -346,7 +346,7 @@ class UserFolder_BrowseContent(Folder_BrowseContent):
 
 
 
-class BrowseUsers(SearchForm):
+class BrowseUsers(BrowseForm):
 
     access = 'is_admin'
     title = MSG(u'Browse Members')

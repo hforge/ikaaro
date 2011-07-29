@@ -37,7 +37,7 @@ from ikaaro.autoform import SelectWidget
 from ikaaro.buttons import BrowseButton
 from ikaaro.config_groups import UserGroupsDatatype
 from ikaaro import messages
-from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
+from ikaaro.views import BrowseForm, BrowseForm as BaseBrowseForm, ContextMenu
 from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
@@ -514,7 +514,7 @@ class Tracker_View(BrowseForm):
 
 
 
-class Tracker_Search(BaseSearchForm, Tracker_View):
+class Tracker_Search(BaseBrowseForm, Tracker_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
@@ -544,7 +544,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
     def get_query(self, context):
         try:
-            return BaseSearchForm.get_query(self, context)
+            return BaseBrowseForm.get_query(self, context)
         except FormError:
             schema = self.get_query_schema()
             query = {}
@@ -554,7 +554,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
             return query
 
 
-    on_query_error = BaseSearchForm.on_query_error
+    on_query_error = BaseBrowseForm.on_query_error
 
 
     def get_search_namespace(self, resource, context):

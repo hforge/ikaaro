@@ -164,6 +164,8 @@ class CSV_View(BrowseForm):
         'ids': Integer(mandatory=True, multiple=True),
     }
 
+    search_template = None
+
 
     def get_items(self, resource, context):
         return list(resource.handler.get_rows())

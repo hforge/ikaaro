@@ -39,7 +39,7 @@ from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from utils import generate_name, get_base_path_query, get_content_containers
-from views import IconsView, SearchForm, ContextMenu
+from views import IconsView, BrowseForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
 import messages
 
@@ -253,12 +253,12 @@ class Folder_Rename(STLForm):
 
 
 
-class Folder_BrowseContent(SearchForm):
+class Folder_BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
     context_menus = []
-    query_schema = merge_dicts(SearchForm.query_schema,
+    query_schema = merge_dicts(BrowseForm.query_schema,
         sort_by=String(default='mtime'),
         reverse=Boolean(default=True))
     schema = {

@@ -183,7 +183,7 @@ class IconsView(STLView):
 
 
 ###########################################################################
-# Browse View (batch + table)
+# Browse View (batch + table + search)
 ###########################################################################
 class BrowseForm(STLForm):
 
@@ -202,6 +202,17 @@ class BrowseForm(STLForm):
     batch_msg2 = MSG(u"There are {n} items.")
     batch_max_middle_pages = None
 
+    # Search configuration
+    search_template = '/ui/generic/browse_search.xml'
+    search_schema = {
+        'search_field': String,
+        'search_term': Unicode}
+    search_fields =  [
+        ('title', MSG(u'Title')),
+        ('text', MSG(u'Text')),
+        ('name', MSG(u'Name'))]
+    hidden_fields = freeze([])
+
     # Content
     table_template = '/ui/generic/browse_table.xml'
     table_css = None
@@ -213,6 +224,13 @@ class BrowseForm(STLForm):
     # Keep the batch in the canonical URL
     canonical_query_parameters = (STLForm.canonical_query_parameters
                                   + ['batch_start'])
+
+
+    def get_query_schema(self):
+        proxy = super(BrowseForm, self)
+        return merge_dicts(proxy.get_query_schema(),
+                           self.search_schema)
+
 
 
     def get_namespace(self, resource, context):
@@ -232,7 +250,50 @@ class BrowseForm(STLForm):
             namespace = self.get_table_namespace(resource, context, items)
             table = stl(template, namespace)
 
-        return {'batch': batch, 'table': table}
+        # The Search Form
+        search = None
+        if self.search_template:
+            search_template = context.get_template(self.search_template)
+            search_namespace = self.get_search_namespace(resource, context)
+            search = stl(search_template, search_namespace)
+
+
+        return {'batch': batch, 'table': table, 'search': search}
+
+
+    ##################################################
+    # Search
+    ##################################################
+    def get_search_fields(self, resource, context):
+        return self.search_fields
+
+
+    def get_search_namespace(self, resource, context):
+        # Build the namespace
+        search_fields = self.get_search_fields(resource, context)
+        if search_fields:
+            field = context.query['search_field']
+            search_fields = [
+                {'name': name, 'value': title}
+                for name, title in search_fields ]
+
+            # Build dynamic datatype and widget
+            datatype = Enumerate(options=search_fields)
+            widget = SelectWidget(name='search_fields', datatype=datatype,
+                                  value=field)
+        else:
+            widget = None
+
+        # Hidden widgets
+        hidden_widgets = []
+        for name in self.hidden_fields:
+            value = context.get_query_value(name)
+            hidden_widgets.append({'name': name, 'value': value})
+
+        return {
+            'search_term': context.query['search_term'],
+            'search_fields_widget': widget,
+            'hidden_widgets': hidden_widgets}
 
 
     #######################################################################
@@ -462,77 +523,6 @@ class BrowseForm(STLForm):
             'actions': actions,
             'external_form': self.external_form or not actions}
 
-
-
-###########################################################################
-# Search View (search + batch + table)
-###########################################################################
-class SearchForm(BrowseForm):
-
-    template = '/ui/generic/search.xml'
-
-    search_template = '/ui/generic/browse_search.xml'
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode}
-    search_fields =  [
-        ('title', MSG(u'Title')),
-        ('text', MSG(u'Text')),
-        ('name', MSG(u'Name'))]
-    hidden_fields = freeze([])
-
-
-    def get_query_schema(self):
-        return merge_dicts(BrowseForm.get_query_schema(self),
-                           self.search_schema)
-
-
-    def get_search_fields(self, resource, context):
-        return self.search_fields
-
-
-    def get_namespace(self, resource, context):
-        namespace = BrowseForm.get_namespace(self, resource, context)
-
-        # The Search Form
-        if self.search_template is None:
-            namespace['search'] = None
-        else:
-            search_template = context.get_template(self.search_template)
-            search_namespace = self.get_search_namespace(resource, context)
-            namespace['search'] = stl(search_template, search_namespace)
-
-        return namespace
-
-
-    #######################################################################
-    # The Search Form
-    def get_search_namespace(self, resource, context):
-        # Build the namespace
-        search_fields = self.get_search_fields(resource, context)
-        if search_fields:
-            field = context.query['search_field']
-            search_fields = [
-                {'name': name, 'value': title}
-                for name, title in search_fields ]
-
-            # Build dynamic datatype and widget
-            datatype = Enumerate(options=search_fields)
-            widget = SelectWidget(name='search_fields', datatype=datatype,
-                                  value=field)
-        else:
-            widget = None
-
-        # Hidden widgets
-        hidden_widgets = []
-        for name in self.hidden_fields:
-            value = context.get_query_value(name)
-            hidden_widgets.append({'name': name, 'value': value})
-
-        return {
-            'search_term': context.query['search_term'],
-            'search_fields_widget': widget,
-            'hidden_widgets': hidden_widgets}
 
 
 ###########################################################################

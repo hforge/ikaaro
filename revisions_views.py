@@ -27,7 +27,7 @@ from itools.web import STLView, ERROR
 # Import from ikaaro
 from buttons import BrowseButton
 from metadata import Metadata
-from views import SearchForm
+from views import BrowseForm
 
 
 
@@ -146,7 +146,7 @@ class DiffButton(BrowseButton):
 
 
 
-class DBResource_CommitLog(SearchForm):
+class DBResource_CommitLog(BrowseForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
