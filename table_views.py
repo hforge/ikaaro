@@ -47,7 +47,8 @@ class Table_View(BrowseForm):
     title = MSG(u'View')
     icon = 'view.png'
 
-    search_template = None
+    search_schema = {}
+    search_widgets = []
     schema = {
         'ids': Integer(multiple=True, mandatory=True)}
     # Add record action does not required any parameters

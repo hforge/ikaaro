@@ -108,7 +108,8 @@ class BrowseGroups(Folder_BrowseContent):
     access = 'is_admin'
     title = MSG(u'Browse groups')
 
-    search_template = None
+    search_schema = {}
+    search_widgets = []
 
     table_columns = [
         ('checkbox', None),

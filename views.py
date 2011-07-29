@@ -15,15 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
-from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
+from itools.core import merge_dicts
+from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLView, STLForm
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from autoform import SelectWidget
+from autoform import AutoForm
+from buttons import Button
 from utils import CMSTemplate
 
 
@@ -203,15 +204,8 @@ class BrowseForm(STLForm):
     batch_max_middle_pages = None
 
     # Search configuration
-    search_template = '/ui/generic/browse_search.xml'
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode}
-    search_fields =  [
-        ('title', MSG(u'Title')),
-        ('text', MSG(u'Text')),
-        ('name', MSG(u'Name'))]
-    hidden_fields = freeze([])
+    search_schema = {}
+    search_widgets = []
 
     # Content
     table_template = '/ui/generic/browse_table.xml'
@@ -252,11 +246,8 @@ class BrowseForm(STLForm):
 
         # The Search Form
         search = None
-        if self.search_template:
-            search_template = context.get_template(self.search_template)
-            search_namespace = self.get_search_namespace(resource, context)
-            search = stl(search_template, search_namespace)
-
+        if self.search_widgets:
+            search = self.get_search_namespace(resource, context)
 
         return {'batch': batch, 'table': table, 'search': search}
 
@@ -264,36 +255,17 @@ class BrowseForm(STLForm):
     ##################################################
     # Search
     ##################################################
-    def get_search_fields(self, resource, context):
-        return self.search_fields
-
-
     def get_search_namespace(self, resource, context):
-        # Build the namespace
-        search_fields = self.get_search_fields(resource, context)
-        if search_fields:
-            field = context.query['search_field']
-            search_fields = [
-                {'name': name, 'value': title}
-                for name, title in search_fields ]
-
-            # Build dynamic datatype and widget
-            datatype = Enumerate(options=search_fields)
-            widget = SelectWidget(name='search_fields', datatype=datatype,
-                                  value=field)
-        else:
-            widget = None
-
-        # Hidden widgets
-        hidden_widgets = []
-        for name in self.hidden_fields:
-            value = context.get_query_value(name)
-            hidden_widgets.append({'name': name, 'value': value})
-
-        return {
-            'search_term': context.query['search_term'],
-            'search_fields_widget': widget,
-            'hidden_widgets': hidden_widgets}
+        search_button = Button(access=True,
+            resource=resource, context=context,
+            css='button-search', title=MSG(u'Search'))
+        form = AutoForm(
+            title=MSG(u'Search'),
+            method='get',
+            schema=self.search_schema,
+            widgets=self.search_widgets,
+            actions=[search_button])
+        return form.GET(resource, context)
 
 
     #######################################################################
@@ -316,7 +288,7 @@ class BrowseForm(STLForm):
         return table_columns
 
 
-    def get_items(self, resource, context):
+    def get_items(self, resource, context, *args):
         name = 'get_items'
         raise NotImplementedError, "the '%s' method is not defined" % name
 

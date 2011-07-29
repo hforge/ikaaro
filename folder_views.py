@@ -22,7 +22,7 @@ except ImportError:
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
+from itools.database import AndQuery, PhraseQuery, OrQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -32,7 +32,7 @@ from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR, get_context
 
 # Import from ikaaro
-from autoform import SelectWidget
+from autoform import SelectWidget, TextWidget
 from buttons import PasteButton, PublishButton, RetireButton
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
@@ -42,6 +42,42 @@ from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
 import messages
+
+
+class SearchTypes_Enumerate(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        context = get_context()
+        resource = context.resource
+        view = context.view
+        # 1. Build the query of all objects to search
+        path = resource.get_abspath()
+        query = get_base_path_query(path)
+        if view.search_content_only(resource, context) is True:
+            content_query = PhraseQuery('is_content', True)
+            query = AndQuery(query, content_query)
+
+        # 2. Compute children_formats
+        children_formats = set()
+        for child in context.root.search(query).get_documents():
+            children_formats.add(child.format)
+
+        # 3. Do not show two options with the same title
+        formats = {}
+        for type in children_formats:
+            cls = context.database.get_resource_class(type)
+            title = cls.class_title.gettext()
+            formats.setdefault(title, []).append(type)
+
+        # 4. Build the namespace
+        types = []
+        for title, type in formats.items():
+            type = ','.join(type)
+            types.append({'name': type, 'value': title})
+        types.sort(key=lambda x: x['value'].lower())
+
+        return types
 
 
 
@@ -265,10 +301,12 @@ class Folder_BrowseContent(BrowseForm):
         'ids': String(multiple=True, mandatory=True)}
 
     # Search Form
-    search_template = '/ui/folder/browse_search.xml'
+    search_widgets = [
+        TextWidget('text', title=MSG(u'Text')),
+        SelectWidget('format', title=MSG(u'Type'))]
     search_schema = {
-        'search_text': Unicode,
-        'search_type': String}
+        'text': Unicode,
+        'format': SearchTypes_Enumerate}
 
     # Table
     table_columns = [
@@ -289,93 +327,55 @@ class Folder_BrowseContent(BrowseForm):
         return resource.is_content
 
 
-    def get_search_types(self, resource, context):
-        # 1. Build the query of all objects to search
-        path = resource.get_abspath()
-        query = get_base_path_query(path)
-        if self.search_content_only(resource, context) is True:
-            content_query = PhraseQuery('is_content', True)
-            query = AndQuery(query, content_query)
-
-        # 2. Compute children_formats
-        children_formats = set()
-        for child in context.root.search(query).get_documents():
-            children_formats.add(child.format)
-
-        # 3. Do not show two options with the same title
-        formats = {}
-        for type in children_formats:
-            cls = context.database.get_resource_class(type)
-            title = cls.class_title.gettext()
-            formats.setdefault(title, []).append(type)
-
-        # 4. Build the namespace
-        types = []
-        for title, type in formats.items():
-            type = ','.join(type)
-            types.append({'name': type, 'value': title})
-        types.sort(key=lambda x: x['value'].lower())
-
-        return types
-
-
-    def get_search_namespace(self, resource, context):
-        types = self.get_search_types(resource, context)
-
-        # Build dynamic datatype and widget
-        search_type = context.query['search_type']
-        datatype = Enumerate(options=types)
-        widget = SelectWidget(name='search_type', datatype=datatype,
-                              value=search_type)
-
-        # Hidden widgets
-        hidden_widgets = []
-        for name in self.hidden_fields:
-            value = context.get_query_value(name)
-            hidden_widgets.append({'name': name, 'value': value})
-
-        return {
-            'search_text': context.query['search_text'],
-            'search_types_widget': widget.render(),
-            'hidden_widgets': hidden_widgets}
-
-
     def get_items_query(self, resource, context, *args):
-        # Query
-        args = list(args)
-
+        queries = list(args)
         # Search in subtree
-        query = get_base_path_query(resource.abspath)
-        args.append(query)
+        queries.append(get_base_path_query(resource.abspath))
         if self.search_content_only(resource, context) is True:
             # Exclude non-content
-            args.append(PhraseQuery('is_content', True))
+            queries.append(PhraseQuery('is_content', True))
+        return queries
 
-        # Filter by type
-        search_type = context.query['search_type']
-        if search_type:
-            if ',' in search_type:
-                search_type = search_type.split(',')
-                search_type = [ PhraseQuery('format', x) for x in search_type ]
-                search_type = OrQuery(*search_type)
-            else:
-                search_type = PhraseQuery('format', search_type)
-            args.append(search_type)
 
-        # Text search
-        search_text = context.query['search_text'].strip()
-        if search_text:
-            args.append(OrQuery(TextQuery('title', search_text),
-                                TextQuery('text', search_text),
-                                PhraseQuery('name', search_text)))
+    def get_search_query(self, resource, context, *args):
+        queries = list(args)
+        form = context.query
+        for key, datatype in self.search_schema.items():
+            value = form[key]
+            if value and key == 'text':
+                queries.append(TextQuery(key, form[key]))
+            elif value and datatype.multiple is True:
+                queries.append(OrQuery(*[PhraseQuery(key, x)
+                                        for x in form[key]]))
+            elif value:
+                queries.append(PhraseQuery(key, form[key]))
+        return queries
 
-        # Ok
-        return args[0] if len(args) == 1 else AndQuery(*args)
 
 
     def get_items(self, resource, context, *args):
-        query = self.get_items_query(resource, context, *args)
-        return context.root.search(query)
+        root = context.root
+        # Query
+        queries = list(args)
+
+        # Items Query
+        items_query = self.get_items_query(resource, context)
+        if items_query:
+            queries.extend(items_query)
+
+        # Search Query
+        search_query = self.get_search_query(resource, context)
+        if search_query:
+            queries.extend(search_query)
+
+        # Transform list of queries into a query
+        if len(queries) == 1:
+            query = queries[0]
+        else:
+            query = AndQuery(*queries)
+
+        # Search
+        return root.search(query)
 
 
     def _get_key_sorted_by_unicode(self, field):

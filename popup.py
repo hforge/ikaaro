@@ -60,8 +60,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     access = 'is_allowed_to_edit'
     context_menus = []
 
+    search_schema = {}
+    search_widgets =[]
     table_template = '/ui/html/addbase_browse_table.xml'
-    search_template = '/ui/html/addbase_browse_search.xml'
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                Folder_BrowseContent.search_schema)
     hidden_fields = freeze(['target_id', 'mode'])

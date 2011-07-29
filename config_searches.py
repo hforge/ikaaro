@@ -30,7 +30,8 @@ from folder_views import Folder_BrowseContent
 class SavedSearch_Results(Folder_BrowseContent):
 
     title = MSG(u'View results')
-    search_template = None
+    search_schema = {}
+    search_widgets = []
 
     def get_items_query(self, resource, context):
         return resource.get_search_query()

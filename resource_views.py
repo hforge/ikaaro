@@ -143,8 +143,8 @@ class DBResource_Links(Folder_BrowseContent):
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                batch_size=Integer(default=0))
 
-    search_template = None
     search_schema = {}
+    search_widgets = []
 
     def get_table_columns(self, resource, context):
         cols = Folder_BrowseContent.get_table_columns(self, resource, context)

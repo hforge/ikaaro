@@ -25,6 +25,7 @@ from itools.uri import encode_query, get_reference
 from itools.web import STLView, ERROR
 
 # Import from ikaaro
+from autoform import TextWidget
 from buttons import BrowseButton
 from metadata import Metadata
 from views import BrowseForm
@@ -155,10 +156,10 @@ class DBResource_CommitLog(BrowseForm):
         'ids': IndexRevision(multiple=True, mandatory=True),
     }
 
-    search_template = '/ui/revisions/browse_search.xml'
+    search_widgets = [TextWidget('search_mail', title=MSG(u"Author's mail")),
+                      TextWidget('search_comment', title=MSG(u'Comment'))]
     search_schema = {'search_mail': String(default=''),
                      'search_comment': String(default='')}
-    search_fields = None
 
     table_columns = [
         ('checkbox', None),
@@ -220,9 +221,6 @@ class DBResource_CommitLog(BrowseForm):
         return get_reference(uri)
 
 
-    def get_search_namespace(self, resource, context):
-        return {'search_mail': context.query['search_mail'],
-                'search_comment': context.query['search_comment']}
 
 
 

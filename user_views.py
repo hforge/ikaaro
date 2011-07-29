@@ -32,6 +32,7 @@ from pytz import common_timezones
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
+from autoform import TextWidget
 from buttons import RemoveButton
 from folder import Folder_BrowseContent
 import messages
@@ -339,10 +340,13 @@ class UserFolder_BrowseContent(Folder_BrowseContent):
 
     access = 'is_admin'
 
-    search_fields = (Folder_BrowseContent.search_fields
-                     + [('username', MSG(u'Login')),
-                        ('lastname', MSG(u'Last Name')),
-                        ('firstname', MSG(u'First Name'))])
+    search_schema = {'username': Unicode,
+                     'lastname': Unicode,
+                     'firstname': Unicode}
+
+    search_widgets = [TextWidget('username', title=MSG(u'Login')),
+                      TextWidget('lastname', title=MSG(u'Last Name')),
+                      TextWidget('firstname', title=MSG(u'First Name'))]
 
 
 
@@ -360,17 +364,12 @@ class BrowseUsers(BrowseForm):
         return merge_dicts(schema, sort_by=String(default='login_name'))
 
 
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode}
-
-    search_fields = []
-
+    search_schema = {'search_term': Unicode}
+    search_widgets = [TextWidget('search_term', title=MSG(u'Search'))]
 
     def get_items(self, resource, context):
         # Build the Query
         search_query = PhraseQuery('format', 'user')
-
         search_term = context.query['search_term'].strip()
         if search_term:
             search_query = AndQuery(search_query)

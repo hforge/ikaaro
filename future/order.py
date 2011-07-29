@@ -155,10 +155,9 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     # Reset unrequired stuff
     context_menus = []
-    search_template = None
     search_schema = {}
-    def get_search_namespace(self, resource, context):
-        return {}
+    search_widgets = []
+
     def get_query_schema(self):
         return {}
 
