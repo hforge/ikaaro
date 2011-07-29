@@ -6,8 +6,8 @@
 
 ${before}
 
-<form id="autoform" name="autoform" action="${action}" method="post"
-  onsubmit="${onsubmit}" enctype="multipart/form-data"
+<form id="autoform" name="autoform" action="${action}" method="${method}"
+  onsubmit="${onsubmit}" enctype="${enctype}"
   stl:omit-tag="not actions">
   <fieldset>
     <legend>${title}</legend>

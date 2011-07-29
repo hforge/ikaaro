@@ -665,6 +665,7 @@ class AutoForm(STLForm):
     widgets = []
     template = '/ui/auto_form.xml'
     description = None
+    method = 'post'
     actions = [Button(access=True, css='button-ok', title=MSG(u'Save'))]
 
     def get_widgets(self, resource, context):
@@ -786,6 +787,8 @@ class AutoForm(STLForm):
             ns_widget['widgets'] = widgets_html
             ns_widgets.append(ns_widget)
 
+        # Enctype
+        enctype = 'multipart/form-data' if self.method == 'post' else None
         # Get the actions
         actions = self._get_action_namespace(resource, context)
         action = None
@@ -800,6 +803,8 @@ class AutoForm(STLForm):
             'before': None,
             'actions': actions,
             'action': action,
+            'method': self.method,
+            'enctype': enctype,
             'onsubmit': onsubmit,
             'title': self.get_title(context),
             'description': self.description,
