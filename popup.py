@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts, thingy_property
+from itools.core import merge_dicts, thingy_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -62,14 +62,12 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
     search_schema = {}
     search_widgets =[]
+
     table_template = '/ui/html/addbase_browse_table.xml'
-    query_schema = merge_dicts(Folder_BrowseContent.query_schema,
-                               Folder_BrowseContent.search_schema)
-    hidden_fields = freeze(['target_id', 'mode'])
 
     folder_classes = ()
     item_classes = ()
-    show_type_form = True
+
     # Parameter for get_items
     target = None
     popup_root = None
@@ -141,26 +139,6 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         return items
 
 
-    def get_search_types(self, resource, context):
-        # Narrow the children to target content
-        target = self.target
-        proxy = super(AddBase_BrowseContent, self)
-        return proxy.get_search_types(target, context)
-
-
-    def get_search_namespace(self, resource, context):
-        proxy = super(AddBase_BrowseContent, self)
-        namespace = proxy.get_search_namespace(resource, context)
-        hidden_widgets = namespace['hidden_widgets']
-        # Hook hidden_widgets, add computed 'target' value
-        popup_root_abspath = self.popup_root.get_abspath()
-        target = popup_root_abspath.get_pathto(self.target.get_abspath())
-        hidden_widgets.append({'name': 'target', 'value': target})
-
-        namespace['show_type_form'] = self.show_type_form
-        return namespace
-
-
     def get_actions_namespace(self, resource, context, items):
         actions = []
         for button in self.get_table_actions(resource, context):
@@ -172,7 +150,6 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 class AddImage_BrowseContent(AddBase_BrowseContent):
 
-    show_type_form = False
 
     @classmethod
     def get_item_classes(cls):
@@ -219,7 +196,6 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 class AddMedia_BrowseContent(AddBase_BrowseContent):
 
-    show_type_form = False
 
     @classmethod
     def get_item_classes(cls):
@@ -257,10 +233,8 @@ class DBResource_AddBase(STLForm):
         'target_id': String(default=None),
         'mode': String(default='')}
 
-    search_schema = {
-        'search_type': String,
-        'search_text': Unicode,
-    }
+    search_widgets = []
+    search_schema = {}
 
     # This value must be set in subclass
     browse_content_class = None
