@@ -762,8 +762,13 @@ class AutoForm(STLForm):
                 raise ValueError, "2 widgets want to change onsubmit"
             onsubmit = widget_onsubmit
 
+            # Get value
+            if self.method == 'get':
+                # XXX AutoForm get widget value from the form not from the query
+                value = context.get_query_value(widget.name)
+            else:
+                value = ns_widget['value']
             # multilingual or monolingual
-            value = ns_widget['value']
             if getattr(datatype, 'multilingual', False):
                 widgets_html = []
                 for language in languages:
