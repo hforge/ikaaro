@@ -17,15 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_property
 from itools.database import register_field
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
+from itools.web import get_context
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.xml import XMLParser
 
 # Import from ikaaro
 from autoform import SelectWidget
-from fields import Char_Field
+from fields import Select_Field
 
 
 
@@ -73,13 +75,76 @@ workflow.set_initstate('private')
 
 
 
+###########################################################################
+# Fields, datatypes, widgets
+###########################################################################
+class StaticStateEnumerate(Enumerate):
+
+    workflow = workflow
+
+    def get_options(cls):
+        states = cls.workflow.states
+
+        # Options
+        options = [
+           {'name': x, 'value': states[x].metadata['title'].gettext()}
+           for x in states.keys() ]
+
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
+
+state_widget = SelectWidget('state', title=MSG(u'State'),
+                            has_empty_option=False)
+
+class State_Field(Select_Field):
+
+    default = ''
+    title = MSG(u'State')
+    widget = state_widget
+
+    @thingy_property
+    def options(self):
+        context = get_context()
+        user = context.user
+        root = context.root
+
+        # Possible states
+        resource = self.resource
+        workflow = resource.workflow
+        try:
+            statename = resource.get_statename()
+        except TypeError:
+            statename = workflow.initstate
+
+        states = workflow.states
+        state = states.get(statename)
+        options = set([statename])
+        for name, trans in state.transitions.items():
+            if root.is_allowed_to_trans(user, resource, name):
+                options.add(trans.state_to)
+
+        # Options
+        options = [
+           {'name': x, 'value': states[x].metadata['title'].gettext()}
+           for x in options ]
+
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
+
+###########################################################################
+# Base class
+###########################################################################
 class WorkflowAware(BaseWorkflowAware):
 
     class_version = '20090122'
     workflow = workflow
 
     fields = ['state']
-    state = Char_Field
+    state = State_Field
 
 
     def get_workflow_state(self):
@@ -106,58 +171,5 @@ def get_workflow_preview(resource, context):
     return XMLParser(state)
 
 
+# Register
 register_field('workflow_state', String(stored=True, indexed=True))
-
-###########################################################################
-# Datatypes and widgets
-###########################################################################
-
-class StateEnumerate(Enumerate):
-
-    default = ''
-
-    def get_options(self):
-        resource = self.resource
-        states = resource.workflow.states
-        state = resource.get_state()
-
-        ac = resource.get_access_control()
-        user = self.context.user
-
-        # Possible states
-        options = [
-            trans.state_to
-            for name, trans in state.transitions.items()
-            if ac.is_allowed_to_trans(user, resource, name) ]
-        options = set(options)
-        options.add(resource.get_statename())
-
-        # Options
-        options = [
-           {'name': x, 'value': states[x].metadata['title'].gettext()}
-           for x in options ]
-
-        options.sort(key=lambda x: x['value'])
-        return options
-
-
-
-class StaticStateEnumerate(Enumerate):
-
-    workflow = WorkflowAware.workflow
-
-    def get_options(cls):
-        states = cls.workflow.states
-
-        # Options
-        options = [
-           {'name': x, 'value': states[x].metadata['title'].gettext()}
-           for x in states.keys() ]
-
-        options.sort(key=lambda x: x['value'])
-        return options
-
-
-
-state_widget = SelectWidget('state', title=MSG(u'State'),
-                            has_empty_option=False)

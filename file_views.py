@@ -35,7 +35,6 @@ from autoform import FileWidget, PathSelectorWidget, ProgressBarWidget
 from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
-from workflow import StateEnumerate, state_widget
 
 
 class File_NewInstance(AutoAdd):
@@ -104,20 +103,6 @@ class File_View(STLView):
 class File_Edit(AutoEdit):
 
     fields = ['title', 'state', 'data', 'description', 'subject']
-
-
-    def _get_datatype(self, resource, context, name):
-        if name == 'state':
-            return StateEnumerate(resource=resource, context=context)
-
-        return super(File_Edit, self)._get_datatype(resource, context, name)
-
-
-    def _get_widget(self, resource, context, name):
-        if name == 'state':
-            return state_widget
-
-        return super(File_Edit, self)._get_widget(resource, context, name)
 
 
 

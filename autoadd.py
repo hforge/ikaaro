@@ -35,9 +35,13 @@ class AutoAdd(AutoForm):
 
     access = 'is_allowed_to_add'
 
-    fields = ['title', 'location']
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     goto_view = None
+
+
+    fields = ['title', 'location']
+    def get_fields(self, cls):
+        return self.fields
 
 
     #######################################################################
@@ -68,7 +72,9 @@ class AutoAdd(AutoForm):
 
     def _get_datatype(self, resource, context, name):
         cls = self._get_resource_class(context)
-        return cls.get_field(name).get_datatype()
+        field = cls.get_field(name)
+        field = field(resource=cls) # bind
+        return field.get_datatype()
 
 
     def get_query_schema(self):
@@ -88,7 +94,8 @@ class AutoAdd(AutoForm):
         schema = {
             'cls_description': Unicode,
             'referrer': URI}
-        for name in self.fields:
+        cls = self._get_resource_class(context)
+        for name in self.get_fields(cls):
             # Special case: location
             if name == 'location':
                 schema['path'] = ContainerPathDatatype
@@ -130,7 +137,8 @@ class AutoAdd(AutoForm):
         widgets = [
             ReadOnlyWidget('cls_description'),
             HiddenWidget('referrer')]
-        for name in self.fields:
+        cls = self._get_resource_class(context)
+        for name in self.get_fields(cls):
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
 
@@ -239,7 +247,7 @@ class AutoAdd(AutoForm):
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
         schema = self.get_schema(resource, context)
-        for name in self.fields:
+        for name in self.get_fields(cls):
             datatype = schema.get(name)
             if datatype and not getattr(datatype, 'readonly', False):
                 if self.set_value(child, context, name, form):

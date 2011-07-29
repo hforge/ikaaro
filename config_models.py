@@ -97,11 +97,9 @@ class Model_NewInstance(NewInstance_Local):
         # Create the inherited fields
         class_id = child.get_value('base_class')
         cls = child.database.get_resource_class(class_id)
-        for field_name in cls.fields:
-            field = cls.get_field(field_name)
-            if field.readonly:
-                continue
-            child.make_resource(field_name, ModelField_Inherited)
+        for field_name, field in cls.get_fields():
+            if not field.readonly:
+                child.make_resource(field_name, ModelField_Inherited)
 
         # Ok
         return child
@@ -148,12 +146,14 @@ class Model(Folder):
             'class_id': str(self.abspath),
             'class_title': MSG(self.get_value('title'))}
         fields = []
-        for field in self.get_resources():
-            if isinstance(field, ModelField_Inherited):
+        for resource in self.get_resources():
+            if isinstance(resource, ModelField_Inherited):
                 continue
-            field_type = field.get_value('field_type')
-            class_dict[field.name] = fields_map[field_type]
-            fields.append(field.name)
+            field_name = resource.name
+            field_type = resource.get_value('field_type')
+            field = fields_map[field_type]
+            class_dict[field_name] = field(title=resource.get_title())
+            fields.append(field_name)
         class_dict['fields'] = base_class.fields + fields
 
         return type(self.name, bases, class_dict)

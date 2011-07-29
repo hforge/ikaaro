@@ -57,8 +57,8 @@ class RegisterForm(AutoForm):
         cls = context.database.get_resource_class('user')
 
         schema = {}
-        for name in self.fields:
-            datatype = cls.get_field(name).get_datatype()
+        for name, field in cls.get_fields():
+            datatype = field.get_datatype()
             schema[name] = datatype
             # Special case: datetime
             if issubclass(datatype, DateTime):
@@ -83,12 +83,8 @@ class RegisterForm(AutoForm):
 
     def get_widgets(self, resource, context):
         cls = context.database.get_resource_class('user')
-
-        widgets = []
-        for name in self.fields:
-            field = cls.get_field(name)
-            widget = field.widget(name, title=field.title)
-            widgets.append(widget)
+        widgets = [ field.widget(name, title=field.title)
+                    for name, field in cls.get_fields() ]
 
         # Terms of service
         config_register = resource.get_resource('config/register')

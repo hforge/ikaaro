@@ -125,6 +125,8 @@ class AutoEdit(AutoForm):
     title = MSG(u'Edit')
 
     fields = ['title', 'description', 'subject']
+    def get_fields(self, resource):
+        return self.fields
 
 
     context_menus = []
@@ -177,14 +179,16 @@ class AutoEdit(AutoForm):
 
 
     def _get_datatype(self, resource, context, name):
-        return resource.get_field(name).get_datatype()
+        field = resource.get_field(name)
+        field = field(resource=resource) # bind
+        return field.get_datatype()
 
 
     def _get_schema(self, resource, context):
         schema = {'timestamp': DateTime(readonly=True)}
 
         # Add schema from the resource
-        for name in self.fields:
+        for name in self.get_fields(resource):
             datatype = self._get_datatype(resource, context, name)
 
             # Special case: datetime
@@ -226,7 +230,7 @@ class AutoEdit(AutoForm):
 
     def _get_widgets(self, resource, context):
         widgets = [timestamp_widget]
-        for name in self.fields:
+        for name in self.get_fields(resource):
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
 

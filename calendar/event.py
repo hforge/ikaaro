@@ -89,7 +89,12 @@ class RRuleDataType(Enumerate):
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
-    fields = ['title', 'dtstart', 'dtend', 'description', 'rrule', 'status']
+
+    def get_fields(self, resource):
+        for name, field in resource.get_fields():
+            if not field.readonly:
+                yield name
+
 
     def get_namespace(self, resource, context):
         proxy = super(Event_Edit, self)
@@ -129,7 +134,11 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
-    fields = ['title', 'dtstart', 'dtend', 'cc_list']
+    def get_fields(self, cls):
+        for name, field in cls.get_fields():
+            if not field.readonly:
+                yield name
+
 
     def get_container(self, resource, context, form):
         # XXX Copied from blog/blog.py
@@ -185,7 +194,7 @@ class Event_NewInstance(AutoAdd):
         cls = context.database.get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
-        for key in self.fields:
+        for key in self.get_fields(cls):
             if key != 'cc_list':
                 self.set_value(child, context, key, form)
         # Set properties / cc_list
@@ -226,8 +235,8 @@ class Event(Content):
     fields = Content.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
                                'uid']
     owner = Char_Field(readonly=True)
-    dtstart = EventDatetime_Field(title=MSG(u'Start'))
-    dtend = EventDatetime_Field(title=MSG(u'End'))
+    dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
+    dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = Select_Field(datatype=RRuleDataType, title=MSG(u'Recurrence'))
     uid = Char_Field(readonly=True)

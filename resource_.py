@@ -56,8 +56,7 @@ class DBResourceMetaclass(type):
             Database.register_resource_class(cls)
 
         # Register fields in the catalog
-        for name in cls.fields:
-            field = cls.get_field(name)
+        for name, field in cls.get_fields():
             if field.indexed or field.stored:
                 datatype = field.get_datatype()
                 register_field(name, datatype)
@@ -231,6 +230,14 @@ class DBResource(Resource):
         return None
 
 
+    @classmethod
+    def get_fields(self):
+        for name in self.fields:
+            field = self.get_field(name)
+            if field:
+                yield name, field
+
+
     def get_value(self, name, language=None):
         field = self.get_field(name)
         if field is None:
@@ -369,8 +376,7 @@ class DBResource(Resource):
 
         # Step 1. Automatically index fields
         languages = self.get_root().get_value('website_languages')
-        for name in self.fields:
-            field = self.get_field(name)
+        for name, field in self.get_fields():
             if not field.indexed and not field.stored:
                 continue
 
@@ -444,14 +450,9 @@ class DBResource(Resource):
         """Return all the handlers attached to this resource, except the
         metadata.
         """
-        handlers = []
-        for field_name in self.fields:
-            field = self.get_field(field_name)
-            if issubclass(field, File_Field):
-                handler = self.get_value(field_name)
-                handlers.append(handler)
-
-        return handlers
+        return [ field.get_value(self, name)
+                 for name, field in self.get_fields()
+                 if issubclass(field, File_Field) ]
 
 
     def rename_handlers(self, new_name):
@@ -493,8 +494,7 @@ class DBResource(Resource):
         TODO This list should be calculated statically to avoid a performance
         hit at run time.
         """
-        for name in self.fields:
-            field = self.get_field(name)
+        for name, field in self.get_fields():
             if issubclass(field.datatype, URI):
                 yield name
 
