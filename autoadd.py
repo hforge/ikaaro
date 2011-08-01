@@ -148,7 +148,8 @@ class AutoAdd(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'cls_description':
             cls = self._get_resource_class(context)
-            return cls.class_description.gettext()
+            value = cls.class_description
+            return value.gettext() if value else u''
         elif name == 'referrer':
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()

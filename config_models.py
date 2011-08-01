@@ -40,42 +40,68 @@ class FieldType_Field(Select_Field):
 
 
 
-class ModelField_Base(DBResource):
+class ModelField_Inherited(DBResource):
 
-    class_title = MSG(u'...')
-    class_description = MSG(u'...')
-    class_icon48 = 'icons/48x48/folder.png' # XXX
+    class_id = 'model-field-inherited'
+    class_title = MSG(u'Inherited field')
     class_views = ['edit', 'commit_log']
 
 
 
-class ModelField_Inherited(ModelField_Base):
-
-    class_id = 'model-field-inherited'
-
-
-
-class ModelField_Standard(ModelField_Base):
+class ModelField_Standard(DBResource):
 
     class_id = 'model-field-standard'
+    class_title = MSG(u'Standard field')
 
     # Fields
     fields = DBResource.fields + ['field_type']
     field_type = FieldType_Field(required=True, title=MSG(u'Field type'))
 
+    # API
+    def build_field(self):
+        fields_map = {
+            'text': Text_Field,
+            'integer': Integer_Field}
+
+        field_type = self.get_value('field_type')
+        return fields_map[field_type]
+
     # Views
+    class_views = ['edit', 'commit_log']
     new_instance = NewInstance_Local(fields=['field_type', 'title'])
     edit = AutoEdit(fields=['field_type', 'title'])
 
 
 
-#class ModelField_Choice(ModelField):
-#
-#    class_id = 'model-field-choices'
-#
-#    # Fields
-#    fields = ModelField.fields + ['field_options']
-#    field_options =
+class Choice(DBResource):
+
+    class_id = 'model-field-choice'
+    class_title = MSG(u'Choice')
+
+    # Views
+    class_views = ['edit', 'commit_log']
+    new_instance = NewInstance_Local(fields=['title'])
+
+
+
+class ModelField_Choices(Folder):
+
+    class_id = 'model-field-choices'
+    class_title = MSG(u'Choices field')
+
+    def get_document_types(self):
+        return [Choice]
+
+    # API
+    def build_field(self):
+        options = [ {'name': x.name, 'value': x.get_title() }
+                    for x in self.get_resources() ]
+        return Select_Field(options=options)
+
+    # Views
+    class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
+    new_instance = NewInstance_Local(fields=['title'])
+    add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
 
 
@@ -145,7 +171,7 @@ class Model(Folder):
     add_field = NewResource_Local(title=MSG(u'Add field'))
 
     def get_document_types(self):
-        return [ModelField_Standard]#, ModelField_Choice]
+        return [ModelField_Standard, ModelField_Choices]
 
 
     @property
@@ -155,10 +181,6 @@ class Model(Folder):
 
 
     def build_resource_class(self):
-        fields_map = {
-            'text': Text_Field,
-            'integer': Integer_Field}
-
         # bases
         base_class = self.get_value('base_class')
         base_class = self.database.get_resource_class(base_class)
@@ -171,9 +193,8 @@ class Model(Folder):
         for resource in self.get_resources():
             if isinstance(resource, ModelField_Inherited):
                 continue
+            field = resource.build_field()
             field_name = resource.name
-            field_type = resource.get_value('field_type')
-            field = fields_map[field_type]
             class_dict[field_name] = field(title=resource.get_title())
             fields.append(field_name)
         class_dict['fields'] = base_class.fields + fields

@@ -709,8 +709,7 @@ class AutoForm(STLForm):
 
 
     def get_schema(self, resource, context):
-        proxy = super(AutoForm, self)
-        schema = proxy.get_schema(resource, context)
+        schema = super(AutoForm, self).get_schema(resource, context)
         # Hack for some Datatypes
         for name, datatype in schema.items():
             # Special case: datetime

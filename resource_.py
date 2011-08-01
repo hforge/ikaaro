@@ -71,6 +71,9 @@ class DBResource(Resource):
     __hash__ = None
 
     class_version = '20071215'
+    class_description = None
+    class_icon16 = 'icons/16x16/resource.png'
+    class_icon48 = 'icons/48x48/resource.png'
     class_views = []
     context_menus = []
 
