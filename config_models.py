@@ -14,8 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from operator import itemgetter
+
 # Import from itools
+from itools.core import thingy_property
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -77,10 +82,27 @@ class ModelField_Standard(ModelField_Base):
 ###########################################################################
 # The model resource
 ###########################################################################
+models_registry = set()
+
+def register_model_base_class(cls):
+    models_registry.add(cls.class_id)
+
+
+def unregister_model_base_class(cls):
+    models_registry.discard(cls.class_id)
+
+
+
 class BaseClass_Field(Select_Field):
 
-    options = [
-        {'name': 'event', 'value': MSG(u'Event')}]
+    @thingy_property
+    def options(self):
+        database = get_context().database
+        options = [
+            {'name': x, 'value': database.get_resource_class(x).class_title}
+            for x in models_registry ]
+        options.sort(key=itemgetter('value'))
+        return options
 
 
 

@@ -29,6 +29,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
+from ikaaro.config_models import register_model_base_class
 from ikaaro.content import Content
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.folder import Folder
@@ -403,3 +404,4 @@ class Event(Content):
 # Register
 register_field('dates', Date(indexed=True, multiple=True))
 register_field('is_event', Boolean(indexed=True))
+register_model_base_class(Event)
