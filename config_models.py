@@ -28,7 +28,7 @@ from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from fields import Select_Field
 from fields import Integer_Field, Text_Field
-from folder import Folder
+from folder import Folder, OrderedFolder
 from resource_ import DBResource
 
 
@@ -143,18 +143,23 @@ class Model_NewInstance(NewInstance_Local):
             return
 
         # Create the inherited fields
+        fields_names = []
         class_id = child.get_value('base_class')
         cls = child.database.get_resource_class(class_id)
         for field_name, field in cls.get_fields():
             if not field.readonly:
                 child.make_resource(field_name, ModelField_Inherited)
+                fields_names.append(field_name)
+
+        # Order fields into folder
+        child.update_order(fields_names)
 
         # Ok
         return child
 
 
 
-class Model(Folder):
+class Model(OrderedFolder):
 
     class_id = 'model'
     class_title = MSG(u'...')
@@ -170,14 +175,19 @@ class Model(Folder):
     new_instance = Model_NewInstance()
     add_field = NewResource_Local(title=MSG(u'Add field'))
 
+    # Order configuration
+    allow_to_unorder_items = True
+
     def get_document_types(self):
         return [ModelField_Standard, ModelField_Choices]
 
 
     @property
     def __fixed_handlers__(self):
-        return [ x.name for x in self.get_resources()
-                 if isinstance(x, ModelField_Inherited) ]
+        return []
+        # XXX To allow ordering, resources should not be fixed handlers
+        #return [ x.name for x in self.get_resources()
+        #         if isinstance(x, ModelField_Inherited) ]
 
 
     def build_resource_class(self):
