@@ -280,13 +280,13 @@ class DBResource(Resource):
         """Return a Metadata object with sensible default values.
         """
         # Properties
-        for key in kw:
-            value = kw[key]
+        for name, value in kw.items():
+            field = self.get_field(name)
             if type(value) is dict:
                 for lang in value:
-                    self.set_value(key, value[lang], lang)
+                    field._set_value(self, name, value[lang], lang)
             else:
-                self.set_value(key, value)
+                field._set_value(self, name, value)
 
         # Workflow State (default)
         if kw.get('state') is None and isinstance(self, WorkflowAware):

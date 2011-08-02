@@ -51,12 +51,18 @@ class Field(thingy):
 
 
     def set_value(self, resource, name, value, language=None):
-        """This method must return a boolean:
-
-        - True if the value has changed
-        - False if the value has NOT changed
+        """If value == old value then return False
+           else make the change and return True
         """
-        raise NotImplementedError
+        # Check the new value is different from the old value
+        old_value = self.get_value(resource, name, language)
+        if value == old_value:
+            return False
+
+        # Set property
+        self._set_value(resource, name, value, language)
+        get_context().database.change_resource(resource)
+        return True
 
 
     # XXX For backwards compatibility
@@ -103,22 +109,10 @@ class Metadata_Field(Field):
         return property.value
 
 
-    def set_value(self, resource, name, value, language=None):
-        """If value == old value then return False
-           else make the change and return True
-        """
-        # Check the new value is different from the old value
-        old_value = self.get_value(resource, name, language)
-        if value == old_value:
-            return False
-
-        # Set property
+    def _set_value(self, resource, name, value, language=None):
         if language:
             value = Property(value, lang=language)
-
-        get_context().database.change_resource(resource)
         resource.metadata.set_property(name, value)
-        return True
 
 
 
@@ -235,11 +229,11 @@ class File_Field(Field):
         return get_handler(key, cls=cls, soft=True)
 
 
-    def set_value(self, resource, name, value, language=None):
+    def _set_value(self, resource, name, value, language=None):
         """
         value may be:
 
-        - None
+        - None (XXX remove handler?)
         - a handler
         - a byte string
         - a tuple
@@ -248,18 +242,13 @@ class File_Field(Field):
         if self.multilingual and not language:
             raise ValueError, 'expected "language" param not found'
 
-        # Case 1: None (XXX should remove instead?)
-        if value is None:
-            return False
-
-        # Case 2: Set handler
+        # Set handler
         handler = self._get_handler_from_value(value)
         key = self._get_key(resource, name, language)
         database = resource.metadata.database
         if database.get_handler(key, soft=True):
             database.del_handler(key)
         database.set_handler(key, handler)
-        return True # XXX It may be False
 
 
     def _get_handler_from_value(self, value):
