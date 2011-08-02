@@ -98,11 +98,6 @@ class Menu_View(OrderedTable_View):
         return table_actions
 
 
-    def get_items(self, resource, context):
-        items = resource.get_records_in_order()
-        return list(items)
-
-
     def get_table_columns(self, resource, context):
         proxy = super(Menu_View, self)
         base_columns = proxy.get_table_columns(resource, context)

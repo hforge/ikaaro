@@ -28,6 +28,7 @@ from itools.web import get_context
 from autoform import get_default_widget
 from fields import File_Field
 from file import File
+from order import OrderAware
 from resource_ import DBResource
 from table_views import Table_View, Table_AddRecord, Table_EditRecord
 from table_views import OrderedTable_View, Table_ExportCSV
@@ -107,78 +108,44 @@ class OrderedTableFile(TableFile):
     schema = {'order': Tokens}
 
 
-    def get_record_ids_in_order(self):
-        """Return ids sort by order"""
-        ordered = self.get_property_value('order') or []
-        ordered = [ int(x) for x in ordered ]
-        record_ids = list(self.get_record_ids())
-        for id in ordered:
-            if id in record_ids:
-                yield id
-        # Unordered
-        ordered_set = set(ordered)
-        for id in record_ids:
-            if id not in ordered_set:
-                yield id
-
-
-    def order_up(self, ids):
-        order = self.get_record_ids_in_order()
-        order = list(order)
-        for id in ids:
-            index = order.index(id)
-            if index > 0:
-                order.remove(id)
-                order.insert(index - 1, id)
-        # Update the order
-        order = [ str(x) for x in order ]
-        self.update_properties(order=tuple(order))
-
-
-    def order_down(self, ids):
-        order = self.get_record_ids_in_order()
-        order = list(order)
-        for id in ids:
-            index = order.index(id)
-            order.remove(id)
-            order.insert(index + 1, id)
-        # Update the order
-        order = [ str(x) for x in order ]
-        self.update_properties(order=tuple(order))
-
-
-    def order_top(self, ids):
-        order = self.get_record_ids_in_order()
-        order = list(order)
-        order = ids + [ id for id in order if id not in ids ]
-        # Update the order
-        order = [ str(x) for x in order ]
-        self.update_properties(order=tuple(order))
-
-
-    def order_bottom(self, ids):
-        order = self.get_record_ids_in_order()
-        order = list(order)
-        order = [ id for id in order if id not in ids ] + ids
-        # Update the order
-        order = [ str(x) for x in order ]
-        self.update_properties(order=tuple(order))
-
-
-
-class OrderedTable(Table):
+class OrderedTable(Table, OrderAware):
 
     class_title = MSG(u'Ordered Table')
 
     table = Table.table(class_handler=OrderedTableFile)
 
+    allow_to_unorder_items = False
+
+    def update_order(self, order):
+        order = [str(x) for x in order]
+        table = self.get_value('table')
+        table.update_properties(order=tuple(order))
+
+
+    def get_ordered_values(self):
+        table = self.get_value('table')
+        ordered = table.get_property_value('order') or []
+        ordered = [ int(x) for x in ordered ]
+        # Get existing records id (A record should have been deleted)
+        record_ids = list(table.get_record_ids())
+        for id in ordered:
+            if id in record_ids:
+                yield id
+        # Unordered
+        if self.allow_to_unorder_items is False:
+            ordered_set = set(ordered)
+            for id in record_ids:
+                if id not in ordered_set:
+                    yield id
+
+
+
     def get_records_in_order(self):
         table = self.get_value('table')
         if table:
-            for id in table.get_record_ids_in_order():
+            for id in self.get_ordered_values():
                 yield table.get_record(id)
 
 
     # Views
     view = OrderedTable_View()
-

@@ -24,7 +24,6 @@ from zipfile import ZipFile
 
 # Import from itools
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid, Folder as FolderHandler
@@ -37,11 +36,13 @@ from itools.web import get_context, BaseView
 from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
-from folder_views import Folder_BrowseContent
+from fields import URI_Field
+from folder_views import Folder_BrowseContent, OrderedFolder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
+from order import OrderAware
 from resource_ import DBResource
 from utils import get_base_path_query
 
@@ -470,6 +471,34 @@ class Folder(DBResource):
     preview_content = Folder_PreviewContent()
     thumb = Folder_Thumbnail()
 
+
+###########################################################################
+# Ordered Folder
+###########################################################################
+
+class OrderedFolder(Folder, OrderAware):
+
+    class_title = MSG(u'Ordered Folder')
+    class_views = ['browse_content']
+
+    order = URI_Field(title=MSG(u'Order'), multiple=True)
+    fields = Folder.fields + ['order']
+
+    def update_order(self, order):
+        self.set_property('order', order)
+
+
+    def get_ordered_values(self):
+        ordered_names = list(self.get_value('order'))
+        # Unordered names
+        if self.allow_to_unorder_items is False:
+            for name in self.get_names():
+                if name not in ordered_names:
+                    ordered_names.append(name)
+        return ordered_names
+
+    # Views
+    browse_content = OrderedFolder_BrowseContent()
 
 
 ###########################################################################

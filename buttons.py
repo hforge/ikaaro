@@ -188,6 +188,19 @@ class OrderBottomButton(BrowseButton):
     title = MSG(u'Order bottom')
 
 
+class OrderButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'add_to_ordered'
+    title = MSG(u'Add to ordered list')
+
+
+class UnOrderButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'remove_from_ordered'
+    title = MSG(u'Remove from ordered list')
+
 
 class AddButton(BrowseButton):
 

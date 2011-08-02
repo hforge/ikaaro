@@ -38,6 +38,7 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
+from order import OrderAware_View
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
@@ -757,6 +758,42 @@ class Folder_BrowseContent(BrowseForm):
         context.set_content_disposition('inline', filename)
         # Ok
         return data
+
+
+
+class OrderedFolder_BrowseContent(Folder_BrowseContent, OrderAware_View):
+
+
+    query_schema = merge_dicts(Folder_BrowseContent.query_schema,
+                               sort_by=Unicode(default='order'),
+                               reverse=Boolean(default=False))
+
+    table_columns = (Folder_BrowseContent.table_columns +
+                     [('order', MSG(u'Order'))])
+
+    def get_table_actions(self, resource, context):
+        proxy = super(OrderedFolder_BrowseContent, self)
+        return (proxy.get_table_actions(resource, context) +
+                OrderAware_View.get_table_actions(self, resource, context))
+
+
+    def get_item_value(self, resource, context, item, column):
+        proxy = super(OrderedFolder_BrowseContent, self)
+        item_brain, item_resource = item
+        if column == 'order':
+            ordered_ids = list(resource.get_ordered_values())
+            if item_brain.name in ordered_ids:
+                return ordered_ids.index(item_brain.name) + 1
+            return MSG(u'Not ordered')
+        return proxy.get_item_value(resource, context, item, column)
+
+
+    def action_remove(self, resource, context, form):
+        # Remove from ordered list
+        resource.order_remove(form['ids'])
+        # Super
+        proxy = super(OrderedFolder_BrowseContent, self)
+        return proxy.get_item_value(resource, context, form)
 
 
 

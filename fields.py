@@ -19,7 +19,7 @@ from itools.core import freeze, thingy
 from itools.csv import Property
 from itools.database import magic
 from itools.datatypes import Boolean, Date, DateTime, Email, Enumerate
-from itools.datatypes import Integer, String, Unicode
+from itools.datatypes import Integer, String, Unicode, URI
 from itools.handlers import get_handler_class_by_mimetype
 from itools.html import XHTMLFile
 from itools.web import get_context
@@ -188,6 +188,9 @@ class Textarea_Field(Text_Field):
     widget = MultilineWidget
 
 
+
+class URI_Field(Metadata_Field):
+    datatype = URI
 
 ###########################################################################
 # File handlers

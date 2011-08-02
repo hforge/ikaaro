@@ -19,16 +19,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.csv import UniqueError, Property, is_multilingual
-from itools.datatypes import Integer, Enumerate, Tokens
+from itools.datatypes import Boolean, Integer, Enumerate, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
-from buttons import OrderBottomButton, OrderTopButton, AddButton
+from buttons import Button, RemoveButton, AddButton
+from order import OrderAware_View
 from views import BrowseForm
 import messages
 
@@ -347,115 +348,37 @@ class Table_EditRecord(AutoEdit):
         context.message = messages.MSG_CHANGES_SAVED
 
 
-
 ##########################################################################
 # Ordered Views
 ##########################################################################
-class OrderedTable_View(Table_View):
-
-    def get_items(self, resource, context):
-        items = resource.handler.get_records_in_order()
-        return list(items)
 
 
-    def sort_and_batch(self, resource, context, items):
-        # Sort
-        sort_by = context.query['sort_by']
-        if sort_by == 'order':
-            reverse = context.query['reverse']
-            ordered_ids = list(resource.handler.get_record_ids_in_order())
-            f = lambda x: ordered_ids.index(x.id)
-            items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+class OrderedTable_View(Table_View, OrderAware_View):
 
-            # Batch
-            start = context.query['batch_start']
-            size = context.query['batch_size']
-            return items[start:start+size]
+    query_schema = merge_dicts(Table_View.query_schema,
+                               sort_by=Unicode(default='order'),
+                               reverse=Boolean(default=False))
 
-        return Table_View.sort_and_batch(self, resource, context, items)
+    def get_table_actions(self, resource, context):
+        proxy = super(OrderedTable_View, self)
+        return (proxy.get_table_actions(resource, context) +
+                OrderAware_View.get_table_actions(self, resource, context))
 
 
     def get_table_columns(self, resource, context):
         proxy = super(OrderedTable_View, self)
-        columns = proxy.get_table_columns(resource, context)
-        columns.append(('order', MSG(u'Order'), False))
-
-        # Disable order feature
-        table_columns = []
-        for column in columns:
-            if len(column) == 2:
-                name, title = column
-            else:
-                name, title, k = column
-            table_columns.append((name, title, False))
-
-        return table_columns
+        return (proxy.get_table_columns(resource, context) +
+                     [('order', MSG(u'Order'))])
 
 
     def get_item_value(self, resource, context, item, column):
         if column == 'order':
-            ordered_ids = list(resource.handler.get_record_ids_in_order())
-            return ordered_ids.index(item.id) + 1
-
-        return Table_View.get_item_value(self, resource, context, item, column)
-
-
-    table_actions = [AddRecordButton, RemoveButton, OrderUpButton,
-                     OrderDownButton, OrderTopButton, OrderBottomButton]
-
-    ######################################################################
-    # Form Actions
-    ######################################################################
-    def action_remove(self, resource, context, form):
-        ids = form['ids']
-        for id in ids:
-            resource.del_record(id)
-
-        context.message = INFO(u'Record deleted.')
-
-
-    def action_order_up(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order up.')
-            context.message = message
-            return
-
-        resource.handler.order_up(ids)
-        context.message = INFO(u'Resources ordered up.')
-
-
-    def action_order_down(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order down.')
-            context.message = message
-            return
-
-        resource.handler.order_down(ids)
-        context.message = INFO(u'Resources ordered down.')
-
-
-    def action_order_top(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order on top.')
-            context.message = message
-            return
-
-        resource.handler.order_top(ids)
-        context.message = INFO(u'Resources ordered on top.')
-
-
-    def action_order_bottom(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order on bottom.')
-            context.message = message
-            return
-
-        resource.handler.order_bottom(ids)
-        context.message = INFO(u'Resources ordered on bottom.')
+            ordered_ids = list(resource.get_ordered_values())
+            if item.id in ordered_ids:
+                return ordered_ids.index(item.id) + 1
+            return MSG(u'Not ordered')
+        proxy = super(OrderedTable_View, self)
+        return proxy.get_item_value(resource, context, item, column)
 
 
 
