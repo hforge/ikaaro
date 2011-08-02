@@ -21,7 +21,7 @@ from datetime import date
 from itools.csv import Property
 from itools.datatypes import Date, Unicode
 from itools.gettext import MSG
-from itools.web import STLForm
+from itools.web import STLView
 
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
@@ -73,7 +73,7 @@ class Post_NewInstance(AutoAdd):
 
 
 
-class Post_View(STLForm):
+class Post_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')

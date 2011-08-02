@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
-from itools.web import BaseView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLView, INFO, ERROR
 from itools.web import Conflict, NotImplemented
 
 # Import from ikaaro
@@ -181,7 +181,7 @@ class DBResource_Backlinks(DBResource_Links):
 ###########################################################################
 # Views / Login, Logout
 ###########################################################################
-class LoginView(STLForm):
+class LoginView(STLView):
 
     access = True
     title = MSG(u'Login')

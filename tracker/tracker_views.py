@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.handlers.utils import transmap
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
+from itools.web import BaseView, STLView, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
@@ -289,7 +289,7 @@ class Tracker_Edit(AutoEdit):
 
 
 
-class Tracker_AddIssue(STLForm):
+class Tracker_AddIssue(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
@@ -316,7 +316,8 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
-        namespace = STLForm.get_namespace(self, resource, context)
+        proxy = super(Tracker_AddIssue, self)
+        namespace = proxy.get_namespace(resource, context)
         namespace['list_products'] = resource.get_list_products_namespace()
         return namespace
 
@@ -618,7 +619,7 @@ class Tracker_Search(BaseBrowseForm, Tracker_View):
 
 
 
-class Tracker_RememberSearch(BaseForm):
+class Tracker_RememberSearch(BaseView):
 
     access = 'is_allowed_to_edit'
 
@@ -681,7 +682,7 @@ class Tracker_RememberSearch(BaseForm):
 
 
 
-class Tracker_ForgetSearch(BaseForm):
+class Tracker_ForgetSearch(BaseView):
 
     access = 'is_allowed_to_edit'
     schema = {

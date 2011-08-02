@@ -22,7 +22,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
-from itools.web import STLForm, STLView, INFO
+from itools.web import STLView, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, get_default_widget, MultilineWidget
@@ -90,7 +90,7 @@ class Text_View(STLView):
 
 
 
-class PO_Edit(STLForm):
+class PO_Edit(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
@@ -98,8 +98,7 @@ class PO_Edit(STLForm):
     schema = {
         'msgctxt': Unicode,
         'msgid': Unicode(mandatory=True),
-        'msgstr': Unicode(mandatory=True),
-    }
+        'msgstr': Unicode(mandatory=True)}
 
 
     def get_namespace(self, resource, context):

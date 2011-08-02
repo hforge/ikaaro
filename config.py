@@ -24,7 +24,7 @@ from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
-from itools.web import STLView, STLForm, INFO, ERROR
+from itools.web import STLView, INFO, ERROR
 from itools.database import PhraseQuery
 
 # Import from ikaaro
@@ -45,7 +45,7 @@ GROUPS = [
     ]
 
 
-class Configuration_View(STLForm):
+class Configuration_View(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Configuration')
@@ -100,7 +100,7 @@ class Configuration_View(STLForm):
 
 
 
-class Config_EditVirtualHosts(STLForm):
+class Config_EditVirtualHosts(STLView):
 
     access = 'is_admin'
     title = MSG(u'Virtual Hosts')
@@ -217,7 +217,7 @@ class Config_Orphans(Folder_BrowseContent):
 
 
 
-class Config_EditLanguages(STLForm):
+class Config_EditLanguages(STLView):
 
     access = 'is_admin'
     title = MSG(u'Languages')

@@ -29,7 +29,7 @@ from itools.gettext import MSG
 from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
-from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
+from itools.web import BaseView, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
@@ -102,7 +102,7 @@ def get_current_date(value):
 
 
 
-class TimetablesForm(STLForm):
+class TimetablesForm(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
@@ -810,7 +810,7 @@ class DailyView(CalendarView):
 
 
 
-class Calendar_Import(STLForm):
+class Calendar_Import(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Import')

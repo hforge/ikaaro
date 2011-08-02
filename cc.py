@@ -33,7 +33,7 @@ from fields import Select_Field
 from messages import MSG_BAD_KEY
 from user_views import BrowseUsers
 from utils import generate_password
-from views import CompositeForm
+from views import CompositeView
 
 
 MSG_CONFIRMATION_SENT = INFO(u'A message has been sent to confirm your '
@@ -329,7 +329,7 @@ class MassSubscriptionForm(AutoForm):
 
 
 
-class SubscribeForm(CompositeForm):
+class SubscribeForm(CompositeView):
     access = 'is_allowed_to_view'
     title = MSG(u'Subscriptions')
 

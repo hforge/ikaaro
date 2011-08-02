@@ -29,7 +29,7 @@ from itools.handlers import checkid
 from itools.handlers.utils import transmap
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, ERROR, get_context
+from itools.web import BaseView, STLView, ERROR, get_context
 
 # Import from ikaaro
 from autoform import SelectWidget, TextWidget
@@ -194,7 +194,7 @@ class Folder_NewResource(IconsView):
 
 
 
-class Folder_Rename(STLForm):
+class Folder_Rename(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Rename resources')

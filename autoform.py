@@ -32,7 +32,7 @@ from itools.handlers import Image
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
 from itools.stl import stl
-from itools.web import STLForm, get_context
+from itools.web import STLView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
@@ -650,7 +650,7 @@ file_widget = FileWidget('file', title=MSG(u'Replace file'))
 ###########################################################################
 # Generate Form
 ###########################################################################
-class AutoForm(STLForm):
+class AutoForm(STLView):
     """Fields is a dictionnary:
 
       {'firstname': Unicode(mandatory=True),
@@ -763,7 +763,8 @@ class AutoForm(STLForm):
 
             # Get value
             if self.method == 'get':
-                # XXX AutoForm get widget value from the form not from the query
+                # XXX AutoForm get widget value from the form not from the
+                # query
                 value = context.get_query_value(widget.name)
             else:
                 value = ns_widget['value']

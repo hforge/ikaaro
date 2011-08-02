@@ -24,7 +24,7 @@ from itools.database import AndQuery, OrQuery
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import BaseView, STLView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from pytz
 from pytz import common_timezones
@@ -198,7 +198,7 @@ class User_EditAccount(AutoEdit):
 
 
 
-class User_EditPreferences(STLForm):
+class User_EditPreferences(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Preferences')

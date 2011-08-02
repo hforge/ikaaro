@@ -19,7 +19,7 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.web import STLView, STLForm
+from itools.web import STLView
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -82,73 +82,62 @@ class CompositeView(STLView):
                 yield view
 
 
-    def get_namespace(self, resource, context):
-        views = []
-        for view in self.get_allowed_subviews(resource, context):
-            views.append(view.GET(resource, context))
-        return {'views': views}
-
-
-
-class CompositeForm(CompositeView, STLForm):
-    """This view renders the sub-views defined by the class variable
-    'subviews' one after the other.
-    """
-
     def get_schema(self, resource, context):
         # Check for specific schema
-        action = context.form_action
+        method_name = context.form_action
         for view in self.subviews:
-            method = getattr(view, action, None)
-            if method is None:
-                continue
-            schema = getattr(view, '%s_schema' % action, None)
-            if schema is not None:
-                return schema
-            return view.get_schema(resource, context)
+            if getattr(view, method_name, None):
+                schema = getattr(view, '%s_schema' % method_name, None)
+                if schema is not None:
+                    return schema
+                return view.get_schema(resource, context)
+
         return {}
 
 
-    def _get_action(self, resource, context):
-        super(CompositeForm, self)._get_action(resource, context)
-        # Check if the action is not defined in several subviews
+    def get_action(self, resource, context):
+        method = super(CompositeView, self).get_action(resource, context)
+        if method:
+            return method
+
+        # Check subviews
+        method_name = context.form_action
         method = None
         for view in self.subviews:
-            view_method = getattr(view, context.form_action, None)
-            if view_method is not None and method:
+            view_method = getattr(view, method_name, None)
+            if method and view_method:
                 msg = 'method "%s" should not be defined in several subviews'
                 raise ValueError, msg % context.form_action
-            else:
-                method = view_method
+            method = view_method
 
-
-    def get_action_method(self, resource, context):
-        for view in self.subviews:
-            method = getattr(view, context.form_action, None)
-            if method is not None:
-                return method
-        return None
+        return method
 
 
     def get_namespace(self, resource, context):
-        if context.method == 'POST':
-            # When context.method is POST, render the subview which caused
-            # the POST as a 'POST' and the others as a 'GET'
-            views = []
-            for view in self.get_allowed_subviews(resource, context):
-                method = getattr(view, context.form_action, None)
-                if method is None:
-                    context.method = 'GET'
-                    views.append(view.GET(resource, context))
-                else:
-                    # Render the view as if it was a POST
-                    context.method = 'POST'
-                    views.append(view.GET(resource, context))
-            # Restore context.method
-            context.method = 'POST'
+        # Case 1. GET
+        if context.method == 'GET':
+            views = self.get_allowed_subviews(resource, context)
+            views = [ view.GET(resource, context) for view in views ]
             return {'views': views}
 
-        return super(CompositeForm, self).get_namespace(resource, context)
+        # Case 2. POST
+        # Render the subview which caused the POST as a 'POST' and the others
+        # as a 'GET'
+        views = []
+        for view in self.get_allowed_subviews(resource, context):
+            method = getattr(view, context.form_action, None)
+            if method is None:
+                context.method = 'GET'
+                views.append(view.GET(resource, context))
+            else:
+                # Render the view as if it was a POST
+                context.method = 'POST'
+                views.append(view.GET(resource, context))
+
+        # Restore context.method
+        context.method = 'POST'
+        return {'views': views}
+
 
 
 
@@ -186,7 +175,7 @@ class IconsView(STLView):
 ###########################################################################
 # Browse View (batch + table + search)
 ###########################################################################
-class BrowseForm(STLForm):
+class BrowseForm(STLView):
 
     template = '/ui/generic/browse.xml'
 
@@ -216,7 +205,7 @@ class BrowseForm(STLForm):
     external_form = False
 
     # Keep the batch in the canonical URL
-    canonical_query_parameters = (STLForm.canonical_query_parameters
+    canonical_query_parameters = (STLView.canonical_query_parameters
                                   + ['batch_start'])
 
 

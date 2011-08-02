@@ -22,7 +22,7 @@ import unicodedata
 # Import from itools
 from itools.datatypes import DateTime, Enumerate, Integer, String
 from itools.html import xhtml_uri
-from itools.web import STLForm, STLView
+from itools.web import STLView
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
@@ -168,7 +168,7 @@ class CommentView(STLView):
 
 
 
-class CommentsView(STLForm):
+class CommentsView(STLView):
     template = '/ui/comments.xml'
     schema = {
         'state': String(multiple=True),

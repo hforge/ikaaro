@@ -25,8 +25,7 @@ from os.path import splitext
 from itools.datatypes import Boolean, HTTPDate, PathDataType, String
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.web import BaseView, STLView, STLForm, ERROR
-from itools.web import FormError
+from itools.web import BaseView, STLView, ERROR, FormError
 
 # Import from ikaaro
 from autoadd import AutoAdd
@@ -236,7 +235,7 @@ class Video_View(STLView):
 
 
 
-class Archive_View(STLForm):
+class Archive_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -261,7 +260,7 @@ class Archive_View(STLForm):
 
 
     def _get_form(self, resource, context):
-        form = STLForm._get_form(self, resource, context)
+        form = super(Archive_View, self)._get_form(resource, context)
 
         # Get the target resource
         target = form['target']

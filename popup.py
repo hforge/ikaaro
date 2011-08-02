@@ -28,7 +28,7 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
-from itools.web import STLForm, ERROR
+from itools.web import STLView, ERROR
 from itools.database import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
@@ -218,7 +218,7 @@ class AddMedia_BrowseContent(AddBase_BrowseContent):
 ###########################################################################
 # Interface to add images from the TinyMCE editor
 ###########################################################################
-class DBResource_AddBase(STLForm):
+class DBResource_AddBase(STLView):
     """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
     by the Web Page editor).
     """
