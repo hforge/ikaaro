@@ -353,7 +353,6 @@ class Folder_BrowseContent(BrowseForm):
         return queries
 
 
-
     def get_items(self, resource, context, *args):
         root = context.root
         # Query

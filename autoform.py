@@ -677,16 +677,14 @@ class AutoForm(STLView):
 
 
     def _get_action_namespace(self, resource, context):
-        # (1) Actions (submit buttons)
-        actions = []
-        for button in self.get_actions(resource, context):
-            actions.append(button(resource=resource, context=context))
-        return actions
+        # Actions (submit buttons)
+        return [ button(resource=resource, context=context)
+                 for button in self.get_actions(resource, context) ]
+
 
     #########################
     # Hack for datatypes
     #########################
-
     def _get_form(self, resource, context):
         form = super(AutoForm, self)._get_form(resource, context)
         # Combine date & time

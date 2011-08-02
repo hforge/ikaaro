@@ -211,9 +211,7 @@ class BrowseForm(STLView):
 
     def get_query_schema(self):
         proxy = super(BrowseForm, self)
-        return merge_dicts(proxy.get_query_schema(),
-                           self.search_schema)
-
+        return merge_dicts(proxy.get_query_schema(), self.search_schema)
 
 
     def get_namespace(self, resource, context):
@@ -418,11 +416,8 @@ class BrowseForm(STLView):
 
 
     def get_actions_namespace(self, resource, context, items):
-        actions = []
-        for button in self.get_table_actions(resource, context):
-            actions.append(button(resource=resource, context=context,
-                items=items))
-        return actions
+        return [ button(resource=resource, context=context, items=items)
+                 for button in self.get_table_actions(resource, context) ]
 
 
     def get_table_namespace(self, resource, context, items):
