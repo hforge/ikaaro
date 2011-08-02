@@ -15,26 +15,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import Table as TableFile
+from itools.core import thingy_property
 from itools.database import PhraseQuery
-from itools.datatypes import Enumerate
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import SelectWidget
 from config import Configuration
-from config_common import NewInstance_Local
+from config_common import NewResource_Local, NewInstance_Local
 from config_groups import UserGroupsDatatype
 from config_searches import Config_Searches, SavedSearch
 from fields import Select_Field
+from folder import Folder
 from registry import register_document_type
-from table import Table
-from table_views import Table_AddRecord, Table_EditRecord
+from resource_ import DBResource
 from workflow import StaticStateEnumerate
 
 
-class PermissionsDatatype(Enumerate):
+class Permissions_Field(Select_Field):
 
     title = MSG(u'Permission')
     options = [
@@ -71,33 +71,53 @@ class SavedSearch_Content(SavedSearch):
         return query
 
 
-class SavedSearchesDatatype(Enumerate):
 
-    def get_options(self):
+class SavedSearches_Field(Select_Field):
+
+    @thingy_property
+    def options(self):
+        config = get_context().root.get_resource('config')
         return [ {'name': x.name, 'value': x.get_title()}
-                 for x in self.config.get_resources('searches') ]
+                 for x in config.get_resources('searches') ]
 
 
 
-class ConfigAccess_Handler(TableFile):
+class ConfigAccess_Rule_NewInstance(NewInstance_Local):
 
-    record_properties = {
-        'permission': PermissionsDatatype(mandatory=True),
-        'group': UserGroupsDatatype(mandatory=True, title=MSG(u'User group')),
-        'resources': SavedSearchesDatatype(title=MSG(u'Content')),
-        }
+    fields = ['permission', 'group', 'resources']
+
+    def get_new_resource_name(self, form):
+        container = form['container']
+        return container.get_new_id()
 
 
 
-class ConfigAccess(Table):
+class ConfigAccess_Rule(DBResource):
+
+    class_id = 'config-access-rule'
+    class_title = MSG(u'Access rule')
+
+    # Fields
+    fields = DBResource.fields + ['permission', 'group', 'resources']
+    permission = Permissions_Field(required=True)
+    group = Select_Field(required=True, title=MSG(u'User group'),
+                         datatype=UserGroupsDatatype)
+    resources = SavedSearches_Field(title=MSG(u'Content'))
+
+    # Views
+    class_views = ['edit', 'commit_log']
+    new_instance = ConfigAccess_Rule_NewInstance()
+    edit = AutoEdit(fields=['permission', 'group', 'resources'])
+
+
+
+class ConfigAccess(Folder):
 
     class_id = 'config-access'
     class_version = '20110606'
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
     class_icon48 = 'icons/48x48/lock.png'
-
-    table = Table.table(class_handler=ConfigAccess_Handler)
 
     # Configuration
     config_name = 'access'
@@ -117,14 +137,13 @@ class ConfigAccess(Table):
             user_groups.add('authenticated')
             user_groups.update(user.get_value('groups'))
 
-        table = self.handler
-        for record in table.get_records():
-            if table.get_record_value(record, 'permission') == permission:
-                group_name = table.get_record_value(record, 'group')
+        for rule in self.get_resources():
+            if rule.get_value('permission') == permission:
+                group_name = rule.get_value('group')
                 if group_name in user_groups:
                     if resource is None:
                         return True
-                    search = table.get_record_value(record, 'resources')
+                    search = rule.get_value('resources')
                     if search is None:
                         return True
                     search = searches.get_resource(search, soft=True)
@@ -134,17 +153,18 @@ class ConfigAccess(Table):
         return False
 
 
-    # User interface
-    def get_schema(self):
-        schema = super(ConfigAccess, self).get_schema()
-        config = self.parent
-        schema['group'] = schema['group'](config=config)
-        schema['resources'] = schema['resources'](config=config)
-        return schema
+    def get_new_id(self):
+        ids = [ int(x) for x in self.get_names() ]
+        return str(max(ids) + 1) if ids else '0'
 
-    _fields = ['permission', 'group', 'resources']
-    add_record = Table_AddRecord(fields=_fields)
-    edit_record = Table_EditRecord(fields=_fields)
+
+    def get_document_types(self):
+        return [ConfigAccess_Rule]
+
+
+    # Views
+    class_views = ['browse_content', 'add_rule', 'edit', 'commit_log']
+    add_rule = NewResource_Local(title=MSG(u'Add rule'))
 
 
 

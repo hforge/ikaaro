@@ -49,7 +49,7 @@ from autoform import MultilineWidget
 from config import Configuration
 from fields import Char_Field
 from folder import Folder
-from config_access import SavedSearch_Content
+from config_access import ConfigAccess_Rule, SavedSearch_Content
 from config_register import RegisterForm
 from resource_views import LoginView
 from skins import skin_registry
@@ -156,10 +156,11 @@ class Root(AccessControl, Folder):
             ('admins', 'wf_request', None),
             ('admins', 'wf_publish', None),
         ]
-        access = config.get_resource('access').handler
+        access = config.get_resource('access')
         for group, permission, resources in permissions:
-            access.add_record({'group': group, 'permission': permission,
-                               'resources': resources})
+            name = access.get_new_id()
+            access.make_resource(name, ConfigAccess_Rule, group=group,
+                                 permission=permission, resources=resources)
 
 
     def make_resource(self, name, cls, **kw):

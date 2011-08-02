@@ -254,9 +254,8 @@ class Tracker_Edit(AutoEdit):
 
     def _get_datatype(self, resource, context, name):
         if name == 'included_roles':
-            config = resource.get_resource('/config')
             return UserGroupsDatatype(mandatory=True, multiple=True,
-                                      special_groups=None, config=config)
+                                      special_groups=None)
 
         return super(Tracker_Edit, self)._get_datatype(resource, context, name)
 

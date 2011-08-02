@@ -17,6 +17,7 @@
 # Import from itools
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from buttons import BrowseButton, RemoveButton, RenameButton
@@ -36,8 +37,9 @@ class UserGroupsDatatype(Enumerate):
         {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
 
     def get_options(self):
+        config = get_context().root.get_resource('config')
         groups = [ {'name': group.name, 'value': group.get_title()}
-                   for group in self.config.get_resources('groups') ]
+                   for group in config.get_resources('groups') ]
 
         # Special groups
         if self.special_groups:
