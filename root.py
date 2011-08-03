@@ -28,7 +28,6 @@ from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from email.header import Header
 from json import dumps
-from types import GeneratorType
 import sys
 import traceback
 
@@ -42,7 +41,7 @@ from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import AccessControl, BaseView, STLView, get_context
-from itools.xml import XMLParser
+from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
 from autoform import MultilineWidget
@@ -246,7 +245,7 @@ class Root(AccessControl, Folder):
     def after_traverse(self, context):
         body = context.entity
         is_str = type(body) is str
-        is_xml = isinstance(body, (list, GeneratorType, XMLParser))
+        is_xml = is_xml_stream(body)
         if not is_str and not is_xml:
             return
 
