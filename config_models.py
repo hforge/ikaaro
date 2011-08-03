@@ -24,11 +24,13 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
+from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from fields import Select_Field
 from fields import Integer_Field, Text_Field
 from folder import Folder, OrderedFolder
+from folder_views import Folder_BrowseContent, OrderedFolder_BrowseContent
 from resource_ import DBResource
 
 
@@ -84,7 +86,25 @@ class Choice(DBResource):
 
 
 
-class ModelField_Choices(Folder):
+class ModelField_Choices_Browse(OrderedFolder_BrowseContent):
+
+    search_widgets = None
+    depth = 1
+
+    table_columns = [
+        ('checkbox', None),
+        ('icon', None),
+        ('abspath', MSG(u'Path')),
+        ('title', MSG(u'Title')),
+        ('format', MSG(u'Type')),
+        ('mtime', MSG(u'Last Modified')),
+        ('last_author', MSG(u'Last Author')),
+        ('order', MSG(u'Order'))]
+    table_actions = [RemoveButton]
+
+
+
+class ModelField_Choices(OrderedFolder):
 
     class_id = 'model-field-choices'
     class_title = MSG(u'Choices field')
@@ -94,12 +114,13 @@ class ModelField_Choices(Folder):
 
     # API
     def build_field(self):
-        options = [ {'name': x.name, 'value': x.get_title() }
-                    for x in self.get_resources() ]
+        options = [ {'name': x, 'value': self.get_resource(x).get_title()}
+                    for x in self.get_ordered_values() ]
         return Select_Field(options=options)
 
     # Views
     class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
+    browse_content = ModelField_Choices_Browse()
     new_instance = NewInstance_Local(fields=['title'])
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
@@ -159,6 +180,24 @@ class Model_NewInstance(NewInstance_Local):
 
 
 
+class Model_Browse(OrderedFolder_BrowseContent):
+
+    search_widgets = None
+    depth = 1
+
+    table_columns = [
+        ('checkbox', None),
+        ('icon', None),
+        ('abspath', MSG(u'Path')),
+        ('title', MSG(u'Title')),
+        ('format', MSG(u'Type')),
+        ('mtime', MSG(u'Last Modified')),
+        ('last_author', MSG(u'Last Author')),
+        ('order', MSG(u'Order'))]
+    table_actions = [RemoveButton]
+
+
+
 class Model(OrderedFolder):
 
     class_id = 'model'
@@ -172,6 +211,7 @@ class Model(OrderedFolder):
 
     # Views
     class_views = ['browse_content', 'add_field', 'edit', 'commit_log']
+    browse_content = Model_Browse()
     new_instance = Model_NewInstance()
     add_field = NewResource_Local(title=MSG(u'Add field'))
 
@@ -215,7 +255,23 @@ class Model(OrderedFolder):
 ###########################################################################
 # The configuration plugin
 ###########################################################################
-class Config_Models(Folder):
+class ConfigModels_Browse(Folder_BrowseContent):
+
+    search_widgets = None
+    depth = 1
+
+    table_columns = [
+        ('checkbox', None),
+        ('abspath', MSG(u'Path')),
+        ('title', MSG(u'Title')),
+        ('base_class', MSG(u'Base class')),
+        ('mtime', MSG(u'Last Modified')),
+        ('last_author', MSG(u'Last Author'))]
+    table_actions = [RemoveButton]
+
+
+
+class ConfigModels(Folder):
 
     class_id = 'config-models'
     class_title = MSG(u'Content models')
@@ -227,10 +283,11 @@ class Config_Models(Folder):
 
     # Views
     class_views = ['browse_content', 'add_model', 'edit', 'commit_log']
+    browse_content = ConfigModels_Browse()
     add_model = NewResource_Local(title=MSG(u'Add model'))
 
     def get_document_types(self):
         return [Model]
 
 
-Configuration.register_plugin(Config_Models)
+Configuration.register_plugin(ConfigModels)
