@@ -31,6 +31,7 @@ from itools.web import BaseView, STLView, ERROR, FormError
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import FileWidget, PathSelectorWidget, ProgressBarWidget
+from autoform import ReadOnlyWidget
 from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
@@ -102,6 +103,15 @@ class File_View(STLView):
 class File_Edit(AutoEdit):
 
     fields = ['title', 'state', 'data', 'description', 'subject']
+    def _get_widget(self, resource, context, name):
+        widget = super(File_Edit, self)._get_widget(resource, context, name)
+
+        if name == 'state':
+            root = context.root
+            if not root.is_allowed_to_change_state(context.user, resource):
+                return ReadOnlyWidget(name, title=widget.title)
+
+        return widget
 
 
 

@@ -24,6 +24,7 @@ from zipfile import ZipFile
 
 # Import from itools
 from itools.database import AndQuery, NotQuery, PhraseQuery
+from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid, Folder as FolderHandler
@@ -437,10 +438,10 @@ class Folder(DBResource):
             if not isinstance(resource, cls):
                 continue
             # Filter by class_id
-            if format is not None and resource.metadata.format != format:
+            if format and resource.metadata.format != format:
                 continue
             # Filter by workflow state
-            if state is not None and resource.get_workflow_state() != state:
+            if state and resource.get_value('state') != state:
                 continue
             # All filters passed
             yield resource

@@ -128,11 +128,10 @@ class PasteButton(BrowseButton):
 
 class PublishButton(BrowseButton):
 
-    access = 'is_allowed_to_publish'
+    access = 'is_allowed_to_change_state'
     css = 'button-publish'
     name = 'publish'
     title = MSG(u'Publish')
-    transition = 'publish'
 
 
     @thingy_property
@@ -141,7 +140,7 @@ class PublishButton(BrowseButton):
         for item in cls.items:
             if type(item) is tuple:
                 item = item[1]
-            if ac.is_allowed_to_trans(cls.context.user, item, cls.transition):
+            if ac.is_allowed_to_change_state(cls.context.user, item):
                 return True
         return False
 
@@ -149,11 +148,9 @@ class PublishButton(BrowseButton):
 
 class RetireButton(PublishButton):
 
-    access = 'is_allowed_to_retire'
     css = 'button-retire'
     name = 'retire'
     title = MSG(u'Unpublish')
-    transition = 'retire'
 
 
 

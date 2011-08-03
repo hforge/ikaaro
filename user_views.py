@@ -140,7 +140,7 @@ class User_Profile(STLView):
     icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
-    items = ['edit_account', 'edit_preferences', 'edit_password', 'tasks']
+    items = ['edit_account', 'edit_preferences', 'edit_password']
 
 
     def get_items(self, resource, context):
@@ -307,32 +307,6 @@ class User_EditPassword(AutoForm):
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
-
-
-
-class User_Tasks(STLView):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Tasks')
-    description = MSG(u'See your pending tasks.')
-    icon = 'tasks.png'
-    template = '/ui/user/tasks.xml'
-
-
-    def get_namespace(self, resource, context):
-        query = PhraseQuery('workflow_state', 'pending')
-        root = context.root
-        documents = []
-        for brain in root.search(query).get_documents():
-            document = root.get_resource(brain.abspath)
-            # Check security
-            ac = document.get_access_control()
-            if ac.is_allowed_to_view(context.user, document):
-                documents.append(
-                    {'url': '%s/' % resource.get_pathto(document),
-                     'title': document.get_title()})
-
-        return {'documents': documents}
 
 
 

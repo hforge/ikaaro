@@ -130,10 +130,10 @@ class Root(AccessControl, Folder):
         searches = config.get_resource('searches')
         items = [('any-content', None),
                  ('public-content', ['public']),
-                 ('private-content', ['private', 'pending'])]
+                 ('private-content', ['private'])]
         for name, value in items:
             search = searches.make_resource(name, SavedSearch_Content)
-            search.set_property('search_workflow_state', value)
+            search.set_property('search_state', value)
 
         # Permissions
         permissions = [
@@ -143,18 +143,15 @@ class Root(AccessControl, Folder):
             # publication
             ('members', 'add', 'any-content'),
             ('members', 'edit', 'private-content'),
-            ('members', 'wf_request', None),
             # Reviewers can add new content, edit any content and publish
             ('reviewers', 'add', 'any-content'),
             ('reviewers', 'edit', 'any-content'),
-            ('reviewers', 'wf_request', 'any-content'),
-            ('reviewers', 'wf_publish', 'any-content'),
+            ('reviewers', 'change_state', 'any-content'),
             # Admins can do anything
             ('admins', 'view', None),
             ('admins', 'edit', None),
             ('admins', 'add', None),
-            ('admins', 'wf_request', None),
-            ('admins', 'wf_publish', None),
+            ('admins', 'change_state', None),
         ]
         access = config.get_resource('access')
         for group, permission, resources in permissions:
@@ -500,19 +497,12 @@ class Root(AccessControl, Folder):
         return access.has_permission(user, 'add', resource)
 
 
-    def is_allowed_to_trans(self, user, resource, name):
+    def is_allowed_to_change_state(self, user, resource):
         if not isinstance(resource, WorkflowAware):
             return False
 
-        # 1. Permission
-        if name in ('publish', 'retire'):
-            permission = 'wf_publish'
-        elif name in ('request', 'unrequest'):
-            permission = 'wf_request'
-
-        # 2. Access
         access = self.get_resource('config/access')
-        return access.has_permission(user, permission)
+        return access.has_permission(user, 'change_state')
 
 
     # By default all other change operations (add, remove, copy, etc.)
@@ -531,14 +521,6 @@ class Root(AccessControl, Folder):
 
     def is_allowed_to_move(self, user, resource):
         return self.is_allowed_to_edit(user, resource)
-
-
-    def is_allowed_to_publish(self, user, resource):
-        return self.is_allowed_to_trans(user, resource, 'publish')
-
-
-    def is_allowed_to_retire(self, user, resource):
-        return self.is_allowed_to_trans(user, resource, 'retire')
 
 
     def is_allowed_to_view_folder(self, user, resource):

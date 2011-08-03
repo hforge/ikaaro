@@ -36,7 +36,7 @@ from folder import Folder
 from resource_ import DBResource
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
-from user_views import User_ResendConfirmation, User_Tasks
+from user_views import User_ResendConfirmation
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
 from utils import get_secure_hash, generate_password
 from views import MessageView
@@ -51,7 +51,7 @@ class User(DBResource):
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
     class_views = ['profile', 'edit_account', 'edit_preferences',
-                   'edit_password', 'tasks']
+                   'edit_password']
 
 
     ########################################################################
@@ -236,7 +236,6 @@ class User(DBResource):
     edit_account = User_EditAccount()
     edit_preferences = User_EditPreferences()
     edit_password = User_EditPassword()
-    tasks = User_Tasks()
 
 
 

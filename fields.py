@@ -168,10 +168,6 @@ class Select_Field(Metadata_Field):
 
     datatype_keys = Metadata_Field.datatype_keys + ['options']
 
-    def get_value_title(self, value):
-        datatype = self.get_datatype()
-        return datatype.get_value(value)
-
 
 
 class Text_Field(Metadata_Field):

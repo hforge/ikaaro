@@ -139,7 +139,7 @@ class Menu_View(OrderedTable_View):
             if child is None:
                 return None
             return 'edit', context.get_link(child)
-        elif column == 'workflow_state':
+        elif column == 'state':
             path = get_value(item, 'path')
             if not path:
                 # Do not display a workflow state if there is no path defined.

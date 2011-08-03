@@ -38,11 +38,10 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
-from fields import Select_Field
 from order import OrderAware_View
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
-from workflow import WorkflowAware, get_workflow_preview
+from workflow import State_Datatype, WorkflowAware, get_workflow_preview
 import messages
 
 
@@ -319,7 +318,7 @@ class Folder_BrowseContent(BrowseForm):
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
-        ('workflow_state', MSG(u'State'))]
+        ('state', MSG(u'State'))]
     table_actions = [
         RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
         PublishButton, RetireButton, ZipButton]
@@ -419,20 +418,20 @@ class Folder_BrowseContent(BrowseForm):
         return key
 
 
-    def get_key_sorted_by_workflow_state(self):
+    def get_key_sorted_by_state(self):
         database = get_context().database
         def key(item, cache={}):
             # Don't cache by state name because the same name could be
             # translated differently in two workflows
             format = item.format
-            workflow_state = item.workflow_state
-            cache_key = (format, workflow_state)
+            state = item.state
+            cache_key = (format, state)
             if cache_key in cache:
                 return cache[cache_key]
             cls = database.get_resource_class(format)
             if issubclass(cls, WorkflowAware):
-                state = cls.workflow.states[workflow_state]
-                value = state['title'].gettext().lower().translate(transmap)
+                state_title = State_Datatype.get_value(state)
+                value = state_title.gettext().lower().translate(transmap)
             else:
                 value = None
             # Group by format
@@ -518,20 +517,12 @@ class Folder_BrowseContent(BrowseForm):
             # Last author
             author =  brain.last_author
             return context.root.get_user_title(author) if author else None
-        elif column == 'workflow_state':
+        elif column == 'state':
             # The workflow state
             return get_workflow_preview(item_resource, context)
 
         # Default
-        try:
-            value = getattr(brain, column)
-        except AttributeError:
-            value = item_resource.get_value(column)
-
-        field = item_resource.get_field(column)
-        if issubclass(field, Select_Field):
-            return field.get_value_title(value)
-        return value
+        return item_resource.get_value_title(column)
 
 
     #######################################################################
@@ -724,36 +715,26 @@ class Folder_BrowseContent(BrowseForm):
         context.message = message
 
 
-    def _action_workflow(self, resource, context, form, transition, statename,
-                         message):
-        resources = [ resource.get_resource(id) for id in form['ids'] ]
+    def _action_workflow(self, resource, context, form, state, message):
+        context.message = messages.MSG_NONE_ALLOWED
+
+        # Change state
         user = context.user
-        # Check there is at least one item we can publish
-        ac = resource.get_access_control()
-        allowed = [ x for x in resources
-                    if ac.is_allowed_to_trans(user, x, transition) ]
-        if not allowed:
-            context.message = messages.MSG_NONE_ALLOWED
-            return
-
-        # Publish
-        for item in allowed:
-            if item.get_statename() == statename:
-                continue
-            # Update workflow history
-            item.do_trans(transition)
-
-        # Ok
-        context.message = message
+        root = context.root
+        for id in form['ids']:
+            item = resource.get_resource(id)
+            if root.is_allowed_to_change_state(user, item):
+                item.set_value('state', state)
+                context.message = message
 
 
     def action_publish(self, resource, context, form):
-        self._action_workflow(resource, context, form, 'publish', 'public',
+        self._action_workflow(resource, context, form, 'public',
                               messages.MSG_PUBLISHED)
 
 
     def action_retire(self, resource, context, form):
-        self._action_workflow(resource, context, form, 'retire', 'private',
+        self._action_workflow(resource, context, form, 'private',
                               messages.MSG_RETIRED)
 
 
@@ -899,11 +880,11 @@ class Folder_PreviewContent(Folder_BrowseContent):
             row = {'checkbox': False,
                    # These are required for internal use
                    'title_or_name': item_resource.get_title(),
-                   'workflow_statename': None}
+                   'state': None}
             # XXX Already hard-coded in the catalog search
             row['is_folder'] = (item_brain.format == 'folder')
             if isinstance(item_resource, WorkflowAware):
-                row['workflow_statename'] = item_resource.get_statename()
+                row['state'] = item_resource.get_value_title('state')
             for name, title, sortable, css in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:

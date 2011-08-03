@@ -37,7 +37,7 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from utils import reduce_string, make_stl_template
-from workflow import state_widget, StaticStateEnumerate, WorkflowAware
+from workflow import WorkflowAware, State_Widget
 
 
 class SelectElement(AddButton):
@@ -79,7 +79,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         ('name', MSG(u'Name')),
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
-        ('workflow_state', MSG(u'State'))]
+        ('state', MSG(u'State'))]
 
     table_actions = [SelectElement]
 
@@ -331,10 +331,7 @@ class DBResource_AddBase(STLView):
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
         namespace['mode'] = context.get_form_value('mode')
-        # add state widget
-        # FIXME default state
-        widget = state_widget(datatype=StaticStateEnumerate, value='private')
-        namespace['state_widget'] = widget
+        namespace['state_widget'] = State_Widget
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = root.get_skin(context).get_styles(context)
         browse_content = self.browse_content_class(\

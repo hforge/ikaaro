@@ -34,8 +34,8 @@ from itools.web import AccessControl, BaseView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from database import Database
-from fields import Char_Field, Datetime_Field, Field, File_Field, Text_Field
-from fields import Textarea_Field
+from fields import Char_Field, Datetime_Field, Field, File_Field
+from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Backlinks
@@ -44,7 +44,6 @@ from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import split_reference
-from workflow import WorkflowAware
 
 
 
@@ -253,6 +252,15 @@ class DBResource(Resource):
         return field.set_value(self, name, value, language)
 
 
+    def get_value_title(self, name):
+        field = self.get_field(name)
+        value = field.get_value(self, name)
+        if issubclass(field, Select_Field):
+            datatype = field.get_datatype()
+            return datatype.get_value(value)
+        return value
+
+
     def get_property(self, name, language=None):
         property = self.metadata.get_property(name, language=language)
         if property:
@@ -287,13 +295,6 @@ class DBResource(Resource):
                     field._set_value(self, name, value[lang], lang)
             else:
                 field._set_value(self, name, value)
-
-        # Workflow State (default)
-        if kw.get('state') is None and isinstance(self, WorkflowAware):
-            state = self.get_field('state').datatype.get_default()
-            if state is None:
-                state = self.workflow.initstate
-            self.set_value('state', state)
 
 
     def load_handlers(self):
@@ -423,14 +424,6 @@ class DBResource(Resource):
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
 
-        # Workflow state
-        is_content = self.is_content
-        if is_content:
-            if isinstance(self, WorkflowAware):
-                values['workflow_state'] = self.get_workflow_state()
-            else:
-                values['workflow_state'] = 'public'
-
         # Image
         from file import Image
         values['is_image'] = isinstance(self, Image)
@@ -440,7 +433,7 @@ class DBResource(Resource):
         values['is_folder'] = isinstance(self, Folder)
 
         # Content
-        values['is_content'] = is_content
+        values['is_content'] = self.is_content
 
         # Ok
         return values

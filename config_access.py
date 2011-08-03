@@ -22,7 +22,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import SelectWidget
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
@@ -33,29 +32,22 @@ from folder import Folder
 from folder_views import Folder_BrowseContent
 from registry import register_document_type
 from resource_ import DBResource
-from workflow import StaticStateEnumerate
+from workflow import State_Field
 
 
 ###########################################################################
 # Saved searches
 ###########################################################################
-class SearchWorkflowState_Widget(SelectWidget):
-    multiple = True
-    has_empty_option = False
-
-
 class SavedSearch_Content(SavedSearch):
 
     class_id = 'saved-search-content'
     class_title = MSG(u'Saved Search - Content')
 
-    fields = SavedSearch.fields + ['search_workflow_state']
-    search_workflow_state = Select_Field(multiple=True,
-                                         datatype=StaticStateEnumerate,
-                                         widget=SearchWorkflowState_Widget)
+    fields = SavedSearch.fields + ['search_state']
+    search_state = State_Field(multiple=True)
 
     # Views
-    _fields = ['title', 'search_workflow_state']
+    _fields = ['title', 'search_state']
     edit = AutoEdit(fields=_fields)
     new_instance = NewInstance_Local(fields=_fields)
 
@@ -95,8 +87,7 @@ class Permissions_Field(Select_Field):
         {'name': 'view', 'value': MSG(u'View')},
         {'name': 'edit', 'value': MSG(u'Remove and modify')},
         {'name': 'add', 'value': MSG(u'Add')},
-        {'name': 'wf_request', 'value': MSG(u'Request publication')},
-        {'name': 'wf_publish', 'value': MSG(u'Publish and unpublish')}]
+        {'name': 'change_state', 'value': MSG(u'Change workflow state')}]
 
 
 
