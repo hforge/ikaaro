@@ -23,28 +23,22 @@ from itools.web import get_context
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import SelectWidget
+from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from config_groups import UserGroupsDatatype
 from config_searches import Config_Searches, SavedSearch
 from fields import Select_Field
 from folder import Folder
+from folder_views import Folder_BrowseContent
 from registry import register_document_type
 from resource_ import DBResource
 from workflow import StaticStateEnumerate
 
 
-class Permissions_Field(Select_Field):
-
-    title = MSG(u'Permission')
-    options = [
-        {'name': 'view', 'value': MSG(u'View')},
-        {'name': 'edit', 'value': MSG(u'Remove and modify')},
-        {'name': 'add', 'value': MSG(u'Add')},
-        {'name': 'wf_request', 'value': MSG(u'Request publication')},
-        {'name': 'wf_publish', 'value': MSG(u'Publish and unpublish')}]
-
-
+###########################################################################
+# Saved searches
+###########################################################################
 class SearchWorkflowState_Widget(SelectWidget):
     multiple = True
     has_empty_option = False
@@ -91,6 +85,20 @@ class ConfigAccess_Rule_NewInstance(NewInstance_Local):
         return container.get_new_id()
 
 
+###########################################################################
+# Access rule
+###########################################################################
+class Permissions_Field(Select_Field):
+
+    title = MSG(u'Permission')
+    options = [
+        {'name': 'view', 'value': MSG(u'View')},
+        {'name': 'edit', 'value': MSG(u'Remove and modify')},
+        {'name': 'add', 'value': MSG(u'Add')},
+        {'name': 'wf_request', 'value': MSG(u'Request publication')},
+        {'name': 'wf_publish', 'value': MSG(u'Publish and unpublish')}]
+
+
 
 class ConfigAccess_Rule(DBResource):
 
@@ -108,6 +116,42 @@ class ConfigAccess_Rule(DBResource):
     class_views = ['edit', 'commit_log']
     new_instance = ConfigAccess_Rule_NewInstance()
     edit = AutoEdit(fields=['permission', 'group', 'resources'])
+
+
+
+###########################################################################
+# Configuration module
+###########################################################################
+class ConfigAccess_Browse(Folder_BrowseContent):
+
+    query_schema = Folder_BrowseContent.query_schema.copy()
+    query_schema['sort_by'] = query_schema['sort_by'](default='group')
+
+    search_widgets = None
+
+    table_columns = [
+        ('checkbox', None),
+        ('abspath', MSG(u'Path')),
+        #('title', MSG(u'Title')),
+        ('group', MSG(u'Group')),
+        ('resources', MSG(u'Resources')),
+        ('permission', MSG(u'Permission'))]
+        #('mtime', MSG(u'Last Modified')),
+        #('last_author', MSG(u'Last Author'))]
+
+    table_actions = [RemoveButton]
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'resources':
+            brain, item_resource = item
+            value = item_resource.get_value(column)
+            if value is None:
+                return None
+            search = resource.get_resource('/config/searches/%s' % value)
+            return (search.get_title(), str(search.abspath))
+
+        proxy = super(ConfigAccess_Browse, self)
+        return proxy.get_item_value(resource, context, item, column)
 
 
 
@@ -164,6 +208,7 @@ class ConfigAccess(Folder):
 
     # Views
     class_views = ['browse_content', 'add_rule', 'edit', 'commit_log']
+    browse_content = ConfigAccess_Browse()
     add_rule = NewResource_Local(title=MSG(u'Add rule'))
 
 

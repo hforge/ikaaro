@@ -38,6 +38,7 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
+from fields import Select_Field
 from order import OrderAware_View
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
@@ -519,10 +520,17 @@ class Folder_BrowseContent(BrowseForm):
         elif column == 'workflow_state':
             # The workflow state
             return get_workflow_preview(item_resource, context)
+
+        # Default
         try:
-            return getattr(brain, column)
+            value = getattr(brain, column)
         except AttributeError:
-            return item_resource.get_value(column)
+            value = item_resource.get_value(column)
+
+        field = item_resource.get_field(column)
+        if issubclass(field, Select_Field):
+            return field.get_value_title(value)
+        return value
 
 
     #######################################################################
