@@ -29,7 +29,7 @@ from autoform import PathSelectorWidget, SelectWidget
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from buttons import RemoveButton
-from fields import Char_Field, Select_Field
+from fields import Select_Field, URI_Field
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from utils import split_reference
 
@@ -80,8 +80,9 @@ class MenuItem(OrderedFolder):
     class_title = MSG(u'Menu')
 
     # Fields
-    path = Char_Field(required=True, title=MSG(u'Path'),
-                      widget=PathSelectorWidget)
+    fields = OrderedFolder.fields + ['path', 'target']
+    path = URI_Field(required=True, title=MSG(u'Path'),
+                     widget=PathSelectorWidget)
     target = Target_Field
 
     def get_document_types(self):

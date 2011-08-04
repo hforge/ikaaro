@@ -18,133 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard Library
-from copy import deepcopy
-
 # Import from itools
-from itools.fs import FileName
 from itools.gettext import MSG
-from itools.html import xhtml_uri
-from itools.stl import rewrite_uris
-from itools.uri import Path, Reference, get_reference
-from itools.web import BaseView, get_context
-from itools.xml import START_ELEMENT
+from itools.web import BaseView
 
 # Import from ikaaro
 from database import Database
 from fields import HTMLFile_Field
 from file import File
 from resource_ import DBResource
-
-
-def _get_links(base, events):
-    map = {'a': 'href', 'img': 'src', 'iframe': 'src',
-           # Map
-           'area': 'href',
-           # Object
-           # FIXME param tag can have both src and data attributes
-           'object': 'data', 'param': 'src'}
-    links = set()
-    for event, value, line in events:
-        if event != START_ELEMENT:
-            continue
-        tag_uri, tag_name, attributes = value
-        if tag_uri != xhtml_uri:
-            continue
-
-        # Get the attribute name and value
-        attr_name = map.get(tag_name)
-        if attr_name is None:
-            continue
-
-        attr_name = (None, attr_name)
-        value = attributes.get(attr_name)
-        if value is None:
-            continue
-
-        reference = get_reference(value)
-
-        # Skip empty links, external links and links to '/ui/'
-        if reference.scheme or reference.authority:
-            continue
-        path = reference.path
-        if not path or path.is_absolute() and path[0] == 'ui':
-            continue
-
-        # Strip the view
-        name = path.get_name()
-        if name and name[0] == ';':
-            path = path[:-1]
-
-        uri = base.resolve2(path)
-        uri = str(uri)
-        links.add(uri)
-    return links
-
-
-def _change_link(source, target, old_base, new_base, stream):
-    map = {'a': 'href', 'img': 'src', 'iframe': 'src',
-           # Map
-           'area': 'href',
-           # Object
-           # FIXME param tag can have both src and data attributes
-           'object': 'data', 'param': 'src'}
-
-    for event in stream:
-        # Process only elements of the XHTML namespace
-        type, value, line = event
-        if type != START_ELEMENT:
-            yield event
-            continue
-        tag_uri, tag_name, attributes = value
-        if tag_uri != xhtml_uri:
-            yield event
-            continue
-
-        # Get the attribute name and value
-        attr_name = map.get(tag_name)
-        if attr_name is None:
-            yield event
-            continue
-
-        attr_name = (None, attr_name)
-        value = attributes.get(attr_name)
-        if value is None:
-            yield event
-            continue
-
-        reference = get_reference(value)
-
-        # Skip empty links, external links and links to '/ui/'
-        if reference.scheme or reference.authority:
-            yield event
-            continue
-        path = reference.path
-        if not path or path.is_absolute() and path[0] == 'ui':
-            yield event
-            continue
-
-        # Strip the view
-        name = path.get_name()
-        if name and name[0] == ';':
-            view = '/' + name
-            path = path[:-1]
-        else:
-            view = ''
-
-        # Check the link points to the resource that is moving
-        path = old_base.resolve2(path)
-        if path != source:
-            yield event
-            continue
-
-        # Update the link
-        # Build the new reference with the right path
-        new_reference = deepcopy(reference)
-        new_reference.path = str(new_base.get_pathto(target)) + view
-
-        attributes[attr_name] = str(new_reference)
-        yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
 
 
@@ -174,87 +56,6 @@ class WebPage(File):
 
 
     data = HTMLFile_Field(title=MSG(u'Body'))
-
-
-    def rename_handlers(self, new_name):
-        old_name = self.name
-        extension = self.class_handler.class_extension
-        langs = self.get_root().get_value('website_languages')
-
-        return [ (FileName.encode((old_name, extension, x)),
-                  FileName.encode((new_name, extension, x)))
-                 for x in langs ]
-
-
-    # FIXME These three methods are private, add the heading underscore
-    def get_links(self):
-        links = super(WebPage, self).get_links()
-        base = self.abspath
-        languages = self.get_root().get_value('website_languages')
-        for language in languages:
-            handler = self.get_value('data', language=language)
-            if handler:
-                links.update(_get_links(base, handler.events))
-        return links
-
-
-    def update_links(self,  source, target):
-        super(WebPage, self).update_links(source, target)
-        base = self.get_abspath()
-        resources_new2old = get_context().database.resources_new2old
-        base = str(base)
-        old_base = resources_new2old.get(base, base)
-        old_base = Path(old_base)
-        new_base = Path(base)
-
-        for handler in self.get_handlers():
-            events = _change_link(source, target, old_base, new_base,
-                                  handler.events)
-            events = list(events)
-            handler.set_changed()
-            handler.events = events
-        get_context().database.change_resource(self)
-
-
-    def update_relative_links(self, source):
-        super(WebPage, self).update_relative_links(source)
-        target = self.get_abspath()
-        resources_old2new = get_context().database.resources_old2new
-
-        def my_func(value):
-            # Skip empty links, external links and links to '/ui/'
-            uri = get_reference(value)
-            if uri.scheme or uri.authority or uri.path.is_absolute():
-                return value
-            path = uri.path
-            if not path or path.is_absolute() and path[0] == 'ui':
-                return value
-
-            # Strip the view
-            name = path.get_name()
-            if name and name[0] == ';':
-                view = '/' + name
-                path = path[:-1]
-            else:
-                view = ''
-
-            # Resolve Path
-            # Calcul the old absolute path
-            old_abs_path = source.resolve2(path)
-            # Get the 'new' absolute parth
-            new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
-
-            path = str(target.get_pathto(new_abs_path)) + view
-            value = Reference('', '', path, uri.query.copy(), uri.fragment)
-            return str(value)
-
-        for handler in self.get_handlers():
-            if handler.database.is_phantom(handler):
-                continue
-            events = rewrite_uris(handler.events, my_func)
-            events = list(events)
-            handler.set_changed()
-            handler.events = events
 
 
     #######################################################################

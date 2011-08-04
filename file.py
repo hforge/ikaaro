@@ -26,7 +26,6 @@ from itools.handlers import Image as ImageHandler, SVGFile
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
-from itools.fs import FileName
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
@@ -79,17 +78,6 @@ class File(Content):
                 extensions.remove(cls.class_extension)
             extensions.insert(0, cls.class_extension)
         return extensions
-
-
-    def rename_handlers(self, new_name):
-        folder = self.parent.handler
-        old_name = self.name
-        for extension in self.get_all_extensions():
-            old = FileName.encode((old_name, extension, None))
-            if folder.get_handler(old, cls=self.class_handler,
-                                  soft=True) is not None:
-                return [(old, FileName.encode((new_name, extension, None)))]
-        return [(None, None)]
 
 
     #######################################################################

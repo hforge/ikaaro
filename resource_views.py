@@ -146,6 +146,8 @@ class DBResource_Links(Folder_BrowseContent):
     search_schema = {}
     search_widgets = []
 
+    table_actions = []
+
     def get_table_columns(self, resource, context):
         cols = Folder_BrowseContent.get_table_columns(self, resource, context)
         return [ col for col in cols if col[0] != 'checkbox' ]
@@ -153,13 +155,8 @@ class DBResource_Links(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         links = resource.get_links()
-        if type(links) is list: # TODO 'get_links' must return <set>
-            links = set(links)
         query = OrQuery(*[ PhraseQuery('abspath', link) for link in links ])
         return context.root.search(query)
-
-
-    table_actions = []
 
 
 

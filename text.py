@@ -174,8 +174,8 @@ class CSS(Text):
         get_context().database.change_resource(self)
 
 
-    def update_relative_links(self, source):
-        super(CSS, self).update_relative_links(source)
+    def update_incoming_links(self, source):
+        super(CSS, self).update_incoming_links(source)
         target = self.get_abspath()
         resources_old2new = get_context().database.resources_old2new
 

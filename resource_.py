@@ -24,7 +24,7 @@ from itools.core import lazy, is_thingy
 from itools.csv import Property
 from itools.database import register_field
 from itools.database import PhraseQuery, Resource
-from itools.datatypes import Boolean, Integer, String, URI, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path
@@ -43,7 +43,6 @@ from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from utils import split_reference
 
 
 
@@ -396,8 +395,6 @@ class DBResource(Resource):
         values['name'] = self.name
         values['format'] = self.metadata.format
         links = self.get_links()
-        if type(links) is list: # TODO 'get_links' must return <set>
-            links = set(links)
         values['links'] = list(links)
 
         # Parent path
@@ -458,7 +455,22 @@ class DBResource(Resource):
 
         This method is required by the "move_resource" method.
         """
-        return [(self.name, new_name)]
+        langs = self.get_resource('/').get_value('website_languages')
+
+        aux = []
+        for field_name in self.fields:
+            field = self.get_field(field_name)
+            if field and issubclass(field, File_Field):
+                old = '%s.%s' % (self.name, field_name)
+                new = '%s.%s' % (new_name, field_name)
+                if field.multilingual:
+                    for language in langs:
+                        aux.append(('%s.%s' % (old, language),
+                                    '%s.%s' % (new, language)))
+                else:
+                    aux.append((old, new))
+
+        return aux
 
 
     def _on_move_resource(self, source):
@@ -469,7 +481,7 @@ class DBResource(Resource):
         parameter is the place the resource has been moved from.
         """
         # (1) Update links to other resources
-        self.update_relative_links(Path(source))
+        self.update_incoming_links(Path(source))
 
         # (2) Update resources that link to me
         database = self.database
@@ -483,55 +495,14 @@ class DBResource(Resource):
             resource.update_links(source, target)
 
 
-    def _get_references_from_schema(self):
-        """Returns the names of properties that are references to other
-        resources.
-
-        TODO This list should be calculated statically to avoid a performance
-        hit at run time.
-        """
-        for name, field in self.get_fields():
-            if issubclass(field.datatype, URI):
-                yield name
-
-
     def get_links(self):
+        languages = self.get_resource('/').get_value('website_languages')
+
         links = set()
-        base = self.get_abspath()
-        root = self.get_root()
-        available_languages = root.get_value('website_languages')
-
-        for name in self._get_references_from_schema():
-            field = self.get_field(name)
-            languages = available_languages if field.multilingual else [None]
-
-            for lang in languages:
-                prop = self.get_property(name, language=lang)
-                if prop is None:
-                    continue
-                if field.multiple:
-                    # Multiple
-                    for x in prop:
-                        value = x.value
-                        if not value:
-                            continue
-                        # Get the reference, path and view
-                        ref, path, view = split_reference(value)
-                        if ref.scheme:
-                            continue
-                        link = base.resolve2(path)
-                        links.add(str(link))
-                else:
-                    value = prop.value
-                    if not value:
-                        continue
-                    # Get the reference, path and view
-                    ref, path, view = split_reference(value)
-                    if ref.scheme:
-                        continue
-                    # Singleton
-                    link = base.resolve2(path)
-                    links.add(str(link))
+        for field_name in self.fields:
+            field = self.get_field(field_name)
+            if field:
+                field.get_links(links, self, field_name, languages)
 
         return links
 
@@ -542,117 +513,32 @@ class DBResource(Resource):
 
         The parameters 'source' and 'target' are absolute 'Path' objects.
         """
-        base = self.get_abspath()
-        base = str(base)
+        base = str(self.abspath)
         old_base = self.database.resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
-        root = self.get_root()
-        available_languages = root.get_value('website_languages')
+        languages = self.get_resource('/').get_value('website_languages')
 
-        for name in self._get_references_from_schema():
-            field = self.get_field(name)
-            languages = available_languages if field.multilingual else [None]
-
-            for lang in languages:
-                prop = self.get_property(name, language=lang)
-                if prop is None:
-                    continue
-                if field.multiple:
-                    # Multiple
-                    new_values = []
-                    for p in prop:
-                        value = p.value
-                        if not value:
-                            continue
-                        # Get the reference, path and view
-                        ref, path, view = split_reference(value)
-                        if ref.scheme:
-                            continue
-                        path = old_base.resolve2(path)
-                        if path == source:
-                            # Explicitly call str because URI.encode does
-                            # nothing
-                            new_value = str(new_base.get_pathto(target)) + view
-                            new_values.append(new_value)
-                        else:
-                            new_values.append(p)
-                    self.set_property(name, new_values, lang)
-                else:
-                    # Singleton
-                    value = prop.value
-                    if not value:
-                        continue
-                    # Get the reference, path and view
-                    ref, path, view = split_reference(value)
-                    if ref.scheme:
-                        continue
-                    path = old_base.resolve2(path)
-                    if path == source:
-                        # Hit the old name
-                        # Build the new reference with the right path
-                        # Explicitly call str because URI.encode does nothing
-                        new_value = str(new_base.get_pathto(target)) + view
-                        self.set_property(name, new_value, lang)
+        for field_name in self.fields:
+            field = self.get_field(field_name)
+            if field:
+                field.update_links(self, field_name, source, target,
+                                   languages, old_base, new_base)
 
         self.database.change_resource(self)
 
 
-    def update_relative_links(self, source):
+    def update_incoming_links(self, source):
         """Update the relative links coming out from this resource after it
         was moved, so they are not broken. The old path is in parameter. The
         new path is "self.get_abspath()".
         """
-        target = self.get_abspath()
-        resources_old2new = self.database.resources_old2new
-        root = self.get_root()
-        available_languages = root.get_value('website_languages')
-
-        for name in self._get_references_from_schema():
-            field = self.get_field(name)
-            languages = available_languages if field.multilingual else [None]
-
-            for lang in languages:
-                prop = self.get_property(name, language=lang)
-                if prop is None:
-                    continue
-                if field.multiple:
-                    # Multiple
-                    new_values = []
-                    for p in prop:
-                        value = p.value
-                        if not value:
-                            continue
-                        # Get the reference, path and view
-                        ref, path, view = split_reference(value)
-                        if ref.scheme:
-                            continue
-                        # Calculate the old absolute path
-                        old_abs_path = source.resolve2(path)
-                        # Check if the target path has not been moved
-                        new_abs_path = resources_old2new.get(old_abs_path,
-                                                             old_abs_path)
-                        new_value = str(target.get_pathto(new_abs_path)) + view
-                        new_values.append(new_value)
-                    self.set_property(name, new_values, lang)
-                else:
-                    # Singleton
-                    value = prop.value
-                    if not value:
-                        continue
-                    # Get the reference, path and view
-                    ref, path, view = split_reference(value)
-                    if ref.scheme:
-                        continue
-                    # Calculate the old absolute path
-                    old_abs_path = source.resolve2(path)
-                    # Check if the target path has not been moved
-                    new_abs_path = resources_old2new.get(old_abs_path,
-                                                         old_abs_path)
-
-                    # Explicitly call str because URI.encode does nothing
-                    new_value = str(target.get_pathto(new_abs_path)) + view
-                    self.set_property(name, new_value, lang)
+        languages = self.get_resource('/').get_value('website_languages')
+        for field_name in self.fields:
+            field = self.get_field(field_name)
+            if field:
+                field.update_incoming_links(self, field_name, source,
+                                            languages)
 
 
     ########################################################################
