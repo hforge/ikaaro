@@ -43,8 +43,8 @@
         </tr>
       </table>
       <!-- Menu -->
-      <ul stl:if="menu/items" id="menu">
-        <li stl:repeat="menu menu/items" class="${menu/class}">
+      <ul stl:if="menu" id="menu">
+        <li stl:repeat="menu menu" class="${menu/class}">
           <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
              title="${menu/title}">${menu/title}</a>
         </li>

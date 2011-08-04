@@ -32,7 +32,6 @@ from itools.web import get_context, ERROR, INFO
 # Import from ikaaro
 from context import register_ui
 from folder import Folder
-from menu import get_menu_namespace
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
@@ -343,7 +342,7 @@ class Skin(object):
 
         # Menu
         menu = root.get_resource('config/menu')
-        menu_ns = get_menu_namespace(context, 1, menu=menu)
+        menu_ns = menu.get_menu_namespace(context)
 
         # The document language
         here = context.resource
