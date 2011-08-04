@@ -27,6 +27,7 @@ from autoedit import AutoEdit
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
+from database import Database
 from fields import Select_Field
 from fields import Integer_Field, Text_Field
 from folder import Folder
@@ -42,8 +43,20 @@ class FieldType_Field(Select_Field):
         {'name': 'integer', 'value': MSG(u'Integer')}]
 
 
+class ModelField_Base(DBResource):
 
-class ModelField_Inherited(DBResource):
+    def set_value(self, name, value, language=None):
+        proxy = super(ModelField_Base, self)
+        has_changed = proxy.set_value(name, value, language)
+        if has_changed:
+            class_id = str(self.parent.abspath)
+            Database.resources_registry.pop(class_id, None)
+
+        return has_changed
+
+
+
+class ModelField_Inherited(ModelField_Base):
 
     class_id = 'model-field-inherited'
     class_title = MSG(u'Inherited field')
@@ -51,7 +64,7 @@ class ModelField_Inherited(DBResource):
 
 
 
-class ModelField_Standard(DBResource):
+class ModelField_Standard(ModelField_Base):
 
     class_id = 'model-field-standard'
     class_title = MSG(u'Standard field')
@@ -105,7 +118,7 @@ class ModelField_Choices_Browse(OrderedFolder_BrowseContent):
 
 
 
-class ModelField_Choices(OrderedFolder):
+class ModelField_Choices(OrderedFolder, ModelField_Base):
 
     class_id = 'model-field-choices'
     class_title = MSG(u'Choices field')
@@ -165,16 +178,16 @@ class Model_NewInstance(NewInstance_Local):
             return
 
         # Create the inherited fields
-        fields_names = []
+        field_names = []
         class_id = child.get_value('base_class')
         cls = child.database.get_resource_class(class_id)
         for field_name, field in cls.get_fields():
             if not field.readonly:
                 child.make_resource(field_name, ModelField_Inherited)
-                fields_names.append(field_name)
+                field_names.append(field_name)
 
         # Order fields into folder
-        child.update_order(fields_names)
+        child.set_value('order', field_names)
 
         # Ok
         return child
@@ -241,16 +254,24 @@ class Model(OrderedFolder):
             'class_id': str(self.abspath),
             'class_title': MSG(self.get_value('title'))}
         fields = []
-        for resource in self.get_resources():
-            if isinstance(resource, ModelField_Inherited):
-                continue
-            field = resource.build_field()
-            field_name = resource.name
-            class_dict[field_name] = field(title=resource.get_title())
+        for field_name in self.get_ordered_values():
+            resource = self.get_resource(field_name)
+            if not isinstance(resource, ModelField_Inherited):
+                field = resource.build_field()
+                class_dict[field_name] = field(title=resource.get_title())
             fields.append(field_name)
-        class_dict['fields'] = base_class.fields + fields
+        class_dict['fields'] = fields
 
         return type(self.name, bases, class_dict)
+
+
+    def set_value(self, name, value, language=None):
+        has_changed = super(Model, self).set_value(name, value, language)
+        if has_changed:
+            class_id = str(self.abspath)
+            Database.resources_registry.pop(class_id, None)
+
+        return has_changed
 
 
 ###########################################################################

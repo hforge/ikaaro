@@ -191,7 +191,7 @@ class OrderedFolder(Folder):
                 order.remove(id)
                 order.insert(index - 1, id)
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def order_down(self, ids):
@@ -202,7 +202,7 @@ class OrderedFolder(Folder):
             order.remove(id)
             order.insert(index + 1, id)
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def order_top(self, ids):
@@ -210,7 +210,7 @@ class OrderedFolder(Folder):
         order = list(order)
         order = ids + [ id for id in order if id not in ids ]
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def order_bottom(self, ids):
@@ -218,7 +218,7 @@ class OrderedFolder(Folder):
         order = list(order)
         order = [ id for id in order if id not in ids ] + ids
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def order_add(self, ids):
@@ -226,7 +226,7 @@ class OrderedFolder(Folder):
         order = list(order)
         order = [ id for id in order if id not in ids ] + ids
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def order_remove(self, ids):
@@ -234,7 +234,7 @@ class OrderedFolder(Folder):
         order = list(order)
         order = [ id for id in order if id not in ids ]
         # Update the order
-        self.set_property('order', order)
+        self.set_value('order', order)
 
 
     def get_ordered_values(self):
