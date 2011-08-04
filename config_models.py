@@ -29,8 +29,9 @@ from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from fields import Select_Field
 from fields import Integer_Field, Text_Field
-from folder import Folder, OrderedFolder
-from folder_views import Folder_BrowseContent, OrderedFolder_BrowseContent
+from folder import Folder
+from folder_views import Folder_BrowseContent
+from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
 
 

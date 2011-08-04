@@ -151,54 +151,6 @@ class RetireButton(PublishButton):
     css = 'button-retire'
     name = 'retire'
     title = MSG(u'Unpublish')
-
-
-
-class OrderUpButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'order_up'
-    title = MSG(u'Order up')
-
-
-
-class OrderDownButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'order_down'
-    title = MSG(u'Order down')
-
-
-
-class OrderTopButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'order_top'
-    title = MSG(u'Order top')
-
-
-
-class OrderBottomButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'order_bottom'
-    title = MSG(u'Order bottom')
-
-
-class OrderButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'add_to_ordered'
-    title = MSG(u'Add to ordered list')
-
-
-class UnOrderButton(BrowseButton):
-
-    access = 'is_allowed_to_edit'
-    name = 'remove_from_ordered'
-    title = MSG(u'Remove from ordered list')
-
-
 class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'

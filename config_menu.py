@@ -30,8 +30,7 @@ from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from buttons import RemoveButton
 from fields import Char_Field, Select_Field
-from folder import OrderedFolder
-from folder_views import OrderedFolder_BrowseContent
+from order import OrderedFolder, OrderedFolder_BrowseContent
 from utils import split_reference
 
 

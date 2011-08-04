@@ -15,102 +15,84 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.gettext import MSG
 from itools.web import INFO, get_context
 
 # Import from ikaaro
-from ikaaro.buttons import OrderUpButton, OrderDownButton, OrderTopButton
-from ikaaro.buttons import OrderBottomButton, OrderButton, UnOrderButton
+from buttons import BrowseButton
+from fields import URI_Field
+from folder import Folder
+from folder_views import Folder_BrowseContent
 
 
-###############################################
-# OrderAware
-###############################################
 
-class OrderAware(object):
+class OrderUpButton(BrowseButton):
 
-    allow_to_unorder_items = False
-
-    def order_up(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        for id in ids:
-            index = order.index(id)
-            if index > 0:
-                order.remove(id)
-                order.insert(index - 1, id)
-        # Update the order
-        self.update_order(order=order)
+    access = 'is_allowed_to_edit'
+    name = 'order_up'
+    title = MSG(u'Order up')
 
 
-    def order_down(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        for id in ids:
-            index = order.index(id)
-            order.remove(id)
-            order.insert(index + 1, id)
-        # Update the order
-        self.update_order(order=order)
+
+class OrderDownButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_down'
+    title = MSG(u'Order down')
 
 
-    def order_top(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        order = ids + [ id for id in order if id not in ids ]
-        # Update the order
-        self.update_order(order=order)
+
+class OrderTopButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_top'
+    title = MSG(u'Order top')
 
 
-    def order_bottom(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        order = [ id for id in order if id not in ids ] + ids
-        # Update the order
-        self.update_order(order=order)
+
+class OrderBottomButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_bottom'
+    title = MSG(u'Order bottom')
 
 
-    def order_add(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        order = [ id for id in order if id not in ids ] + ids
-        # Update the order
-        self.update_order(order=order)
+class OrderButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'add_to_ordered'
+    title = MSG(u'Add to ordered list')
 
 
-    def order_remove(self, ids):
-        order = self.get_ordered_values()
-        order = list(order)
-        order = [ id for id in order if id not in ids ]
-        # Update the order
-        self.update_order(order=order)
+class UnOrderButton(BrowseButton):
 
-    ##############################
-    # To override
-    ##############################
-
-    def update_order(self, order):
-        raise NotImplementedError
-
-
-    def get_ordered_values(self):
-        raise NotImplementedError
+    access = 'is_allowed_to_edit'
+    name = 'remove_from_ordered'
+    title = MSG(u'Remove from ordered list')
 
 
 
 
-class OrderAware_View(object):
+class OrderedFolder_BrowseContent(Folder_BrowseContent):
 
+    query_schema = Folder_BrowseContent.query_schema.copy()
+    query_schema['sort_by'] = query_schema['sort_by'](default='order')
+    query_schema['reverse'] = query_schema['reverse'](default=False)
+
+    table_columns = (Folder_BrowseContent.table_columns +
+                     [('order', MSG(u'Order'))])
 
     def get_table_actions(self, resource, context):
-        actions = [OrderUpButton, OrderDownButton,
-                   OrderTopButton, OrderBottomButton]
+        proxy = super(OrderedFolder_BrowseContent, self)
+        buttons = proxy.get_table_actions(resource, context)
+
+        buttons = list(buttons)
+        buttons += [OrderUpButton, OrderDownButton, OrderTopButton,
+                    OrderBottomButton]
         if resource.allow_to_unorder_items:
-            return actions + [OrderButton, UnOrderButton]
-        return actions
+            buttons += [OrderButton, UnOrderButton]
 
-
-    def get_items(self, resource, context):
-        raise NotImplementedError
+        return buttons
 
 
     def get_key_sorted_by_order(self):
@@ -118,13 +100,37 @@ class OrderAware_View(object):
         ordered_names = list(context.resource.get_ordered_values())
         nb_ordered_names = len(ordered_names)
         def key(item):
-            return (ordered_names.index(item.name)
-                      if item.name in ordered_names else nb_ordered_names)
+            try:
+                return ordered_names.index(item.name)
+            except ValueError:
+                return nb_ordered_names
+
         return key
 
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'order':
+            item_brain, item_resource = item
+            ordered_ids = list(resource.get_ordered_values())
+            if item_brain.name in ordered_ids:
+                return ordered_ids.index(item_brain.name) + 1
+            return MSG(u'Not ordered')
+
+        proxy = super(OrderedFolder_BrowseContent, self)
+        return proxy.get_item_value(resource, context, item, column)
+
+
     ######################################################################
-    # Order Actions
+    # Actions
     ######################################################################
+    def action_remove(self, resource, context, form):
+        # Remove from ordered list
+        resource.order_remove(form['ids'])
+        # Super
+        proxy = super(OrderedFolder_BrowseContent, self)
+        return proxy.get_item_value(resource, context, form)
+
+
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         resource.order_up(ids)
@@ -159,3 +165,86 @@ class OrderAware_View(object):
         ids = form['ids']
         resource.order_remove(ids)
         context.message = INFO(u'Resources unordered.')
+
+
+
+###############################################
+# OrderAware
+###############################################
+
+class OrderedFolder(Folder):
+
+    class_title = MSG(u'Ordered Folder')
+    class_views = ['browse_content']
+
+    fields = Folder.fields + ['order']
+    order = URI_Field(title=MSG(u'Order'), multiple=True)
+
+    allow_to_unorder_items = False
+
+    def order_up(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        for id in ids:
+            index = order.index(id)
+            if index > 0:
+                order.remove(id)
+                order.insert(index - 1, id)
+        # Update the order
+        self.set_property('order', order)
+
+
+    def order_down(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        for id in ids:
+            index = order.index(id)
+            order.remove(id)
+            order.insert(index + 1, id)
+        # Update the order
+        self.set_property('order', order)
+
+
+    def order_top(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        order = ids + [ id for id in order if id not in ids ]
+        # Update the order
+        self.set_property('order', order)
+
+
+    def order_bottom(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        order = [ id for id in order if id not in ids ] + ids
+        # Update the order
+        self.set_property('order', order)
+
+
+    def order_add(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        order = [ id for id in order if id not in ids ] + ids
+        # Update the order
+        self.set_property('order', order)
+
+
+    def order_remove(self, ids):
+        order = self.get_ordered_values()
+        order = list(order)
+        order = [ id for id in order if id not in ids ]
+        # Update the order
+        self.set_property('order', order)
+
+
+    def get_ordered_values(self):
+        ordered_names = list(self.get_value('order'))
+        # Unordered names
+        if self.allow_to_unorder_items is False:
+            for name in self.get_names():
+                if name not in ordered_names:
+                    ordered_names.append(name)
+        return ordered_names
+
+    # Views
+    browse_content = OrderedFolder_BrowseContent()
