@@ -25,13 +25,11 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import get_default_widget
-from fields import File_Field
-from file import File
-from order import OrderAware
-from resource_ import DBResource
-from table_views import Table_View, Table_AddRecord, Table_EditRecord
-from table_views import OrderedTable_View, Table_ExportCSV
+from ikaaro.autoform import get_default_widget
+from ikaaro.fields import File_Field
+from ikaaro.file import File
+from ikaaro.order import OrderAware
+from ikaaro.resource_ import DBResource
 
 
 
@@ -93,10 +91,6 @@ class Table(File):
 
     # Views
     new_instance = DBResource.new_instance
-    view = Table_View()
-    add_record = Table_AddRecord()
-    edit_record = Table_EditRecord()
-    export_csv = Table_ExportCSV()
 
 
 
@@ -145,7 +139,3 @@ class OrderedTable(Table, OrderAware):
         if table:
             for id in self.get_ordered_values():
                 yield table.get_record(id)
-
-
-    # Views
-    view = OrderedTable_View()
