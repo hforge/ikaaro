@@ -331,7 +331,7 @@ class DBResource_AddBase(STLView):
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
         namespace['mode'] = context.get_form_value('mode')
-        namespace['state_widget'] = State_Widget
+        namespace['state_widget'] = State_Widget(name='state', value=None)
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = root.get_skin(context).get_styles(context)
         browse_content = self.browse_content_class(\
