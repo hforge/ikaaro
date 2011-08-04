@@ -15,101 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.database import ROGitDatabase, GitDatabase, make_git_database
+from itools.database import RODatabase, RWDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
 
-# Import from ikaaro
-from metadata import Metadata
 
-
-class Database(GitDatabase):
+class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    #######################################################################
-    # Registries
-    #######################################################################
-    resources_registry = {}
-
-    @classmethod
-    def register_resource_class(self, resource_class, format=None):
-        if format is None:
-            format = resource_class.class_id
-        self.resources_registry[format] = resource_class
-
-
-    @classmethod
-    def unregister_resource_class(self, resource_class):
-        for class_id, cls in self.resources_registry.items():
-            if resource_class is cls:
-                del self.resources_registry[class_id]
-
-
-    def get_resource_class(self, class_id):
-        if type(class_id) is not str:
-            raise TypeError, 'expected byte string, got %s' % class_id
-
-        # Standard case
-        registry = self.resources_registry
-        cls = registry.get(class_id)
-        if cls:
-            return cls
-
-        # Dynamic model
-        if class_id[0] == '/':
-            model = self.get_resource(class_id)
-            cls = model.build_resource_class()
-            registry[class_id] = cls
-            return cls
-
-        # Fallback on mimetype
-        if '/' in class_id:
-            class_id = class_id.split('/')[0]
-            cls = registry.get(class_id)
-            if cls:
-                return cls
-
-        # Default
-        return self.resources_registry['application/octet-stream']
-
-
-    def get_resource(self, abspath, soft=False):
-        if type(abspath) is str:
-            path = abspath[1:]
-            abspath = Path(abspath)
-        else:
-            path = str(abspath)[1:]
-
-        path_to_metadata = '%s.metadata' % path
-        metadata = self.get_handler(path_to_metadata, Metadata, soft=soft)
-        if metadata is None:
-            return None
-
-        # 2. Class
-        class_id = metadata.format
-        cls = self.get_resource_class(class_id)
-        if cls is None:
-            if self.fs.exists(path):
-                is_file = self.fs.is_file(path)
-            else:
-                # FIXME This is just a guess, it may fail.
-                is_file = '/' in format
-
-            if is_file:
-                cls = self.get_resource_class('application/octet-stream')
-            else:
-                cls = self.get_resource_class('application/x-not-regular-file')
-
-        # Ok
-        resource = cls(metadata)
-        resource.abspath = abspath
-        return resource
-
-
-    #######################################################################
-    # Commit
-    #######################################################################
     def _before_commit(self):
         context = get_context()
         root = context.root
@@ -171,6 +85,6 @@ def make_database(path):
 
 def get_database(path, size_min, size_max, read_only=False):
     if read_only is True:
-        return ROGitDatabase(path, size_min, size_max)
+        return RODatabase(path, size_min, size_max)
 
     return Database(path, size_min, size_max)

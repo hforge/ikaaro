@@ -23,7 +23,7 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 
 # Import from itools
-from itools.database import AndQuery, NotQuery, PhraseQuery
+from itools.database import Metadata, AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -41,7 +41,6 @@ from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
-from metadata import Metadata
 from resource_ import DBResource
 from utils import get_base_path_query
 

@@ -23,6 +23,7 @@
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
+from itools.database import Metadata
 from itools.datatypes import Integer, String, Tokens, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -32,7 +33,6 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.comments import CommentsAware
 from ikaaro.folder import Folder
-from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name

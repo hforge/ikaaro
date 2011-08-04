@@ -25,10 +25,10 @@ import sys
 # Import from itools
 import itools
 from itools.core import start_subprocess
+from itools.database import Metadata
 
 # Import from ikaaro
 from ikaaro.database import make_database
-from ikaaro.metadata import Metadata
 from ikaaro.root import Root
 from ikaaro.server import get_fake_context
 from ikaaro.utils import generate_password

@@ -19,6 +19,7 @@ from re import compile
 from subprocess import CalledProcessError
 
 # Import from itools
+from itools.database import Metadata
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
@@ -27,7 +28,6 @@ from itools.web import STLView, ERROR
 # Import from ikaaro
 from autoform import TextWidget
 from buttons import BrowseButton
-from metadata import Metadata
 from views import BrowseForm
 
 

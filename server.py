@@ -34,6 +34,7 @@ from glib import GError
 
 # Import from itools
 from itools.core import get_abspath
+from itools.database import Metadata
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
@@ -49,7 +50,6 @@ from itools.web import SoupMessage
 from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
-from metadata import Metadata
 from skins import skin_registry
 from utils import is_pid_running
 

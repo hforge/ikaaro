@@ -33,7 +33,7 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import GitDatabase, AndQuery, PhraseQuery
+from itools.database import RWDatabase, AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -89,7 +89,7 @@ class CtrlView(BaseView):
         database = context.database
         return dumps(
             {'packages': resource.get_version_of_packages(context),
-             'read-only': not isinstance(database, GitDatabase)})
+             'read-only': not isinstance(database, RWDatabase)})
 
 
 ###########################################################################
