@@ -505,8 +505,12 @@ class Observable(object):
 
 
     def get_subscribed_users(self, skip_unconfirmed=True):
+        cc_list = self.get_property('cc_list')
+        if not cc_list:
+            return []
+
         users = []
-        for cc in self.get_property('cc_list'):
+        for cc in cc_list:
             # case 1: subscribed user or unsubscription pending user
             status = cc.get_parameter('status')
             if status in (None, 'U'):
