@@ -196,16 +196,9 @@ class Event_NewInstance(AutoAdd):
         child = container.make_resource(form['name'], cls)
         # 2. Set properties
         for key in self.get_fields(cls):
-            if key != 'cc_list':
-                self.set_value(child, context, key, form)
-        # Set properties / cc_list
-        if 'cc_list' in form:
-            child.set_property('cc_list', form['cc_list'])
+            self.set_value(child, context, key, form)
 
         # 3. Notify the subscribers
-        user = context.user
-        if user:
-            child.set_property('last_author', user.name)
         child.notify_subscribers(context)
 
         # Ok
