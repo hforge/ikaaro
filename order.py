@@ -182,6 +182,25 @@ class OrderedFolder(Folder):
 
     allow_to_unorder_items = False
 
+
+    def make_resource(self, name, cls, **kw):
+        resource = super(OrderedFolder, self).make_resource(name, cls, **kw)
+        order = self.get_value('order')
+        order = order + [name]
+        self.set_value('order', order)
+        return resource
+
+
+    def get_ordered_values(self):
+        ordered_names = list(self.get_value('order'))
+        # Unordered names
+        if self.allow_to_unorder_items is False:
+            for name in self.get_names():
+                if name not in ordered_names:
+                    ordered_names.append(name)
+        return ordered_names
+
+
     def order_up(self, ids):
         order = self.get_ordered_values()
         order = list(order)
@@ -236,15 +255,6 @@ class OrderedFolder(Folder):
         # Update the order
         self.set_value('order', order)
 
-
-    def get_ordered_values(self):
-        ordered_names = list(self.get_value('order'))
-        # Unordered names
-        if self.allow_to_unorder_items is False:
-            for name in self.get_names():
-                if name not in ordered_names:
-                    ordered_names.append(name)
-        return ordered_names
 
     # Views
     browse_content = OrderedFolder_BrowseContent()

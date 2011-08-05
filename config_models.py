@@ -186,9 +186,6 @@ class Model_NewInstance(NewInstance_Local):
                 child.make_resource(field_name, ModelField_Inherited)
                 field_names.append(field_name)
 
-        # Order fields into folder
-        child.set_value('order', field_names)
-
         # Ok
         return child
 
