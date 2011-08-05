@@ -18,7 +18,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import freeze, thingy
+from itools.core import freeze, prototype
 from itools.csv import Property
 from itools.database import magic
 from itools.datatypes import Boolean, Date, DateTime, Email, Enumerate
@@ -40,7 +40,7 @@ from utils import split_reference
 
 
 
-class Field(thingy):
+class Field(prototype):
 
     datatype = None
     default = None

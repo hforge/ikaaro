@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts, thingy_property
+from itools.core import merge_dicts, proto_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -46,7 +46,7 @@ class SelectElement(AddButton):
           class="${css}" onclick="${onclick}">${title}</button>''')
 
 
-    @thingy_property
+    @proto_property
     def onclick(cls):
         element = cls.element_to_add
         return 'select_element("%s", $(this).attr("value"), "")' % element

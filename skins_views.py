@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import proto_lazy_property
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.uri import decode_query
@@ -37,7 +37,7 @@ class LanguagesTemplate(CMSTemplate):
     template = '/ui/aruni/languages.xml'
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def languages(self):
         context = self.context
         # Website languages
@@ -73,7 +73,7 @@ class LocationTemplate(CMSTemplate):
 
     template = '/ui/aruni/location.xml'
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def breadcrumb(self):
         """Return a list of dicts [{name, url}...]
         """
@@ -111,7 +111,7 @@ class LocationTemplate(CMSTemplate):
         return breadcrumb
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def tabs(self):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
@@ -149,6 +149,6 @@ class LocationTemplate(CMSTemplate):
         return tabs
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def location(self):
         return bool(self.breadcrumb) or bool(self.tabs)

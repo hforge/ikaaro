@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import freeze, thingy_property
+from itools.core import freeze, proto_property
 from itools.csv import Property
 from itools.datatypes import Email, MultiLinesTokens
 from itools.datatypes import String
@@ -74,7 +74,7 @@ class RegisterButton(Button):
     title = MSG(u'Subscribe')
 
 
-    @thingy_property
+    @proto_property
     def show(cls):
         if cls.context.user:
             if cls.resource.is_subscribed(cls.context.user.name):
@@ -88,7 +88,7 @@ class UnregisterButton(RegisterButton):
     title = MSG(u'Unsubscribe')
 
 
-    @thingy_property
+    @proto_property
     def show(cls):
         if cls.context.user:
             if not cls.resource.is_subscribed(cls.context.user.name):
@@ -455,7 +455,7 @@ class Followers_Field(Select_Field):
     parameters_schema = {'status': String, 'key': String}
     widget = Followers_Widget
 
-    @thingy_property
+    @proto_property
     def options(self):
         root = get_context().root
 

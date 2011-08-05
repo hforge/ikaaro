@@ -23,7 +23,7 @@ from datetime import datetime, date
 from random import randint
 
 # Import from itools
-from itools.core import get_abspath, thingy_lazy_property
+from itools.core import get_abspath, proto_lazy_property
 from itools.datatypes import DataType, Boolean, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
@@ -171,7 +171,7 @@ class ReadOnlyWidget(Widget):
     focus = False
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def value_(self):
         value = self.value
         if issubclass(self.datatype, Enumerate) and isinstance(value, list):
@@ -205,7 +205,7 @@ class MultilineWidget(Widget):
     rows = 5
     cols = 60
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def value_(self):
         value = self.value
         if type(value) is str:
@@ -369,7 +369,7 @@ class DateWidget(Widget):
         return 'true' if self.show_time else 'false'
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def value_(self):
         value = self.value
         if value is None:
@@ -401,7 +401,7 @@ class DatetimeWidget(DateWidget):
         button: ".next()" });
     </script>""")
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def value_date(self):
         if self.value is None:
             return ''
@@ -412,7 +412,7 @@ class DatetimeWidget(DateWidget):
         return Date.encode(value)
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def value_time(self):
         if self.value is None:
             return ''

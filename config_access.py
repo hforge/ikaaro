@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy_property
+from itools.core import proto_property
 from itools.database import PhraseQuery
 from itools.gettext import MSG
 from itools.web import get_context
@@ -60,7 +60,7 @@ class SavedSearch_Content(SavedSearch):
 
 class SavedSearches_Field(Select_Field):
 
-    @thingy_property
+    @proto_property
     def options(self):
         config = get_context().root.get_resource('config')
         return [ {'name': x.name, 'value': x.get_title()}

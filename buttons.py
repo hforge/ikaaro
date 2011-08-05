@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy_property
+from itools.core import proto_property
 from itools.gettext import MSG
 from itools.stl import STLTemplate
 
@@ -40,14 +40,14 @@ class Button(STLTemplate):
 
 
     # TODO rename to "name" in 0.75
-    @thingy_property
+    @proto_property
     def action(cls):
         if cls.name is None:
             return None
         return 'action'
 
 
-    @thingy_property
+    @proto_property
     def onclick(cls):
         confirm = cls.confirm
         if not confirm:
@@ -55,7 +55,7 @@ class Button(STLTemplate):
         return u'return confirm("%s");' % confirm.gettext()
 
 
-    @thingy_property
+    @proto_property
     def show(cls):
         ac = cls.resource.get_access_control()
         return ac.is_access_allowed(cls.context.user, cls.resource, cls)
@@ -64,7 +64,7 @@ class Button(STLTemplate):
 
 class BrowseButton(Button):
 
-    @thingy_property
+    @proto_property
     def show(cls):
         if len(cls.items) == 0:
             return False
@@ -117,7 +117,7 @@ class PasteButton(BrowseButton):
     title = MSG(u'Paste')
 
 
-    @thingy_property
+    @proto_property
     def show(cls):
         cut, paths = cls.context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
@@ -134,7 +134,7 @@ class PublishButton(BrowseButton):
     title = MSG(u'Publish')
 
 
-    @thingy_property
+    @proto_property
     def show(cls):
         ac = cls.resource.get_access_control()
         for item in cls.items:

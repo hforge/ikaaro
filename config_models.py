@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import thingy_property
+from itools.core import proto_property
 from itools.gettext import MSG
 from itools.web import get_context
 
@@ -156,7 +156,7 @@ def unregister_model_base_class(cls):
 
 class BaseClass_Field(Select_Field):
 
-    @thingy_property
+    @proto_property
     def options(self):
         database = get_context().database
         options = [

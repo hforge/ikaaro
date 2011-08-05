@@ -18,7 +18,7 @@
 import urllib, urllib2
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import proto_lazy_property
 from itools.datatypes import Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.web import get_context
@@ -156,7 +156,7 @@ class CaptchaDatatype(Unicode):
 class CaptchaWidget(Widget):
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def title(self):
         root = get_context().root
         captcha = root.get_resource('config/captcha')

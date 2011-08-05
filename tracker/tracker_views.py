@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
+from itools.core import merge_dicts, proto_lazy_property
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
@@ -89,12 +89,12 @@ class StoreSearchMenu(ContextMenu):
                            search_title=Unicode)
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def search_name(self):
         return self.context.get_query_value('search_name')
 
 
-    @thingy_lazy_property
+    @proto_lazy_property
     def search(self):
         search_name = self.search_name
         if search_name:

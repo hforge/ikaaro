@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import lazy, is_thingy
+from itools.core import lazy, is_prototype
 from itools.csv import Property
 from itools.database import register_field
 from itools.database import PhraseQuery, Resource
@@ -225,7 +225,7 @@ class DBResource(Resource):
     @classmethod
     def get_field(self, name):
         field = getattr(self, name, None)
-        if is_thingy(field, Field):
+        if is_prototype(field, Field):
             return field
 
         return None
