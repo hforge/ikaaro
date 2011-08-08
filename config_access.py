@@ -68,15 +68,6 @@ class SavedSearches_Field(Select_Field):
 
 
 
-class ConfigAccess_Rule_NewInstance(NewInstance_Local):
-
-    fields = ['permission', 'group', 'resources']
-
-    def get_new_resource_name(self, form):
-        container = form['container']
-        return container.get_new_id()
-
-
 ###########################################################################
 # Access rule
 ###########################################################################
@@ -105,8 +96,10 @@ class ConfigAccess_Rule(DBResource):
 
     # Views
     class_views = ['edit', 'commit_log']
-    new_instance = ConfigAccess_Rule_NewInstance()
-    edit = AutoEdit(fields=['permission', 'group', 'resources'])
+    _fields = ['permission', 'group', 'resources']
+    new_instance = NewInstance_Local(fields=_fields,
+                                     automatic_resource_name=True)
+    edit = AutoEdit(fields=_fields)
 
 
 
@@ -186,11 +179,6 @@ class ConfigAccess(Folder):
                         return True
 
         return False
-
-
-    def get_new_id(self):
-        ids = [ int(x) for x in self.get_names() ]
-        return str(max(ids) + 1) if ids else '0'
 
 
     def get_document_types(self):

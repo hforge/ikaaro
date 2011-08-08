@@ -30,6 +30,14 @@ class NewInstance_Local(AutoAdd):
     access = 'is_admin'
     fields = ['title']
 
+    automatic_resource_name = False
+    def get_new_resource_name(self, form):
+        if self.automatic_resource_name:
+            return form['container'].make_resource_name()
+
+        return super(NewInstance_Local, self).get_new_resource_name(form)
+
+
     def get_container(self, resource, context, form):
         return resource
 

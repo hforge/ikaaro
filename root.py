@@ -134,7 +134,7 @@ class Root(AccessControl, Folder):
             search = searches.make_resource(name, SavedSearch_Content)
             search.set_property('search_state', value)
 
-        # Permissions
+        # Access rules
         permissions = [
             # Authenticated users can see any content
             ('authenticated', 'view', 'any-content'),
@@ -154,8 +154,7 @@ class Root(AccessControl, Folder):
         ]
         access = config.get_resource('access')
         for group, permission, resources in permissions:
-            name = access.get_new_id()
-            access.make_resource(name, ConfigAccess_Rule, group=group,
+            access.make_resource(None, ConfigAccess_Rule, group=group,
                                  permission=permission, resources=resources)
 
 
@@ -449,9 +448,8 @@ class Root(AccessControl, Folder):
     def make_user(self, loginname=None, password=None):
         # Create the user
         users = self.get_resource('/users')
-        user_id = users.get_new_id()
         cls = self.database.get_resource_class('user')
-        user = users.make_resource(user_id, cls)
+        user = users.make_resource(None, cls)
 
         # Set login name and paswword
         if loginname is not None:

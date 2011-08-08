@@ -113,12 +113,28 @@ class Folder(DBResource):
     #######################################################################
     # API
     #######################################################################
+    def make_resource_name(self):
+        max_id = -1
+        for name in self.get_names():
+            # Mixing explicit and automatically generated names is allowed
+            try:
+                id = int(name)
+            except ValueError:
+                continue
+            if id > max_id:
+                max_id = id
+
+        return str(max_id + 1)
+
+
     def make_resource(self, name, cls, **kw):
-        context = get_context()
+        if name is None:
+            name = self.make_resource_name()
+
         # Make the metadata
         metadata = Metadata(cls=cls)
         self.handler.set_handler('%s.metadata' % name, metadata)
-        metadata.set_property('mtime', context.timestamp)
+        metadata.set_property('mtime', get_context().timestamp)
         # Initialize
         resource = self.get_resource(name)
         resource.init_resource(**kw)

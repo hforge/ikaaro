@@ -256,21 +256,6 @@ class UserFolder(Folder):
     #######################################################################
     # API
     #######################################################################
-    def get_new_id(self):
-        ids = []
-        for key in self.get_names():
-            try:
-                key = int(key)
-            except ValueError:
-                continue
-            ids.append(key)
-        if ids:
-            user_id = str(max(ids) + 1)
-        else:
-            user_id = '0'
-        return user_id
-
-
     def get_usernames(self):
         """Return all user names."""
         names = self._get_names()

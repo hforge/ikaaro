@@ -107,11 +107,6 @@ class ConfigCalendar(DBResource):
     colors = ['#AC81A1', '#719C71', '#C1617C', '#A0A5B5', '#A59580']
 
 
-    def get_new_id(self):
-        ids = [ int(x) for x in self.get_names()]
-        return str(max(ids) + 1) if ids else '0'
-
-
     fields = DBResource.fields + ['timetables']
     timetables = Char_Field(datatype=Timetables, multiple=True)
     timetables_default = [
