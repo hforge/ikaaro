@@ -449,7 +449,7 @@ class Root(AccessControl, Folder):
     def make_user(self, loginname=None, password=None):
         # Create the user
         users = self.get_resource('/users')
-        user_id = users.get_next_user_id()
+        user_id = users.get_new_id()
         cls = self.database.get_resource_class('user')
         user = users.make_resource(user_id, cls)
 

@@ -256,7 +256,7 @@ class UserFolder(Folder):
     #######################################################################
     # API
     #######################################################################
-    def get_next_user_id(self):
+    def get_new_id(self):
         ids = []
         for key in self.get_names():
             try:
