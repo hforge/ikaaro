@@ -50,6 +50,7 @@ from fields import Char_Field
 from folder import Folder
 from config_access import ConfigAccess_Rule, SavedSearch_Content
 from config_register import RegisterForm
+from datastore import DataStore
 from resource_views import LoginView
 from skins import skin_registry
 from user import UserFolder
@@ -117,6 +118,8 @@ class Root(AccessControl, Folder):
 
     def init_resource(self, email, password):
         Folder.init_resource(self)
+        # General purpose data storage
+        self.make_resource('datastore', DataStore)
         # Users
         self.make_resource('users', UserFolder, title={'en': u'Users'})
         user = self.make_user(email, password)

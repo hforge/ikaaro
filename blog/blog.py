@@ -18,7 +18,6 @@
 from datetime import date
 
 # Import from itools
-from itools.csv import Property
 from itools.datatypes import Date, Unicode
 from itools.gettext import MSG
 from itools.web import STLView
@@ -92,12 +91,7 @@ class Post_View(STLView):
 
 
     def action(self, resource, context, form):
-        date = context.timestamp
-        author = context.user.name if context.user else None
-        comment = Property(form['comment'], date=date, author=author)
-        resource.set_property('comment', comment)
-        # Change
-        context.database.change_resource(resource)
+        resource.add_comment(form['comment'])
         context.message = MSG_CHANGES_SAVED
 
 
@@ -115,7 +109,7 @@ class Post(CommentsAware, WebPage):
 
 
     # Fields
-    fields = WebPage.fields + CommentsAware.fields + ['date']
+    fields = WebPage.fields + ['date']
     date = Date_Field(stored=True, title=MSG(u'Date'))
     title = WebPage.title(required=True)
     data = WebPage.data(widget=rte)
