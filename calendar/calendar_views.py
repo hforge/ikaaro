@@ -18,12 +18,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Standard Library
-from calendar import monthrange, isleap
+from calendar import monthrange
 from cStringIO import StringIO
 from datetime import date, datetime, time, timedelta
 from operator import itemgetter
 
 # Import from itools
+from itools.core import proto_lazy_property
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
@@ -39,7 +40,7 @@ from ikaaro import messages
 from ikaaro.database import Database
 from ikaaro.datatypes import FileDataType
 from ikaaro.folder_views import Folder_NewResource
-
+from ikaaro.utils import CMSTemplate
 
 resolution = timedelta.resolution
 
@@ -199,13 +200,111 @@ class TimetablesForm(STLView):
 
 
 
+class CalendarSelectorTemplate(CMSTemplate):
+
+    template = '/ui/calendar/cal_selector.xml'
+    c_date = None
+    method = None
+
+    def make_link(self, title, date, method=None):
+        if method is None:
+            method = self.method
+        # Build link
+        link = ';{method}?start={date}&end={date}'
+        link = link.format(date=Date.encode(date), method=method)
+        # Enabled ?
+        enabled = self.method == method
+        return {'title': title,
+                'link': link,
+                'css': 'enabled' if enabled else ''}
+
+
+    @proto_lazy_property
+    def link_today(self):
+        return self.make_link(u'Today', date.today())
+
+
+    @proto_lazy_property
+    def start(self):
+        return Date.encode(self.c_date)
+
+
+    @proto_lazy_property
+    def firstday(self):
+        return self.context.view.get_first_day()
+
+    titlew1 = MSG(u'{m_start} {w_start}, {y_start} - {m_end} {w_end}, {y_end}')
+    titlew2 = MSG(u'{m_start} {w_start} - {m_end} {w_end}, {y_start}')
+    titlew3 = MSG(u'{m_start} {w_start} - {w_end}, {y_start}')
+    titlem1 = MSG(u'{month} {year}')
+    titled1 = MSG(u'{weekday}, {month} {day}, {year}')
+
+    @proto_lazy_property
+    def title(self):
+        method = self.method
+        c_date = self.c_date
+        kw = {'weekday': days[c_date.weekday()],
+              'day': c_date.day,
+              'month' : months[c_date.month],
+              'year': c_date.year}
+        if method == 'daily_view':
+            return self.titled1.gettext(**kw)
+        elif method == 'weekly_view':
+            week_start = c_date - timedelta(c_date.weekday())
+            week_end = week_start + timedelta(days=6)
+            kw['w_start'] = week_start.day
+            kw['w_end'] = week_end.day
+            kw['m_start'] = months[week_start.month]
+            kw['m_end'] = months[week_end.month]
+            kw['y_start'] = week_start.year
+            kw['y_end'] = week_end.year
+            if kw['y_end'] > kw['y_start']:
+                return self.titlew1.gettext(**kw)
+            elif kw['w_end'] < kw['w_start']:
+                return self.titlew2.gettext(**kw)
+            return self.titlew3.gettext(**kw)
+        elif method == 'monthly_view':
+            return self.titlem1.gettext(**kw)
+        raise ValueError
+
+
+    @proto_lazy_property
+    def navigation_links(self):
+        c_date = self.c_date
+        method = self.method
+        if method == 'daily_view':
+            previous_date = c_date - timedelta(1)
+            next_date = c_date + timedelta(1)
+        elif method == 'weekly_view':
+            previous_date = c_date - timedelta(7)
+            next_date = c_date + timedelta(7)
+        elif method == 'monthly_view':
+            delta = 31
+            if c_date.month != 1:
+                kk, delta = monthrange(c_date.year, c_date.month - 1)
+            previous_date = c_date - timedelta(delta)
+            kk, delta = monthrange(c_date.year, c_date.month)
+            next_date = c_date + timedelta(delta)
+        # Return links
+        return {'previous': self.make_link(MSG(u'«'), previous_date),
+                'next': self.make_link(MSG(u'»'), next_date)}
+
+
+    @proto_lazy_property
+    def calendar_view_links(self):
+        return [self.make_link(MSG(u'Day'), self.c_date, 'daily_view'),
+                self.make_link(MSG(u'Week'), self.c_date, 'weekly_view'),
+                self.make_link(MSG(u'Month'), self.c_date, 'monthly_view')]
+
+
+
 class CalendarView(STLView):
 
     styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'title', 'status')
-    selector_template = '/ui/calendar/cal_selector.xml'
 
+    calendar_selector = CalendarSelectorTemplate
 
     def get_first_day(self):
         """Returns 0 if Sunday is the first day of the week, else 1.
@@ -238,61 +337,6 @@ class CalendarView(STLView):
         if day in (1, 2, 3):
             week_number = week_number + 1
         return week_number
-
-
-    def get_selector_ns(self, c_date, method):
-        """Set header used to navigate into time.
-        """
-        link = ';{method}?start={{date}}&end={{date}}'
-        link = link.format(method=method)
-        make_link = lambda x: link.format(date=Date.encode(x))
-
-        # Week
-        week_number = '%0d' % self.get_week_number(c_date)
-        current_week = MSG(u'Week {n}').gettext(n=week_number)
-        previous_week = make_link(c_date - timedelta(7))
-        next_week = make_link(c_date + timedelta(7))
-        # Month
-        current_month = months[c_date.month].gettext()
-        delta = 31
-        if c_date.month != 1:
-            kk, delta = monthrange(c_date.year, c_date.month - 1)
-        previous_month = make_link(c_date - timedelta(delta))
-        kk, delta = monthrange(c_date.year, c_date.month)
-        next_month = make_link(c_date + timedelta(delta))
-        # Year
-        date_before = date(c_date.year, 2, 28)
-        date_after = date(c_date.year, 3, 1)
-        delta = 365
-        if (isleap(c_date.year - 1) and c_date <= date_before) \
-          or (isleap(c_date.year) and c_date > date_before):
-            delta = 366
-        previous_year = make_link(c_date - timedelta(delta))
-        delta = 365
-        if (isleap(c_date.year) and c_date <= date_before) \
-          or (isleap(c_date.year +1) and c_date >= date_after):
-            delta = 366
-        next_year = make_link(c_date + timedelta(delta))
-        # Set value into namespace
-        link = ';{method}?start={date}&end={date}'
-        make_link = lambda x,y: link.format(date=Date.encode(x), method=y)
-        return {
-            'current_week': current_week,
-            'previous_week': previous_week,
-            'next_week': next_week,
-            'current_month': current_month,
-            'previous_month': previous_month,
-            'next_month': next_month,
-            'current_year': c_date.year,
-            'previous_year': previous_year,
-            'next_year': next_year,
-            # Add monthly/weekly/daily/today goto links
-            'goto_monthly': make_link(c_date, 'monthly_view'),
-            'goto_weekly': make_link(c_date, 'weekly_view'),
-            'goto_daily': make_link(c_date, 'daily_view'),
-            'goto_today': make_link(date.today(), method),
-            'start': Date.encode(c_date),
-            'firstday': self.get_first_day()}
 
 
     # Get days of week based on get_first_day's result for start
@@ -422,11 +466,10 @@ class CalendarView(STLView):
 
     def get_namespace(self, resource, context, c_date, method=None, ndays=7):
         namespace = {}
-        if method is not None and self.selector_template:
+        if method is not None and self.calendar_selector:
             # Add header to navigate into time
-            template_selector = context.get_template(self.selector_template)
-            selector_ns = self.get_selector_ns(c_date, method)
-            namespace['cal_selector'] = stl(template_selector, selector_ns)
+            namespace['cal_selector'] = self.calendar_selector(
+                method=method, context=context, c_date=c_date)
         return namespace
 
 
