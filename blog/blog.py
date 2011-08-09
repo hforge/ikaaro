@@ -25,7 +25,7 @@ from itools.web import STLView
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoform import RTEWidget
-from ikaaro.comments import CommentsAware, CommentsView
+from ikaaro.comments import CommentsView
 from ikaaro.fields import Date_Field
 from ikaaro.file_views import File_Edit
 from ikaaro.folder import Folder
@@ -98,7 +98,7 @@ class Post_View(STLView):
 ###########################################################################
 # Resource
 ###########################################################################
-class Post(CommentsAware, WebPage):
+class Post(WebPage):
 
     class_id = 'blog-post'
     class_title = MSG(u'Blog Post')

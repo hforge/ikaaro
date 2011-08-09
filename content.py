@@ -16,11 +16,12 @@
 
 # Import from ikaaro
 from cc import Observable
+from comments import CommentsAware
 from resource_ import DBResource
 from workflow import WorkflowAware
 
 
 
-class Content(Observable, WorkflowAware, DBResource):
+class Content(CommentsAware, Observable, WorkflowAware, DBResource):
 
     fields = DBResource.fields + WorkflowAware.fields + Observable.fields
