@@ -615,24 +615,24 @@ p.tabme a.selected {
 .broken { color: red; }
 .number { text-align: right; }
 
-#autoform .title {
+.autoform .title {
   font-weight: bold;
 }
 
-#autoform .language {
+.autoform .language {
   font-size: 0.8em;
   margin-left: 5px;
 }
-#autoform .language.block {
+.autoform .language.block {
   margin: 0;
   display: block;
 }
-#autoform .widget {
+.autoform .widget {
   margin: 2px 0;
 }
 
-#autoform input[type=radio],
-#autoform input[type=checkbox] {
+.autoform input[type=radio],
+.autoform input[type=checkbox] {
   width: auto;
 }
 

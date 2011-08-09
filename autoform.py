@@ -662,8 +662,9 @@ class AutoForm(STLView):
        TextWidget('lastname', title=MSG(u'Lastname'))]
     """
 
-    widgets = []
     template = '/ui/auto_form.xml'
+    form_id = None
+    widgets = []
     description = None
     method = 'post'
     actions = [Button(access=True, css='button-ok', title=MSG(u'Save'))]
@@ -751,7 +752,7 @@ class AutoForm(STLView):
                                     issubclass(datatype, Date))
             ns_widget['suffix'] = widget.suffix
             ns_widget['tip'] = widget.tip
-            ns_widget['endline'] = getattr(widget, 'endline', None)
+            ns_widget['endline'] = getattr(widget, 'endline', False)
 
             # onsubmit
             widget_onsubmit = getattr(widget, 'onsubmit', None)
@@ -803,6 +804,7 @@ class AutoForm(STLView):
 
         # Build namespace
         return {
+            'form_id': self.form_id,
             'before': None,
             'actions': actions,
             'action': action,

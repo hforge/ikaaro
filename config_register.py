@@ -50,6 +50,7 @@ class RegisterForm(AutoForm):
     access = 'is_allowed_to_register'
     title = MSG(u'Create an account')
 
+    form_id = 'register-form'
     fields = ['firstname', 'lastname', 'email']
 
 

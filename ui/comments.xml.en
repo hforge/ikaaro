@@ -10,7 +10,8 @@
     <button type="submit" class="button-ok">Update display</button>
   </div>
 </form>
-<form id="autoform" name="autoform" action="${action}" method="post"
+
+<form class="autoform" name="autoform" action="${action}" method="post"
   enctype="multipart/form-data" stl:omit-tag="not edit_mode">
   <stl:block stl:if="edit_mode">
     <p stl:if="actions">
@@ -19,4 +20,5 @@
   </stl:block>
   <stl:block stl:repeat="comment comments">${comment}</stl:block>
 </form>
+
 </stl:block>

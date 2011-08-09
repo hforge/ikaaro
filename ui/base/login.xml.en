@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<form id="autoform" name="loginform" method="post" action=";login">
+<form class="autoform" name="loginform" method="post" action=";login">
   <fieldset>
     <legend>Sign in</legend>
     <div>
