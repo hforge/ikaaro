@@ -40,7 +40,6 @@ class SavedSearch_Results(Folder_BrowseContent):
 class SavedSearch(DBResource):
     """Base class."""
 
-    class_id = 'saved-search'
     class_title = MSG(u'Saved Search')
     class_description = MSG(u'...')
     class_icon48 = 'icons/48x48/search.png'
@@ -100,9 +99,7 @@ class Config_Searches(Folder):
 
 
     def get_document_types(self):
-        database = self.database
-        return [ database.get_resource_class(x)
-                 for x in self._register_document_types ]
+        return [SavedSearch]
 
 
 
