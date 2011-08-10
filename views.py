@@ -108,17 +108,17 @@ class CompositeView(STLView):
             if method and view_method:
                 msg = 'method "%s" should not be defined in several subviews'
                 raise ValueError, msg % context.form_action
-            method = view_method
+            if view_method:
+                method = view_method
 
         return method
 
 
-    def get_namespace(self, resource, context):
+    def get_subviews_to_show(self, resource, context):
         # Case 1. GET
         if context.method == 'GET':
             views = self.get_allowed_subviews(resource, context)
-            views = [ view.GET(resource, context) for view in views ]
-            return {'views': views}
+            return views
 
         # Case 2. POST
         # Render the subview which caused the POST as a 'POST' and the others
@@ -128,15 +128,20 @@ class CompositeView(STLView):
             method = getattr(view, context.form_action, None)
             if method is None:
                 context.method = 'GET'
-                views.append(view.GET(resource, context))
+                views.append(view)
             else:
                 # Render the view as if it was a POST
                 context.method = 'POST'
-                views.append(view.GET(resource, context))
+                views.append(view)
 
         # Restore context.method
         context.method = 'POST'
-        return {'views': views}
+        return views
+
+
+    def get_namespace(self, resource, context):
+        return {'views': [view.GET(resource, context)
+            for view in self.get_subviews_to_show(resource, context)]}
 
 
 
