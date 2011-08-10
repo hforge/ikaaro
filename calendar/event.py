@@ -126,9 +126,11 @@ class Event_Edit(AutoEdit):
         return form
 
 
-    def action_edit(self, resource, context, form):
+    def action(self, resource, context, form):
         super(Event_Edit, self).action(resource, context, form)
         resource.notify_subscribers(context)
+        return context.come_back(messages.MSG_CHANGES_SAVED,
+            goto=form['referrer'])
 
 
 
