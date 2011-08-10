@@ -73,6 +73,18 @@ class LocationTemplate(CMSTemplate):
 
     template = '/ui/aruni/location.xml'
 
+    keep_view_and_query = False
+
+    def get_url(self, path):
+        if not self.keep_view_and_query:
+            return path
+        uri = str(self.context.uri)
+        view_and_query = ''
+        if '/;' in uri:
+            view_and_query = ';' + uri.split('/;')[1]
+        return path + view_and_query
+
+
     @proto_lazy_property
     def breadcrumb(self):
         """Return a list of dicts [{name, url}...]
@@ -86,7 +98,7 @@ class LocationTemplate(CMSTemplate):
         if not title:
             title = root.class_title.message.encode('utf_8')
         breadcrumb = [{
-            'url': path,
+            'url': self.get_url(path),
             'name': title,
             'short_name': reduce_string(title, 15, 30)}]
 
@@ -104,7 +116,7 @@ class LocationTemplate(CMSTemplate):
                 title = resource.get_title()
             # Append
             breadcrumb.append({
-                'url': path,
+                'url': self.get_url(path),
                 'name': title,
                 'short_name': reduce_string(title, 15, 30)})
 
