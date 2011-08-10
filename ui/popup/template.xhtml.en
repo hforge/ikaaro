@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="${language}"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+  <head>
+    <title>${title}</title>
+    <base href="${base_uri}" />
+    <!-- Meta -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}"
+      content="${meta/content}" />
+    <!-- Canonical URL for search engines -->
+    <link rel="canonical" href="${canonical_uri}" />
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" stl:repeat="style styles"
+      href="${style}" />
+    <!-- JavaScript -->
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+      />
+    <!-- Icon -->
+    <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
+  </head>
+  <body>
+    <div id="page">
+      ${location}
+      ${message}
+      ${body}
+    </div>
+  </body>
+</html>

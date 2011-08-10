@@ -436,4 +436,5 @@ def register_skin(name, skin):
 # Register the built-in skins
 ui_path = get_abspath('ui')
 register_skin('aruni', '%s/aruni' % ui_path)
+register_skin('popup', '%s/popup' % ui_path)
 register_ui('/ui/', ui_path)
