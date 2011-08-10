@@ -250,7 +250,13 @@ class Model(OrderedFolder):
         class_dict = {
             'class_id': str(self.abspath),
             'class_title': MSG(self.get_value('title'))}
+
         fields = []
+        for field_name in base_class.fields:
+            field = base_class.get_field(field_name)
+            if field.readonly:
+                fields.append(field_name)
+
         for field_name in self.get_ordered_values():
             resource = self.get_resource(field_name)
             if not isinstance(resource, ModelField_Inherited):
