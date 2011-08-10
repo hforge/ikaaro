@@ -22,7 +22,7 @@
 from datetime import timedelta
 from email.parser import HeaderParser
 from json import loads
-from os import fdopen
+from os import fdopen, getpgid
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
 import sys
@@ -51,7 +51,6 @@ from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
 from skins import skin_registry
-from utils import is_pid_running
 
 
 log_levels = {
@@ -92,9 +91,11 @@ def get_pid(target):
         return None
 
     pid = int(pid)
-    if is_pid_running(pid):
-        return pid
-    return None
+    try:
+        getpgid(pid)
+    except OSError:
+        return None
+    return pid
 
 
 

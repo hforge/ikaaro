@@ -19,7 +19,6 @@
 # Import from the Standard Library
 from hashlib import sha1
 from random import sample
-from sys import platform
 
 # Import from itools
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
@@ -29,11 +28,6 @@ from itools.stl import STLTemplate, stl_namespaces
 from itools.uri import get_reference, Reference
 from itools.web import get_context
 from itools.xml import XMLParser
-
-if platform[:3] == 'win':
-    from utils_win import is_pid_running, kill
-else:
-    from utils_unix import is_pid_running, kill
 
 
 ###########################################################################
