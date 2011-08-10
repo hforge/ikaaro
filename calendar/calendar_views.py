@@ -452,7 +452,7 @@ class CalendarView(STLView):
             ns_event = event.get_ns_event(conflicts_list, grid, starts_on,
                                           ends_on, out_on)
             if ac.is_allowed_to_view(user, event):
-                url = '%s/;edit' % context.get_link(event)
+                url = './;proxy?id={id}&view=edit'.format(id=event.name)
             else:
                 url = None
             ns_event['url'] = url
@@ -703,7 +703,7 @@ class DailyView(CalendarView):
 
             uid = getattr(event, 'id', getattr(event, 'uid', None))
             if ac.is_allowed_to_view(user, event):
-                edit_url = '%s/;edit' % context.get_link(event)
+                edit_url = './;proxy?id={id}&view=edit'.format(id=event.name)
             else:
                 edit_url = None
             events_by_index.setdefault(tt_start, [])
@@ -770,7 +770,7 @@ class DailyView(CalendarView):
                 if event and tt_index == event['tt_start']:
                     go_url = event['edit_url']
                     if go_url:
-                        go_url = '%s?%s' % (go_url, encode_query(args))
+                        go_url = '%s&%s' % (go_url, encode_query(args))
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
                     else:

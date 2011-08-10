@@ -34,6 +34,7 @@ from itools.web import AccessControl, BaseView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from database import Database
+from datastore_views import DataStore_Proxy
 from fields import Char_Field, Datetime_Field, Field, File_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
@@ -676,6 +677,8 @@ class DBResource(Resource):
     edit = AutoEdit()
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
+    proxy = DataStore_Proxy()
+    # Popup views
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
     add_media = DBResource_AddMedia()

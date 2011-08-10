@@ -27,12 +27,11 @@ from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.config_models import register_model_base_class
 from ikaaro.content import Content
+from ikaaro.datastore_views import DataStore_AutoAdd
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.folder import Folder
 from ikaaro import messages
 
 
@@ -133,27 +132,12 @@ class Event_Edit(AutoEdit):
 
 
 
-class Event_NewInstance(AutoAdd):
+class Event_NewInstance(DataStore_AutoAdd):
 
     def get_fields(self, cls):
         for name, field in cls.get_fields():
             if not field.readonly:
                 yield name
-
-
-    def get_container(self, resource, context, form):
-        # XXX Copied from blog/blog.py
-        date = form['dtstart']
-        names = ['%04d' % date.year, '%02d' % date.month]
-
-        container = context.root
-        for name in names:
-            folder = container.get_resource(name, soft=True)
-            if folder is None:
-                folder = container.make_resource(name, Folder)
-            container = folder
-
-        return container
 
 
     def get_value(self, resource, context, name, datatype):
@@ -193,7 +177,7 @@ class Event_NewInstance(AutoAdd):
         container = form['container']
         class_id = context.query['type']
         cls = context.database.get_resource_class(class_id)
-        child = container.make_resource(form['name'], cls)
+        child = container.make_resource(None, cls)
         # 2. Set properties
         for key in self.get_fields(cls):
             self.set_value(child, context, key, form)
@@ -207,6 +191,8 @@ class Event_NewInstance(AutoAdd):
         if not goto.endswith(views):
             goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+
+
 
 
 class EventDatetime_Field(Datetime_Field):
