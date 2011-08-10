@@ -254,7 +254,7 @@ class Model(OrderedFolder):
         fields = []
         for field_name in base_class.fields:
             field = base_class.get_field(field_name)
-            if field.readonly:
+            if field and field.readonly:
                 fields.append(field_name)
 
         for field_name in self.get_ordered_values():
