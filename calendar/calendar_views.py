@@ -25,11 +25,11 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import proto_lazy_property
-from itools.datatypes import Date, Integer
+from itools.datatypes import Date, DateTime, Integer
 from itools.gettext import MSG
 from itools.ical import Time
 from itools.stl import stl
-from itools.uri import encode_query, get_reference
+from itools.uri import get_reference
 from itools.web import BaseView, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
@@ -488,13 +488,7 @@ class MonthlyView(CalendarView):
         # Current date
         c_date = context.get_form_value('start')
         c_date = get_current_date(c_date)
-        # Save selected date
-        context.set_cookie('selected_date', c_date)
 
-        # Method
-        method = context.get_cookie('method')
-        if method != 'monthly_view':
-            context.set_cookie('method', 'monthly_view')
         # Display link to add/edit an event
         with_new_url = self.get_with_new_url(resource, context)
 
@@ -607,16 +601,7 @@ class WeeklyView(CalendarView):
     def get_namespace(self, resource, context, ndays=7):
         # Current date
         c_date = context.get_form_value('start')
-        if not c_date:
-            c_date = context.get_cookie('selected_date')
         c_date = get_current_date(c_date)
-        # Save selected date
-        context.set_cookie('selected_date', c_date)
-
-        # Method
-        method = context.get_cookie('method')
-        if method != 'weekly_view':
-            context.set_cookie('method', 'weekly_view')
 
         # Calculate start of current week: 0 = Monday, ..., 6 = Sunday
         weekday = c_date.weekday()
@@ -678,7 +663,6 @@ class DailyView(CalendarView):
         ac = calendar.get_access_control()
         cal_fields = self.class_cal_fields
         calendar_name = str(calendar.name)
-        args = {'start': Date.encode(c_date), 'method': method}
 
         # Get a dict for each event, compute colspan
         events_by_index = {}
@@ -766,9 +750,6 @@ class DailyView(CalendarView):
                 if colspan > 0:
                     colspan = colspan - 1
                     continue
-                tmp_args = args.copy()
-                tmp_args['start_time'] = Time.encode(start)
-                tmp_args['end_time'] = Time.encode(end)
                 # Init column
                 column =  {'class': None,
                            'colspan': 1,
@@ -777,8 +758,6 @@ class DailyView(CalendarView):
                 # Add event
                 if event and tt_index == event['tt_start']:
                     go_url = event['edit_url']
-                    if go_url:
-                        go_url = '%s&%s' % (go_url, encode_query(args))
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
                     else:
@@ -803,11 +782,10 @@ class DailyView(CalendarView):
         # '+' for daily_view)
         with_new_url = self.get_with_new_url(calendar, context)
         if with_new_url:
-            url = ';new_event?%s' % encode_query(args)
-            url = get_reference(url).replace(resource=calendar_name)
+            url = get_reference(';new_event').replace(resource=calendar_name)
+            f = lambda x: DateTime.encode(datetime.combine(c_date, x))
             header_columns = [
-                url.replace(start_time=Time.encode(x), end_time=Time.encode(y))
-                for x, y in timetables ]
+                url.replace(dtstart=f(x), dtend=f(y)) for x, y in timetables ]
         else:
             header_columns = [ None for x, y in timetables ]
 
@@ -816,15 +794,11 @@ class DailyView(CalendarView):
             'name': calendar.get_title(),
             'rows': rows_namespace,
             'header_columns': header_columns,
-            'url': ';monthly_view?%s' % encode_query(args),
+            'url': ';monthly_view',
             'rowspan': len(rows) + 1}
 
 
     def get_namespace(self, resource, context):
-        method = context.get_cookie('method')
-        if method != 'daily_view':
-            context.set_cookie('method', 'daily_view')
-
         # Current date
         c_date = context.query['start']
         if c_date is None:
