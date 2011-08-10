@@ -40,7 +40,7 @@ from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 class File_NewInstance(AutoAdd):
 
     title = MSG(u'Upload File')
-    fields = ['file', 'title', 'location', 'progressbar']
+    fields = ['file', 'title', 'state', 'location', 'progressbar']
 
     def _get_datatype(self, resource, context, name):
         if name == 'file':
@@ -80,6 +80,7 @@ class File_NewInstance(AutoAdd):
         child = container._make_file(name, filename, mimetype, body, language)
         # 2. Set properties
         self.set_value(child, context, 'title', form)
+        self.set_value(child, context, 'state', form)
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
