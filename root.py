@@ -350,8 +350,7 @@ class Root(AccessControl, Folder):
     ########################################################################
     # Search
     def search(self, query=None, **kw):
-        catalog = get_context().database.catalog
-        return catalog.search(query, **kw)
+        return self.database.catalog.search(query, **kw)
 
 
     ########################################################################

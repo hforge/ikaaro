@@ -76,6 +76,10 @@ class Database(RWDatabase):
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
 
 
+    def search(self, query=None, **kw):
+        return self.catalog.search(query, **kw)
+
+
 
 def make_database(path):
     size_min, size_max = 4800, 5200
