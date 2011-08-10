@@ -21,14 +21,15 @@
 from datetime import datetime, date
 
 # Import from itools
-from itools.datatypes import DateTime, Time, String
+from itools.datatypes import DateTime, Time, String, URI
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import AutoForm, get_default_widget, timestamp_widget
+from autoform import AutoForm, HiddenWidget
+from autoform import get_default_widget, timestamp_widget
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
 import messages
@@ -185,7 +186,8 @@ class AutoEdit(AutoForm):
 
 
     def _get_schema(self, resource, context):
-        schema = {'timestamp': DateTime(readonly=True)}
+        schema = {'timestamp': DateTime(readonly=True),
+                  'referrer': URI}
 
         # Add schema from the resource
         for name in self.get_fields(resource):
@@ -229,7 +231,8 @@ class AutoEdit(AutoForm):
 
 
     def _get_widgets(self, resource, context):
-        widgets = [timestamp_widget]
+        widgets = [timestamp_widget,
+                   HiddenWidget('referrer')]
         for name in self.get_fields(resource):
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
@@ -253,6 +256,9 @@ class AutoEdit(AutoForm):
         # Timestamp
         if name == 'timestamp':
             return context.timestamp
+        elif name == 'referrer':
+            referrer = context.query.get('referrer')
+            return referrer or context.get_referrer()
 
         # Datetime
         if name[-5:] == '_time' and issubclass(datatype, Time):
@@ -323,7 +329,7 @@ class AutoEdit(AutoForm):
         """Return True if an error occurs otherwise False. If an error
         occurs, the context.message must be an ERROR instance.
         """
-        if name.endswith(('_time', '_year', '_day', '_month')):
+        if name.endswith(('_time', '_year', '_day', '_month', 'referrer')):
             return False
         value = form[name]
         if type(value) is dict:
