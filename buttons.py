@@ -151,6 +151,9 @@ class RetireButton(PublishButton):
     css = 'button-retire'
     name = 'retire'
     title = MSG(u'Unpublish')
+
+
+
 class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
