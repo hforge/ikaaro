@@ -687,6 +687,14 @@ class DailyView(CalendarView):
             event = calendar.get_resource(event.abspath)
             event_start = event.get_value('dtstart')
             event_end = event.get_value('dtend')
+            # If no time indications, consider it's an all day event
+            start, end = timetables[0]
+            if type(event_start) is date:
+                event_start = datetime.combine(event_start, start)
+                event_start = context.fix_tzinfo(event_start)
+            if type(event_end) is date:
+                event_end = datetime.combine(event_end, end)
+                event_end = context.fix_tzinfo(event_end)
             # Compute start and end indexes
             tt_start = 0
             tt_end = len(timetables) - 1
