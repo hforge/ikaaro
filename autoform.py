@@ -795,19 +795,12 @@ class AutoForm(STLView):
         enctype = 'multipart/form-data' if self.method == 'post' else None
         # Get the actions
         actions = self._get_action_namespace(resource, context)
-        action = None
-        if len(actions) == 1:
-            # If one action, remove the value parameter
-            # to simulate old functionment
-            action = context.uri
-            actions[0].name = None
 
         # Build namespace
         return {
             'form_id': self.form_id,
             'before': None,
             'actions': actions,
-            'action': action,
             'method': self.method,
             'enctype': enctype,
             'onsubmit': onsubmit,
