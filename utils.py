@@ -208,6 +208,9 @@ def get_base_path_query(abspath, include_container=False, depth=0):
     If 'depth' is 0, depth is unlimited, else depth is the generations of
     children to limit the search to.
     """
+    if type(abspath) is not str:
+        abspath = str(abspath)
+
     # Case 1: everything
     if abspath == '/' and include_container is True:
         return AllQuery()
@@ -217,19 +220,16 @@ def get_base_path_query(abspath, include_container=False, depth=0):
         return PhraseQuery('parent_paths', '/')
 
     # Case 3: some subfolder
-    content = PhraseQuery('parent_paths', str(abspath))
+    content = PhraseQuery('parent_paths', abspath)
     if depth > 0:
-        if type(abspath) is str:
-            min_depth = abspath.rstrip('/').count('/')
-        else:
-            min_depth = len(abspath)
+        min_depth = abspath.rstrip('/').count('/')
         max_depth = min_depth + depth
         content = AndQuery(content,
                 RangeQuery('abspath_depth', min_depth, max_depth))
     if include_container is False:
         return content
 
-    container = PhraseQuery('abspath', str(abspath))
+    container = PhraseQuery('abspath', abspath)
     return OrQuery(container, content)
 
 
