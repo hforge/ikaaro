@@ -21,6 +21,7 @@ configuration plugins.
 
 # Import from ikaaro
 from autoadd import AutoAdd
+from database import Database
 from folder_views import Folder_NewResource
 
 
@@ -48,4 +49,6 @@ class NewResource_Local(Folder_NewResource):
     access = 'is_admin'
 
     def get_items(self, resource, context):
-        return resource.get_document_types()
+        document_types = tuple(resource.get_document_types())
+        return [cls for cls in Database.resources_registry.values()
+                    if issubclass(cls, document_types)]
