@@ -18,27 +18,27 @@
 from itools.core import merge_dicts
 from itools.datatypes import String
 from itools.web import BaseView, get_context
+from itools.web import STLView
 
 # Import from ikaaro
 from autoadd import AutoAdd
-from views import CompositeView
 
 
-class DataStore_Proxy(CompositeView):
+class DataStore_Proxy(STLView):
 
 
     def GET(self, resource, context):
         resource = self.get_datastore_resource()
         if resource is None:
             raise ValueError, 'This datastore resource do not exist'
-        return super(DataStore_Proxy, self).GET(resource, context)
+        return self.get_view().GET(resource, context)
 
 
     def POST(self, resource, context):
         resource = self.get_datastore_resource()
         if resource is None:
             raise ValueError, 'This datastore resource do not exist'
-        return super(DataStore_Proxy, self).POST(resource, context)
+        return self.get_view().POST(resource, context)
 
 
     def get_query_schema(self):
@@ -52,9 +52,9 @@ class DataStore_Proxy(CompositeView):
 
 
     def get_view(self):
-        query = get_context().query
-        view = getattr(self.get_datastore_resource(), query['view'], None)
-        if not view or not issubclass(view.__class__, BaseView):
+        resource = self.get_datastore_resource()
+        view = resource.get_view(get_context().query['view'])
+        if view is None:
             raise ValueError, 'This view do not exist'
         return view
 
@@ -62,11 +62,6 @@ class DataStore_Proxy(CompositeView):
     @property
     def access(self):
         return self.get_view().access
-
-
-    @property
-    def subviews(self):
-        return [self.get_view()]
 
 
 
