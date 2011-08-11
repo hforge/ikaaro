@@ -14,11 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from random import random
+
 # Import from itools
 from itools.gettext import MSG
 
 # Import from ikaaro
 from folder import Folder
+
+
+def new_name():
+    name = '%.20f' % random()
+    return name[2:]
+
 
 
 class DataStore(Folder):
@@ -27,3 +36,10 @@ class DataStore(Folder):
     class_title = MSG(u'Data Store')
 
     is_content = False
+
+
+    def make_resource_name(self, new_name=new_name):
+        name = new_name()
+        while self.get_resource(name, soft=True):
+            name = new_name()
+        return name
