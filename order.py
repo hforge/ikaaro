@@ -186,7 +186,7 @@ class OrderedFolder(Folder):
     def make_resource(self, name, cls, **kw):
         resource = super(OrderedFolder, self).make_resource(name, cls, **kw)
         order = self.get_value('order')
-        order = order + [name]
+        order = order + [resource.name]
         self.set_value('order', order)
         return resource
 
