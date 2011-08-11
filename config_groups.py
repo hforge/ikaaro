@@ -38,7 +38,7 @@ class UserGroupsDatatype(Enumerate):
 
     def get_options(self):
         config = get_context().root.get_resource('config')
-        groups = [ {'name': group.name, 'value': group.get_title()}
+        groups = [ {'name': str(group.abspath), 'value': group.get_title()}
                    for group in config.get_resources('groups') ]
 
         # Special groups
@@ -67,22 +67,19 @@ class Group_BrowseUsers(BrowseUsers):
         if column == 'checkbox':
             user = context.root.get_resource(item.abspath)
             groups = user.get_value('groups')
-            return item.name, (resource.name in groups)
+            return item.name, str(resource.abspath) in groups
 
         proxy = super(Group_BrowseUsers, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
     def action(self, resource, context, form):
-        group_id = resource.name
+        group_id = str(resource.abspath)
 
-        users = context.root.get_resource('users')
-
-        ac = resource.get_access_control()
-        for username in ac.get_members():
-            user = users.get_resource(username)
+        root = resource.get_resource('/')
+        for user in root.get_resources('users'):
             groups = set(user.get_value('groups'))
-            if username in form['ids']:
+            if user.name in form['ids']:
                 groups.add(group_id)
             else:
                 groups.discard(group_id)
@@ -125,7 +122,7 @@ class BrowseGroups(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
             brain, item_resource = item
-            results = context.database.catalog.search(groups=brain.name)
+            results = context.database.catalog.search(groups=brain.abspath)
             return len(results)
 
         proxy = super(BrowseGroups, self)

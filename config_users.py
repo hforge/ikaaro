@@ -59,45 +59,33 @@ class AddUser(AutoForm):
 
     def _add(self, resource, context, form):
         root = context.root
-        user = context.user
-        users = root.get_resource('users')
 
         # Check whether the user already exists
         email = form['email'].strip()
         results = root.search(email=email)
         if len(results):
-            user_id = results.get_documents()[0].name
-        else:
-            user_id = None
+            context.message = ERROR(u'The user is already here.')
+            return None
 
-        # Get the user (create it if needed)
-        if user_id is None:
-            # New user
-            password = form['newpass']
-            password2 = form['newpass2']
-            # Check the password is right
-            if password != password2:
-                context.message = MSG_PASSWORD_MISMATCH
-                return None
-            if not password:
-                # Admin can set no password
-                # so the user must activate its account
-                password = None
-            # Add the user
-            user = root.make_user(password=password)
-            user.set_property('email', email)
-            user_id = user.name
-            if password is None:
-                # Send confirmation email to activate the account
-                user.send_confirmation(context, email)
-            else:
-                user.send_registration(context, email)
+        # Create user
+        password = form['newpass']
+        password2 = form['newpass2']
+        # Check the password is right
+        if password != password2:
+            context.message = MSG_PASSWORD_MISMATCH
+            return None
+        if not password:
+            # Admin can set no password
+            # so the user must activate its account
+            password = None
+        # Add the user
+        user = root.make_user(password=password)
+        user.set_property('email', email)
+        user_id = user.name
+        if password is None:
+            # Send confirmation email to activate the account
+            user.send_confirmation(context, email)
         else:
-            user = users.get_resource(user_id)
-            # Check the user is not yet in the group
-            if user_id in root.get_members():
-                context.message = ERROR(u'The user is already here.')
-                return None
             user.send_registration(context, email)
 
         return user_id

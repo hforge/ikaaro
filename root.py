@@ -56,7 +56,7 @@ from skins import skin_registry
 from user import UserFolder
 from root_views import AboutView, ContactForm, CreditsView
 from root_views import NotFoundView, ForbiddenView
-from root_views import WebSite_NewInstance, UploadStatsView
+from root_views import UploadStatsView
 from workflow import WorkflowAware
 
 
@@ -77,7 +77,7 @@ def is_admin(user, resource):
     if user is None or resource is None:
         return False
 
-    return 'admins' in user.get_value('groups')
+    return '/config/groups/admins' in user.get_value('groups')
 
 
 
@@ -123,7 +123,7 @@ class Root(AccessControl, Folder):
         # Users
         self.make_resource('users', UserFolder, title={'en': u'Users'})
         user = self.make_user(email, password)
-        user.set_property('groups', ['admins'])
+        user.set_value('groups', ['/config/groups/admins'])
 
         # Configuration
         config = self.make_resource('config', Configuration,
@@ -143,17 +143,17 @@ class Root(AccessControl, Folder):
             ('authenticated', 'view', 'any-content'),
             # Members can add new content, edit private content and request
             # publication
-            ('members', 'add', 'any-content'),
-            ('members', 'edit', 'private-content'),
+            ('/config/groups/members', 'add', 'any-content'),
+            ('/config/groups/members', 'edit', 'private-content'),
             # Reviewers can add new content, edit any content and publish
-            ('reviewers', 'add', 'any-content'),
-            ('reviewers', 'edit', 'any-content'),
-            ('reviewers', 'change_state', 'any-content'),
+            ('/config/groups/reviewers', 'add', 'any-content'),
+            ('/config/groups/reviewers', 'edit', 'any-content'),
+            ('/config/groups/reviewers', 'change_state', 'any-content'),
             # Admins can do anything
-            ('admins', 'view', None),
-            ('admins', 'edit', None),
-            ('admins', 'add', None),
-            ('admins', 'change_state', None),
+            ('/config/groups/admins', 'view', None),
+            ('/config/groups/admins', 'edit', None),
+            ('/config/groups/admins', 'add', None),
+            ('/config/groups/admins', 'change_state', None),
         ]
         access = config.get_resource('access')
         for group, permission, resources in permissions:
@@ -463,14 +463,6 @@ class Root(AccessControl, Folder):
         return user
 
 
-    def get_groups(self):
-        return self.get_names('config/groups')
-
-
-    def get_members(self):
-        return set(self.get_names('users'))
-
-
     def is_allowed_to_register(self, user, resource):
         if user:
             return False
@@ -560,7 +552,6 @@ class Root(AccessControl, Folder):
     #######################################################################
     # Views
     #######################################################################
-    new_instance = WebSite_NewInstance()
     register = RegisterForm()
     # Public views
     contact = ContactForm()

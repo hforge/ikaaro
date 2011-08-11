@@ -31,7 +31,7 @@ from itools.web import INFO
 # Import from ikaaro
 from autoedit import AutoEdit
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
-from fields import File_Field
+from fields import File_Field, URI_Field
 from folder import Folder
 from resource_ import DBResource
 from user_views import User_ConfirmRegistration, User_EditAccount
@@ -71,7 +71,7 @@ class User(DBResource):
     user_language = Char_Field
     user_timezone = Char_Field
     user_must_confirm = Char_Field
-    groups = Char_Field(multiple=True, indexed=True)
+    groups = URI_Field(multiple=True, indexed=True)
     # Metadata (backwards compatibility)
     username = Char_Field(indexed=True, stored=True)
 
@@ -100,10 +100,6 @@ class User(DBResource):
         values['groups'] = self.get_value('groups')
 
         return values
-
-
-    def get_links(self):
-        return set(self.get_value('groups'))
 
 
     ########################################################################
@@ -160,12 +156,6 @@ class User(DBResource):
     login_name_property = 'email'
     def get_login_name(self):
         return self.get_value(self.login_name_property)
-
-
-    def get_groups(self):
-        """Returns all the role aware handlers where this user is a member.
-        """
-        return tuple(self.get_value('groups'))
 
 
     def get_timezone(self):

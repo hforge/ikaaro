@@ -578,7 +578,7 @@ class Observable(object):
 
 
     def subscribe_user(self, email=None, user=None):
-        root = self.get_root()
+        root = self.get_resource('/')
 
         # Get the user
         if user is None:
@@ -594,13 +594,8 @@ class Observable(object):
             # Mark it as new
             user.set_property('user_must_confirm', generate_password(30))
 
-        # Set the role
-        username = user.name
-        if username not in root.get_members():
-            root.set_user_role(username, role='guests')
-
         # Add to subscribers list
-        self.reset_register_key(username)
+        self.reset_register_key(user.name)
 
         return user
 

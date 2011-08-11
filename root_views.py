@@ -32,12 +32,10 @@ from itools.fs import lfs
 from itools.web import BaseView, STLView, INFO
 
 # Import from ikaaro
-from autoadd import AutoAdd
 from autoform import AutoForm
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from config_captcha import CaptchaDatatype, CaptchaWidget
-from messages import MSG_NEW_RESOURCE
 
 
 
@@ -226,34 +224,3 @@ class CreditsView(STLView):
         names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
 
         return {'hackers': names}
-
-
-
-vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
-    tip=MSG(u'Type the hostnames this website will apply to, each one in a'
-            u' different line.'))
-
-class WebSite_NewInstance(AutoAdd):
-
-    fields = ['title', 'location', 'vhosts']
-
-    def action(self, resource, context, form):
-        # 1. Make the resource
-        container = form['container']
-        class_id = context.query['type']
-        cls = context.database.get_resource_class(class_id)
-        child = container.make_resource(form['name'], cls)
-        # 2. Set properties
-        self.set_value(child, context, 'title', form)
-        vhosts = [ x.strip() for x in form['vhosts'] ]
-        vhosts = [ x for x in vhosts if x ]
-        child.metadata.set_property('vhosts', vhosts)
-        # 3. Add initial user
-        user = context.user
-        user = resource.copy_resource(user.get_abspath(),
-                                      '%s/users/0' % child.get_abspath())
-        user.set_property('groups', ['admins'])
-
-        # Ok
-        goto = str(resource.get_pathto(child))
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
