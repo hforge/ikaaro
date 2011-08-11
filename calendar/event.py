@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 # Import from itools
 from itools.database import register_field
@@ -34,6 +34,9 @@ from ikaaro.content import Content
 from ikaaro.datastore_views import DataStore_AutoAdd
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro import messages
+
+# Import from calendar
+from reminders import Reminder_Field
 
 
 # Recurrence
@@ -230,12 +233,13 @@ class Event(Content):
 
 
     fields = Content.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
-                               'uid']
+                               'reminder', 'uid']
     owner = Char_Field(readonly=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = Select_Field(datatype=RRuleDataType, title=MSG(u'Recurrence'))
+    reminder = Reminder_Field(title=MSG(u'Reminder'))
     uid = Char_Field(readonly=True)
 
 
@@ -282,10 +286,30 @@ class Event(Content):
         return sorted(dates)
 
 
+    def get_reminders(self):
+        reminder = self.get_value('reminder')
+        if not reminder:
+            return []
+        reminders = []
+        # Get start time
+        dtstart = self.get_value('dtstart')
+        if type(dtstart) is datetime:
+            start_time = dtstart.time()
+        else:
+            # If no time, start_time is midnight
+            start_time = time(0)
+        # For every date (reccurences) we add a reminder
+        for d in self.get_dates():
+            d_time = datetime.combine(d, start_time)
+            reminders.append(d_time - timedelta(seconds=reminder))
+        return reminders
+
+
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
         values['is_event'] = True
         values['dates'] = self.get_dates()
+        values['reminders'] = self.get_reminders()
         return values
 
 
@@ -399,5 +423,6 @@ class Event(Content):
 
 # Register
 register_field('dates', Date(indexed=True, multiple=True))
+register_field('reminders', DateTime(indexed=True, multiple=True))
 register_field('is_event', Boolean(indexed=True))
 register_model_base_class(Event)
