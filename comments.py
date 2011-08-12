@@ -29,7 +29,7 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 # Import from ikaaro
 from autoform import HiddenWidget, SelectWidget
 from buttons import Button
-from fields import Select_Field, Text_Field, URI_Field
+from fields import Select_Field, Text_Field
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 
@@ -182,10 +182,9 @@ class Comment(DBResource):
     class_title = MSG(u'Comment')
 
     # Fields
-    fields = ['mtime', 'last_author', 'description', 'related_to', 'state']
+    fields = ['mtime', 'last_author', 'description', 'state']
     title = None
     subject = None
-    related_to = URI_Field(indexed=True, readonly=True)
     state = CommentState_Field()
 
     # Views
@@ -285,7 +284,8 @@ class CommentsAware(object):
             state may be a string, a tuple or a list.
         """
         root = self.get_resource('/')
-        comments = root.search(format='comment', related_to=str(self.abspath))
+        abspath = str(self.abspath)
+        comments = root.search(format='comment', parent_paths=abspath)
         comments = comments.get_documents()
         comments = [ self.get_resource(x.abspath) for x in comments ]
         if state is None:
@@ -302,8 +302,6 @@ class CommentsAware(object):
             root = self.get_resource('/')
             language = root.get_default_language()
 
-        datastore = self.get_resource('/datastore')
-        comment = datastore.make_resource(None, Comment)
+        comment = self.make_resource(None, Comment)
         comment.set_value('description', description, language=language)
-        comment.set_value('related_to', str(self.abspath))
         return comment

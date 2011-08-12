@@ -22,10 +22,11 @@
 # Import from itools
 from itools.core import lazy, is_prototype
 from itools.csv import Property
-from itools.database import register_field
-from itools.database import PhraseQuery, Resource
+from itools.database import Metadata, Resource, register_field
+from itools.database import AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
+from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import AccessControl, BaseView, get_context
@@ -35,6 +36,7 @@ from autoadd import AutoAdd
 from autoedit import AutoEdit
 from database import Database
 from datastore_views import DataStore_Proxy
+from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, Field, File_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
@@ -44,6 +46,7 @@ from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
+from utils import get_base_path_query
 
 
 
@@ -79,10 +82,6 @@ class DBResource(Resource):
 
     def __init__(self, metadata):
         self.metadata = metadata
-
-
-    def _get_names(self):
-        raise NotImplementedError
 
 
     def __eq__(self, resource):
@@ -127,9 +126,42 @@ class DBResource(Resource):
 
 
     def get_pathto(self, resource):
-        # XXX brain.abspath is the canonical path
-        # not the possible virtual path
-        return self.get_abspath().get_pathto(resource.abspath)
+        return self.abspath.get_pathto(resource.abspath)
+
+
+    #######################################################################
+    # API / Folderish
+    #######################################################################
+    __fixed_handlers__ = [] # Resources that cannot be removed
+
+
+    @property
+    def handler(self):
+        cls = FolderHandler
+        key = self.metadata.key[:-9]
+        handler = self.database.get_handler(key, cls=cls, soft=True)
+        if handler is None:
+            handler = cls()
+            self.database.push_phantom(key, handler)
+
+        return handler
+
+
+    def get_handlers(self):
+        """Return all the handlers attached to this resource, except the
+        metadata.
+        """
+        handlers = [
+            field.get_value(self, name) for name, field in self.get_fields()
+            if issubclass(field, File_Field) ]
+        handlers.append(self.handler)
+        return handlers
+
+
+    def _get_names(self):
+        folder = self.handler
+        return [ x[:-9] for x in folder.get_handler_names()
+                 if x[-9:] == '.metadata' ]
 
 
     def get_names(self, path='.'):
@@ -156,8 +188,78 @@ class DBResource(Resource):
             yield here.get_resource(name)
 
 
-    def del_resource(self, path, soft=False):
-        raise NotImplementedError
+    def make_resource_name(self):
+        max_id = -1
+        for name in self.get_names():
+            # Mixing explicit and automatically generated names is allowed
+            try:
+                id = int(name)
+            except ValueError:
+                continue
+            if id > max_id:
+                max_id = id
+
+        return str(max_id + 1)
+
+
+    def make_resource(self, name, cls, **kw):
+        if name is None:
+            name = self.make_resource_name()
+
+        # Make the metadata
+        metadata = Metadata(cls=cls)
+        self.handler.set_handler('%s.metadata' % name, metadata)
+        metadata.set_property('mtime', get_context().timestamp)
+        # Initialize
+        resource = self.get_resource(name)
+        resource.init_resource(**kw)
+        # Ok
+        self.database.add_resource(resource)
+        return resource
+
+
+    def del_resource(self, name, soft=False, ref_action='restrict'):
+        """ref_action allows to specify which action is done before deleting
+        the resource.
+        ref_action can take 2 values:
+        - 'restrict' (default value): do an integrity check
+        - 'force': do nothing
+        """
+
+        database = self.database
+        resource = self.get_resource(name, soft=soft)
+        if soft and resource is None:
+            return
+
+        # Referential action
+        if ref_action == 'restrict':
+            # Check referencial-integrity
+            catalog = database.catalog
+            # FIXME Check sub-resources too
+            path = resource.get_abspath()
+            path_str = str(path)
+            query_base_path = get_base_path_query(path)
+            query = AndQuery(PhraseQuery('links', path_str),
+                             NotQuery(query_base_path))
+            results = catalog.search(query)
+            if len(results):
+                message = 'cannot delete, resource "%s" is referenced' % path
+                raise ConsistencyError, message
+        elif ref_action == 'force':
+            # Do not check referencial-integrity
+            pass
+        else:
+            raise ValueError, 'Incorrect ref_action "%s"' % ref_action
+
+        # Events, remove
+        database.remove_resource(resource)
+        # Remove
+        fs = database.fs
+        for handler in resource.get_handlers():
+            # Skip empty folders and phantoms
+            if fs.exists(handler.key):
+                database.del_handler(handler.key)
+        self.handler.del_handler('%s.metadata' % name)
 
 
     def copy_resource(self, source, target):
@@ -170,6 +272,10 @@ class DBResource(Resource):
 
     def traverse_resources(self):
         yield self
+        for name in self._get_names():
+            resource = self.get_resource(name)
+            for x in resource.traverse_resources():
+                yield x
 
 
     #######################################################################
@@ -335,7 +441,11 @@ class DBResource(Resource):
     # Versioning
     ########################################################################
     def get_files_to_archive(self, content=False):
-        raise NotImplementedError
+        metadata = self.metadata.key
+        if content is True:
+            folder = self.handler.key
+            return [metadata, folder]
+        return [metadata]
 
 
     def get_revisions(self, n=None, content=False, author_pattern=None,
@@ -442,15 +552,6 @@ class DBResource(Resource):
     ########################################################################
     # API
     ########################################################################
-    def get_handlers(self):
-        """Return all the handlers attached to this resource, except the
-        metadata.
-        """
-        return [ field.get_value(self, name)
-                 for name, field in self.get_fields()
-                 if issubclass(field, File_Field) ]
-
-
     def rename_handlers(self, new_name):
         """Consider we want to rename this resource to the given 'new_name',
         return the old a new names for all the attached handlers (except the

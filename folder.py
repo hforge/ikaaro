@@ -23,15 +23,14 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 
 # Import from itools
-from itools.database import Metadata, AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.handlers import checkid, Folder as FolderHandler
+from itools.handlers import checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import get_context, BaseView
+from itools.web import BaseView
 
 # Import from ikaaro
 from database import Database
@@ -42,7 +41,6 @@ from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from resource_ import DBResource
-from utils import get_base_path_query
 
 
 
@@ -56,32 +54,6 @@ class Folder(DBResource):
     class_icon48 = 'icons/48x48/folder.png'
     class_views = ['view', 'browse_content', 'preview_content', 'edit',
                    'links', 'backlinks', 'commit_log']
-    class_handler = FolderHandler
-
-
-    # Aggregation relationship (what a generic folder can contain)
-    __fixed_handlers__ = []
-
-
-    @property
-    def handler(self):
-        cls = self.class_handler
-        key = self.metadata.key[:-9]
-        handler = self.database.get_handler(key, cls=cls, soft=True)
-        if handler is None:
-            handler = cls()
-            self.database.push_phantom(key, handler)
-
-        return handler
-
-
-    def get_handlers(self):
-        """Return all the handlers attached to this resource, except the
-        metadata.
-        """
-        handlers = super(Folder, self).get_handlers()
-        handlers.append(self.handler)
-        return handlers
 
 
     #########################################################################
@@ -102,47 +74,9 @@ class Folder(DBResource):
                  for class_id in document_types ]
 
 
-    def get_files_to_archive(self, content=False):
-        metadata = self.metadata.key
-        if content is True:
-            folder = self.handler.key
-            return [metadata, folder]
-        return [metadata]
-
-
     #######################################################################
     # API
     #######################################################################
-    def make_resource_name(self):
-        max_id = -1
-        for name in self.get_names():
-            # Mixing explicit and automatically generated names is allowed
-            try:
-                id = int(name)
-            except ValueError:
-                continue
-            if id > max_id:
-                max_id = id
-
-        return str(max_id + 1)
-
-
-    def make_resource(self, name, cls, **kw):
-        if name is None:
-            name = self.make_resource_name()
-
-        # Make the metadata
-        metadata = Metadata(cls=cls)
-        self.handler.set_handler('%s.metadata' % name, metadata)
-        metadata.set_property('mtime', get_context().timestamp)
-        # Initialize
-        resource = self.get_resource(name)
-        resource.init_resource(**kw)
-        # Ok
-        self.database.add_resource(resource)
-        return resource
-
-
     def _make_file(self, name, filename, mimetype, body, default_language):
         from webpage import WebPage
 
@@ -283,56 +217,6 @@ class Folder(DBResource):
         return isinstance(source, allowed_types)
 
 
-    def _get_names(self):
-        folder = self.handler
-        return [ x[:-9] for x in folder.get_handler_names()
-                 if x[-9:] == '.metadata' ]
-
-
-    def del_resource(self, name, soft=False, ref_action='restrict'):
-        """ref_action allows to specify which action is done before deleting
-        the resource.
-        ref_action can take 2 values:
-        - 'restrict' (default value): do an integrity check
-        - 'force': do nothing
-        """
-
-        database = self.database
-        resource = self.get_resource(name, soft=soft)
-        if soft and resource is None:
-            return
-
-        # Referential action
-        if ref_action == 'restrict':
-            # Check referencial-integrity
-            catalog = database.catalog
-            # FIXME Check sub-resources too
-            path = resource.get_abspath()
-            path_str = str(path)
-            query_base_path = get_base_path_query(path)
-            query = AndQuery(PhraseQuery('links', path_str),
-                             NotQuery(query_base_path))
-            results = catalog.search(query)
-            if len(results):
-                message = 'cannot delete, resource "%s" is referenced' % path
-                raise ConsistencyError, message
-        elif ref_action == 'force':
-            # Do not check referencial-integrity
-            pass
-        else:
-            raise ValueError, 'Incorrect ref_action "%s"' % ref_action
-
-        # Events, remove
-        database.remove_resource(resource)
-        # Remove
-        fs = database.fs
-        for handler in resource.get_handlers():
-            # Skip empty folders and phantoms
-            if fs.exists(handler.key):
-                database.del_handler(handler.key)
-        self.handler.del_handler('%s.metadata' % name)
-
-
     def _resolve_source_target(self, source_path, target_path):
         if type(source_path) is not Path:
             source_path = Path(source_path)
@@ -432,14 +316,6 @@ class Folder(DBResource):
             dst_key = fs.resolve(target_path, new_name)
             if folder.has_handler(src_key):
                 folder.move_handler(src_key, dst_key)
-
-
-    def traverse_resources(self):
-        yield self
-        for name in self._get_names():
-            resource = self.get_resource(name)
-            for x in resource.traverse_resources():
-                yield x
 
 
     def search_resources(self, cls=None, format=None, state=None):
