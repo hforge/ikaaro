@@ -29,7 +29,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.autoedit import AutoEdit
-from ikaaro.config_models import register_model_base_class
+from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.datastore_views import DataStore_AutoAdd
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
@@ -421,8 +421,16 @@ class Event(Content):
 
 
 
+class EventModel(Model):
+
+    class_id = 'model-event'
+    class_title = MSG(u'Event model')
+
+    base_class = Event
+
+
+
 # Register
 register_field('dates', Date(indexed=True, multiple=True))
 register_field('reminders', DateTime(indexed=True, multiple=True))
 register_field('is_event', Boolean(indexed=True))
-register_model_base_class(Event)

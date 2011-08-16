@@ -28,11 +28,12 @@ from ikaaro.root import Root
 from calendar_ import ConfigCalendar
 from calendar_views import MonthlyView, WeeklyView, DailyView
 from calendar_views import Calendar_NewEvent
-from event import Event, Event_Edit, Event_NewInstance
+from event import Event, EventModel, Event_Edit, Event_NewInstance
 
 
 __all__ = [
     'Event',
+    'EventModel',
     'MonthlyView',
     'WeeklyView']
 

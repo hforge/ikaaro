@@ -14,13 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from operator import itemgetter
-
 # Import from itools
-from itools.core import proto_property
 from itools.gettext import MSG
-from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -143,33 +138,9 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
 ###########################################################################
 # The model resource
 ###########################################################################
-models_registry = set()
-
-def register_model_base_class(cls):
-    models_registry.add(cls.class_id)
-
-
-def unregister_model_base_class(cls):
-    models_registry.discard(cls.class_id)
-
-
-
-class BaseClass_Field(Select_Field):
-
-    @proto_property
-    def options(self):
-        database = get_context().database
-        options = [
-            {'name': x, 'value': database.get_resource_class(x).class_title}
-            for x in models_registry ]
-        options.sort(key=itemgetter('value'))
-        return options
-
-
-
 class Model_NewInstance(NewInstance_Local):
 
-    fields = ['base_class', 'title']
+    fields = ['title']
 
     def make_new_resource(self, resource, context, form):
         proxy = super(Model_NewInstance, self)
@@ -179,9 +150,7 @@ class Model_NewInstance(NewInstance_Local):
 
         # Create the inherited fields
         field_names = []
-        class_id = child.get_value('base_class')
-        cls = child.database.get_resource_class(class_id)
-        for field_name, field in cls.get_fields():
+        for field_name, field in child.base_class.get_fields():
             if not field.readonly:
                 child.make_resource(field_name, ModelField_Inherited)
                 field_names.append(field_name)
@@ -211,13 +180,10 @@ class Model_Browse(OrderedFolder_BrowseContent):
 
 class Model(OrderedFolder):
 
-    class_id = 'model'
-    class_title = MSG(u'...')
+    class_title = MSG(u'Base model')
     class_description = MSG(u'...')
 
     # Fields
-    fields = Folder.fields + ['base_class']
-    base_class = BaseClass_Field(required=True, title=MSG(u'Base class'))
     title = Folder.title(required=True)
 
     # Views
@@ -243,8 +209,7 @@ class Model(OrderedFolder):
 
     def build_resource_class(self):
         # bases
-        base_class = self.get_value('base_class')
-        base_class = self.database.get_resource_class(base_class)
+        base_class = self.base_class
         bases = (base_class,)
         # dict
         class_dict = {
@@ -305,6 +270,14 @@ class ConfigModels(Folder):
     # Configuration
     config_name = 'models'
     config_group = 'content'
+
+    # API
+    def get_dynamic_classes(self):
+        database = self.database
+        for model in self.get_resources():
+            class_id = str(model.abspath)
+            yield database.get_resource_class(class_id)
+
 
     # Views
     class_views = ['browse_content', 'add_model', 'edit', 'commit_log']

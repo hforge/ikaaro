@@ -895,5 +895,10 @@ class Calendar_NewEvent(Folder_NewResource):
 
 
     def get_items(self, resource, context):
+        # 1. Load dynamic classes
+        models = resource.get_resource('/config/models')
+        list(models.get_dynamic_classes())
+
+        # 2. The document types
         return [ x for x in Database.resources_registry.values()
                  if issubclass(x, Event) ]

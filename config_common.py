@@ -49,6 +49,11 @@ class NewResource_Local(Folder_NewResource):
     access = 'is_admin'
 
     def get_items(self, resource, context):
+        # 1. Load dynamic classes
+        models = resource.get_resource('/config/models')
+        list(models.get_dynamic_classes())
+
+        # 2. The document types
         document_types = tuple(resource.get_document_types())
-        return [cls for cls in Database.resources_registry.values()
-                    if issubclass(cls, document_types)]
+        return [ cls for cls in Database.resources_registry.values()
+                 if issubclass(cls, document_types) ]
