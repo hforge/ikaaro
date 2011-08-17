@@ -231,6 +231,8 @@ class Event(Content):
     class_icon48 = 'icons/48x48/event.png'
     class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
+    event_edit_views = ['edit']
+
 
     fields = Content.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
                                'reminder', 'uid']
@@ -388,7 +390,21 @@ class Event(Content):
             status = self.get_value('status')
             if status:
                 ns['status'] = status
-
+        ###############################################################
+        # Event links
+        # XXX Only used on monthly view. we have to generalize that
+        ns['links'] = []
+        url = './;proxy?id={id}&view={view}'
+        ac = self.get_access_control()
+        user = get_context().user
+        title = self.get_title()
+        for i, view_name in enumerate(self.event_edit_views):
+            view = getattr(self, view_name, None)
+            if ac.is_access_allowed(user, self, view):
+                ns['links'].append(
+                    {'title': u'*' if i > 0 else title,
+                     'url': url.format(id=self.name, view=view_name),
+                     'name': view_name})
         return ns
 
 
