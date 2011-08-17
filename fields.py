@@ -394,6 +394,11 @@ class File_Field(Field):
         if self.multilingual and not language:
             raise ValueError, 'expected "language" param not found'
 
+        # FIXME This should remove the handler, the FileWidget should include
+        # a checkbox to remove the handler
+        if value is None:
+            return
+
         # Set handler
         handler = self._get_handler_from_value(value)
         key = self._get_key(resource, name, language)
