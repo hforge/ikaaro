@@ -104,8 +104,6 @@ class ConfigCalendar(DBResource):
     config_group = 'content'
 
 
-    colors = ['#AC81A1', '#719C71', '#C1617C', '#A0A5B5', '#A59580']
-
 
     fields = DBResource.fields + ['timetables']
     timetables = Char_Field(datatype=Timetables, multiple=True)

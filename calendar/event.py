@@ -415,6 +415,10 @@ class Event(Content):
         return subject, body
 
 
+    def get_color(self):
+        return '#AC81A1'
+
+
     # Views
     new_instance = Event_NewInstance()
     edit = Event_Edit()

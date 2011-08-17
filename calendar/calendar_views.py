@@ -383,34 +383,6 @@ class CalendarView(STLView):
         return resource.get_resource('/config/calendar')
 
 
-    def get_colors(self, resource):
-        return self.get_config_calendar(resource).colors
-
-
-    def get_color(self, resource, event, colors=None):
-        if colors is None:
-            colors = self.get_colors(resource)
-
-        # Load or initialize the colors cache
-        cache_colors = getattr(self, 'cache_colors', None)
-        if cache_colors is None:
-            self.cache_colors = {}
-            cache_colors = self.cache_colors
-        cache_used_colors = getattr(self, 'cache_used_colors', 0)
-
-        # Cache lookup
-        organizer = event.get_owner()
-        color = cache_colors.get(organizer, None)
-        if color is None:
-            # Choose color for current organizer
-            color = colors[cache_used_colors % len(colors)]
-            # Update cache
-            cache_colors[organizer] = color
-            self.cache_used_colors = cache_used_colors + 1
-
-        return color
-
-
     def events_to_namespace(self, resource, events, day, grid=False,
                             show_conflicts=False):
         """Build namespace for events occuring on current day.
@@ -457,7 +429,7 @@ class CalendarView(STLView):
                 url = None
             ns_event['url'] = url
             ns_event['cal'] = 0
-            ns_event['color'] = self.get_color(resource, event, None)
+            ns_event['color'] = event.get_color()
             ns_event.setdefault('resource', {})['color'] = 0
             ns_events.append(ns_event)
 
