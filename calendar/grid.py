@@ -172,7 +172,7 @@ def render_namespace(items, times, with_new_url, current_date):
                     break
                 icell = icell + 1
             # add cell
-            rowspan = times.index(end) - times.index(start)
+            rowspan = max(times.index(end) - times.index(start), 1)
             cell = Cell(Cell.new, item, start, end, rowspan, 1, cal)
             if icell >= len(cells):
                 state.append(rowspan)
