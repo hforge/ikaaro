@@ -20,7 +20,7 @@ from operator import itemgetter
 # Import from itools
 from itools.core import freeze, proto_property
 from itools.csv import Property
-from itools.datatypes import Email, MultiLinesTokens
+from itools.datatypes import Email, Enumerate, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.web import get_context, INFO, ERROR
@@ -446,6 +446,18 @@ class AcceptInvitation(ConfirmSubscription):
 
 
 
+class Followers_Datatype(Enumerate):
+
+    def get_options(self):
+        root = get_context().root
+        options = [
+            {'name': user.name, 'value': user.get_title()}
+            for user in root.get_resources('/users') ]
+
+        options.sort(key=itemgetter('value'))
+        return options
+
+
 class Followers_Widget(SelectWidget):
     has_empty_option = False
 
@@ -453,26 +465,16 @@ class Followers_Widget(SelectWidget):
 class Followers_Field(Select_Field):
 
     parameters_schema = {'status': String, 'key': String}
+    datatype = Followers_Datatype
     widget = Followers_Widget
-
-    @proto_property
-    def options(self):
-        root = get_context().root
-
-        options = []
-        for user in root.get_resources('/users'):
-            value = user.get_title()
-            options.append({'name': user.name, 'value': value})
-
-        options.sort(key=itemgetter('value'))
-        return options
 
 
 
 class Observable(object):
 
     fields = ['cc_list']
-    cc_list = Followers_Field(multiple=True, title=MSG(u'Followers'))
+    cc_list = Followers_Field(multiple=True, indexed=True,
+                              title=MSG(u'Followers'))
 
     confirm_register_subject = MSG(u"Confirmation required")
     confirm_register_text = MSG(
