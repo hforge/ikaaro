@@ -155,17 +155,18 @@ class AutoAdd(AutoForm):
             return referrer or context.get_referrer()
 #       elif name == 'path':
 #           return context.root.get_pathto(resource)
-#       elif name in self.get_query_schema():
-#           return context.query[name]
+
+        value = context.query.get(name)
+        if value is None:
+            proxy = super(AutoAdd, self)
+            return proxy.get_value(resource, context, name, datatype)
 
         if getattr(datatype, 'multilingual', False):
-            value = {}
             for language in resource.get_edit_languages(context):
-                value[language] = u'' # FIXME
-            return value
+                value.setdefault(language, u'')
 
-        proxy = super(AutoAdd, self)
-        return proxy.get_value(resource, context, name, datatype)
+        return value
+
 
 
     #######################################################################
