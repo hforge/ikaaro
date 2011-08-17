@@ -247,6 +247,7 @@ class AutoAdd(AutoForm):
         container = form['container']
         cls = self._get_resource_class(context)
         child = container.make_resource(form['name'], cls)
+        form['child'] = child
         # 2. Set properties
         schema = self.get_schema(resource, context)
         for name in self.get_fields(cls):
