@@ -303,7 +303,7 @@ def render_namespace(items, times, with_new_url, current_date):
     # render_namespace
     ######################################################################
 
-    url = ';new_resource?type=event&method=weekly_view&'
+    url = ';new_event'
     ns_rows = []
     for cells in table:
         ns_cells = []
@@ -321,7 +321,7 @@ def render_namespace(items, times, with_new_url, current_date):
                 if cell.end is not None:
                     x = datetime.combine(current_date, cell.end)
                     query.append('dtend=%s' % DateTime.encode(x))
-                ns_cell['newurl'] = '%s%s' % (url, '&'.join(query))
+                ns_cell['newurl'] = '%s?%s' % (url, '&'.join(query))
             ns_cells.append(ns_cell)
         ns_rows.append({'cells': ns_cells})
 
