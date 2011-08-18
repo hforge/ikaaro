@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import lazy, is_prototype
+from itools.core import lazy
 from itools.csv import Property
 from itools.database import Metadata, Resource, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
@@ -34,10 +34,9 @@ from itools.web import AccessControl, BaseView, get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from database import Database
 from datastore_views import DataStore_Proxy
 from exceptions import ConsistencyError
-from fields import Char_Field, Datetime_Field, Field, File_Field
+from fields import Char_Field, Datetime_Field, File_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
@@ -50,27 +49,7 @@ from utils import get_base_path_query
 
 
 
-class DBResourceMetaclass(type):
-
-    def __new__(mcs, name, bases, dict):
-        cls = type.__new__(mcs, name, bases, dict)
-        if 'class_id' in dict:
-            Database.register_resource_class(cls)
-
-        # Register fields in the catalog
-        for name, field in cls.get_fields():
-            if field.indexed or field.stored:
-                datatype = field.get_datatype()
-                register_field(name, datatype)
-
-        return cls
-
-
-
 class DBResource(Resource):
-
-    __metaclass__ = DBResourceMetaclass
-    __hash__ = None
 
     class_version = '20071215'
     class_description = None
@@ -225,7 +204,6 @@ class DBResource(Resource):
         - 'restrict' (default value): do an integrity check
         - 'force': do nothing
         """
-
         database = self.database
         resource = self.get_resource(name, soft=soft)
         if soft and resource is None:
@@ -234,14 +212,13 @@ class DBResource(Resource):
         # Referential action
         if ref_action == 'restrict':
             # Check referencial-integrity
-            catalog = database.catalog
             # FIXME Check sub-resources too
             path = resource.get_abspath()
             path_str = str(path)
             query_base_path = get_base_path_query(path)
             query = AndQuery(PhraseQuery('links', path_str),
                              NotQuery(query_base_path))
-            results = catalog.search(query)
+            results = database.search(query)
             if len(results):
                 message = 'cannot delete, resource "%s" is referenced' % path
                 raise ConsistencyError, message
@@ -329,23 +306,6 @@ class DBResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
-    @classmethod
-    def get_field(self, name):
-        field = getattr(self, name, None)
-        if is_prototype(field, Field):
-            return field
-
-        return None
-
-
-    @classmethod
-    def get_fields(self):
-        for name in self.fields:
-            field = self.get_field(name)
-            if field:
-                yield name, field
-
-
     def get_value(self, name, language=None):
         field = self.get_field(name)
         if field is None:
@@ -591,7 +551,7 @@ class DBResource(Resource):
         database = self.database
         target = self.get_abspath()
         query = PhraseQuery('links', source)
-        results = database.catalog.search(query).get_documents()
+        results = database.search(query).get_documents()
         for result in results:
             path = result.abspath
             path = database.resources_old2new.get(path, path)

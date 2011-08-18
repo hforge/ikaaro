@@ -402,7 +402,7 @@ class BrowseUsers(BrowseForm):
         elif column == 'lastname':
             return item.lastname
         elif column == 'account_state':
-            user = context.root.get_resource(item.abspath)
+            user = context.database.get_resource(item.abspath)
             if user.get_value('user_must_confirm'):
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Resend Confirmation'), href

@@ -205,26 +205,27 @@ def get_base_path_query(abspath, include_container=False, depth=0):
     if type(abspath) is not str:
         abspath = str(abspath)
 
-    # Case 1: everything
-    if abspath == '/' and include_container is True:
+    # Case 1: standard case (when the optional parameters are not changed)
+    if include_container is False and depth == 0:
+        return PhraseQuery('parent_paths', abspath)
+
+    # Case 2: special case, everything
+    if abspath == '/' and depth == 0 and include_container is True:
         return AllQuery()
 
-    # Case 2: everything but the root
-    if abspath == '/':
-        return PhraseQuery('parent_paths', '/')
-
-    # Case 3: some subfolder
-    content = PhraseQuery('parent_paths', abspath)
+    # Case 3: just something
+    query = PhraseQuery('parent_paths', abspath)
     if depth > 0:
         min_depth = abspath.rstrip('/').count('/')
         max_depth = min_depth + depth
-        content = AndQuery(content,
-                RangeQuery('abspath_depth', min_depth, max_depth))
-    if include_container is False:
-        return content
+        query = AndQuery(query,
+                         RangeQuery('abspath_depth', min_depth, max_depth))
 
-    container = PhraseQuery('abspath', abspath)
-    return OrQuery(container, content)
+    if include_container:
+        container = PhraseQuery('abspath', abspath)
+        return OrQuery(container, query)
+
+    return query
 
 
 ###########################################################################
@@ -237,7 +238,7 @@ def get_content_containers(context, skip_formats):
             continue
 
         # Get the resource
-        container = context.root.get_resource(brain.abspath)
+        container = context.database.get_resource(brain.abspath)
 
         # Exclude /config, /users, ...
         resource = container

@@ -18,9 +18,10 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import freeze, prototype
+from itools.core import freeze
 from itools.csv import Property
 from itools.database import magic
+from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Date, DateTime, Email, Enumerate
 from itools.datatypes import Integer, String, Unicode, URI
 from itools.handlers import get_handler_class_by_mimetype
@@ -40,14 +41,10 @@ from utils import split_reference
 
 
 
-class Field(prototype):
+class Field(BaseField):
 
-    datatype = None
     default = None
     multilingual = False
-    multiple = False
-    indexed = False
-    stored = False
     required = False
     title = None
     hidden_by_default = False

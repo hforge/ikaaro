@@ -639,8 +639,7 @@ class DailyView(CalendarView):
         # Get a dict for each event, compute colspan
         events_by_index = {}
         events = self.search(calendar, dates=c_date)
-        for event in events.get_documents(sort_by='dtstart'):
-            event = calendar.get_resource(event.abspath)
+        for event in events.get_resources(sort_by='dtstart'):
             event_start = event.get_value('dtstart')
             event_end = event.get_value('dtend')
             # If no time indications, consider it's an all day event

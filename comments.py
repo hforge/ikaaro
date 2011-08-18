@@ -283,13 +283,11 @@ class CommentsAware(object):
         """ Get any comment matching given state.
             state may be a string, a tuple or a list.
         """
-        root = self.get_resource('/')
         abspath = str(self.abspath)
-        comments = root.search(format='comment', parent_paths=abspath)
-        comments = comments.get_documents()
-        comments = [ self.get_resource(x.abspath) for x in comments ]
+        comments = self.database.search(format='comment', parent_paths=abspath)
+        comments = comments.get_resources()
         if state is None:
-            return comments
+            return list(comments)
 
         if type(state) not in (tuple, list):
             state = [state]

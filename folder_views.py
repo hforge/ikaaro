@@ -469,8 +469,7 @@ class Folder_BrowseContent(BrowseForm):
         allowed_items = []
         for item in items:
             resource = root.get_resource(item.abspath)
-            ac = resource.get_access_control()
-            if ac.is_allowed_to_view(user, resource):
+            if root.is_allowed_to_view(user, resource):
                 allowed_items.append((item, resource))
 
         return allowed_items

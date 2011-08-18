@@ -350,7 +350,7 @@ class Root(AccessControl, Folder):
     ########################################################################
     # Search
     def search(self, query=None, **kw):
-        return self.database.catalog.search(query, **kw)
+        return self.database.search(query, **kw)
 
 
     ########################################################################
@@ -544,9 +544,8 @@ class Root(AccessControl, Folder):
 
 
     def search_users(self, query):
-        base_path = str(self.get_resource('users').get_abspath())
-        query = AndQuery(PhraseQuery('parent_paths', base_path), query)
-        return self.get_root().search(query)
+        query = AndQuery(PhraseQuery('parent_paths', '/users'), query)
+        return self.database.search(query)
 
 
     #######################################################################

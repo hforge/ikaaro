@@ -139,17 +139,17 @@ class Config_BrokenLinks(STLView):
 
     def get_namespace(self, resource, context):
         # Find out broken links
-        catalog = context.database.catalog
-        base = resource.get_abspath()
+        database = context.database
+        base = resource.abspath
 
         # Search only within the given resource
         query = get_base_path_query(base, include_container=True)
-        results = catalog.search(query)
+        results = database.search(query)
 
         # Find out the broken links
         root = context.root
         broken = {}
-        for link in catalog.get_unique_values('links'):
+        for link in database.catalog.get_unique_values('links'):
             if root.get_resource(link, soft=True) is not None:
                 continue
             sub_results = results.search(PhraseQuery('links', link))

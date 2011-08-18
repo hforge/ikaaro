@@ -122,7 +122,7 @@ class BrowseGroups(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
             brain, item_resource = item
-            results = context.database.catalog.search(groups=brain.abspath)
+            results = context.database.search(groups=brain.abspath)
             return len(results)
 
         proxy = super(BrowseGroups, self)
