@@ -29,12 +29,14 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
+from ikaaro.config_common import NewResource_Local
 from ikaaro.fields import Char_Field
-from ikaaro.resource_ import DBResource
+from ikaaro.folder import Folder
 from calendar_views import Calendar_Export, Calendar_ExportForm
-from calendar_views import Calendar_Import
+from calendar_views import Calendar_Import, Calendar_NewEvent
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
 from event import Event
+from family import Calendar_Family, Families_View
 
 
 ikaaro_to_ics = [
@@ -87,7 +89,7 @@ class Timetables(String):
 
 
 
-class ConfigCalendar(DBResource):
+class ConfigCalendar(Folder):
 
     class_id = 'calendar'
     class_version = '20110606'
@@ -95,7 +97,7 @@ class ConfigCalendar(DBResource):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['edit_timetables',
+    class_views = ['edit_timetables', 'families', 'new_resource',
                    'monthly_view', 'weekly_view', 'daily_view',
                    'import_', 'export_form']
 
@@ -105,7 +107,7 @@ class ConfigCalendar(DBResource):
 
 
 
-    fields = DBResource.fields + ['timetables']
+    fields = Folder.fields + ['timetables']
     timetables = Char_Field(datatype=Timetables, multiple=True)
     timetables_default = [
         (time( 7,0), time( 8,0)),
@@ -124,6 +126,13 @@ class ConfigCalendar(DBResource):
         (time(20,0), time(21,0))]
 
 
+    def init_resource(self, **kw):
+        super(ConfigCalendar, self).init_resource(**kw)
+        # Create default family
+        kw = {'title': {'en': u'My events'}, 'color': '#AC81A1'}
+        self.make_resource(None, Calendar_Family, **kw)
+
+
     def get_timetables(self):
         """Build a list of timetables represented as tuples(start, end).
         Data are taken from metadata or from class value.
@@ -138,6 +147,9 @@ class ConfigCalendar(DBResource):
         # From class value
         return self.timetables_default
 
+
+    def get_document_types(self):
+        return [Calendar_Family]
 
     #######################################################################
     # User Interface
@@ -239,3 +251,6 @@ class ConfigCalendar(DBResource):
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
+    families = Families_View()
+    new_resource = NewResource_Local()
+    new_event = Calendar_NewEvent()

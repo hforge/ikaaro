@@ -36,6 +36,7 @@ from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro import messages
 
 # Import from calendar
+from family import Calendar_FamiliesEnumerate
 from reminders import Reminder_Field
 
 
@@ -234,9 +235,11 @@ class Event(Content):
     event_edit_views = ['edit']
 
 
-    fields = Content.fields + ['owner', 'dtstart', 'dtend', 'status', 'rrule',
-                               'reminder', 'uid']
+    fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
+                               'rrule', 'reminder', 'uid']
     owner = Char_Field(readonly=True)
+    family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
+                title=MSG(u'Calendar'))
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
@@ -432,7 +435,8 @@ class Event(Content):
 
 
     def get_color(self):
-        return '#AC81A1'
+        family = self.get_resource(self.get_value('family'))
+        return family.get_value('color')
 
 
     # Views

@@ -29,9 +29,12 @@ from calendar_ import ConfigCalendar
 from calendar_views import MonthlyView, WeeklyView, DailyView
 from calendar_views import Calendar_NewEvent
 from event import Event, EventModel, Event_Edit, Event_NewInstance
+from family import Calendar_Family, Calendar_FamiliesEnumerate
 
 
 __all__ = [
+    'Calendar_Family',
+    'Calendar_FamiliesEnumerate',
     'Event',
     'EventModel',
     'MonthlyView',
