@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div id="cal-weekly-view">
+<div id="${css_id}">
   ${cal_selector}
   <table class="timetable" border="0" width="100%">
     <tr>
@@ -52,4 +52,5 @@
 <script type="text/javascript">
   $("#date").focus();
 </script>
+
 </stl:block>

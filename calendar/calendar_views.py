@@ -20,16 +20,14 @@
 # Import from Standard Library
 from calendar import monthrange
 from cStringIO import StringIO
-from datetime import date, datetime, time, timedelta
-from operator import itemgetter
+from datetime import date, datetime, timedelta
 
 # Import from itools
 from itools.core import proto_lazy_property
-from itools.datatypes import Date, DateTime, Integer
+from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
 from itools.stl import stl
-from itools.uri import get_reference
 from itools.web import BaseView, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
@@ -87,19 +85,6 @@ def build_timetables(start_time, end_time, interval):
         timetables.append((tt_start.time(), tt_end.time()))
         tt_start = tt_end
     return timetables
-
-
-
-def get_current_date(value):
-    """Get date as a date object from string value.
-    By default, get today's date as a date object.
-    """
-    if value is None:
-        return date.today()
-    try:
-        return Date.decode(value)
-    except ValueError:
-        return date.today()
 
 
 
@@ -208,12 +193,12 @@ class CalendarSelectorTemplate(CMSTemplate):
 
     def make_link(self, title, date, method=None):
         if method is None:
-            method = self.method
+            method = self.context.view.method
         # Build link
         link = ';{method}?start={date}&end={date}'
         link = link.format(date=Date.encode(date), method=method)
         # Enabled ?
-        enabled = self.method == method
+        enabled = self.context.view.method == method
         return {'title': title,
                 'link': link,
                 'css': 'enabled' if enabled else ''}
@@ -241,7 +226,7 @@ class CalendarSelectorTemplate(CMSTemplate):
 
     @proto_lazy_property
     def title(self):
-        method = self.method
+        method = self.context.view.method
         c_date = self.c_date
         kw = {'weekday': days[c_date.weekday()],
               'day': c_date.day,
@@ -271,7 +256,7 @@ class CalendarSelectorTemplate(CMSTemplate):
     @proto_lazy_property
     def navigation_links(self):
         c_date = self.c_date
-        method = self.method
+        method = self.context.view.method
         if method == 'daily_view':
             previous_date = c_date - timedelta(1)
             next_date = c_date + timedelta(1)
@@ -300,17 +285,22 @@ class CalendarSelectorTemplate(CMSTemplate):
 
 class CalendarView(STLView):
 
+    query_schema = {'start': Date}
+
     styles = ['/ui/calendar/style.css']
-    # default viewed fields on monthly_view
-    default_viewed_fields = ('dtstart', 'dtend', 'title', 'status')
 
     calendar_selector = CalendarSelectorTemplate
+
 
     def get_first_day(self):
         """Returns 0 if Sunday is the first day of the week, else 1.
         For now it has to be overridden to return anything else than 1.
         """
         return 1
+
+
+    def get_current_date(self, context):
+        return context.query['start'] or date.today()
 
 
     def get_with_new_url(self, resource, context):
@@ -436,13 +426,11 @@ class CalendarView(STLView):
         return ns_events
 
 
-    def get_namespace(self, resource, context, c_date, method=None, ndays=7):
-        namespace = {}
-        if method is not None and self.calendar_selector:
-            # Add header to navigate into time
-            namespace['cal_selector'] = self.calendar_selector(
-                method=method, context=context, c_date=c_date)
-        return namespace
+    def get_namespace(self, resource, context):
+        c_date = self.get_current_date(context)
+        cal_selector = self.calendar_selector(context=context, c_date=c_date)
+        return {'cal_selector': cal_selector,
+                'add_icon': '/ui/icons/16x16/add.png'}
 
 
 
@@ -453,66 +441,59 @@ class MonthlyView(CalendarView):
     template = '/ui/calendar/monthly_view.xml'
     monthly_template = '/ui/calendar/monthly_template.xml'
 
+    ndays = 7
+    method = 'monthly_view'
 
-    def get_namespace(self, resource, context, ndays=7):
-        today_date = date.today()
-
-        # Current date
-        c_date = context.get_form_value('start')
-        c_date = get_current_date(c_date)
-
-        # Display link to add/edit an event
-        with_new_url = self.get_with_new_url(resource, context)
-
-        ###################################################################
+    def get_start_date(self, c_date):
         # Calculate start of previous week
         # 0 = Monday, ..., 6 = Sunday
         weekday = c_date.weekday()
         start = c_date - timedelta(7 + weekday)
         if self.get_first_day() == 0:
             start = start - timedelta(1)
+        return start
 
-        ###################################################################
+
+    def get_namespace(self, resource, context):
+        # Base namespace
+        namespace = super(MonthlyView, self).get_namespace(resource, context)
+        # Get today date
+        today_date = date.today()
+        # Current date
+        c_date = self.get_current_date(context)
+        # Display link to add/edit an event
+        with_new_url = self.get_with_new_url(resource, context)
+        # Start date
+        start = self.get_start_date(c_date)
         # Get a list of events to display on view
         events = self.search(resource)
-        template = self.monthly_template
-        if type(template) is str:
-            template = context.get_template(template)
-
-        ###################################################################
-        namespace = super(MonthlyView, self).get_namespace(resource, context,
-                c_date, 'monthly_view', ndays)
+        # Get montly template
+        template = context.get_template(self.monthly_template)
         # Get header line with days of the week
-        namespace['days_of_week'] = self.days_of_week_ns(start, ndays=ndays)
-
+        namespace['days_of_week'] = self.days_of_week_ns(start, ndays=self.ndays)
+        # Get the 5 weeks
         namespace['weeks'] = []
-        day = start
-        # 5 weeks
         link = ';new_event?dtstart={date}&dtend={date}'
+        day = start
         for w in range(5):
             ns_week = {'days': [], 'month': u''}
             # 7 days a week
             for d in range(7):
-                # day in timetable
-                if d < ndays:
-                    ns_day = {
-                        'url': None,
-                        'nday': day.day,
-                        'selected': (day == today_date)}
+                # Day in timetable
+                if d < self.ndays:
+                    ns_day = {'url': None,
+                              'nday': day.day,
+                              'selected': (day == today_date)}
                     if with_new_url:
                         ns_day['url'] = link.format(date=Date.encode(day))
                     # Insert events
-                    ns_events = self.events_to_namespace(resource, events,
-                                                         day)
+                    ns_events = self.events_to_namespace(resource, events, day)
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
-                        month = months[day.month].gettext()
-                        ns_week['month'] = month
+                        ns_week['month'] = months[day.month].gettext()
                 day = day + timedelta(1)
             namespace['weeks'].append(ns_week)
-
-        namespace['add_icon'] = '/ui/icons/16x16/add.png'
         return namespace
 
 
@@ -523,6 +504,9 @@ class WeeklyView(CalendarView):
     title = MSG(u'Weekly View')
     template = '/ui/calendar/weekly_view.xml'
 
+    css_id = 'cal-weekly-view'
+    method = 'weekly_view'
+    ndays = 7
 
     def get_weekly_templates(self):
         """Get weekly templates to display events with timetables, and full
@@ -570,26 +554,27 @@ class WeeklyView(CalendarView):
         return ns_days
 
 
-    def get_namespace(self, resource, context, ndays=7):
-        # Current date
-        c_date = context.get_form_value('start')
-        c_date = get_current_date(c_date)
-
+    def get_start_date(self, c_date):
         # Calculate start of current week: 0 = Monday, ..., 6 = Sunday
         weekday = c_date.weekday()
         start = c_date - timedelta(weekday)
         if self.get_first_day() == 0:
             start = start - timedelta(1)
+        return start
 
-        namespace = super(WeeklyView, self).get_namespace(resource, context,
-                c_date, 'weekly_view')
 
-        # Get icon to appear to add a new event
-        add_icon = '/ui/icons/16x16/add.png'
-        namespace['add_icon'] = add_icon
+    def get_namespace(self, resource, context):
+        # Base namespace
+        namespace = super(WeeklyView, self).get_namespace(resource, context)
+
+        # Current date
+        c_date = self.get_current_date(context)
+
+        # Start date
+        start = self.get_start_date(c_date)
 
         # Get header line with days of the week
-        days_of_week_ns = self.days_of_week_ns(start, True, ndays, c_date)
+        days_of_week_ns = self.days_of_week_ns(start, True, self.ndays, c_date)
         ns_headers = []
         for day in days_of_week_ns:
             ns_header = '%s %s' % (day['name'], day['nday'])
@@ -604,205 +589,25 @@ class WeeklyView(CalendarView):
         templates = self.get_weekly_templates()
         with_new_url = self.get_with_new_url(resource, context)
         timetable = get_grid_data(events, timetables, start, templates,
-                                  with_new_url, add_icon)
+                                  with_new_url, namespace['add_icon'])
         namespace['timetable_data'] = timetable
+        namespace['css_id'] = self.css_id
 
         return namespace
 
 
 
-class DailyView(CalendarView):
+class DailyView(WeeklyView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
-    template = '/ui/calendar/daily_view.xml'
-    query_schema = {'start': Date}
 
-    # Start 07:00, End 21:00, Interval 30min
-    class_cal_range = (time(7,0), time(21,0), 30)
-    class_cal_fields = ('title', 'DTSTART', 'DTEND')
+    ndays = 1
+    css_id = 'cal-daily-view'
+    method = 'daily_view'
 
-
-    def get_cal_range(self):
-        return self.class_cal_range
-
-
-    # Get namespace for a resource's lines into daily_view
-    def get_ns_calendar(self, calendar, c_date, timetables,
-            method='daily_view', show_conflicts=False, context=None):
-        context = get_context()
-        user = context.user
-        ac = calendar.get_access_control()
-        cal_fields = self.class_cal_fields
-        calendar_name = str(calendar.name)
-
-        # Get a dict for each event, compute colspan
-        events_by_index = {}
-        events = self.search(calendar, dates=c_date)
-        for event in events.get_resources(sort_by='dtstart'):
-            event_start = event.get_value('dtstart')
-            event_end = event.get_value('dtend')
-            # If no time indications, consider it's an all day event
-            start, end = timetables[0]
-            if type(event_start) is date:
-                event_start = datetime.combine(event_start, start)
-                event_start = context.fix_tzinfo(event_start)
-            if type(event_end) is date:
-                event_end = datetime.combine(event_end, end)
-                event_end = context.fix_tzinfo(event_end)
-            # Compute start and end indexes
-            tt_start = 0
-            tt_end = len(timetables) - 1
-            for tt_index, (start, end) in enumerate(timetables):
-                start = datetime.combine(c_date, start)
-                start = context.fix_tzinfo(start)
-                end = datetime.combine(c_date, end)
-                end = context.fix_tzinfo(end)
-                if start <= event_start:
-                    tt_start = tt_index
-                if end >= event_end:
-                    tt_end = tt_index
-                    break
-
-            uid = getattr(event, 'id', getattr(event, 'uid', None))
-            if ac.is_allowed_to_view(user, event):
-                edit_url = './;proxy?id={id}&view=edit'.format(id=event.name)
-            else:
-                edit_url = None
-            events_by_index.setdefault(tt_start, [])
-            events_by_index[tt_start].append({
-                'name': event.name,
-                'title': event.get_value('title'),
-                'tt_start': tt_start,
-                'tt_end': tt_end,
-                'colspan': tt_end - tt_start + 1,
-                'edit_url': edit_url})
-
-        # Organize events in rows
-        # If a row index is busy, start a new row
-        rows = []
-        for index in range(len(timetables)):
-            events = events_by_index.get(index)
-            if events is None:
-                continue
-            # Sort events by tt_end to reduce fragmentation
-            # Longer events go on lines of their own
-            events.sort(key=itemgetter('tt_end'))
-            for row_index, event in enumerate(events):
-                if not rows or len(rows) <= row_index:
-                    rows.append({'events': []})
-                current_events = rows[row_index]['events']
-                if (current_events
-                        and current_events[-1]['tt_end'] >= index):
-                    # Overlapping, move on a line of its own
-                    rows.append({'events': [event]})
-                else:
-                    # Enough free space, extend
-                    current_events.append(event)
-
-        # Get the list of conflicting events if activated
-        if show_conflicts:
-            conflicts_list = set()
-            conflicts = calendar.handler.get_conflicts(c_date)
-            if conflicts:
-                for uids in conflicts:
-                    uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
-                    conflicts_list.update(uids)
-
-        # Organize columns
-        rows_namespace = []
-        for row in rows:
-            row_namespace = {}
-            columns_namespace = []
-            events = row['events']
-            event = events.pop(0)
-            colspan = 0
-            for tt_index, (start, end) in enumerate(timetables):
-                if colspan > 0:
-                    colspan = colspan - 1
-                    continue
-                # Init column
-                column =  {'class': None,
-                           'colspan': 1,
-                           'rowspan': 1,
-                           'evt_url': None}
-                # Add event
-                if event and tt_index == event['tt_start']:
-                    go_url = event['edit_url']
-                    if show_conflicts and uid in conflicts_list:
-                        css_class = 'cal_conflict'
-                    else:
-                        css_class = 'cal_busy'
-                    column['class'] = css_class
-                    column['colspan'] = event['colspan']
-                    column['evt_url'] = go_url
-                    column['title'] = event['title']
-                    # Set colspan
-                    colspan = event['colspan'] - 1
-                    # Delete added event
-                    event = events.pop(0) if events else None
-                # Fields in template but not shown
-                for field in cal_fields:
-                    if field not in column:
-                        column[field] = None
-                columns_namespace.append(column)
-                row_namespace['columns'] = columns_namespace
-            rows_namespace.append(row_namespace)
-
-        # Header columns (one line with header and empty cases with only
-        # '+' for daily_view)
-        with_new_url = self.get_with_new_url(calendar, context)
-        if with_new_url:
-            url = get_reference(';new_event').replace(resource=calendar_name)
-            f = lambda x: DateTime.encode(datetime.combine(c_date, x))
-            header_columns = [
-                url.replace(dtstart=f(x), dtend=f(y)) for x, y in timetables ]
-        else:
-            header_columns = [ None for x, y in timetables ]
-
-        # Return namespace
-        return {
-            'name': calendar.get_title(),
-            'rows': rows_namespace,
-            'header_columns': header_columns,
-            'url': ';monthly_view',
-            'rowspan': len(rows) + 1}
-
-
-    def get_namespace(self, resource, context):
-        # Current date
-        c_date = context.query['start']
-        if c_date is None:
-            c_date = date.today()
-
-        # Add a header line with start time of each timetable
-        start, end, interval = self.get_cal_range()
-        timetables = build_timetables(start, end, interval)
-
-        # Table heading and footer with the time ranges
-        delta = timedelta(minutes=45)
-        tt_start, tt_end = timetables[0]
-        last_start = datetime.combine(c_date, tt_start)
-        ns_timetables = [last_start.strftime('%H:%M')]
-        # Add next ones if delta time > delta minutes
-        for tt_start, tt_end in timetables[1:]:
-            tt_start = datetime.combine(c_date, tt_start)
-            if (tt_start - last_start) > delta:
-                ns_timetables.append(tt_start.strftime('%H:%M'))
-                last_start = tt_start
-            else:
-                ns_timetables.append(None)
-
-        # Ok
-        ns_calendar = self.get_ns_calendar(resource, c_date, timetables,
-                                           context=context)
-
-        namespace = super(DailyView, self).get_namespace(resource, context,
-                c_date, 'daily_view')
-        namespace['header_timetables'] = ns_timetables
-        namespace['calendars'] = [ns_calendar]
-
-        return namespace
+    def get_start_date(self, c_date):
+        return c_date
 
 
 

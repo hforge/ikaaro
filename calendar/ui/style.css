@@ -74,11 +74,15 @@
 
 /* ******** */
 
-#cal-monthly-view table, #cal-weekly-view table {
+#cal-monthly-view table,
+#cal-daily-view table,
+#cal-weekly-view table {
   border-spacing: 1px;
   border-collapse: collapse;
 }
-#cal-monthly-view td, #cal-weekly-view td {
+#cal-monthly-view td,
+#cal-daily-view td,
+#cal-weekly-view td {
   background: #fff;
   border: 1px solid #0467BA;
 }
@@ -91,13 +95,16 @@
   font-style: italic;
 }
 
-#cal-monthly-view th, #cal-weekly-view th {
+#cal-monthly-view th,
+#cal-daily-view th,
+#cal-weekly-view th {
   background: #fff;
   color: #0467BA;
   font-weight: bold;
 }
 
-#cal-weekly-view th.time {
+#cal-weekly-view th.time,
+#cal-daily-view th.time{
   font-size: 0.8em;
   padding: 4px 0;
 }
@@ -188,6 +195,7 @@ table.timetable {
 /* COLORS for events background */
 
 #cal-monthly-view td.day,
+#cal-daily-view td,
 #cal-weekly-view td.free {
   background-color: #F9F9F9;
   padding: 0;
@@ -233,69 +241,6 @@ table.timetable {
 
 #cal-monthly-view .event .color4 td, #cal-weekly-view td.color4 {
  background-color: #A59580;
-}
-
-
-/**************************************************************************
- * daily_view
- **************************************************************************/
-#cal-daily-view #attributes span {
-  margin: 0 8px 0 0;
-}
-
-#cal-daily-view table {
-  border-collapse: collapse;
-  border-spacing: 0px;
-}
-
-#cal-daily-view td {
-  border: 1px solid #000;
-}
-
-#cal-daily-view .header-columns {
-  border-top: 1px solid black;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-#cal-daily-view .header-columns td {
-  padding: 6px;
-  background: #fff;
-}
-
-#cal-daily-view .header-columns th a {
-  font-weight: bold;
-  text-decoration: none;
-}
-
-#cal-daily-view .header-timetables,
-#cal-daily-view .header-timetables * {
-  border: none;
-}
-
-#cal-daily-view .header-timetables td {
-  color: #0467BA;
-  background: #fff;
-  font-weight: bold;
-  width: 40px;
-}
-
-#cal-daily-view .header-timetables span {
-  margin-left: -15px; /* See below */
-  font-size: 9px;
-  font-weight: bold;
-  text-align: left;
-}
-
-/* Prevent IE from eating the time outside the box */
-* html #cal-daily-view .header-timetables span {
-  margin-left: 0;
-}
-
-#cal-daily-view .evt-value {
-  font-size: 12px;
-  text-decoration: none;
-  color: #003180;
 }
 
 /**************************************************************************
