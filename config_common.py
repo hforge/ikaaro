@@ -28,7 +28,6 @@ from folder_views import Folder_NewResource
 
 class NewInstance_Local(AutoAdd):
 
-    access = 'is_admin'
     fields = ['title']
 
     automatic_resource_name = False
@@ -45,8 +44,6 @@ class NewInstance_Local(AutoAdd):
 
 
 class NewResource_Local(Folder_NewResource):
-
-    access = 'is_admin'
 
     def get_items(self, resource, context):
         # 1. Load dynamic classes
