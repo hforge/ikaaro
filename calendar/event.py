@@ -237,7 +237,7 @@ class Event(Content):
 
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
-    owner = Char_Field(readonly=True)
+    owner = Char_Field(readonly=True, indexed=True)
     family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
                 title=MSG(u'Calendar'))
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
@@ -314,6 +314,7 @@ class Event(Content):
         values = super(Event, self).get_catalog_values()
         values['is_event'] = True
         values['dates'] = self.get_dates()
+        values['owner'] = self.get_owner()
         values['reminders'] = self.get_reminders()
         return values
 
