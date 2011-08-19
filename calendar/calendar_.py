@@ -97,7 +97,7 @@ class ConfigCalendar(Folder):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['edit_timetables', 'families', 'new_resource',
+    class_views = ['edit_timetables', 'families', 'new_family',
                    'monthly_view', 'weekly_view', 'daily_view',
                    'import_', 'export_form']
 
@@ -252,5 +252,5 @@ class ConfigCalendar(Folder):
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
     families = Families_View()
-    new_resource = NewResource_Local()
+    new_family = NewResource_Local(title=MSG(u'Add family'))
     new_event = Calendar_NewEvent()
