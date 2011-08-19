@@ -80,10 +80,10 @@ class WorkflowAware(BaseWorkflowAware):
 
     class_schema = freeze({
         # Metadata
-        'state': String(source='metadata'),
+        'state': String(source='metadata', title=MSG(u'State')),
         # Other
-        'workflow_state': String(stored=True, indexed=True),
-        })
+        'workflow_state': String(title=MSG(u'State'), stored=True,
+                                 indexed=True)})
 
 
     def get_workflow_state(self):
