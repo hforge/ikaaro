@@ -527,8 +527,7 @@ class Observable(object):
 
 
     def is_subscribed(self, username, skip_unconfirmed=True):
-        return username in self.get_subscribed_users(
-                skip_unconfirmed=skip_unconfirmed)
+        return username in self.get_subscribed_users(skip_unconfirmed)
 
 
     def is_confirmed(self, username):
@@ -641,8 +640,9 @@ class Observable(object):
 
     def notify_subscribers(self, context):
         # 1. Check the resource has been modified
-        if not context.database.is_changed(self):
-            return
+        # XXX This test is broken now comments are stored as separate objects
+#       if not context.database.is_changed(self):
+#           return
 
         # 2. Get list of subscribed users
         users = self.get_subscribed_users()
@@ -655,15 +655,18 @@ class Observable(object):
         default_language = root.get_default_language()
         messages_dict = {}
         for language in website_languages:
-            messages_dict[language] = self.get_message(context,
-                                                       language=language)
+            messages_dict[language] = self.get_message(context, language)
 
         # 4. Send the message
+        auth_user = context.user.name if context.user else None
+
         for username in users:
+            if username == auth_user:
+                continue
             # Not confirmed yet
             if self.get_register_key(username) is not None:
                 continue
-            user = context.root.get_user(username)
+            user = root.get_user(username)
             if user and not user.get_value('user_must_confirm'):
                 mail = user.get_value('email')
 
@@ -672,7 +675,7 @@ class Observable(object):
                     language = default_language
                 subject, body = messages_dict[language]
 
-                context.root.send_email(mail, subject, text=body)
+                root.send_email(mail, subject, text=body)
 
 
     #######################################################################
