@@ -210,6 +210,10 @@ class Event_NewInstance(AutoAdd):
         return container
 
 
+    def get_new_resource_name(self, form):
+        return form['container'].make_resource_name()
+
+
     def action(self, resource, context, form):
         # 1. Make the resource
         child = self.make_new_resource(resource, context, form)
