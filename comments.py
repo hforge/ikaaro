@@ -20,16 +20,16 @@ from textwrap import TextWrapper
 import unicodedata
 
 # Import from itools
-from itools.datatypes import DateTime, Integer, String
+from itools.datatypes import Integer, String
 from itools.gettext import MSG
 from itools.html import xhtml_uri
-from itools.web import STLView
+from itools.web import STLView, get_context
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from autoform import HiddenWidget, SelectWidget
 from buttons import Button
-from fields import Select_Field, Text_Field
+from fields import Char_Field, Select_Field
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 
@@ -139,10 +139,10 @@ class Comment_View(STLView):
         elif column == 'comment':
             return indent(item.get_value('description'))
         elif column == 'workflow':
-            datatype = item.state.get_datatype()
+            datatype = item.comment_state.get_datatype()
             if self.edit_mode is False or datatype is None:
                 return None
-            state = item.get_value('state', datatype.get_default())
+            state = item.get_value('comment_state', datatype.get_default())
             widget = SelectWidget('state', datatype=datatype, value=state,
                                   has_empty_option=False)
             return widget
@@ -168,12 +168,13 @@ class Comment_View(STLView):
 
 class CommentState_Field(Select_Field):
 
-    default = 'private'
+    default = 'open'
     options = [
-            {'name': 'public', 'value': u'Public'},
-            {'name': 'private', 'value': u'Private'},
-            {'name': 'pending', 'value': u'Pending'}]
+        {'name': 'open', 'value': MSG(u'Open')},
+        {'name': 'archived', 'value': MSG(u'Archived')}]
 
+    indexed = True
+    stored = True
 
 
 class Comment(DBResource):
@@ -182,14 +183,23 @@ class Comment(DBResource):
     class_title = MSG(u'Comment')
 
     # Fields
-    fields = ['mtime', 'last_author', 'description', 'state']
+    fields = ['mtime', 'last_author', 'description', 'owner', 'comment_state']
     title = None
     subject = None
-    state = CommentState_Field()
+    owner = Char_Field(readonly=True, indexed=True)
+    comment_state = CommentState_Field()
+
+    # API
+    def init_resource(self, **kw):
+        super(Comment, self).init_resource(**kw)
+        # Set owner
+        context = get_context()
+        if context.user:
+            self.set_value('owner', context.user.name)
+
 
     # Views
     view = Comment_View
-
 
 
 ###########################################################################
@@ -199,7 +209,7 @@ class CommentsView(STLView):
 
     template = '/ui/comments.xml'
     schema = {
-        'state': String(multiple=True),
+        'comment_state': String(multiple=True),
         'index': Integer(multiple=True)}
     query_schema = {'filter': String()}
     edit_mode = False
@@ -207,7 +217,7 @@ class CommentsView(STLView):
 
     def get_namespace(self, resource, context):
         # Filter
-        field = Comment.state
+        field = Comment.comment_state
         datatype = field.get_datatype()
         filter_state = context.get_query_value('filter')
         filter_widget = field.widget('filter', datatype=datatype,
@@ -217,7 +227,7 @@ class CommentsView(STLView):
         def filter_comment(x):
             if not filter_state:
                 return False
-            return x.get_value('state', default_state) != filter_state
+            return x.get_value('comment_state', default_state) != filter_state
 
         # Comments
         i = 0
@@ -244,11 +254,11 @@ class CommentsView(STLView):
 
     def action_update(self, resource, context, form):
         comments = resource.get_property('comment')
-        states = form['state']
+        states = form['comment_state']
         for i, comment_index in enumerate(form['index']):
             new_state = states[i]
             comment = comments[comment_index]
-            comment.set_parameter('state', new_state)
+            comment.set_parameter('comment_state', new_state)
 
         resource.del_property('comment')
         resource.set_property('comment', comments)
@@ -266,11 +276,6 @@ class CommentsAware(object):
         - Method "is_allowed_to_view_comment" can be overwritten to define
           access to comments on specific criteria.
     """
-
-    comment = Text_Field(multilingual=False, multiple=True,
-                         parameters_schema={'date': DateTime,
-                                            'author': String,
-                                            'state': String})
 
     comments = CommentsView(access='is_allowed_to_edit', edit_mode=True)
 
@@ -292,7 +297,8 @@ class CommentsAware(object):
         if type(state) not in (tuple, list):
             state = [state]
 
-        return [ x for x in comments if x.get_value('state') in state ]
+        return [ x for x in comments
+                 if x.get_value('comment_state') in state ]
 
 
     def add_comment(self, description, language=None):
