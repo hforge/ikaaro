@@ -380,23 +380,27 @@ class Event(Content):
         if grid:
             # Neither a full day event nor a multiple days event
             if dtstart_type is datetime and dtstart.date() == dtend.date():
-                ns['TIME'] = '%s - %s' % (ns['start'], ns['end'])
+                if ns['start'] == ns['end']:
+                    ns['TIME'] = ns['start']
+                else:
+                    ns['TIME'] = '%s - %s' % (ns['start'], ns['end'])
             else:
                 ns['start'] = ns['end'] = None
         elif not out_on:
             if dtstart_type is datetime:
                 value = ''
-                if starts_on:
+                if starts_on and ns['start'] != ns['end']:
                     value = ns['start']
                     if ends_on:
                         value = value + '-'
                     else:
                         value = value + '...'
-                if ends_on:
+                if ends_on and ns['start'] != ns['end']:
                     value = value + ns['end']
                     if not starts_on:
                         value = '...' + value
-                ns['TIME'] = '(' + value + ')'
+                if value:
+                    ns['TIME'] = '(' + value + ')'
 
         ###############################################################
         # Set class for conflicting events or just from status value
