@@ -34,7 +34,6 @@ from itools.web import AccessControl, BaseView, get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from datastore_views import DataStore_Proxy
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field
 from fields import Select_Field, Text_Field, Textarea_Field
@@ -738,7 +737,6 @@ class DBResource(Resource):
     edit = AutoEdit()
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
-    proxy = DataStore_Proxy()
     # Popup views
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()

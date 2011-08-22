@@ -28,11 +28,12 @@ from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.config_models import Model
 from ikaaro.content import Content
-from ikaaro.datastore_views import DataStore_AutoAdd
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
+from ikaaro.folder import Folder
 from ikaaro import messages
 
 # Import from calendar
@@ -154,7 +155,7 @@ class Event_Edit(AutoEdit):
 
 
 
-class Event_NewInstance(DataStore_AutoAdd):
+class Event_NewInstance(AutoAdd):
 
     def get_fields(self, cls):
         for name, field in cls.get_fields():
@@ -194,15 +195,26 @@ class Event_NewInstance(DataStore_AutoAdd):
         return proxy.set_value(resource, context, name, form)
 
 
+    def get_container(self, resource, context, form):
+        # XXX Copied from blog/blog.py
+        date = form['dtstart']
+        names = ['%04d' % date.year, '%02d' % date.month]
+
+        container = context.root
+        for name in names:
+            folder = container.get_resource(name, soft=True)
+            if folder is None:
+                folder = container.make_resource(name, Folder)
+            container = folder
+
+        return container
+
+
     def action(self, resource, context, form):
         # 1. Make the resource
-        container = form['container']
-        class_id = context.query['type']
-        cls = context.database.get_resource_class(class_id)
-        child = container.make_resource(None, cls)
-        # 2. Set properties
-        for key in self.get_fields(cls):
-            self.set_value(child, context, key, form)
+        child = self.make_new_resource(resource, context, form)
+        if child is None:
+            return
 
         # 3. Notify the subscribers
         child.notify_subscribers(context)
@@ -397,8 +409,9 @@ class Event(Content):
         ###############################################################
         # Event links
         # XXX Only used on monthly view. we have to generalize that
+        context = get_context()
         ns['links'] = []
-        url = './;proxy?id={id}&view={view}'
+        url = '%s/;{view}' % context.get_link(self)
         ac = self.get_access_control()
         user = get_context().user
         title = self.get_title()
@@ -407,7 +420,7 @@ class Event(Content):
             if ac.is_access_allowed(user, self, view):
                 ns['links'].append(
                     {'title': u'*' if i > 0 else title,
-                     'url': url.format(id=self.name, view=view_name),
+                     'url': url.format(view=view_name),
                      'name': view_name})
         return ns
 

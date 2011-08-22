@@ -414,7 +414,7 @@ class CalendarView(STLView):
             ns_event = event.get_ns_event(conflicts_list, grid, starts_on,
                                           ends_on, out_on)
             if ac.is_allowed_to_view(user, event):
-                url = './;proxy?id={id}&view=edit'.format(id=event.name)
+                url = '%s/;edit' % context.get_link(event)
             else:
                 url = None
             ns_event['url'] = url
