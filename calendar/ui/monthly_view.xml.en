@@ -19,7 +19,7 @@
 
     <tr stl:repeat="week weeks" valign="top">
       <td class="month">${week/month}</td>
-      <td stl:repeat="day week/days" class="day">
+      <td stl:repeat="day week/days" class="day add-event-area">
         <span stl:if="not day/selected" class="bold">${day/nday}</span>
         <span stl:if="day/selected" class="cal-day-selected">${day/nday}</span>
 

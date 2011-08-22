@@ -25,7 +25,7 @@
           <div stl:if="cell/new">${cell/ns}</div>
 
           <div stl:if="cell/free">
-            <td colspan="${cell/colspan}" class="free" valign="top">
+            <td colspan="${cell/colspan}" class="free add-event-area" valign="top">
               <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
                 <img width="16" height="16" src="${add_icon}" />
               </a>

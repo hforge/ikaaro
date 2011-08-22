@@ -288,6 +288,7 @@ class CalendarView(STLView):
     query_schema = {'start': Date}
 
     styles = ['/ui/calendar/style.css']
+    scripts = ['/ui/calendar/javascript.js']
 
     calendar_selector = CalendarSelectorTemplate
 

@@ -202,17 +202,11 @@ table.timetable {
   border-collapse: collapse;
 }
 
-#cal-monthly-view table.event,
 #cal-weekly-view #full-day-events table.event {
  border-collapse: collapse;
- width: 100%;
 }
 
-#cal-monthly-view table.event td {
- border-left: 0;
- border-right: 0;
-}
-#cal-monthly-view table.event td,
+#cal-monthly-view .event,
 #cal-weekly-view #full-day-events table.event td {
  border-top: 1px solid #0467BA;
  padding: 2px;
@@ -248,4 +242,8 @@ table.timetable {
  **************************************************************************/
 p#event-owner {
   margin-top: 0;
+}
+
+.add-event-area, .event{
+  cursor: pointer;
 }

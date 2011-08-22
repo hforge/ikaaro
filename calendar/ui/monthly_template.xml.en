@@ -4,16 +4,13 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<table class="event">
-  <tr stl:repeat="event events">
-    <td class="${event/status}" style="background-color: ${event/color}">
-      <a href="${link/url}" title="${link/title}"
-        stl:repeat="link event/links">
-        ${link/title}
-      </a>
-      <span stl:if="event/TIME" class="time">${event/TIME}</span>
-    </td>
-  </tr>
-</table>
+  <div class="event ${event/status}" style="background-color: ${event/color}"
+      stl:repeat="event events">
+    <a href="${link/url}" title="${link/title}" class="event-link"
+      stl:repeat="link event/links">
+      ${link/title}
+    </a>
+    <span stl:if="event/TIME" class="time">${event/TIME}</span>
+  </div>
 
 </stl:block>

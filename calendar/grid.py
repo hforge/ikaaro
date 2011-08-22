@@ -28,8 +28,9 @@ from itools.html import XHTMLFile
 default_template_fd = XHTMLFile(string=
     """
     <td xmlns="http://www.w3.org/1999/xhtml"
+        class="event"
         style="background-color: ${color}">
-      <a href="${url}" class="${status}" title="${description}">${title}</a>
+      <a href="${url}" class="event-link ${status}" title="${description}">${title}</a>
     </td>""")
 
 # Template to display events with timetables
@@ -37,12 +38,13 @@ default_template = XHTMLFile(string=
     """
     <td xmlns="http://www.w3.org/1999/xhtml"
       xmlns:stl="http://www.hforge.org/xml-namespaces/stl"
+      class="event"
       colspan="${cell/colspan}" rowspan="${cell/rowspan}"
       valign="top" style="background-color: ${cell/content/color}">
-      <a stl:if="cell/newurl" class="add_event" href="${cell/newurl}">
+      <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
         <img width="16" height="16" src="${add_icon}" />
       </a><br/>
-      <a href="${cell/content/url}" class="${cell/content/status}"
+      <a href="${cell/content/url}" class="event-link ${cell/content/status}"
         title="${cell/content/description}">
         <span class="title">${cell/content/title}</span>
       </a>
