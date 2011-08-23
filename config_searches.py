@@ -34,7 +34,7 @@ class SavedSearch_Results(Folder_BrowseContent):
     search_widgets = []
 
     def get_items_query(self, resource, context):
-        return resource.get_search_query()
+        return [resource.get_search_query()]
 
 
 class SavedSearch(DBResource):
