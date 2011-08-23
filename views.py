@@ -115,24 +115,20 @@ class CompositeView(STLView):
 
 
     def get_subviews_to_show(self, resource, context):
+        subviews = self.get_allowed_subviews(resource, context)
+
         # Case 1. GET
         if context.method == 'GET':
-            views = self.get_allowed_subviews(resource, context)
-            return views
+            return [ (x.GET(resource, context), x) for x in subviews ]
 
         # Case 2. POST
         # Render the subview which caused the POST as a 'POST' and the others
         # as a 'GET'
         views = []
-        for view in self.get_allowed_subviews(resource, context):
+        for view in subviews:
             method = getattr(view, context.form_action, None)
-            if method is None:
-                context.method = 'GET'
-                views.append(view)
-            else:
-                # Render the view as if it was a POST
-                context.method = 'POST'
-                views.append(view)
+            context.method = 'GET' if method is None else 'POST'
+            views.append((view.GET(resource, context), view))
 
         # Restore context.method
         context.method = 'POST'
@@ -140,9 +136,8 @@ class CompositeView(STLView):
 
 
     def get_namespace(self, resource, context):
-        return {'views': [view.GET(resource, context)
-            for view in self.get_subviews_to_show(resource, context)]}
-
+        subviews = self.get_subviews_to_show(resource, context)
+        return {'views': [ x[0] for x in subviews ]}
 
 
 
