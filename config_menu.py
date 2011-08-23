@@ -25,7 +25,7 @@ from itools.uri import Path
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import PathSelectorWidget, SelectWidget
+from autoform import PathSelectorWidget
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from buttons import RemoveButton
@@ -33,10 +33,6 @@ from fields import Select_Field, URI_Field
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from utils import split_reference
 
-
-
-class Target_Widget(SelectWidget):
-    has_empty_option = False
 
 
 class Target_Field(Select_Field):
@@ -47,7 +43,7 @@ class Target_Field(Select_Field):
 
     required = True
     title = MSG(u'Target')
-    widget = Target_Widget
+    has_empty_option = False
 
 
 

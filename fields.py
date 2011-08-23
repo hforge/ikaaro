@@ -49,6 +49,8 @@ class Field(BaseField):
     title = None
     hidden_by_default = False
     readonly = False # Means the field should not be editable by the user
+    datatype = None
+    widget = None
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
@@ -71,7 +73,7 @@ class Field(BaseField):
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'widget',
+        'default', 'multiple', 'multilingual', 'indexed', 'stored',
         'hidden_by_default']
     def get_datatype(self):
         kw = {}
@@ -80,13 +82,24 @@ class Field(BaseField):
             if value is not None:
                 kw[key] = value
 
-        return self.datatype(mandatory=self.required, title=self.title, **kw)
+        return self.datatype(mandatory=self.required, **kw)
 
 
     def get_default(self):
         if self.default is not None:
             return self.default
         return self.get_datatype().get_default()
+
+
+    widget_keys = []
+    def get_widget(self, name):
+        kw = {}
+        for key in self.widget_keys:
+            value = getattr(self, key, None)
+            if value is not None:
+                kw[key] = value
+
+        return self.widget(name, title=self.title, **kw)
 
 
     # Links
@@ -184,6 +197,7 @@ class Select_Field(Metadata_Field):
     options = None # Must be overriden by subclasses: [{}, ...]
 
     datatype_keys = Metadata_Field.datatype_keys + ['options']
+    widget_keys = Metadata_Field.widget_keys + ['has_empty_option']
 
 
 

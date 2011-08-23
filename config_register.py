@@ -84,12 +84,7 @@ class RegisterForm(AutoForm):
 
     def get_widgets(self, resource, context):
         cls = context.database.get_resource_class('user')
-
-        widgets = []
-        for name in self.fields:
-            field = cls.get_field(name)
-            widget = field.widget(name, title=field.title)
-            widgets.append(widget)
+        widgets = [ cls.get_field(x).get_widget(x) for x in self.fields ]
 
         # Terms of service
         config_register = resource.get_resource('config/register')

@@ -24,7 +24,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import SelectWidget
 from config import Configuration
 from fields import Select_Field, Textarea_Field
 from resource_ import DBResource
@@ -68,10 +67,6 @@ class ConfigMail_Edit(AutoEdit):
         return schema
 
 
-class SelectWidgetWithoutEmptyOption(SelectWidget):
-
-    has_empty_option = False
-
 
 class ConfigMail(DBResource):
 
@@ -84,7 +79,7 @@ class ConfigMail(DBResource):
                                   'emails_signature']
     contacts = Select_Field(multiple=True,
                             title=MSG(u'Select the contact accounts'),
-                            widget=SelectWidgetWithoutEmptyOption)
+                            has_empty_option=False)
     emails_from_addr = Select_Field(title=MSG(u'Emails from addr'))
     emails_signature = Textarea_Field(title=MSG(u'Emails signature'))
 

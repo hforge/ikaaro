@@ -27,7 +27,7 @@ from itools.web import get_context, INFO, ERROR
 
 # Import from ikaaro
 from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
-from autoform import HiddenWidget, SelectWidget
+from autoform import HiddenWidget
 from buttons import Button, BrowseButton
 from fields import Select_Field
 from messages import MSG_BAD_KEY
@@ -458,15 +458,12 @@ class Followers_Datatype(Enumerate):
         return options
 
 
-class Followers_Widget(SelectWidget):
-    has_empty_option = False
-
 
 class Followers_Field(Select_Field):
 
     parameters_schema = {'status': String, 'key': String}
     datatype = Followers_Datatype
-    widget = Followers_Widget
+    has_empty_option = False
 
 
 

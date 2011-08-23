@@ -22,7 +22,7 @@ from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
 from autoform import AutoForm, HiddenWidget, ReadOnlyWidget
-from autoform import get_default_widget, location_widget
+from autoform import location_widget
 from datatypes import BirthDate
 from buttons import Button
 from datatypes import ContainerPathDatatype, FileDataType
@@ -125,12 +125,9 @@ class AutoAdd(AutoForm):
         if name == 'location':
             return location_widget
 
-        datatype = self._get_datatype(resource, context, name)
-        title = getattr(datatype, 'title', name)
-        widget = getattr(datatype, 'widget', None)
-        if widget is None:
-            widget = get_default_widget(datatype)
-        return widget(name, title=title)
+        cls = self._get_resource_class(context)
+        field = cls.get_field(name)
+        return field.get_widget(name)
 
 
     def get_widgets(self, resource, context):

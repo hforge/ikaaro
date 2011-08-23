@@ -29,7 +29,7 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoform import AutoForm, HiddenWidget
-from autoform import get_default_widget, timestamp_widget
+from autoform import timestamp_widget
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
 import messages
@@ -222,12 +222,8 @@ class AutoEdit(AutoForm):
 
 
     def _get_widget(self, resource, context, name):
-        datatype = self._get_datatype(resource, context, name)
-        title = getattr(datatype, 'title', name)
-        widget = getattr(datatype, 'widget', None)
-        if widget is None:
-            widget = get_default_widget(datatype)
-        return widget(name, title=title)
+        field = resource.get_field(name)
+        return field.get_widget(name)
 
 
     def _get_widgets(self, resource, context):
