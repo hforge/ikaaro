@@ -33,8 +33,7 @@ from ikaaro.config_common import NewResource_Local
 from ikaaro.fields import Char_Field
 from ikaaro.folder import Folder
 from calendar_views import Calendar_Export, Calendar_ExportForm
-from calendar_views import Calendar_Import, Calendar_NewEvent
-from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
+from calendar_views import Calendar_Import, TimetablesForm
 from event import Event
 from family import Calendar_Family, Families_View
 
@@ -98,7 +97,6 @@ class ConfigCalendar(Folder):
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
     class_views = ['edit_timetables', 'families', 'new_family',
-                   'monthly_view', 'weekly_view', 'daily_view',
                    'import_', 'export_form']
 
     # Configuration
@@ -244,13 +242,9 @@ class ConfigCalendar(Folder):
             i += 1
 
     # Views
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    daily_view = DailyView()
     edit_timetables = TimetablesForm()
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
     families = Families_View()
     new_family = NewResource_Local(title=MSG(u'Add family'))
-    new_event = Calendar_NewEvent()
