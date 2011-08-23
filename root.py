@@ -32,7 +32,7 @@ import sys
 import traceback
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import get_abspath, is_prototype
 from itools.database import RWDatabase, AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
@@ -355,9 +355,14 @@ class Root(AccessControl, Folder):
     def send_email(self, to_addr, subject, from_addr=None, text=None,
                    html=None, encoding='utf-8', subject_with_host=True,
                    return_receipt=False, attachment=None):
-        # Check input data
-        if not isinstance(subject, unicode):
-            raise TypeError, 'the subject must be a Unicode string'
+        # 1. Check input data
+        if type(subject) is unicode:
+            subject = subject.encode(encoding)
+        elif is_prototype(subject, MSG):
+            subject = subject.gettext()
+        else:
+            raise TypeError, 'unexpected subject of type %s' % type(subject)
+
         if len(subject.splitlines()) > 1:
             raise ValueError, 'the subject cannot have more than one line'
         if text and not isinstance(text, unicode):
@@ -365,7 +370,7 @@ class Root(AccessControl, Folder):
         if html and not isinstance(html, unicode):
             raise TypeError, 'the html must be a Unicode string'
 
-        # Figure out the from address
+        # 2. Figure out the from address
         context = get_context()
         server = context.server
         mail = context.root.get_resource('config/mail')
@@ -380,18 +385,19 @@ class Root(AccessControl, Folder):
             else:
                 from_addr = server.smtp_from
 
-        # Set the subject
-        subject = subject.encode(encoding)
+        # 3. Add the hostname to the subject
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
-        # Add signature
+
+        # 4. Add signature
         signature = mail.get_value('emails_signature')
         if signature:
             signature = signature.strip()
             if not signature.startswith('--'):
                 signature = '-- \n%s' % signature
             text += '\n\n%s' % signature
-        # Build the message
+
+        # 5. Build the message
         message = MIMEMultipart('related')
         message['Subject'] = Header(subject, encoding)
         message['Date'] = formatdate(localtime=True)
@@ -437,7 +443,8 @@ class Root(AccessControl, Folder):
             message_attachment.add_header('Content-Disposition', 'attachment',
                                           filename=attachment.name)
             message.attach(message_attachment)
-        # Send email
+
+        # 6. Send email
         server.send_email(message)
 
 

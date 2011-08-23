@@ -118,7 +118,7 @@ class RegisterForm(AutoForm):
         else:
             user = results.get_documents()[0]
             user = resource.get_resource(user.abspath)
-            # TODO Send specific email
+            user.send_already_registered(context, email)
 
         # Bring the user to the login form
         message = MSG(

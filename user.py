@@ -165,10 +165,20 @@ class User(DBResource):
     ########################################################################
     # Email: Register confirmation & Password forgotten
     ########################################################################
+    already_registered_subject = MSG(u"Already registered")
+    already_registered_txt = MSG(u"You already have an account:\n"
+                                 u"\n {uri}")
+    def send_already_registered(self, context, email):
+        uri = context.uri
+        uri = uri.resolve('%s/;login?loginname=%s' % (self.abspath, email))
+        text = self.already_registered_txt.gettext(uri=uri)
+        # Send email
+        root = context.root
+        root.send_email(email, self.already_registered_subject, text=text)
+
 
     confirmation_subject = MSG(u"Confirmation required")
-    confirmation_txt = MSG(u"To confirm your identity, click the link:"
-                           u"\n"
+    confirmation_txt = MSG(u"To confirm your identity, click the link:\n"
                            u"\n {uri}")
     def send_confirmation(self, context, email):
         self.send_confirm_url(context, email, self.confirmation_subject,
@@ -176,22 +186,20 @@ class User(DBResource):
 
 
     registration_subject = MSG(u"Registration confirmed")
-    registration_txt = MSG(u"You are now registered as users of: {site_name}.\n"
-                           u"You can follow this link {site_uri} to access "
-                           u"to the site.")
+    registration_txt = MSG(
+        u"You are now registered as users of: {site_name}.\n"
+        u"You can follow this link {site_uri} to access to the site.")
     def send_registration(self, context, email):
-        site_name = context.root.get_title()
+        root = context.root
         uri = context.uri
         site_uri = Reference(uri.scheme, uri.authority, '/', {}, None)
-        text = self.registration_txt.gettext(site_name=site_name,
+        text = self.registration_txt.gettext(site_name=root.get_title(),
                                              site_uri=site_uri)
-        context.root.send_email(email, self.registration_subject.gettext(),
-                                text=text)
+        root.send_email(email, self.registration_subject.gettext(), text=text)
 
 
     forgotten_subject = MSG(u"Choose a new password")
-    forgotten_txt = MSG(u"To choose a new password, click the link:"
-                        u"\n"
+    forgotten_txt = MSG(u"To choose a new password, click the link:\n"
                         u"\n {uri}")
     def send_forgotten_password(self, context, email):
         self.send_confirm_url(context, email, self.forgotten_subject,
