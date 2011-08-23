@@ -32,22 +32,43 @@ from folder import Folder
 from folder_views import Folder_BrowseContent
 from registry import register_document_type
 from resource_ import DBResource
+from utils import get_content_containers
 from workflow import State_Field
 
 
 ###########################################################################
 # Saved searches
 ###########################################################################
+class Path_Field(Select_Field):
+
+    title = MSG(u'Path')
+    has_empty_option = False
+
+    @proto_property
+    def options(self):
+        context = get_context()
+
+        items = []
+        for resource in get_content_containers(context, set()):
+            path = resource.abspath
+            title = '/' if not path else ('%s/' % path)
+            items.append({'name': path, 'value': title, 'selected': False})
+
+        return items
+
+
+
 class SavedSearch_Content(SavedSearch):
 
     class_id = 'saved-search-content'
     class_title = MSG(u'Saved Search - Content')
 
-    fields = SavedSearch.fields + ['search_state']
-    search_state = State_Field(multiple=True)
+    fields = SavedSearch.fields + ['search_state', 'search_parent_paths']
+    search_state = State_Field(has_empty_option=True, default='')
+    search_parent_paths = Path_Field()
 
     # Views
-    _fields = ['title', 'search_state']
+    _fields = ['title', 'search_state', 'search_parent_paths']
     edit = AutoEdit(fields=_fields)
     new_instance = NewInstance_Local(fields=_fields)
 
