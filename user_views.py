@@ -281,7 +281,7 @@ class User_EditPassword(AutoForm):
         is_same_user = (resource.name == context.user.name)
         if is_same_user:
             password = form['password']
-            if not resource.authenticate(password, clear=True):
+            if not resource.authenticate(password):
                 context.message = ERROR(
                     u"You mistyped your actual password, your account is"
                     u" not changed.")

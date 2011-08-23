@@ -24,7 +24,6 @@ from copy import deepcopy
 from itools.database import register_field
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.log import log_warning
 from itools.uri import Path, Reference
 from itools.web import INFO
 
@@ -120,18 +119,9 @@ class User(DBResource):
         self.set_property('password', secure_hash)
 
 
-    def authenticate(self, password, clear=None):
-        if clear is not None:
-            log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
-
+    def authenticate(self, password):
         secure_hash = get_secure_hash(password)
         return secure_hash == self.get_value('password')
-
-
-    def set_auth_cookie(self, context, password):
-        msg = "user.set_auth_cookie is DEPRECATED, use context.login(user)"
-        log_warning(msg, domain='ikaaro')
-        context.login(self)
 
 
     ########################################################################

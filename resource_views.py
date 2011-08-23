@@ -236,7 +236,7 @@ class LoginView(STLView):
 
         # Case 2: Login
         password = form['password']
-        if user is None or not user.authenticate(password, clear=True):
+        if user is None or not user.authenticate(password):
             message = ERROR(u'The login name or the password is incorrect.')
             context.message = message
             return
