@@ -23,6 +23,7 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 
 # Import from itools
+from itools.core import is_prototype
 from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -346,7 +347,7 @@ class Folder(DBResource):
                 class_id = query.get('type')
                 if class_id:
                     cls = self.database.get_resource_class(class_id)
-                    if isinstance(cls.new_instance, BaseView):
+                    if is_prototype(cls.new_instance, BaseView):
                         return cls.new_instance
 
         # Default

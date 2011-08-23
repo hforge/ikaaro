@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import lazy
+from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Metadata, Resource, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
@@ -287,10 +287,11 @@ class DBResource(Resource):
 
         # Explicit view, defined by name
         view = getattr(self, name, None)
-        if view is None or not isinstance(view, BaseView):
-            return None
+        if is_prototype(view, BaseView):
+            return view
 
-        return view
+        return None
+
 
     def get_context_menus(self):
         return self.context_menus
