@@ -70,6 +70,15 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
         return proxy.get_item_value(resource, context, item, column)
 
 
+class AddMenu(NewResource_Local):
+
+    title = MSG(u'Add item')
+
+    def get_items(self, resource, context):
+        return tuple(resource.get_document_types())
+
+
+
 class MenuItem(OrderedFolder):
 
     class_id = 'config-menu-item'
@@ -90,9 +99,9 @@ class MenuItem(OrderedFolder):
     new_instance = NewInstance_Local(fields=_fields)
     edit = AutoEdit(fields=_fields)
     browse_content = MenuItem_Browse()
-    add_menu = NewResource_Local(title=MSG(u'Add item'))
+    add_menu = AddMenu()
 
-    #######################################################################
+
     # API
     def _is_allowed_to_access(self, context, uri):
         # Get the reference and path
