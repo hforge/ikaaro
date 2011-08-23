@@ -759,7 +759,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_query_schema(self):
         # Define a huge batch limit, and the image size parameter
-        return merge_dicts(Folder_BrowseContent.get_query_schema(self),
+        schema = super(Folder_PreviewContent, self).get_query_schema()
+        return merge_dicts(schema,
                            batch_size=Integer(default=0),
                            size=Integer(default=128),
                            width=String,
@@ -769,7 +770,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
     def get_items(self, resource, context):
         # Show only images
         query = PhraseQuery('is_image', True)
-        return Folder_BrowseContent.get_items(self, resource, context, query)
+        proxy = super(Folder_PreviewContent, self)
+        return proxy.get_items(resource, context, query)
 
 
     def get_table_head(self, resource, context, items, actions=None):

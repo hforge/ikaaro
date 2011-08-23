@@ -149,8 +149,9 @@ class DBResource_Links(Folder_BrowseContent):
     table_actions = []
 
     def get_table_columns(self, resource, context):
-        cols = Folder_BrowseContent.get_table_columns(self, resource, context)
-        return [ col for col in cols if col[0] != 'checkbox' ]
+        proxy = super(DBResource_Links, self)
+        cols = proxy.get_table_columns(resource, context)
+        return [ x for x in cols if x[0] != 'checkbox' ]
 
 
     def get_items(self, resource, context):
