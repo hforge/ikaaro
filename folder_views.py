@@ -173,7 +173,7 @@ class Folder_NewResource(IconsView):
                     document_types.append(cls)
 
         # 2. Add dynamic models
-        models = resource.get_resource('config/models')
+        models = resource.get_resource('/config/models')
         for cls in models.get_dynamic_classes():
             document_types.append(cls)
 
