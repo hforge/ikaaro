@@ -30,7 +30,7 @@ from itools.web import INFO
 # Import from ikaaro
 from autoedit import AutoEdit
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
-from fields import File_Field, URI_Field
+from fields import File_Field, Select_Field, URI_Field
 from folder import Folder
 from resource_ import DBResource
 from user_views import User_ConfirmRegistration, User_EditAccount
@@ -39,6 +39,16 @@ from user_views import User_ResendConfirmation
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
 from utils import get_secure_hash, generate_password
 from views import MessageView
+
+
+class UserState_Field(Select_Field):
+
+    parameters_schema = {'key': String}
+    default = 'active'
+    options = [
+        {'name': 'active', 'value': MSG(u'Active')},
+        {'name': 'pending', 'value': MSG(u'Pending confirmation')},
+        {'name': 'inactive', 'value': MSG(u'Inactive')}]
 
 
 
@@ -57,7 +67,7 @@ class User(DBResource):
     # Metadata
     ########################################################################
     fields = ['firstname', 'lastname', 'email', 'password', 'avatar',
-              'user_language', 'user_timezone', 'user_must_confirm',
+              'user_language', 'user_timezone', 'user_state',
               'groups', 'username']
     firstname = Text_Field(multilingual=False, indexed=True, stored=True,
                            title=MSG(u'First Name'))
@@ -69,7 +79,7 @@ class User(DBResource):
     avatar = File_Field(title=MSG(u'Avatar'))
     user_language = Char_Field
     user_timezone = Char_Field
-    user_must_confirm = Char_Field
+    user_state = UserState_Field
     groups = URI_Field(multiple=True, indexed=True)
     # Metadata (backwards compatibility)
     username = Char_Field(indexed=True, stored=True)
@@ -198,11 +208,12 @@ class User(DBResource):
 
     def send_confirm_url(self, context, email, subject, text, view):
         # Set the confirmation key
-        if self.has_property('user_must_confirm'):
-            key = self.get_value('user_must_confirm')
+        state = self.get_property('user_state')
+        if state.value == 'pending':
+            key = state.get_parameter('key')
         else:
             key = generate_password(30)
-            self.set_property('user_must_confirm', key)
+            self.set_value('user_state', 'pending', key=key)
 
         # Build the confirmation link
         confirm_url = deepcopy(context.uri)

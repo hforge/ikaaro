@@ -590,7 +590,8 @@ class Observable(object):
             users = root.get_resource('users')
             user = users.set_user(email, password=None)
             # Mark it as new
-            user.set_property('user_must_confirm', generate_password(30))
+            key = generate_password(30)
+            user.set_property('user_state', 'pending', key=key)
 
         # Add to subscribers list
         self.reset_register_key(user.name)
@@ -664,7 +665,7 @@ class Observable(object):
             if self.get_register_key(username) is not None:
                 continue
             user = root.get_user(username)
-            if user and not user.get_value('user_must_confirm'):
+            if user and not user.get_value('user_state') == 'active':
                 mail = user.get_value('email')
 
                 language = user.get_value('user_language')

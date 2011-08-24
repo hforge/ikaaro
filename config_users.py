@@ -21,9 +21,9 @@ from itools.web import ERROR, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, TextWidget, PasswordWidget
-from buttons import Button
+from buttons import Button, BrowseButton
 from config import Configuration
-from messages import MSG_PASSWORD_MISMATCH
+from messages import MSG_CHANGES_SAVED, MSG_PASSWORD_MISMATCH
 from resource_ import DBResource
 from user_views import BrowseUsers
 
@@ -105,6 +105,37 @@ class AddUser(AutoForm):
             return context.come_back(message, goto=goto)
 
 
+
+class ConfigUsers_Browse(BrowseUsers):
+
+    table_actions = [
+        BrowseButton(access='is_admin', name='switch_state',
+                     title=MSG(u'Switch state'))]
+
+
+    def action_switch_state(self, resource, context, form):
+        # Verify if after this operation, all is ok
+        usernames = form['ids']
+        if context.user.name in usernames:
+            context.message = ERROR(u'You cannot change your state yourself.')
+            return
+
+        database = resource.database
+        for username in usernames:
+            user = database.get_resource('/users/%s' % username)
+            user_state = user.get_value('user_state')
+            if user_state == 'active':
+                user.set_value('user_state', 'inactive')
+            elif user_state == 'inactive':
+                user.set_value('user_state', 'active')
+            else: # pending
+                continue
+
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
 class ConfigUsers(DBResource):
 
     class_id = 'config-users'
@@ -114,7 +145,7 @@ class ConfigUsers(DBResource):
 
     # Views
     class_views = ['browse_users', 'add_user']
-    browse_users = BrowseUsers()
+    browse_users = ConfigUsers_Browse()
     add_user = AddUser()
 
     # Configuration

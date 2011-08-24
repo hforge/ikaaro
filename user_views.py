@@ -33,7 +33,6 @@ from pytz import common_timezones
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from autoform import TextWidget
-from buttons import RemoveButton
 from folder import Folder_BrowseContent
 import messages
 from views import BrowseForm
@@ -59,7 +58,7 @@ class User_ConfirmRegistration(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'key':
-            return resource.get_value('user_must_confirm')
+            return resource.get_property('user_state').get_parameter('key')
         if name == 'username':
             return resource.get_login_name()
 
@@ -69,12 +68,13 @@ class User_ConfirmRegistration(AutoForm):
 
     def get_namespace(self, resource, context):
         # Check register key
-        must_confirm = resource.get_value('user_must_confirm')
         username = context.get_form_value('username', default='')
-        if must_confirm is None:
+
+        key = resource.get_property('user_state').get_parameter('key')
+        if key is None:
             goto = '/;login?username=%s' % username
             return context.come_back(messages.MSG_REGISTERED, goto=goto)
-        elif context.get_form_value('key') != must_confirm:
+        elif context.get_form_value('key') != key:
             goto ='/;login?username=%s' % username
             return context.come_back(messages.MSG_BAD_KEY, goto=goto)
 
@@ -84,8 +84,12 @@ class User_ConfirmRegistration(AutoForm):
 
     def action(self, resource, context, form):
         # Check register key
-        must_confirm = resource.get_value('user_must_confirm')
-        if form['key'] != must_confirm:
+        key = resource.get_property('user_state').get_parameter('key')
+        if not key:
+            context.message = MSG(u'User is not pending')
+            return
+
+        if form['key'] != key:
             context.message = messages.MSG_BAD_KEY
             return
 
@@ -98,7 +102,7 @@ class User_ConfirmRegistration(AutoForm):
 
         # Set user
         resource.set_password(password)
-        resource.del_property('user_must_confirm')
+        resource.del_property('user_state')
         # Set cookie
         context.login(resource)
 
@@ -120,7 +124,8 @@ class User_ResendConfirmation(BaseView):
 
     def GET(self, resource, context):
         # Already confirmed
-        if not resource.has_property('user_must_confirm'):
+        user_state = resource.get_value('user_state')
+        if user_state != 'pending':
             msg = MSG(u'User has already confirmed his registration!')
             return context.come_back(msg)
 
@@ -161,12 +166,13 @@ class User_Profile(STLView):
 
     def get_namespace(self, resource, context):
         avatar = resource.get_value('avatar')
+        state = resource.get_property('user_state')
         return {
             'firstname': resource.get_value('firstname'),
             'lastname': resource.get_value('lastname'),
             'avatar': avatar is not None,
             'items': self.get_items(resource, context),
-            'user_must_confirm': resource.has_property('user_must_confirm')}
+            'user_is_active': (state == 'active')}
 
 
 
@@ -295,8 +301,7 @@ class User_EditPassword(AutoForm):
             return
 
         # Clear confirmation key
-        if resource.has_property('user_must_confirm'):
-            resource.del_property('user_must_confirm')
+        resource.set_value('user_state', None)
 
         # Set password
         resource.set_password(newpass)
@@ -321,7 +326,6 @@ class UserFolder_BrowseContent(Folder_BrowseContent):
     search_widgets = [TextWidget('username', title=MSG(u'Login')),
                       TextWidget('lastname', title=MSG(u'Last Name')),
                       TextWidget('firstname', title=MSG(u'First Name'))]
-
 
 
 class BrowseUsers(BrowseForm):
@@ -387,9 +391,6 @@ class BrowseUsers(BrowseForm):
         ('account_state', MSG(u'State'))]
 
 
-    table_actions = [RemoveButton]
-
-
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             return item.name, False
@@ -403,23 +404,9 @@ class BrowseUsers(BrowseForm):
             return item.lastname
         elif column == 'account_state':
             user = context.database.get_resource(item.abspath)
-            if user.get_value('user_must_confirm'):
+            user_state = user.get_value('user_state')
+            if user_state == 'pending':
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Resend Confirmation'), href
-            return MSG(u'Active'), None
 
-
-    def action_remove(self, resource, context, form):
-        usernames = form['ids']
-
-        # Verify if after this operation, all is ok
-        user = context.user
-        if str(user.name) in usernames:
-            context.message = ERROR(u'You cannot remove yourself.')
-            return
-
-        # Make the operation
-        resource.set_user_role(usernames, None)
-
-        # Ok
-        context.message = u"Members deleted."
+            return user.get_value_title('user_state'), None

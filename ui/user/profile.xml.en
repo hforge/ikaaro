@@ -4,8 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <p stl:if="user_must_confirm">
-  The user is not active, (s)he has not confirmed registration.
+  <p stl:if="not user_is_active">
+  This account is not active.
   </p>
 
   <div style="float: right">

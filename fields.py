@@ -56,7 +56,7 @@ class Field(BaseField):
         raise NotImplementedError
 
 
-    def set_value(self, resource, name, value, language=None):
+    def set_value(self, resource, name, value, language=None, **kw):
         """If value == old value then return False
            else make the change and return True
         """
@@ -66,7 +66,7 @@ class Field(BaseField):
             return False
 
         # Set property
-        self._set_value(resource, name, value, language)
+        self._set_value(resource, name, value, language, **kw)
         get_context().database.change_resource(resource)
         return True
 
@@ -139,9 +139,12 @@ class Metadata_Field(Field):
         return property.value
 
 
-    def _set_value(self, resource, name, value, language=None):
+    def _set_value(self, resource, name, value, language=None, **kw):
         if language:
-            value = Property(value, lang=language)
+            kw['lang'] = language
+        if kw:
+            value = Property(value, **kw)
+
         resource.metadata.set_property(name, value)
 
 
@@ -392,7 +395,7 @@ class File_Field(Field):
         return get_handler(key, cls=cls, soft=True)
 
 
-    def _set_value(self, resource, name, value, language=None):
+    def _set_value(self, resource, name, value, language=None, **kw):
         """
         value may be:
 
@@ -404,6 +407,9 @@ class File_Field(Field):
         """
         if self.multilingual and not language:
             raise ValueError, 'expected "language" param not found'
+
+        if kw:
+            raise NotImplementedError, 'keyword arguments not supported'
 
         # FIXME This should remove the handler, the FileWidget should include
         # a checkbox to remove the handler
