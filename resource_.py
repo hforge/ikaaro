@@ -559,14 +559,20 @@ class DBResource(Resource):
 
 
     def get_links(self):
+        # Automatically from the fields
         languages = self.get_resource('/').get_value('website_languages')
-
         links = set()
         for field_name in self.fields:
             field = self.get_field(field_name)
             if field:
                 field.get_links(links, self, field_name, languages)
 
+        # Support for dynamic models
+        class_id = self.metadata.format
+        if class_id[0] == '/':
+            links.add(class_id)
+
+        # Ok
         return links
 
 
