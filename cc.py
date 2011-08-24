@@ -559,7 +559,7 @@ class Observable(object):
                 continue
 
             # other
-            if skip_unconfirmed is False or cc['status'] == 'S':
+            if skip_unconfirmed is False and cc['status'] == 'S':
                 users.append(cc['username'])
 
         return users
