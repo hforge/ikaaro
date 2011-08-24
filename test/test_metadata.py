@@ -19,10 +19,10 @@ from unittest import TestCase, main
 
 # Import from itools
 from itools.csv import Property
+from itools.database import Metadata
 from itools.fs import vfs
 
 # Import from ikaaro
-from ikaaro.metadata import Metadata
 from ikaaro.webpage import WebPage
 
 
