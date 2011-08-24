@@ -60,7 +60,10 @@ def get_workflow_preview(resource, context):
     if not isinstance(resource, WorkflowAware):
         return None
     state = resource.get_value('state')
-    state_title = resource.get_value_title('state').gettext().encode('utf-8')
+    if state is None:
+        return None
+    state_title = resource.get_value_title('state')
+    state_title = state_title.gettext().encode('utf-8')
     # TODO Include the template in the base table
     state = '<span class="wf-%s">%s</span>' % (state, state_title)
     return XMLParser(state)
