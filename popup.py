@@ -394,10 +394,7 @@ class DBResource_AddBase(STLView):
             context.message = ERROR(error)
             return
 
-        kw = {'body': body,
-              'format': mimetype,
-              'filename': filename,
-              'extension': type}
+        kw = {'data': body, 'filename': filename}
         # WorkflowAware class
         if issubclass(cls, WorkflowAware):
             kw['state'] = form['state']
