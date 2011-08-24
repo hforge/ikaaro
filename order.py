@@ -128,7 +128,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
         resource.order_remove(form['ids'])
         # Super
         proxy = super(OrderedFolder_BrowseContent, self)
-        return proxy.get_item_value(resource, context, form)
+        return proxy.action_remove(resource, context, form)
 
 
     def action_order_up(self, resource, context, form):
