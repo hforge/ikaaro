@@ -314,9 +314,9 @@ class DBResource(Resource):
         return field.get_value(self, name)
 
 
-    def set_value(self, name, value, language=None):
+    def set_value(self, name, value, language=None, **kw):
         field = self.get_field(name)
-        return field.set_value(self, name, value, language)
+        return field.set_value(self, name, value, language, **kw)
 
 
     def get_value_title(self, name):
