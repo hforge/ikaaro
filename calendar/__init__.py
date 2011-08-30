@@ -29,6 +29,7 @@ from calendar_ import ConfigCalendar
 from calendar_views import MonthlyView, WeeklyView, DailyView
 from calendar_views import Calendar_NewEvent
 from event import Event, EventModel, Event_Edit, Event_NewInstance
+from event import Event_Render
 from family import Calendar_Family, Calendar_FamiliesEnumerate
 
 
@@ -51,4 +52,4 @@ Root.daily_view = DailyView()
 Root.new_event = Calendar_NewEvent()
 
 # Silent pyflakes
-Event_Edit, Event_NewInstance
+Event_Render, Event_Edit, Event_NewInstance

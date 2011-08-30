@@ -34,6 +34,7 @@ from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.folder import Folder
+from ikaaro.utils import CMSTemplate
 from ikaaro import messages
 
 # Import from calendar
@@ -239,6 +240,19 @@ class EventDatetime_Field(Datetime_Field):
 
 
 
+class Event_Render(CMSTemplate):
+
+    template = '/ui/calendar/event_render.xml'
+
+    event = None
+    day = None
+    grid = False
+
+    def ns(self):
+        return self.event.get_ns_event(self.day, self.grid)
+
+
+
 class Event(Content):
 
     class_id = 'event'
@@ -248,9 +262,10 @@ class Event(Content):
     class_icon48 = 'icons/48x48/event.png'
     class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
-    event_edit_views = ['edit']
+    # Render
+    render = Event_Render
 
-
+    # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
     owner = Char_Field(readonly=True, indexed=True)
@@ -335,29 +350,27 @@ class Event(Content):
         return values
 
 
-    def get_ns_event(self, conflicts_list, grid, starts_on, ends_on, out_on):
-        """Specify the namespace given on views to represent an event.
+    def get_ns_event(self, current_day, grid=False):
+        context = get_context()
+        ns = {'id': str(self.get_abspath()),
+              'link': context.get_link(self),
+              'title': self.get_title(),
+              'cal': 0,
+              'color': self.get_color(),
+              'current_day': current_day,
+              'description': self.get_value('description'),
+              'status': self.get_value('status') or 'cal_busy',
+              'ORGANIZER': self.get_owner()}
 
-        conflicts_list: list of conflicting uids for current resource, [] if
-            not used
-        grid: current calculated view uses gridlayout
-        starts_on, ends_on and out_on are used to adjust display.
-
-        By default, we get:
-
-          start: HH:MM, end: HH:MM,
-            TIME: (HH:MM-HH:MM) or TIME: (HH:MM...) or TIME: (...HH:MM)
-          or
-          start: None,  end: None, TIME: None
-
-          summary: 'summary of the event'
-          status: 'status' (class: cal_conflict, if id in conflicts_list)
-          ORGANIZER: 'organizer of the event'
-        """
-        ns = {
-            'title': self.get_title(),
-            'description': self.get_value('description'),
-            'ORGANIZER': self.get_owner()}
+        ###############################################################
+        # URL
+        context = get_context()
+        user = context.user
+        ac = self.get_access_control()
+        if ac.is_allowed_to_view(user, self):
+            ns['url'] = '%s/;edit' % context.get_link(self)
+        else:
+            ns['url'] = None
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
@@ -376,6 +389,17 @@ class Event(Content):
         else:
             ns['end'] = '23:59'
 
+        ###############################################################
+        # Time
+        if type(dtstart) is datetime:
+            e_dtstart = dtstart.date()
+        if type(dtend) is datetime:
+            e_dtend = dtend.date()
+
+        # Does current event occurs on current date ?
+        starts_on = e_dtstart == current_day
+        ends_on = e_dtend == current_day
+        out_on = (e_dtstart < current_day and e_dtend > current_day)
         ns['TIME'] = None
         if grid:
             # Neither a full day event nor a multiple days event
@@ -401,35 +425,6 @@ class Event(Content):
                         value = '...' + value
                 if value:
                     ns['TIME'] = '(' + value + ')'
-
-        ###############################################################
-        # Set class for conflicting events or just from status value
-        id = self.get_abspath()
-        ns['id'] = str(id)
-
-        if id in conflicts_list:
-            ns['status'] = 'cal_conflict'
-        else:
-            ns['status'] = 'cal_busy'
-            status = self.get_value('status')
-            if status:
-                ns['status'] = status
-        ###############################################################
-        # Event links
-        # XXX Only used on monthly view. we have to generalize that
-        context = get_context()
-        ns['links'] = []
-        url = '%s/;{view}' % context.get_link(self)
-        ac = self.get_access_control()
-        user = get_context().user
-        title = self.get_title()
-        for i, view_name in enumerate(self.event_edit_views):
-            view = getattr(self, view_name, None)
-            if ac.is_access_allowed(user, self, view):
-                ns['links'].append(
-                    {'title': u'*' if i > 0 else title,
-                     'url': url.format(view=view_name),
-                     'name': view_name})
         return ns
 
 

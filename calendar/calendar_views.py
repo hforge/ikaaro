@@ -27,7 +27,6 @@ from itools.core import proto_lazy_property
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
-from itools.stl import stl
 from itools.web import BaseView, STLView, get_context, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
@@ -67,6 +66,9 @@ days = {
     6: MSG(u'Sunday')}
 
 
+######################################################################
+# Calendar timetables configuration
+######################################################################
 
 def build_timetables(start_time, end_time, interval):
     """Build a list of timetables represented as tuples(start, end).
@@ -184,6 +186,9 @@ class TimetablesForm(STLView):
         context.message = messages.MSG_CHANGES_SAVED
 
 
+######################################################################
+# Calendar Navigation
+######################################################################
 
 class CalendarSelectorTemplate(CMSTemplate):
 
@@ -282,6 +287,9 @@ class CalendarSelectorTemplate(CMSTemplate):
                 self.make_link(MSG(u'Month'), self.c_date, 'monthly_view')]
 
 
+######################################################################
+# Calendar Views
+######################################################################
 
 class CalendarView(STLView):
 
@@ -359,72 +367,19 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-    def search(self, calendar, **kw):
-        # Build the query
-        query = AndQuery()
+    def get_events(self, day=None, *args):
+        context = get_context()
+        root = context.root
+        query = list(args)
         query.append(PhraseQuery('is_event', True))
-        for name, value in kw.items():
-            query.append(PhraseQuery(name, value))
-
-        # Search
-        return get_context().root.search(query)
+        if day:
+            query.append(PhraseQuery('dates', day))
+        search = root.search(AndQuery(*query))
+        return search.get_resources(sort_by='dtstart')
 
 
     def get_config_calendar(self, resource):
         return resource.get_resource('/config/calendar')
-
-
-    def events_to_namespace(self, resource, events, day, grid=False,
-                            show_conflicts=False):
-        """Build namespace for events occuring on current day.
-        Update events, removing past ones.
-
-        Events is a list of events where each one follows:
-          (resource_name, dtstart, event)
-          'event' object must have a methods:
-              - get_end
-              - get_ns_event.
-        """
-        context = get_context()
-        user = context.user
-        ac = resource.get_access_control()
-
-        ns_events = []
-        events = events.search(dates=day)
-        for event in events.get_documents(sort_by='dtstart'):
-            e_dtstart = event.dtstart
-            if type(e_dtstart) is datetime:
-                e_dtstart = e_dtstart.date()
-            e_dtend = event.dtend
-            if type(e_dtend) is datetime:
-                e_dtend = e_dtend.date()
-
-            # Current event occurs on current date
-            starts_on = e_dtstart == day
-            ends_on = e_dtend == day
-            out_on = (e_dtstart < day and e_dtend > day)
-
-            conflicts_list = set()
-            if show_conflicts:
-                handler = resource.handler
-                conflicts = handler.get_conflicts(e_dtstart, e_dtend)
-                if conflicts:
-                    for uids in conflicts:
-                        conflicts_list.update(uids)
-            event = resource.get_resource(event.abspath)
-            ns_event = event.get_ns_event(conflicts_list, grid, starts_on,
-                                          ends_on, out_on)
-            if ac.is_allowed_to_view(user, event):
-                url = '%s/;edit' % context.get_link(event)
-            else:
-                url = None
-            ns_event['url'] = url
-            ns_event['cal'] = 0
-            ns_event['color'] = event.get_color()
-            ns_event.setdefault('resource', {})['color'] = 0
-            ns_events.append(ns_event)
-
-        return ns_events
 
 
     def get_namespace(self, resource, context):
@@ -440,7 +395,6 @@ class MonthlyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
     template = '/ui/calendar/monthly_view.xml'
-    monthly_template = '/ui/calendar/monthly_template.xml'
 
     ndays = 7
     method = 'monthly_view'
@@ -466,10 +420,6 @@ class MonthlyView(CalendarView):
         with_new_url = self.get_with_new_url(resource, context)
         # Start date
         start = self.get_start_date(c_date)
-        # Get a list of events to display on view
-        events = self.search(resource)
-        # Get montly template
-        template = context.get_template(self.monthly_template)
         # Get header line with days of the week
         namespace['days_of_week'] = self.days_of_week_ns(start, ndays=self.ndays)
         # Get the 5 weeks
@@ -487,9 +437,13 @@ class MonthlyView(CalendarView):
                               'selected': (day == today_date)}
                     if with_new_url:
                         ns_day['url'] = link.format(date=Date.encode(day))
-                    # Insert events
-                    ns_events = self.events_to_namespace(resource, events, day)
-                    ns_day['events'] = stl(template, {'events': ns_events})
+                    # Get a list of events to display on view
+                    ns_day['events'] = []
+                    for event in self.get_events(day):
+                        ns_day['events'].append(
+                          {'stream': event.render(event=event, day=day),
+                           'color': event.get_color(),
+                           'status': event.get_value('status') or 'cal_busy'})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
                         ns_week['month'] = months[day.month].gettext()
@@ -541,14 +495,14 @@ class WeeklyView(CalendarView):
         if headers is None:
             headers = [None] * ndays
 
-        # For each found calendar (or self), get events
-        events = []
         # Get a list of events to display on view
-        events = self.search(resource)
         for header in headers:
             # Insert events
-            ns_events = self.events_to_namespace(resource, events,
-                                                 current_date, grid=True)
+            ns_events = []
+            for event in self.get_events(current_date):
+                n = event.get_ns_event(current_date, grid=True)
+                n['stream'] = event.render(event=event, day=current_date)
+                ns_events.append(n)
             ns_days.append({'header': header, 'events': ns_events})
             current_date += step
 
@@ -611,6 +565,9 @@ class DailyView(WeeklyView):
         return c_date
 
 
+######################################################################
+# Calendar Utils Views
+######################################################################
 
 class Calendar_Import(STLView):
 

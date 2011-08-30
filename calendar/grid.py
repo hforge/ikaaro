@@ -30,7 +30,7 @@ default_template_fd = XHTMLFile(string=
     <td xmlns="http://www.w3.org/1999/xhtml"
         class="event"
         style="background-color: ${color}">
-      <a href="${url}" class="event-link ${status}" title="${description}">${title}</a>
+        ${stream}
     </td>""")
 
 # Template to display events with timetables
@@ -44,10 +44,7 @@ default_template = XHTMLFile(string=
       <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
         <img width="16" height="16" src="${add_icon}" />
       </a><br/>
-      <a href="${cell/content/url}" class="event-link ${cell/content/status}"
-        title="${cell/content/description}">
-        <span class="title">${cell/content/title}</span>
-      </a>
+      ${cell/content/stream}
     </td>""")
 
 
