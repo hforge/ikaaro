@@ -270,7 +270,7 @@ class Event(Content):
                                'rrule', 'reminder', 'uid']
     owner = Char_Field(readonly=True, indexed=True)
     family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
-                title=MSG(u'Calendar'))
+                title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
@@ -344,6 +344,7 @@ class Event(Content):
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
         values['is_event'] = True
+        values['family'] = self.get_value('family')
         values['dates'] = self.get_dates()
         values['owner'] = self.get_owner()
         values['reminders'] = self.get_reminders()
