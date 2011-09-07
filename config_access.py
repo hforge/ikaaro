@@ -17,6 +17,7 @@
 # Import from itools
 from itools.core import proto_property
 from itools.database import PhraseQuery
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
 
@@ -39,13 +40,9 @@ from workflow import State_Field
 ###########################################################################
 # Saved searches
 ###########################################################################
-class Path_Field(Select_Field):
+class Path_Datatype(Enumerate):
 
-    title = MSG(u'Path')
-    has_empty_option = False
-
-    @proto_property
-    def options(self):
+    def get_options(self):
         context = get_context()
 
         items = []
@@ -55,6 +52,13 @@ class Path_Field(Select_Field):
             items.append({'name': path, 'value': title, 'selected': False})
 
         return items
+
+
+class Path_Field(Select_Field):
+
+    datatype = Path_Datatype
+    has_empty_option = False
+    title = MSG(u'Path')
 
 
 
