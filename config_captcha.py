@@ -25,12 +25,15 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import TextWidget, Widget
+from autoform import TextWidget, RadioWidget, Widget
 from config import Configuration
 from fields import Select_Field, Text_Field
+from folder import Folder
 from resource_ import DBResource
 from utils import make_stl_template
 
+
+captcha_field = Text_Field(multilingual=False)
 
 ###########################################################################
 # ReCaptcha
@@ -39,6 +42,7 @@ from utils import make_stl_template
 class RecaptchaWidget(Widget):
 
     title = MSG(u"Please enter the words below")
+    public_key = None
 
     template = make_stl_template(
         """
@@ -60,25 +64,17 @@ class RecaptchaWidget(Widget):
         """)
 
 
-    def public_key(self):
-        root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        return captcha.get_value('recaptcha_public_key')
-
-
 
 
 class RecaptchaDatatype(String):
 
     mandatory = True
+    private_key = None
 
-    @classmethod
     def is_valid(cls, value):
         context = get_context()
         if getattr(context, 'recaptcha_return_code', None) == 'true':
             return True
-        captcha = context.root.get_resource('config/captcha')
-        private_key = captcha.get_value('recaptcha_private_key')
         # Get remote ip
         remote_ip = context.get_remote_ip() or '127.0.0.1'
         # Get Captcha fields
@@ -88,7 +84,7 @@ class RecaptchaDatatype(String):
             'recaptcha_response_field', type=String)
         # Test if captcha value is valid
         params = urllib.urlencode ({
-                'privatekey': private_key,
+                'privatekey': cls.private_key,
                 'remoteip' :  remote_ip,
                 'challenge':  recaptcha_challenge_field,
                 'response' :  recaptcha_response_field,
@@ -108,49 +104,96 @@ class RecaptchaDatatype(String):
         return return_code == 'true'
 
 
+
+class Captcha_Recaptcha(DBResource):
+
+    class_id = 'config-captcha-recaptcha'
+    class_title = MSG(u'Recaptcha')
+    class_views = ['edit']
+
+    # Fields
+    fields = ['public_key', 'private_key']
+    public_key = captcha_field(title=MSG(u"Recaptcha public key"))
+    private_key = captcha_field(title=MSG(u"Recaptcha private key"))
+
+    # Views
+    edit = AutoEdit(fields=fields)
+
+    # API
+    def get_widget(self):
+        return RecaptchaWidget(public_key=self.get_value('public_key'))
+
+
+    def get_datatype(self):
+        return RecaptchaDatatype(private_key=self.get_value('private_key'))
+
+
 ###########################################################################
 # Question Captcha
 ###########################################################################
 
 class QuestionCaptchaDatatype(Unicode):
+
     mandatory = True
+    answer = None
 
-
-    @staticmethod
-    def is_valid(value):
-        root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        return captcha.get_value('captcha_answer') == value
+    def is_valid(cls, value):
+        return cls.answer == value
 
 
 
 class QuestionCaptchaWidget(TextWidget):
+
     title = MSG(u"Please answer the question below:")
+
+    question = None
     template = make_stl_template("""
     ${question}
     <input type="text" id="${id}" name="${name}" value="${value}"
       maxlength="${maxlength}" size="${size}" />""")
 
 
-    def question(self):
-        root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        return captcha.get_value('captcha_question')
+
+
+class Captcha_Question(DBResource):
+
+    class_id = 'config-captcha-question'
+    class_title = MSG(u'Captcha question')
+    class_views = ['edit']
+
+    # Fields
+    fields = ['question', 'answer']
+    question = captcha_field(default=u'2 + 3', title=MSG(u"Question"))
+    answer = captcha_field(default=u'5', title=MSG(u"Answer"))
+
+    # Views
+    edit = AutoEdit(fields=fields)
+
+    # API
+    def get_widget(self):
+        return QuestionCaptchaWidget(question=self.get_value('question'))
+
+
+    def get_datatype(self):
+        return QuestionCaptchaDatatype(answer=self.get_value('answer'))
+
 
 
 ###########################################################################
 # CaptchaWidget
 ###########################################################################
+
 class CaptchaDatatype(Unicode):
 
     mandatory = True
 
-    @staticmethod
-    def is_valid(value):
+    def is_valid(cls, value):
         root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        captcha_type = captcha.get_value('captcha_type')
-        return CaptchaType.datatypes[captcha_type].is_valid(value)
+        config_captcha = root.get_resource('config/captcha')
+        captcha = config_captcha.get_captcha()
+        datatype = captcha.get_datatype()
+        return datatype.is_valid(value)
+
 
 
 class CaptchaWidget(Widget):
@@ -159,72 +202,82 @@ class CaptchaWidget(Widget):
     @proto_lazy_property
     def title(self):
         root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        captcha_type = captcha.get_value('captcha_type')
-        return CaptchaType.widgets[captcha_type].title
+        config_captcha = root.get_resource('config/captcha')
+        captcha = config_captcha.get_captcha()
+        widget = captcha.get_widget()
+        return widget.title
 
 
     def render(self, mode='events'):
         root = get_context().root
-        captcha = root.get_resource('config/captcha')
-        captcha_type = captcha.get_value('captcha_type')
-        widget = CaptchaType.widgets[captcha_type]
+        config_captcha = root.get_resource('config/captcha')
+        captcha = config_captcha.get_captcha()
+        widget = captcha.get_widget()
         return widget(name=self.name, value=self.value).render()
 
 
 
-###########################################################################
-# Resource
-###########################################################################
+#######################################################
+# Captcha Config
+#######################################################
+class Select_CaptchaWidget(RadioWidget):
+
+    template = make_stl_template("""
+    <stl:block stl:repeat="option options">
+      <input type="radio" id="${id}-${option/name}" name="${name}"
+        value="${option/name}" checked="${option/selected}" />
+      <label for="${id}-${option/name}">
+          <a href="${option/name}">
+          ${option/value}
+          </a>
+      </label>
+      <br stl:if="not oneline" />
+    </stl:block>""")
+
+
 
 class CaptchaType(Enumerate):
 
     default = 'question'
 
-    options = [{'name': 'question', 'value': MSG(u'Question captcha')},
-               {'name': 'recaptcha', 'value': MSG(u'Recaptcha')}]
-
-    widgets = {'question': QuestionCaptchaWidget,
-               'recaptcha': RecaptchaWidget}
-
-    datatypes = {'question': QuestionCaptchaDatatype,
-                 'recaptcha': RecaptchaDatatype}
+    options = [
+        {'name': 'question', 'value': MSG(u'Question captcha')},
+        {'name': 'recaptcha', 'value': MSG(u'Recaptcha')}]
 
 
-captcha_field = Text_Field(multilingual=False)
 
-
-class Captcha(DBResource):
+class Captcha(Folder):
 
     class_id = 'config-captcha'
     class_title = MSG(u'Captcha')
     class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'
 
-    fields = DBResource.fields + ['captcha_type',
-                                  'captcha_question', 'captcha_answer',
-                                  'recaptcha_public_key',
-                                  'recaptcha_private_key']
+    fields = Folder.fields + ['captcha_type']
     captcha_type = Select_Field(required=True, title=MSG(u"Captcha type"),
+                                widget=Select_CaptchaWidget(has_empty_option=False),
                                 datatype=CaptchaType)
-    # Question captcha
-    captcha_question = captcha_field(default=u'2 + 3', title=MSG(u"Question"))
-    captcha_answer = captcha_field(default=u'5', title=MSG(u"Answer"))
-    # ReCaptcha
-    recaptcha_public_key = captcha_field(title=MSG(u"Recaptcha public key"))
-    recaptcha_private_key = captcha_field(title=MSG(u"Recaptcha private key"))
 
     # Views
     class_views = ['edit']
-    edit = AutoEdit(
-        title=MSG(u'Edit captcha'),
-        fields=['captcha_type',
-                'captcha_question', 'captcha_answer',
-                'recaptcha_public_key', 'recaptcha_private_key'])
+    edit = AutoEdit(title=MSG(u'Edit captcha'), fields=['captcha_type'])
 
     # Configuration
     config_name = 'captcha'
     config_group = 'access'
 
 
+    def init_resource(self, **kw):
+        super(Captcha, self).init_resource(**kw)
+        # Init several captcha
+        self.make_resource('question', Captcha_Question)
+        self.make_resource('recaptcha', Captcha_Recaptcha)
+
+
+    def get_captcha(self):
+        captcha_type = self.get_value('captcha_type')
+        return self.get_resource(captcha_type)
+
+
+# Register captcha plugin
 Configuration.register_plugin(Captcha)
