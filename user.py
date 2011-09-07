@@ -162,6 +162,12 @@ class User(DBResource):
         return self.get_value('user_timezone')
 
 
+    def account_is_completed(self):
+        for name, field in self.get_fields():
+            if field.required and not self.has_property(name):
+                return False
+        return True
+
     ########################################################################
     # Email: Register confirmation & Password forgotten
     ########################################################################
