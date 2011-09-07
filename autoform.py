@@ -99,6 +99,7 @@ class HTMLBody(XHTMLBody):
 class Widget(CMSTemplate):
 
     id = None
+    name = None
     language = None
     maxlength = None
     size = None
@@ -120,7 +121,8 @@ class Widget(CMSTemplate):
     def __init__(self, name=None, **kw):
         if name:
             self.name = name
-        self.id = self.name.replace('_', '-')
+        if self.name:
+            self.id = self.name.replace('_', '-')
 
 
 
