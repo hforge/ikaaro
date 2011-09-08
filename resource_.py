@@ -129,10 +129,15 @@ class DBResource(Resource):
         """Return all the handlers attached to this resource, except the
         metadata.
         """
-        handlers = [
-            field.get_value(self, name) for name, field in self.get_fields()
-            if issubclass(field, File_Field) ]
-        handlers.append(self.handler)
+        handlers = [self.handler]
+        # Fields
+        for name, field in self.get_fields():
+            if issubclass(field, File_Field):
+                value = field.get_value(self, name)
+                if value is not None:
+                    handlers.append(value)
+
+        # Ok
         return handlers
 
 
