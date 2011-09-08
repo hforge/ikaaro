@@ -257,7 +257,7 @@ class WebSite_NewInstance(NewInstance):
         child = container.make_resource(form['name'], cls)
         # Set properties
         language = form['language']
-        child.metadata.set_property('website_languages', [language])
+        child.metadata.set_property('website_languages', (language,))
         title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
         vhosts = form['vhosts']
