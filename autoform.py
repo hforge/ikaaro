@@ -24,7 +24,7 @@ from random import randint
 
 # Import from itools
 from itools.core import get_abspath, proto_lazy_property
-from itools.datatypes import DataType, Boolean, Enumerate, PathDataType
+from itools.datatypes import DataType, Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
@@ -37,7 +37,7 @@ from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
 from buttons import Button
-from datatypes import BirthDate
+from datatypes import BirthDate, Password
 from enumerates import Days, Months, Years
 from utils import CMSTemplate, make_stl_template
 
@@ -816,7 +816,9 @@ widgets_registry = {
         Boolean: RadioWidget,
         Date: DateWidget,
         DateTime: DatetimeWidget,
+        Email: TextWidget,
         Enumerate: SelectWidget,
+        Password: PasswordWidget,
         PathDataType: PathSelectorWidget}
 
 def get_default_widget(datatype):
