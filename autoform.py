@@ -23,7 +23,7 @@ from datetime import datetime, date
 from random import randint
 
 # Import from itools
-from itools.core import get_abspath, proto_lazy_property
+from itools.core import get_abspath, is_prototype, proto_lazy_property
 from itools.datatypes import DataType, Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
@@ -266,7 +266,8 @@ class RadioWidget(Widget):
             labels = getattr(self, 'labels', default_labels)
             yes_selected = value in [True, 1, '1']
             return [
-                {'name': '1', 'value': labels['yes'], 'selected': yes_selected},
+                {'name': '1', 'value': labels['yes'],
+                 'selected': yes_selected},
                 {'name': '0', 'value': labels['no'],
                  'selected': not yes_selected}]
 
@@ -574,28 +575,6 @@ class RTEWidget(Widget):
 
 
 
-class LocationWidget(SelectWidget):
-    """This widget is only used in add forms. It is a hack because it is a
-    composite widget and ikaaro does not allow to do this easily.
-    """
-
-    template = make_stl_template("""
-    <select id="${id}" name="${name}" class="${css}">
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
-    </select>
-    <input stl:if="include_name"
-      type="text" id="name" name="name" value="${name_value}"
-      maxlength="80" size="40" style="width: 50%" />
-    """)
-
-    include_name = True
-
-    def name_value(self):
-        return get_context().query['name']
-
-
-
 class ProgressBarWidget(Widget):
     name = 'progress-bar'
     onsubmit = 'startProgressBar();'
@@ -638,7 +617,6 @@ class ProgressBarWidget(Widget):
 ###########################################################################
 # Common widgets to reuse
 ###########################################################################
-location_widget = LocationWidget('path', title=MSG(u'Location'))
 title_widget = TextWidget('title', title=MSG(u'Title'))
 description_widget = MultilineWidget('description',
                                      title=MSG(u'Description'), rows=8)
@@ -750,8 +728,7 @@ class AutoForm(STLView):
             ns_widget['title'] = getattr(widget, 'title', None)
             ns_widget['id'] = widget.id
             ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
-            ns_widget['is_date'] = (datatype is not None and
-                                    issubclass(datatype, Date))
+            ns_widget['is_date'] = is_prototype(datatype, Date)
             ns_widget['suffix'] = widget.suffix
             ns_widget['tip'] = widget.tip
             ns_widget['endline'] = getattr(widget, 'endline', False)

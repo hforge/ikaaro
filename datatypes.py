@@ -23,12 +23,8 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Date, Enumerate
+from itools.datatypes import DataType, Date
 from itools.fs import FileName
-from itools.web import get_context
-
-# Import from ikaaro
-from utils import get_content_containers
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -98,33 +94,6 @@ class CopyCookie(DataType):
     @staticmethod
     def decode(str):
         return loads(decompress(unquote(str)))
-
-
-
-class ContainerPathDatatype(Enumerate):
-
-    def get_options(cls):
-        context = get_context()
-        class_id = context.query['type']
-
-        skip_formats = set()
-        items = []
-        for resource in get_content_containers(context, skip_formats):
-            for cls in resource.get_document_types():
-                if cls.class_id == class_id:
-                    break
-            else:
-                skip_formats.add(resource.class_id)
-                continue
-
-            path = resource.abspath
-            title = '/' if not path else ('%s/' % path)
-            # Next
-            items.append({'name': path, 'value': title, 'selected': False})
-
-        # Sort
-        items.sort(key=lambda x: x['name'])
-        return items
 
 
 

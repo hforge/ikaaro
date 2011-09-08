@@ -15,19 +15,70 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, Time, String, Unicode, URI
+from itools.datatypes import DateTime, Enumerate, String, Time, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
-from autoform import AutoForm, HiddenWidget, ReadOnlyWidget
-from autoform import location_widget
+from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, SelectWidget
 from datatypes import BirthDate
 from buttons import Button
-from datatypes import ContainerPathDatatype, FileDataType
+from datatypes import FileDataType
 from enumerates import Days, Months, Years
 import messages
+from utils import get_content_containers, make_stl_template
+
+
+
+class ContainerPathDatatype(Enumerate):
+
+    def get_options(cls):
+        context = get_context()
+        class_id = context.query['type']
+
+        skip_formats = set()
+        items = []
+        for resource in get_content_containers(context, skip_formats):
+            for cls in resource.get_document_types():
+                if cls.class_id == class_id:
+                    break
+            else:
+                skip_formats.add(resource.class_id)
+                continue
+
+            path = resource.abspath
+            title = '/' if not path else ('%s/' % path)
+            # Next
+            items.append({'name': path, 'value': title, 'selected': False})
+
+        # Sort
+        items.sort(key=lambda x: x['name'])
+        return items
+
+
+
+class LocationWidget(SelectWidget):
+    """This widget is only used in add forms. It is a hack because it is a
+    composite widget and ikaaro does not allow to do this easily.
+    """
+
+    title = MSG(u'Location')
+
+    template = make_stl_template("""
+    <select id="${id}" name="${name}" class="${css}">
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>
+    <input type="text" id="name" name="name" value="${name_value}"
+      maxlength="80" size="40" style="width: 50%" />
+    """)
+
+    def name_value(self):
+        return get_context().query['name']
+
+
+location_widget = LocationWidget('path')
 
 
 
