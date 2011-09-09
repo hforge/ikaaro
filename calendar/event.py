@@ -392,6 +392,8 @@ class Event(Content):
 
         ###############################################################
         # Time
+        e_dtstart = dtstart
+        e_dtend = dtend
         if type(dtstart) is datetime:
             e_dtstart = dtstart.date()
         if type(dtend) is datetime:
