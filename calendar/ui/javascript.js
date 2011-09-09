@@ -16,7 +16,12 @@ $(document).ready(function(){
   });
   // Intercept clicks on add-event-area
   $(".add-event-area").click(function(e){
-    var link = $(this).children('.add-event').attr('href');
+    var target  = $(e.target);
+    if( target.is('img') ) {
+      var link = target.parent.attr('href');
+    }else{
+      var link = $(this).children('.add-event').attr('href');
+    }
     $(location).attr('href', link);
     return false;
   });
