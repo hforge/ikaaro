@@ -23,6 +23,7 @@ from itools.gettext import MSG
 from itools.web import BaseView
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from database import Database
 from fields import HTMLFile_Field
 from file import File
@@ -90,7 +91,7 @@ class WebPage(File):
     #######################################################################
     # Views
     #######################################################################
-    new_instance = DBResource.new_instance
+    new_instance = AutoAdd(fields=['title', 'location', 'data'])
     view = WebPage_View()
 
 

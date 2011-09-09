@@ -17,6 +17,8 @@
 
       /* language */
       language : "${rte_language}",
+      /* Use absloute urls */
+      relative_urls : 0,
       /* css */
       content_css : "${css}",
       table_styles : "${table_styles}",

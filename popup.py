@@ -108,8 +108,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         brain, item_resource = item
         if column == 'checkbox':
             # radiobox
-            id = str(resource.get_abspath().get_pathto(brain.abspath))
-            id += self.resource_action
+            id = brain.abspath + self.resource_action
             return id, False
         elif column == 'name':
             target = self.target
@@ -182,7 +181,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                     path_to_icon = Path('%s/' % brain.name).resolve(
                                                             path_to_icon)
             else:
-                path = resource.get_pathto(item_resource)
+                path = item_resource.abspath
                 path_to_icon = ";thumb?width48=&height=48"
                 if path:
                     path_to_resource = Path(str(path) + '/')
@@ -406,7 +405,7 @@ class DBResource_AddBase(STLView):
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
         # Get the path
-        path = resource.get_pathto(child)
+        path = child.abspath
         action = self.get_resource_action(context)
         if action:
             path = '%s%s' % (path, action)
@@ -478,10 +477,9 @@ class DBResource_AddLink(DBResource_AddBase):
         # WorkflowAware resource
         if isinstance(child, WorkflowAware):
             child.set_property('state', form['state'])
-        path = context.resource.get_pathto(child)
         scripts = self.get_scripts(context)
         context.add_script(*scripts)
-        return self.get_javascript_return(context, path)
+        return self.get_javascript_return(context, child.abspath)
 
 
     def get_page_type(self, mode):
