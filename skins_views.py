@@ -136,8 +136,6 @@ class LocationTemplate(CMSTemplate):
         # Tabs
         tabs = []
         for link, view in here.get_views():
-            active = False
-
             # From method?param1=value1&param2=value2&...
             # we separate method and arguments, then we get a dict with
             # the arguments and the subview active state
@@ -148,15 +146,14 @@ class LocationTemplate(CMSTemplate):
                 name, args = link, {}
 
             # Active
-            if context.view == here.get_view(name, args):
-                active = True
+            active = context.view.__bases__[0] is here.get_view(name, args)
 
             # Add the menu
             tabs.append({
                 'name': '%s/;%s' % (here_link, link),
                 'label': view.get_title(context),
                 'active': active,
-                'class': active and 'active' or None})
+                'class': 'active' if active else None})
 
         return tabs
 
