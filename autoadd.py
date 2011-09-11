@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import proto_lazy_property
 from itools.datatypes import DateTime, Enumerate, String, Time, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -91,16 +92,16 @@ class AutoAdd(AutoForm):
 
 
     fields = ['title', 'location']
-    def get_fields(self, cls):
+    def get_fields(self):
         return self.fields
 
 
     #######################################################################
     # GET
     #######################################################################
-    def _get_resource_class(self, context=None):
-        if context is None:
-            context = get_context()
+    @proto_lazy_property
+    def _resource_class(self):
+        context = self.context
 
         class_id = context.query['type']
         if not class_id:
@@ -112,7 +113,7 @@ class AutoAdd(AutoForm):
         if self.title is not None:
             return self.title
 
-        cls = self._get_resource_class(context)
+        cls = self._resource_class
         if cls:
             class_title = cls.class_title.gettext()
             title = MSG(u'Add {class_title}')
@@ -122,7 +123,7 @@ class AutoAdd(AutoForm):
 
 
     def _get_datatype(self, resource, context, name):
-        cls = self._get_resource_class(context)
+        cls = self._resource_class
         field = cls.get_field(name)
         field = field(resource=cls) # bind
         return field.get_datatype()
@@ -145,8 +146,7 @@ class AutoAdd(AutoForm):
         schema = {
             'cls_description': Unicode,
             'referrer': URI}
-        cls = self._get_resource_class(context)
-        for name in self.get_fields(cls):
+        for name in self.get_fields():
             # Special case: location
             if name == 'location':
                 schema['path'] = ContainerPathDatatype
@@ -176,7 +176,7 @@ class AutoAdd(AutoForm):
         if name == 'location':
             return location_widget
 
-        cls = self._get_resource_class(context)
+        cls = self._resource_class
         field = cls.get_field(name)
         return field.get_widget(name)
 
@@ -185,8 +185,7 @@ class AutoAdd(AutoForm):
         widgets = [
             ReadOnlyWidget('cls_description'),
             HiddenWidget('referrer')]
-        cls = self._get_resource_class(context)
-        for name in self.get_fields(cls):
+        for name in self.get_fields():
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
 
@@ -195,7 +194,7 @@ class AutoAdd(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'cls_description':
-            cls = self._get_resource_class(context)
+            cls = self._resource_class
             value = cls.class_description
             return value.gettext() if value else u''
         elif name == 'referrer':
@@ -293,12 +292,12 @@ class AutoAdd(AutoForm):
         """
         # 1. Make the resource
         container = form['container']
-        cls = self._get_resource_class(context)
+        cls = self._resource_class
         child = container.make_resource(form['name'], cls)
         form['child'] = child
         # 2. Set properties
         schema = self.get_schema(resource, context)
-        for name in self.get_fields(cls):
+        for name in self.get_fields():
             datatype = schema.get(name)
             if datatype and not getattr(datatype, 'readonly', False):
                 if self.set_value(child, context, name, form):

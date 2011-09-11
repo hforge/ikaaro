@@ -126,7 +126,7 @@ class AutoEdit(AutoForm):
     title = MSG(u'Edit')
 
     fields = ['title', 'description', 'subject']
-    def get_fields(self, resource):
+    def get_fields(self):
         return self.fields
 
 
@@ -190,7 +190,7 @@ class AutoEdit(AutoForm):
                   'referrer': URI}
 
         # Add schema from the resource
-        for name in self.get_fields(resource):
+        for name in self.get_fields():
             datatype = self._get_datatype(resource, context, name)
 
             # Special case: datetime
@@ -229,7 +229,7 @@ class AutoEdit(AutoForm):
     def _get_widgets(self, resource, context):
         widgets = [timestamp_widget,
                    HiddenWidget('referrer')]
-        for name in self.get_fields(resource):
+        for name in self.get_fields():
             widget = self._get_widget(resource, context, name)
             widgets.append(widget)
 

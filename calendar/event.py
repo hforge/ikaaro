@@ -111,8 +111,8 @@ class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
 
-    def get_fields(self, resource):
-        for name, field in resource.get_fields():
+    def get_fields(self):
+        for name, field in self.resource.get_fields():
             if not field.readonly:
                 yield name
 
@@ -158,8 +158,8 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
-    def get_fields(self, cls):
-        for name, field in cls.get_fields():
+    def get_fields(self):
+        for name, field in self._resource_class.get_fields():
             if not field.readonly:
                 yield name
 
