@@ -355,12 +355,12 @@ class Folder(DBResource):
 
 
     # Views
-    view = Folder_View()
-    new_resource = Folder_NewResource()
-    browse_content = Folder_BrowseContent()
-    rename = Folder_Rename()
-    preview_content = Folder_PreviewContent()
-    thumb = Folder_Thumbnail()
+    view = Folder_View
+    new_resource = Folder_NewResource
+    browse_content = Folder_BrowseContent
+    rename = Folder_Rename
+    preview_content = Folder_PreviewContent
+    thumb = Folder_Thumbnail
 
 
 ###########################################################################
