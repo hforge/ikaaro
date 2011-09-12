@@ -25,6 +25,9 @@ from zlib import compress, decompress
 from itools.core import freeze, guess_type
 from itools.datatypes import DataType, Date
 from itools.fs import FileName
+from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
+from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
+from itools.xml import XMLParser, is_xml_stream
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -110,3 +113,52 @@ class ExpireValue(DataType):
 
 class BirthDate(Date):
     pass
+
+
+
+###########################################################################
+# HTML
+###########################################################################
+xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
+
+
+
+class XHTMLBody(DataType):
+    """Read and write XHTML.
+    """
+    sanitize_html = True
+
+    def decode(cls, data):
+        events = XMLParser(data, namespaces=xhtml_namespaces,
+                           doctype=xhtml_doctype)
+        if cls.sanitize_html is True:
+            events = sanitize_stream(events)
+        return list(events)
+
+
+    @staticmethod
+    def encode(value):
+        if value is None:
+            return ''
+        return stream_to_str_as_xhtml(value)
+
+
+    @staticmethod
+    def is_empty(value):
+        return stream_is_empty(value)
+
+
+
+class HTMLBody(XHTMLBody):
+    """TinyMCE specifics: read as XHTML, rendered as HTML.
+    """
+
+    @staticmethod
+    def encode(value):
+        if value is None:
+            return ''
+        if type(value) is unicode:
+            return value.encode('utf-8')
+        if not is_xml_stream(value):
+            value = value.get_body().get_content_elements()
+        return stream_to_str_as_html(value)

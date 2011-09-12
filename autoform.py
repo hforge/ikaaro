@@ -23,72 +23,20 @@ from datetime import datetime, date
 from random import randint
 
 # Import from itools
-from itools.core import get_abspath, is_prototype, proto_lazy_property
-from itools.datatypes import DataType, Boolean, Email, Enumerate, PathDataType
+from itools.core import get_abspath, proto_lazy_property
+from itools.datatypes import Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.handlers import Image
-from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
-from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
 from itools.stl import stl
 from itools.web import STLView, get_context
-from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
 from buttons import Button
 from datatypes import BirthDate, Password
 from enumerates import Days, Months, Years
 from utils import CMSTemplate, make_stl_template
-
-
-
-xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
-
-
-
-###########################################################################
-# DataTypes
-###########################################################################
-class XHTMLBody(DataType):
-    """Read and write XHTML.
-    """
-    sanitize_html = True
-
-    def decode(cls, data):
-        events = XMLParser(data, namespaces=xhtml_namespaces,
-                           doctype=xhtml_doctype)
-        if cls.sanitize_html is True:
-            events = sanitize_stream(events)
-        return list(events)
-
-
-    @staticmethod
-    def encode(value):
-        if value is None:
-            return ''
-        return stream_to_str_as_xhtml(value)
-
-
-    @staticmethod
-    def is_empty(value):
-        return stream_is_empty(value)
-
-
-
-class HTMLBody(XHTMLBody):
-    """TinyMCE specifics: read as XHTML, rendered as HTML.
-    """
-
-    @staticmethod
-    def encode(value):
-        if value is None:
-            return ''
-        if type(value) is unicode:
-            return value.encode('utf-8')
-        if not is_xml_stream(value):
-            value = value.get_body().get_content_elements()
-        return stream_to_str_as_html(value)
 
 
 

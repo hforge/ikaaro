@@ -32,11 +32,11 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import HTMLBody, Widget
+from autoform import Widget
 from autoform import BirthDateWidget, DateWidget, DatetimeWidget, FileWidget
 from autoform import MultilineWidget, RadioWidget, SelectWidget, TextWidget
 from autoform import rte_widget
-from datatypes import BirthDate, Password
+from datatypes import BirthDate, HTMLBody, Password
 from utils import split_reference
 
 
