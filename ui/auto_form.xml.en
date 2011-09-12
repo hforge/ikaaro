@@ -14,14 +14,13 @@ ${before}
     <p stl:if="description">${description}</p>
     <stl:block stl:repeat="widget widgets">
       <div class="block-widget-${widget/name}">
-        <stl:block stl:if="widget/title">
+        <div stl:if="widget/title">
           <label class="title" for="${widget/name}">${widget/title}</label>
           <span stl:if="widget/mandatory" class="field-is-missing"
             title="This field is required">*</span>
           <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
-          <br/>
-        </stl:block>
-        <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
+        </div>
+        <div stl:if="widget/error" class="field-error">${widget/error}</div>
         <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
       </div>
       <div stl:if="widget/endline" class="clear" />
