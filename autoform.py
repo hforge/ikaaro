@@ -728,7 +728,6 @@ class AutoForm(STLView):
             ns_widget['title'] = getattr(widget, 'title', None)
             ns_widget['id'] = widget.id
             ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
-            ns_widget['is_date'] = is_prototype(datatype, Date)
             ns_widget['suffix'] = widget.suffix
             ns_widget['tip'] = widget.tip
             ns_widget['endline'] = getattr(widget, 'endline', False)
@@ -752,10 +751,10 @@ class AutoForm(STLView):
                 for language in languages:
                     language_title = get_language_msg(language)
                     widget_name = '%s:%s' % (widget.name, language)
-                    widgets_html.append(widget(name=widget_name,
-                                               datatype=datatype,
-                                               value=value[language],
-                                               language=language_title))
+                    widget = widget(name=widget_name, datatype=datatype,
+                                    value=value[language],
+                                    language=language_title)
+                    widgets_html.append(widget)
                     if first_widget is None and widget.focus:
                         first_widget = widget_name
                 # fix label
