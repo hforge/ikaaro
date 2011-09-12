@@ -61,7 +61,7 @@ button {
   color: #ff0000;
 }
 
-div.field-error {
+.field-error {
   color: #f22;
   font-weight: bold;
 }
