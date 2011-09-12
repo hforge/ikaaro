@@ -91,7 +91,7 @@ class Field(BaseField):
         return self.get_datatype().get_default()
 
 
-    widget_keys = []
+    widget_keys = ['title']
     def get_widget(self, name):
         kw = {}
         for key in self.widget_keys:
@@ -99,7 +99,7 @@ class Field(BaseField):
             if value is not None:
                 kw[key] = value
 
-        return self.widget(name, title=self.title, **kw)
+        return self.widget(name, **kw)
 
 
     # Links

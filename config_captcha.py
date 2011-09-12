@@ -27,7 +27,7 @@ from itools.web import get_context
 from autoedit import AutoEdit
 from autoform import TextWidget, RadioWidget, Widget
 from config import Configuration
-from fields import Select_Field, Text_Field
+from fields import Field, Select_Field, Text_Field
 from folder import Folder
 from resource_ import DBResource
 from utils import make_stl_template
@@ -198,7 +198,6 @@ class CaptchaDatatype(Unicode):
 
 class CaptchaWidget(Widget):
 
-
     @proto_lazy_property
     def title(self):
         root = get_context().root
@@ -217,9 +216,17 @@ class CaptchaWidget(Widget):
 
 
 
-#######################################################
+class Captcha_Field(Field):
+    
+    required = True
+    datatype = CaptchaDatatype
+    widget = CaptchaWidget
+
+
+
+###########################################################################
 # Captcha Config
-#######################################################
+###########################################################################
 class Select_CaptchaWidget(RadioWidget):
 
     template = make_stl_template("""
@@ -254,9 +261,9 @@ class Captcha(Folder):
     class_icon48 = 'icons/48x48/captcha.png'
 
     fields = Folder.fields + ['captcha_type']
-    captcha_type = Select_Field(required=True, title=MSG(u"Captcha type"),
-                                widget=Select_CaptchaWidget(has_empty_option=False),
-                                datatype=CaptchaType)
+    captcha_type = Select_Field(
+        required=True, title=MSG(u"Captcha type"), datatype=CaptchaType,
+        widget = Select_CaptchaWidget(has_empty_option=False))
 
     # Views
     class_views = ['edit']

@@ -15,13 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Boolean, DateTime, Date, Time
+from itools.core import proto_lazy_property
+from itools.datatypes import DateTime, Date, Time
 from itools.gettext import MSG
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import AutoForm, Widget
 from config import Configuration
+from config_captcha import Captcha_Field
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
 from fields import Boolean_Field, Textarea_Field
@@ -51,16 +53,44 @@ class RegisterForm(AutoForm):
     title = MSG(u'Create an account')
 
     form_id = 'register-form'
-    fields = ['firstname', 'lastname', 'email']
+    fields = ['firstname', 'lastname', 'email', 'captcha', 'terms_of_service']
+
+
+    @proto_lazy_property
+    def _resource_class(self):
+        return self.context.database.get_resource_class('user')
+
+
+    def get_field(self, name):
+        # Captcha
+        if name == 'captcha':
+            return Captcha_Field(persistent=False)
+
+        # Terms of service
+        if name == 'terms_of_service':
+            config_register = self.resource.get_resource('config/register')
+            terms_of_service = config_register.get_value('terms_of_service')
+            if not terms_of_service:
+                return None
+            widget = TermsOfService_Widget('terms_of_service',
+                                           terms_of_service=terms_of_service)
+            return Boolean_Field(required=True, widget=widget,
+                                 persistent=False)
+
+        # Standard
+        return self._resource_class.get_field(name)
 
 
     def get_schema(self, resource, context):
-        cls = context.database.get_resource_class('user')
-
         schema = {}
         for name in self.fields:
-            datatype = cls.get_field(name).get_datatype()
+            field = self.get_field(name)
+            if field is None:
+                continue
+
+            datatype = field.get_datatype()
             schema[name] = datatype
+
             # Special case: datetime
             if issubclass(datatype, DateTime):
                 schema[name] = Date
@@ -73,25 +103,17 @@ class RegisterForm(AutoForm):
                 schema['%s_month' % name] = Months
                 schema['%s_year' % name] = Years
 
-        # Terms of service
-        config_register = resource.get_resource('config/register')
-        terms_of_service = config_register.get_value('terms_of_service')
-        if terms_of_service:
-            schema['terms_of_service'] = Boolean(mandatory=True)
-
         return schema
 
 
     def get_widgets(self, resource, context):
-        cls = context.database.get_resource_class('user')
-        widgets = [ cls.get_field(x).get_widget(x) for x in self.fields ]
+        widgets = []
+        for name in self.fields:
+            field = self.get_field(name)
+            if field is None:
+                continue
 
-        # Terms of service
-        config_register = resource.get_resource('config/register')
-        terms_of_service = config_register.get_value('terms_of_service')
-        if terms_of_service:
-            widget = TermsOfService_Widget('terms_of_service',
-                                           terms_of_service=terms_of_service)
+            widget = field.get_widget(name)
             widgets.append(widget)
 
         return widgets
@@ -105,8 +127,10 @@ class RegisterForm(AutoForm):
         if len(results) == 0:
             # Create the user
             user = root.make_user()
-            for field in self.fields:
-                user.set_property(field, form[field])
+            for name in self.fields:
+                field = self.get_field(name)
+                if field and getattr(field, 'persistent', True):
+                    user.set_value(name, form[name])
 
             # Send confirmation email
             user.send_confirmation(context, email)
