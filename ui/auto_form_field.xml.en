@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<div class="block-widget-${name}">
+  <div stl:if="title">
+    <label class="title" for="${name}">${title}</label>
+    <span stl:if="mandatory" class="field-is-missing"
+      title="This field is required">*</span>
+    <span stl:if="tip" title="${tip}">(?)</span>
+  </div>
+  <div stl:if="error" class="field-error">${error}</div>
+  <p class="widget" stl:repeat="widget widgets">${widget}</p>
+</div>
+<div stl:if="endline" class="clear" />
+
+</stl:block>

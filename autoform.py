@@ -591,6 +591,8 @@ class AutoForm(STLView):
     """
 
     template = '/ui/auto_form.xml'
+    template_field = '/ui/auto_form_field.xml'
+
     form_id = None
     widgets = []
     description = None
@@ -655,30 +657,30 @@ class AutoForm(STLView):
     #########################
 
     def get_namespace(self, resource, context):
-        proxy = super(AutoForm, self)
-        widgets_namespace = proxy.get_namespace(resource, context)
+        namespace = super(AutoForm, self).get_namespace(resource, context)
 
         # Local Variables
+        template = context.get_template(self.template_field)
         fields = self.get_schema(resource, context)
-        widgets = self.get_widgets(resource, context)
         languages = resource.get_edit_languages(context)
 
         # Build widgets namespace
+        fields_list = []
+        fields_dict = {}
+
         first_widget = None
         onsubmit = None
-        ns_widgets = []
-        for widget in widgets:
+        for widget in self.get_widgets(resource, context):
             datatype = fields.get(widget.name, None)
-            ns_widget = widgets_namespace.get(widget.name,
-                                              {'name': widget.name,
-                                               'value': None,
-                                               'error': None})
-            ns_widget['title'] = getattr(widget, 'title', None)
-            ns_widget['id'] = widget.id
-            ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
-            ns_widget['suffix'] = widget.suffix
-            ns_widget['tip'] = widget.tip
-            ns_widget['endline'] = getattr(widget, 'endline', False)
+            field_ns = namespace.get(widget.name,
+                                     {'name': widget.name, 'value': None,
+                                      'error': None})
+            field_ns['title'] = getattr(widget, 'title', None)
+            field_ns['id'] = widget.id
+            field_ns['mandatory'] = getattr(datatype, 'mandatory', False)
+            field_ns['suffix'] = widget.suffix
+            field_ns['tip'] = widget.tip
+            field_ns['endline'] = getattr(widget, 'endline', False)
 
             # onsubmit
             widget_onsubmit = getattr(widget, 'onsubmit', None)
@@ -692,10 +694,10 @@ class AutoForm(STLView):
                 # query
                 value = context.get_query_value(widget.name)
             else:
-                value = ns_widget['value']
+                value = field_ns['value']
             # multilingual or monolingual
+            field_ns['widgets'] = widgets_html = []
             if getattr(datatype, 'multilingual', False):
-                widgets_html = []
                 for language in languages:
                     language_title = get_language_msg(language)
                     widget_name = '%s:%s' % (widget.name, language)
@@ -707,15 +709,17 @@ class AutoForm(STLView):
                         first_widget = widget_name
                 # fix label
                 if widgets_html:
-                    ns_widget['name'] = widgets_html[0].name
+                    field_ns['name'] = widgets_html[0].name
             else:
                 widget = widget(datatype=datatype, value=value)
-                widgets_html = [widget]
+                widgets_html.append(widget)
                 if first_widget is None and widget.focus:
                     first_widget = widget.name
 
-            ns_widget['widgets'] = widgets_html
-            ns_widgets.append(ns_widget)
+            # Ok
+            stream = stl(template, field_ns)
+            fields_list.append(stream)
+            fields_dict[widget.name] = stream
 
         # Enctype
         enctype = 'multipart/form-data' if self.method == 'post' else None
@@ -733,7 +737,8 @@ class AutoForm(STLView):
             'title': self.get_title(context),
             'description': self.description,
             'first_widget': first_widget,
-            'widgets': ns_widgets,
+            'fields_list': fields_list,
+            'fields': fields_dict,
             'after': None}
 
 
