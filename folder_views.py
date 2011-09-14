@@ -509,7 +509,9 @@ class Folder_BrowseContent(BrowseForm):
             return item_resource.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
-            return context.format_datetime(brain.mtime)
+            if brain.mtime:
+                return context.format_datetime(brain.mtime)
+            return None
         elif column == 'last_author':
             # Last author
             author =  brain.last_author
