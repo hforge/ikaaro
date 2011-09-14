@@ -29,7 +29,7 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 # Import from ikaaro
 from autoform import HiddenWidget, SelectWidget
 from buttons import Button
-from fields import Char_Field, Select_Field
+from fields import Select_Field, URI_Field
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 
@@ -186,7 +186,7 @@ class Comment(DBResource):
     fields = ['mtime', 'last_author', 'description', 'owner', 'comment_state']
     title = None
     subject = None
-    owner = Char_Field(readonly=True, indexed=True)
+    owner = URI_Field(readonly=True, indexed=True)
     comment_state = CommentState_Field()
 
     # API
@@ -195,7 +195,7 @@ class Comment(DBResource):
         # Set owner
         context = get_context()
         if context.user:
-            self.set_value('owner', context.user.name)
+            self.set_value('owner', str(context.user.abspath))
 
 
     # Views

@@ -157,9 +157,7 @@ class ConfigCalendar(Folder):
         if self.get_access_control().is_admin(context.user, self):
             return True
         if event:
-            organizer = event.get_owner()
-            username = str(context.user.name)
-            return organizer and username == organizer
+            return event.get_owner() == context.user.abspath
         ac = self.parent.get_access_control()
         return ac.is_allowed_to_edit(context.user, self.parent)
 

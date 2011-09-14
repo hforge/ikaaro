@@ -32,7 +32,7 @@ from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.config_models import Model
 from ikaaro.content import Content
-from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
+from ikaaro.fields import Char_Field, Datetime_Field, Select_Field, URI_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate
 from ikaaro import messages
@@ -123,7 +123,7 @@ class Event_Edit(AutoEdit):
 
         # Set organizer infos in ${before}
         owner = resource.get_owner()
-        owner = get_context().root.get_user_title(owner)
+        owner = resource.get_resource(owner).get_title()
         owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
         owner = owner.gettext().encode('utf-8')
         namespace['before'] = XMLParser(owner)
@@ -268,7 +268,7 @@ class Event(Content):
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
-    owner = Char_Field(readonly=True, indexed=True)
+    owner = URI_Field(readonly=True, indexed=True)
     family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
@@ -290,7 +290,7 @@ class Event(Content):
 
         # Set owner
         if context.user:
-            self.set_value('owner', context.user.name)
+            self.set_value('owner', str(context.user.abspath))
 
 
     def get_owner(self):
@@ -360,8 +360,7 @@ class Event(Content):
               'color': self.get_color(),
               'current_day': current_day,
               'description': self.get_value('description'),
-              'status': self.get_value('status') or 'cal_busy',
-              'ORGANIZER': self.get_owner()}
+              'status': self.get_value('status') or 'cal_busy'}
 
         ###############################################################
         # URL

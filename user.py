@@ -138,7 +138,7 @@ class User(DBResource):
     # API
     ########################################################################
     def get_owner(self):
-        return self.name
+        return str(self.abspath)
 
 
     def get_title(self, language=None):

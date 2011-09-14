@@ -179,7 +179,7 @@ class ConfigAccess(Folder):
     # API
     def has_permission(self, user, permission, resource=None):
         # 1. Ownership
-        if user and resource and user.name == resource.get_owner():
+        if user and resource and user.abspath == resource.get_owner():
             return True
 
         # 2. Configuration
