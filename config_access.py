@@ -179,25 +179,29 @@ class ConfigAccess(Folder):
     # API
     def has_permission(self, user, permission, resource=None):
         # 1. Ownership
-        if user and resource and user.abspath == resource.get_owner():
+        owner = resource.get_owner() if resource else None
+        if user and user.abspath == owner:
             return True
 
-        # 2. Configuration
-        searches = self.get_resource('../searches')
-
+        # 2. User groups
         user_groups = set(['everybody'])
         if user:
             user_groups.add('authenticated')
             user_groups.update(user.get_value('groups'))
 
-        for rule in self.get_resources():
+        # 3. Check access rules
+        searches = self.get_resource('/config/searches')
+        owner = self.get_resource(owner) if owner else self
+        for rule in owner.get_resources():
+            if not isinstance(rule, ConfigAccess_Rule):
+                continue
             if rule.get_value('permission') == permission:
                 group_name = rule.get_value('group')
                 if group_name in user_groups:
                     if resource is None:
                         return True
                     search = rule.get_value('resources')
-                    if search is None:
+                    if not search:
                         return True
                     search = searches.get_resource(search, soft=True)
                     if search and search.match_resource(resource):

@@ -27,7 +27,7 @@ from itools.core import proto_lazy_property
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
-from itools.web import BaseView, STLView, get_context, INFO, ERROR
+from itools.web import BaseView, STLView, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
@@ -313,8 +313,7 @@ class CalendarView(STLView):
 
 
     def get_with_new_url(self, resource, context):
-        ac = resource.get_access_control()
-        return ac.is_allowed_to_add(context.user, resource)
+        return context.root.is_allowed_to_add(context.user, resource)
 
 
     def get_week_number(self, c_date):
@@ -368,14 +367,17 @@ class CalendarView(STLView):
     # Public API
     ######################################################################
     def get_events(self, day=None, *args):
-        context = get_context()
-        root = context.root
+        root = self.context.root
         query = list(args)
         query.append(PhraseQuery('is_event', True))
         if day:
             query.append(PhraseQuery('dates', day))
         search = root.search(AndQuery(*query))
-        return search.get_resources(sort_by='dtstart')
+        # Access control
+        user = self.context.user
+        access = root.get_resource('/config/access')
+        return ( x for x in search.get_resources(sort_by='dtstart')
+                 if access.has_permission(user, 'view', x) )
 
 
     def get_config_calendar(self, resource):
