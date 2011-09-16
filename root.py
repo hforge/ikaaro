@@ -72,14 +72,6 @@ add_codec('utf-8', 'utf_8')
 
 
 
-def is_admin(user, resource):
-    if user is None or resource is None:
-        return False
-
-    return '/config/groups/admins' in user.get_value('groups')
-
-
-
 class CtrlView(BaseView):
 
     access = True
@@ -474,7 +466,10 @@ class Root(AccessControl, Folder):
 
 
     def is_admin(self, user, resource):
-        return is_admin(user, resource)
+        if user is None:
+            return False
+
+        return '/config/groups/admins' in user.get_value('groups')
 
 
     def is_allowed_to_view(self, user, resource):
