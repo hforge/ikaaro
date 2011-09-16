@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import proto_lazy_property
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
 from itools.web import get_context
@@ -63,10 +64,16 @@ class Group_BrowseUsers(BrowseUsers):
     table_actions = [
         BrowseButton(access='is_admin', title=MSG(u'Update'))]
 
+
+    @proto_lazy_property
+    def _property_name(self):
+        return self.resource.parent.property_name
+
+
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             user = context.root.get_resource(item.abspath)
-            groups = user.get_value('groups')
+            groups = user.get_value(self._property_name)
             return item.name, str(resource.abspath) in groups
 
         proxy = super(Group_BrowseUsers, self)
@@ -78,12 +85,12 @@ class Group_BrowseUsers(BrowseUsers):
 
         root = resource.get_resource('/')
         for user in root.get_resources('users'):
-            groups = set(user.get_value('groups'))
+            groups = set(user.get_value(self._property_name))
             if user.name in form['ids']:
                 groups.add(group_id)
             else:
                 groups.discard(group_id)
-            user.set_property('groups', list(groups))
+            user.set_value(self._property_name, list(groups))
 
         context.message = MSG_CHANGES_SAVED
 
@@ -119,10 +126,16 @@ class BrowseGroups(Folder_BrowseContent):
         ('last_author', MSG(u'Last Author'))]
     table_actions = [RemoveButton, RenameButton]
 
+    @proto_lazy_property
+    def _property_name(self):
+        return self.resource.property_name
+
+
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
             brain, item_resource = item
-            results = context.database.search(groups=brain.abspath)
+            kw = {self._property_name: brain.abspath}
+            results = context.database.search(format='user', **kw)
             return len(results)
 
         proxy = super(BrowseGroups, self)
@@ -140,6 +153,7 @@ class ConfigGroups(Folder):
     # Configuration
     config_name = 'groups'
     config_group = 'access'
+    property_name = 'groups'
 
     # Views
     class_views = ['browse_content', 'add_group', 'edit', 'commit_log']
