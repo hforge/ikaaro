@@ -15,8 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import proto_property
-from itools.database import PhraseQuery
+from itools.database import AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
@@ -27,11 +26,9 @@ from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from config_groups import UserGroupsDatatype
-from config_searches import Config_Searches, SavedSearch
 from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
-from registry import register_document_type
 from resource_ import DBResource
 from utils import get_content_containers
 from workflow import State_Field
@@ -62,37 +59,6 @@ class Path_Field(Select_Field):
 
 
 
-class SavedSearch_Content(SavedSearch):
-
-    class_id = 'saved-search-content'
-    class_title = MSG(u'Saved Search - Content')
-
-    fields = SavedSearch.fields + ['search_state', 'search_parent_paths']
-    search_state = State_Field(has_empty_option=True, default='')
-    search_parent_paths = Path_Field()
-
-    # Views
-    _fields = ['title', 'search_state', 'search_parent_paths']
-    edit = AutoEdit(fields=_fields)
-    new_instance = NewInstance_Local(fields=_fields)
-
-    def get_search_query(self):
-        query = super(SavedSearch_Content, self).get_search_query()
-        query.append(PhraseQuery('is_content', True))
-        return query
-
-
-
-class SavedSearches_Field(Select_Field):
-
-    @proto_property
-    def options(self):
-        config = get_context().root.get_resource('config')
-        return [ {'name': x.name, 'value': x.get_title()}
-                 for x in config.get_resources('searches') ]
-
-
-
 ###########################################################################
 # Access rule
 ###########################################################################
@@ -107,24 +73,69 @@ class Permissions_Field(Select_Field):
 
 
 
-class ConfigAccess_Rule(DBResource):
+class AccessRule_Results(Folder_BrowseContent):
+
+    title = MSG(u'View results')
+    search_schema = {}
+    search_widgets = []
+
+    def get_items_query(self, resource, context):
+        return [resource.get_search_query()]
+
+
+class AccessRule(DBResource):
 
     class_id = 'config-access-rule'
     class_title = MSG(u'Access rule')
 
     # Fields
-    fields = DBResource.fields + ['permission', 'group', 'resources']
-    permission = Permissions_Field(required=True)
+    fields = DBResource.fields + ['group', 'permission',
+                                  'search_state', 'search_parent_paths']
     group = Select_Field(required=True, title=MSG(u'User group'),
                          datatype=UserGroupsDatatype)
-    resources = SavedSearches_Field(title=MSG(u'Content'))
+    permission = Permissions_Field(required=True)
+    search_state = State_Field(has_empty_option=True, default='')
+    search_parent_paths = Path_Field()
 
     # Views
-    class_views = ['edit', 'commit_log']
-    _fields = ['permission', 'group', 'resources']
+    class_views = ['edit', 'results', 'commit_log']
+    _fields = ['group', 'permission', 'search_state', 'search_parent_paths']
     new_instance = NewInstance_Local(fields=_fields,
                                      automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
+    results = AccessRule_Results()
+
+    # API
+    def get_search_query(self):
+        # Search values
+        query = AndQuery()
+        for name in self.fields:
+            if not name.startswith('search_'):
+                continue
+            value = self.get_value(name)
+            if not value:
+                continue
+            field = self.get_field(name)
+            name = name[7:]
+            if field.multiple:
+                subquery = [ PhraseQuery(name, x) for x in value ]
+                if len(subquery) == 1:
+                    subquery = subquery[0]
+                else:
+                    subquery = OrQuery(*subquery)
+            else:
+                subquery = PhraseQuery(name, value)
+            query.append(subquery)
+
+        query.append(PhraseQuery('is_content', True))
+        return query
+
+
+    def match_resource(self, resource):
+        query = self.get_search_query()
+        query.append(PhraseQuery('abspath', str(resource.abspath)))
+        results = get_context().root.search(query)
+        return len(results)
 
 
 
@@ -143,24 +154,25 @@ class ConfigAccess_Browse(Folder_BrowseContent):
         ('abspath', MSG(u'Path')),
         #('title', MSG(u'Title')),
         ('group', MSG(u'Group')),
-        ('resources', MSG(u'Resources')),
-        ('permission', MSG(u'Permission'))]
+        ('permission', MSG(u'Permission')),
+        ('search_state', MSG(u'State')),
+        ('search_parent_paths', MSG(u'Path'))]
         #('mtime', MSG(u'Last Modified')),
         #('last_author', MSG(u'Last Author'))]
 
     table_actions = [RemoveButton]
 
-    def get_item_value(self, resource, context, item, column):
-        if column == 'resources':
-            brain, item_resource = item
-            value = item_resource.get_value(column)
-            if value is None:
-                return None
-            search = resource.get_resource('/config/searches/%s' % value)
-            return (search.get_title(), str(search.abspath))
+#   def get_item_value(self, resource, context, item, column):
+#       if column == 'search_state':
+#           brain, item_resource = item
+#           value = item_resource.get_value(column)
+#           if value is None:
+#               return None
+#           search = resource.get_resource('/config/searches/%s' % value)
+#           return (search.get_title(), str(search.abspath))
 
-        proxy = super(ConfigAccess_Browse, self)
-        return proxy.get_item_value(resource, context, item, column)
+#       proxy = super(ConfigAccess_Browse, self)
+#       return proxy.get_item_value(resource, context, item, column)
 
 
 
@@ -189,29 +201,22 @@ class ConfigAccess(Folder):
             user_groups.add('authenticated')
             user_groups.update(user.get_value('groups'))
 
+        # Special case: admins
+        if '/config/groups/admins' in user_groups:
+            return True
+
         # 3. Check access rules
-        searches = self.get_resource('/config/searches')
         owner = self.get_resource(owner) if owner else self
         for rule in owner.get_resources():
-            if not isinstance(rule, ConfigAccess_Rule):
-                continue
             if rule.get_value('permission') == permission:
-                group_name = rule.get_value('group')
-                if group_name in user_groups:
-                    if resource is None:
-                        return True
-                    search = rule.get_value('resources')
-                    if not search:
-                        return True
-                    search = searches.get_resource(search, soft=True)
-                    if search and search.match_resource(resource):
-                        return True
+                if rule.get_value('group') in user_groups:
+                    return resource is None or rule.match_resource(resource)
 
         return False
 
 
     def get_document_types(self):
-        return [ConfigAccess_Rule]
+        return [AccessRule]
 
 
     # Views
@@ -223,4 +228,3 @@ class ConfigAccess(Folder):
 
 # Register
 Configuration.register_plugin(ConfigAccess)
-register_document_type(SavedSearch_Content, Config_Searches.class_id)

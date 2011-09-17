@@ -48,7 +48,7 @@ from autoform import MultilineWidget
 from config import Configuration
 from fields import Char_Field
 from folder import Folder
-from config_access import ConfigAccess_Rule, SavedSearch_Content
+from config_access import AccessRule
 from config_register import RegisterForm
 from resource_views import LoginView
 from skins import skin_registry
@@ -117,37 +117,24 @@ class Root(AccessControl, Folder):
         # Configuration
         config = self.make_resource('config', Configuration,
                                     title={'en': u'Configuration'})
-        # Saved searches
-        searches = config.get_resource('searches')
-        items = [('any-content', None),
-                 ('public-content', ['public']),
-                 ('private-content', ['private'])]
-        for name, value in items:
-            search = searches.make_resource(name, SavedSearch_Content)
-            search.set_property('search_state', value)
 
         # Access rules
-        permissions = [
+        rules = [
             # Authenticated users can see any content
-            ('authenticated', 'view', 'any-content'),
+            ('authenticated', 'view', None),
             # Members can add new content, edit private content and request
             # publication
-            ('/config/groups/members', 'add', 'any-content'),
-            ('/config/groups/members', 'edit', 'private-content'),
+            ('/config/groups/members', 'add', None),
+            ('/config/groups/members', 'edit', ['private']),
             # Reviewers can add new content, edit any content and publish
-            ('/config/groups/reviewers', 'add', 'any-content'),
-            ('/config/groups/reviewers', 'edit', 'any-content'),
-            ('/config/groups/reviewers', 'change_state', 'any-content'),
-            # Admins can do anything
-            ('/config/groups/admins', 'view', None),
-            ('/config/groups/admins', 'edit', None),
-            ('/config/groups/admins', 'add', None),
-            ('/config/groups/admins', 'change_state', None),
-        ]
+            ('/config/groups/reviewers', 'add', None),
+            ('/config/groups/reviewers', 'edit', None),
+            ('/config/groups/reviewers', 'change_state', None)]
         access = config.get_resource('access')
-        for group, permission, resources in permissions:
-            access.make_resource(None, ConfigAccess_Rule, group=group,
-                                 permission=permission, resources=resources)
+        for group, permission, state in rules:
+            rule = access.make_resource(None, AccessRule, group=group,
+                                        permission=permission)
+            rule.set_value('search_state', state)
 
 
     def make_resource(self, name, cls, **kw):
