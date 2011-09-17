@@ -361,6 +361,5 @@ import config_menu
 import config_models
 import config_register
 import config_seo
-import config_searches
 import config_theme
 import config_users
