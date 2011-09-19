@@ -58,11 +58,9 @@ class AddUser(AutoForm):
 
 
     def _add(self, resource, context, form):
-        root = context.root
-
         # Check whether the user already exists
         email = form['email'].strip()
-        results = root.search(email=email)
+        results = context.search(email=email)
         if len(results):
             context.message = ERROR(u'The user is already here.')
             return None
@@ -79,16 +77,15 @@ class AddUser(AutoForm):
             # so the user must activate its account
             password = None
         # Add the user
-        user = root.make_user(password=password)
+        user = context.root.make_user(password=password)
         user.set_property('email', email)
-        user_id = user.name
         if password is None:
             # Send confirmation email to activate the account
             user.send_confirmation(context, email)
         else:
             user.send_registration(context, email)
 
-        return user_id
+        return user.name
 
 
     def action_add_and_return(self, resource, context, form):

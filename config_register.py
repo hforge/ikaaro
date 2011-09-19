@@ -120,21 +120,20 @@ class RegisterForm(AutoForm):
 
 
     def action(self, resource, context, form):
-        root = context.root
-
         email = form['email'].strip()
-        results = root.search(format='user', email=email)
+        results = context.database.search(format='user', email=email)
+
         if len(results) == 0:
-            # Create the user
-            user = root.make_user()
+            # Case 1: new user
+            user = context.root.make_user()
             for name in self.fields:
                 field = self.get_field(name)
                 if field and getattr(field, 'persistent', True):
                     user.set_value(name, form[name])
 
-            # Send confirmation email
             user.send_confirmation(context, email)
         else:
+            # Case 2: user already registered
             user = results.get_documents()[0]
             user = resource.get_resource(user.abspath)
             user.send_already_registered(context, email)

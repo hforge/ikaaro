@@ -157,7 +157,7 @@ class DBResource_Links(Folder_BrowseContent):
     def get_items(self, resource, context):
         links = resource.get_links()
         query = OrQuery(*[ PhraseQuery('abspath', link) for link in links ])
-        return context.root.search(query)
+        return context.database.search(query)
 
 
 
@@ -171,8 +171,7 @@ class DBResource_Backlinks(DBResource_Links):
     title = MSG(u"Backlinks")
 
     def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_abspath()))
-        return context.root.search(query)
+        return context.search(links=str(resource.abspath))
 
 
 

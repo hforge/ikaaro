@@ -233,7 +233,7 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 ###########################################################################
 def get_content_containers(context, skip_formats):
     query = PhraseQuery('is_folder', True)
-    for brain in context.root.search(query).get_documents():
+    for brain in context.search(query).get_documents():
         if brain.format in skip_formats:
             continue
 

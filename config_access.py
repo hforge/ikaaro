@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.database import AndQuery, OrQuery, PhraseQuery
+from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
@@ -107,7 +107,6 @@ class AccessRule(DBResource):
 
     # API
     def get_search_query(self):
-        # Search values
         query = AndQuery()
         for name in self.fields:
             if not name.startswith('search_'):
@@ -115,27 +114,26 @@ class AccessRule(DBResource):
             value = self.get_value(name)
             if not value:
                 continue
+
             field = self.get_field(name)
+            if not field.multiple:
+                value = [value]
+
             name = name[7:]
-            if field.multiple:
-                subquery = [ PhraseQuery(name, x) for x in value ]
-                if len(subquery) == 1:
-                    subquery = subquery[0]
-                else:
-                    subquery = OrQuery(*subquery)
-            else:
-                subquery = PhraseQuery(name, value)
+            subquery = OrQuery()
+            for value in value:
+                subquery.append(PhraseQuery(name, value))
+                # Special case: parent_paths
+                if name == 'parent_paths':
+                    subquery.append(PhraseQuery('abspath', value))
+
+            if len(subquery.atoms) == 1:
+                subquery = subquery.atoms[0]
+
             query.append(subquery)
 
         query.append(PhraseQuery('is_content', True))
         return query
-
-
-    def match_resource(self, resource):
-        query = self.get_search_query()
-        query.append(PhraseQuery('abspath', str(resource.abspath)))
-        results = get_context().root.search(query)
-        return len(results)
 
 
 
@@ -189,13 +187,43 @@ class ConfigAccess(Folder):
     config_group = 'access'
 
     # API
-    def has_permission(self, user, permission, resource=None):
-        # 1. Ownership
-        owner = resource.get_owner() if resource else None
-        if user and user.abspath == owner:
-            return True
+    def get_search_query(self, user, permission):
+        # User groups
+        user_groups = set(['everybody'])
+        if user:
+            user_groups.add('authenticated')
+            user_groups.update(user.get_value('groups'))
 
-        # 2. User groups
+        # Special case: admins can see everything
+        if '/config/groups/admins' in user_groups:
+            return AllQuery()
+
+        # Build the query
+        # 1. Ownership
+        query = OrQuery()
+        if user:
+            query.append(PhraseQuery('owner', user.abspath))
+
+        # Access rules
+        for rule in self.get_resources():
+            if rule.get_value('permission') == permission:
+                if rule.get_value('group') in user_groups:
+                    query.append(rule.get_search_query())
+
+        return query
+
+
+    def has_permission(self, user, permission, resource=None):
+        # Case 1: we got a resource
+        if resource:
+            query = AndQuery(
+                self.get_search_query(user, permission),
+                PhraseQuery('abspath', str(resource.abspath)))
+            results = get_context().search(query)
+            return len(results) > 0
+
+        # Case 2: no resource
+        # 1. User groups
         user_groups = set(['everybody'])
         if user:
             user_groups.add('authenticated')
@@ -205,12 +233,11 @@ class ConfigAccess(Folder):
         if '/config/groups/admins' in user_groups:
             return True
 
-        # 3. Check access rules
-        owner = self.get_resource(owner) if owner else self
-        for rule in owner.get_resources():
+        # Access rules
+        for rule in self.get_resources():
             if rule.get_value('permission') == permission:
                 if rule.get_value('group') in user_groups:
-                    return resource is None or rule.match_resource(resource)
+                    return True
 
         return False
 

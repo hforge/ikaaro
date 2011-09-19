@@ -193,7 +193,7 @@ class User_EditAccount(AutoEdit):
         # user with the same email in the database.
         email = form['email']
         if email != resource.get_value('email'):
-            results = context.root.search(email=email)
+            results = context.database.search(email=email)
             if len(results):
                 context.message = ERROR(
                     u'There is another user with the email "{email}", please'
@@ -359,7 +359,7 @@ class BrowseUsers(BrowseForm):
             search_query.append(or_query)
 
         # Ok
-        results = context.root.search(search_query)
+        results = context.search(search_query)
         return results.get_documents()
 
 

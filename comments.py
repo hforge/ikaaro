@@ -289,7 +289,7 @@ class CommentsAware(object):
             state may be a string, a tuple or a list.
         """
         abspath = str(self.abspath)
-        comments = self.database.search(format='comment', parent_paths=abspath)
+        comments = get_context().search(format='comment', parent_paths=abspath)
         comments = comments.get_resources()
         if state is None:
             return list(comments)

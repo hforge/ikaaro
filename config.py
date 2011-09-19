@@ -139,17 +139,16 @@ class Config_BrokenLinks(STLView):
 
     def get_namespace(self, resource, context):
         # Find out broken links
-        database = context.database
         base = resource.abspath
 
         # Search only within the given resource
         query = get_base_path_query(base, include_container=True)
-        results = database.search(query)
+        results = context.search(query)
 
         # Find out the broken links
         root = context.root
         broken = {}
-        for link in database.catalog.get_unique_values('links'):
+        for link in context.database.catalog.get_unique_values('links'):
             if root.get_resource(link, soft=True) is not None:
                 continue
             sub_results = results.search(PhraseQuery('links', link))
@@ -196,21 +195,16 @@ class Config_Orphans(Folder_BrowseContent):
         # Make the base search
         items = super(Config_Orphans, self).get_items(context.root, context)
 
-        # Find out the orphans
-        root = context.root
-        orphans = []
-        for item in items.get_documents():
-            query = PhraseQuery('links', item.abspath)
-            results = root.search(query)
-            if len(results) == 0:
-                orphans.append(item)
+        # Show only the orphan resources
+        items = [ x for x in items.get_documents()
+                  if len(context.database.search(links=x.abspath)) == 0 ]
 
         # Transform back the items found in a SearchResults object.
         # FIXME This is required by 'get_item_value', we should change that,
         # for better performance.
-        args = [ PhraseQuery('abspath', x.abspath) for x in orphans ]
+        args = [ PhraseQuery('abspath', x.abspath) for x in items ]
         query = OrQuery(*args)
-        items = root.search(query)
+        items = context.search(query)
 
         # Ok
         return items

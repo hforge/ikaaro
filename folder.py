@@ -57,6 +57,13 @@ class Folder(DBResource):
                    'links', 'backlinks', 'commit_log']
 
 
+
+    def get_catalog_values(self):
+        values = super(Folder, self).get_catalog_values()
+        values['state'] = 'public'
+        return values
+
+
     #########################################################################
     # Gallery properties
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)

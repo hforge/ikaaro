@@ -18,10 +18,11 @@
 from os.path import isdir
 
 # Import from itools
+from itools.core import proto_lazy_property
 from itools.fs import lfs
 from itools.handlers import ro_database
 from itools.i18n import has_language
-from itools.uri import get_host_from_authority, normalize_path
+from itools.uri import normalize_path
 from itools.web import Context
 
 
@@ -80,6 +81,19 @@ class CMSContext(Context):
             language = languages[0]
         local_path = '%s.%s' % (local_path, language)
         return ro_database.get_handler(local_path)
+
+
+    #######################################################################
+    # Search
+    @proto_lazy_property
+    def _user_search(self):
+        access = self.root.get_resource('/config/access')
+        query = access.get_search_query(self.user, 'view')
+        return self.database.search(query)
+
+
+    def search(self, query=None, **kw):
+        return self._user_search.search(query, **kw)
 
 
 ###########################################################################

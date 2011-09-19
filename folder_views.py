@@ -52,15 +52,14 @@ class SearchTypes_Enumerate(Enumerate):
         resource = context.resource
         view = context.view
         # 1. Build the query of all objects to search
-        path = resource.get_abspath()
-        query = get_base_path_query(path)
+        query = get_base_path_query(resource.abspath)
         if view.search_content_only(resource, context) is True:
             content_query = PhraseQuery('is_content', True)
             query = AndQuery(query, content_query)
 
         # 2. Compute children_formats
         children_formats = set()
-        for child in context.root.search(query).get_documents():
+        for child in context.search(query).get_documents():
             children_formats.add(child.format)
 
         # 3. Do not show two options with the same title
@@ -353,7 +352,6 @@ class Folder_BrowseContent(BrowseForm):
 
 
     def get_items(self, resource, context, *args):
-        root = context.root
         # Query
         queries = list(args)
 
@@ -374,7 +372,7 @@ class Folder_BrowseContent(BrowseForm):
             query = AndQuery(*queries)
 
         # Search
-        return root.search(query)
+        return context.search(query)
 
 
     def _get_key_sorted_by_unicode(self, field):
@@ -440,9 +438,6 @@ class Folder_BrowseContent(BrowseForm):
 
 
     def sort_and_batch(self, resource, context, results):
-        user = context.user
-        root = context.root
-
         start = context.query['batch_start']
         size = context.query['batch_size']
         sort_by = context.query['sort_by']
@@ -465,14 +460,8 @@ class Folder_BrowseContent(BrowseForm):
             items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
 
-        # Access Control (FIXME this should be done before batch)
-        allowed_items = []
-        for item in items:
-            resource = root.get_resource(item.abspath)
-            if root.is_allowed_to_view(user, resource):
-                allowed_items.append((item, resource))
-
-        return allowed_items
+        # XXX For backwards compatibility, return just the resources
+        return [ (x, resource.get_resource(x.abspath)) for x in items ]
 
 
     def get_item_value(self, resource, context, item, column):

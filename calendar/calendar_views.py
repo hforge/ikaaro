@@ -367,17 +367,14 @@ class CalendarView(STLView):
     # Public API
     ######################################################################
     def get_events(self, day=None, *args):
-        root = self.context.root
-        query = list(args)
+        query = AndQuery(*args)
         query.append(PhraseQuery('is_event', True))
         if day:
             query.append(PhraseQuery('dates', day))
-        search = root.search(AndQuery(*query))
-        # Access control
-        user = self.context.user
-        access = root.get_resource('/config/access')
-        return ( x for x in search.get_resources(sort_by='dtstart')
-                 if access.has_permission(user, 'view', x) )
+
+        # Ok
+        search = self.context.search(query)
+        return search.get_resources(sort_by='dtstart')
 
 
     def get_config_calendar(self, resource):

@@ -33,7 +33,7 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath, is_prototype
-from itools.database import RWDatabase, AndQuery, PhraseQuery
+from itools.database import RWDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -324,12 +324,6 @@ class Root(AccessControl, Folder):
 
 
     ########################################################################
-    # Search
-    def search(self, query=None, **kw):
-        return self.database.search(query, **kw)
-
-
-    ########################################################################
     # Email
     def send_email(self, to_addr, subject, from_addr=None, text=None,
                    html=None, encoding='utf-8', subject_with_host=True,
@@ -516,22 +510,19 @@ class Root(AccessControl, Folder):
         return None.
         """
         # Search the user by username (login name)
-        query = PhraseQuery('username', username)
-        results = self.search_users(query)
+        database = self.database
+        results = database.search(parent_paths='/users', username=username)
+
         n = len(results)
         if n == 0:
             return None
         if n > 1:
             error = 'There are %s users in the database identified as "%s"'
             raise ValueError, error % (n, username)
+
         # Get the user
         brain = results.get_documents()[0]
         return self.get_user(brain.name)
-
-
-    def search_users(self, query):
-        query = AndQuery(PhraseQuery('parent_paths', '/users'), query)
-        return self.database.search(query)
 
 
     #######################################################################

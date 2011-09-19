@@ -135,7 +135,7 @@ class BrowseGroups(Folder_BrowseContent):
         if column == 'members':
             brain, item_resource = item
             kw = {self._property_name: brain.abspath}
-            results = context.database.search(format='user', **kw)
+            results = context.search(format='user', **kw)
             return len(results)
 
         proxy = super(BrowseGroups, self)
