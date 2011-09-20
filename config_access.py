@@ -228,7 +228,7 @@ class ConfigAccess(Folder):
         # 1. Ownership
         query = OrQuery()
         if user:
-            query.append(PhraseQuery('owner', user.abspath))
+            query.append(PhraseQuery('owner', str(user.abspath)))
 
         # Access rules
         for rule in self.get_resources():
