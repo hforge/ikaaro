@@ -48,7 +48,6 @@ from autoform import MultilineWidget
 from config import Configuration
 from fields import Char_Field
 from folder import Folder
-from config_access import AccessRule
 from config_register import RegisterForm
 from resource_views import LoginView
 from skins import skin_registry
@@ -115,26 +114,8 @@ class Root(AccessControl, Folder):
         user.set_value('groups', ['/config/groups/admins'])
 
         # Configuration
-        config = self.make_resource('config', Configuration,
-                                    title={'en': u'Configuration'})
-
-        # Access rules
-        rules = [
-            # Authenticated users can see any content
-            ('authenticated', 'view', None),
-            # Members can add new content, edit private content and request
-            # publication
-            ('/config/groups/members', 'add', None),
-            ('/config/groups/members', 'edit', ['private']),
-            # Reviewers can add new content, edit any content and publish
-            ('/config/groups/reviewers', 'add', None),
-            ('/config/groups/reviewers', 'edit', None),
-            ('/config/groups/reviewers', 'change_state', None)]
-        access = config.get_resource('access')
-        for group, permission, state in rules:
-            rule = access.make_resource(None, AccessRule, group=group,
-                                        permission=permission)
-            rule.set_value('search_state', state)
+        title = {'en': u'Configuration'}
+        self.make_resource('config', Configuration, title=title)
 
 
     def make_resource(self, name, cls, **kw):
