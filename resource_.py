@@ -24,7 +24,7 @@ from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Metadata, Resource, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
@@ -474,8 +474,8 @@ class DBResource(Resource):
         # Step 2. Index non-metadata properties
         values['name'] = self.name
         values['format'] = self.metadata.format
-        links = self.get_links()
-        values['links'] = list(links)
+        values['links'] = list(self.get_links())
+        values['owner'] = self.get_owner()
 
         # Parent path
         abspath = self.abspath
@@ -770,13 +770,14 @@ class DBResource(Resource):
 # Register read-only fields
 ###########################################################################
 
-# Key & class id
+# Key, class id, and path related fields
 register_field('abspath', String(indexed=True, stored=True))
 register_field('abspath_depth', Integer(indexed=True, stored=True))
 register_field('format', String(indexed=True, stored=True))
-# Folder's view
 register_field('parent_paths', String(multiple=True, indexed=True))
 register_field('name', String(stored=True, indexed=True))
+# ACL related
+register_field('owner', URI(indexed=True))
 # Referential integrity
 register_field('links', String(multiple=True, indexed=True))
 # Full text search

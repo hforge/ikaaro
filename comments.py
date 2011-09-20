@@ -186,7 +186,7 @@ class Comment(DBResource):
     fields = ['mtime', 'last_author', 'description', 'owner', 'comment_state']
     title = None
     subject = None
-    owner = URI_Field(readonly=True, indexed=True)
+    owner = URI_Field(readonly=True)
     comment_state = CommentState_Field()
 
     # API

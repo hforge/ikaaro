@@ -268,7 +268,7 @@ class Event(Content):
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
-    owner = URI_Field(readonly=True, indexed=True)
+    owner = URI_Field(readonly=True)
     family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
@@ -346,7 +346,6 @@ class Event(Content):
         values['is_event'] = True
         values['family'] = self.get_value('family')
         values['dates'] = self.get_dates()
-        values['owner'] = self.get_owner()
         values['reminders'] = self.get_reminders()
         return values
 
