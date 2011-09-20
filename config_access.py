@@ -189,23 +189,24 @@ class ConfigAccess(Folder):
     # Initialization
     default_rules = [
         # Authenticated users can see any content
-        ('authenticated', 'view', None),
+        ('authenticated', 'view', None, None),
         # Members can add new content, edit private content and request
         # publication
-        ('/config/groups/members', 'add', None),
-        ('/config/groups/members', 'edit', ['private']),
+        ('/config/groups/members', 'add', None, None),
+        ('/config/groups/members', 'edit', ['private'], None),
         # Reviewers can add new content, edit any content and publish
-        ('/config/groups/reviewers', 'add', None),
-        ('/config/groups/reviewers', 'edit', None),
-        ('/config/groups/reviewers', 'change_state', None)]
+        ('/config/groups/reviewers', 'add', None, None),
+        ('/config/groups/reviewers', 'edit', None, None),
+        ('/config/groups/reviewers', 'change_state', None, None)]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
         # Access rules
-        for group, permission, state in self.default_rules:
+        for group, permission, state, path in self.default_rules:
             rule = self.make_resource(None, AccessRule, group=group,
                                       permission=permission)
             rule.set_value('search_state', state)
+            rule.set_value('search_parent_paths', path)
 
 
     # API
