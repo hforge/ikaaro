@@ -235,7 +235,7 @@ class ConfigAccess(Folder):
         # Members can add new content, edit private content and request
         # publication
         ('/config/groups/members', 'add', None, None),
-        ('/config/groups/members', 'edit', ['private'], None),
+        ('/config/groups/members', 'edit', 'private', None),
         # Reviewers can add new content, edit any content and publish
         ('/config/groups/reviewers', 'add', None, None),
         ('/config/groups/reviewers', 'edit', None, None),
