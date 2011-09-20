@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import is_prototype
 from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -22,6 +23,7 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
+from autoform import SelectWidget
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
@@ -62,14 +64,19 @@ class Path_Field(Select_Field):
 ###########################################################################
 # Access rule
 ###########################################################################
-class Permissions_Field(Select_Field):
+class Permission_Datatype(Enumerate):
 
-    title = MSG(u'Permission')
     options = [
         {'name': 'view', 'value': MSG(u'View')},
         {'name': 'edit', 'value': MSG(u'Remove and modify')},
         {'name': 'add', 'value': MSG(u'Add')},
         {'name': 'change_state', 'value': MSG(u'Change workflow state')}]
+
+
+class Permissions_Field(Select_Field):
+
+    title = MSG(u'Permission')
+    datatype = Permission_Datatype
 
 
 
@@ -92,10 +99,12 @@ class AccessRule(DBResource):
     fields = DBResource.fields + ['group', 'permission',
                                   'search_state', 'search_parent_paths']
     group = Select_Field(required=True, title=MSG(u'User group'),
-                         datatype=UserGroupsDatatype)
-    permission = Permissions_Field(required=True)
-    search_state = State_Field(has_empty_option=True, default='')
-    search_parent_paths = Path_Field()
+                         datatype=UserGroupsDatatype,
+                         indexed=True, stored=True)
+    permission = Permissions_Field(required=True, indexed=True, stored=True)
+    search_state = State_Field(has_empty_option=True, default='',
+                               indexed=True, stored=True)
+    search_parent_paths = Path_Field(indexed=True, stored=True)
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
@@ -143,13 +152,27 @@ class AccessRule(DBResource):
 class ConfigAccess_Browse(Folder_BrowseContent):
 
     query_schema = Folder_BrowseContent.query_schema.copy()
-    query_schema['sort_by'] = query_schema['sort_by'](default='group')
+    query_schema['sort_by'] = query_schema['sort_by'](default='abspath')
+    query_schema['reverse'] = query_schema['reverse'](default=False)
 
-    search_widgets = None
+    # Search form
+    search_widgets = [
+        SelectWidget('group', title=MSG(u'Group')),
+        SelectWidget('permission', title=MSG(u'Permission')),
+        SelectWidget('search_state', title=MSG(u'State')),
+        SelectWidget('search_parent_paths', title=MSG(u'Path')),
+        ]
+    search_schema = {
+        'group': AccessRule.group.datatype,
+        'permission': AccessRule.permission.datatype,
+        'search_state': AccessRule.search_state.datatype(default=None),
+        'search_parent_paths': AccessRule.search_parent_paths.datatype,
+        }
+
 
     table_columns = [
         ('checkbox', None),
-        ('abspath', MSG(u'Path')),
+        ('abspath', MSG(u'Num.')),
         #('title', MSG(u'Title')),
         ('group', MSG(u'Group')),
         ('permission', MSG(u'Permission')),
@@ -160,17 +183,36 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
     table_actions = [RemoveButton]
 
-#   def get_item_value(self, resource, context, item, column):
-#       if column == 'search_state':
-#           brain, item_resource = item
-#           value = item_resource.get_value(column)
-#           if value is None:
-#               return None
-#           search = resource.get_resource('/config/searches/%s' % value)
-#           return (search.get_title(), str(search.abspath))
 
-#       proxy = super(ConfigAccess_Browse, self)
-#       return proxy.get_item_value(resource, context, item, column)
+    def get_key_sorted_by_group(self):
+        def key(item, cache={}):
+            title = UserGroupsDatatype.get_value(item.group)
+            if is_prototype(title, MSG):
+                title = title.gettext()
+            return title.lower()
+        return key
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'search_parent_paths':
+            brain, item_resource = item
+            value = brain.search_parent_paths
+            if value:
+                resource = resource.get_resource(value, soft=True)
+                if resource:
+                    return value, value
+            return value
+
+        proxy = super(ConfigAccess_Browse, self)
+        value = proxy.get_item_value(resource, context, item, column)
+
+        if column == 'group':
+            brain, item_resource = item
+            group = brain.group
+            if group[0] == '/':
+                return value, group
+
+        return value
 
 
 
