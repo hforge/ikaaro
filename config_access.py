@@ -187,15 +187,19 @@ class ConfigAccess(Folder):
     config_group = 'access'
 
     # API
-    def get_search_query(self, user, permission):
-        # User groups
+    def _get_user_groups(self, user):
         user_groups = set(['everybody'])
         if user:
             user_groups.add('authenticated')
             user_groups.update(user.get_value('groups'))
 
+        return user_groups, '/config/groups/admins' in user_groups
+
+
+    def get_search_query(self, user, permission):
         # Special case: admins can see everything
-        if '/config/groups/admins' in user_groups:
+        user_groups, is_admin = self._get_user_groups(user)
+        if is_admin:
             return AllQuery()
 
         # Build the query
@@ -223,14 +227,9 @@ class ConfigAccess(Folder):
             return len(results) > 0
 
         # Case 2: no resource
-        # 1. User groups
-        user_groups = set(['everybody'])
-        if user:
-            user_groups.add('authenticated')
-            user_groups.update(user.get_value('groups'))
-
         # Special case: admins
-        if '/config/groups/admins' in user_groups:
+        user_groups, is_admin = self._get_user_groups(user)
+        if is_admin:
             return True
 
         # Access rules
