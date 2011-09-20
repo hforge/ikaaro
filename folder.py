@@ -58,9 +58,10 @@ class Folder(DBResource):
 
 
 
+    folder_state = 'public'
     def get_catalog_values(self):
         values = super(Folder, self).get_catalog_values()
-        values['state'] = 'public'
+        values['state'] = self.folder_state
         return values
 
 
