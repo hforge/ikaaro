@@ -50,6 +50,7 @@ class Path_Datatype(Enumerate):
             title = '/' if not path else ('%s/' % path)
             items.append({'name': path, 'value': title, 'selected': False})
 
+        items.sort(key=lambda x: x['value'])
         return items
 
 
