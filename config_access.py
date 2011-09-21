@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import is_prototype
+from itools.core import is_prototype, proto_property
 from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -156,30 +156,37 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     query_schema['reverse'] = query_schema['reverse'](default=False)
 
     # Search form
-    search_widgets = [
-        SelectWidget('group', title=MSG(u'Group')),
-        SelectWidget('permission', title=MSG(u'Permission')),
-        SelectWidget('search_state', title=MSG(u'State')),
-        SelectWidget('search_parent_paths', title=MSG(u'Path')),
-        ]
-    search_schema = {
-        'group': AccessRule.group.datatype,
-        'permission': AccessRule.permission.datatype,
-        'search_state': AccessRule.search_state.datatype(default=None),
-        'search_parent_paths': AccessRule.search_parent_paths.datatype,
-        }
+    @proto_property
+    def search_widgets(self):
+        cls = AccessRule
+        return [
+            SelectWidget('group', title=cls.group.title),
+            SelectWidget('permission', title=cls.permission.title),
+            SelectWidget('search_state', title=cls.search_state.title),
+            SelectWidget('search_parent_paths',
+                         title=cls.search_parent_paths.title)]
 
 
-    table_columns = [
-        ('checkbox', None),
-        ('abspath', MSG(u'Num.')),
-        #('title', MSG(u'Title')),
-        ('group', MSG(u'Group')),
-        ('permission', MSG(u'Permission')),
-        ('search_state', MSG(u'State')),
-        ('search_parent_paths', MSG(u'Path'))]
-        #('mtime', MSG(u'Last Modified')),
-        #('last_author', MSG(u'Last Author'))]
+    @proto_property
+    def search_schema(self):
+        cls = AccessRule
+        return {
+            'group': cls.group.datatype,
+            'permission': cls.permission.datatype,
+            'search_state': cls.search_state.datatype(default=None),
+            'search_parent_paths': cls.search_parent_paths.datatype}
+
+
+    @proto_property
+    def table_columns(self):
+        cls = AccessRule
+        return [
+            ('checkbox', None),
+            ('abspath', MSG(u'Num.')),
+            ('group', cls.group.title),
+            ('permission', cls.permission.title),
+            ('search_state', cls.search_state.title),
+            ('search_parent_paths', cls.search_parent_paths.title)]
 
     table_actions = [RemoveButton]
 
