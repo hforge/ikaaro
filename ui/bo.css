@@ -414,12 +414,12 @@ table.new-resource-thumb p {
   text-decoration: underline;
 }
 
-div.block-widget-text,
-div.block-widget-format,
-div.block-widget-group,
-div.block-widget-permission,
-div.block-widget-search_state,
-div.block-widget-search_parent_paths
+form#form-search div.block-widget-text,
+form#form-search div.block-widget-format,
+form#form-search div.block-widget-group,
+form#form-search div.block-widget-permission,
+form#form-search div.block-widget-search_state,
+form#form-search div.block-widget-search_parent_paths
 {
   float: left;
   margin-right: 0.5em;

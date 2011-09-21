@@ -193,6 +193,7 @@ class BrowseForm(STLView):
     batch_max_middle_pages = None
 
     # Search configuration
+    search_form_id = 'form-search'
     search_schema = {}
     search_widgets = []
 
@@ -247,6 +248,7 @@ class BrowseForm(STLView):
             resource=resource, context=context,
             css='button-search', title=MSG(u'Search'))
         form = AutoForm(
+            form_id=self.search_form_id,
             title=MSG(u'Search'),
             method='get',
             schema=self.search_schema,
