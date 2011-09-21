@@ -103,13 +103,13 @@ class AccessRule(DBResource):
                          datatype=UserGroupsDatatype,
                          indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
+    search_parent_paths = Path_Field(indexed=True, stored=True)
     search_state = State_Field(has_empty_option=True, default='',
                                indexed=True, stored=True)
-    search_parent_paths = Path_Field(indexed=True, stored=True)
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
-    _fields = ['group', 'permission', 'search_state', 'search_parent_paths']
+    _fields = ['group', 'permission', 'search_parent_paths', 'search_state']
     new_instance = NewInstance_Local(fields=_fields,
                                      automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
@@ -163,9 +163,9 @@ class ConfigAccess_Browse(Folder_BrowseContent):
         return [
             SelectWidget('group', title=cls.group.title),
             SelectWidget('permission', title=cls.permission.title),
-            SelectWidget('search_state', title=cls.search_state.title),
             SelectWidget('search_parent_paths',
-                         title=cls.search_parent_paths.title)]
+                         title=cls.search_parent_paths.title),
+            SelectWidget('search_state', title=cls.search_state.title)]
 
 
     @proto_property
@@ -174,8 +174,8 @@ class ConfigAccess_Browse(Folder_BrowseContent):
         return {
             'group': cls.group.datatype,
             'permission': cls.permission.datatype,
-            'search_state': cls.search_state.datatype(default=None),
-            'search_parent_paths': cls.search_parent_paths.datatype}
+            'search_parent_paths': cls.search_parent_paths.datatype,
+            'search_state': cls.search_state.datatype(default=None)}
 
 
     @proto_property
@@ -186,8 +186,8 @@ class ConfigAccess_Browse(Folder_BrowseContent):
             ('abspath', MSG(u'Num.')),
             ('group', cls.group.title),
             ('permission', cls.permission.title),
-            ('search_state', cls.search_state.title),
-            ('search_parent_paths', cls.search_parent_paths.title)]
+            ('search_parent_paths', cls.search_parent_paths.title),
+            ('search_state', cls.search_state.title)]
 
     table_actions = [RemoveButton]
 
@@ -255,8 +255,8 @@ class ConfigAccess(Folder):
         for group, permission, state, path in self.default_rules:
             rule = self.make_resource(None, AccessRule, group=group,
                                       permission=permission)
-            rule.set_value('search_state', state)
             rule.set_value('search_parent_paths', path)
+            rule.set_value('search_state', state)
 
 
     # API
