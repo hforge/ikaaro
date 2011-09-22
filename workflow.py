@@ -46,13 +46,15 @@ class State_Field(Select_Field):
     title = MSG(u'State')
     datatype = State_Datatype
     widget = State_Widget
+    indexed = True
+    stored = True
 
 
 
 class WorkflowAware(object):
 
     fields = ['state']
-    state = State_Field(indexed=True, stored=True)
+    state = State_Field()
 
 
 

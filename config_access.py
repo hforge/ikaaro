@@ -23,7 +23,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import SelectWidget
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
@@ -111,9 +110,9 @@ class AccessRule(DBResource):
     class_title = MSG(u'Access rule')
 
     # Fields
-    fields = DBResource.fields + [
-        'group', 'permission',
-        'search_parent_paths', 'search_format', 'search_state']
+    _fields = ['group', 'permission', 'search_parent_paths',
+               'search_format', 'search_state']
+    fields = DBResource.fields + _fields
     group = Select_Field(required=True, title=MSG(u'User group'),
                          datatype=UserGroupsDatatype,
                          indexed=True, stored=True)
@@ -122,13 +121,10 @@ class AccessRule(DBResource):
     search_format = Select_Field(datatype=SearchFormat_Datatype,
                                  indexed=True, stored=True,
                                  title=MSG(u'Resource type'))
-    search_state = State_Field(has_empty_option=True, default='',
-                               indexed=True, stored=True)
+    search_state = State_Field(has_empty_option=True, default='')
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
-    _fields = ['group', 'permission', 'search_parent_paths', 'search_format',
-               'search_state']
     new_instance = NewInstance_Local(fields=_fields,
                                      automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
@@ -178,33 +174,37 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
     # Search form
     @proto_property
-    def search_widgets(self):
+    def _search_fields(self):
         cls = AccessRule
-        widgets = []
         for name in cls._fields:
-            field = cls.get_field(name)
-            widgets.append(SelectWidget(name, title=field.title))
+            yield name, cls.get_field(name)
+
+
+    @proto_property
+    def search_widgets(self):
+        widgets = []
+        for name, field in self._search_fields:
+            if is_prototype(field, Select_Field):
+                widget = field.widget
+                widgets.append(widget(name, title=field.title))
         return widgets
 
 
     @proto_property
     def search_schema(self):
-        cls = AccessRule
         schema = {}
-        for name in cls._fields:
-            field = cls.get_field(name)
-            schema[name] = field.datatype(default=None)
+        for name, field in self._search_fields:
+            if is_prototype(field, Select_Field):
+                schema[name] = field.datatype(default=None)
         return schema
 
 
     @proto_property
     def table_columns(self):
-        cls = AccessRule
         columns = [
             ('checkbox', None),
             ('abspath', MSG(u'Num.'))]
-        for name in cls._fields:
-            field = cls.get_field(name)
+        for name, field in self._search_fields:
             columns.append((name, field.title))
 
         return columns
@@ -272,7 +272,8 @@ class ConfigAccess(Folder):
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
         # Access rules
-        for group, permission, path, class_id, state in self.default_rules:
+        rules = self.default_rules
+        for group, permission, path, class_id, state in rules:
             rule = self.make_resource(None, AccessRule, group=group,
                                       permission=permission)
             rule.set_value('search_parent_paths', path)
