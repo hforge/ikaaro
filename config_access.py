@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.core import is_prototype, proto_property
-from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
+from itools.database import AllQuery, AndQuery, NotQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
@@ -161,7 +161,8 @@ class AccessRule(DBResource):
 
             query.append(subquery)
 
-        query.append(PhraseQuery('is_content', True))
+        # Exclude configuration
+        query.append(NotQuery(PhraseQuery('parent_paths', '/config')))
         return query
 
 
@@ -301,7 +302,7 @@ class ConfigAccess(Folder):
         if user:
             query.append(PhraseQuery('owner', str(user.abspath)))
 
-        # Access rules
+        # 2. Access rules
         for rule in self.get_resources():
             if rule.get_value('permission') == permission:
                 if rule.get_value('group') in user_groups:
