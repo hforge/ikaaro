@@ -186,7 +186,8 @@ class ConfigAccess_Browse(Folder_BrowseContent):
         for name, field in self._search_fields:
             if is_prototype(field, Select_Field):
                 widget = field.widget
-                widgets.append(widget(name, title=field.title))
+                widgets.append(
+                    widget(name, has_empty_option=True, title=field.title))
         return widgets
 
 
