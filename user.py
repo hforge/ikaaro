@@ -251,6 +251,7 @@ class UserFolder(Folder):
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
     class_views = ['view', 'browse_content', 'edit']
+    is_content = False
 
 
     def get_document_types(self):
