@@ -80,6 +80,20 @@ class Permissions_Field(Select_Field):
     datatype = Permission_Datatype
 
 
+class SearchFormat_Datatype(Enumerate):
+
+    @classmethod
+    def get_options(self):
+        database = get_context().database
+
+        options = []
+        for name, cls in database.resources_registry.items():
+            options.append({'name': name, 'value': cls.class_title.gettext()})
+
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
 
 class AccessRule_Results(Folder_BrowseContent):
 
@@ -97,19 +111,24 @@ class AccessRule(DBResource):
     class_title = MSG(u'Access rule')
 
     # Fields
-    fields = DBResource.fields + ['group', 'permission',
-                                  'search_state', 'search_parent_paths']
+    fields = DBResource.fields + [
+        'group', 'permission',
+        'search_parent_paths', 'search_format', 'search_state']
     group = Select_Field(required=True, title=MSG(u'User group'),
                          datatype=UserGroupsDatatype,
                          indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
     search_parent_paths = Path_Field(indexed=True, stored=True)
+    search_format = Select_Field(datatype=SearchFormat_Datatype,
+                                 indexed=True, stored=True,
+                                 title=MSG(u'Resource type'))
     search_state = State_Field(has_empty_option=True, default='',
                                indexed=True, stored=True)
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
-    _fields = ['group', 'permission', 'search_parent_paths', 'search_state']
+    _fields = ['group', 'permission', 'search_parent_paths', 'search_format',
+               'search_state']
     new_instance = NewInstance_Local(fields=_fields,
                                      automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
@@ -160,34 +179,34 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     @proto_property
     def search_widgets(self):
         cls = AccessRule
-        return [
-            SelectWidget('group', title=cls.group.title),
-            SelectWidget('permission', title=cls.permission.title),
-            SelectWidget('search_parent_paths',
-                         title=cls.search_parent_paths.title),
-            SelectWidget('search_state', title=cls.search_state.title)]
+        widgets = []
+        for name in cls._fields:
+            field = cls.get_field(name)
+            widgets.append(SelectWidget(name, title=field.title))
+        return widgets
 
 
     @proto_property
     def search_schema(self):
         cls = AccessRule
-        return {
-            'group': cls.group.datatype,
-            'permission': cls.permission.datatype,
-            'search_parent_paths': cls.search_parent_paths.datatype,
-            'search_state': cls.search_state.datatype(default=None)}
+        schema = {}
+        for name in cls._fields:
+            field = cls.get_field(name)
+            schema[name] = field.datatype(default=None)
+        return schema
 
 
     @proto_property
     def table_columns(self):
         cls = AccessRule
-        return [
+        columns = [
             ('checkbox', None),
-            ('abspath', MSG(u'Num.')),
-            ('group', cls.group.title),
-            ('permission', cls.permission.title),
-            ('search_parent_paths', cls.search_parent_paths.title),
-            ('search_state', cls.search_state.title)]
+            ('abspath', MSG(u'Num.'))]
+        for name in cls._fields:
+            field = cls.get_field(name)
+            columns.append((name, field.title))
+
+        return columns
 
     table_actions = [RemoveButton]
 
@@ -239,23 +258,24 @@ class ConfigAccess(Folder):
     # Initialization
     default_rules = [
         # Authenticated users can see any content
-        ('authenticated', 'view', None, None),
+        ('authenticated', 'view', None, None, None),
         # Members can add new content, edit private content and request
         # publication
-        ('/config/groups/members', 'add', None, None),
-        ('/config/groups/members', 'edit', 'private', None),
+        ('/config/groups/members', 'add', None, None, None),
+        ('/config/groups/members', 'edit', None, None, 'private'),
         # Reviewers can add new content, edit any content and publish
-        ('/config/groups/reviewers', 'add', None, None),
-        ('/config/groups/reviewers', 'edit', None, None),
-        ('/config/groups/reviewers', 'change_state', None, None)]
+        ('/config/groups/reviewers', 'add', None, None, None),
+        ('/config/groups/reviewers', 'edit', None, None, None),
+        ('/config/groups/reviewers', 'change_state', None, None, None)]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
         # Access rules
-        for group, permission, state, path in self.default_rules:
+        for group, permission, path, class_id, state in self.default_rules:
             rule = self.make_resource(None, AccessRule, group=group,
                                       permission=permission)
             rule.set_value('search_parent_paths', path)
+            rule.set_value('search_format', class_id)
             rule.set_value('search_state', state)
 
 

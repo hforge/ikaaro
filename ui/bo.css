@@ -418,8 +418,9 @@ form#form-search div.block-widget-text,
 form#form-search div.block-widget-format,
 form#form-search div.block-widget-group,
 form#form-search div.block-widget-permission,
-form#form-search div.block-widget-search_state,
-form#form-search div.block-widget-search_parent_paths
+form#form-search div.block-widget-search_parent_paths,
+form#form-search div.block-widget-search_format,
+form#form-search div.block-widget-search_state
 {
   float: left;
   margin-right: 0.5em;
