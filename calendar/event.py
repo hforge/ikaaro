@@ -293,10 +293,6 @@ class Event(Content):
             self.set_value('owner', str(context.user.abspath))
 
 
-    def get_owner(self):
-        return self.get_value('owner')
-
-
     def get_dates(self):
         start = self.get_value('dtstart')
         if type(start) is datetime:

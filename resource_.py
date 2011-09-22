@@ -432,7 +432,7 @@ class DBResource(Resource):
 
 
     def get_owner(self):
-        return None
+        return self.get_value('owner')
 
 
     def get_mtime(self):
