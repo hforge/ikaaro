@@ -65,11 +65,10 @@ class Families_View(Folder_BrowseContent):
 
 
     def get_item_value(self, resource, context, item, column):
-        brain, item_resource = item
         if column == 'title':
-            return item_resource.get_title(), brain.name
+            return item.get_title(), item.name
         elif column == 'color':
-            color = item_resource.get_value('color')
+            color = item.get_value('color')
             data = '<span style="color:{color}">{color}</span>'
             return XMLParser(data.format(color=color))
         proxy = super(Families_View, self)

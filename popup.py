@@ -105,15 +105,14 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 
     def get_item_value(self, resource, context, item, column):
-        brain, item_resource = item
         if column == 'checkbox':
             # radiobox
-            id = brain.abspath + self.resource_action
+            id = str(item.abspath) + self.resource_action
             return id, False
         elif column == 'name':
             target = self.target
-            if self.is_folder(item_resource):
-                path_to_item = context.root.get_pathto(item_resource)
+            if self.is_folder(item):
+                path_to_item = context.root.get_pathto(item)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
                            'search_text': None,
@@ -123,8 +122,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
-            abspath = item_resource.get_abspath()
-            path = target.get_abspath().get_pathto(abspath)
+            path = target.get_abspath().get_pathto(item.abspath)
             return unicode(path), url
         else:
             proxy = super(AddBase_BrowseContent, self)
@@ -167,21 +165,19 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 
     def get_item_value(self, resource, context, item, column):
-        brain, item_resource = item
         if column == 'checkbox':
-            if self.is_folder(item_resource):
+            if self.is_folder(item):
                 return None
             proxy = super(AddImage_BrowseContent, self)
             return proxy.get_item_value(resource, context, item, column)
         elif column == 'icon':
-            if self.is_folder(item_resource):
+            if self.is_folder(item):
                 # icon
-                path_to_icon = item_resource.get_resource_icon(48)
+                path_to_icon = item.get_resource_icon(48)
                 if path_to_icon.startswith(';'):
-                    path_to_icon = Path('%s/' % brain.name).resolve(
-                                                            path_to_icon)
+                    path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
             else:
-                path = item_resource.abspath
+                path = item.abspath
                 path_to_icon = ";thumb?width48=&height=48"
                 if path:
                     path_to_resource = Path(str(path) + '/')

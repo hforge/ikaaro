@@ -224,8 +224,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'search_parent_paths':
-            brain, item_resource = item
-            value = brain.search_parent_paths
+            value = item.get_value('search_parent_paths')
             if value:
                 resource = resource.get_resource(value, soft=True)
                 if resource:
@@ -236,8 +235,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
         value = proxy.get_item_value(resource, context, item, column)
 
         if column == 'group':
-            brain, item_resource = item
-            group = brain.group
+            group = item.get_value('group')
             if group[0] == '/':
                 return value, group
 

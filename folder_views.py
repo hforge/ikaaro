@@ -460,57 +460,57 @@ class Folder_BrowseContent(BrowseForm):
             items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
 
-        # XXX For backwards compatibility, return just the resources
-        return [ (x, resource.get_resource(x.abspath)) for x in items ]
+        database = resource.database
+        return [ database.get_resource(x.abspath) for x in items ]
 
 
     def get_item_value(self, resource, context, item, column):
-        brain, item_resource = item
         if column == 'checkbox':
             # checkbox
-            parent = item_resource.parent
+            parent = item.parent
             if parent is None:
                 return None
-            if item_resource.name in parent.__fixed_handlers__:
+            if item.name in parent.__fixed_handlers__:
                 return None
-            id = resource.get_abspath().get_pathto(brain.abspath)
+            id = resource.get_abspath().get_pathto(item.abspath)
             id = str(id)
             return id, False
         elif column == 'icon':
             # icon
-            path_to_icon = item_resource.get_resource_icon(16)
+            path_to_icon = item.get_resource_icon(16)
             if not path_to_icon:
                 return None
             if path_to_icon.startswith(';'):
-                path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
+                path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
             return path_to_icon
         elif column == 'abspath':
             # Name
-            id = resource.get_abspath().get_pathto(brain.abspath)
+            id = resource.get_abspath().get_pathto(item.abspath)
             id = str(id)
-            view = item_resource.get_view(None)
+            view = item.get_view(None)
             if view is None:
                 return id
-            href = '%s/' % context.get_link(item_resource)
+            href = '%s/' % context.get_link(item)
             return id, href
         elif column == 'format':
             # Type
-            return item_resource.class_title.gettext()
+            return item.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
-            if brain.mtime:
-                return context.format_datetime(brain.mtime)
+            mtime = item.get_value('mtime')
+            if mtime:
+                return context.format_datetime(mtime)
             return None
         elif column == 'last_author':
             # Last author
-            author =  brain.last_author
+            author =  item.get_value('last_author')
             return context.root.get_user_title(author) if author else None
         elif column == 'state':
             # The workflow state
-            return get_workflow_preview(item_resource, context)
+            return get_workflow_preview(item, context)
 
         # Default
-        return item_resource.get_value_title(column)
+        return item.get_value_title(column)
 
 
     #######################################################################

@@ -133,8 +133,7 @@ class BrowseGroups(Folder_BrowseContent):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'members':
-            brain, item_resource = item
-            kw = {self._property_name: brain.abspath}
+            kw = {self._property_name: str(item.abspath)}
             results = context.search(format='user', **kw)
             return len(results)
 

@@ -110,10 +110,9 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'order':
-            item_brain, item_resource = item
             ordered_ids = list(resource.get_ordered_values())
-            if item_brain.name in ordered_ids:
-                return ordered_ids.index(item_brain.name) + 1
+            if item.name in ordered_ids:
+                return ordered_ids.index(item.name) + 1
             return MSG(u'Not ordered')
 
         proxy = super(OrderedFolder_BrowseContent, self)

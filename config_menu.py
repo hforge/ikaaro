@@ -62,9 +62,7 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'title':
-            brain, item_resource = item
-            path = item_resource.get_value('path')
-            return (brain.title, path)
+            return item.get_title(), item.get_value('path')
 
         proxy = super(MenuItem_Browse, self)
         return proxy.get_item_value(resource, context, item, column)
