@@ -152,16 +152,6 @@ class ConfigCalendar(Folder):
     #######################################################################
     # User Interface
     #######################################################################
-    # Test if user in context is the organizer of a given event (or is admin)
-    def is_organizer_or_admin(self, context, event):
-        if self.get_access_control().is_admin(context.user, self):
-            return True
-        if event:
-            return event.get_owner() == context.user.abspath
-        ac = self.parent.get_access_control()
-        return ac.is_allowed_to_edit(context.user, self.parent)
-
-
     def to_ical(self, context):
         """Serialize as an ical file, generally named .ics
         """
