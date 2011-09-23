@@ -27,11 +27,11 @@ from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from config_groups import UserGroupsDatatype
-from fields import Select_Field
+from fields import Integer_Field, Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from resource_ import DBResource
-from utils import get_content_containers
+from utils import get_base_path_query, get_content_containers
 from workflow import State_Field
 
 
@@ -58,6 +58,17 @@ class Path_Field(Select_Field):
     datatype = Path_Datatype
     has_empty_option = False
     title = MSG(u'Path')
+
+
+
+class PathDepth_Field(Integer_Field):
+
+    title = MSG(u'Depth')
+    default = 0
+    size=2
+    oneline=True
+    endline=True
+    tip = MSG(u'Zero (0) means any depth.')
 
 
 
@@ -110,14 +121,16 @@ class AccessRule(DBResource):
     class_title = MSG(u'Access rule')
 
     # Fields
-    _fields = ['group', 'permission', 'search_parent_paths',
+    _fields = ['group', 'permission',
+               'search_path', 'search_path_depth',
                'search_format', 'search_state']
     fields = DBResource.fields + _fields
     group = Select_Field(required=True, title=MSG(u'User group'),
                          datatype=UserGroupsDatatype,
                          indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
-    search_parent_paths = Path_Field(indexed=True, stored=True)
+    search_path = Path_Field(indexed=True, stored=True)
+    search_path_depth = PathDepth_Field()
     search_format = Select_Field(datatype=SearchFormat_Datatype,
                                  indexed=True, stored=True,
                                  title=MSG(u'Resource type'))
@@ -133,32 +146,29 @@ class AccessRule(DBResource):
     # API
     def get_search_query(self):
         query = AndQuery()
-        for name in self.fields:
-            if not name.startswith('search_'):
-                continue
-            value = self.get_value(name)
+        # Exclude configuration
+        query.append(NotQuery(PhraseQuery('parent_paths', '/config')))
+
+        # Rules
+        for name in ['path', 'format', 'state']:
+            field_name = 'search_%s' % name
+            field = self.get_field(field_name)
+            value = field.get_value(self, field_name)
             if not value:
                 continue
 
-            field = self.get_field(name)
-            if not field.multiple:
-                value = [value]
-
-            name = name[7:]
-            subquery = OrQuery()
-            for value in value:
-                subquery.append(PhraseQuery(name, value))
-                # Special case: parent_paths
-                if name == 'parent_paths':
-                    subquery.append(PhraseQuery('abspath', value))
-
-            if len(subquery.atoms) == 1:
-                subquery = subquery.atoms[0]
+            if name == 'path':
+                depth = self.get_value('search_path_depth')
+                subquery = get_base_path_query(value, True, depth)
+            elif field.multiple:
+                err = "access rules don't yet support multiple fields"
+                raise NotImplementedError, err
+            else:
+                subquery = PhraseQuery(name, value)
 
             query.append(subquery)
 
-        # Exclude configuration
-        query.append(NotQuery(PhraseQuery('parent_paths', '/config')))
+        # Ok
         return query
 
 
@@ -173,10 +183,13 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     query_schema['reverse'] = query_schema['reverse'](default=False)
 
     # Search form
+    _columns = [
+        'group', 'permission', 'search_path', 'search_format', 'search_state']
+
     @proto_property
     def _search_fields(self):
         cls = AccessRule
-        for name in cls._fields:
+        for name in self._columns:
             yield name, cls.get_field(name)
 
 
@@ -223,13 +236,18 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
 
     def get_item_value(self, resource, context, item, column):
-        if column == 'search_parent_paths':
-            value = item.get_value('search_parent_paths')
-            if value:
-                resource = resource.get_resource(value, soft=True)
-                if resource:
-                    return value, value
-            return value
+        if column == 'search_path':
+            path = item.get_value('search_path')
+            if not path or not resource.get_resource(path, soft=True):
+                return None
+
+            depth = item.get_value('search_path_depth')
+            if depth:
+                title = '%s (%d)' % (path, depth)
+            else:
+                title = path
+
+            return title, path
 
         proxy = super(ConfigAccess_Browse, self)
         value = proxy.get_item_value(resource, context, item, column)
@@ -258,26 +276,25 @@ class ConfigAccess(Folder):
     # Initialization
     default_rules = [
         # Authenticated users can see any content
-        ('authenticated', 'view', None, None, None),
+        ('authenticated', 'view', {}),
         # Members can add new content, edit private content and request
         # publication
-        ('/config/groups/members', 'add', None, None, None),
-        ('/config/groups/members', 'edit', None, None, 'private'),
+        ('/config/groups/members', 'add', {}),
+        ('/config/groups/members', 'edit', {'state': 'private'}),
         # Reviewers can add new content, edit any content and publish
-        ('/config/groups/reviewers', 'add', None, None, None),
-        ('/config/groups/reviewers', 'edit', None, None, None),
-        ('/config/groups/reviewers', 'change_state', None, None, None)]
+        ('/config/groups/reviewers', 'add', {}),
+        ('/config/groups/reviewers', 'edit', {}),
+        ('/config/groups/reviewers', 'change_state', {})]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
         # Access rules
         rules = self.default_rules
-        for group, permission, path, class_id, state in rules:
-            rule = self.make_resource(None, AccessRule, group=group,
-                                      permission=permission)
-            rule.set_value('search_parent_paths', path)
-            rule.set_value('search_format', class_id)
-            rule.set_value('search_state', state)
+        for group, permission, kw in rules:
+            rule = self.make_resource(None, AccessRule, group=group)
+            rule.set_value('permission', permission)
+            for key in kw:
+                rule.set_value('search_%s' % key, kw[key])
 
 
     # API

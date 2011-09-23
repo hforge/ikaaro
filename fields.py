@@ -91,7 +91,7 @@ class Field(BaseField):
         return self.get_datatype().get_default()
 
 
-    widget_keys = ['title']
+    widget_keys = ['title', 'endline', 'size', 'tip']
     def get_widget(self, name):
         kw = {}
         for key in self.widget_keys:
@@ -158,6 +158,7 @@ class Birthdate_Field(Metadata_Field):
 class Boolean_Field(Metadata_Field):
     datatype = Boolean
     widget = RadioWidget
+    widget_keys = Metadata_Field.widget_keys + ['oneline']
 
 
 
