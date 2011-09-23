@@ -186,8 +186,8 @@ class AboutView(STLView):
 
     def get_namespace(self, resource, context):
         # Case 1: not admin
-        ac = resource.get_access_control()
-        if not ac.is_admin(context.user, resource):
+        root = context.root
+        if not root.is_admin(context.user, resource):
             return {'is_admin': False}
 
         # Case 2: admin
@@ -196,7 +196,6 @@ class AboutView(STLView):
             'lpod': u'lpOD',
             'sys': u'Python',
             'os': MSG(u'Operating System')}
-        root = context.root
         packages = [
             {'name': package2title.get(x, x),
              'version': y or MSG('no version found')}

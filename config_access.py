@@ -329,27 +329,34 @@ class ConfigAccess(Folder):
 
 
     def has_permission(self, user, permission, resource=None):
-        # Case 1: we got a resource
-        if resource:
-            query = AndQuery(
-                self.get_search_query(user, permission),
-                PhraseQuery('abspath', str(resource.abspath)))
-            results = get_context().search(query)
-            return len(results) > 0
+        # Case 1: add permission
+        if permission == 'add':
+            # Special case: admins
+            user_groups, is_admin = self._get_user_groups(user)
+            if is_admin:
+                return True
 
-        # Case 2: no resource
-        # Special case: admins
-        user_groups, is_admin = self._get_user_groups(user)
-        if is_admin:
-            return True
+            # Access rules (XXX)
+            for rule in self.get_resources():
+                if rule.get_value('permission') == permission:
+                    if rule.get_value('group') in user_groups:
+                        return True
 
-        # Access rules
-        for rule in self.get_resources():
-            if rule.get_value('permission') == permission:
-                if rule.get_value('group') in user_groups:
-                    return True
+            return False
 
-        return False
+        # Case 2: other permissions
+        if not resource:
+            raise ValueError, 'required resource not given'
+
+        query = AndQuery(
+            self.get_search_query(user, permission),
+            PhraseQuery('abspath', str(resource.abspath)))
+
+        if permission == 'change_state':
+            query.append(PhraseQuery('is_workflow_aware', True))
+
+        results = get_context().search(query)
+        return len(results) > 0
 
 
     def get_document_types(self):

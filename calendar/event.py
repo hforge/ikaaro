@@ -361,8 +361,8 @@ class Event(Content):
         # URL
         context = get_context()
         user = context.user
-        ac = self.get_access_control()
-        if ac.is_allowed_to_view(user, self):
+        root = context.root
+        if root.is_allowed_to_view(user, self):
             ns['url'] = '%s/;edit' % context.get_link(self)
         else:
             ns['url'] = None

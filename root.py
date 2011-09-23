@@ -40,7 +40,7 @@ from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import AccessControl, BaseView, STLView, get_context
+from itools.web import BaseView, STLView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
@@ -55,7 +55,6 @@ from user import UserFolder
 from root_views import AboutView, ContactForm, CreditsView
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView
-from workflow import WorkflowAware
 
 
 # itools source and target languages
@@ -86,7 +85,7 @@ class CtrlView(BaseView):
 ###########################################################################
 # Resource
 ###########################################################################
-class Root(AccessControl, Folder):
+class Root(Folder):
 
     class_id = 'iKaaro'
     class_title = MSG(u'iKaaro')
@@ -434,52 +433,48 @@ class Root(AccessControl, Folder):
         return '/config/groups/admins' in user.get_value('groups')
 
 
-    def is_allowed_to_view(self, user, resource):
+    def has_permission(self, user, permission, resource=None):
         access = self.get_resource('config/access')
-        return access.has_permission(user, 'view', resource)
+        return access.has_permission(user, permission, resource)
+
+
+    def is_allowed_to_view(self, user, resource):
+        return self.has_permission(user, 'view', resource)
 
 
     def is_allowed_to_edit(self, user, resource):
-        access = self.get_resource('config/access')
-        return access.has_permission(user, 'edit', resource)
+        return self.has_permission(user, 'edit', resource)
 
 
     def is_allowed_to_add(self, user, resource):
-        access = self.get_resource('config/access')
-        return access.has_permission(user, 'add', resource)
+        return self.has_permission(user, 'add', resource)
 
 
     def is_allowed_to_change_state(self, user, resource):
-        if not isinstance(resource, WorkflowAware):
-            return False
-
-        access = self.get_resource('config/access')
-        return access.has_permission(user, 'change_state')
+        return self.has_permission(user, 'change_state', resource)
 
 
     # By default all other change operations (add, remove, copy, etc.)
     # are equivalent to "edit".
     def is_allowed_to_put(self, user, resource):
-        return self.is_allowed_to_edit(user, resource)
+        return self.has_permission(user, 'edit', resource)
 
 
     def is_allowed_to_remove(self, user, resource):
-        return self.is_allowed_to_edit(user, resource)
+        return self.has_permission(user, 'edit', resource)
 
 
     def is_allowed_to_copy(self, user, resource):
-        return self.is_allowed_to_edit(user, resource)
+        return self.has_permission(user, 'edit', resource)
 
 
     def is_allowed_to_move(self, user, resource):
-        return self.is_allowed_to_edit(user, resource)
+        return self.has_permission(user, 'edit', resource)
 
 
     def is_allowed_to_view_folder(self, user, resource):
         index = resource.get_resource('index', soft=True)
-        if index is None:
-            return False
-        return self.is_allowed_to_view(user, index)
+        return index and self.has_permission(user, 'view', index)
 
 
     def get_user(self, name):

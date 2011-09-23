@@ -59,7 +59,7 @@ class Button(STLTemplate):
     def show(self):
         context = self.context
         resource = context.resource
-        return context.root.is_access_allowed(context.user, resource, self)
+        return context.is_access_allowed(context.user, resource, self)
 
 
 
@@ -69,7 +69,7 @@ class BrowseButton(Button):
     def show(self):
         context = self.context
         for item in self.items:
-            if context.root.is_access_allowed(context.user, item, self):
+            if context.is_access_allowed(context.user, item, self):
                 return True
         return False
 
@@ -138,12 +138,11 @@ class PublishButton(BrowseButton):
 
 
     @proto_property
-    def show(cls):
-        ac = cls.resource.get_access_control()
-        for item in cls.items:
-            if type(item) is tuple:
-                item = item[1]
-            if ac.is_allowed_to_change_state(cls.context.user, item):
+    def show(self):
+        context = self.context
+        root = context.root
+        for item in self.items:
+            if root.has_permission(context.user, 'change_state', item):
                 return True
         return False
 

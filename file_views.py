@@ -109,7 +109,8 @@ class File_Edit(AutoEdit):
 
         if name == 'state':
             root = context.root
-            if not root.is_allowed_to_change_state(context.user, resource):
+            user = context.user
+            if not root.has_permission(user, 'change_state', resource):
                 return ReadOnlyWidget(name, title=widget.title)
 
         return widget
@@ -259,8 +260,8 @@ class Archive_View(STLView):
         contents = resource.get_value('data').get_contents()
         contents = '\n'.join(contents)
         # Extract archive
-        ac = resource.get_access_control()
-        extract = ac.is_allowed_to_edit(context.user, resource)
+        root = context.root
+        extract = root.is_allowed_to_edit(context.user, resource)
         if extract:
             widget = PathSelectorWidget('target', value='..').render()
         else:

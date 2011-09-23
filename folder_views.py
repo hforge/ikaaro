@@ -208,10 +208,10 @@ class Folder_Rename(STLView):
     def get_namespace(self, resource, context):
         ids = context.query['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        root = context.root
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
+                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Build the namespace
         paths.sort()
@@ -527,6 +527,7 @@ class Folder_BrowseContent(BrowseForm):
         referenced = []
         not_removed = []
         user = context.user
+        root = context.root
         abspath = resource.get_abspath()
 
         # We sort and reverse ids in order to
@@ -535,8 +536,7 @@ class Folder_BrowseContent(BrowseForm):
         ids.reverse()
         for name in ids:
             child = resource.get_resource(name)
-            ac = child.get_access_control()
-            if ac.is_allowed_to_remove(user, child):
+            if root.is_allowed_to_remove(user, child):
                 # Remove resource
                 try:
                     resource.del_resource(name)
@@ -576,10 +576,10 @@ class Folder_BrowseContent(BrowseForm):
     def action_rename(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        root = context.root
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
+                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Check input data
         if not paths:
@@ -598,10 +598,10 @@ class Folder_BrowseContent(BrowseForm):
     def action_copy(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to copy
-        ac = resource.get_access_control()
+        root = context.root
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_copy(user, resource.get_resource(x)) ]
+                  if root.is_allowed_to_copy(user, resource.get_resource(x)) ]
 
         # Check input data
         if not names:
@@ -619,10 +619,10 @@ class Folder_BrowseContent(BrowseForm):
     def action_cut(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        root = context.root
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
+                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Check input data
         if not names:
@@ -711,7 +711,7 @@ class Folder_BrowseContent(BrowseForm):
         root = context.root
         for id in form['ids']:
             item = resource.get_resource(id)
-            if root.is_allowed_to_change_state(user, item):
+            if root.has_permission(user, 'change_state', item):
                 item.set_value('state', state)
                 context.message = message
 

@@ -248,8 +248,7 @@ def get_content_containers(context, skip_formats):
             resource = resource.parent
         else:
             # Check access control
-            ac = container.get_access_control()
-            if ac.is_allowed_to_add(context.user, container):
+            if context.root.has_permission(context.user, 'add', container)
                 yield container
 
 

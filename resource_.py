@@ -29,7 +29,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
 from itools.uri import Path
-from itools.web import AccessControl, BaseView, get_context
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from autoadd import AutoAdd
@@ -269,11 +269,9 @@ class DBResource(Resource):
         if not views:
             return None
         context = get_context()
-        user = context.user
-        ac = self.get_access_control()
         for view_name in views:
             view = getattr(self, view_name, None)
-            if ac.is_access_allowed(user, self, view):
+            if context.is_access_allowed(context.user, self, view):
                 return view_name
         return views[0]
 
@@ -295,19 +293,6 @@ class DBResource(Resource):
 
     def get_context_menus(self):
         return self.context_menus
-
-
-    #######################################################################
-    # API / Security
-    #######################################################################
-    def get_access_control(self):
-        resource = self
-        while resource is not None:
-            if isinstance(resource, AccessControl):
-                return resource
-            resource = resource.parent
-
-        return None
 
 
     ########################################################################
@@ -501,16 +486,11 @@ class DBResource(Resource):
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
 
-        # Image
-        from file import Image
-        values['is_image'] = isinstance(self, Image)
-
-        # Folder
-        from folder import Folder
-        values['is_folder'] = isinstance(self, Folder)
-
         # Content
         values['is_content'] = self.is_content
+
+        from workflow import WorkflowAware
+        values['is_workflow_aware'] = isinstance(self, WorkflowAware)
 
         # Ok
         return values
@@ -694,12 +674,11 @@ class DBResource(Resource):
     # User interface
     ########################################################################
     def get_views(self):
-        user = get_context().user
-        ac = self.get_access_control()
+        context = get_context()
         for name in self.class_views:
             view_name = name.split('?')[0]
             view = self.get_view(view_name)
-            if ac.is_access_allowed(user, self, view):
+            if context.is_access_allowed(context.user, self, view):
                 yield name, view
 
 
@@ -784,6 +763,5 @@ register_field('links', String(multiple=True, indexed=True))
 register_field('text', Unicode(indexed=True))
 # Various classifications
 register_field('is_role_aware', Boolean(indexed=True))
-register_field('is_image', Boolean(indexed=True))
-register_field('is_folder', Boolean(indexed=True))
 register_field('is_content', Boolean(indexed=True))
+register_field('is_workflow_aware', Boolean(indexed=True))

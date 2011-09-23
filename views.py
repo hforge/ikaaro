@@ -75,10 +75,8 @@ class CompositeView(STLView):
 
 
     def get_allowed_subviews(self, resource, context):
-        user = context.user
-        ac = resource.get_access_control()
         for view in self.subviews:
-            if ac.is_access_allowed(user, resource, view):
+            if context.is_access_allowed(context.user, resource, view):
                 yield view
 
 

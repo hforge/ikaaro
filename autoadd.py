@@ -220,12 +220,14 @@ class AutoAdd(AutoForm):
     # POST
     #######################################################################
     def get_container(self, resource, context, form):
+        root = context.root
+
         container = resource
         path = form['path']
         if path is not None:
-            container = context.root.get_resource(path)
-        ac = container.get_access_control()
-        if not ac.is_allowed_to_add(context.user, container):
+            container = root.get_resource(path)
+
+        if not root.has_permission(context.user, 'add', container):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
             raise FormError, msg.gettext(path=path)
