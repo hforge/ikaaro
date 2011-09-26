@@ -32,7 +32,7 @@ from itools.handlers import checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView
+from itools.web import BaseView, Forbidden, get_context
 
 # Import from ikaaro
 from database import Database
@@ -358,7 +358,12 @@ class Folder(DBResource):
                 if class_id:
                     cls = self.database.get_resource_class(class_id)
                     if is_prototype(cls.new_instance, BaseView):
-                        return cls.new_instance
+                        context = get_context()
+                        root = context.root
+                        user = context.user
+                        if root.has_permission(user, 'add', self, class_id):
+                            return cls.new_instance
+                        raise Forbidden
 
         # Default
         return super(Folder, self).get_view(name, query)
