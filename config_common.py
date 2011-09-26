@@ -19,6 +19,9 @@ This module contains some utility code shared accross the different
 configuration plugins.
 """
 
+# Import from itools
+from itools.core import proto_property
+
 # Import from ikaaro
 from autoadd import AutoAdd
 from database import Database
@@ -45,6 +48,11 @@ class NewInstance_Local(AutoAdd):
 
 class NewResource_Local(Folder_NewResource):
 
+    @proto_property
+    def document_types(self):
+        return self.resource.get_document_types()
+
+
     def get_items(self, resource, context):
         root = context.root
         user = context.user
@@ -54,7 +62,7 @@ class NewResource_Local(Folder_NewResource):
         list(models.get_dynamic_classes())
 
         # 2. The document types
-        document_types = tuple(resource.get_document_types())
+        document_types = tuple(self.document_types)
 
         items = []
         for cls in Database.resources_registry.values():

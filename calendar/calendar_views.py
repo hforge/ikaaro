@@ -34,9 +34,8 @@ from itools.database import AndQuery, PhraseQuery
 from event import Event
 from grid import get_grid_data
 from ikaaro import messages
-from ikaaro.database import Database
+from ikaaro.config_common import NewResource_Local
 from ikaaro.datatypes import FileDataType
-from ikaaro.folder_views import Folder_NewResource
 from ikaaro.utils import CMSTemplate
 
 resolution = timedelta.resolution
@@ -622,16 +621,8 @@ class Calendar_Export(BaseView):
 
 
 
-class Calendar_NewEvent(Folder_NewResource):
+class Calendar_NewEvent(NewResource_Local):
 
     title = MSG(u'Create a new event')
 
-
-    def get_items(self, resource, context):
-        # 1. Load dynamic classes
-        models = resource.get_resource('/config/models')
-        list(models.get_dynamic_classes())
-
-        # 2. The document types
-        return [ x for x in Database.resources_registry.values()
-                 if issubclass(x, Event) ]
+    document_types = (Event,)
