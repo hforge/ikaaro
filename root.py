@@ -433,9 +433,9 @@ class Root(Folder):
         return '/config/groups/admins' in user.get_value('groups')
 
 
-    def has_permission(self, user, permission, resource=None):
+    def has_permission(self, user, permission, resource, class_id=None):
         access = self.get_resource('config/access')
-        return access.has_permission(user, permission, resource)
+        return access.has_permission(user, permission, resource, class_id)
 
 
     def is_allowed_to_view(self, user, resource):

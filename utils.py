@@ -238,7 +238,7 @@ def get_content_containers(context, class_id=None):
 
     root = context.root
     for container in context.search(query).get_resources():
-        if not root.has_permission(context.user, 'add', container):
+        if not root.has_permission(context.user, 'add', container, class_id):
             continue
 
         if class_id is None:

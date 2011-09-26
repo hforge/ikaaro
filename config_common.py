@@ -46,11 +46,20 @@ class NewInstance_Local(AutoAdd):
 class NewResource_Local(Folder_NewResource):
 
     def get_items(self, resource, context):
+        root = context.root
+        user = context.user
+
         # 1. Load dynamic classes
         models = resource.get_resource('/config/models')
         list(models.get_dynamic_classes())
 
         # 2. The document types
         document_types = tuple(resource.get_document_types())
-        return [ cls for cls in Database.resources_registry.values()
-                 if issubclass(cls, document_types) ]
+
+        items = []
+        for cls in Database.resources_registry.values():
+            if issubclass(cls, document_types):
+                if root.has_permission(user, 'add', resource, cls.class_id):
+                    items.append(cls)
+
+        return items

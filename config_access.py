@@ -145,12 +145,20 @@ class AccessRule(DBResource):
 
     # API
     def get_search_query(self):
+        permission = self.get_value('permission')
+
+        # Build query
         query = AndQuery()
         # Exclude configuration
         query.append(NotQuery(PhraseQuery('parent_paths', '/config')))
 
         # Rules
-        for name in ['path', 'format', 'state']:
+        if permission == 'add':
+            names = ['path']
+        else:
+            names = ['path', 'format', 'state']
+
+        for name in names:
             field_name = 'search_%s' % name
             field = self.get_field(field_name)
             value = field.get_value(self, field_name)
@@ -167,6 +175,10 @@ class AccessRule(DBResource):
                 subquery = PhraseQuery(name, value)
 
             query.append(subquery)
+
+        # Permission change-state
+        if permission == 'change_state':
+            query.append(PhraseQuery('is_workflow_aware', True))
 
         # Ok
         return query
@@ -307,7 +319,7 @@ class ConfigAccess(Folder):
         return user_groups, '/config/groups/admins' in user_groups
 
 
-    def get_search_query(self, user, permission):
+    def get_search_query(self, user, permission, class_id=None):
         # Special case: admins can see everything
         user_groups, is_admin = self._get_user_groups(user)
         if is_admin:
@@ -321,42 +333,34 @@ class ConfigAccess(Folder):
 
         # 2. Access rules
         for rule in self.get_resources():
-            if rule.get_value('permission') == permission:
-                if rule.get_value('group') in user_groups:
-                    query.append(rule.get_search_query())
+            if rule.get_value('permission') != permission:
+                continue
+
+            if rule.get_value('group') not in user_groups:
+                continue
+
+            if permission == 'add':
+                r_format = rule.get_value('search_format')
+                if class_id and r_format and class_id != r_format:
+                    continue
+
+            query.append(rule.get_search_query())
 
         return query
 
 
-    def has_permission(self, user, permission, resource=None):
-        # Case 1: add permission
-        if permission == 'add':
-            # Special case: admins
-            user_groups, is_admin = self._get_user_groups(user)
-            if is_admin:
-                return True
-
-            # Access rules (XXX)
-            for rule in self.get_resources():
-                if rule.get_value('permission') == permission:
-                    if rule.get_value('group') in user_groups:
-                        return True
-
-            return False
-
-        # Case 2: other permissions
-        if not resource:
-            raise ValueError, 'required resource not given'
-
+    def has_permission(self, user, permission, resource, class_id=None):
+        # The query
         query = AndQuery(
-            self.get_search_query(user, permission),
+            self.get_search_query(user, permission, class_id),
             PhraseQuery('abspath', str(resource.abspath)))
 
-        if permission == 'change_state':
-            query.append(PhraseQuery('is_workflow_aware', True))
-
+        # Search
         results = get_context().search(query)
-        return len(results) > 0
+        if len(results) == 0:
+            return False
+
+        return True
 
 
     def get_document_types(self):
