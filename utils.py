@@ -231,25 +231,24 @@ def get_base_path_query(abspath, include_container=False, depth=0):
 ###########################################################################
 # Used by the add-form
 ###########################################################################
-def get_content_containers(context, skip_formats):
-    query = PhraseQuery('is_folder', True)
-    for brain in context.search(query).get_documents():
-        if brain.format in skip_formats:
+def get_content_containers(context, class_id=None):
+    query = AndQuery(
+        PhraseQuery('is_folder', True),
+        PhraseQuery('is_content', True))
+
+    root = context.root
+    for container in context.search(query).get_resources():
+        if not root.has_permission(context.user, 'add', container):
             continue
 
-        # Get the resource
-        container = context.database.get_resource(brain.abspath)
+        if class_id is None:
+            yield container
+            continue
 
-        # Exclude /config, /users, ...
-        resource = container
-        while resource is not None:
-            if resource.is_content is False:
-                break
-            resource = resource.parent
-        else:
-            # Check access control
-            if context.root.has_permission(context.user, 'add', container):
+        for cls in container.get_document_types():
+            if class_id == cls.class_id:
                 yield container
+                break
 
 
 ###########################################################################

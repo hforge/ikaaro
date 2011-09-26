@@ -44,7 +44,7 @@ class Path_Datatype(Enumerate):
         context = get_context()
 
         items = []
-        for resource in get_content_containers(context, set()):
+        for resource in get_content_containers(context):
             path = resource.abspath
             title = '/' if not path else ('%s/' % path)
             items.append({'name': path, 'value': title, 'selected': False})

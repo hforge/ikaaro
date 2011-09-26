@@ -38,19 +38,10 @@ class ContainerPathDatatype(Enumerate):
         context = get_context()
         class_id = context.query['type']
 
-        skip_formats = set()
         items = []
-        for resource in get_content_containers(context, skip_formats):
-            for cls in resource.get_document_types():
-                if cls.class_id == class_id:
-                    break
-            else:
-                skip_formats.add(resource.class_id)
-                continue
-
+        for resource in get_content_containers(context, class_id):
             path = resource.abspath
             title = '/' if not path else ('%s/' % path)
-            # Next
             items.append({'name': path, 'value': title, 'selected': False})
 
         # Sort

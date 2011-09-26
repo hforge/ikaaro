@@ -163,16 +163,18 @@ class Folder_NewResource(IconsView):
 
     def get_items(self, resource, context):
         # 1. Static classes
+        aux = set()
         document_types = []
-        skip_formats = set()
-        for resource in get_content_containers(context, skip_formats):
-            skip_formats.add(resource.class_id)
-            for cls in resource.get_document_types():
+        for container in get_content_containers(context):
+            if container.class_id in aux:
+                continue
+            aux.add(container.class_id)
+            for cls in container.get_document_types():
                 if cls not in document_types:
                     document_types.append(cls)
 
         # 2. Add dynamic models
-        models = resource.get_resource('/config/models')
+        models = context.database.get_resource('/config/models')
         for cls in models.get_dynamic_classes():
             document_types.append(cls)
 
