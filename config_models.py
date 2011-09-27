@@ -23,8 +23,8 @@ from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
 from database import Database
-from fields import Select_Field
-from fields import Integer_Field, Text_Field
+from fields import Boolean_Field, Date_Field, Integer_Field, Select_Field
+from fields import Text_Field, Textarea_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from order import OrderedFolder, OrderedFolder_BrowseContent
@@ -34,11 +34,28 @@ from resource_ import DBResource
 class FieldType_Field(Select_Field):
 
     options = [
+        {'name': 'boolean', 'value': MSG(u'Boolean')},
+        {'name': 'date', 'value': MSG(u'Date')},
+        {'name': 'integer', 'value': MSG(u'Integer')},
         {'name': 'text', 'value': MSG(u'Text')},
-        {'name': 'integer', 'value': MSG(u'Integer')}]
+        {'name': 'textarea', 'value': MSG(u'Textarea')}]
+
+    fields_map = {
+        'boolean': Boolean_Field,
+        'date': Date_Field,
+        'integer': Integer_Field,
+        'text': Text_Field,
+        'textarea': Textarea_Field}
+
 
 
 class ModelField_Base(DBResource):
+
+    # Fields
+    fields = DBResource.fields + ['required', 'multiple', 'tip']
+    required = Boolean_Field(title=MSG(u'Required'))
+    multiple = Boolean_Field(title=MSG(u'Multiple'))
+    tip = Text_Field(title=MSG(u'Tip'))
 
     def set_value(self, name, value, language=None):
         proxy = super(ModelField_Base, self)
@@ -48,6 +65,18 @@ class ModelField_Base(DBResource):
             Database.resources_registry.pop(class_id, None)
 
         return has_changed
+
+
+    def get_field_kw(self, field):
+        return {'multiple': self.get_value('multiple'),
+                'required': self.get_value('required'),
+                'widget': field.widget(tip=self.get_value('tip'))}
+
+
+    # Views
+    _fields = ['title', 'required', 'multiple', 'tip']
+    new_instance = NewInstance_Local(fields=_fields)
+    edit = AutoEdit(fields=_fields)
 
 
 
@@ -65,22 +94,21 @@ class ModelField_Standard(ModelField_Base):
     class_title = MSG(u'Standard field')
 
     # Fields
-    fields = DBResource.fields + ['field_type']
+    fields = ModelField_Base.fields + ['field_type', 'tip']
     field_type = FieldType_Field(required=True, title=MSG(u'Field type'))
 
     # API
     def build_field(self):
-        fields_map = {
-            'text': Text_Field,
-            'integer': Integer_Field}
-
         field_type = self.get_value('field_type')
-        return fields_map[field_type]
+        field = FieldType_Field.fields_map[field_type]
+        field_kw = self.get_field_kw(field)
+        return field(**field_kw)
 
     # Views
     class_views = ['edit', 'commit_log']
-    new_instance = NewInstance_Local(fields=['field_type', 'title'])
-    edit = AutoEdit(fields=['field_type', 'title'])
+    _fields = ModelField_Base._fields + ['field_type']
+    new_instance = NewInstance_Local(fields=_fields)
+    edit = AutoEdit(fields=_fields)
 
 
 
@@ -125,12 +153,13 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
     def build_field(self):
         options = [ {'name': x, 'value': self.get_resource(x).get_title()}
                     for x in self.get_ordered_values() ]
-        return Select_Field(options=options)
+        field = Select_Field
+        field_kw = self.get_field_kw(field)
+        return field(options=options, **field_kw)
 
     # Views
     class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
     browse_content = ModelField_Choices_Browse()
-    new_instance = NewInstance_Local(fields=['title'])
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
 
