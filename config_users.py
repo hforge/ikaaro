@@ -38,7 +38,7 @@ class AddUser(AutoAdd):
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
 
-    fields = ['email', 'password', 'password2']
+    fields = ['email', 'password', 'password2', 'groups']
 
     @proto_lazy_property
     def _resource_class(self):

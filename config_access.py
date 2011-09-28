@@ -26,18 +26,31 @@ from autoedit import AutoEdit
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
-from config_groups import UserGroupsDatatype
 from fields import Integer_Field, Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from resource_ import DBResource
+from user import UserGroups_Datatype
 from utils import get_base_path_query, get_content_containers
 from workflow import State_Field
 
 
 ###########################################################################
-# Saved searches
+# Fields & datatypes
 ###########################################################################
+class Groups_Datatype(UserGroups_Datatype):
+
+    special_groups = [
+        {'name': 'everybody', 'value': MSG(u'Everybody')},
+        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+
+
+    def get_options(self):
+        options = super(Groups_Datatype, self).get_options()
+        return options + self.special_groups
+
+
+
 class Path_Datatype(Enumerate):
 
     def get_options(self):
@@ -72,9 +85,6 @@ class PathDepth_Field(Integer_Field):
 
 
 
-###########################################################################
-# Access rule
-###########################################################################
 class Permission_Datatype(Enumerate):
 
     options = [
@@ -105,6 +115,9 @@ class SearchFormat_Datatype(Enumerate):
 
 
 
+###########################################################################
+# Access rule
+###########################################################################
 class AccessRule_Results(Folder_BrowseContent):
 
     title = MSG(u'View results')
@@ -126,8 +139,7 @@ class AccessRule(DBResource):
                'search_format', 'search_state']
     fields = DBResource.fields + _fields
     group = Select_Field(required=True, title=MSG(u'User group'),
-                         datatype=UserGroupsDatatype,
-                         indexed=True, stored=True)
+                         datatype=Groups_Datatype, indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
     search_path = Path_Field(indexed=True, stored=True)
     search_path_depth = PathDepth_Field()
@@ -240,7 +252,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
     def get_key_sorted_by_group(self):
         def key(item, cache={}):
-            title = UserGroupsDatatype.get_value(item.group)
+            title = Groups_Datatype.get_value(item.group)
             if is_prototype(title, MSG):
                 title = title.gettext()
             return title.lower()

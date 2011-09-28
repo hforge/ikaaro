@@ -22,13 +22,14 @@ from copy import deepcopy
 
 # Import from itools
 from itools.database import register_field
-from itools.datatypes import String
+from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
 from itools.uri import Path, Reference
-from itools.web import INFO
+from itools.web import INFO, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
+from autoform import CheckboxWidget
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
 from fields import File_Field, Select_Field, URI_Field
 from folder import Folder
@@ -39,6 +40,25 @@ from user_views import User_ResendConfirmation
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
 from utils import get_secure_hash, generate_password
 from views import MessageView
+
+
+class UserGroups_Datatype(Enumerate):
+
+    _resource_path = '/config/groups'
+    def get_options(self):
+        resource = get_context().root.get_resource(self._resource_path)
+        return [ {'name': str(x.abspath), 'value': x.get_title()}
+                 for x in resource.get_resources() ]
+
+
+class UserGroups_Field(URI_Field):
+
+    datatype = UserGroups_Datatype
+    indexed = True
+    multiple = True
+    title = MSG(u'Groups')
+    widget = CheckboxWidget
+
 
 
 class UserState_Field(Select_Field):
@@ -80,7 +100,7 @@ class User(DBResource):
     user_language = Char_Field
     user_timezone = Char_Field
     user_state = UserState_Field
-    groups = URI_Field(multiple=True, indexed=True)
+    groups = UserGroups_Field
     # Metadata (backwards compatibility)
     username = Char_Field(indexed=True, stored=True)
 

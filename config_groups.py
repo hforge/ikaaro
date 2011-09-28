@@ -16,9 +16,8 @@
 
 # Import from itools
 from itools.core import proto_lazy_property
-from itools.datatypes import Enumerate, String
+from itools.datatypes import String
 from itools.gettext import MSG
-from itools.web import get_context
 
 # Import from ikaaro
 from buttons import BrowseButton, RemoveButton, RenameButton
@@ -28,25 +27,6 @@ from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 from user_views import BrowseUsers
-
-
-
-class UserGroupsDatatype(Enumerate):
-
-    special_groups = [
-        {'name': 'everybody', 'value': MSG(u'Everybody')},
-        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
-
-    def get_options(self):
-        config = get_context().root.get_resource('config')
-        groups = [ {'name': str(group.abspath), 'value': group.get_title()}
-                   for group in config.get_resources('groups') ]
-
-        # Special groups
-        if self.special_groups:
-            return self.special_groups + groups
-
-        return groups
 
 
 
