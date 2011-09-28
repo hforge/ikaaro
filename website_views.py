@@ -96,7 +96,10 @@ class ContactOptions(Enumerate):
             user = users.get_resource(name, soft=True)
             if user is None:
                 continue
-            options.append({'name': name, 'value': user.get_title()})
+            title = user.get_title()
+            options.append({'name': name, 'value': title,
+                            'sort_value': title.lower()})
+        options.sort(key=lambda x: x['sort_value'])
         return options
 
 
