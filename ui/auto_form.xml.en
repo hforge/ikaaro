@@ -10,7 +10,7 @@ ${before}
   name="autoform" class="autoform" id="${form_id}" onsubmit="${onsubmit}"
   stl:omit-tag="not actions">
   <fieldset>
-    <legend>${title}</legend>
+    <legend stl:if="title">${title}</legend>
     <p stl:if="description">${description}</p>
     <stl:block stl:repeat="field fields_list">${field}</stl:block>
     <p stl:if="actions">
