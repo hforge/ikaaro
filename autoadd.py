@@ -297,7 +297,11 @@ class AutoAdd(AutoForm):
         schema = self.get_schema(resource, context)
         for name in self.get_fields():
             datatype = schema.get(name)
-            if datatype and not getattr(datatype, 'readonly', False):
+            if not datatype:
+                continue
+            readonly = getattr(datatype, 'readonly', False)
+            persistent = getattr(datatype, 'persistent', True)
+            if persistent and not readonly:
                 if self.set_value(child, context, name, form):
                     return None
 

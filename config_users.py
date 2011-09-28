@@ -15,12 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Email, String
+from itools.core import proto_lazy_property
+from itools.datatypes import String
 from itools.gettext import MSG
-from itools.web import ERROR, INFO
+from itools.web import ERROR, INFO, FormError
 
 # Import from ikaaro
-from autoform import AutoForm, TextWidget, PasswordWidget
+from autoadd import AutoAdd
+from autoform import PasswordWidget
 from buttons import Button, BrowseButton
 from config import Configuration
 from messages import MSG_CHANGES_SAVED, MSG_PASSWORD_MISMATCH
@@ -29,77 +31,97 @@ from user_views import BrowseUsers
 
 
 
-class AddUser(AutoForm):
+class AddUser(AutoAdd):
 
     access = 'is_admin'
     title = MSG(u'Add New Member')
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
 
-    schema = {
-        'email': Email(mandatory=True),
-        'newpass': String,
-        'newpass2': String}
+    fields = ['email', 'password', 'password2']
 
-    widgets = [
-        TextWidget('email', title=MSG(u'Email')),
-        # Admin can set user password
-        PasswordWidget('newpass', title=MSG(u'Password'),
-                       tip=MSG(u'If no password is given an email will be '
-                               u' sent to the user, asking him to choose '
-                               u' his password.')),
-        PasswordWidget('newpass2', title=MSG(u'Repeat Password'))]
+    @proto_lazy_property
+    def _resource_class(self):
+        return self.context.database.get_resource_class('user')
+
+
+    def _get_datatype(self, resource, context, name):
+        if name == 'password':
+            return String
+        if name == 'password2':
+            return String(persistent=False)
+
+        return super(AddUser, self)._get_datatype(resource, context, name)
+
+
+    def _get_widget(self, resource, context, name):
+        if name == 'password':
+            tip = MSG(
+                u'If no password is given an email will be sent to the '
+                u' user, asking him to choose his password.')
+            return PasswordWidget(name, title=MSG(u'Password'), tip=tip)
+        elif name == 'password2':
+            return PasswordWidget(name, title=MSG(u'Repeat password'))
+
+        return super(AddUser, self)._get_widget(resource, context, name)
+
+
+    def _get_form(self, resource, context):
+        form = super(AddUser, self)._get_form(resource, context)
+
+        # Check whether the user already exists
+        email = form['email'].strip()
+        results = context.search(email=email)
+        if len(results):
+            raise FormError, ERROR(u'The user is already here.')
+
+        # Check the password is right
+        password = form['password'].strip()
+        if password != form['password2']:
+            raise FormError, MSG_PASSWORD_MISMATCH
+        if password == '':
+            form['password'] = None
+
+        return form
+
 
     actions = [
-        Button(access='is_admin', css='button-ok', name='add_and_view',
+        Button(access='is_admin', css='button-ok',
                title=MSG(u'Add and view')),
         Button(access='is_admin', css='button-ok', name='add_and_return',
                title=MSG(u'Add and return'))]
 
 
-    def _add(self, resource, context, form):
-        # Check whether the user already exists
-        email = form['email'].strip()
-        results = context.search(email=email)
-        if len(results):
-            context.message = ERROR(u'The user is already here.')
-            return None
+    def get_container(self, resource, context, form):
+        return resource.get_resource('/users')
 
-        # Create user
-        password = form['newpass']
-        password2 = form['newpass2']
-        # Check the password is right
-        if password != password2:
-            context.message = MSG_PASSWORD_MISMATCH
-            return None
-        if not password:
-            # Admin can set no password
-            # so the user must activate its account
-            password = None
-        # Add the user
-        user = context.root.make_user(password=password)
-        user.set_property('email', email)
-        if password is None:
-            # Send confirmation email to activate the account
-            user.send_confirmation(context, email)
-        else:
-            user.send_registration(context, email)
 
-        return user.name
+    automatic_resource_name = True
+
+
+    def make_new_resource(self, resource, context, form):
+        proxy = super(AddUser, self)
+        child = proxy.make_new_resource(resource, context, form)
+
+        # Send email to the new user
+        if child:
+            email = form['email']
+            password = form['password']
+            if password is None:
+                child.send_confirmation(context, email)
+            else:
+                child.send_registration(context, email)
+
+        # Ok
+        return child
 
 
     def action_add_and_return(self, resource, context, form):
-        user_id = self._add(resource, context, form)
-        if user_id is not None:
-            context.message = INFO(u'User added.')
+        child = self.make_new_resource(resource, context, form)
+        if child is None:
+            return
 
-
-    def action_add_and_view(self, resource, context, form):
-        user_id = self._add(resource, context, form)
-        if user_id is not None:
-            goto = '/users/%s/' % user_id
-            message = INFO(u'User added.')
-            return context.come_back(message, goto=goto)
+        context.message = INFO(u'User added.')
 
 
 
