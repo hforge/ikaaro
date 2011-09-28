@@ -124,11 +124,6 @@ class User(DBResource):
         return self.get_value('password')
 
 
-    def set_password(self, password):
-        secure_hash = get_secure_hash(password)
-        self.set_property('password', secure_hash)
-
-
     def authenticate(self, password):
         secure_hash = get_secure_hash(password)
         return secure_hash == self.get_value('password')

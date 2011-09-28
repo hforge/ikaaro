@@ -101,7 +101,7 @@ class User_ConfirmRegistration(AutoForm):
             return
 
         # Set user
-        resource.set_password(password)
+        resource.set_value('password', password)
         resource.del_property('user_state')
         # Set cookie
         context.login(resource)
@@ -303,7 +303,7 @@ class User_EditPassword(AutoForm):
         resource.set_value('user_state', None)
 
         # Set password
-        resource.set_password(newpass)
+        resource.set_value('password', newpass)
 
         # Update the cookie if we updated our own password
         if is_same_user:

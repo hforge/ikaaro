@@ -37,7 +37,7 @@ from autoform import BirthDateWidget, DateWidget, DatetimeWidget, FileWidget
 from autoform import MultilineWidget, RadioWidget, SelectWidget, TextWidget
 from autoform import rte_widget
 from datatypes import BirthDate, HTMLBody, Password
-from utils import split_reference
+from utils import get_secure_hash, split_reference
 
 
 
@@ -192,6 +192,14 @@ class Integer_Field(Metadata_Field):
 
 class Password_Field(Metadata_Field):
     datatype = Password
+
+    def set_value(self, resource, name, value, language=None, **kw):
+        if value is not None:
+            value = get_secure_hash(value)
+
+        # super
+        proxy = super(Password_Field, self)
+        return proxy.set_value(resource, name, value, language, **kw)
 
 
 

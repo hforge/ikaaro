@@ -414,7 +414,7 @@ class Root(Folder):
         if loginname is not None:
             user.set_property(user.login_name_property, loginname)
         if password is not None:
-            user.set_password(password)
+            user.set_value('password', password)
 
         # Return the user
         return user
