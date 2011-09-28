@@ -227,7 +227,11 @@ class AutoAdd(AutoForm):
         return container
 
 
+    automatic_resource_name = False
     def get_new_resource_name(self, form):
+        if self.automatic_resource_name:
+            return form['container'].make_resource_name()
+
         # If the name is not explicitly given, use the title
         name = form.get('name', '').strip()
         if name:
