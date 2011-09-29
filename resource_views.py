@@ -191,6 +191,14 @@ class LoginView(STLView):
     meta = [('robots', 'noindex, follow', None)]
 
 
+    def GET(self, resource, context):
+        if context.user:
+            msg = MSG(u'You are already connected')
+            goto = str(context.user.get_abspath())
+            return context.come_back(msg, goto)
+        return super(LoginView, self).GET(resource, context)
+
+
     def get_value(self, resource, context, name, datatype):
         if name == 'loginname':
             return context.query['loginname']
