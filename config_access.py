@@ -26,7 +26,7 @@ from autoedit import AutoEdit
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local, NewInstance_Local
-from fields import Integer_Field, Select_Field
+from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from resource_ import DBResource
@@ -74,14 +74,22 @@ class Path_Field(Select_Field):
 
 
 
-class PathDepth_Field(Integer_Field):
+class PathDepth_Field(Select_Field):
 
     title = MSG(u'Depth')
-    default = 0
-    size=2
-    oneline=True
-    endline=True
-    tip = MSG(u'Zero (0) means any depth.')
+    default = ''
+    multiple = False
+    has_empty_option = False
+    endline = True
+
+    options = [
+        {'name': '0', 'value': u'0'},
+        {'name': '1', 'value': u'1'},
+        {'name': '2', 'value': u'2'},
+        {'name': '3', 'value': u'3'},
+        {'name': '4', 'value': u'4'},
+        {'name': '5', 'value': u'5'},
+        {'name': '', 'value': MSG(u'No limit')}]
 
 
 
@@ -179,6 +187,7 @@ class AccessRule(DBResource):
 
             if name == 'path':
                 depth = self.get_value('search_path_depth')
+                depth = None if depth == '' else int(depth)
                 subquery = get_base_path_query(value, 0, depth)
             elif field.multiple:
                 err = "access rules don't yet support multiple fields"
@@ -266,10 +275,10 @@ class ConfigAccess_Browse(Folder_BrowseContent):
                 return None
 
             depth = item.get_value('search_path_depth')
-            if depth:
-                title = '%s (%d)' % (path, depth)
-            else:
+            if depth == '':
                 title = path
+            else:
+                title = '%s (%s)' % (path, depth)
 
             return title, path
 
