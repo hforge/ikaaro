@@ -141,7 +141,7 @@ class Config_BrokenLinks(STLView):
         base = resource.abspath
 
         # Search only within the given resource
-        query = get_base_path_query(base, include_container=True)
+        query = get_base_path_query(base, min_depth=0)
         results = context.search(query)
 
         # Find out the broken links

@@ -192,38 +192,43 @@ def generate_name(name, used, suffix='_'):
 ###########################################################################
 # Index and Search
 ###########################################################################
-def get_base_path_query(abspath, include_container=False, depth=0):
+def get_base_path_query(path, min_depth=1, max_depth=None):
     """Builds a query that will return all the objects within the given
-    absolute path, like it is returned by 'resource.get_abspath()'.
+    absolute path, like it is returned by 'resource.abspath'.
 
-    If 'include_container' is true the resource at the given path will be
-    returned too.
+    The minimum and maximum depth parameters are relative to the given path:
 
-    If 'depth' is 0, depth is unlimited, else depth is the generations of
-    children to limit the search to.
+    - If the minimum depth is zero it means include the container
+    - If the maximum depth is None it means unlimited.
     """
-    if type(abspath) is not str:
-        abspath = str(abspath)
+    # Preprocess input data
+    if type(path) is not str:
+        path = str(path)
 
-    # Case 1: standard case (when the optional parameters are not changed)
-    if include_container is False and depth == 0:
-        return PhraseQuery('parent_paths', abspath)
+    if max_depth is not None and max_depth < min_depth:
+        err = 'maximum depth (%d) smaller than minimum depth (%d)'
+        raise ValueError, err % (max_depth, min_depth)
 
-    # Case 2: special case, everything
-    if abspath == '/' and depth == 0 and include_container is True:
+    # Special case: everything
+    if path == '/' and min_depth == 0 and max_depth is None:
         return AllQuery()
 
-    # Case 3: just something
-    query = PhraseQuery('parent_paths', abspath)
-    if depth > 0:
-        min_depth = abspath.rstrip('/').count('/')
-        max_depth = min_depth + depth
+    # Special case: just the given path
+    if min_depth == 0 and max_depth == 0:
+        return PhraseQuery('abspath', path)
+
+    # Standard case
+    query = PhraseQuery('parent_paths', path)
+    if min_depth > 1 or max_depth is not None:
+        path_depth = path.rstrip('/').count('/')
+        if max_depth is not None:
+            max_depth = path_depth + max_depth
+        min_depth = path_depth + min_depth
         query = AndQuery(query,
                          RangeQuery('abspath_depth', min_depth, max_depth))
 
-    if include_container:
-        container = PhraseQuery('abspath', abspath)
-        return OrQuery(container, query)
+    if min_depth == 0:
+        return OrQuery(query, PhraseQuery('abspath', path))
 
     return query
 

@@ -179,7 +179,7 @@ class AccessRule(DBResource):
 
             if name == 'path':
                 depth = self.get_value('search_path_depth')
-                subquery = get_base_path_query(value, True, depth)
+                subquery = get_base_path_query(value, 0, depth)
             elif field.multiple:
                 err = "access rules don't yet support multiple fields"
                 raise NotImplementedError, err

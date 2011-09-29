@@ -327,11 +327,12 @@ class Folder_BrowseContent(BrowseForm):
         return resource.is_content
 
 
-    depth = 0
+    depth = None
     def get_items_query(self, resource, context, *args):
         queries = list(args)
         # Search in subtree
-        queries.append(get_base_path_query(resource.abspath, depth=self.depth))
+        queries.append(
+            get_base_path_query(resource.abspath, max_depth=self.depth))
         if self.search_content_only(resource, context) is True:
             # Exclude non-content
             queries.append(PhraseQuery('is_content', True))
