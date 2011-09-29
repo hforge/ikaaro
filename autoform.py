@@ -671,6 +671,7 @@ class AutoForm(STLView):
         first_widget = None
         onsubmit = None
         for widget in self.get_widgets(resource, context):
+            widget_name = widget.name
             datatype = fields.get(widget.name, None)
             field_ns = namespace.get(widget.name,
                                      {'name': widget.name, 'value': None,
@@ -700,13 +701,13 @@ class AutoForm(STLView):
             if getattr(datatype, 'multilingual', False):
                 for language in languages:
                     language_title = get_language_msg(language)
-                    widget_name = '%s:%s' % (widget.name, language)
-                    widget = widget(name=widget_name, datatype=datatype,
+                    widget = widget(name='%s:%s' % (widget.name, language),
+                                    datatype=datatype,
                                     value=value[language],
                                     language=language_title)
                     widgets_html.append(widget)
                     if first_widget is None and widget.focus:
-                        first_widget = widget_name
+                        first_widget = widget.name
                 # fix label
                 if widgets_html:
                     field_ns['name'] = widgets_html[0].name
@@ -719,7 +720,7 @@ class AutoForm(STLView):
             # Ok
             stream = stl(template, field_ns)
             fields_list.append(stream)
-            fields_dict[widget.name] = stream
+            fields_dict[widget_name] = stream
 
         # Enctype
         enctype = 'multipart/form-data' if self.method == 'post' else None
