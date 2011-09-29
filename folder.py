@@ -296,8 +296,8 @@ class Folder(DBResource):
         target_parent = self.get_resource(parent_path)
 
         # Cannot move a resource to a subdirectory of itself
-        abspath = self.get_abspath()
-        aux = source.get_abspath()
+        abspath = self.abspath
+        aux = source.abspath
         if aux.get_prefix(abspath) == aux:
             message = 'cannot move a resource to a subdirectory of itself'
             raise ConsistencyError, message
@@ -310,7 +310,7 @@ class Folder(DBResource):
 
         # Events, remove
         database = self.database
-        new_path = self.get_abspath().resolve2(target_path)
+        new_path = self.abspath.resolve2(target_path)
         database.move_resource(source, new_path)
 
         # Move the metadata

@@ -510,10 +510,7 @@ class RTEWidget(Widget):
 
 
     def get_prefix(self):
-        context = get_context()
-        here = context.resource.get_abspath()
-        prefix = here.get_pathto(self.template)
-        return prefix
+        return get_context().resource.abspath.get_pathto(self.template)
 
 
     def render(self):

@@ -348,7 +348,7 @@ class Event(Content):
 
     def get_ns_event(self, current_day, grid=False):
         context = get_context()
-        ns = {'id': str(self.get_abspath()),
+        ns = {'id': str(self.abspath),
               'link': context.get_link(self),
               'title': self.get_title(),
               'cal': 0,

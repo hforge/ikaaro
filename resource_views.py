@@ -194,7 +194,7 @@ class LoginView(STLView):
     def GET(self, resource, context):
         if context.user:
             msg = MSG(u'You are already connected')
-            goto = str(context.user.get_abspath())
+            goto = str(context.user.abspath)
             return context.come_back(msg, goto)
         return super(LoginView, self).GET(resource, context)
 
@@ -324,6 +324,6 @@ class Delete_View(BaseView):
         # Clean the copy cookie if needed
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         # Clean cookie
-        if str(resource.get_abspath()) in paths:
+        if str(resource.abspath) in paths:
             context.del_cookie('ikaaro_cp')
             paths = []

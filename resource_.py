@@ -531,7 +531,7 @@ class DBResource(Resource):
 
         # (2) Update resources that link to me
         database = self.database
-        target = self.get_abspath()
+        target = self.abspath
         query = PhraseQuery('links', source)
         results = database.search(query).get_documents()
         for result in results:
@@ -583,7 +583,7 @@ class DBResource(Resource):
     def update_incoming_links(self, source):
         """Update the relative links coming out from this resource after it
         was moved, so they are not broken. The old path is in parameter. The
-        new path is "self.get_abspath()".
+        new path is "self.abspath".
         """
         languages = self.get_resource('/').get_value('website_languages')
         for field_name in self.fields:

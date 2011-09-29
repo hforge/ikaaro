@@ -63,7 +63,7 @@ def find_versions_to_update(root, force=False):
         # Check for code that is older than the instance
         if obj_version > cls_version:
             print
-            print '* %s resource=%s class=%s' % (resource.get_abspath(),
+            print '* %s resource=%s class=%s' % (resource.abspath,
                 resource.metadata.format, resource.__class__)
             print '* the resource is newer than its class: %s > %s' % (
                 obj_version, cls_version)
@@ -79,9 +79,9 @@ def find_versions_to_update(root, force=False):
         next_version = next_versions[0]
         if version is None or next_version < version:
             version = next_version
-            paths = [resource.get_abspath()]
+            paths = [resource.abspath]
         elif next_version == version:
-            paths.append(resource.get_abspath())
+            paths.append(resource.abspath)
 
     return version, paths
 
@@ -122,7 +122,7 @@ def update_versions(target, database, version, paths, root, force=False):
         try:
             resource.update(version)
         except Exception:
-            line = '%s %s\n' % (resource.get_abspath(), resource.__class__)
+            line = '%s %s\n' % (resource.abspath, resource.__class__)
             if force:
                 log.write(line)
                 print_exc(file=log)

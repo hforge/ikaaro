@@ -184,14 +184,13 @@ class MenuItem(OrderedFolder):
 
             # Set active, in_path
             active = in_path = False
-            resource_abspath = resource.get_abspath()
             # add default view
             if view:
                 resource_method = view[2:]
                 item_id += '_%s' % resource_method
             else:
                 resource_method = resource.get_default_view_name()
-            resource_abspath_and_view = '%s/;%s' % (resource_abspath,
+            resource_abspath_and_view = '%s/;%s' % (resource.abspath,
                                                     resource_method)
             if here_abspath_and_view == resource_abspath_and_view:
                 active = True
@@ -215,7 +214,7 @@ class MenuItem(OrderedFolder):
             items.append({
                 'id': item_id,
                 'path': str(ref2),
-                'real_path': resource.get_abspath(),
+                'real_path': resource.abspath,
                 'title': title,
                 'description': None, # FIXME
                 'in_path': active or in_path,

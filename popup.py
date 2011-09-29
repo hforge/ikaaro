@@ -122,7 +122,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
-            path = target.get_abspath().get_pathto(item.abspath)
+            path = target.abspath.get_pathto(item.abspath)
             return unicode(path), url
         else:
             proxy = super(AddBase_BrowseContent, self)
@@ -274,7 +274,7 @@ class DBResource_AddBase(STLView):
         target_path = context.get_form_value('target')
         # Get the target folder
         popup_root = self.get_root(context)
-        popup_root_abspath = popup_root.get_abspath()
+        popup_root_abspath = popup_root.abspath
         if target_path is None:
             if isinstance(start, Folder):
                 target = start
@@ -294,8 +294,8 @@ class DBResource_AddBase(STLView):
         breadcrumb = []
         node = target
         get_prefix = popup_root_abspath.get_prefix
-        while node and get_prefix(node.get_abspath()) == popup_root_abspath:
-            path_to_node = popup_root_abspath.get_pathto(node.get_abspath())
+        while node and get_prefix(node.abspath) == popup_root_abspath:
+            path_to_node = popup_root_abspath.get_pathto(node.abspath)
             url_dic = {'target': str(path_to_node),
                        # Avoid search conservation
                        'search_text': None,
@@ -320,7 +320,7 @@ class DBResource_AddBase(STLView):
         additional_javascript = self.get_additional_javascript(context)
         namespace['text'] = self.text_values
         namespace['additional_javascript'] = additional_javascript
-        namespace['target_path'] = str(target.get_abspath())
+        namespace['target_path'] = str(target.abspath)
         namespace['breadcrumb'] = breadcrumb
         namespace['element_to_add'] = self.element_to_add
         namespace['target_id'] = context.get_form_value('target_id')

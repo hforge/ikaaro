@@ -246,7 +246,7 @@ class Folder_Rename(STLView):
         renamed = []
         referenced = []
         # Process input data
-        abspath = resource.get_abspath()
+        abspath = resource.abspath
         for i, path in enumerate(paths):
             new_name = new_names[i]
             new_name = checkid(new_name)
@@ -475,7 +475,7 @@ class Folder_BrowseContent(BrowseForm):
                 return None
             if item.name in parent.__fixed_handlers__:
                 return None
-            id = resource.get_abspath().get_pathto(item.abspath)
+            id = resource.abspath.get_pathto(item.abspath)
             id = str(id)
             return id, False
         elif column == 'icon':
@@ -488,7 +488,7 @@ class Folder_BrowseContent(BrowseForm):
             return path_to_icon
         elif column == 'abspath':
             # Name
-            id = resource.get_abspath().get_pathto(item.abspath)
+            id = resource.abspath.get_pathto(item.abspath)
             id = str(id)
             view = item.get_view(None)
             if view is None:
@@ -531,7 +531,7 @@ class Folder_BrowseContent(BrowseForm):
         not_removed = []
         user = context.user
         root = context.root
-        abspath = resource.get_abspath()
+        abspath = resource.abspath
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
@@ -611,7 +611,7 @@ class Folder_BrowseContent(BrowseForm):
             context.message = messages.MSG_NONE_SELECTED
             return
 
-        abspath = resource.get_abspath()
+        abspath = resource.abspath
         cp = (False, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
@@ -632,7 +632,7 @@ class Folder_BrowseContent(BrowseForm):
             context.message = messages.MSG_NONE_SELECTED
             return
 
-        abspath = resource.get_abspath()
+        abspath = resource.abspath
         cp = (True, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')

@@ -127,9 +127,8 @@ class CSS(Text):
 
     def update_links(self,  source, target):
         super(CSS, self).update_links(source, target)
-        base = self.get_abspath()
         resources_new2old = get_context().database.resources_new2old
-        base = str(base)
+        base = str(self.abspath)
         old_base = resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
@@ -176,7 +175,7 @@ class CSS(Text):
 
     def update_incoming_links(self, source):
         super(CSS, self).update_incoming_links(source)
-        target = self.get_abspath()
+        target = self.abspath
         resources_old2new = get_context().database.resources_old2new
 
         def my_func(matchobj):

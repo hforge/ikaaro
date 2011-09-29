@@ -80,7 +80,7 @@ def update_catalog(parser, options, target):
         if not isinstance(obj, Resource):
             continue
         if not options.quiet:
-            print doc_n, obj.get_abspath()
+            print doc_n, obj.abspath
         doc_n += 1
         context.resource = obj
 
@@ -91,7 +91,7 @@ def update_catalog(parser, options, target):
             if options.test:
                 error_detected = True
                 log('*** Error detected ***\n')
-                log('Abspath of the resource: %r\n\n' % str(obj.get_abspath()))
+                log('Abspath of the resource: %r\n\n' % str(obj.abspath))
                 log(format_exc())
                 log('\n')
             else:
