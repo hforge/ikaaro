@@ -420,11 +420,6 @@ class DBResource(Resource):
         return self.get_value('owner')
 
 
-    def get_mtime(self):
-        revision = self.get_last_revision()
-        return revision['date'] if revision else None
-
-
     ########################################################################
     # Indexing
     ########################################################################
