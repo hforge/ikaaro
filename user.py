@@ -80,7 +80,7 @@ class User(DBResource):
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
     class_views = ['profile', 'edit_account', 'edit_preferences',
-                   'edit_password']
+                   'edit_password', 'edit_groups']
 
 
     ########################################################################
@@ -256,6 +256,8 @@ class User(DBResource):
     edit_account = User_EditAccount()
     edit_preferences = User_EditPreferences()
     edit_password = User_EditPassword()
+    edit_groups = AutoEdit(access='is_admin', fields=['groups'],
+                           title=MSG(u'Edit groups'))
 
 
 
