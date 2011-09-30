@@ -77,7 +77,7 @@ class Path_Field(Select_Field):
 class PathDepth_Field(Select_Field):
 
     title = MSG(u'Depth')
-    default = ''
+    default = '0'
     multiple = False
     has_empty_option = False
     endline = True
@@ -275,10 +275,12 @@ class ConfigAccess_Browse(Folder_BrowseContent):
                 return None
 
             depth = item.get_value('search_path_depth')
-            if depth == '':
+            if depth == '0':
                 title = path
+            elif depth == '':
+                title = '%s (*)' % path
             else:
-                title = '%s (%s)' % (path, depth)
+                title = '%s (+%s)' % (path, depth)
 
             return title, path
 
