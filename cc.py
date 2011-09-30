@@ -665,7 +665,7 @@ class Observable(object):
             if self.get_register_key(username) is not None:
                 continue
             user = root.get_user(username)
-            if user and not user.get_value('user_state') == 'active':
+            if user and user.get_value('user_state') == 'active':
                 mail = user.get_value('email')
 
                 language = user.get_value('user_language')
