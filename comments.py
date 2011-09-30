@@ -189,14 +189,6 @@ class Comment(DBResource):
     owner = URI_Field(readonly=True)
     comment_state = CommentState_Field()
 
-    # API
-    def init_resource(self, **kw):
-        super(Comment, self).init_resource(**kw)
-        # Set owner
-        context = get_context()
-        if context.user:
-            self.set_value('owner', str(context.user.abspath))
-
 
     # Views
     view = Comment_View

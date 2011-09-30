@@ -288,10 +288,6 @@ class Event(Content):
             uid = '%s@%s' % (self.abspath, context.uri.authority)
             self.set_value('uid', uid)
 
-        # Set owner
-        if context.user:
-            self.set_value('owner', str(context.user.abspath))
-
 
     def get_dates(self):
         start = self.get_value('dtstart')

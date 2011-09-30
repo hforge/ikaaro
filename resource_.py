@@ -347,7 +347,14 @@ class DBResource(Resource):
     def init_resource(self, **kw):
         """Return a Metadata object with sensible default values.
         """
-        # Properties
+        # Ownership
+        owner = self.get_field('owner')
+        if owner:
+            user = get_context().user
+            if user:
+                self.set_value('owner', str(user.abspath))
+
+        # Keyword parameters
         for name, value in kw.items():
             field = self.get_field(name)
             if type(value) is dict:
