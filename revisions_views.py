@@ -27,7 +27,7 @@ from itools.web import STLView, ERROR
 
 # Import from ikaaro
 from autoform import TextWidget
-from buttons import BrowseButton
+from buttons import Button
 from views import BrowseForm
 
 
@@ -139,8 +139,9 @@ class IndexRevision(String):
 
 
 
-class DiffButton(BrowseButton):
-    access = 'is_allowed_to_edit'
+class DiffButton(Button):
+
+    access = 'is_admin'
     name = 'diff'
     title = MSG(u"Diff between selected revisions")
     css = 'button-compare'
@@ -153,8 +154,7 @@ class DBResource_CommitLog(BrowseForm):
     title = MSG(u"Commit Log")
 
     schema = {
-        'ids': IndexRevision(multiple=True, mandatory=True),
-    }
+        'ids': IndexRevision(multiple=True, mandatory=True)}
 
     search_widgets = [TextWidget('search_mail', title=MSG(u"Author's mail")),
                       TextWidget('search_comment', title=MSG(u'Comment'))]
@@ -165,8 +165,7 @@ class DBResource_CommitLog(BrowseForm):
         ('checkbox', None),
         ('date', MSG(u'Last Change'), False),
         ('username', MSG(u'Author'), False),
-        ('message', MSG(u'Comment'), False),
-    ]
+        ('message', MSG(u'Comment'), False)]
     table_actions = [DiffButton]
 
 
