@@ -89,7 +89,7 @@ class PathDepth_Field(Select_Field):
         {'name': '3', 'value': u'3'},
         {'name': '4', 'value': u'4'},
         {'name': '5', 'value': u'5'},
-        {'name': '', 'value': MSG(u'No limit')}]
+        {'name': '*', 'value': MSG(u'No limit')}]
 
 
 
@@ -187,7 +187,7 @@ class AccessRule(DBResource):
 
             if name == 'path':
                 depth = self.get_value('search_path_depth')
-                depth = None if depth == '' else int(depth)
+                depth = None if depth == '*' else int(depth)
                 subquery = get_base_path_query(value, 0, depth)
             elif field.multiple:
                 err = "access rules don't yet support multiple fields"
@@ -277,10 +277,8 @@ class ConfigAccess_Browse(Folder_BrowseContent):
             depth = item.get_value('search_path_depth')
             if depth == '0':
                 title = path
-            elif depth == '':
-                title = '%s (*)' % path
             else:
-                title = '%s (+%s)' % (path, depth)
+                title = '%s (%s)' % (path, depth)
 
             return title, path
 
