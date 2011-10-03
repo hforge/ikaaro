@@ -833,15 +833,14 @@ class Folder_PreviewContent(Folder_BrowseContent):
         columns = self._get_table_columns(resource, context)
         rows = []
         for item in items:
-            item_brain, item_resource = item
             row = {'checkbox': False,
                    # These are required for internal use
-                   'title_or_name': item_resource.get_title(),
+                   'title_or_name': item.get_title(),
                    'state': None}
             # XXX Already hard-coded in the catalog search
-            row['is_folder'] = (item_brain.format == 'folder')
-            if isinstance(item_resource, WorkflowAware):
-                row['state'] = item_resource.get_value_title('state')
+            row['is_folder'] = (item.class_id == 'folder')
+            if isinstance(item, WorkflowAware):
+                row['state'] = item.get_value_title('state')
             for name, title, sortable, css in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:
