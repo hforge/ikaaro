@@ -40,11 +40,11 @@ from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 class File_NewInstance(AutoAdd):
 
     title = MSG(u'Upload File')
-    fields = ['file', 'title', 'state', 'location', 'progressbar']
+    fields = ['data', 'title', 'state', 'location', 'progressbar']
 
     def _get_datatype(self, resource, context, name):
-        if name == 'file':
-            widget = FileWidget('file', title=MSG(u'File'), size=35)
+        if name == 'data':
+            widget = FileWidget('data', title=MSG(u'File'), size=35)
             return FileDataType(mandatory=True, widget=widget)
         if name == 'progressbar':
             return None
@@ -66,7 +66,7 @@ class File_NewInstance(AutoAdd):
         if name:
             return name
 
-        filename, mimetype, body = form['file']
+        filename, mimetype, body = form['data']
         name, type, language = FileName.decode(filename)
         return name
 
@@ -75,7 +75,7 @@ class File_NewInstance(AutoAdd):
         # 1. Make the resource
         container = form['container']
         name = form['name']
-        filename, mimetype, body = form['file']
+        filename, mimetype, body = form['data']
         language = container.get_edit_languages(context)[0]
         child = container._make_file(name, filename, mimetype, body, language)
         # 2. Set properties
