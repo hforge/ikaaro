@@ -221,11 +221,9 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
     query = PhraseQuery('parent_paths', path)
     if min_depth > 1 or max_depth is not None:
         path_depth = path.rstrip('/').count('/')
-        if max_depth is not None:
-            max_depth = path_depth + max_depth
-        min_depth = path_depth + min_depth
-        query = AndQuery(query,
-                         RangeQuery('abspath_depth', min_depth, max_depth))
+        a = path_depth + min_depth
+        b = path_depth + max_depth if max_depth is not None else None
+        query = AndQuery(query, RangeQuery('abspath_depth', a, b))
 
     if min_depth == 0:
         return OrQuery(query, PhraseQuery('abspath', path))
