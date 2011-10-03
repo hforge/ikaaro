@@ -24,8 +24,7 @@ from zipfile import ZipFile
 
 # Import from itools
 from itools.core import is_prototype
-from itools.database import register_field
-from itools.datatypes import Boolean, Unicode
+from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -62,7 +61,6 @@ class Folder(DBResource):
     folder_state = 'public'
     def get_catalog_values(self):
         values = super(Folder, self).get_catalog_values()
-        values['is_folder'] = True
         values['state'] = self.folder_state
         return values
 
@@ -382,4 +380,3 @@ class Folder(DBResource):
 # Register
 ###########################################################################
 Database.register_resource_class(Folder, 'application/x-not-regular-file')
-register_field('is_folder', Boolean(indexed=True))

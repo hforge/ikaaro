@@ -20,8 +20,6 @@
 
 # Import from itools
 from itools.core import guess_all_extensions
-from itools.database import register_field
-from itools.datatypes import Boolean
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler
 from itools.handlers import Image as ImageHandler, SVGFile
@@ -118,6 +116,7 @@ class File(Content):
 # Media
 ###########################################################################
 class Image(File):
+
     class_id = 'image'
     class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
@@ -125,11 +124,6 @@ class Image(File):
     class_views = ['view', 'download', 'edit', 'externaledit', 'links',
                    'backlinks', 'commit_log']
     class_handler = ImageHandler
-
-    def get_catalog_values(self):
-        values = super(Image, self).get_catalog_values()
-        values['is_image'] = True
-        return values
 
     # Views
     thumb = DBResource_GetImage(field_name='data')
@@ -333,4 +327,3 @@ class Bzip2(File):
 # Register
 ###########################################################################
 Database.register_resource_class(File, 'application/octet-stream')
-register_field('is_image', Boolean(indexed=True))

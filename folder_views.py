@@ -763,7 +763,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Show only images
-        query = PhraseQuery('is_image', True)
+        query = PhraseQuery('base_classes', 'image')
         proxy = super(Folder_PreviewContent, self)
         return proxy.get_items(resource, context, query)
 

@@ -459,19 +459,31 @@ class DBResource(Resource):
                 values[name] = field.get_value(self, name)
 
         # Step 2. Index non-metadata properties
-        values['name'] = self.name
-        values['format'] = self.metadata.format
-        values['links'] = list(self.get_links())
-        values['owner'] = self.get_owner()
-
-        # Parent path
+        # Path related fields
         abspath = self.abspath
-        abspath_str = str(abspath)
-        if abspath_str != '/':
-            values['parent_paths'] = [ str(abspath[:i])
-                                       for i in range(len(abspath)) ]
-        values['abspath'] = abspath_str
-        values['abspath_depth'] = len(abspath)
+        values['abspath'] = str(abspath)
+        n = len(abspath)
+        values['abspath_depth'] = n
+        if n:
+            values['parent_paths'] = [ str(abspath[:i]) for i in range(n) ]
+
+        values['name'] = self.name
+        values['is_content'] = self.is_content
+
+        # Class related fields
+        values['format'] = self.metadata.format
+        values['base_classes'] = []
+        for cls in self.__class__.__mro__:
+            class_id = getattr(cls, 'class_id', None)
+            if class_id:
+                values['base_classes'].append(class_id)
+
+        from workflow import WorkflowAware
+        values['is_workflow_aware'] = isinstance(self, WorkflowAware)
+
+        # Links to other resources
+        values['owner'] = self.get_owner()
+        values['links'] = list(self.get_links())
 
         # Full text
         context = get_context()
@@ -487,12 +499,6 @@ class DBResource(Resource):
             except Exception:
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
-
-        # Content
-        values['is_content'] = self.is_content
-
-        from workflow import WorkflowAware
-        values['is_workflow_aware'] = isinstance(self, WorkflowAware)
 
         # Ok
         return values
@@ -751,12 +757,14 @@ class DBResource(Resource):
 # Register read-only fields
 ###########################################################################
 
-# Key, class id, and path related fields
+# Path related fields
 register_field('abspath', String(indexed=True, stored=True))
 register_field('abspath_depth', Integer(indexed=True, stored=True))
-register_field('format', String(indexed=True, stored=True))
 register_field('parent_paths', String(multiple=True, indexed=True))
 register_field('name', String(stored=True, indexed=True))
+# Class related fields
+register_field('format', String(indexed=True, stored=True))
+register_field('base_classes', String(multiple=True, indexed=True))
 # ACL related
 register_field('owner', URI(indexed=True))
 # Referential integrity

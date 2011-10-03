@@ -29,7 +29,7 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLView, ERROR
-from itools.database import OrQuery, PhraseQuery, StartQuery
+from itools.database import OrQuery, PhraseQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -91,14 +91,6 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         return (Folder,)
 
 
-    @classmethod
-    def get_item_classes(cls):
-        if cls.item_classes:
-            return cls.item_classes
-        from resource_ import DBResource
-        return (DBResource,)
-
-
     def is_folder(self, resource):
         bases = self.get_folder_classes()
         return isinstance(resource, bases)
@@ -130,10 +122,16 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 
     def get_items(self, resource, context, *args):
-        resource = self.target
+        item_classes = self.item_classes
+        if item_classes:
+            query = OrQuery()
+            for class_id in self.item_classes:
+                query.append(PhraseQuery('base_classes', class_id))
+            args += (query,)
+
+        # super
         proxy = super(AddBase_BrowseContent, self)
-        items = proxy.get_items(resource, context, *args)
-        return items
+        return proxy.get_items(self.target, context, *args)
 
 
     def get_actions_namespace(self, resource, context, items):
@@ -147,21 +145,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 class AddImage_BrowseContent(AddBase_BrowseContent):
 
-
-    @classmethod
-    def get_item_classes(cls):
-        if cls.item_classes:
-            return cls.item_classes
-        from file import Image
-        from folder import Folder
-        return (Image, Folder)
-
-
-    def get_items(self, resource, context, *args):
-        query = [PhraseQuery('is_folder', True), PhraseQuery('is_image', True)]
-        args += OrQuery(*query) ,
-        proxy = super(AddImage_BrowseContent, self)
-        return proxy.get_items(resource, context, *args)
+    item_classes = ('folder', 'image')
 
 
     def get_item_value(self, resource, context, item, column):
@@ -191,22 +175,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 class AddMedia_BrowseContent(AddBase_BrowseContent):
 
-
-    @classmethod
-    def get_item_classes(cls):
-        if cls.item_classes:
-            return cls.item_classes
-        from file import Flash, Video
-        return (Flash, Video)
-
-
-    def get_items(self, resource, context, *args):
-        classes = self.get_item_classes()
-        query = [ StartQuery('format', x.class_id) for x in classes ]
-        query.append(PhraseQuery('is_folder', True))
-        args += OrQuery(*query) ,
-        proxy = super(AddMedia_BrowseContent, self)
-        return proxy.get_items(resource, context, *args)
+    item_classes = ('folder', 'video', 'application/x-shockwave-flash')
 
 
 
@@ -256,12 +225,12 @@ class DBResource_AddBase(STLView):
 
 
     def can_upload(self, cls):
-        bases = self.get_item_classes()
-        return issubclass(cls, bases)
+        item_classes = self.browse_content_class.item_classes
+        for base_class in cls.__mro__:
+            if getattr(base_class, 'class_id', None) in item_classes:
+                return True
 
-
-    def get_item_classes(self):
-        return self.browse_content_class.get_item_classes()
+        return False
 
 
     def get_namespace(self, resource, context):
