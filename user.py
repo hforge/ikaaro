@@ -298,7 +298,7 @@ class UserFolder(Folder):
         title=MSG(u'View'),
         icon='view.png',
         message=INFO(u'To manage the users please go '
-                     u'<a href="/;browse_users">here</a>.'))
+                     u'<a href="/config/users">here</a>.'))
 
 
 # Register
