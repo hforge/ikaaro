@@ -347,19 +347,19 @@ class Folder_BrowseContent(BrowseForm):
         return query
 
 
-    def get_search_query(self, resource, context, *args):
-        queries = list(args)
+    def get_search_query(self, resource, context):
+        query = AndQuery()
         form = context.query
         for key, datatype in self.search_schema.items():
             value = form[key]
             if value and key == 'text':
-                queries.append(TextQuery(key, form[key]))
+                query.append(TextQuery(key, form[key]))
             elif value and datatype.multiple is True:
-                queries.append(OrQuery(*[PhraseQuery(key, x)
-                                        for x in form[key]]))
+                query.append(
+                    OrQuery(*[ PhraseQuery(key, x) for x in form[key] ]))
             elif value:
-                queries.append(PhraseQuery(key, form[key]))
-        return queries
+                query.append(PhraseQuery(key, form[key]))
+        return query
 
 
     def get_items(self, resource, context):
