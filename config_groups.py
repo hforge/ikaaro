@@ -20,9 +20,10 @@ from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from buttons import BrowseButton, RemoveButton, RenameButton
 from config import Configuration
-from config_common import NewResource_Local, NewInstance_Local
+from config_common import NewResource_Local
 from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
@@ -85,7 +86,7 @@ class Group(DBResource):
     # Views
     class_views = ['browse_users', 'edit']
     browse_users = Group_BrowseUsers()
-    new_instance = NewInstance_Local()
+    new_instance = AutoAdd(fields=['title'])
 
 
 

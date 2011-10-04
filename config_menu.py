@@ -24,10 +24,11 @@ from itools.handlers import checkid
 from itools.uri import Path
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import PathSelectorWidget
 from config import Configuration
-from config_common import NewResource_Local, NewInstance_Local
+from config_common import NewResource_Local
 from buttons import RemoveButton
 from fields import Select_Field, URI_Field
 from order import OrderedFolder, OrderedFolder_BrowseContent
@@ -94,7 +95,7 @@ class MenuItem(OrderedFolder):
     # Views
     class_views = ['edit', 'browse_content', 'add_menu', 'commit_log']
     _fields = ['title', 'path', 'target']
-    new_instance = NewInstance_Local(fields=_fields)
+    new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
     browse_content = MenuItem_Browse()
     add_menu = AddMenu()

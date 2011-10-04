@@ -23,18 +23,8 @@ configuration plugins.
 from itools.core import proto_property
 
 # Import from ikaaro
-from autoadd import AutoAdd
 from database import Database
 from folder_views import Folder_NewResource
-
-
-
-class NewInstance_Local(AutoAdd):
-
-    fields = ['title']
-
-    def get_container(self, resource, context, form):
-        return resource
 
 
 

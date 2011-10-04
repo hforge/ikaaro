@@ -18,10 +18,11 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from buttons import RemoveButton
 from config import Configuration
-from config_common import NewResource_Local, NewInstance_Local
+from config_common import NewResource_Local
 from database import Database
 from fields import Boolean_Field, Date_Field, Integer_Field, Select_Field
 from fields import Text_Field, Textarea_Field
@@ -75,7 +76,7 @@ class ModelField_Base(DBResource):
 
     # Views
     _fields = ['title', 'required', 'multiple', 'tip']
-    new_instance = NewInstance_Local(fields=_fields)
+    new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
 
 
@@ -107,7 +108,7 @@ class ModelField_Standard(ModelField_Base):
     # Views
     class_views = ['edit', 'commit_log']
     _fields = ModelField_Base._fields + ['field_type']
-    new_instance = NewInstance_Local(fields=_fields)
+    new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
 
 
@@ -119,7 +120,7 @@ class Choice(DBResource):
 
     # Views
     class_views = ['edit', 'commit_log']
-    new_instance = NewInstance_Local(fields=['title'])
+    new_instance = AutoAdd(fields=['title'])
 
 
 
@@ -167,7 +168,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
 ###########################################################################
 # The model resource
 ###########################################################################
-class Model_NewInstance(NewInstance_Local):
+class Model_NewInstance(AutoAdd):
 
     fields = ['title']
 

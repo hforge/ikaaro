@@ -22,10 +22,11 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from buttons import RemoveButton
 from config import Configuration
-from config_common import NewResource_Local, NewInstance_Local
+from config_common import NewResource_Local
 from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
@@ -158,8 +159,7 @@ class AccessRule(DBResource):
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
-    new_instance = NewInstance_Local(fields=_fields,
-                                     automatic_resource_name=True)
+    new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
     results = AccessRule_Results()
 

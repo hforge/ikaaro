@@ -82,7 +82,7 @@ class AutoAdd(AutoForm):
     goto_view = None
 
 
-    fields = ['title', 'location']
+    fields = []
     def get_fields(self):
         return self.fields
 
@@ -211,19 +211,22 @@ class AutoAdd(AutoForm):
     # POST
     #######################################################################
     def get_container(self, resource, context, form):
-        root = context.root
-        class_id = context.query['type']
-
+        # Container
         container = resource
-        path = form['path']
-        if path is not None:
-            container = root.get_resource(path)
+        if 'location' in self.get_fields():
+            path = form['path']
+            if path is not None:
+                container = resource.get_resource(path)
 
+        # Access control
+        class_id = context.query['type']
+        root = context.root
         if not root.has_permission(context.user, 'add', container, class_id):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
             raise FormError, msg.gettext(path=path)
 
+        # Ok
         return container
 
 

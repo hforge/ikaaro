@@ -732,7 +732,7 @@ class DBResource(Resource):
 
 
     # Views
-    new_instance = AutoAdd()
+    new_instance = AutoAdd(fields=['title', 'location'])
     login = LoginView()
     logout = LogoutView()
     edit = AutoEdit()

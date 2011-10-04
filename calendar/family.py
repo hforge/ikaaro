@@ -22,12 +22,12 @@ from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro import messages
+from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.buttons import RenameButton, RemoveButton
-from ikaaro.config_common import NewInstance_Local
 from ikaaro.fields import Char_Field
 from ikaaro.folder_views import Folder_BrowseContent
+from ikaaro.messages import MSG_NEW_RESOURCE
 from ikaaro.resource_ import DBResource
 
 
@@ -76,7 +76,7 @@ class Families_View(Folder_BrowseContent):
 
 
 
-class Calendar_Family_NewInstance(NewInstance_Local):
+class Calendar_Family_NewInstance(AutoAdd):
 
     automatic_resource_name = True
 
@@ -85,7 +85,7 @@ class Calendar_Family_NewInstance(NewInstance_Local):
         if child is None:
             return
         # Ok
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto='./;families')
+        return context.come_back(MSG_NEW_RESOURCE, goto='./;families')
 
 
 
