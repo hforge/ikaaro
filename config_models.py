@@ -178,11 +178,9 @@ class Model_NewInstance(NewInstance_Local):
             return
 
         # Create the inherited fields
-        field_names = []
         for field_name, field in child.base_class.get_fields():
             if not field.readonly:
                 child.make_resource(field_name, ModelField_Inherited)
-                field_names.append(field_name)
 
         # Ok
         return child
