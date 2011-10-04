@@ -32,7 +32,8 @@ from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.config_models import Model
 from ikaaro.content import Content
-from ikaaro.fields import Char_Field, Datetime_Field, Select_Field, URI_Field
+from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
+from ikaaro.fields import Owner_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate
 from ikaaro import messages
@@ -268,7 +269,7 @@ class Event(Content):
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
-    owner = URI_Field(readonly=True)
+    owner = Owner_Field
     family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))

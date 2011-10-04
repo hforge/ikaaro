@@ -29,7 +29,7 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 # Import from ikaaro
 from autoform import HiddenWidget, SelectWidget
 from buttons import Button
-from fields import Select_Field, URI_Field
+from fields import Select_Field, Owner_Field
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
 
@@ -186,8 +186,8 @@ class Comment(DBResource):
     fields = ['mtime', 'last_author', 'description', 'owner', 'comment_state']
     title = None
     subject = None
-    owner = URI_Field(readonly=True)
-    comment_state = CommentState_Field()
+    owner = Owner_Field
+    comment_state = CommentState_Field
 
 
     # Views

@@ -361,6 +361,13 @@ class URI_Field(Metadata_Field):
                 self._set_value(resource, field_name, new_value, lang)
 
 
+
+class Owner_Field(URI_Field):
+
+    readonly = True
+
+
+
 ###########################################################################
 # File handlers
 ###########################################################################
