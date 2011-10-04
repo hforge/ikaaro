@@ -29,7 +29,6 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLView, ERROR
-from itools.database import OrQuery, PhraseQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -66,7 +65,6 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     table_template = '/ui/html/addbase_browse_table.xml'
 
     folder_classes = ()
-    item_classes = ()
 
     # Parameter for get_items
     target = None
@@ -121,17 +119,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             return proxy.get_item_value(resource, context, item, column)
 
 
-    def get_items(self, resource, context, *args):
-        item_classes = self.item_classes
-        if item_classes:
-            query = OrQuery()
-            for class_id in self.item_classes:
-                query.append(PhraseQuery('base_classes', class_id))
-            args += (query,)
-
-        # super
+    def get_items(self, resource, context):
         proxy = super(AddBase_BrowseContent, self)
-        return proxy.get_items(self.target, context, *args)
+        return proxy.get_items(self.target, context)
 
 
     def get_actions_namespace(self, resource, context, items):
@@ -145,7 +135,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 class AddImage_BrowseContent(AddBase_BrowseContent):
 
-    item_classes = ('folder', 'image')
+    base_classes = ('folder', 'image')
 
 
     def get_item_value(self, resource, context, item, column):
@@ -175,7 +165,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 class AddMedia_BrowseContent(AddBase_BrowseContent):
 
-    item_classes = ('folder', 'video', 'application/x-shockwave-flash')
+    base_classes = ('folder', 'video', 'application/x-shockwave-flash')
 
 
 
@@ -225,9 +215,12 @@ class DBResource_AddBase(STLView):
 
 
     def can_upload(self, cls):
-        item_classes = self.browse_content_class.item_classes
+        base_classes = self.browse_content_class.base_classes
+        if base_classes is None:
+            return True
+
         for base_class in cls.__mro__:
-            if getattr(base_class, 'class_id', None) in item_classes:
+            if getattr(base_class, 'class_id', None) in base_classes:
                 return True
 
         return False

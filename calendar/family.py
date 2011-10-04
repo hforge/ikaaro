@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.database import PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
@@ -38,7 +37,7 @@ class Calendar_FamiliesEnumerate(Enumerate):
         calendar = get_context().root.get_resource('config/calendar')
         return [ {'name': str(family.abspath), 'value': family.get_title(),
                   'color': family.get_value('color')}
-                   for family in calendar.search_resources(cls=Calendar_Family)]
+                 for family in calendar.search_resources(cls=Calendar_Family)]
 
 
 
@@ -58,10 +57,8 @@ class Families_View(Folder_BrowseContent):
         ('title', MSG(u'Title')),
         ('color', MSG(u'Color'))]
 
-    def get_items_query(self, resource, context, *args):
-        queries = list(args)
-        queries.append(PhraseQuery('format', 'calendar-family'))
-        return queries
+
+    base_classes = ('calendar-family',)
 
 
     def get_item_value(self, resource, context, item, column):

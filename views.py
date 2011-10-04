@@ -275,7 +275,7 @@ class BrowseForm(STLView):
         return table_columns
 
 
-    def get_items(self, resource, context, *args):
+    def get_items(self, resource, context):
         name = 'get_items'
         raise NotImplementedError, "the '%s' method is not defined" % name
 

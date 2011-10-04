@@ -328,15 +328,23 @@ class Folder_BrowseContent(BrowseForm):
 
 
     depth = None
-    def get_items_query(self, resource, context, *args):
-        queries = list(args)
+    base_classes = None
+    def get_items_query(self, resource, context):
         # Search in subtree
-        queries.append(
-            get_base_path_query(resource.abspath, max_depth=self.depth))
+        query = get_base_path_query(resource.abspath, max_depth=self.depth)
+
+        # Base classes
+        base_classes = self.base_classes
+        if base_classes is not None:
+            base_classes_query = OrQuery(*
+                [ PhraseQuery('base_classes', x) for x in base_classes ])
+            query = AndQuery(query, base_classes_query)
+
+        # Exclude non-content
         if self.search_content_only(resource, context) is True:
-            # Exclude non-content
-            queries.append(PhraseQuery('is_content', True))
-        return queries
+            query = AndQuery(query, PhraseQuery('is_content', True))
+
+        return query
 
 
     def get_search_query(self, resource, context, *args):
@@ -354,25 +362,14 @@ class Folder_BrowseContent(BrowseForm):
         return queries
 
 
-    def get_items(self, resource, context, *args):
-        # Query
-        queries = list(args)
+    def get_items(self, resource, context):
+        # Base query
+        query = self.get_items_query(resource, context)
 
-        # Items Query
-        items_query = self.get_items_query(resource, context)
-        if items_query:
-            queries.extend(items_query)
-
-        # Search Query
+        # Search form
         search_query = self.get_search_query(resource, context)
         if search_query:
-            queries.extend(search_query)
-
-        # Transform list of queries into a query
-        if len(queries) == 1:
-            query = queries[0]
-        else:
-            query = AndQuery(*queries)
+            query = AndQuery(query, search_query)
 
         # Search
         return context.search(query)
@@ -747,8 +744,9 @@ class Folder_PreviewContent(Folder_BrowseContent):
     styles = ['/ui/gallery/style.css']
 
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
-    # Table
-    table_template = '/ui/folder/browse_image.xml'
+
+
+    base_classes = ('image',)
 
 
     def get_query_schema(self):
@@ -761,12 +759,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
                            height=String)
 
 
-    def get_items(self, resource, context):
-        # Show only images
-        query = PhraseQuery('base_classes', 'image')
-        proxy = super(Folder_PreviewContent, self)
-        return proxy.get_items(resource, context, query)
-
+    # Table
+    table_template = '/ui/folder/browse_image.xml'
 
     def get_table_head(self, resource, context, items, actions=None):
         # Get from the query
