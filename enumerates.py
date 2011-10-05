@@ -21,6 +21,26 @@ from datetime import date
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 
+days = {
+    0: MSG(u'Monday'),
+    1: MSG(u'Tuesday'),
+    2: MSG(u'Wednesday'),
+    3: MSG(u'Thursday'),
+    4: MSG(u'Friday'),
+    5: MSG(u'Saturday'),
+    6: MSG(u'Sunday')}
+
+
+class DaysOfWeek(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        options = []
+        for i in range(1, 8):
+            options.append({'name': str(i), 'value': days[i-1]})
+        return options
+
+
 
 class Days(Enumerate):
 

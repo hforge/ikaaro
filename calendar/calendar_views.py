@@ -36,6 +36,7 @@ from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.config_common import NewResource_Local
 from ikaaro.datatypes import FileDataType
+from ikaaro.enumerates import days
 from ikaaro.utils import CMSTemplate
 
 resolution = timedelta.resolution
@@ -54,16 +55,6 @@ months = {
     10: MSG(u'October'),
     11: MSG(u'November'),
     12: MSG(u'December')}
-
-days = {
-    0: MSG(u'Monday'),
-    1: MSG(u'Tuesday'),
-    2: MSG(u'Wednesday'),
-    3: MSG(u'Thursday'),
-    4: MSG(u'Friday'),
-    5: MSG(u'Saturday'),
-    6: MSG(u'Sunday')}
-
 
 ######################################################################
 # Calendar timetables configuration
