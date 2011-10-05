@@ -188,7 +188,6 @@ class BrowseForm(STLView):
     batch_template = '/ui/generic/browse_batch.xml'
     batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
     batch_msg2 = MSG(u"There are {n} items.")
-    batch_max_middle_pages = None
 
     # Search configuration
     search_form_id = 'form-search'
@@ -337,16 +336,6 @@ class BrowseForm(STLView):
         # Add middle pages
         middle_pages = range(max(current_page - 3, 2),
                              min(current_page + 3, nb_pages-1) + 1)
-
-        # Truncate middle pages if nedded
-        if self.batch_max_middle_pages:
-            middle_pages_len = len(middle_pages)
-            if middle_pages_len > self.batch_max_middle_pages:
-                delta = middle_pages_len - self.batch_max_middle_pages
-                delta_start = delta_end = delta / 2
-                if delta % 2 == 1:
-                    delta_end = delta_end +1
-                middle_pages = middle_pages[delta_start:-delta_end]
 
         pages = [1] + middle_pages
         if nb_pages > 1:
