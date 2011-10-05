@@ -29,8 +29,11 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
+from ikaaro.autoedit import AutoEdit
+from ikaaro.autoform import CheckboxWidget
 from ikaaro.config_common import NewResource_Local
-from ikaaro.fields import Char_Field
+from ikaaro.enumerates import DaysOfWeek
+from ikaaro.fields import Char_Field, Select_Field
 from ikaaro.folder import Folder
 from calendar_views import Calendar_Export, Calendar_ExportForm
 from calendar_views import Calendar_Import, TimetablesForm
@@ -88,6 +91,14 @@ class Timetables(String):
 
 
 
+class SelectDays_Field(Select_Field):
+    datatype = DaysOfWeek
+    widget = CheckboxWidget
+    widget_keys = Select_Field.widget_keys + ['oneline']
+    oneline = True
+
+
+
 class ConfigCalendar(Folder):
 
     class_id = 'calendar'
@@ -96,17 +107,17 @@ class ConfigCalendar(Folder):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['edit_timetables', 'families', 'new_family',
-                   'import_', 'export_form']
+    class_views = ['edit_timetables', 'edit_working_days', 'families',
+                   'new_family', 'import_', 'export_form']
 
     # Configuration
     config_name = 'calendar'
     config_group = 'content'
 
 
-
-    fields = Folder.fields + ['timetables']
-    timetables = Char_Field(datatype=Timetables, multiple=True)
+    fields = Folder.fields + ['timetables', 'working_days']
+    timetables = Char_Field(datatype=Timetables, multiple=True,
+        title=MSG(u'Timetables'))
     timetables_default = [
         (time( 7,0), time( 8,0)),
         (time( 8,0), time( 9,0)),
@@ -122,6 +133,9 @@ class ConfigCalendar(Folder):
         (time(18,0), time(19,0)),
         (time(19,0), time(20,0)),
         (time(20,0), time(21,0))]
+    working_days_default = [str(x) for x in range(1, 6)]
+    working_days = SelectDays_Field(multiple=True, title=MSG(u'Working days'),
+        default=working_days_default, indexed=True, stored=True)
 
 
     def init_resource(self, **kw):
@@ -144,6 +158,20 @@ class ConfigCalendar(Folder):
 
         # From class value
         return self.timetables_default
+
+
+    def get_working_days(self):
+        """Build a list of working days represented as a list.
+        Data are taken from metadata or from class value.
+
+        Example: ['1', '2', '3', '4', '5'] # '1' is Monday
+        """
+        working_days = self.get_value('working_days')
+        if working_days:
+            return working_days
+
+        # From class value
+        return self.working_days_default
 
 
     def get_document_types(self):
@@ -231,6 +259,8 @@ class ConfigCalendar(Folder):
 
     # Views
     edit_timetables = TimetablesForm()
+    edit_working_days = AutoEdit(title=MSG(u'Working days'),
+        fields=['working_days'])
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
