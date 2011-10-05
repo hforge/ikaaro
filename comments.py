@@ -274,7 +274,7 @@ class CommentsAware(object):
         """
         abspath = str(self.abspath)
         comments = get_context().search(format='comment', parent_paths=abspath)
-        comments = comments.get_resources()
+        comments = comments.get_resources(sort_by='mtime')
         if state is None:
             return list(comments)
 
