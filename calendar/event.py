@@ -49,6 +49,12 @@ MAX_DELTA = timedelta(3650) # we cannot index an infinite number of values
 def next_day(x, delta=timedelta(1)):
     return x + delta
 
+def next_working_day(x, working_days):
+    x = next_day(x)
+    if str(x.isoweekday()) in working_days:
+        return x
+    return next_working_day(x, working_days)
+
 def next_week(x, delta=timedelta(7)):
     return x + delta
 
@@ -69,6 +75,7 @@ def next_year(x):
 rrules = {
     'daily': next_day,
     'weekly': next_week,
+    'on_working_days': next_working_day,
     'monthly': next_month,
     'yearly': next_year}
 
@@ -89,6 +96,7 @@ class RRuleDataType(Enumerate):
     options = [
         {'name': 'daily', 'value': MSG(u'Daily')},
         {'name': 'weekly', 'value': MSG(u'Weekly')},
+        {'name': 'on_working_days', 'value': MSG(u'On working days')},
         {'name': 'monthly', 'value': MSG(u'Monthly')},
         {'name': 'yearly', 'value': MSG(u'Yearly')}]
 
@@ -302,13 +310,19 @@ class Event(Content):
         dates = set()
         f = lambda date: dates.update([ date + timedelta(x) for x in days ])
 
-        rrule = self.get_value('rrule')
-        rrule = rrules.get(rrule)
+        rrule_name = self.get_value('rrule')
+        rrule = rrules.get(rrule_name)
+        if rrule_name == 'on_working_days':
+            working_days = self.get_config_calendar().get_working_days()
         if rrule:
             top = max(start, date.today()) + MAX_DELTA
             while start < top:
                 f(start)
-                start = rrule(start)
+                if rrule_name == 'on_working_days':
+                    start = rrule(start, working_days)
+                else:
+                    start = rrule(start)
+
         else:
             f(start)
 
@@ -448,6 +462,10 @@ class Event(Content):
     def get_color(self):
         family = self.get_resource(self.get_value('family'))
         return family.get_value('color')
+
+
+    def get_config_calendar(self):
+        return self.get_resource('/config/calendar')
 
 
     # Views
