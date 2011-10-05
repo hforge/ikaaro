@@ -187,19 +187,25 @@ class User_EditAccount(AutoEdit):
     # users to have several email addresses.
     fields = ['firstname', 'lastname', 'avatar', 'email']
 
-    def action(self, resource, context, form):
-        # If the user changes his email, check there is not already other
-        # user with the same email in the database.
-        email = form['email']
-        if email != resource.get_value('email'):
-            results = context.database.search(email=email)
-            if len(results):
-                context.message = ERROR(
-                    u'There is another user with the email "{email}", please'
-                    u' try again.', email=email).gettext()
-                return
 
-        return super(User_EditAccount, self).action(resource, context, form)
+    def set_value(self, resource, context, name, form):
+        field = resource.get_field(name)
+        if getattr(field, 'unique', False):
+            old_value = resource.get_value(name)
+            new_value = form[name]
+            if old_value != new_value:
+                query = PhraseQuery(name, new_value)
+                results = context.database.search(query)
+                if len(results):
+                    error = (
+                        u'There is another user with the "{value}" {name},'
+                        u' please choose another one.')
+                    error = ERROR(error, name=name, value=new_value)
+                    context.message = error.gettext()
+                    return True
+
+        proxy = super(User_EditAccount, self)
+        return proxy.set_value(resource, context, name, form)
 
 
 

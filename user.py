@@ -94,7 +94,7 @@ class User(DBResource):
     lastname = Text_Field(multilingual=False, indexed=True, stored=True,
                           title=MSG(u'Last Name'))
     email = Email_Field(indexed=True, stored=True, required=True,
-                        title=MSG(u'E-mail Address'))
+                        unique=True, title=MSG(u'E-mail Address'))
     password = Password_Field
     avatar = File_Field(title=MSG(u'Avatar'))
     user_language = Char_Field
