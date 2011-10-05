@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, proto_property, proto_lazy_property
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
@@ -173,6 +173,117 @@ class IconsView(STLView):
 ###########################################################################
 # Browse View (batch + table + search)
 ###########################################################################
+class Batch(CMSTemplate):
+    """
+    Input parameters:
+    - total
+    """
+
+    template = '/ui/generic/browse_batch.xml'
+    batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
+    batch_msg2 = MSG(u"There are {n} items.")
+
+
+    @proto_lazy_property
+    def start(self):
+        return self.context.query['batch_start']
+
+
+    @proto_lazy_property
+    def size(self):
+        return self.context.query['batch_size']
+
+
+    @proto_property
+    def msg(self):
+        total = self.total
+        # Singular
+        if total == 1:
+            return self.batch_msg1.gettext()
+        # Plural
+        return self.batch_msg2.gettext(n=total)
+
+
+    @proto_lazy_property
+    def nb_pages(self):
+        # Size = 0
+        size = self.size
+        if size == 0:
+            return 1
+
+        # Size > 0
+        total = self.total
+        nb_pages = total / size
+        if (total % size) > 0:
+            nb_pages += 1
+        return nb_pages
+
+
+    @proto_lazy_property
+    def current_page(self):
+        # Size = 0
+        size = self.size
+        if size == 0:
+            return 1
+
+        # Size > 0
+        return (self.start / size) + 1
+
+
+    @proto_property
+    def control(self):
+        return self.nb_pages > 1
+
+
+    @proto_property
+    def previous(self):
+        if self.current_page != 1:
+            previous = max(self.start - self.size, 0)
+            return self.context.uri.replace(batch_start=previous)
+
+        return None
+
+
+    @proto_property
+    def next(self):
+        if self.current_page < self.nb_pages:
+            next = self.start + self.size
+            return self.context.uri.replace(batch_start=next)
+
+        return None
+
+
+    @proto_property
+    def pages(self):
+        # Add middle pages
+        current_page = self.current_page
+        nb_pages = self.nb_pages
+        middle_pages = range(max(current_page - 3, 2),
+                             min(current_page + 3, nb_pages-1) + 1)
+
+        pages = [1] + middle_pages
+        if nb_pages > 1:
+            pages.append(nb_pages)
+
+        uri = self.context.uri
+        pages = [
+            {'number': i,
+             'css': 'current' if i == current_page else None,
+             'uri': uri.replace(batch_start=((i-1) * self.size))}
+             for i in pages ]
+
+        # Add ellipsis if needed
+        if nb_pages > 5:
+            ellipsis = {'uri': None}
+            if 2 not in middle_pages:
+                pages.insert(1, ellipsis)
+            if (nb_pages - 1) not in middle_pages:
+                pages.insert(len(pages) - 1, ellipsis)
+
+        return pages
+
+
+
 class BrowseForm(STLView):
 
     template = '/ui/generic/browse.xml'
@@ -185,9 +296,7 @@ class BrowseForm(STLView):
     }
 
     # Batch
-    batch_template = '/ui/generic/browse_batch.xml'
-    batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
-    batch_msg2 = MSG(u"There are {n} items.")
+    batch = Batch
 
     # Search configuration
     search_form_id = 'form-search'
@@ -217,10 +326,9 @@ class BrowseForm(STLView):
         table = None
         # Batch
         items = self.get_items(resource, context)
-        if self.batch_template is not None:
-            template = context.get_template(self.batch_template)
-            namespace = self.get_batch_namespace(resource, context, items)
-            batch = stl(template, namespace)
+        if self.batch is not None:
+            total = len(items)
+            batch = Batch(context=context, total=total).render()
 
         # Content
         items = self.sort_and_batch(resource, context, items)
@@ -291,72 +399,6 @@ class BrowseForm(STLView):
 
     def get_table_actions(self, resource, context):
         return self.table_actions
-
-
-    #######################################################################
-    # Batch
-    def get_batch_namespace(self, resource, context, items):
-        namespace = {}
-        batch_start = context.query['batch_start']
-        uri = context.uri
-
-        # Total & Size
-        size = context.query['batch_size']
-        total = len(items)
-        if size == 0:
-            nb_pages = 1
-            current_page = 1
-        else:
-            nb_pages = total / size
-            if total % size > 0:
-                nb_pages += 1
-            current_page = (batch_start / size) + 1
-
-        namespace['control'] = nb_pages > 1
-
-        # Message (singular or plural)
-        if total == 1:
-            namespace['msg'] = self.batch_msg1.gettext()
-        else:
-            namespace['msg'] = self.batch_msg2.gettext(n=total)
-
-        # See previous button ?
-        if current_page != 1:
-            previous = max(batch_start - size, 0)
-            namespace['previous'] = uri.replace(batch_start=previous)
-        else:
-            namespace['previous'] = None
-
-        # See next button ?
-        if current_page < nb_pages:
-            namespace['next'] = uri.replace(batch_start=batch_start+size)
-        else:
-            namespace['next'] = None
-
-        # Add middle pages
-        middle_pages = range(max(current_page - 3, 2),
-                             min(current_page + 3, nb_pages-1) + 1)
-
-        pages = [1] + middle_pages
-        if nb_pages > 1:
-            pages.append(nb_pages)
-
-        namespace['pages'] = [
-            {'number': i,
-             'css': 'current' if i == current_page else None,
-             'uri': uri.replace(batch_start=((i-1) * size))}
-             for i in pages ]
-
-        # Add ellipsis if needed
-        if nb_pages > 5:
-            ellipsis = {'uri': None}
-            if 2 not in middle_pages:
-                namespace['pages'].insert(1, ellipsis)
-            if (nb_pages - 1) not in middle_pages:
-                namespace['pages'].insert(len(namespace['pages']) - 1,
-                                          ellipsis)
-
-        return namespace
 
 
     #######################################################################
