@@ -115,12 +115,21 @@ class SearchFormat_Datatype(Enumerate):
     def get_options(self):
         database = get_context().database
 
-        options = []
-        for name, cls in database.resources_registry.items():
-            options.append({'name': name, 'value': cls.class_title.gettext()})
+        options = {}
+        for cls in database.resources_registry.values():
+            options.setdefault(cls.class_id, cls)
+
+        options = [ {'name': class_id, 'value': cls.class_title.gettext()}
+                    for class_id, cls in options.items() ]
 
         options.sort(key=lambda x: x['value'])
         return options
+
+
+class SearchFormat_Field(Select_Field):
+
+    title = MSG(u'Resource type')
+    datatype = SearchFormat_Datatype
 
 
 
@@ -152,9 +161,7 @@ class AccessRule(DBResource):
     permission = Permissions_Field(required=True, indexed=True, stored=True)
     search_path = Path_Field(indexed=True, stored=True)
     search_path_depth = PathDepth_Field()
-    search_format = Select_Field(datatype=SearchFormat_Datatype,
-                                 indexed=True, stored=True,
-                                 title=MSG(u'Resource type'))
+    search_format = SearchFormat_Field(indexed=True, stored=True)
     search_state = State_Field(has_empty_option=True, default='')
 
     # Views
