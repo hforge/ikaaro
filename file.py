@@ -134,6 +134,7 @@ class Image(File):
 class SVG(Image):
 
     class_id = 'image/svg+xml'
+    class_title = MSG(u'Image SVG')
     class_handler = SVGFile
 
 
