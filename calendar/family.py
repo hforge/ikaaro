@@ -23,7 +23,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.buttons import RenameButton, RemoveButton
+from ikaaro.buttons import RemoveButton
 from ikaaro.fields import Char_Field
 from ikaaro.folder_views import Folder_BrowseContent
 from ikaaro.messages import MSG_NEW_RESOURCE
@@ -50,7 +50,7 @@ class Families_View(Folder_BrowseContent):
     search_widgets = []
     search_schema = {}
 
-    table_actions = [RenameButton, RemoveButton]
+    table_actions = [RemoveButton]
     table_columns = [
         ('checkbox', None),
         ('icon', None),
