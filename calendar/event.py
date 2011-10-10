@@ -353,18 +353,24 @@ class Event(Content):
         dates = set()
         f = lambda date: dates.update([ date + timedelta(x) for x in days ])
 
-        rrule_name = self.get_value('rrule')
-        rrule = rrules.get(rrule_name)
-        if rrule_name == 'on_working_days':
-            working_days = self.get_config_calendar().get_working_days()
-        if rrule:
-            top = max(start, date.today()) + MAX_DELTA
-            while start < top:
-                f(start)
-                if rrule_name == 'on_working_days':
-                    start = rrule(start, working_days)
-                else:
-                    start = rrule(start)
+        rrule = self.metadata.get_property('rrule')
+        if rrule is not None:
+            rrule_name = rrule.value
+            rrule_interval = int(rrule.get_parameter('interval') or 1)
+            rrule = rrules.get(rrule_name)
+            if rrule_name == 'on_working_days':
+                working_days = self.get_config_calendar().get_working_days()
+            if rrule:
+                top = max(start, date.today()) + MAX_DELTA
+                while start < top:
+                    interval = rrule_interval
+                    f(start)
+                    if rrule_name == 'on_working_days':
+                        start = rrule(start, working_days)
+                    else:
+                        while interval > 0:
+                            start = rrule(start)
+                            interval -= 1
 
         else:
             f(start)
