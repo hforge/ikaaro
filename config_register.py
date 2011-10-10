@@ -18,6 +18,8 @@
 from itools.core import proto_lazy_property
 from itools.datatypes import DateTime, Date, Time
 from itools.gettext import MSG
+from itools.html import stream_is_empty
+from itools.web import STLView
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -26,24 +28,40 @@ from config import Configuration
 from config_captcha import Captcha_Field
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
-from fields import Boolean_Field, Textarea_Field
+from fields import Boolean_Field, HTMLFile_Field, Textarea_Field
 from resource_ import DBResource
 from utils import make_stl_template
+
+
+class TermsOfService_View(STLView):
+
+    access = 'is_allowed_to_register'
+
+    def GET(self, resource, context):
+        context.content_type = 'text/html; charset=UTF-8'
+        config = resource.get_resource('/config/register')
+        return config.get_value('tos').to_str()
+
 
 
 class TermsOfService_Widget(Widget):
 
     title = MSG(u'Terms of Service')
+    inline = True
 
     template = make_stl_template("""
-    <textarea cols="80" rows="7" readonly="readonly">${terms_of_service}</textarea>
-    <br/>
-    <input type="checkbox" id="terms_of_service" name="terms_of_service"
-      value="1" />
-    <label for="terms_of_service">
-      Please check this box to accept the
-      <a href="/;terms_of_service" target="_blank">Terms of Service</a>.
-    </label>""")
+    <iframe src="/;terms_of_service" width="500px" stl:if="inline">
+      <p>Your browser does not support iframes.</p>
+    </iframe>
+    <div>
+      <input type="checkbox" id="tos" name="tos" value="1" />
+      <label for="tos">Please check this box to accept the
+        <a href="/;terms_of_service" target="_blank"
+          onclick="return popup('/;terms_of_service', 640, 480);"
+          >Terms of Service</a>.
+      </label>
+    </div>
+    """)
 
 
 
@@ -53,8 +71,10 @@ class RegisterForm(AutoForm):
     title = MSG(u'Create an account')
 
     form_id = 'register-form'
-    fields = ['firstname', 'lastname', 'email', 'captcha', 'terms_of_service']
+    fields = ['firstname', 'lastname', 'email', 'captcha', 'tos']
 
+    tos_widget = TermsOfService_Widget('tos')
+    tos = Boolean_Field(required=True, widget=tos_widget, persistent=False)
 
     @proto_lazy_property
     def _resource_class(self):
@@ -67,15 +87,21 @@ class RegisterForm(AutoForm):
             return Captcha_Field(persistent=False)
 
         # Terms of service
-        if name == 'terms_of_service':
+        if name == 'tos':
+            # 1. Check the terms-of-service have been filled
             config_register = self.resource.get_resource('config/register')
-            terms_of_service = config_register.get_value('terms_of_service')
-            if not terms_of_service:
+            tos = config_register.get_value('tos')
+            if tos is None:
                 return None
-            widget = TermsOfService_Widget('terms_of_service',
-                                           terms_of_service=terms_of_service)
-            return Boolean_Field(required=True, widget=widget,
-                                 persistent=False)
+            tos = tos.get_body()
+            if tos is None:
+                return None
+            tos = tos.get_content_elements()
+            if stream_is_empty(tos):
+                return None
+
+            # 2. Ok
+            return self.tos
 
         # Standard
         return self._resource_class.get_field(name)
@@ -151,18 +177,17 @@ class ConfigRegister(DBResource):
 
     class_id = 'config-register'
     class_title = MSG(u'User registration')
-    class_description = MSG(u'Configuration the user registration process.')
+    class_description = MSG(u'Configuration of the user registration process.')
     class_icon48 = 'icons/48x48/signin.png'
 
-    fields = DBResource.fields + ['is_open', 'terms_of_service']
+    fields = DBResource.fields + ['is_open', 'tos']
     is_open = Boolean_Field(default=False,
                             title=MSG(u'Users can register by themselves'))
-    terms_of_service = Textarea_Field(title=MSG(u"Terms of service"))
+    tos = HTMLFile_Field(title=MSG(u"Terms of service"))
 
     # Views
     class_views = ['edit']
-    edit = AutoEdit(title=class_description,
-                    fields=['is_open', 'terms_of_service'])
+    edit = AutoEdit(title=class_title, fields=['is_open', 'tos'])
 
     # Configuration
     config_name = 'register'

@@ -46,9 +46,9 @@ from itools.xml import XMLParser, is_xml_stream
 # Import from ikaaro
 from autoform import MultilineWidget
 from config import Configuration
+from config_register import RegisterForm, TermsOfService_View
 from fields import Char_Field
 from folder import Folder
-from config_register import RegisterForm
 from resource_views import LoginView
 from skins import skin_registry
 from user import UserFolder
@@ -505,6 +505,7 @@ class Root(Folder):
     # Views
     #######################################################################
     register = RegisterForm()
+    terms_of_service = TermsOfService_View
     # Public views
     contact = ContactForm()
     about = AboutView()
