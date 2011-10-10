@@ -300,6 +300,8 @@ class BrowseForm(STLView):
 
     # Search configuration
     search_form_id = 'form-search'
+    search_template = '/ui/auto_form.xml'
+    search_template_field = '/ui/auto_form_field.xml'
     search_schema = {}
     search_widgets = []
 
@@ -354,6 +356,8 @@ class BrowseForm(STLView):
             css='button-search', title=MSG(u'Search'))
         form = AutoForm(
             form_id=self.search_form_id,
+            template=self.search_template,
+            template_field=self.search_template_field,
             title=MSG(u'Search'),
             method='get',
             schema=self.search_schema,
