@@ -20,6 +20,7 @@
 from datetime import date, datetime, time, timedelta
 
 # Import from itools
+from itools.core import is_prototype
 from itools.database import register_field
 from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time
 from itools.gettext import MSG
@@ -32,8 +33,9 @@ from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.config_models import Model
 from ikaaro.content import Content
+from ikaaro.enumerates import IntegerRange
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.fields import Owner_Field
+from ikaaro.fields import Field, Owner_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate
 from ikaaro import messages
@@ -91,6 +93,10 @@ class Status(Enumerate):
 
 
 
+class RRuleIntervalDataType(IntegerRange):
+    count = 31
+
+
 class RRuleDataType(Enumerate):
 
     options = [
@@ -99,6 +105,16 @@ class RRuleDataType(Enumerate):
         {'name': 'on_working_days', 'value': MSG(u'On working days')},
         {'name': 'monthly', 'value': MSG(u'Monthly')},
         {'name': 'yearly', 'value': MSG(u'Yearly')}]
+
+
+class RRule_Field(Select_Field):
+    datatype = RRuleDataType
+    parameters_schema = {'interval': RRuleIntervalDataType}
+
+
+class RRuleInterval_Field(Select_Field):
+    datatype = RRuleIntervalDataType
+    has_empty_option = False
 
 
 
@@ -120,11 +136,10 @@ class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
 
-    def get_fields(self):
-        for name, field in self.resource.get_fields():
-            if not field.readonly:
-                yield name
-
+    # Fields
+    fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
+                                'rrule', 'rrule_interval', 'reminder', 'uid']
+    rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
 
     def get_namespace(self, resource, context):
         proxy = super(Event_Edit, self)
@@ -156,6 +171,19 @@ class Event_Edit(AutoEdit):
         return form
 
 
+    def set_value(self, resource, context, name, form):
+        if name == 'rrule_interval':
+            return False
+        elif name == 'rrule':
+            value = form.get(name, None)
+            if value:
+                interval = form.get('rrule_interval', None)
+                resource.set_value(name, value, interval=interval)
+                return False
+        proxy = super(Event_Edit, self)
+        return proxy.set_value(resource, context, name, form)
+
+
     def action(self, resource, context, form):
         super(Event_Edit, self).action(resource, context, form)
         resource.notify_subscribers(context)
@@ -167,8 +195,18 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
+    # Fields
+    fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
+                               'rrule', 'rrule_interval', 'reminder', 'uid']
+    rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
+
+
     def get_fields(self):
-        for name, field in self._resource_class.get_fields():
+        cls = self._resource_class
+        for name in self.fields:
+            field = self.get_field(name)
+            if field is None or not is_prototype(field, Field):
+                field = cls.get_field(name)
             if not field.readonly:
                 yield name
 
@@ -198,8 +236,14 @@ class Event_NewInstance(AutoAdd):
 
 
     def set_value(self, resource, context, name, form):
-        if name in ('dtstart_time', 'dtend_time'):
+        if name in ('rrule_interval',):
             return False
+        if name == 'rrule':
+            value = form.get(name, None)
+            if value:
+                interval = form.get('rrule_interval', None)
+                resource.set_value(name, value, interval=interval)
+                return False
 
         proxy = super(Event_NewInstance, self)
         return proxy.set_value(resource, context, name, form)
@@ -238,7 +282,6 @@ class Event_NewInstance(AutoAdd):
         if goto is None:
             goto = str(child.abspath)
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
-
 
 
 
@@ -283,7 +326,7 @@ class Event(Content):
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
-    rrule = Select_Field(datatype=RRuleDataType, title=MSG(u'Recurrence'))
+    rrule = RRule_Field(title=MSG(u'Recurrence'))
     reminder = Reminder_Field(title=MSG(u'Reminder'))
     uid = Char_Field(readonly=True)
 
@@ -327,6 +370,17 @@ class Event(Content):
             f(start)
 
         return sorted(dates)
+
+
+    def get_value(self, name, language=None):
+        if name in ('rrule_interval',):
+            f_name, kk, param = name.partition('_')
+            property = self.metadata.get_property(f_name, language=language)
+            if property:
+                value = property.get_parameter(param)
+                return value
+        proxy = super(Event, self)
+        return proxy.get_value(name, language)
 
 
     def get_reminders(self):
