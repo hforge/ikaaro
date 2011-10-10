@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import proto_lazy_property
+from itools.core import proto_lazy_property, is_prototype
 from itools.datatypes import DateTime, Enumerate, String, Time, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -27,6 +27,7 @@ from datatypes import BirthDate
 from buttons import Button
 from datatypes import FileDataType
 from enumerates import Days, Months, Years
+from fields import Field
 import messages
 from utils import get_content_containers, make_stl_template
 
@@ -87,6 +88,13 @@ class AutoAdd(AutoForm):
         return self.fields
 
 
+    def get_field(self, name):
+        cls = self._resource_class
+        field = getattr(self, name, None)
+        if field is None or not is_prototype(field, Field):
+            field = cls.get_field(name)
+        return field
+
     #######################################################################
     # GET
     #######################################################################
@@ -115,7 +123,9 @@ class AutoAdd(AutoForm):
 
     def _get_datatype(self, resource, context, name):
         cls = self._resource_class
-        field = cls.get_field(name)
+
+        field = self.get_field(name)
+
         field = field(resource=cls) # bind
         return field.get_datatype()
 
@@ -167,8 +177,7 @@ class AutoAdd(AutoForm):
         if name == 'location':
             return location_widget
 
-        cls = self._resource_class
-        field = cls.get_field(name)
+        field = self.get_field(name)
         return field.get_widget(name)
 
 

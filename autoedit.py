@@ -21,6 +21,7 @@
 from datetime import datetime, date
 
 # Import from itools
+from itools.core import is_prototype
 from itools.datatypes import DateTime, Time, String, URI
 from itools.gettext import MSG
 from itools.i18n import get_language_name
@@ -32,6 +33,7 @@ from autoform import AutoForm, HiddenWidget
 from autoform import timestamp_widget
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
+from fields import Field
 import messages
 from views import ContextMenu
 
@@ -130,6 +132,13 @@ class AutoEdit(AutoForm):
         return self.fields
 
 
+    def get_field(self, resource, name):
+        field = getattr(self, name, None)
+        if field is not None and is_prototype(field, Field):
+            return field
+        return resource.get_field(name)
+
+
     context_menus = []
     def get_context_menus(self):
         context_menus = self.context_menus[:] # copy
@@ -180,7 +189,9 @@ class AutoEdit(AutoForm):
 
 
     def _get_datatype(self, resource, context, name):
-        field = resource.get_field(name)
+        field = self.get_field(resource, name)
+        if field is None:
+            field = resource.get_field(name)
         field = field(resource=resource) # bind
         return field.get_datatype()
 
@@ -222,7 +233,9 @@ class AutoEdit(AutoForm):
 
 
     def _get_widget(self, resource, context, name):
-        field = resource.get_field(name)
+        field = self.get_field(resource, name)
+        if field is None:
+            field = resource.get_field(name)
         return field.get_widget(name)
 
 
