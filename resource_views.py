@@ -183,13 +183,15 @@ class LoginView(STLView):
     access = True
     title = MSG(u'Login')
     template = '/ui/base/login.xml'
-    query_schema = {'loginname': String}
+    meta = [('robots', 'noindex, follow', None)]
+
+    query_schema = {
+        'loginname': String,
+        'no_password': Boolean}
     schema = {
         'loginname': String(mandatory=True),
         'password': String,
         'no_password': Boolean}
-    meta = [('robots', 'noindex, follow', None)]
-
 
     def GET(self, resource, context):
         if context.user:
@@ -208,15 +210,16 @@ class LoginView(STLView):
 
     def get_namespace(self, resource, context):
         namespace = super(LoginView, self).get_namespace(resource, context)
-
+        namespace['no_password'] = context.query['no_password']
+        # Register
         user = context.user
         register = context.root.is_allowed_to_register(user, resource)
         namespace['register'] = register
-
+        # Login name
         cls = context.database.get_resource_class('user')
         field = cls.get_field(cls.login_name_property)
         namespace['login_name_title'] = field.title
-
+        # Ok
         return namespace
 
 

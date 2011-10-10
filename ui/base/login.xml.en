@@ -16,27 +16,29 @@
   <fieldset>
     <legend>Sign in</legend>
     <div>
-      <label for="loginname">${login_name_title}</label>
-      <span class="field-is-missing" title="This field is required">*</span>
-      <br/>
-      <span stl:if="loginname/error" class="field-error">${loginname/error}
-        <br/></span>
-      <p class="widget">
+      <div>
+        <label for="loginname">${login_name_title}</label>
+        <span class="field-is-missing" title="This field is required">*</span>
+      </div>
+      <div stl:if="loginname/error" class="field-error"
+        >${loginname/error}</div>
+      <div class="widget">
         <input type="text" id="loginname" name="loginname"
           value="${loginname/value}" size="30" />
-      </p>
+      </div>
     </div>
     <div>
-      <label for="password">Password</label>
-      <br/>
-      <span stl:if="password/error" class="field-error">${password/error}
-        <br/></span>
-      <p class="widget">
-        <input type="password" id="password" name="password" size="30" />
-      <input type="checkbox" id="no_password" name="no_password" value="1"
-        onclick="disable_field(this, password)" />
-      <label for="no_password">I forgot my password.</label>
-      </p>
+      <div>
+        <label for="password">Password</label>
+      </div>
+      <div stl:if="password/error" class="field-error">${password/error}</div>
+      <div class="widget">
+        <input type="password" id="password" name="password" size="30"
+          disabled="${no_password}"/>
+        <input type="checkbox" id="no_password" name="no_password" value="1"
+          checked="${no_password}" onclick="disable_field(this, password)" />
+        <label for="no_password">I forgot my password.</label>
+      </div>
     </div>
     <div>
     </div>
