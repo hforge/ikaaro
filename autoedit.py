@@ -129,7 +129,13 @@ class AutoEdit(AutoForm):
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):
-        return self.fields
+        resource = self.context.resource
+        for name in self.fields:
+            field = self.get_field(resource, name)
+            if field is None or not is_prototype(field, Field):
+                field = resource.get_field(name)
+            if field is not None:
+                yield name
 
 
     def get_field(self, resource, name):

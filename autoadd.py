@@ -85,7 +85,13 @@ class AutoAdd(AutoForm):
 
     fields = []
     def get_fields(self):
-        return self.fields
+        cls = self._resource_class
+        for name in self.fields:
+            field = self.get_field(name)
+            if field is None or not is_prototype(field, Field):
+                field = cls.get_field(name)
+            if field is not None:
+                yield name
 
 
     def get_field(self, name):

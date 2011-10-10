@@ -141,6 +141,18 @@ class Event_Edit(AutoEdit):
                                 'rrule', 'rrule_interval', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
 
+
+    def get_fields(self):
+        resource = self.context.resource
+        fields = super(Event_Edit, self).get_fields()
+        for name in fields:
+            field = self.get_field(resource, name)
+            if field is None or not is_prototype(field, Field):
+                field = resource.get_field(name)
+            if field is not None and not field.readonly:
+                yield name
+
+
     def get_namespace(self, resource, context):
         proxy = super(Event_Edit, self)
         namespace = proxy.get_namespace(resource, context)
@@ -203,11 +215,12 @@ class Event_NewInstance(AutoAdd):
 
     def get_fields(self):
         cls = self._resource_class
-        for name in self.fields:
+        fields = super(Event_NewInstance, self).get_fields()
+        for name in fields:
             field = self.get_field(name)
             if field is None or not is_prototype(field, Field):
                 field = cls.get_field(name)
-            if not field.readonly:
+            if field is not None and not field.readonly:
                 yield name
 
 
