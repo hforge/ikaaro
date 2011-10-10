@@ -42,14 +42,20 @@ class DaysOfWeek(Enumerate):
 
 
 
-class Days(Enumerate):
+class IntegerRange(Enumerate):
+    count = 4
 
     @classmethod
     def get_options(cls):
         options = []
-        for i in range(1, 32):
+        for i in range(1, cls.count):
             options.append({'name': str(i), 'value': str(i)})
         return options
+
+
+
+class Days(IntegerRange):
+    count = 32
 
 
 
