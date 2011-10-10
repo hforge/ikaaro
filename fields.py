@@ -63,7 +63,12 @@ class Field(BaseField):
         # Check the new value is different from the old value
         old_value = self.get_value(resource, name, language)
         if value == old_value:
-            return False
+            # Check the new parameters are different from the old one
+            for p_key, p_value in kw.iteritems():
+                if self.get_value(resource, p_key, language) != p_value:
+                    break
+            else:
+                return False
 
         # Set property
         self._set_value(resource, name, value, language, **kw)
