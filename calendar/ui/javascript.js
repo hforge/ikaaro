@@ -28,33 +28,26 @@ $(document).ready(function(){
 });
 
 function update_rrule_parameters(){
+  value = $("#rrule").val();
   /* Hide parameter "interval" on empty value and working_days */
-  if ($("#rrule").val() == "" || $("#rrule").val() == "on_working_days" ){
+  if (value == "" || value == "on_working_days" ){
       /* Hide parameters fields */
       $(".block-widget-rrule_interval").hide();
   }
   else {
       $(".block-widget-rrule_interval").show();
-      /* Update label on span aside select field*/
-      var label;
-      switch($("#rrule").val()) {
-         case 'daily':
-            label = 'day(s)'; break;
-         case 'weekly':
-            label = 'week(s)'; break;
-         case 'monthly':
-            label = 'month(s)'; break;
-         case 'yearly':
-            label = 'year(s)'; break;
-         default:
-            label = "";
-            break;
-      };
-      $(".rrule_interval-rrule").text(label);
+      /** Update label on span aside select field **/
+      /* Hide any label */
+      $(".rrule_interval-daily").hide();
+      $(".rrule_interval-weekly").hide();
+      $(".rrule_interval-monthly").hide();
+      $(".rrule_interval-yearly").hide();
+      /* Show selected label */
+      $(".rrule_interval-"+value).show();
   };
 
   /* Show parameter "byday" only on weekly value */
-  if ($("#rrule").val() == "weekly"){
+  if (value == "weekly"){
       $(".block-widget-rrule_byday").show();
   }
   else {

@@ -135,7 +135,14 @@ class RRuleIntervalWidget(SelectWidget):
         <option stl:repeat="option options" value="${option/name}"
           selected="${option/selected}">${option/value}</option>
     </select>
-    <span class="${name}-rrule"></span>""")
+    <span class="${name}-daily">%s</span>
+    <span class="${name}-weekly">%s</span>
+    <span class="${name}-monthly">%s</span>
+    <span class="${name}-yearly">%s</span>
+    """ % (MSG(u"day(s)").gettext().encode('utf-8'),
+           MSG(u"week(s)").gettext().encode('utf-8'),
+           MSG(u"month(s)").gettext().encode('utf-8'),
+           MSG(u"year(s)").gettext().encode('utf-8')))
 
 
 class RRule_Field(Select_Field):
