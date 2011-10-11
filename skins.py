@@ -354,6 +354,11 @@ class Skin(object):
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
+        # Location template
+        location_template = self.location_template
+        if location_template:
+            location_template = location_template(context=context)
+
         # Ok
         return {
             # HTML head
@@ -373,7 +378,7 @@ class Skin(object):
             # menu
             'menu': menu_ns,
             # Location & Views
-            'location': self.location_template(context=context),
+            'location': location_template,
             'languages': self.languages_template(context=context),
             # Body
             'page_title': self._get_page_title(context),
@@ -418,6 +423,16 @@ class Skin(object):
         return ''.join(s)
 
 
+###########################################################################
+# Specific Skin for popup
+###########################################################################
+class FancyboxSkin(Skin):
+
+    location_template = None
+
+    def get_styles(self, context):
+        return ['/ui/bo.css', '/ui/fancybox/style.css']
+
 
 #############################################################################
 # The folder "/ui"
@@ -436,4 +451,5 @@ def register_skin(name, skin):
 ui_path = get_abspath('ui')
 register_skin('aruni', '%s/aruni' % ui_path)
 register_skin('popup', '%s/popup' % ui_path)
+register_skin('fancybox', FancyboxSkin('%s/fancybox' % ui_path))
 register_ui('/ui/', ui_path)

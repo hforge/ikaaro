@@ -285,8 +285,10 @@ class CalendarView(STLView):
 
     query_schema = {'start': Date}
 
-    styles = ['/ui/calendar/style.css']
-    scripts = ['/ui/calendar/javascript.js']
+    styles = ['/ui/calendar/style.css',
+              '/ui/fancybox/jquery.fancybox-1.3.4.css']
+    scripts = ['/ui/fancybox/jquery.fancybox-1.3.4.pack.js',
+               '/ui/calendar/javascript.js']
 
     calendar_selector = CalendarSelectorTemplate
 
@@ -617,3 +619,4 @@ class Calendar_NewEvent(NewResource_Local):
     title = MSG(u'Create a new event')
 
     document_types = (Event,)
+    view_class_skin = 'fancybox'

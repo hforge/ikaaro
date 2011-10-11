@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <a href="${ns/url}" title="${ns/title}" class="event-link">
+  <a href="${ns/url}" title="${ns/title}" class="event-link" rel="fancybox">
     ${ns/title}
   </a>
   <span stl:if="ns/TIME" class="time">${ns/TIME}</span>

@@ -26,7 +26,8 @@
 
           <div stl:if="cell/free">
             <td colspan="${cell/colspan}" class="free add-event-area" valign="top">
-              <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
+              <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}"
+                rel="fancybox">
                 <img width="16" height="16" src="${add_icon}" />
               </a>
             </td>

@@ -23,7 +23,7 @@
         <span stl:if="not day/selected" class="bold">${day/nday}</span>
         <span stl:if="day/selected" class="cal-day-selected">${day/nday}</span>
 
-        <a stl:if="day/url" class="add-event" href="${day/url}">
+        <a stl:if="day/url" class="add-event" href="${day/url}" rel="fancybox">
           <img width="16" height="16" src="${add_icon}" /></a>
 
         <div class="event ${event/status}" style="background-color: ${event/color}"

@@ -41,7 +41,8 @@ default_template = XHTMLFile(string=
       class="event"
       colspan="${cell/colspan}" rowspan="${cell/rowspan}"
       valign="top" style="background-color: ${cell/content/color}">
-      <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
+      <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}"
+        rel="fancybox">
         <img width="16" height="16" src="${add_icon}" />
       </a><br/>
       ${cell/content/stream}

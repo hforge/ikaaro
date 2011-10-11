@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   // Hide add event buttons
   $(".add-event-area .add-event").hide();
   // Intercept clicks on events
@@ -11,7 +12,7 @@ $(document).ready(function(){
     }else{
       var link = $(this).children('.event-link:first').attr('href');
     }
-    $(location).attr('href', link);
+    open_in_fancybox(link);
     return false;
   });
   // Intercept clicks on add-event-area
@@ -22,10 +23,32 @@ $(document).ready(function(){
     }else{
       var link = $(this).children('.add-event').attr('href');
     }
-    $(location).attr('href', link);
+    open_in_fancybox(link);
     return false;
   });
+
+  // Open links as fancybox
+  $("a[rel='fancybox']").click(function(e){
+    open_in_fancybox(this.href);
+    return false;
+  });
+
 });
+
+function open_in_fancybox(url){
+  $.fancybox({'type': 'iframe',
+              'transitionIn': 'none',
+              'transitionOut': 'none',
+              'href': url,
+              'overlayColor': '#333',
+              'overlayOpacity': 0.8,
+              'onClosed': function() {window.location.reload();},
+              'hideOnOverlayClick': false,
+              'width': 800,
+              'height': 550,
+              'centerOnScroll': true});
+
+}
 
 function update_rrule_parameters(){
   value = $("#rrule").val();

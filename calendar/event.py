@@ -24,7 +24,6 @@ from itools.core import is_prototype
 from itools.database import register_field
 from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time
 from itools.gettext import MSG
-from itools.uri import get_reference
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
 
@@ -169,24 +168,11 @@ class RRuleInterval_Field(Select_Field):
 
 
 
-def get_goto(form, event):
-    """Utility function used by the edit and new-instance forms.
-    """
-    referrer = form['referrer']
-    if referrer:
-        path = get_reference(referrer).path
-        views = (';monthly_view', ';weekly_view', ';daily_view')
-        if path and path[-1] in views:
-            return referrer
-
-    return None
-
-
-
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
     scripts = ['/ui/calendar/javascript.js']
+    view_class_skin = 'fancybox'
 
     # Fields
     fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend',
@@ -262,14 +248,15 @@ class Event_Edit(AutoEdit):
         super(Event_Edit, self).action(resource, context, form)
         resource.notify_subscribers(context)
         # Ok
-        goto = get_goto(form, resource)
-        return context.come_back(messages.MSG_CHANGES_SAVED, goto=goto)
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
 class Event_NewInstance(AutoAdd):
 
     scripts = ['/ui/calendar/javascript.js']
+    view_class_skin = 'fancybox'
+
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
         'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
@@ -364,9 +351,7 @@ class Event_NewInstance(AutoAdd):
         child.notify_subscribers(context)
 
         # Ok
-        goto = get_goto(form, child)
-        if goto is None:
-            goto = str(child.abspath)
+        goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
