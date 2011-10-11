@@ -33,6 +33,7 @@ from itools.stl import stl
 
 # Import from ikaaro
 from event import Event
+from family import Calendar_FamiliesEnumerate
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.config_common import NewResource_Local
@@ -278,6 +279,15 @@ class CalendarSelectorTemplate(CMSTemplate):
                 self.make_link(MSG(u'Month'), self.c_date, 'monthly_view')]
 
 
+
+class CalendarCaptionTemplate(CMSTemplate):
+
+    template = '/ui/calendar/calendar_caption.xml'
+
+    def families(self):
+        return Calendar_FamiliesEnumerate.get_options()
+
+
 ######################################################################
 # Calendar Views
 ######################################################################
@@ -294,6 +304,7 @@ class CalendarView(STLView):
     template = '/ui/calendar/calendar_view.xml'
     calendar_template = None
     calendar_selector = CalendarSelectorTemplate
+    calendar_caption = CalendarCaptionTemplate
 
 
     def get_first_day(self):
@@ -381,7 +392,8 @@ class CalendarView(STLView):
         cal_selector = self.calendar_selector(context=context, c_date=c_date)
         return {'css_id': self.css_id,
                 'cal_selector': cal_selector,
-                'calendar': self.get_calendar(resource, context)}
+                'calendar': self.get_calendar(resource, context),
+                'calendar_caption': self.calendar_caption}
 
 
     def get_calendar(self, resource, context):

@@ -247,3 +247,25 @@ p#event-owner {
 .add-event-area, .event{
   cursor: pointer;
 }
+
+/**************************************************************************
+ * Calendar caption
+ **************************************************************************/
+#calendar-caption{
+  margin: 5px 0;
+}
+#calendar-caption-title{
+  float: left;
+}
+.calendar-family{
+  float: left;
+  line-height: 15px;
+}
+
+.calendar-family-color{
+  width: 15px;
+  height: 15px;
+  display: block;
+  float: left;
+  margin: 0 5px;
+}

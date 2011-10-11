@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <div id="calendar-caption">
+    <div id="calendar-caption-title">
+      Calendar:
+    </div>
+    <div stl:repeat="family families"
+      class="calendar-family">
+      <div class="calendar-family-color"
+        title="${family/value}"
+        style="background-color:${family/color}"/>
+      ${family/value}
+    </div>
+  </div>
+
+  <div class="clear"/>
+
+</stl:block>

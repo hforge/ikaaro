@@ -7,6 +7,7 @@
   <div id="${css_id}">
     ${cal_selector}
     ${calendar}
+    ${calendar_caption}
   </div>
 
 </stl:block>
