@@ -350,7 +350,12 @@ class DatetimeWidget(DateWidget):
         ifFormat: "${format}",
         timeFormat: "24",
         button: ".next()" });
+        $("input[name=${name}_time]").mask("99:99");
+        $("input[name=${name}_time]").val("${value_time}");
     </script>""")
+    scripts = ['/ui/jquery.maskedinput-1.3.min.js']
+
+
 
     @proto_lazy_property
     def value_date(self):
