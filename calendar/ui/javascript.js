@@ -28,8 +28,8 @@ $(document).ready(function(){
 });
 
 function update_rrule_parameters(){
-  /* Hide parameter "interval" on empty value */
-  if ($("#rrule").val() == ""){
+  /* Hide parameter "interval" on empty value and working_days */
+  if ($("#rrule").val() == "" || $("#rrule").val() == "on_working_days" ){
       /* Hide parameters fields */
       $(".block-widget-rrule_interval").hide();
   }

@@ -224,7 +224,9 @@ class Event_Edit(AutoEdit):
             if value:
                 interval = form.get('rrule_interval', None)
                 byday = form.get('rrule_byday', None)
-                kw = {'interval': interval}
+                kw = {}
+                if value != 'working_days':
+                    kw['interval'] = interval
                 if value == 'weekly' and byday:
                     bydays = []
                     for v in byday:
@@ -298,7 +300,9 @@ class Event_NewInstance(AutoAdd):
             if value:
                 interval = form.get('rrule_interval', None)
                 byday = form.get('rrule_byday', None)
-                kw = {'interval': interval}
+                kw = {}
+                if value != 'working_days':
+                    kw['interval'] = interval
                 if value == 'weekly' and byday:
                     bydays = []
                     for v in byday:
