@@ -26,3 +26,13 @@ $(document).ready(function(){
     return false;
   });
 });
+
+function update_rrule_parameters(){
+  if ($("#rrule").val() == ""){
+      /* Hide parameters fields */
+      $(".block-widget-rrule_interval").hide();
+  }
+  else {
+      $(".block-widget-rrule_interval").show();
+  };
+};

@@ -31,13 +31,14 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
+from ikaaro.autoform import SelectWidget
 from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.enumerates import IntegerRange
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.fields import Field, Owner_Field
 from ikaaro.folder import Folder
-from ikaaro.utils import CMSTemplate
+from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
 
 # Import from calendar
@@ -107,9 +108,28 @@ class RRuleDataType(Enumerate):
         {'name': 'yearly', 'value': MSG(u'Yearly')}]
 
 
+class RRuleWidget(SelectWidget):
+
+    template = make_stl_template("""
+    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
+      class="${css}" onchange="update_rrule_parameters();">
+      <option value="" stl:if="has_empty_option"></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>
+    <script>
+     <![CDATA[
+       $(document).ready(function(){
+         update_rrule_parameters();
+       });
+     ]]>
+    </script>""")
+
+
 class RRule_Field(Select_Field):
     datatype = RRuleDataType
     parameters_schema = {'interval': RRuleIntervalDataType}
+    widget = RRuleWidget
 
 
 class RRuleInterval_Field(Select_Field):
@@ -135,6 +155,7 @@ def get_goto(form, event):
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
+    scripts = ['/ui/calendar/javascript.js']
 
     # Fields
     fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
@@ -207,6 +228,7 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
+    scripts = ['/ui/calendar/javascript.js']
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
                                'rrule', 'rrule_interval', 'reminder', 'uid']
