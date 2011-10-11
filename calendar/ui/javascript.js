@@ -28,11 +28,20 @@ $(document).ready(function(){
 });
 
 function update_rrule_parameters(){
+  /* Hide parameter "interval" on empty value */
   if ($("#rrule").val() == ""){
       /* Hide parameters fields */
       $(".block-widget-rrule_interval").hide();
   }
   else {
       $(".block-widget-rrule_interval").show();
+  };
+
+  /* Show parameter "byday" only on weekly value */
+  if ($("#rrule").val() == "weekly"){
+      $(".block-widget-rrule_byday").show();
+  }
+  else {
+      $(".block-widget-rrule_byday").hide();
   };
 };

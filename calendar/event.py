@@ -127,8 +127,19 @@ class RRuleWidget(SelectWidget):
 
 
 class RRule_Field(Select_Field):
+    """Recurrence Rule
+        - byday allowed on value 'weekly' only
+        - default byday is MO,TU,WE,TH,FR,SA,SU
+        - interval not allowed on value 'daily'
+        - default interval is 1
+
+        Examples:
+            rrule;byday=MO,WE,FR;interval=1:weekly
+            rrule;interval=2:monthly
+    """
     datatype = RRuleDataType
-    parameters_schema = {'interval': RRuleIntervalDataType}
+    parameters_schema = {'interval': RRuleIntervalDataType,
+                         'byday': DaysOfWeek(multiple=True)}
     widget = RRuleWidget
 
 
@@ -158,9 +169,10 @@ class Event_Edit(AutoEdit):
     scripts = ['/ui/calendar/javascript.js']
 
     # Fields
-    fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
-                                'rrule', 'rrule_interval', 'reminder', 'uid']
+    fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend',
+        'status', 'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
+    rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
 
 
     def get_fields(self):
@@ -205,13 +217,20 @@ class Event_Edit(AutoEdit):
 
 
     def set_value(self, resource, context, name, form):
-        if name == 'rrule_interval':
+        if name in ('rrule_interval', 'rrule_byday'):
             return False
         elif name == 'rrule':
             value = form.get(name, None)
             if value:
                 interval = form.get('rrule_interval', None)
-                resource.set_value(name, value, interval=interval)
+                byday = form.get('rrule_byday', None)
+                kw = {'interval': interval}
+                if value == 'weekly' and byday:
+                    bydays = []
+                    for v in byday:
+                        bydays.append(DaysOfWeek.get_shortname(v))
+                    kw['byday'] = bydays
+                resource.set_value(name, value, **kw)
                 return False
         proxy = super(Event_Edit, self)
         return proxy.set_value(resource, context, name, form)
@@ -231,8 +250,9 @@ class Event_NewInstance(AutoAdd):
     scripts = ['/ui/calendar/javascript.js']
     # Fields
     fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
-                               'rrule', 'rrule_interval', 'reminder', 'uid']
+        'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
+    rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
 
 
     def get_fields(self):
@@ -271,13 +291,20 @@ class Event_NewInstance(AutoAdd):
 
 
     def set_value(self, resource, context, name, form):
-        if name in ('rrule_interval',):
+        if name in ('rrule_interval', 'rrule_byday'):
             return False
         if name == 'rrule':
             value = form.get(name, None)
             if value:
                 interval = form.get('rrule_interval', None)
-                resource.set_value(name, value, interval=interval)
+                byday = form.get('rrule_byday', None)
+                kw = {'interval': interval}
+                if value == 'weekly' and byday:
+                    bydays = []
+                    for v in byday:
+                        bydays.append(DaysOfWeek.get_shortname(v))
+                    kw['byday'] = bydays
+                resource.set_value(name, value, **kw)
                 return False
 
         proxy = super(Event_NewInstance, self)
@@ -414,11 +441,16 @@ class Event(Content):
 
 
     def get_value(self, name, language=None):
-        if name in ('rrule_interval',):
+        if name in ('rrule_interval', 'rrule_byday'):
             f_name, kk, param = name.partition('_')
             property = self.metadata.get_property(f_name, language=language)
             if property:
                 value = property.get_parameter(param)
+                if param == 'byday' and value is not None:
+                    bydays = []
+                    for v in value:
+                        bydays.append(DaysOfWeek.get_name_by_shortname(v))
+                    return bydays
                 return value
         proxy = super(Event, self)
         return proxy.get_value(name, language)
