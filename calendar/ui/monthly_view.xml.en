@@ -4,8 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div id="cal-monthly-view">
-  ${cal_selector}
   <table>
     <colgroup span="1" width="85px" />
     <colgroup span="7" width="13%" />
@@ -34,8 +32,5 @@
       </td>
     </tr>
   </table>
-</div>
-<script type="text/javascript">
-  $("#date").focus();
-</script>
+
 </stl:block>

@@ -29,6 +29,7 @@ from itools.gettext import MSG
 from itools.ical import Time
 from itools.web import BaseView, STLView, INFO, ERROR
 from itools.database import AndQuery, PhraseQuery
+from itools.stl import stl
 
 # Import from ikaaro
 from event import Event
@@ -290,6 +291,8 @@ class CalendarView(STLView):
     scripts = ['/ui/fancybox/jquery.fancybox-1.3.4.pack.js',
                '/ui/calendar/javascript.js']
 
+    template = '/ui/calendar/calendar_view.xml'
+    calendar_template = None
     calendar_selector = CalendarSelectorTemplate
 
 
@@ -376,8 +379,19 @@ class CalendarView(STLView):
     def get_namespace(self, resource, context):
         c_date = self.get_current_date(context)
         cal_selector = self.calendar_selector(context=context, c_date=c_date)
-        return {'cal_selector': cal_selector,
-                'add_icon': '/ui/icons/16x16/add.png'}
+        return {'css_id': self.css_id,
+                'cal_selector': cal_selector,
+                'calendar': self.get_calendar(resource, context)}
+
+
+    def get_calendar(self, resource, context):
+        template = context.get_template(self.calendar_template)
+        namespace = self.get_calendar_namespace(resource, context)
+        return stl(template, namespace)
+
+
+    def get_calendar_namespace(self, resource, context):
+        return {'add_icon': '/ui/icons/16x16/add.png'}
 
 
 
@@ -385,10 +399,11 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    template = '/ui/calendar/monthly_view.xml'
+    calendar_template = '/ui/calendar/monthly_view.xml'
 
     ndays = 7
     method = 'monthly_view'
+    css_id = 'cal-monthly-view'
 
     def get_start_date(self, c_date):
         # Calculate start of previous week
@@ -400,9 +415,10 @@ class MonthlyView(CalendarView):
         return start
 
 
-    def get_namespace(self, resource, context):
+    def get_calendar_namespace(self, resource, context):
         # Base namespace
-        namespace = super(MonthlyView, self).get_namespace(resource, context)
+        proxy = super(MonthlyView, self)
+        namespace = proxy.get_calendar_namespace(resource, context)
         # Get today date
         today_date = date.today()
         # Current date
@@ -448,7 +464,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    template = '/ui/calendar/weekly_view.xml'
+    calendar_template = '/ui/calendar/weekly_view.xml'
 
     css_id = 'cal-weekly-view'
     method = 'weekly_view'
@@ -509,9 +525,10 @@ class WeeklyView(CalendarView):
         return start
 
 
-    def get_namespace(self, resource, context):
+    def get_calendar_namespace(self, resource, context):
         # Base namespace
-        namespace = super(WeeklyView, self).get_namespace(resource, context)
+        proxy = super(WeeklyView, self)
+        namespace = proxy.get_calendar_namespace(resource, context)
 
         # Current date
         c_date = self.get_current_date(context)
@@ -537,7 +554,6 @@ class WeeklyView(CalendarView):
         timetable = get_grid_data(events, timetables, start, templates,
                                   with_new_url, namespace['add_icon'])
         namespace['timetable_data'] = timetable
-        namespace['css_id'] = self.css_id
 
         return namespace
 
