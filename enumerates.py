@@ -33,12 +33,27 @@ days = {
 
 class DaysOfWeek(Enumerate):
 
+    options = [
+        {'name':'1', 'value': 'Monday', 'shortname': 'MO'},
+        {'name':'2', 'value': 'Tuesday', 'shortname': 'TU'},
+        {'name':'3', 'value': 'Wednesday', 'shortname': 'WE'},
+        {'name':'4', 'value': 'Thursday', 'shortname': 'TH'},
+        {'name':'5', 'value': 'Friday', 'shortname': 'FR'},
+        {'name':'6', 'value': 'Saturday', 'shortname': 'SA'},
+        {'name':'7', 'value': 'Sunday', 'shortname': 'SU'}]
+
     @classmethod
-    def get_options(cls):
-        options = []
-        for i in range(1, 8):
-            options.append({'name': str(i), 'value': days[i-1]})
-        return options
+    def get_shortname(cls, name):
+        for option in cls.options:
+            if option['name'] == name:
+                return option['shortname']
+
+
+    @classmethod
+    def get_name_by_shortname(cls, shortname):
+        for option in cls.options:
+            if option['shortname'] == shortname:
+                return option['name']
 
 
 
