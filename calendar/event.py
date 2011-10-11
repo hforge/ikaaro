@@ -443,14 +443,37 @@ class Event(Content):
         if rrule is not None:
             rrule_name = rrule.value
             rrule_interval = int(rrule.get_parameter('interval') or 1)
+            rrule_byday = rrule.get_parameter('byday') or []
             rrule = rrules.get(rrule_name)
             if rrule_name == 'on_working_days':
                 working_days = self.get_config_calendar().get_working_days()
             if rrule:
+                # Check if "byday" param set
+                bydays = None
+                if rrule_name == 'weekly':
+                    bydays = []
+                    for v in (rrule_byday):
+                        bydays.append(int(DaysOfWeek.get_name_by_shortname(v)))
                 top = max(start, date.today()) + MAX_DELTA
                 while start < top:
                     interval = rrule_interval
-                    f(start)
+                    if bydays:
+                        # Check any day of byday parameter
+                        c_day = start
+                        for byday in bydays:
+                            # Skip previous byday values
+                            if byday < c_day.isoweekday():
+                                continue
+                            # Go ahead to current byday value
+                            while c_day.isoweekday() < byday:
+                                c_day = next_day(c_day)
+                            if c_day >= top:
+                                break
+                            # Add current day (== byday value)
+                            f(c_day)
+                    else:
+                        f(start)
+                    # Go to next date based on rrule value and interval
                     if rrule_name == 'on_working_days':
                         start = rrule(start, working_days)
                     else:
