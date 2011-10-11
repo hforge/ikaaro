@@ -34,13 +34,13 @@ days = {
 class DaysOfWeek(Enumerate):
 
     options = [
-        {'name':'1', 'value': 'Monday', 'shortname': 'MO'},
-        {'name':'2', 'value': 'Tuesday', 'shortname': 'TU'},
-        {'name':'3', 'value': 'Wednesday', 'shortname': 'WE'},
-        {'name':'4', 'value': 'Thursday', 'shortname': 'TH'},
-        {'name':'5', 'value': 'Friday', 'shortname': 'FR'},
-        {'name':'6', 'value': 'Saturday', 'shortname': 'SA'},
-        {'name':'7', 'value': 'Sunday', 'shortname': 'SU'}]
+        {'name':'1', 'value': MSG(u'Monday'), 'shortname': 'MO'},
+        {'name':'2', 'value': MSG(u'Tuesday'), 'shortname': 'TU'},
+        {'name':'3', 'value': MSG(u'Wednesday'), 'shortname': 'WE'},
+        {'name':'4', 'value': MSG(u'Thursday'), 'shortname': 'TH'},
+        {'name':'5', 'value': MSG(u'Friday'), 'shortname': 'FR'},
+        {'name':'6', 'value': MSG(u'Saturday'), 'shortname': 'SA'},
+        {'name':'7', 'value': MSG(u'Sunday'), 'shortname': 'SU'}]
 
     @classmethod
     def get_shortname(cls, name):
