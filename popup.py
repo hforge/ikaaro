@@ -252,6 +252,7 @@ class DBResource_AddBase(STLForm):
     template = '/ui/html/popup.xml'
 
     element_to_add = None
+    default_state = 'private'
 
     schema = {
         'target_path': String(mandatory=True),
@@ -359,8 +360,8 @@ class DBResource_AddBase(STLForm):
         namespace['message'] = context.message
         namespace['mode'] = context.get_form_value('mode')
         # add state widget
-        # FIXME default state
-        widget = state_widget(datatype=StaticStateEnumerate, value='private')
+        widget = state_widget(datatype=StaticStateEnumerate,
+            value=self.default_state)
         namespace['state_widget'] = widget
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = site_root.get_skin(context).get_styles(context)
