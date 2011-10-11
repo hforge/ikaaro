@@ -35,6 +35,22 @@ function update_rrule_parameters(){
   }
   else {
       $(".block-widget-rrule_interval").show();
+      /* Update label on span aside select field*/
+      var label;
+      switch($("#rrule").val()) {
+         case 'daily':
+            label = 'day(s)'; break;
+         case 'weekly':
+            label = 'week(s)'; break;
+         case 'monthly':
+            label = 'month(s)'; break;
+         case 'yearly':
+            label = 'year(s)'; break;
+         default:
+            label = "";
+            break;
+      };
+      $(".rrule_interval-rrule").text(label);
   };
 
   /* Show parameter "byday" only on weekly value */

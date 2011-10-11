@@ -126,6 +126,18 @@ class RRuleWidget(SelectWidget):
     </script>""")
 
 
+class RRuleIntervalWidget(SelectWidget):
+
+    template = make_stl_template("""
+    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
+      class="${css}" onchange="update_rrule_parameters();">
+      <option value="" stl:if="has_empty_option"></option>
+        <option stl:repeat="option options" value="${option/name}"
+          selected="${option/selected}">${option/value}</option>
+    </select>
+    <span class="${name}-rrule"></span>""")
+
+
 class RRule_Field(Select_Field):
     """Recurrence Rule
         - byday allowed on value 'weekly' only
@@ -146,6 +158,7 @@ class RRule_Field(Select_Field):
 class RRuleInterval_Field(Select_Field):
     datatype = RRuleIntervalDataType
     has_empty_option = False
+    widget = RRuleIntervalWidget
 
 
 
