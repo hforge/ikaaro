@@ -97,19 +97,14 @@ class Event_Edit(DBResource_Edit):
         return fields, to_keep
 
 
-    def get_namespace(self, resource, context):
-        proxy = super(Event_Edit, self)
-        namespace = proxy.get_namespace(resource, context)
-
+    def get_before_namespace(self, resource, context):
         # Set organizer infos in ${before}
         owner = resource.get_owner()
         owner = get_context().root.get_user_title(owner)
         from itools.xml import XMLParser
         owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
         owner = owner.gettext().encode('utf-8')
-        namespace['before'] = XMLParser(owner)
-
-        return namespace
+        return XMLParser(owner)
 
 
     def get_value(self, resource, context, name, datatype):

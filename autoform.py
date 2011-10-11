@@ -644,6 +644,14 @@ class AutoForm(STLForm):
         return actions
 
 
+    def get_before_namespace(self, resource, context):
+        return None
+
+
+    def get_after_namespace(self, resource, context):
+        return None
+
+
     def get_namespace(self, resource, context):
         widgets_namespace = STLForm.get_namespace(self, resource, context)
 
@@ -711,9 +719,13 @@ class AutoForm(STLForm):
             action = context.uri
             actions[0].name = None
 
+        # Before and after
+        before = self.get_before_namespace(resource, context)
+        after = self.get_after_namespace(resource, context)
+
         # Build namespace
         return {
-            'before': None,
+            'before': before,
             'actions': actions,
             'action': action,
             'onsubmit': onsubmit,
@@ -721,7 +733,7 @@ class AutoForm(STLForm):
             'description': self.description,
             'first_widget': first_widget,
             'widgets': ns_widgets,
-            'after': None}
+            'after': after}
 
 
 # Registry with {datatype: widget, ...}
