@@ -51,7 +51,6 @@ class Widget(CMSTemplate):
     language = None
     maxlength = None
     size = None
-    suffix = None
     tip = None
     type = 'text'
     # Focus on it if the first one displayed
@@ -236,6 +235,7 @@ class CheckboxWidget(Widget):
     </stl:block>""")
 
     oneline = False
+    label = MSG(u'Yes')
 
 
     def options(self):
@@ -254,7 +254,7 @@ class CheckboxWidget(Widget):
 
         # Case 2: Boolean
         if issubclass(datatype, Boolean):
-            return [{'name': '1', 'value': '',
+            return [{'name': '1', 'value': self.label,
                      'selected': value in [True, 1, '1']}]
 
         # Case 3: Error
@@ -676,7 +676,6 @@ class AutoForm(STLView):
             field_ns['title'] = getattr(widget, 'title', None)
             field_ns['id'] = widget.id
             field_ns['mandatory'] = getattr(datatype, 'mandatory', False)
-            field_ns['suffix'] = widget.suffix
             field_ns['tip'] = widget.tip
             field_ns['endline'] = getattr(widget, 'endline', False)
 

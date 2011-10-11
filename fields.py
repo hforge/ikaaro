@@ -163,7 +163,7 @@ class Birthdate_Field(Metadata_Field):
 class Boolean_Field(Metadata_Field):
     datatype = Boolean
     widget = RadioWidget
-    widget_keys = Metadata_Field.widget_keys + ['oneline']
+    widget_keys = Metadata_Field.widget_keys + ['label', 'oneline']
 
 
 
