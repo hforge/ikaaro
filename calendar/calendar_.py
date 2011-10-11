@@ -30,10 +30,8 @@ from itools.ical import iCalendar
 
 # Import from ikaaro
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import CheckboxWidget
 from ikaaro.config_common import NewResource_Local
-from ikaaro.enumerates import DaysOfWeek
-from ikaaro.fields import Char_Field, Select_Field
+from ikaaro.fields import Char_Field, SelectDays_Field
 from ikaaro.folder import Folder
 from calendar_views import Calendar_Export, Calendar_ExportForm
 from calendar_views import Calendar_Import, TimetablesForm
@@ -88,14 +86,6 @@ class Timetables(String):
         start, end = value
         template = '%s:%s %s:%s'
         return template % (start.hour, start.minute, end.hour, end.minute)
-
-
-
-class SelectDays_Field(Select_Field):
-    datatype = DaysOfWeek
-    widget = CheckboxWidget
-    widget_keys = Select_Field.widget_keys + ['oneline']
-    oneline = True
 
 
 

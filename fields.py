@@ -33,10 +33,12 @@ from itools.xml import START_ELEMENT
 
 # Import from ikaaro
 from autoform import Widget
-from autoform import BirthDateWidget, DateWidget, DatetimeWidget, FileWidget
-from autoform import MultilineWidget, RadioWidget, SelectWidget, TextWidget
+from autoform import BirthDateWidget, CheckboxWidget, DateWidget
+from autoform import DatetimeWidget, FileWidget, MultilineWidget, RadioWidget
+from autoform import SelectWidget, TextWidget
 from autoform import rte_widget
 from datatypes import BirthDate, HTMLBody, Password
+from enumerates import DaysOfWeek
 from utils import get_secure_hash, split_reference
 
 
@@ -641,3 +643,11 @@ class HTMLFile_Field(File_Field):
             events = list(events)
             handler.set_changed()
             handler.events = events
+
+
+
+class SelectDays_Field(Select_Field):
+    datatype = DaysOfWeek
+    widget = CheckboxWidget
+    widget_keys = Select_Field.widget_keys + ['oneline']
+    oneline = True

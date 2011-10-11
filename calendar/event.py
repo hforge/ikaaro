@@ -34,9 +34,9 @@ from ikaaro.autoedit import AutoEdit
 from ikaaro.autoform import SelectWidget
 from ikaaro.config_models import Model
 from ikaaro.content import Content
-from ikaaro.enumerates import IntegerRange
+from ikaaro.enumerates import DaysOfWeek, IntegerRange
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.fields import Field, Owner_Field
+from ikaaro.fields import Field, Owner_Field, SelectDays_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
