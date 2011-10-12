@@ -171,7 +171,6 @@ class RRuleInterval_Field(Select_Field):
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/calendar/style.css']
-    scripts = ['/ui/calendar/javascript.js']
     view_class_skin = 'fancybox'
 
     # Fields
@@ -179,6 +178,12 @@ class Event_Edit(AutoEdit):
         'status', 'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
+
+
+    def get_scripts(self, context):
+        scripts = super(Event_Edit, self).get_scripts(context)
+        scripts.append('/ui/calendar/javascript.js')
+        return scripts
 
 
     def get_fields(self):
@@ -254,7 +259,6 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
-    scripts = ['/ui/calendar/javascript.js']
     view_class_skin = 'fancybox'
 
     # Fields
@@ -262,6 +266,12 @@ class Event_NewInstance(AutoAdd):
         'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
+
+
+    def get_scripts(self, context):
+        scripts = super(Event_NewInstance, self).get_scripts(context)
+        scripts.append('/ui/calendar/javascript.js')
+        return scripts
 
 
     def get_fields(self):

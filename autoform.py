@@ -53,10 +53,10 @@ class Widget(CMSTemplate):
     size = None
     tip = None
     type = 'text'
-    # Focus on it if the first one displayed
-    focus = True
+    focus = True # Focus on it if the first one displayed
     onsubmit = None
     css = None
+    scripts = None
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
@@ -356,7 +356,6 @@ class DatetimeWidget(DateWidget):
     scripts = ['/ui/jquery.maskedinput-1.3.min.js']
 
 
-
     @proto_lazy_property
     def value_date(self):
         if self.value is None:
@@ -548,8 +547,8 @@ class ProgressBarWidget(Widget):
         attachmentSelected($(this));
       });
     </script>
-    <script  type="text/javascript" src="/ui/progressbar/jquery-progressbar.min.js"/>
     """)
+    scripts = ['/ui/progressbar/jquery-progressbar.min.js']
 
 
     def __init__(self, **kw):
@@ -613,6 +612,17 @@ class AutoForm(STLView):
         # Actions (submit buttons)
         return [ button(resource=resource, context=context)
                  for button in self.get_actions(resource, context) ]
+
+
+    def get_scripts(self, context):
+        scripts = []
+
+        resource = context.resource # XXX
+        for widget in self.get_widgets(resource, context):
+            if widget.scripts:
+                scripts.extend(widget.scripts)
+
+        return scripts
 
 
     #########################

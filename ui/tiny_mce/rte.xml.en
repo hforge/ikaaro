@@ -5,7 +5,6 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <!-- TinyMCE -->
-  <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
   <script type="text/javascript">
   tinyMCE.init({
       mode : "exact",
