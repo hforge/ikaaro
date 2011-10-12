@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <!-- EditArea -->
+  <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
+  <script type="text/javascript">
+  editAreaLoader.init({
+    id : "${id}",		// textarea id
+    syntax: "CSS",		// syntax to be uses for highligthning, here CSS
+    start_highlight: true,	// to display with highlight mode on start-up
+    word_wrap: true,
+    font_size: 8,
+    min_width: ${width},
+    min_height: ${height}
+  });
+
+  </script>
+  <noscript>
+    (Javascript is deactivated or missing: the EditArea Editor is unavailable.)
+  </noscript>
+
+  <!-- Gets replaced with EditArea -->
+  <textarea id="${id}" name="${name}" rows="15" cols="82">${value}</textarea>
+
+</stl:block>

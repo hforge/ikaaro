@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2008 Nicolas Deram <nicolas@itaapy.com>
+# Copyright (C) 2011 Armel FORTUN <armel@tchack.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,7 +37,7 @@ from file_views import File_Edit
 from registry import register_resource_class
 from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
-
+from text_views import CSS_Edit
 
 css_uri_expr = compile(r"url\((.*)\)")
 def css_get_reference(uri):
@@ -236,6 +237,10 @@ class CSS(Text):
         self.handler.load_state_from_string(new_data)
 
 
+    # Views
+    edit = CSS_Edit()
+
+
 
 class Python(Text):
 
@@ -325,4 +330,3 @@ for js_mime in ['application/x-javascript', 'text/javascript',
 register_resource_class(XML, format='application/xml')
 register_resource_class(CSV, 'text/x-comma-separated-values')
 register_resource_class(CSV, 'text/csv')
-

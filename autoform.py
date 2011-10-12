@@ -4,6 +4,7 @@
 # Copyright (C) 2007-2008 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2008 Sylvain Taverne <sylvain@itaapy.com>
+# Copyright (C) 2011 Armel FORTUN <armel@tchack.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -594,6 +595,39 @@ class ProgressBarWidget(Widget):
 
 
 
+class EditAreaWidget(Widget):
+    """It's an EditArea Widget, for file code edit, used for edit the CSS here,
+    see original code here: <http://www.cdolivet.com>"""
+
+    template = '/ui/editarea/ea.xml'
+    scripts = ['/ui/editarea/edit_area_full.js']
+
+    # Configuration
+    width = 610
+    height = 340
+    readonly = False
+
+
+    def ea_language(self):
+        path = get_abspath('ui/editarea/langs')
+        languages = [ x[:-3] for x in lfs.get_names(path) ]
+        return get_context().accept_language.select_language(languages)
+
+
+    def get_prefix(self):
+        context = get_context()
+        here = context.resource.get_abspath()
+        prefix = here.get_pathto(self.template)
+        return prefix
+
+
+    def render(self):
+        prefix = self.get_prefix()
+        template = self.get_template()
+        return stl(events=template, namespace=self, prefix=prefix)
+
+
+
 ###########################################################################
 # Common widgets to reuse
 ###########################################################################
@@ -606,6 +640,7 @@ subject_widget = TextWidget('subject', title=MSG(u'Keywords'),
 rte_widget = RTEWidget('data', title=MSG(u'Body'))
 timestamp_widget = HiddenWidget('timestamp')
 file_widget = FileWidget('file', title=MSG(u'Replace file'))
+editarea_widget = EditAreaWidget('data', title=MSG(u'Body'))
 
 
 ###########################################################################
