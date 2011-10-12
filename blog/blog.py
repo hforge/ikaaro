@@ -47,7 +47,13 @@ rte = RTEWidget(
 class Post_NewInstance(AutoAdd):
 
     fields = ['title', 'data', 'date']
-    date = Date_Field(default=date.today())
+
+
+    def get_field(self, name):
+        if name == 'date':
+            return Date_Field(default=date.today())
+
+        return super(Post_NewInstance, self).get_field(name)
 
 
     def get_container(self, resource, context, form):
