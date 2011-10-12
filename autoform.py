@@ -93,11 +93,12 @@ class FileWidget(Widget):
       size="${size}" class="${css}" />
     <label class="language" for="${id}" stl:if="language" >${language}</label>
     <br/>
-    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}"
+    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}&amp;fit=${fit}"
       stl:if="thumb"/>""")
 
     width = 128
     height = 128
+    fit = 1
 
     def thumb(self):
         return isinstance(self.value, Image)
