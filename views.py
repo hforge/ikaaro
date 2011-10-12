@@ -31,6 +31,12 @@ from utils import CMSTemplate
 """This module contains some generic views used by different resources.
 """
 
+def get_view_scripts(view, context):
+    get_scripts = getattr(view, 'get_scripts', None)
+    if get_scripts:
+        return get_scripts(context)
+    return getattr(view, 'scripts', [])
+
 
 class CompositeView(STLView):
 
@@ -51,14 +57,12 @@ class CompositeView(STLView):
 
 
     def get_scripts(self, context):
-        scripts = getattr(self, 'scripts', [])
+        scripts = []
         for view in self.subviews:
-            _get_scripts = getattr(view, 'get_scripts', None)
-            if _get_scripts is None:
-                extra = getattr(view, 'scripts', [])
-            else:
-                extra = _get_scripts(context)
-            scripts.extend(extra)
+            for script in get_view_scripts(view):
+                if script not in scripts:
+                    scripts.append(script)
+
         return scripts
 
 

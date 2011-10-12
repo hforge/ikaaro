@@ -32,6 +32,7 @@ from itools.web import get_context, ERROR, INFO
 # Import from ikaaro
 from context import register_ui
 from folder import Folder
+from views import get_view_scripts
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
@@ -125,12 +126,9 @@ class Skin(object):
             scripts.append('%s/javascript.js' % self.base_path)
 
         # View
-        get_scripts = getattr(context.view, 'get_scripts', None)
-        if get_scripts is None:
-            extra = getattr(context.view, 'scripts', [])
-        else:
-            extra = get_scripts(context)
-        scripts.extend(extra)
+        for script in get_view_scripts(context.view, context):
+            if script not in scripts:
+                scripts.append(script)
 
         # Ok
         return scripts

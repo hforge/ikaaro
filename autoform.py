@@ -23,7 +23,7 @@ from datetime import datetime, date
 from random import randint
 
 # Import from itools
-from itools.core import get_abspath, proto_lazy_property
+from itools.core import freeze, get_abspath, proto_lazy_property
 from itools.datatypes import Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
@@ -56,7 +56,7 @@ class Widget(CMSTemplate):
     focus = True # Focus on it if the first one displayed
     onsubmit = None
     css = None
-    scripts = None
+    scripts = freeze([])
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
@@ -616,11 +616,10 @@ class AutoForm(STLView):
 
     def get_scripts(self, context):
         scripts = []
-
-        resource = context.resource # XXX
-        for widget in self.get_widgets(resource, context):
-            if widget.scripts:
-                scripts.extend(widget.scripts)
+        for widget in self.get_widgets(self.resource, context):
+            for script in widget.scripts:
+                if script not in scripts:
+                    scripts.append(script)
 
         return scripts
 
