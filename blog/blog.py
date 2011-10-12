@@ -18,7 +18,7 @@
 from datetime import date
 
 # Import from itools
-from itools.datatypes import Date, Unicode
+from itools.datatypes import Unicode
 from itools.gettext import MSG
 from itools.web import STLView
 
@@ -47,14 +47,7 @@ rte = RTEWidget(
 class Post_NewInstance(AutoAdd):
 
     fields = ['title', 'data', 'date']
-
-
-    def _get_datatype(self, resource, context, name):
-        if name == 'date':
-           return Date(default=date.today())
-
-        proxy = super(Post_NewInstance, self)
-        return proxy._get_datatype(resource, context, name)
+    date = Date_Field(default=date.today())
 
 
     def get_container(self, resource, context, form):

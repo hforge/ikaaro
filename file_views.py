@@ -30,9 +30,9 @@ from itools.web import BaseView, STLView, ERROR, FormError
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import FileWidget, PathSelectorWidget, ProgressBarWidget
+from autoform import PathSelectorWidget
 from autoform import ReadOnlyWidget
-from datatypes import FileDataType
+from fields import ProgressBar_Field
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 
@@ -42,24 +42,7 @@ class File_NewInstance(AutoAdd):
     title = MSG(u'Upload File')
     fields = ['data', 'title', 'state', 'location', 'progressbar']
 
-    def _get_datatype(self, resource, context, name):
-        if name == 'data':
-            widget = FileWidget('data', title=MSG(u'File'), size=35)
-            return FileDataType(mandatory=True, widget=widget)
-        if name == 'progressbar':
-            return None
-
-        proxy = super(File_NewInstance, self)
-        return proxy._get_datatype(resource, context, name)
-
-
-    def _get_widget(self, resource, context, name):
-        if name == 'progressbar':
-            return ProgressBarWidget()
-
-        proxy = super(File_NewInstance, self)
-        return proxy._get_widget(resource, context, name)
-
+    progressbar = ProgressBar_Field
 
     def get_new_resource_name(self, form):
         name = super(File_NewInstance, self).get_new_resource_name(form)

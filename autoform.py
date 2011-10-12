@@ -551,7 +551,7 @@ class ProgressBarWidget(Widget):
     scripts = ['/ui/progressbar/jquery-progressbar.min.js']
 
 
-    def __init__(self, **kw):
+    def __init__(self, name=None, **kw):
         # An int in [1, 2^31 - 1]
         self.upload_id = str(randint(1, 2147483647))
 

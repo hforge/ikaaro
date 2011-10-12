@@ -28,7 +28,7 @@ from config import Configuration
 from config_captcha import Captcha_Field
 from datatypes import BirthDate
 from enumerates import Days, Months, Years
-from fields import Boolean_Field, HTMLFile_Field, Textarea_Field
+from fields import Boolean_Field, HTMLFile_Field
 from resource_ import DBResource
 from utils import make_stl_template
 

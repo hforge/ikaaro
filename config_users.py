@@ -22,9 +22,9 @@ from itools.web import ERROR, INFO, FormError
 
 # Import from ikaaro
 from autoadd import AutoAdd
-from autoform import PasswordWidget
 from buttons import Button, BrowseButton
 from config import Configuration
+from fields import Password_Field
 from messages import MSG_CHANGES_SAVED, MSG_PASSWORD_MISMATCH
 from resource_ import DBResource
 from user_views import BrowseUsers
@@ -40,30 +40,16 @@ class AddUser(AutoAdd):
 
     fields = ['email', 'password', 'password2', 'groups']
 
+    password = Password_Field(title=MSG(u'Password'), datatype=String,
+            tip = MSG(u'If no password is given an email will be sent to the '
+                      u' user, asking him to choose his password.'))
+    password2 = Password_Field(title=MSG(u'Repeat password'),
+                               datatype=String)
+
+
     @proto_lazy_property
     def _resource_class(self):
         return self.context.database.get_resource_class('user')
-
-
-    def _get_datatype(self, resource, context, name):
-        if name == 'password':
-            return String
-        if name == 'password2':
-            return String(persistent=False)
-
-        return super(AddUser, self)._get_datatype(resource, context, name)
-
-
-    def _get_widget(self, resource, context, name):
-        if name == 'password':
-            tip = MSG(
-                u'If no password is given an email will be sent to the '
-                u' user, asking him to choose his password.')
-            return PasswordWidget(name, title=MSG(u'Password'), tip=tip)
-        elif name == 'password2':
-            return PasswordWidget(name, title=MSG(u'Repeat password'))
-
-        return super(AddUser, self)._get_widget(resource, context, name)
 
 
     def _get_form(self, resource, context):

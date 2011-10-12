@@ -25,7 +25,6 @@ from itools.web import get_context, ERROR, FormError
 from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, SelectWidget
 from datatypes import BirthDate
 from buttons import Button
-from datatypes import FileDataType
 from enumerates import Days, Months, Years
 from fields import Field
 import messages
@@ -291,6 +290,9 @@ class AutoAdd(AutoForm):
         occurs, the context.message must be an ERROR instance.
         """
         if name.endswith(('_time', '_year', '_day', '_month')):
+            return False
+
+        if resource.get_field(name) is None:
             return False
 
         value = form[name]

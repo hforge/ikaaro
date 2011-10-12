@@ -32,10 +32,10 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import Widget
+from autoform import ProgressBarWidget, Widget
 from autoform import BirthDateWidget, CheckboxWidget, DateWidget
 from autoform import DatetimeWidget, FileWidget, MultilineWidget, RadioWidget
-from autoform import SelectWidget, TextWidget
+from autoform import PasswordWidget, SelectWidget, TextWidget
 from autoform import rte_widget
 from datatypes import BirthDate, HTMLBody, Password
 from enumerates import DaysOfWeek
@@ -199,6 +199,7 @@ class Integer_Field(Metadata_Field):
 
 class Password_Field(Metadata_Field):
     datatype = Password
+    widget = PasswordWidget
 
     def set_value(self, resource, name, value, language=None, **kw):
         if value is not None:
@@ -208,6 +209,10 @@ class Password_Field(Metadata_Field):
         proxy = super(Password_Field, self)
         return proxy.set_value(resource, name, value, language, **kw)
 
+
+class ProgressBar_Field(Metadata_Field):
+    datatype = String
+    widget = ProgressBarWidget
 
 
 class Select_Field(Metadata_Field):

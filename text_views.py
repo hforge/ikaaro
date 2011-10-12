@@ -25,8 +25,9 @@ from itools.gettext import MSG
 from itools.web import STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, get_default_widget, MultilineWidget
+from autoform import AutoForm, get_default_widget
 from buttons import Button, RemoveButton
+from fields import Textarea_Field
 from file_views import File_Edit
 import messages
 from views import BrowseForm
@@ -39,19 +40,7 @@ class Text_Edit(File_Edit):
 
     fields = ['title', 'state', 'data', 'file', 'description', 'subject']
 
-    def _get_datatype(self, resource, context, name):
-        if name == 'data':
-            return String
-
-        return super(Text_Edit, self)._get_datatype(resource, context, name)
-
-
-    def _get_widget(self, resource, context, name):
-        if name == 'data':
-            return MultilineWidget('data', title=MSG(u"Content"), rows=15,
-                                   cols=69)
-
-        return super(Text_Edit, self)._get_widget(resource, context, name)
+    data = Textarea_Field(title=MSG(u'Content'))
 
 
     def get_value(self, resource, context, name, datatype):

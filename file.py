@@ -59,7 +59,7 @@ class File(Content):
 
     # Fields
     fields = Content.fields + ['data', 'filename']
-    data = File_Field(title=MSG(u'File'))
+    data = File_Field(title=MSG(u'File'), required=True)
     filename = Char_Field
 
 
