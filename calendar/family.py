@@ -24,7 +24,7 @@ from itools.xml import XMLParser
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.buttons import RemoveButton
-from ikaaro.fields import Char_Field
+from ikaaro.fields import Char_Field, Owner_Field
 from ikaaro.folder_views import Folder_BrowseContent
 from ikaaro.messages import MSG_NEW_RESOURCE
 from ikaaro.resource_ import DBResource
@@ -93,8 +93,9 @@ class Calendar_Family(DBResource):
     class_views = ['edit']
 
     # Fields
-    fields = DBResource.fields + ['color']
+    fields = DBResource.fields + ['color', 'owner']
     color = Char_Field(title=MSG(u'Color'))
+    owner = Owner_Field
 
     # Views
     _fields = ['title', 'color']
