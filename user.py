@@ -46,7 +46,7 @@ class UserGroups_Datatype(Enumerate):
 
     _resource_path = '/config/groups'
     def get_options(self):
-        resource = get_context().root.get_resource(self._resource_path)
+        resource = get_context().database.get_resource(self._resource_path)
         return [ {'name': str(x.abspath), 'value': x.get_title()}
                  for x in resource.get_resources() ]
 
