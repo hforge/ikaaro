@@ -15,6 +15,7 @@
         style="background-color:${family/color}"/>
       ${family/value}
     </div>
+    <div class="clear"/>
   </div>
 
   <div class="clear"/>

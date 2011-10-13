@@ -256,12 +256,12 @@ p#event-owner {
 }
 #calendar-caption-title{
   float: left;
+  line-height: 15px;
 }
 .calendar-family{
   float: left;
   line-height: 15px;
 }
-
 .calendar-family-color{
   width: 15px;
   height: 15px;
