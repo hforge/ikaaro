@@ -435,7 +435,7 @@ class Event(Content):
         f = lambda date: dates.update([ date + timedelta(x) for x in days ])
 
         rrule = self.metadata.get_property('rrule')
-        if rrule is not None:
+        if rrule is not None and rrule.value:
             rrule_name = rrule.value
             rrule_interval = int(rrule.get_parameter('interval') or 1)
             rrule_byday = rrule.get_parameter('byday') or []
