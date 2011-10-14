@@ -36,8 +36,8 @@ from autoform import ProgressBarWidget, Widget
 from autoform import BirthDateWidget, CheckboxWidget, DateWidget
 from autoform import DatetimeWidget, FileWidget, MultilineWidget, RadioWidget
 from autoform import PasswordWidget, SelectWidget, TextWidget
-from autoform import rte_widget
-from datatypes import BirthDate, HTMLBody, Password
+from autoform import ColorPickerWidget, rte_widget
+from datatypes import BirthDate, HexadecimalColor, HTMLBody, Password
 from enumerates import DaysOfWeek
 from utils import get_secure_hash, split_reference
 
@@ -173,6 +173,10 @@ class Char_Field(Metadata_Field):
     datatype = String
     widget = TextWidget
 
+
+class Color_Field(Metadata_Field):
+    datatype = HexadecimalColor
+    widget = ColorPickerWidget
 
 
 class Date_Field(Metadata_Field):

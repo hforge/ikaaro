@@ -23,7 +23,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Date
+from itools.datatypes import DataType, Date, String
 from itools.fs import FileName
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
@@ -114,6 +114,13 @@ class ExpireValue(DataType):
 class BirthDate(Date):
     pass
 
+
+
+class HexadecimalColor(String):
+
+    @staticmethod
+    def is_valid(value):
+        return value.startswith('#') and len(value) == 7
 
 
 ###########################################################################

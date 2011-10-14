@@ -27,7 +27,7 @@ from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.buttons import Button, BrowseButton
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.fields import Char_Field, Owner_Field
+from ikaaro.fields import Char_Field, Color_Field, Owner_Field
 from ikaaro.folder_views import Folder_BrowseContent
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
 from ikaaro.resource_ import DBResource
@@ -190,7 +190,7 @@ class Calendar(DBResource):
     # Fields
     fields = DBResource.fields + ['color', 'owner']
     hidden_for_users = Char_Field(multiple=True)
-    color = Char_Field(title=MSG(u'Color'))
+    color = Color_Field(title=MSG(u'Color'), default='#0467BA', required=True)
     owner = Owner_Field
 
     def get_documents_type(self):
