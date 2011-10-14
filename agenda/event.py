@@ -41,7 +41,7 @@ from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
 
 # Import from calendar
-from family import Calendar_FamiliesEnumerate
+from calendars import Calendars_Enumerate
 from reminders import Reminder_Field
 
 
@@ -174,7 +174,7 @@ class Event_Edit(AutoEdit):
     view_class_skin = 'fancybox'
 
     # Fields
-    fields = AutoEdit.fields + ['owner', 'family', 'dtstart', 'dtend',
+    fields = AutoEdit.fields + ['owner', 'calendar', 'dtstart', 'dtend',
         'status', 'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
@@ -262,7 +262,7 @@ class Event_NewInstance(AutoAdd):
     view_class_skin = 'fancybox'
 
     # Fields
-    fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
+    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend', 'status',
         'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
@@ -399,10 +399,10 @@ class Event(Content):
     render = Event_Render
 
     # Fields
-    fields = Content.fields + ['owner', 'family', 'dtstart', 'dtend', 'status',
+    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend', 'status',
                                'rrule', 'reminder', 'uid']
     owner = Owner_Field
-    family = Select_Field(datatype=Calendar_FamiliesEnumerate, required=True,
+    calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
@@ -520,7 +520,7 @@ class Event(Content):
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
         values['is_event'] = True
-        values['family'] = self.get_value('family')
+        values['calendar'] = self.get_value('calendar')
         values['dates'] = self.get_dates()
         values['reminders'] = self.get_reminders()
         return values
@@ -629,8 +629,8 @@ class Event(Content):
 
 
     def get_color(self):
-        family = self.get_resource(self.get_value('family'))
-        return family.get_value('color')
+        calendar = self.get_resource(self.get_value('calendar'))
+        return calendar.get_value('color')
 
 
     def get_config_calendar(self):

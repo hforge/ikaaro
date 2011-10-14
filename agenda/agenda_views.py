@@ -32,8 +32,8 @@ from itools.database import AndQuery, PhraseQuery
 from itools.stl import stl
 
 # Import from ikaaro
+from calendars import Calendars_Enumerate
 from event import Event
-from family import Calendar_FamiliesEnumerate
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.config_common import NewResource_Local
@@ -284,8 +284,8 @@ class CalendarCaptionTemplate(CMSTemplate):
 
     template = '/ui/agenda/calendar_caption.xml'
 
-    def families(self):
-        return Calendar_FamiliesEnumerate.get_options()
+    def calendars(self):
+        return Calendars_Enumerate.get_options()
 
 
 ######################################################################

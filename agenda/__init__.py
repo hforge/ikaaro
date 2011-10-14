@@ -27,12 +27,12 @@ from ikaaro.skins import register_skin
 from agenda import ConfigAgenda
 from event import Event, EventModel, Event_Edit, Event_NewInstance
 from event import Event_Render
-from family import Calendar_Family, Calendar_FamiliesEnumerate
+from calendars import Calendar, Calendars_Enumerate
 
 
 __all__ = [
-    'Calendar_Family',
-    'Calendar_FamiliesEnumerate',
+    'Calendar',
+    'Calendars_Enumerate',
     'Event',
     'EventModel',
     'MonthlyView',

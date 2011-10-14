@@ -37,8 +37,8 @@ from agenda_views import Calendar_Export, Calendar_ExportForm
 from agenda_views import Calendar_Import, TimetablesForm
 from agenda_views import MonthlyView, WeeklyView, DailyView
 from agenda_views import Calendar_NewEvent
+from calendars import Calendar, Calendars_View
 from event import Event
-from family import Calendar_Family, Families_View
 
 
 ikaaro_to_ics = [
@@ -100,8 +100,8 @@ class ConfigAgenda(Folder):
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
-                   'edit_timetables', 'edit_working_days', 'families',
-                   'new_family', 'import_', 'export_form']
+                   'edit_timetables', 'edit_working_days', 'calendars',
+                   'new_calendar', 'import_', 'export_form']
 
     # Configuration
     config_name = 'agenda'
@@ -133,9 +133,9 @@ class ConfigAgenda(Folder):
 
     def init_resource(self, **kw):
         super(ConfigAgenda, self).init_resource(**kw)
-        # Create default family
+        # Create default calendar
         kw = {'title': {'en': u'My events'}, 'color': '#AC81A1'}
-        self.make_resource(None, Calendar_Family, **kw)
+        self.make_resource(None, Calendar, **kw)
 
 
     def get_timetables(self):
@@ -168,7 +168,7 @@ class ConfigAgenda(Folder):
 
 
     def get_document_types(self):
-        return [Calendar_Family]
+        return [Calendar]
 
     #######################################################################
     # User Interface
@@ -261,6 +261,5 @@ class ConfigAgenda(Folder):
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()
-    families = Families_View()
-    new_family = NewResource_Local(title=MSG(u'Add family'))
-
+    calendars = Calendars_View()
+    new_calendar = NewResource_Local(title=MSG(u'Add calendar'))

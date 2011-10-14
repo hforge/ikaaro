@@ -8,12 +8,12 @@
     <div id="calendar-caption-title">
       Calendar:
     </div>
-    <div stl:repeat="family families"
+    <div stl:repeat="calendar calendars"
       class="calendar-family">
       <div class="calendar-family-color"
-        title="${family/value}"
-        style="background-color:${family/color}"/>
-      ${family/value}
+        title="${calendar/value}"
+        style="background-color:${calendar/color}"/>
+      ${calendar/value}
     </div>
     <div class="clear"/>
   </div>

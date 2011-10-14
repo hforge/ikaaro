@@ -31,19 +31,19 @@ from ikaaro.resource_ import DBResource
 
 
 
-class Calendar_FamiliesEnumerate(Enumerate):
+class Calendars_Enumerate(Enumerate):
 
     def get_options(self):
-        calendar = get_context().root.get_resource('config/agenda')
-        return [ {'name': str(family.abspath), 'value': family.get_title(),
-                  'color': family.get_value('color')}
-                 for family in calendar.search_resources(cls=Calendar_Family)]
+        agenda = get_context().root.get_resource('config/agenda')
+        return [ {'name': str(calendar.abspath), 'value': calendar.get_title(),
+                  'color': calendar.get_value('color')}
+                 for calendar in agenda.search_resources(cls=Calendar)]
 
 
 
-class Families_View(Folder_BrowseContent):
+class Calendars_View(Folder_BrowseContent):
 
-    title = MSG(u'Families')
+    title = MSG(u'Calendars')
 
     depth = 1
 
@@ -58,7 +58,7 @@ class Families_View(Folder_BrowseContent):
         ('color', MSG(u'Color'))]
 
 
-    base_classes = ('calendar-family',)
+    base_classes = ('calendar',)
 
 
     def get_item_value(self, resource, context, item, column):
@@ -68,12 +68,12 @@ class Families_View(Folder_BrowseContent):
             color = item.get_value('color')
             data = '<span style="color:{color}">{color}</span>'
             return XMLParser(data.format(color=color))
-        proxy = super(Families_View, self)
+        proxy = super(Calendars_View, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
 
-class Calendar_Family_NewInstance(AutoAdd):
+class Calendar_NewInstance(AutoAdd):
 
     automatic_resource_name = True
 
@@ -82,14 +82,14 @@ class Calendar_Family_NewInstance(AutoAdd):
         if child is None:
             return
         # Ok
-        return context.come_back(MSG_NEW_RESOURCE, goto='./;families')
+        return context.come_back(MSG_NEW_RESOURCE, goto='./;calendars')
 
 
 
-class Calendar_Family(DBResource):
+class Calendar(DBResource):
 
-    class_id = 'calendar-family'
-    class_title = MSG(u'Calendar family')
+    class_id = 'calendar'
+    class_title = MSG(u'Calendar')
     class_views = ['edit']
 
     # Fields
@@ -97,7 +97,11 @@ class Calendar_Family(DBResource):
     color = Char_Field(title=MSG(u'Color'))
     owner = Owner_Field
 
+    def get_documents_type(self):
+        return [Event]
+
     # Views
     _fields = ['title', 'color']
-    new_instance = Calendar_Family_NewInstance(fields=_fields)
+    new_instance = Calendar_NewInstance(fields=_fields)
     edit = AutoEdit(fields=_fields)
+
