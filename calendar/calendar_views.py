@@ -203,7 +203,7 @@ class CalendarSelectorTemplate(CMSTemplate):
 
     @proto_lazy_property
     def link_today(self):
-        return self.make_link(u'Today', date.today())
+        return self.make_link(MSG(u'Today'), date.today())
 
 
     @proto_lazy_property
