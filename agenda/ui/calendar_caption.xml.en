@@ -5,9 +5,6 @@
            xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <div id="calendar-caption">
-    <div id="calendar-caption-title">
-      Calendar:
-    </div>
     <div stl:repeat="calendar calendars"
       class="calendar-family">
       <div class="calendar-family-color"
@@ -15,8 +12,12 @@
         style="background-color:${calendar/color}"/>
       ${calendar/value}
     </div>
+    <a href="./;calendars" rel="fancybox">
+      Manage my calendars
+    </a>
     <div class="clear"/>
   </div>
+
 
   <div class="clear"/>
 

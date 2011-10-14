@@ -100,7 +100,7 @@ class ConfigAgenda(Folder):
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
-                   'edit_timetables', 'edit_working_days', 'calendars',
+                   'edit_timetables', 'edit_working_days',
                    'new_calendar', 'import_', 'export_form']
 
     # Configuration

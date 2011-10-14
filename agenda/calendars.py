@@ -15,29 +15,53 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Enumerate
+from itools.core import merge_dicts
+from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.web import get_context
+from itools.uri import get_reference
+from itools.web import ERROR, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.buttons import RemoveButton
+from ikaaro.buttons import Button, BrowseButton
+from ikaaro.exceptions import ConsistencyError
 from ikaaro.fields import Char_Field, Owner_Field
 from ikaaro.folder_views import Folder_BrowseContent
-from ikaaro.messages import MSG_NEW_RESOURCE
+from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
 from ikaaro.resource_ import DBResource
-
 
 
 class Calendars_Enumerate(Enumerate):
 
     def get_options(self):
-        agenda = get_context().root.get_resource('config/agenda')
+        context = get_context()
+        agenda = context.root.get_resource('config/agenda')
         return [ {'name': str(calendar.abspath), 'value': calendar.get_title(),
                   'color': calendar.get_value('color')}
-                 for calendar in agenda.search_resources(cls=Calendar)]
+                 for calendar in agenda.search_resources(cls=Calendar)
+                    if context.user.name
+                        not in calendar.get_value('hidden_for_users')]
+
+#####################################
+# Calendar views
+#####################################
+
+class AddButton(Button):
+
+    access = True
+    title = MSG(u'Create a new calendar...')
+    name = 'add'
+    css = 'button-add'
+
+
+class UpdateCalendarVisibility(BrowseButton):
+
+    access = 'is_allowed_to_view'
+    css = 'button-ok'
+    name = 'update_calendar_visibility'
+    title = MSG(u'Update calendar visibility')
 
 
 
@@ -47,35 +71,101 @@ class Calendars_View(Folder_BrowseContent):
 
     depth = 1
 
+    styles = ['/ui/agenda/style.css']
+
+    schema = {'ids': String(multiple=True)}
+    query_schema = merge_dicts(Folder_BrowseContent.query_schema,
+                               sort_by=String(default='title'))
+
+    view_class_skin = 'fancybox'
     search_widgets = []
     search_schema = {}
 
-    table_actions = [RemoveButton]
+    table_actions = [UpdateCalendarVisibility, AddButton]
     table_columns = [
         ('checkbox', None),
-        ('icon', None),
+        ('color', MSG(u'Color'), None),
         ('title', MSG(u'Title')),
-        ('color', MSG(u'Color'))]
+        ('visible', MSG(u'Visible ?'), None),
+        ]
 
 
     base_classes = ('calendar',)
 
 
     def get_item_value(self, resource, context, item, column):
-        if column == 'title':
-            return item.get_title(), item.name
+        if column in ('checkbox', 'visible'):
+            hidden_for_users = item.get_value('hidden_for_users')
+            visible = context.user.name not in hidden_for_users
+            if column == 'checkbox':
+                return item.name, visible
+            return MSG(u'Yes') if visible else MSG(u'No')
         elif column == 'color':
             color = item.get_value('color')
-            data = '<span style="color:{color}">{color}</span>'
+            data = """
+              <div class="calendar-family-color"
+                style="background-color:{color}"/>"""
             return XMLParser(data.format(color=color))
+        elif column == 'title':
+            return item.get_title(), item.name
         proxy = super(Calendars_View, self)
         return proxy.get_item_value(resource, context, item, column)
+
+
+    def action_update_calendar_visibility(self, resource, context, form):
+        for calendar in self.get_items(resource, context).get_resources():
+            if calendar.name not in form['ids']:
+                hidden_for_users = calendar.get_value('hidden_for_users')
+                if context.user.name not in hidden_for_users:
+                    calendar.set_value('hidden_for_users', context.user.name)
+            else:
+                hidden_for_users = calendar.get_value('hidden_for_users')
+                if context.user.name in hidden_for_users:
+                    hidden_for_users.remove(context.user.name)
+                    calendar.set_value('hidden_for_users', hidden_for_users)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+    action_add_schema = {}
+    def action_add(self, resource, context, form):
+        return get_reference('./;new_resource?type=calendar')
+
+
+
+class Calendar_Edit(AutoEdit):
+
+    view_class_skin = 'fancybox'
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Save')),
+               Button(access='is_allowed_to_remove',
+                      name='remove', css='button-delete',
+                      title=MSG(u'Remove this calendar'))]
+
+    def action(self, resource, context, form):
+        # Check edit conflict
+        self.check_edit_conflict(resource, context, form)
+        if context.edit_conflict:
+            return
+        super(Calendar_Edit, self).action(resource, context, form)
+        return context.come_back(MSG_CHANGES_SAVED, goto='./;calendars')
+
+
+    def action_remove(self, resource, context, form):
+        # Remove resource
+        try:
+            resource.parent.del_resource(resource.name)
+        except ConsistencyError:
+            context.message = ERROR(u"Can't remove this calendar")
+            return
+        msg = MSG(u'This calendar has been removed')
+        return context.come_back(msg, goto='./;calendars')
 
 
 
 class Calendar_NewInstance(AutoAdd):
 
     automatic_resource_name = True
+    view_class_skin = 'fancybox'
 
     def action(self, resource, context, form):
         child = self.make_new_resource(resource, context, form)
@@ -86,6 +176,11 @@ class Calendar_NewInstance(AutoAdd):
 
 
 
+#####################################
+# Calendar
+# A calendar contains events
+#####################################
+
 class Calendar(DBResource):
 
     class_id = 'calendar'
@@ -94,14 +189,17 @@ class Calendar(DBResource):
 
     # Fields
     fields = DBResource.fields + ['color', 'owner']
+    hidden_for_users = Char_Field(multiple=True)
     color = Char_Field(title=MSG(u'Color'))
     owner = Owner_Field
 
     def get_documents_type(self):
+        # Import from ikaaro.agenda
+        from event import Event
         return [Event]
 
     # Views
     _fields = ['title', 'color']
     new_instance = Calendar_NewInstance(fields=_fields)
-    edit = AutoEdit(fields=_fields)
+    edit = Calendar_Edit(fields=_fields)
 
