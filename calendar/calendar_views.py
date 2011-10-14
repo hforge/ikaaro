@@ -297,8 +297,8 @@ class CalendarView(STLView):
     query_schema = {'start': Date}
 
     styles = ['/ui/calendar/style.css',
-              '/ui/fancybox/jquery.fancybox-1.3.4.css']
-    scripts = ['/ui/fancybox/jquery.fancybox-1.3.4.pack.js',
+              '/ui/js/fancybox/jquery.fancybox-1.3.4.css']
+    scripts = ['/ui/js/fancybox/jquery.fancybox-1.3.4.pack.js',
                '/ui/calendar/javascript.js']
 
     template = '/ui/calendar/calendar_view.xml'
