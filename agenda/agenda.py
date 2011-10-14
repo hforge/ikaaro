@@ -35,6 +35,8 @@ from ikaaro.fields import Char_Field, SelectDays_Field
 from ikaaro.folder import Folder
 from agenda_views import Calendar_Export, Calendar_ExportForm
 from agenda_views import Calendar_Import, TimetablesForm
+from agenda_views import MonthlyView, WeeklyView, DailyView
+from agenda_views import Calendar_NewEvent
 from event import Event
 from family import Calendar_Family, Families_View
 
@@ -97,7 +99,8 @@ class ConfigAgenda(Folder):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['edit_timetables', 'edit_working_days', 'families',
+    class_views = ['monthly_view', 'weekly_view', 'daily_view',
+                   'edit_timetables', 'edit_working_days', 'families',
                    'new_family', 'import_', 'export_form']
 
     # Configuration
@@ -248,6 +251,10 @@ class ConfigAgenda(Folder):
             i += 1
 
     # Views
+    monthly_view = MonthlyView()
+    weekly_view = WeeklyView()
+    daily_view = DailyView()
+    new_event = Calendar_NewEvent()
     edit_timetables = TimetablesForm()
     edit_working_days = AutoEdit(title=MSG(u'Working days'),
         fields=['working_days'])
@@ -256,3 +263,4 @@ class ConfigAgenda(Folder):
     export_form = Calendar_ExportForm()
     families = Families_View()
     new_family = NewResource_Local(title=MSG(u'Add family'))
+

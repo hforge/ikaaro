@@ -22,12 +22,9 @@ from itools.core import get_abspath
 from ikaaro.config import Configuration
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from ikaaro.root import Root
 
 # Import from ikaaro.agenda
 from agenda import ConfigAgenda
-from agenda_views import MonthlyView, WeeklyView, DailyView
-from agenda_views import Calendar_NewEvent
 from event import Event, EventModel, Event_Edit, Event_NewInstance
 from event import Event_Render
 from family import Calendar_Family, Calendar_FamiliesEnumerate
@@ -46,10 +43,6 @@ __all__ = [
 register_document_type(Event)
 register_skin('agenda', get_abspath('ui'))
 Configuration.register_plugin(ConfigAgenda)
-Root.monthly_view = MonthlyView()
-Root.weekly_view = WeeklyView()
-Root.daily_view = DailyView()
-Root.new_event = Calendar_NewEvent()
 
 # Silent pyflakes
 Event_Render, Event_Edit, Event_NewInstance
