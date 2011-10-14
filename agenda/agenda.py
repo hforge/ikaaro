@@ -33,8 +33,8 @@ from ikaaro.autoedit import AutoEdit
 from ikaaro.config_common import NewResource_Local
 from ikaaro.fields import Char_Field, SelectDays_Field
 from ikaaro.folder import Folder
-from calendar_views import Calendar_Export, Calendar_ExportForm
-from calendar_views import Calendar_Import, TimetablesForm
+from agenda_views import Calendar_Export, Calendar_ExportForm
+from agenda_views import Calendar_Import, TimetablesForm
 from event import Event
 from family import Calendar_Family, Families_View
 
@@ -89,11 +89,11 @@ class Timetables(String):
 
 
 
-class ConfigCalendar(Folder):
+class ConfigAgenda(Folder):
 
-    class_id = 'calendar'
+    class_id = 'agenda'
     class_version = '20110606'
-    class_title = MSG(u'Calendar')
+    class_title = MSG(u'Agenda')
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
@@ -101,7 +101,7 @@ class ConfigCalendar(Folder):
                    'new_family', 'import_', 'export_form']
 
     # Configuration
-    config_name = 'calendar'
+    config_name = 'agenda'
     config_group = 'content'
 
 
@@ -129,7 +129,7 @@ class ConfigCalendar(Folder):
 
 
     def init_resource(self, **kw):
-        super(ConfigCalendar, self).init_resource(**kw)
+        super(ConfigAgenda, self).init_resource(**kw)
         # Create default family
         kw = {'title': {'en': u'My events'}, 'color': '#AC81A1'}
         self.make_resource(None, Calendar_Family, **kw)

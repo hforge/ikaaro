@@ -86,8 +86,8 @@ class TimetablesForm(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    template = '/ui/calendar/edit_timetables.xml'
-    styles = ['/ui/calendar/style.css']
+    template = '/ui/agenda/edit_timetables.xml'
+    styles = ['/ui/agenda/style.css']
 
 
     def get_namespace(self, resource, context):
@@ -184,7 +184,7 @@ class TimetablesForm(STLView):
 
 class CalendarSelectorTemplate(CMSTemplate):
 
-    template = '/ui/calendar/cal_selector.xml'
+    template = '/ui/agenda/cal_selector.xml'
     c_date = None
     method = None
 
@@ -282,7 +282,7 @@ class CalendarSelectorTemplate(CMSTemplate):
 
 class CalendarCaptionTemplate(CMSTemplate):
 
-    template = '/ui/calendar/calendar_caption.xml'
+    template = '/ui/agenda/calendar_caption.xml'
 
     def families(self):
         return Calendar_FamiliesEnumerate.get_options()
@@ -296,12 +296,12 @@ class CalendarView(STLView):
 
     query_schema = {'start': Date}
 
-    styles = ['/ui/calendar/style.css',
+    styles = ['/ui/agenda/style.css',
               '/ui/js/fancybox/jquery.fancybox-1.3.4.css']
     scripts = ['/ui/js/fancybox/jquery.fancybox-1.3.4.pack.js',
-               '/ui/calendar/javascript.js']
+               '/ui/agenda/javascript.js']
 
-    template = '/ui/calendar/calendar_view.xml'
+    template = '/ui/agenda/calendar_view.xml'
     calendar_template = None
     calendar_selector = CalendarSelectorTemplate
     calendar_caption = CalendarCaptionTemplate
@@ -384,7 +384,7 @@ class CalendarView(STLView):
 
 
     def get_config_calendar(self, resource):
-        return resource.get_resource('/config/calendar')
+        return resource.get_resource('/config/agenda')
 
 
     def get_namespace(self, resource, context):
@@ -411,7 +411,7 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    calendar_template = '/ui/calendar/monthly_view.xml'
+    calendar_template = '/ui/agenda/monthly_view.xml'
 
     ndays = 7
     method = 'monthly_view'
@@ -476,7 +476,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    calendar_template = '/ui/calendar/weekly_view.xml'
+    calendar_template = '/ui/agenda/weekly_view.xml'
 
     css_id = 'cal-weekly-view'
     method = 'weekly_view'
@@ -592,7 +592,7 @@ class Calendar_Import(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Import')
-    template = '/ui/calendar/upload.xml'
+    template = '/ui/agenda/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True)}
 
@@ -623,7 +623,7 @@ class Calendar_ExportForm(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Export')
-    template = '/ui/calendar/export_form.xml'
+    template = '/ui/agenda/export_form.xml'
 
     def get_namespace(self, resource, context):
         return {'filename': '%s.ics' % resource.name}

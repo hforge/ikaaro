@@ -34,7 +34,7 @@ from ikaaro.resource_ import DBResource
 class Calendar_FamiliesEnumerate(Enumerate):
 
     def get_options(self):
-        calendar = get_context().root.get_resource('config/calendar')
+        calendar = get_context().root.get_resource('config/agenda')
         return [ {'name': str(family.abspath), 'value': family.get_title(),
                   'color': family.get_value('color')}
                  for family in calendar.search_resources(cls=Calendar_Family)]

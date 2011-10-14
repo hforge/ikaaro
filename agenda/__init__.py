@@ -24,10 +24,10 @@ from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
 from ikaaro.root import Root
 
-# Import from ikaaro.calendar
-from calendar_ import ConfigCalendar
-from calendar_views import MonthlyView, WeeklyView, DailyView
-from calendar_views import Calendar_NewEvent
+# Import from ikaaro.agenda
+from agenda import ConfigAgenda
+from agenda_views import MonthlyView, WeeklyView, DailyView
+from agenda_views import Calendar_NewEvent
 from event import Event, EventModel, Event_Edit, Event_NewInstance
 from event import Event_Render
 from family import Calendar_Family, Calendar_FamiliesEnumerate
@@ -44,8 +44,8 @@ __all__ = [
 
 # Register
 register_document_type(Event)
-register_skin('calendar', get_abspath('ui'))
-Configuration.register_plugin(ConfigCalendar)
+register_skin('agenda', get_abspath('ui'))
+Configuration.register_plugin(ConfigAgenda)
 Root.monthly_view = MonthlyView()
 Root.weekly_view = WeeklyView()
 Root.daily_view = DailyView()

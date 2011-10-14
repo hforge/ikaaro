@@ -170,7 +170,7 @@ class RRuleInterval_Field(Select_Field):
 
 class Event_Edit(AutoEdit):
 
-    styles = ['/ui/calendar/style.css']
+    styles = ['/ui/agenda/style.css']
     view_class_skin = 'fancybox'
 
     # Fields
@@ -182,7 +182,7 @@ class Event_Edit(AutoEdit):
 
     def get_scripts(self, context):
         scripts = super(Event_Edit, self).get_scripts(context)
-        scripts.append('/ui/calendar/javascript.js')
+        scripts.append('/ui/agenda/javascript.js')
         return scripts
 
 
@@ -270,7 +270,7 @@ class Event_NewInstance(AutoAdd):
 
     def get_scripts(self, context):
         scripts = super(Event_NewInstance, self).get_scripts(context)
-        scripts.append('/ui/calendar/javascript.js')
+        scripts.append('/ui/agenda/javascript.js')
         return scripts
 
 
@@ -375,7 +375,7 @@ class EventDatetime_Field(Datetime_Field):
 
 class Event_Render(CMSTemplate):
 
-    template = '/ui/calendar/event_render.xml'
+    template = '/ui/agenda/event_render.xml'
 
     event = None
     day = None
@@ -634,7 +634,7 @@ class Event(Content):
 
 
     def get_config_calendar(self):
-        return self.get_resource('/config/calendar')
+        return self.get_resource('/config/agenda')
 
 
     # Views
