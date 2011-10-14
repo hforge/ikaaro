@@ -59,7 +59,7 @@ class CompositeView(STLView):
     def get_scripts(self, context):
         scripts = []
         for view in self.subviews:
-            for script in get_view_scripts(view):
+            for script in get_view_scripts(view, context):
                 if script not in scripts:
                     scripts.append(script)
 
