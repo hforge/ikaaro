@@ -58,7 +58,7 @@ class CompositeView(STLView):
 
     def get_scripts(self, context):
         scripts = []
-        for view in self.subviews:
+        for view in self.allowed_subviews:
             for script in get_view_scripts(view, context):
                 if script not in scripts:
                     scripts.append(script)
@@ -68,7 +68,7 @@ class CompositeView(STLView):
 
     def get_query_schema(self):
         schema = {}
-        for view in self.subviews:
+        for view in self.allowed_subviews:
             view_schema = view.get_query_schema()
             for key in view_schema:
                 if key in schema:
@@ -78,16 +78,23 @@ class CompositeView(STLView):
         return schema
 
 
-    def get_allowed_subviews(self, resource, context):
+    @proto_lazy_property
+    def allowed_subviews(self):
+        resource = self.resource
+        context = self.context
+
+        views = []
         for view in self.subviews:
+            view = view(resource=resource, context=context) # bind
             if context.is_access_allowed(context.user, resource, view):
-                yield view
+                views.append(view)
+        return views
 
 
     def get_schema(self, resource, context):
         # Check for specific schema
         method_name = context.form_action
-        for view in self.subviews:
+        for view in self.allowed_subviews:
             if getattr(view, method_name, None):
                 schema = getattr(view, '%s_schema' % method_name, None)
                 if schema is not None:
@@ -105,7 +112,7 @@ class CompositeView(STLView):
         # Check subviews
         method_name = context.form_action
         method = None
-        for view in self.subviews:
+        for view in self.allowed_subviews:
             view_method = getattr(view, method_name, None)
             if method and view_method:
                 msg = 'method "%s" should not be defined in several subviews'
@@ -116,8 +123,11 @@ class CompositeView(STLView):
         return method
 
 
-    def get_subviews_to_show(self, resource, context):
-        subviews = self.get_allowed_subviews(resource, context)
+    @proto_lazy_property
+    def subviews_to_show(self):
+        context = self.context
+        resource = self.resource
+        subviews = self.allowed_subviews
 
         # Case 1. GET
         if context.method == 'GET':
@@ -138,8 +148,7 @@ class CompositeView(STLView):
 
 
     def get_namespace(self, resource, context):
-        subviews = self.get_subviews_to_show(resource, context)
-        return {'views': [ x[0] for x in subviews ]}
+        return {'views': [ x[0] for x in self.subviews_to_show ]}
 
 
 
