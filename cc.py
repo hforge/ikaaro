@@ -586,9 +586,7 @@ class Observable(object):
 
         # Create it if needed
         if user is None:
-            # Add the user
-            users = root.get_resource('users')
-            user = users.set_user(email, password=None)
+            user = root.make_user(email, password=None)
             # Mark it as new
             key = generate_password(30)
             user.set_property('user_state', 'pending', key=key)
