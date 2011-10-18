@@ -225,3 +225,8 @@ function attachmentSelected(file)
     (type == '') ? $("#file-type").html('Type: Unknown') : $("#file-type").html('Type: ' + type);
   }
 }
+
+/* Add a parameter to url */
+function add_parameter_to_url(url, param){
+    return url + (url.split('?')[1] ? '&':'?') + param;
+}

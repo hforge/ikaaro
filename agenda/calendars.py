@@ -18,7 +18,6 @@
 from itools.core import merge_dicts
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.uri import get_reference
 from itools.web import ERROR, get_context
 from itools.xml import XMLParser
 
@@ -77,7 +76,7 @@ class Calendars_View(Folder_BrowseContent):
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                sort_by=String(default='title'))
 
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True
     search_widgets = []
     search_schema = {}
 
@@ -129,13 +128,14 @@ class Calendars_View(Folder_BrowseContent):
 
     action_add_schema = {}
     def action_add(self, resource, context, form):
-        return get_reference('./;new_resource?type=calendar')
+        goto = './;new_resource?type=calendar'
+        return context.come_back(None, goto=goto)
 
 
 
 class Calendar_Edit(AutoEdit):
 
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True
     actions = [Button(access=True, css='button-ok', title=MSG(u'Save')),
                Button(access='is_allowed_to_remove',
                       name='remove', css='button-delete',
@@ -165,7 +165,7 @@ class Calendar_Edit(AutoEdit):
 class Calendar_NewInstance(AutoAdd):
 
     automatic_resource_name = True
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True
 
     def action(self, resource, context, form):
         child = self.make_new_resource(resource, context, form)

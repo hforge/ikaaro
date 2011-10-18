@@ -39,7 +39,7 @@ function open_in_fancybox(url){
   $.fancybox({'type': 'iframe',
               'transitionIn': 'none',
               'transitionOut': 'none',
-              'href': url,
+              'href': add_parameter_to_url(url, 'fancybox=1'),
               'overlayColor': '#333',
               'overlayOpacity': 0.8,
               'onClosed': function() {window.location.reload();},

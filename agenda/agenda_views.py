@@ -647,4 +647,4 @@ class Calendar_NewEvent(NewResource_Local):
     title = MSG(u'Create a new event')
 
     document_types = (Event,)
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True

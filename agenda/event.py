@@ -171,7 +171,7 @@ class RRuleInterval_Field(Select_Field):
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/agenda/style.css']
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True
 
     # Fields
     fields = AutoEdit.fields + ['owner', 'calendar', 'dtstart', 'dtend',
@@ -259,7 +259,7 @@ class Event_Edit(AutoEdit):
 
 class Event_NewInstance(AutoAdd):
 
-    view_class_skin = 'fancybox'
+    can_be_open_in_fancybox = True
 
     # Fields
     fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend', 'status',

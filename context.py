@@ -18,7 +18,7 @@
 from os.path import isdir
 
 # Import from itools
-from itools.core import proto_lazy_property
+from itools.core import freeze, proto_lazy_property
 from itools.fs import lfs
 from itools.handlers import ro_database
 from itools.i18n import has_language
@@ -31,6 +31,14 @@ class CMSContext(Context):
     set_mtime = True
     message = None
     content_type = None
+
+    def come_back(self, message, goto=None, keep=freeze([]), **kw):
+        goto = super(CMSContext, self).come_back(message, goto, keep, **kw)
+        # Keep fancybox
+        if 'fancybox' in self.uri.query:
+            goto.query['fancybox'] = '1'
+        # Ok
+        return goto
 
 
     def find_site_root(self):

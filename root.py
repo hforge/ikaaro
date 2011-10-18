@@ -192,9 +192,10 @@ class Root(Folder):
 
 
     def get_skin(self, context):
-        # The view can override class skin
-        if hasattr(context.view, 'view_class_skin'):
-            return skin_registry[context.view.view_class_skin]
+        # Open in fancybox ?
+        if (getattr(context.view, 'can_be_open_in_fancybox', False)
+            and 'fancybox' in context.uri.query):
+            return skin_registry['fancybox']
         # Back-Office
         hostname = context.uri.authority
         if hostname[:3] in ['bo.', 'bo-']:
