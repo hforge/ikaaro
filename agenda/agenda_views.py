@@ -27,9 +27,9 @@ from itools.core import proto_lazy_property
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
-from itools.web import BaseView, STLView, INFO, ERROR
-from itools.database import AndQuery, PhraseQuery
+from itools.database import AndQuery, PhraseQuery, NotQuery
 from itools.stl import stl
+from itools.web import BaseView, STLView, INFO, ERROR, get_context
 
 # Import from ikaaro
 from calendars import Calendars_Enumerate
@@ -377,6 +377,13 @@ class CalendarView(STLView):
         query.append(PhraseQuery('is_event', True))
         if day:
             query.append(PhraseQuery('dates', day))
+
+        # Do not show hidden calendars
+        context = get_context()
+        for calendar in context.search(format='calendar').get_resources():
+            if context.user.name in calendar.get_value('hidden_for_users'):
+                abspath = str(calendar.get_abspath())
+                query.append(NotQuery(PhraseQuery('calendar', abspath)))
 
         # Ok
         search = self.context.search(query)

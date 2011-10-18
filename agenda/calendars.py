@@ -27,19 +27,19 @@ from ikaaro.autoedit import AutoEdit
 from ikaaro.buttons import Button, BrowseButton
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.fields import Char_Field, Color_Field, Owner_Field
-from ikaaro.folder_views import Folder_BrowseContent
 from ikaaro.messages import MSG_NEW_RESOURCE, MSG_CHANGES_SAVED
 from ikaaro.resource_ import DBResource
+from ikaaro.views import BrowseForm
 
 
 class Calendars_Enumerate(Enumerate):
 
     def get_options(self):
         context = get_context()
-        agenda = context.root.get_resource('config/agenda')
+        calendars = context.search(format=Calendar.class_id).get_resources()
         return [ {'name': str(calendar.abspath), 'value': calendar.get_title(),
                   'color': calendar.get_value('color')}
-                 for calendar in agenda.search_resources(cls=Calendar)
+                 for calendar in calendars
                     if context.user.name
                         not in calendar.get_value('hidden_for_users')]
 
@@ -64,16 +64,15 @@ class UpdateCalendarVisibility(BrowseButton):
 
 
 
-class Calendars_View(Folder_BrowseContent):
+class Calendars_View(BrowseForm):
 
     title = MSG(u'Calendars')
-
-    depth = 1
+    access = 'is_allowed_to_view'
 
     styles = ['/ui/agenda/style.css']
 
     schema = {'ids': String(multiple=True)}
-    query_schema = merge_dicts(Folder_BrowseContent.query_schema,
+    query_schema = merge_dicts(BrowseForm.query_schema,
                                sort_by=String(default='title'))
 
     can_be_open_in_fancybox = True
@@ -89,7 +88,8 @@ class Calendars_View(Folder_BrowseContent):
         ]
 
 
-    base_classes = ('calendar',)
+    def get_items(self, resource, context):
+        return context.search(format='calendar')
 
 
     def get_item_value(self, resource, context, item, column):
@@ -97,7 +97,7 @@ class Calendars_View(Folder_BrowseContent):
             hidden_for_users = item.get_value('hidden_for_users')
             visible = context.user.name not in hidden_for_users
             if column == 'checkbox':
-                return item.name, visible
+                return item.get_abspath(), visible
             return MSG(u'Yes') if visible else MSG(u'No')
         elif column == 'color':
             color = item.get_value('color')
@@ -106,14 +106,14 @@ class Calendars_View(Folder_BrowseContent):
                 style="background-color:{color}"/>"""
             return XMLParser(data.format(color=color))
         elif column == 'title':
-            return item.get_title(), item.name
+            return item.get_title(), item.get_abspath()
         proxy = super(Calendars_View, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
     def action_update_calendar_visibility(self, resource, context, form):
         for calendar in self.get_items(resource, context).get_resources():
-            if calendar.name not in form['ids']:
+            if str(calendar.get_abspath()) not in form['ids']:
                 hidden_for_users = calendar.get_value('hidden_for_users')
                 if context.user.name not in hidden_for_users:
                     calendar.set_value('hidden_for_users', context.user.name)
@@ -124,6 +124,18 @@ class Calendars_View(Folder_BrowseContent):
                     calendar.set_value('hidden_for_users', hidden_for_users)
         # Ok
         context.message = MSG_CHANGES_SAVED
+
+
+    def sort_and_batch(self, resource, context, results):
+        # TODO BrowseForm should be able to sort items ?
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+        items = results.get_documents(sort_by=sort_by, reverse=reverse,
+                                      start=start, size=size)
+        database = resource.database
+        return [ database.get_resource(x.abspath) for x in items ]
 
 
     action_add_schema = {}
@@ -189,17 +201,12 @@ class Calendar(DBResource):
 
     # Fields
     fields = DBResource.fields + ['color', 'owner']
+    title = DBResource.title(required=True)
     hidden_for_users = Char_Field(multiple=True)
     color = Color_Field(title=MSG(u'Color'), default='#0467BA', required=True)
     owner = Owner_Field
-
-    def get_documents_type(self):
-        # Import from ikaaro.agenda
-        from event import Event
-        return [Event]
 
     # Views
     _fields = ['title', 'color']
     new_instance = Calendar_NewInstance(fields=_fields)
     edit = Calendar_Edit(fields=_fields)
-

@@ -25,16 +25,19 @@ from ikaaro.skins import register_skin
 
 # Import from ikaaro.agenda
 from agenda import ConfigAgenda
+from agenda_views import DailyView, MonthlyView, WeeklyView
 from event import Event, EventModel, Event_Edit, Event_NewInstance
 from event import Event_Render
-from calendars import Calendar, Calendars_Enumerate
+from calendars import Calendar, Calendars_Enumerate, Calendars_View
 
 
 __all__ = [
     'Calendar',
     'Calendars_Enumerate',
+    'Calendars_View',
     'Event',
     'EventModel',
+    'DailyView',
     'MonthlyView',
     'WeeklyView']
 
