@@ -307,6 +307,8 @@ class DBResource(Resource):
 
     def set_value(self, name, value, language=None, **kw):
         field = self.get_field(name)
+        if field is None:
+            raise ValueError, 'Field %s do not exist' % name
         return field.set_value(self, name, value, language, **kw)
 
 
