@@ -29,9 +29,8 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
-from ikaaro.autoedit import AutoEdit
 from ikaaro.config_common import NewResource_Local
-from ikaaro.fields import Char_Field, SelectDays_Field
+from ikaaro.fields import Char_Field
 from ikaaro.folder import Folder
 from agenda_views import Calendar_Export, Calendar_ExportForm
 from agenda_views import Calendar_Import, TimetablesForm
@@ -99,16 +98,16 @@ class ConfigAgenda(Folder):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/calendar.png'
     class_icon48 = 'icons/48x48/calendar.png'
-    class_views = ['monthly_view', 'weekly_view', 'daily_view',
-                   'edit_timetables', 'edit_working_days',
-                   'new_calendar', 'import_', 'export_form']
+    class_views = [
+        'monthly_view', 'weekly_view', 'daily_view',
+        'edit_timetables', 'new_calendar', 'import_', 'export_form']
 
     # Configuration
     config_name = 'agenda'
     config_group = 'content'
 
 
-    fields = Folder.fields + ['timetables', 'working_days']
+    fields = Folder.fields + ['timetables']
     timetables = Char_Field(datatype=Timetables, multiple=True,
         title=MSG(u'Timetables'))
     timetables_default = [
@@ -126,9 +125,6 @@ class ConfigAgenda(Folder):
         (time(18,0), time(19,0)),
         (time(19,0), time(20,0)),
         (time(20,0), time(21,0))]
-    working_days_default = [str(x) for x in range(1, 6)]
-    working_days = SelectDays_Field(multiple=True, title=MSG(u'Working days'),
-        default=working_days_default, indexed=True, stored=True)
 
 
     def init_resource(self, **kw):
@@ -151,20 +147,6 @@ class ConfigAgenda(Folder):
 
         # From class value
         return self.timetables_default
-
-
-    def get_working_days(self):
-        """Build a list of working days represented as a list.
-        Data are taken from metadata or from class value.
-
-        Example: ['1', '2', '3', '4', '5'] # '1' is Monday
-        """
-        working_days = self.get_value('working_days')
-        if working_days:
-            return working_days
-
-        # From class value
-        return self.working_days_default
 
 
     def get_document_types(self):
@@ -256,8 +238,6 @@ class ConfigAgenda(Folder):
     daily_view = DailyView()
     new_event = Calendar_NewEvent()
     edit_timetables = TimetablesForm()
-    edit_working_days = AutoEdit(title=MSG(u'Working days'),
-        fields=['working_days'])
     export = Calendar_Export()
     import_ = Calendar_Import()
     export_form = Calendar_ExportForm()

@@ -52,8 +52,8 @@ function open_in_fancybox(url){
 
 function update_rrule_parameters(){
   value = $("#rrule").val();
-  /* Hide parameter "interval" on empty value and working_days */
-  if (value == "" || value == "on_working_days" ){
+  /* Hide parameter "interval" on empty value */
+  if (value == "") {
       /* Hide parameters fields */
       $(".block-widget-rrule_interval").hide();
   }

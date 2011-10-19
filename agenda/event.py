@@ -51,12 +51,6 @@ MAX_DELTA = timedelta(3650) # we cannot index an infinite number of values
 def next_day(x, delta=timedelta(1)):
     return x + delta
 
-def next_working_day(x, working_days):
-    x = next_day(x)
-    if str(x.isoweekday()) in working_days:
-        return x
-    return next_working_day(x, working_days)
-
 def next_week(x, delta=timedelta(7)):
     return x + delta
 
@@ -77,7 +71,6 @@ def next_year(x):
 rrules = {
     'daily': next_day,
     'weekly': next_week,
-    'on_working_days': next_working_day,
     'monthly': next_month,
     'yearly': next_year}
 
@@ -102,7 +95,6 @@ class RRuleDataType(Enumerate):
     options = [
         {'name': 'daily', 'value': MSG(u'Daily')},
         {'name': 'weekly', 'value': MSG(u'Weekly')},
-        {'name': 'on_working_days', 'value': MSG(u'On working days')},
         {'name': 'monthly', 'value': MSG(u'Monthly')},
         {'name': 'yearly', 'value': MSG(u'Yearly')}]
 
@@ -291,8 +283,7 @@ class Event_Edit(AutoEdit):
                 interval = form.get('rrule_interval', None)
                 byday = form.get('rrule_byday', None)
                 kw = {}
-                if value != 'working_days':
-                    kw['interval'] = interval
+                kw['interval'] = interval
                 if value == 'weekly' and byday:
                     bydays = []
                     for v in byday:
@@ -365,8 +356,7 @@ class Event_NewInstance(AutoAdd):
                 interval = form.get('rrule_interval', None)
                 byday = form.get('rrule_byday', None)
                 kw = {}
-                if value != 'working_days':
-                    kw['interval'] = interval
+                kw['interval'] = interval
                 if value == 'weekly' and byday:
                     bydays = []
                     for v in byday:
@@ -489,8 +479,6 @@ class Event(Content):
             rrule_interval = int(rrule.get_parameter('interval') or 1)
             rrule_byday = rrule.get_parameter('byday') or []
             rrule = rrules.get(rrule_name)
-            if rrule_name == 'on_working_days':
-                working_days = self.get_config_calendar().get_working_days()
             if rrule:
                 # Check if "byday" param set
                 bydays = None
@@ -518,12 +506,9 @@ class Event(Content):
                     else:
                         f(start)
                     # Go to next date based on rrule value and interval
-                    if rrule_name == 'on_working_days':
-                        start = rrule(start, working_days)
-                    else:
-                        while interval > 0:
-                            start = rrule(start)
-                            interval -= 1
+                    while interval > 0:
+                        start = rrule(start)
+                        interval -= 1
 
         else:
             f(start)
