@@ -86,14 +86,16 @@ def build_timetables(start_time, end_time, interval):
 
 
 
-def get_current_date(value):
+def get_current_date(value, cls_date=None):
     """Get date as a date object from string value.
     By default, get today's date as a date object.
     """
     if value is None:
         return date.today()
+    if cls_date is None:
+        cls_date = Date
     try:
-        return Date.decode(value)
+        return cls_date.decode(value)
     except ValueError:
         return date.today()
 
@@ -249,26 +251,28 @@ class CalendarView(STLView):
         return week_number
 
 
-    def add_selector_ns(self, c_date, method, namespace):
+    def add_selector_ns(self, c_date, method, namespace, cls_date=None):
         """Set header used to navigate into time.
 
         """
+        if cls_date is None:
+            cls_date = Date
         week_number = '%0d' % self.get_week_number(c_date)
         current_week = MSG(u'Week {n}').gettext(n=week_number)
         tmp_date = c_date - timedelta(7)
-        previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_week = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         tmp_date = c_date + timedelta(7)
-        next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        next_week = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         # Month
         current_month = months[c_date.month].gettext()
         delta = 31
         if c_date.month != 1:
             kk, delta = monthrange(c_date.year, c_date.month - 1)
         tmp_date = c_date - timedelta(delta)
-        previous_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_month = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         kk, delta = monthrange(c_date.year, c_date.month)
         tmp_date = c_date + timedelta(delta)
-        next_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        next_month = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         # Year
         date_before = date(c_date.year, 2, 28)
         date_after = date(c_date.year, 3, 1)
@@ -277,13 +281,13 @@ class CalendarView(STLView):
           or (isleap(c_date.year) and c_date > date_before):
             delta = 366
         tmp_date = c_date - timedelta(delta)
-        previous_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_year = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         delta = 365
         if (isleap(c_date.year) and c_date <= date_before) \
           or (isleap(c_date.year +1) and c_date >= date_after):
             delta = 366
         tmp_date = c_date + timedelta(delta)
-        next_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        next_year = ";%s?date=%s" % (method, cls_date.encode(tmp_date))
         # Set value into namespace
         namespace['current_week'] = current_week
         namespace['previous_week'] = previous_week
@@ -296,7 +300,7 @@ class CalendarView(STLView):
         namespace['next_year'] = next_year
         # Add today link
         tmp_date = date.today()
-        namespace['today'] = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        namespace['today'] = ";%s?date=%s" %(method, cls_date.encode(tmp_date))
         return namespace
 
 
