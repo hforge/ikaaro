@@ -59,43 +59,31 @@ msgid "   :ignore-missing-pages: no"
 msgstr ""
 
 #: ../wiki/folder_views.py:175
-#, fuzzy
 msgid "   :language: %s"
-msgstr ":language:"
+msgstr ""
 
 #: ../wiki/folder_views.py:171
-#, fuzzy
 msgid "   :template: %s"
-msgstr "Choisissez un modèle&nbsp;:"
+msgstr ""
 
 #: ../wiki/folder_views.py:170
-#, fuzzy
 msgid "   :toc-depth: %s"
 msgstr ""
-"`page-de-couverture`_\n"
-"   :toc-depth:"
 
 #: ../wiki/folder_views.py:437
-#, fuzzy
 msgid ""
 " `%s`_\n"
 "%s\n"
 "%s"
 msgstr ""
-"\n"
-"\n"
-"%s\n"
-"\n"
-"%s"
 
 #: ../future/dressable.py:57
 msgid "\"%s\" is incorrect"
 msgstr "\"%s\" est incorrect"
 
 #: ../wiki/folder_views.py:452
-#, fuzzy
 msgid "\"%s\" is not an OpenDocument Text"
-msgstr "$filename n'est pas un texte OpenDocument"
+msgstr "\"%s\" n'est pas un texte OpenDocument"
 
 #: ../tracker/tracker_views.py:773
 msgid "#%s"
@@ -312,14 +300,11 @@ msgid "3"
 msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:53
-#, fuzzy
 msgctxt "pre"
 msgid ""
 "3\n"
 "   :template:"
 msgstr ""
-"3\n"
-"   :title:"
 
 #: ../wiki/ui/importodt.xml.en:131
 msgctxt "option"
@@ -331,7 +316,6 @@ msgid "5"
 msgstr "5"
 
 #: ../wiki/ui/importodt.xml.en:132
-#, fuzzy
 msgctxt "option"
 msgid "5"
 msgstr "5"
@@ -353,10 +337,9 @@ msgid ":comments:"
 msgstr ":comments:"
 
 #: ../wiki/ui/help_odt.xml.en:62
-#, fuzzy
 msgctxt "pre"
 msgid ":filename:"
-msgstr "Nom de fichier"
+msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:60
 msgctxt "pre"
@@ -541,12 +524,10 @@ msgstr ""
 "<g id='7'>Importer</g>"
 
 #: ../ui/revisions/browse_search.xml.en:17
-#, fuzzy
 msgctxt "label"
 msgid "<g id='4'>Comment</g><x id='5'/>  <x id='6'/>  <g id='7'>Search</g>"
 msgstr ""
-"<g id='4'>Parcourir</g>  <g id='5'>Lien Externe</g>  <g id='6'>Insérer</g>  "
-"<g id='7'>Importer</g>"
+"<g id='4'>Commentaire</g><x id='5'>  <x id='6'/>  <g id='7'>Rechercher</g>"
 
 #: ../calendar/ui/weekly_view.xml.en:18 ../calendar/ui/monthly_view.xml.en:18
 msgctxt "link"
@@ -554,10 +535,9 @@ msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 
 #: ../wiki/ui/edit.xml.en:199
-#, fuzzy
 msgctxt "button"
 msgid "<g id='47'>Save</g>  <g id='48'>Save &amp; View</g>"
-msgstr "<g id='44'>Sauvegarder</g>  <g id='45'>Sauvegarder &amp; voir</g>"
+msgstr "<g id='47'>Sauvegarder</g>  <g id='48'>Sauvegarder &amp; voir</g>"
 
 #: ../tracker/ui/export_to_csv.xml.en:17
 msgctxt "label"
@@ -896,10 +876,9 @@ msgid "Author"
 msgstr "Auteur"
 
 #: ../ui/revisions/browse_search.xml.en:12
-#, fuzzy
 msgctxt "label"
 msgid "Author's mail"
-msgstr "Auteur"
+msgstr "Email de l'auteur"
 
 #: ../ui/folder/browse_image.xml.en:38 ../ui/binary/Image_view.xml.en:15
 msgctxt "title attribute"
@@ -969,10 +948,9 @@ msgid "Browse and insert an Image from the workspace"
 msgstr "Parcourir l'application pour sélectionner une image&nbsp;:"
 
 #: ../wiki/ui/importodt.xml.en:43
-#, fuzzy
 msgctxt "heading"
 msgid "Browse and insert an ODT from the workspace"
-msgstr "Parcourir l'application pour sélectionner une image&nbsp;:"
+msgstr "Parcourir l'application pour sélectionner un ODT"
 
 #: ../ui/html/addlink.xml.en:43
 msgctxt "heading"
@@ -1176,10 +1154,9 @@ msgid "Comments..."
 msgstr "Commentaires..."
 
 #: ../wiki/ui/importodt.xml.en:107
-#, fuzzy
 msgctxt "label"
 msgid "Comments:"
-msgstr "Commentaire&nbsp;:"
+msgstr "Commentaires&nbsp;:"
 
 #: ../revisions_views.py:135
 msgid "Commit Log"
@@ -1397,10 +1374,9 @@ msgid "Document Management."
 msgstr "Gestion de documents."
 
 #: ../wiki/ui/importodt.xml.en:96
-#, fuzzy
 msgctxt "heading"
 msgid "Document metadata:"
-msgstr "Gestion de documents."
+msgstr "Métadonnées du document :"
 
 #: ../access.py:77
 msgid "Domain"
@@ -1411,10 +1387,9 @@ msgid "Download"
 msgstr "Télécharger"
 
 #: ../ui/file/externaledit.xml.en:13
-#, fuzzy
 msgctxt "li"
 msgid "Download <g id='2'>restedit</g>"
-msgstr "Consultez les <g id='9'>crédits</g>&nbsp;;"
+msgstr "Télécharger <g id='2'>restedit</g>"
 
 #: ../future/dressable.py:145
 msgid "Dressable"
@@ -1855,28 +1830,24 @@ msgid "Heading 3"
 msgstr "Titre 3"
 
 #: ../wiki/ui/edit.xml.en:264
-#, fuzzy
 msgctxt "span"
 msgid "Heading 4"
-msgstr "Titre 1"
+msgstr "Titre 4"
 
 #: ../wiki/ui/edit.xml.en:264
-#, fuzzy
 msgctxt "title attribute"
 msgid "Heading 4"
-msgstr "Titre 1"
+msgstr "Titre 4"
 
 #: ../wiki/ui/edit.xml.en:272
-#, fuzzy
 msgctxt "span"
 msgid "Heading 5"
-msgstr "Titre 1"
+msgstr "Titre 5"
 
 #: ../wiki/ui/edit.xml.en:272
-#, fuzzy
 msgctxt "title attribute"
 msgid "Heading 5"
-msgstr "Titre 1"
+msgstr "Titre 5"
 
 #: ../wiki/page_views.py:698
 msgid "Help"
@@ -1941,16 +1912,14 @@ msgid "Image"
 msgstr "Image"
 
 #: ../wiki/ui/importodt.xml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "Import ODT"
-msgstr "Export ODT"
+msgstr ""
 
 #: ../wiki/ui/edit.xml.en:164
-#, fuzzy
 msgctxt "title attribute"
 msgid "Import ODT"
-msgstr "Export ODT"
+msgstr ""
 
 #: ../ui/html/addimage.xml.en:7
 msgctxt "title"
@@ -2089,10 +2058,9 @@ msgid "Language settings"
 msgstr "Configuration des langues"
 
 #: ../wiki/ui/importodt.xml.en:117
-#, fuzzy
 msgctxt "label"
 msgid "Language:"
-msgstr "Langues"
+msgstr "Langue :"
 
 #: ../control_panel.py:279
 msgid "Languages"
@@ -3135,10 +3103,9 @@ msgid "Select Media"
 msgstr "Sélectionner le média"
 
 #: ../wiki/ui/importodt.xml.en:57
-#, fuzzy
 msgctxt "table cell"
 msgid "Select ODT"
-msgstr "Sélectionner le tableau"
+msgstr "Sélectionner le ODT"
 
 #: ../ui/html/addlink.xml.en:57
 msgctxt "table cell"
@@ -3274,10 +3241,9 @@ msgid "Subject..."
 msgstr "Sujet..."
 
 #: ../wiki/ui/importodt.xml.en:103
-#, fuzzy
 msgctxt "label"
 msgid "Subject:"
-msgstr ":subject:"
+msgstr "Sujet :"
 
 #: ../calendar/ui/edit_event.xml.en:21
 msgctxt "table cell"
@@ -3693,10 +3659,9 @@ msgid "Type (mandatory):"
 msgstr "Type (obligatoire)&nbsp;:"
 
 #: ../ui/html/addmedia.xml.en:89
-#, fuzzy
 msgctxt "heading"
 msgid "Type the URL of an external media"
-msgstr "Saisissez l'adresse URL d'une ressource"
+msgstr "Saisissez l'adresse URL d'un media externe"
 
 #: ../ui/html/addlink.xml.en:89
 msgctxt "heading"
@@ -3900,10 +3865,9 @@ msgid "Versions"
 msgstr "Versions"
 
 #: ../ui/website/new_instance.xml.en:30
-#, fuzzy
 msgctxt "label"
 msgid "Vhosts"
-msgstr "${vhosts}"
+msgstr ""
 
 #: ../file.py:230 ../file.py:231
 msgid "Video"
@@ -4266,7 +4230,6 @@ msgid "original"
 msgstr "originale"
 
 #: ../wiki/ui/help_odt.xml.en:62
-#, fuzzy
 msgctxt "pre"
 msgid ""
 "output.odt\n"
@@ -4277,11 +4240,13 @@ msgid ""
 "      - `another-subpage`_\n"
 "   - `a-last-page`_"
 msgstr ""
-"- `une-page`_\n"
-"   - `une-autre-page`_\n"
-"      - `une-sous-page`_\n"
-"      - `une autre-sous-page`_\n"
-"   - `une dernière-page`_"
+"output.odt\n"
+"\n"
+"   - `une-page`_\n"
+"      - `une-autre-page`_\n"
+"         - `une-sous-page`_\n"
+"         - `une autre-sous-page`_\n"
+"      - `une dernière-page`_"
 
 #: ../website_views.py:349
 msgid "pygobject"
