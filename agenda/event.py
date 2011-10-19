@@ -20,7 +20,6 @@
 from datetime import date, datetime, time, timedelta
 
 # Import from itools
-from itools.core import is_prototype
 from itools.database import register_field
 from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time
 from itools.gettext import MSG
@@ -36,7 +35,7 @@ from ikaaro.content import Content
 from ikaaro.enumerates import DaysOfWeek, IntegerRange
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
 from ikaaro.fields import Owner_Field, SelectDays_Field
-from ikaaro.fields import Boolean_Field, Field
+from ikaaro.fields import Boolean_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
@@ -227,9 +226,9 @@ class Event_Edit(AutoEdit):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = AutoEdit.fields + ['owner', 'calendar', 'dtstart', 'dtend',
+    fields = AutoEdit.fields + ['calendar', 'dtstart', 'dtend',
         'allday', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
-        'reminder', 'uid']
+        'reminder']
     allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
@@ -239,17 +238,6 @@ class Event_Edit(AutoEdit):
         scripts = super(Event_Edit, self).get_scripts(context)
         scripts.append('/ui/agenda/javascript.js')
         return scripts
-
-
-    def get_fields(self):
-        resource = self.context.resource
-        fields = super(Event_Edit, self).get_fields()
-        for name in fields:
-            field = self.get_field(resource, name)
-            if field is None or not is_prototype(field, Field):
-                field = resource.get_field(name)
-            if field is not None and not field.readonly:
-                yield name
 
 
     def get_namespace(self, resource, context):
@@ -329,9 +317,9 @@ class Event_NewInstance(AutoAdd):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend',
-        'allday', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
-        'reminder', 'uid']
+    fields = ['title', 'description', 'state', 'cc_list',
+        'calendar', 'dtstart', 'dtend', 'allday', 'status',
+        'rrule', 'rrule_interval', 'rrule_byday', 'reminder']
     allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
@@ -341,17 +329,6 @@ class Event_NewInstance(AutoAdd):
         scripts = super(Event_NewInstance, self).get_scripts(context)
         scripts.append('/ui/agenda/javascript.js')
         return scripts
-
-
-    def get_fields(self):
-        cls = self._resource_class
-        fields = super(Event_NewInstance, self).get_fields()
-        for name in fields:
-            field = self.get_field(name)
-            if field is None or not is_prototype(field, Field):
-                field = cls.get_field(name)
-            if field is not None and not field.readonly:
-                yield name
 
 
     def get_value(self, resource, context, name, datatype):
