@@ -184,6 +184,30 @@ class Image(File):
                    'backlinks', 'commit_log']
     class_handler = ImageHandler
 
+    def get_max_width(self):
+        # Auto-reduce width on init
+        return None
+
+
+    def get_max_height(self):
+        # Auto-reduce height on init
+        return None
+
+
+    def init_resource(self, body=None, filename=None, extension=None, **kw):
+        super(Image, self).init_resource(body=body, filename=filename,
+            extension=extension, **kw)
+        # Resize image at max size
+        max_width = self.get_max_width()
+        max_height = self.get_max_height()
+        if max_width or max_height:
+            handler = self.handler
+            xsize, ysize = handler.get_size()
+            thumb, format = handler.get_thumbnail(
+                min(xsize, max_width or xsize),
+                min(ysize, max_height or ysize))
+            handler.load_state_from_string(thumb)
+
     # Views
     thumb = Image_Thumbnail()
     view = Image_View()
