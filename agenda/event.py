@@ -227,7 +227,7 @@ class Event_Edit(AutoEdit):
 
     # Fields
     fields = AutoEdit.fields + ['calendar', 'dtstart', 'dtend',
-        'allday', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
+        'allday', 'place', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
         'reminder']
     allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
@@ -318,7 +318,7 @@ class Event_NewInstance(AutoAdd):
 
     # Fields
     fields = ['title', 'description', 'state', 'cc_list',
-        'calendar', 'dtstart', 'dtend', 'allday', 'status',
+        'calendar', 'dtstart', 'dtend', 'allday', 'place', 'status',
         'rrule', 'rrule_interval', 'rrule_byday', 'reminder']
     allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
@@ -447,12 +447,14 @@ class Event(Content):
 
     # Fields
     fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend',
-                               'status', 'rrule', 'reminder', 'uid']
+                               'place', 'status', 'rrule', 'reminder', 'uid']
+
     owner = Owner_Field
     calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
+    place = Char_Field(title=MSG(u'Where'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = RRule_Field(title=MSG(u'Recurrence'))
     reminder = Reminder_Field(title=MSG(u'Reminder'))
