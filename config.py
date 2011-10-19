@@ -45,7 +45,9 @@ class ServerConfig(ConfigFile):
         'profile-time': Boolean(default=False),
         'profile-space': Boolean(default=False),
         'index-text': Boolean(default=True),
-        'auth-cookie-expires': ExpireValue(default=timedelta(0))
+        'auth-cookie-expires': ExpireValue(default=timedelta(0)),
+        'max-width': Integer(default=None),
+        'max-height': Integer(default=None),
     }
 
 
