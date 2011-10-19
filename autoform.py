@@ -727,6 +727,13 @@ class AutoForm(STLView):
                 value = context.get_query_value(widget.name)
             else:
                 value = field_ns['value']
+                if issubclass(datatype, DateTime) and len(value) <=10:
+                    value_time = namespace.get('%s_time' % widget.name,
+                                               {'value': None})
+                    value_time = value_time['value']
+                    if value_time:
+                        value += 'T%s' % value_time
+
             # multilingual or monolingual
             field_ns['widgets'] = widgets_html = []
             if getattr(datatype, 'multilingual', False):
