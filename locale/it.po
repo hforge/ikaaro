@@ -6,15 +6,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2010-06-10 13:06+CET\n"
+"POT-Creation-Date: 2011-05-11 18:05+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Italian\n"
 "X-Poedit-Country: ITALY\n"
+
+#: ../wiki/folder_views.py:440
+msgid "\n"
+msgstr "\n"
 
 #: ../tracker/tracker_views.py:886
 msgid ""
@@ -31,9 +36,47 @@ msgid ""
 "      Optimize your website for better ranking in search engine results."
 msgstr ""
 
+#: ../wiki/folder_views.py:174
+msgid "   :%s: %s"
+msgstr ""
+
+#: ../wiki/folder_views.py:184
+msgid "   :filename: %s"
+msgstr ""
+
+#: ../wiki/folder_views.py:172
+msgid "   :ignore-missing-pages: no"
+msgstr ""
+
+#: ../wiki/folder_views.py:175
+#, fuzzy
+msgid "   :language: %s"
+msgstr "Linguaggio"
+
+#: ../wiki/folder_views.py:171
+#, fuzzy
+msgid "   :template: %s"
+msgstr "Scegli un linguaggio"
+
+#: ../wiki/folder_views.py:170
+msgid "   :toc-depth: %s"
+msgstr ""
+
+#: ../wiki/folder_views.py:437
+msgid ""
+" `%s`_\n"
+"%s\n"
+"%s"
+msgstr ""
+
 #: ../future/dressable.py:57
 msgid "\"%s\" is incorrect"
 msgstr ""
+
+#: ../wiki/folder_views.py:452
+#, fuzzy
+msgid "\"%s\" is not an OpenDocument Text"
+msgstr "Documento modificato."
 
 #: ../tracker/tracker_views.py:773
 msgid "#%s"
@@ -51,7 +94,7 @@ msgstr ""
 msgid "#1.%s|outline"
 msgstr ""
 
-#: ../wiki/page_views.py:541
+#: ../wiki/page_views.py:574
 #, fuzzy
 msgid "$filename is not an OpenDocument Text."
 msgstr "Documento modificato."
@@ -116,6 +159,10 @@ msgstr ""
 
 #: ../future/dressable.py:73
 msgid "%s %s"
+msgstr ""
+
+#: ../wiki/folder_views.py:58
+msgid "%s (%d)"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:17
@@ -186,14 +233,12 @@ msgstr ""
 msgid "-"
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:61
-msgctxt "pre"
-msgid ""
-"- `a-page`_\n"
-"   - `another-page`_\n"
-"      - `a-subpage`_\n"
-"      - `another-subpage`_\n"
-"   - `a-last-page`_"
+#: ../wiki/folder_views.py:291
+msgid "- [unknown title]\n"
+msgstr ""
+
+#: ../wiki/folder_views.py:293
+msgid "- `"
 msgstr ""
 
 #: ../ui/user/edit_preferences.xml.en:14
@@ -216,8 +261,37 @@ msgctxt "pre"
 msgid ".."
 msgstr "..."
 
+#: ../wiki/folder_views.py:148
+msgid ""
+".. %s image:: %s\n"
+"\n"
+msgstr ""
+
+#: ../wiki/folder_views.py:123
+msgid ".. [#] %s\n"
+msgstr ""
+
+#: ../wiki/folder_views.py:160
+msgid ".. [*] %s\n"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:128
+msgctxt "option"
+msgid "1"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:129
+msgctxt "option"
+msgid "2"
+msgstr ""
+
 #: ../website.py:88
 msgid "2 + 3"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:130
+msgctxt "option"
+msgid "3"
 msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:53
@@ -225,10 +299,20 @@ msgstr ""
 msgctxt "pre"
 msgid ""
 "3\n"
-"   :title:"
+"   :template:"
 msgstr "Titolo"
 
+#: ../wiki/ui/importodt.xml.en:131
+msgctxt "option"
+msgid "4"
+msgstr ""
+
 #: ../website.py:89
+msgid "5"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:132
+msgctxt "option"
 msgid "5"
 msgstr ""
 
@@ -243,19 +327,25 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:55
+#: ../wiki/ui/help_odt.xml.en:57
 #, fuzzy
 msgctxt "pre"
 msgid ":comments:"
 msgstr "Commenti:"
 
-#: ../wiki/ui/help_odt.xml.en:58
+#: ../wiki/ui/help_odt.xml.en:62
+#, fuzzy
+msgctxt "pre"
+msgid ":filename:"
+msgstr "Rinomina.."
+
+#: ../wiki/ui/help_odt.xml.en:60
 #, fuzzy
 msgctxt "pre"
 msgid ":language:"
 msgstr "Linguaggio"
 
-#: ../wiki/ui/help_odt.xml.en:57
+#: ../wiki/ui/help_odt.xml.en:59
 #, fuzzy
 msgctxt "pre"
 msgid ":subject:"
@@ -312,7 +402,7 @@ msgid ""
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
-#: ../ui/html/addmedia.xml.en:49
+#: ../wiki/ui/importodt.xml.en:49 ../ui/html/addmedia.xml.en:49
 #, fuzzy
 msgctxt "link"
 msgid "<g id='10'>${x/short_title}</g> /"
@@ -402,11 +492,16 @@ msgid "<g id='4'>Add and view</g>  <g id='5'>Add and return</g>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:28 ../ui/html/addlink.xml.en:28
-#: ../ui/html/addmedia.xml.en:28
+#: ../wiki/ui/importodt.xml.en:28 ../ui/html/addmedia.xml.en:28
 msgctxt "link"
 msgid ""
 "<g id='4'>Browse</g>  <g id='5'>External Link</g>  <g id='6'>Insert</g>  <g "
 "id='7'>Upload</g>"
+msgstr ""
+
+#: ../ui/revisions/browse_search.xml.en:17
+msgctxt "label"
+msgid "<g id='4'>Comment</g><x id='5'/>  <x id='6'/>  <g id='7'>Search</g>"
 msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:18 ../calendar/ui/monthly_view.xml.en:18
@@ -414,9 +509,9 @@ msgctxt "link"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
 
-#: ../wiki/ui/edit.xml.en:189
+#: ../wiki/ui/edit.xml.en:199
 msgctxt "button"
-msgid "<g id='44'>Save</g>  <g id='45'>Save &amp; View</g>"
+msgid "<g id='47'>Save</g>  <g id='48'>Save &amp; View</g>"
 msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:17
@@ -468,7 +563,7 @@ msgctxt "link"
 msgid "<g id='9'>Log in</g>  <g id='10'>Register</g>"
 msgstr ""
 
-#: ../wiki/page_views.py:519
+#: ../wiki/page_views.py:552
 msgid ""
 "<p>Please install <a href=\"{href}\">{name}</a> for Python on the server.</p>"
 msgstr ""
@@ -517,7 +612,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:346
+#: ../website_views.py:342
 msgid "About"
 msgstr "A proposito di"
 
@@ -551,7 +646,7 @@ msgstr "Oggetti rimossi: %s."
 msgid "Active"
 msgstr "Il titolo"
 
-#: ../views_new.py:66 ../text_views.py:235 ../table_views.py:234
+#: ../views_new.py:66 ../text_views.py:239 ../table_views.py:234
 #: ../tracker/tracker_views.py:225
 msgid "Add"
 msgstr "Aggiungi"
@@ -606,7 +701,7 @@ msgstr "Nuovo utente"
 msgid "Add Resource"
 msgstr "Nuovo utente"
 
-#: ../text_views.py:233
+#: ../text_views.py:237
 #, fuzzy
 msgid "Add Row"
 msgstr "Aggiungi"
@@ -647,7 +742,7 @@ msgstr "Lista utenti:"
 msgid "Add {class_title}"
 msgstr "Modifica gruppi per <span stl:content=\"fullname\"></span>"
 
-#: ../root.py:96 ../access.py:386
+#: ../root.py:95 ../access.py:386
 msgid "Admin"
 msgstr ""
 
@@ -664,13 +759,17 @@ msgstr ""
 msgid "All Fields"
 msgstr ""
 
+#: ../forms.py:319
+msgid "All/None"
+msgstr ""
+
 #: ../ui/website/forgotten_password.xml.en:8
 msgctxt "paragraph"
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:155
+#: ../website_views.py:151
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -680,7 +779,7 @@ msgstr ""
 msgid "An iKaaro forum"
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:74
+#: ../wiki/ui/help_odt.xml.en:77
 msgctxt "li"
 msgid "Any other content in this page will be ignored."
 msgstr ""
@@ -753,13 +852,18 @@ msgstr "Commenti:"
 msgid "August"
 msgstr ""
 
-#: ../revisions_views.py:143
+#: ../revisions_views.py:149
 msgid "Author"
 msgstr ""
 
 #: ../ui/revisions/changes.xml.en:11
 msgctxt "b"
 msgid "Author"
+msgstr ""
+
+#: ../ui/revisions/browse_search.xml.en:12
+msgctxt "label"
+msgid "Author's mail"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:38 ../ui/binary/Image_view.xml.en:15
@@ -787,7 +891,7 @@ msgstr ""
 msgid "Bing site verification key"
 msgstr ""
 
-#: ../forms.py:569
+#: ../forms.py:583
 #, fuzzy
 msgid "Body"
 msgstr "Cartella"
@@ -798,6 +902,10 @@ msgctxt "title attribute"
 msgid "Bold"
 msgstr "Cartella"
 
+#: ../wiki/page_views.py:365
+msgid "Books are not exportable to PDF."
+msgstr ""
+
 #: ../future/order.py:125 ../future/menu.py:167
 #, fuzzy
 msgid "Broken"
@@ -807,13 +915,13 @@ msgstr "Naviga"
 msgid "Broken Links"
 msgstr ""
 
-#: ../folder_views.py:224
+#: ../folder_views.py:225
 #, fuzzy
 msgid "Browse Content"
 msgstr "Contenuti"
 
 #: ../ui/html/addimage.xml.en:56 ../ui/html/addlink.xml.en:56
-#: ../ui/html/addmedia.xml.en:56
+#: ../wiki/ui/importodt.xml.en:56 ../ui/html/addmedia.xml.en:56
 #, fuzzy
 msgctxt "table cell"
 msgid "Browse Content"
@@ -834,6 +942,12 @@ msgstr "» Naviga e collega un'immagine presente nell'area di lavoro: "
 #, fuzzy
 msgctxt "heading"
 msgid "Browse and insert an Image from the workspace"
+msgstr "» Naviga e collega un'immagine presente nell'area di lavoro: "
+
+#: ../wiki/ui/importodt.xml.en:43
+#, fuzzy
+msgctxt "heading"
+msgid "Browse and insert an ODT from the workspace"
 msgstr "» Naviga e collega un'immagine presente nell'area di lavoro: "
 
 #: ../ui/html/addlink.xml.en:43
@@ -877,7 +991,7 @@ msgctxt "label"
 msgid "CC:"
 msgstr "Aggiungi"
 
-#: ../text.py:92
+#: ../text.py:82
 msgid "CSS"
 msgstr ""
 
@@ -941,15 +1055,10 @@ msgstr "Modifica l'impostazione predefinita"
 msgid "Change your password."
 msgstr "Modifica l'impostazione predefinita"
 
-#: ../revisions_views.py:197
+#: ../revisions_views.py:215
 #, fuzzy
 msgid "Changes"
 msgstr "OK"
-
-#: ../ui/file/externaledit.xml.en:32
-msgctxt "label"
-msgid "Character encoding"
-msgstr ""
 
 #: ../control_panel.py:232
 msgid "Check the referential integrity."
@@ -966,7 +1075,7 @@ msgstr "Scegli un linguaggio"
 msgid "Choose a new password"
 msgstr "Modifica l'impostazione predefinita"
 
-#: ../wiki/page_views.py:508
+#: ../wiki/page_views.py:524
 #, fuzzy
 msgid "Choose a template:"
 msgstr "Scegli un linguaggio"
@@ -1025,11 +1134,11 @@ msgctxt "link"
 msgid "Come back to today"
 msgstr ""
 
-#: ../text.py:274
+#: ../text.py:264
 msgid "Comma Separated Values"
 msgstr ""
 
-#: ../tracker/resources.py:177 ../revisions_views.py:144
+#: ../tracker/resources.py:177 ../revisions_views.py:150
 #: ../tracker/issue.py:285
 #, fuzzy
 msgid "Comment"
@@ -1064,17 +1173,23 @@ msgctxt "label"
 msgid "Comments (optional):"
 msgstr "Commenti:"
 
-#: ../wiki/ui/help_odt.xml.en:55
+#: ../wiki/ui/help_odt.xml.en:57
 #, fuzzy
 msgctxt "pre"
 msgid "Comments..."
 msgstr "Commenti:"
 
-#: ../revisions_views.py:131
+#: ../wiki/ui/importodt.xml.en:107
+#, fuzzy
+msgctxt "label"
+msgid "Comments:"
+msgstr "Commenti:"
+
+#: ../revisions_views.py:135
 msgid "Commit Log"
 msgstr ""
 
-#: ../revisions_views.py:234 ../revisions_views.py:242
+#: ../revisions_views.py:252 ../revisions_views.py:260
 msgid "Commit {commit} not found"
 msgstr ""
 
@@ -1107,12 +1222,12 @@ msgstr "Anteprima"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:180
+#: ../website_views.py:176
 #, fuzzy
 msgid "Contact"
 msgstr "Contenuti"
 
-#: ../wiki/folder.py:38
+#: ../wiki/folder.py:40
 msgid "Container for a wiki"
 msgstr ""
 
@@ -1131,7 +1246,7 @@ msgstr "Contenuti"
 msgid "Control Panel"
 msgstr ""
 
-#: ../wiki/page_views.py:512
+#: ../wiki/page_views.py:530
 #, fuzzy
 msgid "Convert"
 msgstr "Contenuti"
@@ -1145,7 +1260,7 @@ msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:71
+#: ../wiki/ui/help_odt.xml.en:74
 msgctxt "li"
 msgid "Cover titles are treated as main title and subtitle."
 msgstr ""
@@ -1159,12 +1274,12 @@ msgctxt "heading"
 msgid "Create a new page and link to it:"
 msgstr ""
 
-#: ../webpage.py:227
+#: ../webpage.py:231
 #, fuzzy
 msgid "Create and publish a Web Page."
 msgstr "Pubblica il documento."
 
-#: ../website_views.py:419
+#: ../website_views.py:364
 msgid "Credits"
 msgstr ""
 
@@ -1188,7 +1303,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:910
+#: ../calendar/calendar_views.py:925
 #, fuzzy
 msgid "Daily View"
 msgstr "Il titolo"
@@ -1260,7 +1375,7 @@ msgctxt "paragraph"
 msgid "Definition lists are converted to styles paragraphs."
 msgstr ""
 
-#: ../forms.py:566
+#: ../forms.py:580
 msgid "Description"
 msgstr "Descrizione"
 
@@ -1282,7 +1397,7 @@ msgctxt "heading"
 msgid "Details"
 msgstr "Dettagli"
 
-#: ../revisions_views.py:123
+#: ../revisions_views.py:127
 #, fuzzy
 msgid "Diff between selected revisions"
 msgstr "Devi scegliere una o due revisioni."
@@ -1302,12 +1417,18 @@ msgctxt "li"
 msgid "Document Management."
 msgstr "Benvenuto nel Sistema di Gestione dei Contenuti IKAARO"
 
+#: ../wiki/ui/importodt.xml.en:96
+#, fuzzy
+msgctxt "heading"
+msgid "Document metadata:"
+msgstr "Nuovo documento"
+
 #: ../access.py:77
 #, fuzzy
 msgid "Domain"
 msgstr "Nuovo documento"
 
-#: ../file_views.py:119 ../file_views.py:144
+#: ../file_views.py:119 ../file_views.py:156
 msgid "Download"
 msgstr ""
 
@@ -1321,7 +1442,7 @@ msgstr ""
 msgid "Dressable"
 msgstr "Preambolo"
 
-#: ../user_views.py:170 ../website_views.py:123
+#: ../user_views.py:170 ../website_views.py:119
 #, fuzzy
 msgid "E-mail Address"
 msgstr "Utenti"
@@ -1354,7 +1475,7 @@ msgstr "Modifica"
 msgid "Edit Account"
 msgstr "A proposito di"
 
-#: ../calendar/calendar_views.py:419
+#: ../calendar/calendar_views.py:428
 #, fuzzy
 msgid "Edit Event"
 msgstr "Testo integrale"
@@ -1414,7 +1535,7 @@ msgctxt "legend"
 msgid "Edit Virtual Hosts"
 msgstr ""
 
-#: ../wiki/folder.py:63
+#: ../wiki/folder.py:53
 #, fuzzy
 msgid "Edit Wiki"
 msgstr "Testo integrale"
@@ -1434,7 +1555,7 @@ msgstr "Gruppi"
 msgid "Edit resources"
 msgstr "Utenti"
 
-#: ../text_views.py:250
+#: ../text_views.py:254
 #, fuzzy
 msgid "Edit row #{id}"
 msgstr "Gruppi"
@@ -1511,12 +1632,12 @@ msgstr ""
 msgid "Error: {msg}"
 msgstr "Messaggio"
 
-#: ../calendar/calendar_views.py:641
+#: ../calendar/calendar_views.py:650
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../calendar/calendar_views.py:494 ../calendar/calendar_views.py:600
-#: ../calendar/calendar_views.py:628
+#: ../calendar/calendar_views.py:503 ../calendar/calendar_views.py:609
+#: ../calendar/calendar_views.py:637
 msgid "Event not found"
 msgstr ""
 
@@ -1534,7 +1655,7 @@ msgctxt "paragraph"
 msgid "Existing URLs remain untouched."
 msgstr ""
 
-#: ../calendar/calendar_views.py:460
+#: ../calendar/calendar_views.py:469
 msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
@@ -1560,22 +1681,22 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Testo integrale"
 
-#: ../file_views.py:231
+#: ../file_views.py:243
 #, fuzzy
 msgid "External Editor"
 msgstr "Editor esterno"
 
-#: ../ui/file/externaledit.xml.en:39
+#: ../ui/file/externaledit.xml.en:32
 #, fuzzy
 msgctxt "button"
 msgid "External Editor..."
 msgstr "Editor esterno"
 
-#: ../calendar/calendar_views.py:1124
+#: ../calendar/calendar_views.py:1147
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:198
+#: ../file_views.py:210
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -1593,7 +1714,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr "Rinomina.."
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:117
 #: ../access.py:76 ../access.py:132
 #, fuzzy
 msgid "First Name"
@@ -1623,7 +1744,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "Cerca"
 
-#: ../website_views.py:63
+#: ../website_views.py:59
 #, fuzzy
 msgid "Forgotten password"
 msgstr "Modifica l'impostazione predefinita"
@@ -1634,19 +1755,19 @@ msgctxt "link"
 msgid "Format"
 msgstr "Formato"
 
-#: ../wiki/ui/edit.xml.en:213
+#: ../wiki/ui/edit.xml.en:223
 #, fuzzy
 msgctxt "span"
 msgid "Format"
 msgstr "Formato"
 
-#: ../wiki/ui/edit.xml.en:213
+#: ../wiki/ui/edit.xml.en:223
 #, fuzzy
 msgctxt "title attribute"
 msgid "Format"
 msgstr "Formato"
 
-#: ../forms.py:384
+#: ../forms.py:396
 msgid "Format: 'yyyy-mm-dd'"
 msgstr ""
 
@@ -1676,13 +1797,17 @@ msgctxt "table cell"
 msgid "From"
 msgstr "Da"
 
-#: ../wiki/folder.py:51 ../folder_views.py:831
+#: ../wiki/folder.py:61 ../folder_views.py:832
 msgid "Front Page"
 msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:62
 msgctxt "table cell"
 msgid "Full day"
+msgstr ""
+
+#: ../root.py:255
+msgid "GNU/Linux"
 msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:47
@@ -1700,7 +1825,7 @@ msgstr ""
 msgid "German"
 msgstr "Generale"
 
-#: ../revisions_views.py:217
+#: ../revisions_views.py:235
 msgid "Git failed: {error}"
 msgstr ""
 
@@ -1762,7 +1887,7 @@ msgstr ""
 msgid "Gzip Compressed"
 msgstr ""
 
-#: ../text.py:266
+#: ../text.py:256
 #, fuzzy
 msgid "HTML File"
 msgstr "HTML riparato."
@@ -1773,43 +1898,67 @@ msgctxt "heading"
 msgid "Hacking"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:230
+#: ../wiki/ui/edit.xml.en:240
 #, fuzzy
 msgctxt "span"
 msgid "Heading 1"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:230
+#: ../wiki/ui/edit.xml.en:240
 #, fuzzy
 msgctxt "title attribute"
 msgid "Heading 1"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:238
+#: ../wiki/ui/edit.xml.en:248
 #, fuzzy
 msgctxt "span"
 msgid "Heading 2"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:238
+#: ../wiki/ui/edit.xml.en:248
 #, fuzzy
 msgctxt "title attribute"
 msgid "Heading 2"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:246
+#: ../wiki/ui/edit.xml.en:256
 #, fuzzy
 msgctxt "span"
 msgid "Heading 3"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/ui/edit.xml.en:246
+#: ../wiki/ui/edit.xml.en:256
 #, fuzzy
 msgctxt "title attribute"
 msgid "Heading 3"
 msgstr "in attesa di pubblicazione"
 
-#: ../wiki/page_views.py:648
+#: ../wiki/ui/edit.xml.en:264
+#, fuzzy
+msgctxt "span"
+msgid "Heading 4"
+msgstr "in attesa di pubblicazione"
+
+#: ../wiki/ui/edit.xml.en:264
+#, fuzzy
+msgctxt "title attribute"
+msgid "Heading 4"
+msgstr "in attesa di pubblicazione"
+
+#: ../wiki/ui/edit.xml.en:272
+#, fuzzy
+msgctxt "span"
+msgid "Heading 5"
+msgstr "in attesa di pubblicazione"
+
+#: ../wiki/ui/edit.xml.en:272
+#, fuzzy
+msgctxt "title attribute"
+msgid "Heading 5"
+msgstr "in attesa di pubblicazione"
+
+#: ../wiki/page_views.py:698
 msgid "Help"
 msgstr "Aiuto"
 
@@ -1868,8 +2017,22 @@ msgstr ""
 "L'errore dovrebbe essere riportato automaticamente all'amministratore di "
 "sistema."
 
+#: ../wiki/page_views.py:529
+msgid "Ignore missing pages"
+msgstr ""
+
 #: ../file.py:215
 msgid "Image"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:7
+msgctxt "title"
+msgid "Import ODT"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:164
+msgctxt "title attribute"
+msgid "Import ODT"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:7
@@ -1923,7 +2086,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../calendar/calendar_views.py:477
+#: ../calendar/calendar_views.py:486
 msgid "Invalid dates."
 msgstr ""
 
@@ -1972,7 +2135,7 @@ msgstr ""
 msgid "Japanese"
 msgstr "Giapponese"
 
-#: ../text.py:249
+#: ../text.py:239
 #, fuzzy
 msgid "Javascript"
 msgstr "Soggetto"
@@ -1996,13 +2159,18 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:59
+#: ../wiki/ui/help_odt.xml.en:61
 msgctxt "pre"
 msgid "Keyword1, Keyword2..."
 msgstr ""
 
-#: ../forms.py:568
+#: ../forms.py:582
 msgid "Keywords (Separated by comma)"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:111
+msgctxt "label"
+msgid "Keywords:"
 msgstr ""
 
 #: ../control_panel.py:362
@@ -2014,6 +2182,12 @@ msgstr "Linguaggio aggiunto."
 msgctxt "table[summary]"
 msgid "Language settings"
 msgstr "Impostazioni linguaggi"
+
+#: ../wiki/ui/importodt.xml.en:117
+#, fuzzy
+msgctxt "label"
+msgid "Language:"
+msgstr "Linguaggi"
 
 #: ../control_panel.py:279
 msgid "Languages"
@@ -2029,21 +2203,21 @@ msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr "Testo integrale"
 
-#: ../folder_views.py:249
+#: ../folder_views.py:250
 msgid "Last Author"
 msgstr ""
 
-#: ../revisions_views.py:142
+#: ../revisions_views.py:148
 #, fuzzy
 msgid "Last Change"
 msgstr "OK"
 
-#: ../folder_views.py:248
+#: ../folder_views.py:249
 #, fuzzy
 msgid "Last Modified"
 msgstr "modificato:"
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:118
 #: ../access.py:75 ../access.py:133
 #, fuzzy
 msgid "Last Name"
@@ -2075,7 +2249,7 @@ msgctxt "link"
 msgid "Links"
 msgstr "Collegamento"
 
-#: ../wiki/ui/help_odt.xml.en:73
+#: ../wiki/ui/help_odt.xml.en:76
 msgctxt "li"
 msgid "Links to included pages will be turned into internal anchors."
 msgstr ""
@@ -2092,7 +2266,7 @@ msgid "Location"
 msgstr "Azione"
 
 #: ../ui/html/addimage.xml.en:47 ../ui/html/addlink.xml.en:47
-#: ../ui/html/addmedia.xml.en:47
+#: ../wiki/ui/importodt.xml.en:47 ../ui/html/addmedia.xml.en:47
 #, fuzzy
 msgctxt "label"
 msgid "Location:"
@@ -2119,10 +2293,19 @@ msgstr "Entra"
 msgid "Low"
 msgstr ""
 
+#: ../root.py:256
+msgid "Mac OS X"
+msgstr ""
+
 #: ../calendar/calendar_views.py:47
 #, fuzzy
 msgid "March"
 msgstr "Cerca"
+
+#: ../wiki/ui/importodt.xml.en:125
+msgctxt "label"
+msgid "Max heading level to split:"
+msgstr ""
 
 #: ../calendar/calendar_views.py:49
 msgid "May"
@@ -2164,12 +2347,12 @@ msgid ""
 "</g>"
 msgstr ""
 
-#: ../text.py:79
+#: ../text.py:69
 #, fuzzy
 msgid "Message Catalog"
 msgstr "Salva la traduzione"
 
-#: ../website_views.py:205
+#: ../website_views.py:201
 #, fuzzy
 msgid "Message body"
 msgstr "Messaggio"
@@ -2179,12 +2362,12 @@ msgstr "Messaggio"
 msgid "Message in a thread"
 msgstr "Messaggio modificato."
 
-#: ../website_views.py:246
+#: ../website_views.py:242
 #, fuzzy
 msgid "Message sent."
 msgstr "Messaggio modificato."
 
-#: ../website_views.py:204
+#: ../website_views.py:200
 msgid "Message subject"
 msgstr "Titolo del messaggio"
 
@@ -2241,7 +2424,7 @@ msgstr "Codice"
 msgid "Monday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:725
+#: ../calendar/calendar_views.py:734
 msgid "Monthly View"
 msgstr ""
 
@@ -2255,8 +2438,8 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views_new.py:65 ../file_views.py:56 ../folder_views.py:245
-#: ../views.py:378
+#: ../views_new.py:65 ../file_views.py:56 ../folder_views.py:246
+#: ../views.py:381
 msgid "Name"
 msgstr "Nome"
 
@@ -2316,7 +2499,7 @@ msgstr "Nuova area di lavoro"
 msgid "New record added."
 msgstr "Aggiunta nuova risorsa"
 
-#: ../text_views.py:242
+#: ../text_views.py:246
 #, fuzzy
 msgid "New row added."
 msgstr "Aggiunta nuova risorsa"
@@ -2338,7 +2521,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../forms.py:274
+#: ../forms.py:276
 msgid "No"
 msgstr ""
 
@@ -2357,7 +2540,7 @@ msgctxt "paragraph"
 msgid "No history."
 msgstr "Storico"
 
-#: ../wiki/page_views.py:604
+#: ../wiki/page_views.py:641
 #, fuzzy
 msgid "No page found to export."
 msgstr "Devi scegliere un collaboratore da rimuovere."
@@ -2422,7 +2605,7 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../wiki/page_views.py:676
+#: ../wiki/page_views.py:726
 #, fuzzy
 msgid "ODT Help"
 msgstr "Aiuto"
@@ -2453,7 +2636,7 @@ msgstr "scrivi"
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:64
+#: ../website_views.py:60
 msgid "Ok"
 msgstr "Ok"
 
@@ -2463,7 +2646,7 @@ msgid ""
 "On any page, click on the <g id='8'>To ODT</g> tab to acccess this feature."
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:56
+#: ../wiki/ui/help_odt.xml.en:58
 msgctxt "pre"
 msgid "On multiple lines..."
 msgstr ""
@@ -2514,7 +2697,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:409
+#: ../website_views.py:352
 msgid "Operating System"
 msgstr ""
 
@@ -2522,12 +2705,12 @@ msgstr ""
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:70
+#: ../wiki/ui/help_odt.xml.en:73
 msgctxt "li"
 msgid "Optional book title is a link to the cover page."
 msgstr ""
 
-#: ../wiki/page_views.py:511
+#: ../wiki/page_views.py:527
 msgid "Or provide another ODT as a template:"
 msgstr ""
 
@@ -2578,7 +2761,7 @@ msgstr "Cartella"
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:754
+#: ../folder_views.py:755
 msgid "Orphans"
 msgstr ""
 
@@ -2591,24 +2774,24 @@ msgstr ""
 msgid "PDF Document"
 msgstr "Nuovo documento"
 
-#: ../wiki/page_views.py:422
+#: ../wiki/page_views.py:436
 msgid "PDF generated not found. See \"{dirname}\" on the server for debug."
 msgstr ""
 
-#: ../wiki/page_views.py:340
+#: ../wiki/page_views.py:348
 msgid "PDF generation failed. Please install pdflatex on the server."
 msgstr ""
 
-#: ../wiki/page_views.py:416
+#: ../wiki/page_views.py:430
 msgid "PDF generation failed. See \"{dirname}\" on the server for debug."
 msgstr ""
 
-#: ../wiki/page_views.py:576 ../wiki/page_views.py:600
+#: ../wiki/page_views.py:609 ../wiki/page_views.py:637
 #, fuzzy
 msgid "Page \"{uri}\" not found."
 msgstr "Oggetti rinominati."
 
-#: ../wiki/ui/help_odt.xml.en:72
+#: ../wiki/ui/help_odt.xml.en:75
 msgctxt "li"
 msgid "Pages listed as a subitem will see their title level incremented."
 msgstr ""
@@ -2653,11 +2836,11 @@ msgstr "in attesa di pubblicazione"
 msgid "Performance Improvement"
 msgstr ""
 
-#: ../text.py:57
+#: ../text.py:49
 msgid "Plain Text"
 msgstr "Testo integrale"
 
-#: ../website_views.py:198
+#: ../website_views.py:194
 msgid "Please answer this: {captcha_question}"
 msgstr ""
 
@@ -2714,13 +2897,13 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Scegli il tuo linguaggio:"
 
-#: ../wiki/ui/edit.xml.en:222
+#: ../wiki/ui/edit.xml.en:232
 #, fuzzy
 msgctxt "span"
 msgid "Preformatted"
 msgstr "Formato"
 
-#: ../wiki/ui/edit.xml.en:221
+#: ../wiki/ui/edit.xml.en:231
 #, fuzzy
 msgctxt "title attribute"
 msgid "Preformatted"
@@ -2740,7 +2923,7 @@ msgstr ""
 msgid "Preview"
 msgstr "Anteprima"
 
-#: ../folder_views.py:590
+#: ../folder_views.py:591
 #, fuzzy
 msgid "Preview Content"
 msgstr "Contenuti"
@@ -2812,7 +2995,7 @@ msgstr "pubblicato"
 msgid "Publish the document."
 msgstr "Pubblica il documento."
 
-#: ../text.py:239
+#: ../website_views.py:351 ../text.py:229
 msgid "Python"
 msgstr ""
 
@@ -2825,7 +3008,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "Nuovo documento"
 
-#: ../website_views.py:202
+#: ../website_views.py:198
 #, fuzzy
 msgid "Recipient"
 msgstr "Anteprima"
@@ -2835,7 +3018,7 @@ msgstr "Anteprima"
 msgid "Record deleted."
 msgstr "Registrazione modificata."
 
-#: ../website_views.py:112 ../website_views.py:113
+#: ../website_views.py:108 ../website_views.py:109
 #, fuzzy
 msgid "Register"
 msgstr "Anteprima"
@@ -2902,7 +3085,7 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "Ripeti la parola d'accesso"
 
-#: ../calendar/calendar_views.py:1103
+#: ../calendar/calendar_views.py:1126
 #, fuzzy
 msgid "Replace"
 msgstr "Anteprima"
@@ -2913,7 +3096,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "Anteprima"
 
-#: ../forms.py:571
+#: ../forms.py:585
 #, fuzzy
 msgid "Replace file"
 msgstr "Carica file"
@@ -2954,7 +3137,7 @@ msgctxt "table cell"
 msgid "Resource"
 msgstr "Nuova risorsa"
 
-#: ../calendar/calendar_views.py:449
+#: ../calendar/calendar_views.py:458
 #, fuzzy
 msgid "Resource \"{name}\" not found."
 msgstr "Oggetti rinominati."
@@ -3084,7 +3267,7 @@ msgstr "Rimuovi"
 msgid "Role updated."
 msgstr "File aggiornato."
 
-#: ../text_views.py:203
+#: ../text_views.py:207
 #, fuzzy
 msgid "Row deleted."
 msgstr "Nessun oggetto selezionato."
@@ -3093,7 +3276,7 @@ msgstr "Nessun oggetto selezionato."
 msgid "Saturday"
 msgstr ""
 
-#: ../forms.py:592
+#: ../forms.py:606
 #, fuzzy
 msgid "Save"
 msgstr "Salva"
@@ -3110,7 +3293,7 @@ msgstr "Salva"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:253
+#: ../tracker/tracker_views.py:452 ../website_views.py:249
 msgid "Search"
 msgstr "Cerca"
 
@@ -3121,7 +3304,8 @@ msgid "Search"
 msgstr "Cerca"
 
 #: ../tracker/ui/search.xml.en:29 ../ui/website/search_form.xml.en:9
-#: ../ui/folder/browse_search.xml.en:9 ../ui/generic/browse_search.xml.en:7
+#: ../ui/revisions/browse_search.xml.en:8 ../ui/folder/browse_search.xml.en:9
+#: ../ui/generic/browse_search.xml.en:7
 #, fuzzy
 msgctxt "legend"
 msgid "Search"
@@ -3181,6 +3365,12 @@ msgctxt "table cell"
 msgid "Select Media"
 msgstr "Nuovo collegamento"
 
+#: ../wiki/ui/importodt.xml.en:57
+#, fuzzy
+msgctxt "table cell"
+msgid "Select ODT"
+msgstr "Nuovo collegamento"
+
 #: ../ui/html/addlink.xml.en:57
 #, fuzzy
 msgctxt "table cell"
@@ -3196,7 +3386,7 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../website_views.py:181
+#: ../website_views.py:177
 msgid "Send"
 msgstr ""
 
@@ -3209,11 +3399,11 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr "Scegli il tuo linguaggio:"
 
-#: ../folder_views.py:756
+#: ../folder_views.py:757
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
-#: ../folder_views.py:250
+#: ../folder_views.py:251
 msgid "Size"
 msgstr "Dimensione"
 
@@ -3273,7 +3463,7 @@ msgid "Stat"
 msgstr "Stato"
 
 #: ../future/order.py:102 ../future/order.py:172 ../access.py:135
-#: ../folder_views.py:251 ../tracker/tracker_views.py:58
+#: ../folder_views.py:252 ../tracker/tracker_views.py:58
 #: ../tracker/issue.py:327
 msgid "State"
 msgstr "Stato"
@@ -3322,10 +3512,16 @@ msgctxt "paragraph"
 msgid "Styles, headers and footers are preserved."
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:57
+#: ../wiki/ui/help_odt.xml.en:59
 msgctxt "pre"
 msgid "Subject..."
 msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:103
+#, fuzzy
+msgctxt "label"
+msgid "Subject:"
+msgstr "Soggetto"
 
 #: ../calendar/ui/edit_event.xml.en:21
 msgctxt "table cell"
@@ -3341,15 +3537,15 @@ msgctxt "li"
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: ../wiki/page_views.py:481
+#: ../wiki/page_views.py:495
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
-#: ../wiki/page_views.py:264 ../wiki/page_views.py:485
+#: ../wiki/page_views.py:272 ../wiki/page_views.py:499
 msgid "Syntax error: {error}"
 msgstr ""
 
-#: ../wiki/page_views.py:591
+#: ../wiki/page_views.py:626
 msgid "Table of Contents"
 msgstr ""
 
@@ -3392,7 +3588,7 @@ msgstr "Anteprima"
 msgid "Tentative"
 msgstr "Il titolo"
 
-#: ../views.py:377
+#: ../views.py:380
 msgid "Text"
 msgstr "Testo"
 
@@ -3401,12 +3597,12 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:612
+#: ../forms.py:626
 msgid ""
 "The <span class=\"field-is-required\">emphasized</span> fields are required."
 msgstr ""
 
-#: ../wiki/ui/help_odt.xml.en:68
+#: ../wiki/ui/help_odt.xml.en:71
 msgctxt "paragraph"
 msgid "The book has some nice behaviour:"
 msgstr ""
@@ -3535,7 +3731,7 @@ msgstr ""
 msgid "There are {n} assignments."
 msgstr "Non sono presenti immagini."
 
-#: ../views.py:127
+#: ../views.py:130
 #, fuzzy
 msgid "There are {n} items."
 msgstr "Non sono presenti immagini."
@@ -3557,12 +3753,12 @@ msgstr "Il nome utente è errato, tenta di nuovo"
 msgid "There is 1 assignment."
 msgstr "Il titolo"
 
-#: ../views.py:126
+#: ../views.py:129
 #, fuzzy
 msgid "There is 1 item."
 msgstr "Il titolo"
 
-#: ../website_views.py:137
+#: ../website_views.py:133
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "Esiste già un altro gruppo con questo nome."
@@ -3578,7 +3774,7 @@ msgstr ""
 "Esiste già un altro utente che ha scelto \"%s\" come nome utente, tenta di "
 "nuovo"
 
-#: ../website_views.py:92
+#: ../website_views.py:88
 #, fuzzy
 msgid "There is not a user identified as \"{username}\""
 msgstr ""
@@ -3628,9 +3824,9 @@ msgstr ""
 msgid "Timetables"
 msgstr "Titolo"
 
-#: ../tracker/tracker_views.py:53 ../tracker/issue.py:317 ../views.py:376
-#: ../future/order.py:101 ../future/order.py:170 ../forms.py:564
-#: ../folder_views.py:246 ../future/menu.py:268
+#: ../tracker/tracker_views.py:53 ../tracker/issue.py:317 ../views.py:379
+#: ../future/order.py:101 ../future/order.py:170 ../forms.py:578
+#: ../folder_views.py:247 ../future/menu.py:268
 msgid "Title"
 msgstr "Titolo"
 
@@ -3647,7 +3843,7 @@ msgctxt "label"
 msgid "Title (mandatory):"
 msgstr "La password è errata"
 
-#: ../wiki/ui/help_odt.xml.en:54
+#: ../wiki/ui/help_odt.xml.en:56
 #, fuzzy
 msgctxt "pre"
 msgid "Title..."
@@ -3659,11 +3855,17 @@ msgctxt "emphasis"
 msgid "Title:"
 msgstr "Titolo"
 
-#: ../wiki/page_views.py:506
+#: ../wiki/ui/importodt.xml.en:99
+#, fuzzy
+msgctxt "label"
+msgid "Title:"
+msgstr "Titolo"
+
+#: ../wiki/page_views.py:520
 msgid "To ODT"
 msgstr ""
 
-#: ../wiki/page_views.py:332
+#: ../wiki/page_views.py:340
 msgid "To PDF"
 msgstr ""
 
@@ -3671,7 +3873,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar/calendar_views.py:665
+#: ../calendar/calendar_views.py:674
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -3751,7 +3953,7 @@ msgstr "Traduzione memorizzata."
 msgid "Tuesday"
 msgstr ""
 
-#: ../tracker/tracker_views.py:57 ../folder_views.py:247
+#: ../tracker/tracker_views.py:57 ../folder_views.py:248
 #: ../tracker/issue.py:325
 #, fuzzy
 msgid "Type"
@@ -3762,6 +3964,11 @@ msgstr "Tipo"
 msgctxt "label"
 msgid "Type (mandatory):"
 msgstr "La password è errata"
+
+#: ../ui/html/addmedia.xml.en:89
+msgctxt "heading"
+msgid "Type the URL of an external media"
+msgstr ""
 
 #: ../ui/html/addlink.xml.en:89
 msgctxt "heading"
@@ -3774,7 +3981,7 @@ msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:68
+#: ../website_views.py:64
 #, fuzzy
 msgid "Type your email address"
 msgstr "Utenti"
@@ -3845,7 +4052,7 @@ msgid "Upload"
 msgstr "Carica"
 
 #: ../ui/html/addimage.xml.en:98 ../ui/html/addlink.xml.en:123
-#: ../ui/html/addmedia.xml.en:98
+#: ../wiki/ui/importodt.xml.en:139 ../ui/html/addmedia.xml.en:109
 #, fuzzy
 msgctxt "button"
 msgid "Upload"
@@ -3866,9 +4073,14 @@ msgctxt "heading"
 msgid "Upload a file to the current folder and link to it:"
 msgstr ""
 
-#: ../ui/html/addmedia.xml.en:89
+#: ../ui/html/addmedia.xml.en:100
 msgctxt "heading"
 msgid "Upload a media to the current folder and insert it:"
+msgstr ""
+
+#: ../wiki/ui/importodt.xml.en:89
+msgctxt "heading"
+msgid "Upload an ODT to import it:"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:89
@@ -3935,7 +4147,7 @@ msgctxt "label"
 msgid "Username"
 msgstr "Nome utente"
 
-#: ../root.py:105
+#: ../root.py:104
 msgid "Users"
 msgstr "Utenti"
 
@@ -3955,7 +4167,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Personale"
 
-#: ../calendar/calendar_views.py:1128 ../file_views.py:224
+#: ../calendar/calendar_views.py:1151 ../file_views.py:236
 #, fuzzy
 msgid "Version uploaded"
 msgstr "Versione caricata."
@@ -3989,11 +4201,11 @@ msgstr "Contenuti"
 msgid "Video"
 msgstr "Vedi"
 
-#: ../file_views.py:335 ../file_views.py:427 ../file_views.py:439
-#: ../file_views.py:453 ../text_views.py:69 ../text_views.py:143
+#: ../file_views.py:345 ../file_views.py:437 ../file_views.py:449
+#: ../file_views.py:463 ../text_views.py:69 ../text_views.py:143
 #: ../tracker/tracker_views.py:265 ../user.py:295 ../table_views.py:42
-#: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
-#: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
+#: ../wiki/page_views.py:260 ../future/order.py:247 ../future/order.py:277
+#: ../forum/forum.py:43 ../webpage.py:160 ../forum/thread.py:41
 #: ../folder_views.py:86 ../future/menu.py:581 ../future/dressable.py:94
 msgid "View"
 msgstr "Vedi"
@@ -4009,7 +4221,7 @@ msgstr ""
 msgid "Virtual Hosts"
 msgstr ""
 
-#: ../webpage.py:226
+#: ../webpage.py:230
 msgid "Web Page"
 msgstr ""
 
@@ -4021,11 +4233,11 @@ msgstr ""
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:252
+#: ../calendar/calendar_views.py:257
 msgid "Week {n}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:802
+#: ../calendar/calendar_views.py:814
 msgid "Weekly View"
 msgstr ""
 
@@ -4033,18 +4245,22 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: ../wiki/folder.py:37 ../wiki/folder_views.py:31
+#: ../wiki/folder.py:39 ../wiki/folder_views.py:352
 msgid "Wiki"
 msgstr ""
 
-#: ../wiki/page.py:120
+#: ../wiki/page.py:144
 msgid "Wiki Page"
 msgstr ""
 
-#: ../wiki/page.py:121
+#: ../wiki/page.py:145
 #, fuzzy
 msgid "Wiki contents"
 msgstr "Contenuti"
+
+#: ../root.py:257
+msgid "Windows"
+msgstr ""
 
 #: ../file.py:257
 msgid "Word"
@@ -4059,7 +4275,7 @@ msgstr "Testo integrale"
 msgid "Workflow State"
 msgstr ""
 
-#: ../website_views.py:228
+#: ../website_views.py:224
 msgid "Wrong answer to the question."
 msgstr ""
 
@@ -4067,7 +4283,7 @@ msgstr ""
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
-#: ../text.py:258
+#: ../text.py:248
 #, fuzzy
 msgid "XML File"
 msgstr "File"
@@ -4076,7 +4292,7 @@ msgstr "File"
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../forms.py:274
+#: ../forms.py:276
 msgid "Yes"
 msgstr ""
 
@@ -4094,7 +4310,7 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
-#: ../calendar/calendar_views.py:605
+#: ../calendar/calendar_views.py:614
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -4186,7 +4402,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:203
+#: ../website_views.py:199
 #, fuzzy
 msgid "Your email address"
 msgstr "Utenti"
@@ -4229,6 +4445,10 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
+#: ../wiki/folder_views.py:293
+msgid "`_\n"
+msgstr ""
+
 #: ../wiki/ui/help_odt.xml.en:52
 msgctxt "pre"
 msgid ""
@@ -4260,7 +4480,7 @@ msgid ""
 "%s"
 msgstr "Stato:"
 
-#: ../wiki/ui/help_odt.xml.en:58
+#: ../wiki/ui/help_odt.xml.en:60
 msgctxt "pre"
 msgid ""
 "fr-FR\n"
@@ -4272,7 +4492,7 @@ msgstr ""
 msgid "huge"
 msgstr "OK"
 
-#: ../root.py:84
+#: ../root.py:83
 msgid "iKaaro"
 msgstr "iKaaro"
 
@@ -4292,7 +4512,7 @@ msgstr ""
 msgid "id"
 msgstr ""
 
-#: ../wiki/page_views.py:567
+#: ../wiki/page_views.py:599
 msgid "ikaaro.wiki to ODT"
 msgstr ""
 
@@ -4301,7 +4521,11 @@ msgstr ""
 msgid "large"
 msgstr "Confronta"
 
-#: ../wiki/page_views.py:237
+#: ../website_views.py:350
+msgid "lpOD"
+msgstr ""
+
+#: ../wiki/page_views.py:245
 #, fuzzy
 msgid "lpoD default template"
 msgstr "Scegli un linguaggio"
@@ -4310,7 +4534,15 @@ msgstr "Scegli un linguaggio"
 msgid "medium"
 msgstr ""
 
-#: ../website_views.py:393
+#: ../wiki/ui/help_odt.xml.en:55
+#, fuzzy
+msgctxt "pre"
+msgid ""
+"no\n"
+"   :title:"
+msgstr "Titolo"
+
+#: ../root.py:244
 msgid "no version found"
 msgstr ""
 
@@ -4318,6 +4550,22 @@ msgstr ""
 #, fuzzy
 msgid "original"
 msgstr "Entra"
+
+#: ../wiki/ui/help_odt.xml.en:62
+msgctxt "pre"
+msgid ""
+"output.odt\n"
+"\n"
+"   - `a-page`_\n"
+"   - `another-page`_\n"
+"      - `a-subpage`_\n"
+"      - `another-subpage`_\n"
+"   - `a-last-page`_"
+msgstr ""
+
+#: ../website_views.py:349
+msgid "pygobject"
+msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:14
 #, fuzzy
@@ -4329,6 +4577,13 @@ msgstr "Devi scegliere un collaboratore da rimuovere."
 #, fuzzy
 msgid "small"
 msgstr "Email"
+
+#: ../wiki/ui/help_odt.xml.en:54
+msgctxt "pre"
+msgid ""
+"template-name\n"
+"   :ignore-missing-pages:"
+msgstr ""
 
 #: ../ui/tiny_mce/rte.xml.en:47
 msgctxt "noscript"
@@ -4394,7 +4649,7 @@ msgid ""
 "{comment}\n"
 msgstr ""
 
-#: ../wiki/page_views.py:241
+#: ../wiki/page_views.py:249
 msgid "{title} (<a href=\"{link}\">view</a>)"
 msgstr ""
 
@@ -4438,9 +4693,6 @@ msgstr ""
 msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
 msgstr "Titolo"
-
-#~ msgid "\n"
-#~ msgstr "\n"
 
 #~ msgid "\"<stl:inline content=\"name\"></stl:inline>\" to"
 #~ msgstr "\"<stl:inline content=\"name\"></stl:inline>\" a"
@@ -4535,12 +4787,12 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
-#~ msgctxt "table cell"
+#~ msgctxt "link to"
 #~ msgid "${column/title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
-#~ msgctxt "link to"
+#~ msgctxt "table cell"
 #~ msgid "${column/title}"
 #~ msgstr "Titolo"
 
@@ -4704,6 +4956,11 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "abbr[title]"
+#~ msgid "${item/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgctxt "label"
 #~ msgid "${item/title}"
 #~ msgstr "Titolo"
@@ -4714,22 +4971,17 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "link to"
+#~ msgid "${item/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgctxt "option"
 #~ msgid "${item/title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "title attribute"
-#~ msgid "${item/title}"
-#~ msgstr "Titolo"
-
-#, fuzzy
-#~ msgctxt "abbr[title]"
-#~ msgid "${item/title}"
-#~ msgstr "Titolo"
-
-#, fuzzy
-#~ msgctxt "link to"
 #~ msgid "${item/title}"
 #~ msgstr "Titolo"
 
@@ -4802,11 +5054,11 @@ msgstr "Titolo"
 #~ msgstr "Messaggio"
 
 #, fuzzy
-#~ msgctxt "div"
 #~ msgid "${message}"
 #~ msgstr "Messaggio"
 
 #, fuzzy
+#~ msgctxt "div"
 #~ msgid "${message}"
 #~ msgstr "Messaggio"
 
@@ -5056,17 +5308,17 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
-#~ msgctxt "title"
-#~ msgid "${title}"
-#~ msgstr "Titolo"
-
-#, fuzzy
 #~ msgctxt "label"
 #~ msgid "${title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "legend"
+#~ msgid "${title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "title"
 #~ msgid "${title}"
 #~ msgstr "Titolo"
 
@@ -5269,8 +5521,8 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid ""
 #~ "<a style=\"font-size: 10px\" href=\"${messages_next}\">></a> <a href="
-#~ "\"${messages_last}\">>></a> <textarea name=\"msgid\" cols=\"65\" rows=\"8"
-#~ "\" readonly=\"\">${msgid}></textarea>"
+#~ "\"${messages_last}\">>></a> <textarea name=\"msgid\" cols=\"65\" rows="
+#~ "\"8\" readonly=\"\">${msgid}></textarea>"
 #~ msgstr ""
 #~ "<stl:inline content=\"messages_index\"></stl:inline> / <stl:inline "
 #~ "content=\"messages_total\"></stl:inline> <a stl:attributes=\"href "
@@ -5879,10 +6131,6 @@ msgstr "Titolo"
 #~ msgstr "We protect your rights with two steps:"
 
 #, fuzzy
-#~ msgid "Document Calc"
-#~ msgstr "Nuovo documento"
-
-#, fuzzy
 #~ msgid "Document Excel"
 #~ msgstr "Documento modificato."
 
@@ -5953,12 +6201,12 @@ msgstr "Titolo"
 #~ msgstr "Ad ogni versione è associato un numero di versione univoco."
 
 #, fuzzy
-#~ msgctxt "link to"
+#~ msgctxt "input[value]"
 #~ msgid "Edit"
 #~ msgstr "Modifica"
 
 #, fuzzy
-#~ msgctxt "input[value]"
+#~ msgctxt "link to"
 #~ msgid "Edit"
 #~ msgstr "Modifica"
 
@@ -6158,14 +6406,6 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgctxt "span[title]"
 #~ msgid "Heading 3"
-#~ msgstr "in attesa di pubblicazione"
-
-#, fuzzy
-#~ msgid "Heading 4"
-#~ msgstr "in attesa di pubblicazione"
-
-#, fuzzy
-#~ msgid "Heading 5"
 #~ msgstr "in attesa di pubblicazione"
 
 #, fuzzy
@@ -6468,10 +6708,10 @@ msgstr "Titolo"
 
 #, fuzzy
 #~ msgid ""
-#~ "Message ${messages_index} / ${messages_total} <a href=\"${messages_first}"
-#~ "\">&lt;&lt;</a> <a style=\"font-size: 10px\" href=\"${messages_previous}"
-#~ "\">&lt;</a> <a style=\"font-size: 10px\" href=\"${messages_next}\">></a> "
-#~ "<a href=\"${messages_last}\">>></a>"
+#~ "Message ${messages_index} / ${messages_total} <a href="
+#~ "\"${messages_first}\">&lt;&lt;</a> <a style=\"font-size: 10px\" href="
+#~ "\"${messages_previous}\">&lt;</a> <a style=\"font-size: 10px\" href="
+#~ "\"${messages_next}\">></a> <a href=\"${messages_last}\">>></a>"
 #~ msgstr ""
 #~ "<stl:inline content=\"messages_index\"></stl:inline> / <stl:inline "
 #~ "content=\"messages_total\"></stl:inline> <a stl:attributes=\"href "
@@ -6880,11 +7120,11 @@ msgstr "Titolo"
 #~ "SERVICING, REPAIR OR CORRECTION."
 
 #, fuzzy
-#~ msgctxt "button"
 #~ msgid "Save Changes"
 #~ msgstr "OK"
 
 #, fuzzy
+#~ msgctxt "button"
 #~ msgid "Save Changes"
 #~ msgstr "OK"
 
@@ -7224,11 +7464,6 @@ msgstr "Titolo"
 #~ "Title <stl:inline stl:content=\"table/sortcontrol(title)\"></stl:inline>"
 #~ msgstr ""
 #~ "Titolo <stl:inline content=\"table/sortcontrol(title)\"></stl:inline>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Title:"
-#~ msgstr "Titolo"
 
 #~ msgid "To"
 #~ msgstr "A"

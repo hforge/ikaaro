@@ -315,6 +315,9 @@ class SelectWidget(Widget):
 
 class SelectRadio(Widget):
 
+    all_none = None
+    all_none_label = MSG(u'All/None')
+
     template = list(XMLParser("""
         <stl:block stl:if="has_empty_option">
           <input type="radio" name="${name}" value="" checked="checked"
@@ -335,6 +338,11 @@ class SelectRadio(Widget):
         """, stl_namespaces))
 
     template_multiple = list(XMLParser("""
+        <stl:block stl:if="all_none">
+          <input type="checkbox" title="Click to select/unselect all items"
+            onclick="select_checkboxes_of_form(this, this.checked);" />
+          <label>${all_none_label}</label>
+        </stl:block>
         <stl:block stl:repeat="option options">
           <input type="checkbox" name="${name}" id="${id}-${option/name}"
             value="${option/name}" checked="${option/selected}" />
@@ -377,6 +385,8 @@ class SelectRadio(Widget):
             'is_inline': is_inline,
             'has_empty_option': has_empty_option,
             'none_selected': none_selected,
+            'all_none': self.all_none,
+            'all_none_label': self.all_none_label,
             'options': options}
 
 

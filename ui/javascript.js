@@ -7,6 +7,15 @@ function select_checkboxes(elt, checked) {
   });
 }
 
+/* Form: select all/none */
+function select_checkboxes_of_form(elt, checked) {
+  var form = $(elt).parents('form');
+  form.find('input:checkbox').each(function() {
+    $(this).attr('checked', checked);
+  });
+}
+
+
 
 /* Popup */
 var popup_window;
