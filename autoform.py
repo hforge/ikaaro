@@ -23,7 +23,7 @@ from datetime import datetime, date
 from random import randint
 
 # Import from itools
-from itools.core import freeze, get_abspath, proto_lazy_property
+from itools.core import freeze, get_abspath, is_prototype, proto_lazy_property
 from itools.datatypes import Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
@@ -727,7 +727,7 @@ class AutoForm(STLView):
                 value = context.get_query_value(widget.name)
             else:
                 value = field_ns['value']
-                if issubclass(datatype, DateTime) and len(value) <=10:
+                if is_prototype(datatype, DateTime) and len(value) <= 10:
                     value_time = namespace.get('%s_time' % widget.name,
                                                {'value': None})
                     value_time = value_time['value']
