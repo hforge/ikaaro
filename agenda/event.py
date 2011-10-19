@@ -30,12 +30,13 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import SelectWidget
+from ikaaro.autoform import SelectWidget, RadioWidget
 from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.enumerates import DaysOfWeek, IntegerRange
 from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.fields import Field, Owner_Field, SelectDays_Field
+from ikaaro.fields import Owner_Field, SelectDays_Field
+from ikaaro.fields import Boolean_Field, Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
@@ -168,6 +169,58 @@ class RRuleInterval_Field(Select_Field):
 
 
 
+class AllDayWidget(RadioWidget):
+
+    template = make_stl_template("""
+      ${widget}
+      <script>
+         $(document).ready(function(){
+          var old_value_dtstart_time;
+          var old_value_dtend_time;
+          var dtstart_time = $("input[name='dtstart_time']");
+          var dtend_time = $("input[name='dtend_time']");
+          var has_changed_value = 0;
+          $("#${id}-1").click(function(){
+            change_all_day();
+          });
+          $("#${id}-0").click(function(){
+            change_all_day();
+          });
+          function change_all_day(){
+            if($("input:radio[name=${name}]:checked").val() == '1'){
+              old_value_dtstart_time = dtstart_time.val();
+              old_value_dtend_time = dtend_time.val();
+              has_changed_value = 1;
+              dtstart_time.val('');
+              dtend_time.val('');
+              dtstart_time.hide();
+              dtend_time.hide();
+            }else{
+              if (has_changed_value == 1){
+                dtstart_time.val(old_value_dtstart_time);
+                dtend_time.val(old_value_dtend_time);
+              }
+              dtstart_time.show();
+              dtend_time.show();
+            }
+          }
+          change_all_day();
+         });
+      </script>""")
+
+    def widget(self):
+        return RadioWidget(datatype=Boolean,
+            value=self.value, id=self.id, name=self.name)
+
+
+
+class AllDay_Field(Boolean_Field):
+
+    widget = AllDayWidget
+    title = MSG(u'All day')
+
+
+
 class Event_Edit(AutoEdit):
 
     styles = ['/ui/agenda/style.css']
@@ -175,7 +228,9 @@ class Event_Edit(AutoEdit):
 
     # Fields
     fields = AutoEdit.fields + ['owner', 'calendar', 'dtstart', 'dtend',
-        'status', 'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
+        'allday', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
+        'reminder', 'uid']
+    allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
 
@@ -216,8 +271,9 @@ class Event_Edit(AutoEdit):
 
         dtstart = form['dtstart']
         dtend = form['dtend']
-        if type(dtstart) is not type(dtend):
-            msg = ERROR(u'Each time must be filled, or neither.')
+        if not form['allday'] and (not form['dtstart_time'] or
+                                   not form['dtend_time']):
+            msg = ERROR(u"You have to fill start and end time")
             raise FormError(msg)
 
         if dtstart > dtend:
@@ -227,8 +283,19 @@ class Event_Edit(AutoEdit):
         return form
 
 
+    def get_value(self, resource, context, name, datatype):
+        if name == 'allday':
+            dtstart = resource.get_value('dtstart')
+            dtend = resource.get_value('dtend')
+            if type(dtstart) is date and type(dtend) is date:
+                return True
+            return False
+        proxy = super(Event_Edit, self)
+        return proxy.get_value(resource, context, name, datatype)
+
+
     def set_value(self, resource, context, name, form):
-        if name in ('rrule_interval', 'rrule_byday'):
+        if name in ('rrule_interval', 'rrule_byday', 'allday'):
             return False
         elif name == 'rrule':
             value = form.get(name, None)
@@ -262,8 +329,10 @@ class Event_NewInstance(AutoAdd):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend', 'status',
-        'rrule', 'rrule_interval', 'rrule_byday', 'reminder', 'uid']
+    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend',
+        'allday', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
+        'reminder', 'uid']
+    allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
 
@@ -298,8 +367,9 @@ class Event_NewInstance(AutoAdd):
 
         dtstart = form['dtstart']
         dtend = form['dtend']
-        if type(dtstart) is not type(dtend):
-            msg = ERROR(u'Each time must be filled, or neither.')
+        if not form['allday'] and (not form['dtstart_time'] or
+                                   not form['dtend_time']):
+            msg = ERROR(u"You have to fill start and end time")
             raise FormError(msg)
 
         if dtstart > dtend:
@@ -310,7 +380,7 @@ class Event_NewInstance(AutoAdd):
 
 
     def set_value(self, resource, context, name, form):
-        if name in ('rrule_interval', 'rrule_byday'):
+        if name in ('rrule_interval', 'rrule_byday', 'allday'):
             return False
         if name == 'rrule':
             value = form.get(name, None)
@@ -399,8 +469,8 @@ class Event(Content):
     render = Event_Render
 
     # Fields
-    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend', 'status',
-                               'rrule', 'reminder', 'uid']
+    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend',
+                               'status', 'rrule', 'reminder', 'uid']
     owner = Owner_Field
     calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)
