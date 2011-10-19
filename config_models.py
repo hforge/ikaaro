@@ -236,6 +236,15 @@ class Model(OrderedFolder):
         #         if isinstance(x, ModelField_Inherited) ]
 
 
+    def get_model_fields(self):
+        """Return the resources that represent a field.
+        """
+        for field_name in self.get_ordered_values():
+            resource = self.get_resource(field_name)
+            if isinstance(resource, ModelField_Base):
+                yield resource
+
+
     def build_resource_class(self):
         # bases
         base_class = self.base_class
@@ -251,8 +260,8 @@ class Model(OrderedFolder):
             if field and field.readonly:
                 fields.append(field_name)
 
-        for field_name in self.get_ordered_values():
-            resource = self.get_resource(field_name)
+        for resource in self.get_model_fields():
+            field_name = resource.name
             if not isinstance(resource, ModelField_Inherited):
                 field = resource.build_field()
                 class_dict[field_name] = field(title=resource.get_title())
