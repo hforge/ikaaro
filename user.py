@@ -86,9 +86,6 @@ class User(DBResource):
     ########################################################################
     # Metadata
     ########################################################################
-    fields = ['firstname', 'lastname', 'email', 'password', 'avatar',
-              'user_language', 'user_timezone', 'user_state',
-              'groups', 'username']
     firstname = Text_Field(multilingual=False, indexed=True, stored=True,
                            title=MSG(u'First Name'))
     lastname = Text_Field(multilingual=False, indexed=True, stored=True,

@@ -436,9 +436,6 @@ class Event(Content):
     render = Event_Render
 
     # Fields
-    fields = Content.fields + ['owner', 'calendar', 'dtstart', 'dtend',
-                               'place', 'status', 'rrule', 'reminder', 'uid']
-
     owner = Owner_Field
     calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
                 title=MSG(u'Calendar'), indexed=True)

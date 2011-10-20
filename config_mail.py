@@ -75,8 +75,7 @@ class ConfigMail(DBResource):
     class_description = mail_description
     class_icon48 = 'icons/48x48/mail.png'
 
-    fields = DBResource.fields + ['contacts', 'emails_from_addr',
-                                  'emails_signature']
+    # Fields
     contacts = Select_Field(multiple=True,
                             title=MSG(u'Select the contact accounts'),
                             has_empty_option=False)

@@ -176,7 +176,7 @@ class OrderedFolder(Folder):
     class_title = MSG(u'Ordered Folder')
     class_views = ['browse_content']
 
-    fields = Folder.fields + ['order']
+    # Fields
     order = URI_Field(title=MSG(u'Order'), multiple=True)
 
     allow_to_unorder_items = False

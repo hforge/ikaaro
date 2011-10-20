@@ -97,7 +97,6 @@ class Root(Folder):
     abspath = Path('/')
 
     # Fields
-    fields = Folder.fields + ['vhosts', 'website_languages']
     vhosts = Char_Field(multiple=True, title=MSG(u'Domain names'),
                         widget=MultilineWidget)
     website_languages = Char_Field(multiple=True, default=['en'])

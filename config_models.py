@@ -53,7 +53,6 @@ class FieldType_Field(Select_Field):
 class ModelField_Base(DBResource):
 
     # Fields
-    fields = DBResource.fields + ['required', 'multiple', 'tip']
     required = Boolean_Field(title=MSG(u'Required'))
     multiple = Boolean_Field(title=MSG(u'Multiple'))
     tip = Text_Field(title=MSG(u'Tip'))
@@ -95,7 +94,6 @@ class ModelField_Standard(ModelField_Base):
     class_title = MSG(u'Standard field')
 
     # Fields
-    fields = ModelField_Base.fields + ['field_type', 'tip']
     field_type = FieldType_Field(required=True, title=MSG(u'Field type'))
 
     # API

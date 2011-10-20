@@ -84,7 +84,6 @@ class MenuItem(OrderedFolder):
     class_title = MSG(u'Menu')
 
     # Fields
-    fields = OrderedFolder.fields + ['path', 'target']
     path = URI_Field(required=True, title=MSG(u'Path'),
                      widget=PathSelectorWidget)
     target = Target_Field

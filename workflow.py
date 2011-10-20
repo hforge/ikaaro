@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.database import Resource
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.xml import XMLParser
@@ -51,9 +52,8 @@ class State_Field(Select_Field):
 
 
 
-class WorkflowAware(object):
+class WorkflowAware(Resource):
 
-    fields = ['state']
     state = State_Field()
 
 

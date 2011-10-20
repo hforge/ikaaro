@@ -36,9 +36,7 @@ class SEO(DBResource):
     class_icon16 = 'icons/16x16/search.png'
     class_icon48 = 'icons/48x48/search.png'
 
-    fields = DBResource.fields + ['google_site_verification',
-                                  'yahoo_site_verification',
-                                  'bing_site_verification']
+    # Fields
     google_site_verification = Char_Field(
         title=MSG(u'Google site verification key'))
     yahoo_site_verification = Char_Field(

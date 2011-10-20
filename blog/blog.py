@@ -108,7 +108,6 @@ class Post(WebPage):
 
 
     # Fields
-    fields = WebPage.fields + ['date']
     date = Date_Field(stored=True, title=MSG(u'Date'))
     title = WebPage.title(required=True)
     data = WebPage.data(widget=rte)

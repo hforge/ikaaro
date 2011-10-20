@@ -152,10 +152,6 @@ class AccessRule(DBResource):
     class_title = MSG(u'Access rule')
 
     # Fields
-    _fields = ['group', 'permission',
-               'search_path', 'search_path_depth',
-               'search_format', 'search_state']
-    fields = DBResource.fields + _fields
     group = Select_Field(required=True, title=MSG(u'User group'),
                          datatype=Groups_Datatype, indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
@@ -166,6 +162,8 @@ class AccessRule(DBResource):
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
+    _fields = ['group', 'permission', 'search_path', 'search_path_depth',
+               'search_format', 'search_state']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
     results = AccessRule_Results()

@@ -373,8 +373,6 @@ class DBResource(Resource):
     ########################################################################
     # Fields
     ########################################################################
-    fields = ['mtime', 'last_author', 'title', 'description', 'subject']
-
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))

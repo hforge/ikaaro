@@ -33,7 +33,7 @@ from pytz import common_timezones
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from autoform import TextWidget
-from folder import Folder_BrowseContent
+from folder_views import Folder_BrowseContent
 import messages
 from views import BrowseForm
 

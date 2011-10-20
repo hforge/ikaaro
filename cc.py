@@ -20,6 +20,7 @@ from operator import itemgetter
 # Import from itools
 from itools.core import freeze, proto_property
 from itools.csv import Property
+from itools.database import Resource
 from itools.datatypes import Email, Enumerate, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
@@ -467,9 +468,9 @@ class Followers_Field(Select_Field):
 
 
 
-class Observable(object):
+class Observable(Resource):
 
-    fields = ['cc_list']
+    # Fields
     cc_list = Followers_Field(multiple=True, indexed=True,
                               title=MSG(u'Followers'))
 

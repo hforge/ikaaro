@@ -200,7 +200,6 @@ class Calendar(DBResource):
     class_views = ['edit']
 
     # Fields
-    fields = DBResource.fields + ['color', 'owner']
     title = DBResource.title(required=True)
     hidden_for_users = Char_Field(multiple=True)
     color = Color_Field(title=MSG(u'Color'), default='#0467BA', required=True)

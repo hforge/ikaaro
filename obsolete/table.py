@@ -39,7 +39,7 @@ class Table(File):
     record_class = Record
     form = []
 
-    fields = ['table']
+    # Fields
     table = File_Field(class_handler=TableFile)
 
 

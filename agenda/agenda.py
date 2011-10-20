@@ -106,8 +106,7 @@ class ConfigAgenda(Folder):
     config_name = 'agenda'
     config_group = 'content'
 
-
-    fields = Folder.fields + ['timetables']
+    # Fields
     timetables = Char_Field(datatype=Timetables, multiple=True,
         title=MSG(u'Timetables'))
     timetables_default = [

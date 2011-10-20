@@ -112,12 +112,11 @@ class Captcha_Recaptcha(DBResource):
     class_views = ['edit']
 
     # Fields
-    fields = ['public_key', 'private_key']
     public_key = captcha_field(title=MSG(u"Recaptcha public key"))
     private_key = captcha_field(title=MSG(u"Recaptcha private key"))
 
     # Views
-    edit = AutoEdit(fields=fields)
+    edit = AutoEdit(fields=['public_key', 'private_key'])
 
     # API
     def get_widget(self):
@@ -162,12 +161,11 @@ class Captcha_Question(DBResource):
     class_views = ['edit']
 
     # Fields
-    fields = ['question', 'answer']
     question = captcha_field(default=u'2 + 3', title=MSG(u"Question"))
     answer = captcha_field(default=u'5', title=MSG(u"Answer"))
 
     # Views
-    edit = AutoEdit(fields=fields)
+    edit = AutoEdit(fields=['question', 'answer'])
 
     # API
     def get_widget(self):
@@ -260,7 +258,7 @@ class Captcha(Folder):
     class_description = MSG(u'Feature to protect from spammers')
     class_icon48 = 'icons/48x48/captcha.png'
 
-    fields = Folder.fields + ['captcha_type']
+    # Fields
     captcha_type = Select_Field(
         required=True, title=MSG(u"Captcha type"), datatype=CaptchaType,
         widget = Select_CaptchaWidget(has_empty_option=False))

@@ -58,7 +58,6 @@ class File(Content):
     class_handler = FileHandler
 
     # Fields
-    fields = Content.fields + ['data', 'filename']
     data = File_Field(title=MSG(u'File'), required=True)
     filename = Char_Field
 

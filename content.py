@@ -23,5 +23,4 @@ from workflow import WorkflowAware
 
 
 class Content(CommentsAware, Observable, WorkflowAware, DBResource):
-
-    fields = DBResource.fields + WorkflowAware.fields + Observable.fields
+    pass

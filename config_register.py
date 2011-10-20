@@ -180,7 +180,7 @@ class ConfigRegister(DBResource):
     class_description = MSG(u'Configuration of the user registration process.')
     class_icon48 = 'icons/48x48/signin.png'
 
-    fields = DBResource.fields + ['is_open', 'tos']
+    # Fields
     is_open = Boolean_Field(default=False,
                             title=MSG(u'Users can register by themselves'))
     tos = HTMLFile_Field(title=MSG(u"Terms of service"))

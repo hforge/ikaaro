@@ -20,6 +20,7 @@ from textwrap import TextWrapper
 import unicodedata
 
 # Import from itools
+from itools.database import Resource
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
 from itools.html import xhtml_uri
@@ -183,7 +184,6 @@ class Comment(DBResource):
     class_title = MSG(u'Comment')
 
     # Fields
-    fields = ['mtime', 'last_author', 'description', 'owner', 'comment_state']
     title = None
     subject = None
     owner = Owner_Field
@@ -256,7 +256,7 @@ class CommentsView(STLView):
 
 
 
-class CommentsAware(object):
+class CommentsAware(Resource):
     """ - Add "comment" to class_schema.
         - Define a default workflow to be overwritten if necessary, as an
           Enumerate until now.
