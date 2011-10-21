@@ -243,7 +243,7 @@ class File_ExternalEdit(BaseView):
         handler = resource.handler
         header = [
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
-            'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
+            'last-modified:%s' % HTTPDate.encode(resource.handler.get_mtime()),
             'content_type:%s' % handler.get_mimetype(),
             'title:%s' % resource.get_title().encode('utf-8'),
             'include-Cookie:iauth="%s"' % context.get_cookie('iauth'),
