@@ -87,9 +87,15 @@ class AutoAdd(AutoForm):
         cls = self._resource_class
         for name in self.fields:
             field = self.get_field(name)
-            if field is None or not is_prototype(field, Field):
+            if not is_prototype(field, Field):
                 field = cls.get_field(name)
-            if field is not None:
+
+            if not field:
+                continue
+
+            # Access control
+            access = getattr(field, 'access', True)
+            if access is True or self.context.is_access_allowed(cls, field):
                 yield name
 
 
@@ -99,6 +105,7 @@ class AutoAdd(AutoForm):
         if field is None or not is_prototype(field, Field):
             field = cls.get_field(name)
         return field
+
 
     #######################################################################
     # GET

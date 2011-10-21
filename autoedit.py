@@ -129,12 +129,20 @@ class AutoEdit(AutoForm):
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):
-        resource = self.context.resource
+        context = self.context
+        resource = self.resource
+
         for name in self.fields:
             field = self.get_field(resource, name)
-            if field is None or not is_prototype(field, Field):
+            if not is_prototype(field, Field):
                 field = resource.get_field(name)
-            if field is not None:
+
+            if not field:
+                continue
+
+            # Access control
+            access = getattr(field, 'access', True)
+            if access is True or context.is_access_allowed(resource, field):
                 yield name
 
 
