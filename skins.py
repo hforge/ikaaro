@@ -81,9 +81,7 @@ class Skin(object):
 
     def get_styles(self, context):
         # Generic
-        styles = [
-            '/ui/bo.css',
-            '/ui/js_calendar/calendar-aruni.css']
+        styles = ['/ui/bo.css']
 
         # Skin
         if isfile('%s/style.css' % self.key):
@@ -416,8 +414,6 @@ class FancyboxSkin(Skin):
 
     location_template = None
 
-    def get_styles(self, context):
-        return ['/ui/bo.css', '/ui/fancybox/style.css']
 
 
 #############################################################################

@@ -57,6 +57,7 @@ class Widget(CMSTemplate):
     onsubmit = None
     css = None
     scripts = freeze([])
+    styles = freeze([])
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
@@ -325,6 +326,7 @@ class DateWidget(Widget):
         button: ".next()" });
     </script>""")
 
+    styles = ['/ui/js_calendar/calendar-aruni.css']
 
     css = None
     format = '%Y-%m-%d'
@@ -376,6 +378,7 @@ class DatetimeWidget(DateWidget):
         $("input[name=${name}_time]").val("${value_time}");
     </script>""")
 
+    styles = ['/ui/js_calendar/calendar-aruni.css']
 
     @proto_lazy_property
     def scripts(self):
@@ -588,7 +591,6 @@ class ProgressBarWidget(Widget):
         </div>
     </div>
     <script type="text/javascript">
-      $('head').append('<link rel="stylesheet" href="/ui/progressbar/jquery-progressbar.css" type="text/css" />');
       var upload_id = ${upload_id};
       $("INPUT:file").focus(function () {
         attachmentSelected($(this));
@@ -596,6 +598,7 @@ class ProgressBarWidget(Widget):
     </script>
     """)
     scripts = ['/ui/progressbar/jquery-progressbar.min.js']
+    styles = ['/ui/progressbar/jquery-progressbar.css']
 
 
     def __init__(self, name=None, **kw):
@@ -669,6 +672,15 @@ class AutoForm(STLView):
                     scripts.append(script)
 
         return scripts
+
+
+    def get_styles(self, context):
+        styles = []
+        for widget in self.get_widgets(self.resource, context):
+            for style in widget.styles:
+                if style not in styles:
+                    styles.append(style)
+        return styles
 
 
     #########################
