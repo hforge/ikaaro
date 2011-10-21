@@ -109,18 +109,6 @@ class Skin(object):
             '/ui/jquery.js',
             '/ui/javascript.js']
 
-        # Calendar (http://code.google.com/p/dyndatetime/)
-        scripts.append('/ui/js_calendar/jquery.dynDateTime.pack.js')
-        languages = [
-            'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
-            'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
-            'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sp', 'sv', 'tr', 'zh']
-        accept = context.accept_language
-        language = accept.select_language(languages)
-        if language is None:
-            language = 'en'
-        scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
-
         # This skin's JavaScript
         if isfile('%s/javascript.js' % self.key):
             scripts.append('%s/javascript.js' % self.base_path)

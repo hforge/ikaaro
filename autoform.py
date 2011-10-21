@@ -294,6 +294,22 @@ class SelectWidget(Widget):
         return value
 
 
+def get_dynDateTime_scripts():
+    context = get_context()
+    scripts = []
+    # Calendar (http://code.google.com/p/dyndatetime/)
+    scripts.append('/ui/js_calendar/jquery.dynDateTime.pack.js')
+    languages = [
+        'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
+        'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
+        'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sp', 'sv', 'tr', 'zh']
+    accept = context.accept_language
+    language = accept.select_language(languages)
+    if language is None:
+        language = 'en'
+    scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
+    return scripts
+
 
 class DateWidget(Widget):
 
@@ -315,6 +331,11 @@ class DateWidget(Widget):
     size = 10
     show_time = False
     tip = MSG(u'Click on button "..." to choose a date (Format: "yyyy-mm-dd").')
+
+    @proto_lazy_property
+    def scripts(self):
+        return get_dynDateTime_scripts()
+
 
     def show_time_js(self):
         # True -> true for Javascript
@@ -354,7 +375,12 @@ class DatetimeWidget(DateWidget):
         $("input[name=${name}_time]").mask("99:99");
         $("input[name=${name}_time]").val("${value_time}");
     </script>""")
-    scripts = ['/ui/jquery.maskedinput-1.3.min.js']
+
+
+    @proto_lazy_property
+    def scripts(self):
+        return (['/ui/jquery.maskedinput-1.3.min.js'] +
+                get_dynDateTime_scripts())
 
 
     @proto_lazy_property
