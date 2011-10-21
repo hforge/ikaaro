@@ -20,6 +20,7 @@ from itools.gettext import MSG
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
+from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local
@@ -139,11 +140,20 @@ class ModelField_Choices_Browse(OrderedFolder_BrowseContent):
     table_actions = [RemoveButton]
 
 
+class ChoicesWidget_Field(Select_Field):
+
+    options = [{'name': 'radio-checkbox', 'value': u'Radio/Checkbox'},
+               {'name': 'select', 'value': u'Select'}]
+
 
 class ModelField_Choices(OrderedFolder, ModelField_Base):
 
     class_id = 'model-field-choices'
     class_title = MSG(u'Choices field')
+
+    # Fields
+    choices_widget = ChoicesWidget_Field(title=MSG(u'Widget to use'),
+                                         required=True)
 
     def get_document_types(self):
         return [Choice]
@@ -152,14 +162,26 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
     def build_field(self):
         options = [ {'name': x, 'value': self.get_resource(x).get_title()}
                     for x in self.get_ordered_values() ]
-        field = Select_Field
+        field = Select_Field(widget=self.get_widget())
         field_kw = self.get_field_kw(field)
         return field(options=options, **field_kw)
+
+
+    def get_widget(self):
+        if self.get_value('choices_widget') == 'radio-checkbox':
+            if self.get_value('multiple'):
+                return CheckboxWidget
+            return RadioWidget
+        return SelectWidget
 
     # Views
     class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
     browse_content = ModelField_Choices_Browse()
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
+
+    _fields = ModelField_Base._fields + ['choices_widget']
+    new_instance = AutoAdd(fields=_fields)
+    edit = AutoEdit(fields=_fields)
 
 
 
