@@ -55,6 +55,7 @@ from user import UserFolder
 from root_views import AboutView, ContactForm, CreditsView
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView
+from server import get_config
 
 
 # itools source and target languages
@@ -140,10 +141,25 @@ class Root(Folder):
     # Publish
     ########################################################################
     def internal_server_error(self, context):
+        self.alert_on_internal_server_error(context)
         namespace = {'traceback': traceback.format_exc()}
-
         handler = context.get_template('/ui/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
+
+
+    def alert_on_internal_server_error(self, context):
+        # Get administrator mail
+        config = get_config(context.server.target)
+        email = config.get_value('administrator-email')
+        # We send an email to administrator
+        if email:
+            headers = u'\n'.join([u'%s => %s' % (x, y)
+                                    for x, y in context.get_headers()])
+            subject = MSG(u'Internal server error').gettext()
+            text = u'%s\n\n%s\n\n%s' % (context.uri,
+                                        traceback.format_exc(),
+                                        headers)
+            self.send_email(email, subject, text=text)
 
 
     ########################################################################

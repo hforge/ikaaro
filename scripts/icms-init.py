@@ -51,6 +51,10 @@ modules = {modules}
 listen-address = 127.0.0.1
 listen-port = {listen_port}
 
+# Administrator email (We send tracebacks)
+
+administrator-email = {administrator_email}
+
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
 # The "smtp-from" variable is the email address used in the From field when
 # sending anonymous emails.  (These options are required for the application
@@ -141,7 +145,8 @@ def init(parser, options, target):
         modules=" ".join(modules),
         listen_port=getattr(options, 'port') or '8080',
         smtp_host=getattr(options, 'smtp_host') or 'localhost',
-        smtp_from=email)
+        smtp_from=email,
+        administrator_email=getattr(options, 'administrator_email'))
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
@@ -203,6 +208,8 @@ if __name__ == '__main__':
         help='add the given MODULES to load at start')
     parser.add_option('--profile',
         help="print profile information to the given file")
+    parser.add_option('-a', '--administrator-email',
+                      help='define the administrator email')
 
     options, args = parser.parse_args()
     if len(args) != 1:

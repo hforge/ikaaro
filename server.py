@@ -35,7 +35,7 @@ from glib import GError
 # Import from itools
 from itools.core import get_abspath
 from itools.database import Metadata
-from itools.datatypes import Boolean, Integer, String, Tokens
+from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
 from itools.log import Logger, register_logger
@@ -339,6 +339,7 @@ class ServerConfig(ConfigFile):
         'modules': Tokens,
         'listen-address': String(default=''),
         'listen-port': Integer(default=None),
+        'administrator-email': Email(default=''),
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
