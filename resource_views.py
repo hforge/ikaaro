@@ -252,7 +252,7 @@ class LoginView(STLView):
             context.message = message
             return
 
-        context.login(user)
+        user.login(context)
 
         # Check if user account is completed
         if not user.account_is_completed():

@@ -146,6 +146,14 @@ class User(DBResource):
         return secure_hash == self.get_value('password')
 
 
+    def login(self, context):
+        context.login(self)
+        # To activte this feature set the lastlog field
+        lastlog = self.get_field('lastlog')
+        if lastlog:
+            self.set_value('lastlog', context.timestamp)
+
+
     ########################################################################
     # API
     ########################################################################

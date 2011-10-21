@@ -104,7 +104,7 @@ class User_ConfirmRegistration(AutoForm):
         resource.set_value('password', password)
         resource.del_property('user_state')
         # Set cookie
-        context.login(resource)
+        resource.login(context)
 
         # Ok
         message = INFO(u'Operation successful! Welcome.')
@@ -286,16 +286,6 @@ class User_EditPassword(AutoForm):
 
 
     def action(self, resource, context, form):
-        # Check password to confirm changes
-        is_same_user = (resource.name == context.user.name)
-        if is_same_user:
-            password = form['password']
-            if not resource.authenticate(password):
-                context.message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-                return
-
         # Check the new password matches
         newpass = form['newpass'].strip()
         newpass2 = form['newpass2']
@@ -303,15 +293,20 @@ class User_EditPassword(AutoForm):
             context.message = ERROR(u"Passwords mismatch, please try again.")
             return
 
-        # Clear confirmation key
-        resource.set_value('user_state', None)
+        # Check password to confirm changes
+        if resource.name == context.user.name:
+            password = form['password']
+            if not resource.authenticate(password):
+                context.message = ERROR(
+                    u"You mistyped your actual password, your account is"
+                    u" not changed.")
+                return
 
-        # Set password
-        resource.set_value('password', newpass)
-
-        # Update the cookie if we updated our own password
-        if is_same_user:
             context.login(resource)
+
+        # Clear confirmation key and set password
+        resource.set_value('user_state', None)
+        resource.set_value('password', newpass)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
