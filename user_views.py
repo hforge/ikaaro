@@ -200,8 +200,7 @@ class User_EditAccount(AutoEdit):
                     error = (
                         u'There is another user with the "{value}" {name},'
                         u' please choose another one.')
-                    error = ERROR(error, name=name, value=new_value)
-                    context.message = error.gettext()
+                    context.message = ERROR(error, name=name, value=new_value)
                     return True
 
         proxy = super(User_EditAccount, self)
