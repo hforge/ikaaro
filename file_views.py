@@ -267,7 +267,7 @@ class File_ExternalEdit(BaseView):
         handler = resource.handler
         header = [
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
-            'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
+            'last-modified:%s' % HTTPDate.encode(resource.handler.get_mtime()),
             'content_type:%s' % handler.get_mimetype(),
             'cookie:%s' % context.soup_message.get_header('Cookie'),
             'title:%s' % resource.get_title().encode('utf-8')]
