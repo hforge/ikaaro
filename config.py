@@ -60,7 +60,7 @@ class Configuration_View(STLView):
             view = resource.get_view(name)
             if view is None:
                 continue
-            if not context.is_access_allowed(context.user, resource, view):
+            if not context.is_access_allowed(resource, view):
                 continue
             group_name = getattr(view, 'config_group', 'other')
             groups.setdefault(group_name, []).append({

@@ -149,12 +149,11 @@ class User_Profile(STLView):
 
 
     def get_items(self, resource, context):
-        user = context.user
         items = []
         for name in self.items:
             # Get the view & check access rights
             view = resource.get_view(name)
-            if view and context.is_access_allowed(user, resource, view):
+            if view and context.is_access_allowed(resource, view):
                 items.append({
                     'url': ';%s' % name,
                     'title': view.title,

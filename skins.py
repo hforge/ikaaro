@@ -220,7 +220,7 @@ class Skin(object):
         if isinstance(here, Folder) is False:
             container = here.parent
         view = container.get_view('new_resource')
-        if context.is_access_allowed(user, container, view):
+        if context.is_access_allowed(container, view):
             usermenu.append({
                 'href': '%s/;new_resource' % context.get_link(container),
                 'title': MSG(u'Add content'),
@@ -229,7 +229,7 @@ class Skin(object):
         # Configuration
         root = context.root
         view = root.get_resource('config').get_view('view')
-        if context.is_access_allowed(user, root, view):
+        if context.is_access_allowed(root, view):
             usermenu.append({
                 'href': '/config',
                 'title': MSG(u'Configuration'),

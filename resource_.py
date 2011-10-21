@@ -271,7 +271,7 @@ class DBResource(Resource):
         context = get_context()
         for view_name in views:
             view = getattr(self, view_name, None)
-            if context.is_access_allowed(context.user, self, view):
+            if context.is_access_allowed(self, view):
                 return view_name
         return views[0]
 
@@ -686,7 +686,7 @@ class DBResource(Resource):
         for name in self.class_views:
             view_name = name.split('?')[0]
             view = self.get_view(view_name)
-            if context.is_access_allowed(context.user, self, view):
+            if context.is_access_allowed(self, view):
                 yield name, view
 
 

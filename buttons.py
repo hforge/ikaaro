@@ -58,8 +58,7 @@ class Button(STLTemplate):
     @proto_property
     def show(self):
         context = self.context
-        resource = context.resource
-        return context.is_access_allowed(context.user, resource, self)
+        return context.is_access_allowed(context.resource, self)
 
 
 
@@ -69,7 +68,7 @@ class BrowseButton(Button):
     def show(self):
         context = self.context
         for item in self.items:
-            if context.is_access_allowed(context.user, item, self):
+            if context.is_access_allowed(item, self):
                 return True
         return False
 

@@ -124,7 +124,7 @@ class MenuItem(OrderedFolder):
             if not view:
                 return False
             # Check ACL
-            return context.is_access_allowed(context.user, resource, view)
+            return context.is_access_allowed(resource, view)
 
         # Check if the user can access to resource views
         # get_views checks ACLs with by calling is_access_allowed

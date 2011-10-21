@@ -86,7 +86,7 @@ class CompositeView(STLView):
         views = []
         for view in self.subviews:
             view = view(resource=resource, context=context) # bind
-            if context.is_access_allowed(context.user, resource, view):
+            if context.is_access_allowed(resource, view):
                 views.append(view)
         return views
 
