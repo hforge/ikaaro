@@ -221,7 +221,7 @@ class CommentsView(STLForm):
         namespace['edit_mode'] = self.edit_mode
         namespace['action'] = None
         namespace['actions'] = [Button(access='is_allowed_to_edit',
-            title=u'Change state', resource=resource, context=context,
+            title=MSG(u'Change state'), resource=resource, context=context,
             name='update')]
         namespace['comments'] = comments
         namespace['filter'] = filter_widget
