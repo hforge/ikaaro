@@ -230,17 +230,20 @@ class LoginView(STLView):
 
         # Case 1: Forgotten password
         if form['no_password']:
+            # 1.1 Send email
             if user:
-                datatype = user.get_field(user.login_name_property).datatype
-                if not datatype.is_valid(loginname):
-                    message = u'The given login name is not valid.'
-                    context.message = ERROR(message)
-                    return
                 email = user.get_value('email')
-                user.send_forgotten_password(context, email)
+                if user.get_value('user_state') == 'invalid':
+                    # TODO Send email
+                    pass
+                else:
+                    user.send_forgotten_password(context, email)
+            else:
+                # TODO Send email (which is the email address?)
+                pass
 
-            # We send the same message even if the user does not exist
-            # (privacy wins over usability).
+            # 1.2 Show message (we show the same message even if the user
+            # does not exist, because privacy wins over usability)
             path = '/ui/website/forgotten_password.xml'
             handler = context.get_template(path)
             return stl(handler)
@@ -250,6 +253,13 @@ class LoginView(STLView):
         if user is None or not user.authenticate(password):
             message = ERROR(u'The login name or the password is incorrect.')
             context.message = message
+            return
+
+        # Check if the user account is valid
+        if user.get_value('user_state') == 'inactive':
+            context.message = ERROR(
+                u'Your account has been canceled, contact the administrator '
+                u' if you want to get access again.')
             return
 
         user.login(context)
