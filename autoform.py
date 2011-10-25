@@ -726,6 +726,14 @@ class AutoForm(STLView):
     # End hack for datatypes
     #########################
 
+    def get_before_namespace(self, resource, context):
+        return None
+
+
+    def get_after_namespace(self, resource, context):
+        return None
+
+
     def get_namespace(self, resource, context):
         namespace = super(AutoForm, self).get_namespace(resource, context)
 
@@ -803,10 +811,14 @@ class AutoForm(STLView):
         # Get the actions
         actions = self._get_action_namespace(resource, context)
 
+        # Before and after
+        before = self.get_before_namespace(resource, context)
+        after = self.get_after_namespace(resource, context)
+
         # Build namespace
         return {
             'form_id': self.form_id,
-            'before': None,
+            'before': before,
             'actions': actions,
             'method': self.method,
             'enctype': enctype,
@@ -816,7 +828,7 @@ class AutoForm(STLView):
             'first_widget': first_widget,
             'fields_list': fields_list,
             'fields': fields_dict,
-            'after': None}
+            'after': after}
 
 
 # Registry with {datatype: widget, ...}

@@ -232,18 +232,13 @@ class Event_Edit(AutoEdit):
         return scripts
 
 
-    def get_namespace(self, resource, context):
-        proxy = super(Event_Edit, self)
-        namespace = proxy.get_namespace(resource, context)
-
+    def get_before_namespace(self, resource, context):
         # Set organizer infos in ${before}
         owner = resource.get_owner()
         owner = resource.get_resource(owner).get_title()
         owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
         owner = owner.gettext().encode('utf-8')
-        namespace['before'] = XMLParser(owner)
-
-        return namespace
+        return XMLParser(owner)
 
 
     def _get_form(self, resource, context):

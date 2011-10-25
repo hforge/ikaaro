@@ -28,6 +28,7 @@ from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
+from itools.web import get_context
 
 # Import from ikaaro
 from content import Content
@@ -123,6 +124,36 @@ class Image(File):
     class_views = ['view', 'download', 'edit', 'externaledit', 'links',
                    'backlinks', 'commit_log']
     class_handler = ImageHandler
+
+    def get_max_width(self):
+        # Auto-reduce width on init
+        server = get_context().server
+        if server is not None:
+            return server.config.get_value('max-width')
+        return None
+
+
+    def get_max_height(self):
+        # Auto-reduce height on init
+        server = get_context().server
+        if server is not None:
+            return server.config.get_value('max-height')
+        return None
+
+
+    def init_resource(self, body=None, filename=None, extension=None, **kw):
+        super(Image, self).init_resource(body=body, filename=filename,
+            extension=extension, **kw)
+        # Resize image at max size
+        max_width = self.get_max_width()
+        max_height = self.get_max_height()
+        if max_width or max_height:
+            handler = self.handler
+            xsize, ysize = handler.get_size()
+            thumb, format = handler.get_thumbnail(
+                min(xsize, max_width or xsize),
+                min(ysize, max_height or ysize))
+            handler.load_state_from_string(thumb)
 
     # Views
     thumb = DBResource_GetImage(field_name='data')

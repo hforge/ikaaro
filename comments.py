@@ -232,7 +232,7 @@ class CommentsView(STLView):
             comments.insert(0, view.GET(resource, context))
             i += 1
 
-        button = Button(access='is_allowed_to_edit', title=u'Change state',
+        button = Button(access='is_allowed_to_edit', title=MSG(u'Change state'),
                         resource=resource, context=context, name='update')
         return {
             'edit_mode': self.edit_mode,

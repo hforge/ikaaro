@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2011-07-25 15:07+CET\n"
+"POT-Creation-Date: 2011-10-25 08:10+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -97,7 +97,7 @@ msgid ""
 "files with the same name</g>"
 msgstr ""
 
-#: ../website_views.py:208
+#: ../website_views.py:212
 msgid "%s@%s:%s"
 msgstr ""
 
@@ -541,7 +541,7 @@ msgctxt "link"
 msgid "<g id='8'>«</g> ${current_week} <g id='9'>»</g>"
 msgstr ""
 
-#: ../calendar/event.py:108
+#: ../calendar/event.py:105
 msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:183
+#: ../website_views.py:187
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -839,7 +839,7 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: ../autoform.py:605
+#: ../autoform.py:606
 msgid "Body"
 msgstr "正文"
 
@@ -861,17 +861,17 @@ msgstr "浏览"
 msgid "Browse Members"
 msgstr "浏览"
 
-#: ../popup.py:566
+#: ../popup.py:567
 #, fuzzy
 msgid "Browse and insert a Media from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: ../popup.py:536
+#: ../popup.py:537
 #, fuzzy
 msgid "Browse and insert an Image from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: ../popup.py:478
+#: ../popup.py:479
 #, fuzzy
 msgid "Browse and link to a File from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
@@ -892,11 +892,11 @@ msgid ""
 "every time this resource is modified."
 msgstr ""
 
-#: ../file.py:378
+#: ../file.py:409
 msgid "Bzip2"
 msgstr ""
 
-#: ../file.py:379
+#: ../file.py:410
 msgid "Bzip2 Compressed"
 msgstr ""
 
@@ -925,7 +925,7 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: ../calendar/event.py:312
+#: ../calendar/event.py:307
 msgid "Calendar event"
 msgstr ""
 
@@ -980,7 +980,7 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "改变内设"
 
-#: ../comments.py:223
+#: ../comments.py:224
 #, fuzzy
 msgid "Change state"
 msgstr "语言被改变."
@@ -1024,11 +1024,11 @@ msgstr "更改安全设置"
 msgid "Choose your password"
 msgstr "改变内设"
 
-#: ../autoform.py:338
+#: ../autoform.py:339
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 
-#: ../autoform.py:393 ../autoform.py:428
+#: ../autoform.py:394 ../autoform.py:429
 msgid "Click on button \"...\" to select a file."
 msgstr ""
 
@@ -1148,7 +1148,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:106 ../website.py:111 ../website.py:246
+#: ../website_views.py:110 ../website.py:111 ../website.py:246
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1176,7 +1176,7 @@ msgstr ""
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
-#: ../popup.py:480
+#: ../popup.py:481
 msgid "Create a new page and link to it:"
 msgstr ""
 
@@ -1190,7 +1190,7 @@ msgstr "列出文档"
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:215
+#: ../website_views.py:219
 msgid "Credits"
 msgstr ""
 
@@ -1206,7 +1206,7 @@ msgstr ""
 msgid "Cut"
 msgstr "剪切"
 
-#: ../calendar/event.py:447
+#: ../calendar/event.py:442
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1276,6 +1276,11 @@ msgctxt "table cell"
 msgid "Default"
 msgstr "设置"
 
+#: ../website_views.py:240
+#, fuzzy
+msgid "Default language"
+msgstr "语言"
+
 #: ../control_panel.py:283
 msgid "Define the Web Site languages."
 msgstr ""
@@ -1288,7 +1293,7 @@ msgstr ""
 msgid "Definitely remove"
 msgstr ""
 
-#: ../autoform.py:602 ../blog/blog.py:42 ../calendar/event.py:79
+#: ../autoform.py:603 ../blog/blog.py:42 ../calendar/event.py:79
 msgid "Description"
 msgstr ""
 
@@ -1329,7 +1334,7 @@ msgctxt "li"
 msgid "Document Management."
 msgstr "编辑文档"
 
-#: ../website_views.py:230
+#: ../website_views.py:242
 #, fuzzy
 msgid "Domain names"
 msgstr "新文件"
@@ -1359,7 +1364,7 @@ msgstr "新文件"
 msgid "E-mail Address"
 msgstr "用户"
 
-#: ../calendar/event.py:142 ../calendar/event.py:244
+#: ../calendar/event.py:137 ../calendar/event.py:239
 #, fuzzy
 msgid "Each time must be filled, or neither."
 msgstr "必须写入文件."
@@ -1490,7 +1495,7 @@ msgstr "用户"
 msgid "Emails signature"
 msgstr ""
 
-#: ../calendar/event.py:78 ../calendar/event.py:216
+#: ../calendar/event.py:78 ../calendar/event.py:211
 msgid "End"
 msgstr ""
 
@@ -1507,21 +1512,21 @@ msgstr ""
 msgid "Error: {msg}"
 msgstr "信息"
 
-#: ../calendar/event.py:311
+#: ../calendar/event.py:306
 #, fuzzy
 msgid "Event"
 msgstr "简易文件"
 
-#: ../calendar/event.py:188
+#: ../calendar/event.py:183
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../file.py:239
+#: ../file.py:270
 #, fuzzy
 msgid "Excel"
 msgstr "外部"
 
-#: ../file.py:240
+#: ../file.py:271
 msgid "Excel Spreadsheet"
 msgstr ""
 
@@ -1586,7 +1591,7 @@ msgctxt "legend"
 msgid "Fields"
 msgstr ""
 
-#: ../file_views.py:57 ../file.py:52
+#: ../file_views.py:57 ../file.py:53
 msgid "File"
 msgstr ""
 
@@ -1615,11 +1620,11 @@ msgstr "你的全名"
 msgid "Fixed"
 msgstr ""
 
-#: ../file.py:214
+#: ../file.py:245
 msgid "Flash"
 msgstr ""
 
-#: ../file.py:215
+#: ../file.py:246
 #, fuzzy
 msgid "Flash Document"
 msgstr "新文件"
@@ -1732,11 +1737,11 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: ../file.py:368
+#: ../file.py:399
 msgid "Gzip"
 msgstr ""
 
-#: ../file.py:369
+#: ../file.py:400
 msgid "Gzip Compressed"
 msgstr ""
 
@@ -1801,7 +1806,7 @@ msgid ""
 "checkbox below the password field."
 msgstr ""
 
-#: ../file.py:180
+#: ../file.py:181
 msgid "Image"
 msgstr ""
 
@@ -1810,17 +1815,17 @@ msgstr ""
 msgid "Import"
 msgstr "简易文件"
 
-#: ../popup.py:535
+#: ../popup.py:536
 #, fuzzy
 msgid "Insert image"
 msgstr "新链接"
 
-#: ../popup.py:477
+#: ../popup.py:478
 #, fuzzy
 msgid "Insert link"
 msgstr "新链接"
 
-#: ../popup.py:565
+#: ../popup.py:566
 #, fuzzy
 msgid "Insert media"
 msgstr "新链接"
@@ -1835,11 +1840,11 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../calendar/event.py:157 ../calendar/event.py:259
+#: ../calendar/event.py:152 ../calendar/event.py:254
 msgid "Invalid dates."
 msgstr ""
 
-#: ../popup.py:498
+#: ../popup.py:499
 msgid "Invalid title."
 msgstr ""
 
@@ -1905,7 +1910,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../autoform.py:603
+#: ../autoform.py:604
 msgid "Keywords"
 msgstr ""
 
@@ -1971,7 +1976,7 @@ msgctxt "legend"
 msgid "Linux/Unix"
 msgstr ""
 
-#: ../autoform.py:599
+#: ../autoform.py:600
 #, fuzzy
 msgid "Location"
 msgstr "登录"
@@ -2064,17 +2069,17 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:135
+#: ../website_views.py:139
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
 
-#: ../website_views.py:176
+#: ../website_views.py:180
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:134
+#: ../website_views.py:138
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2209,7 +2214,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../autoform.py:236
+#: ../autoform.py:237
 msgid "No"
 msgstr ""
 
@@ -2280,15 +2285,15 @@ msgstr ""
 msgid "November"
 msgstr ""
 
-#: ../file.py:329
+#: ../file.py:360
 msgid "ODP"
 msgstr ""
 
-#: ../file.py:319
+#: ../file.py:350
 msgid "ODS"
 msgstr ""
 
-#: ../file.py:309
+#: ../file.py:340
 msgid "ODT"
 msgstr ""
 
@@ -2302,16 +2307,16 @@ msgctxt "button"
 msgid "OK"
 msgstr ""
 
-#: ../file.py:269
+#: ../file.py:300
 msgid "OOo Calc"
 msgstr ""
 
-#: ../file.py:279
+#: ../file.py:310
 #, fuzzy
 msgid "OOo Impress"
 msgstr "编辑文档"
 
-#: ../file.py:259
+#: ../file.py:290
 #, fuzzy
 msgid "OOo Writer"
 msgstr "写入"
@@ -2345,34 +2350,34 @@ msgstr ""
 msgid "Open Issues"
 msgstr ""
 
-#: ../file.py:330
+#: ../file.py:361
 #, fuzzy
 msgid "OpenDocument Presentation"
 msgstr "新文件"
 
-#: ../file.py:320
+#: ../file.py:351
 #, fuzzy
 msgid "OpenDocument Spreadsheet"
 msgstr "新文件"
 
-#: ../file.py:310
+#: ../file.py:341
 #, fuzzy
 msgid "OpenDocument Text"
 msgstr "编辑文档"
 
-#: ../file.py:280
+#: ../file.py:311
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: ../file.py:270
+#: ../file.py:301
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: ../file.py:260
+#: ../file.py:291
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:198
+#: ../website_views.py:202
 msgid "Operating System"
 msgstr ""
 
@@ -2425,11 +2430,11 @@ msgstr ""
 msgid "Orphans"
 msgstr ""
 
-#: ../file.py:289
+#: ../file.py:320
 msgid "PDF"
 msgstr ""
 
-#: ../file.py:290
+#: ../file.py:321
 #, fuzzy
 msgid "PDF Document"
 msgstr "新文件"
@@ -2458,7 +2463,7 @@ msgstr "粘贴"
 msgid "Path"
 msgstr "粘贴"
 
-#: ../comments.py:250 ../workflow.py:46
+#: ../comments.py:251 ../workflow.py:46
 msgid "Pending"
 msgstr ""
 
@@ -2475,7 +2480,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr "简易文件"
 
-#: ../autoform.py:521
+#: ../autoform.py:522
 #, fuzzy
 msgid "Please answer the question below:"
 msgstr "你必须选择删除成员."
@@ -2519,11 +2524,11 @@ msgstr "葡萄牙语"
 msgid "Post"
 msgstr "粘贴"
 
-#: ../file.py:249
+#: ../file.py:280
 msgid "PowerPoint"
 msgstr ""
 
-#: ../file.py:250
+#: ../file.py:281
 msgid "PowerPoint Presentation"
 msgstr ""
 
@@ -2557,7 +2562,7 @@ msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
-#: ../comments.py:249 ../workflow.py:41
+#: ../comments.py:250 ../workflow.py:41
 #, fuzzy
 msgid "Private"
 msgstr "隐私"
@@ -2584,7 +2589,7 @@ msgstr "新用户"
 msgid "Profile"
 msgstr ""
 
-#: ../comments.py:248 ../workflow.py:50
+#: ../comments.py:249 ../workflow.py:50
 #, fuzzy
 msgid "Public"
 msgstr "公共"
@@ -2598,20 +2603,20 @@ msgstr "公共"
 msgid "Publish the document."
 msgstr "列出文档"
 
-#: ../website_views.py:197 ../text.py:243
+#: ../website_views.py:201 ../text.py:243
 msgid "Python"
 msgstr ""
 
-#: ../file.py:299
+#: ../file.py:330
 msgid "RTF"
 msgstr ""
 
-#: ../file.py:300
+#: ../file.py:331
 #, fuzzy
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:129
+#: ../website_views.py:133
 msgid "Recipient"
 msgstr "收件人"
 
@@ -2684,7 +2689,7 @@ msgstr "查阅"
 msgid "Replace favicon file (ICO 32x32 only)"
 msgstr ""
 
-#: ../autoform.py:607
+#: ../autoform.py:608
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -2831,7 +2836,7 @@ msgstr "没有物件被选中"
 msgid "Saturday"
 msgstr ""
 
-#: ../autoform.py:628 ../calendar/event.py:85
+#: ../autoform.py:629 ../calendar/event.py:85
 #, fuzzy
 msgid "Save"
 msgstr "保存"
@@ -2914,11 +2919,16 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "你必须选择删除成员."
 
-#: ../website_views.py:107
+#: ../website_views.py:241
+#, fuzzy
+msgid "Select the default language"
+msgstr "你不能改变预设语言."
+
+#: ../website_views.py:111
 msgid "Send"
 msgstr "发送"
 
-#: ../autoform.py:604
+#: ../autoform.py:605
 msgid "Separated by comma"
 msgstr ""
 
@@ -2976,7 +2986,7 @@ msgstr "西班牙语"
 msgid "Stability Issue"
 msgstr ""
 
-#: ../calendar/event.py:75 ../calendar/event.py:213
+#: ../calendar/event.py:75 ../calendar/event.py:208
 #, fuzzy
 msgid "Start"
 msgstr "状态"
@@ -2993,8 +3003,8 @@ msgstr "状态"
 
 #: ../cc.py:251 ../tracker/tracker_views.py:57 ../popup.py:84
 #: ../calendar/event.py:80 ../future/order.py:101 ../future/order.py:174
-#: ../workflow.py:164 ../access.py:150 ../tracker/issue.py:243
-#: ../folder_views.py:260
+#: ../workflow.py:83 ../workflow.py:85 ../workflow.py:164 ../access.py:150
+#: ../tracker/issue.py:243 ../folder_views.py:260
 msgid "State"
 msgstr "状态"
 
@@ -3029,7 +3039,7 @@ msgstr "名称"
 msgid "Subscribed"
 msgstr "名称"
 
-#: ../calendar/event.py:217
+#: ../calendar/event.py:212
 #, fuzzy
 msgid "Subscribers"
 msgstr "名称"
@@ -3053,12 +3063,12 @@ msgctxt "li"
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: ../file.py:358
+#: ../file.py:389
 #, fuzzy
 msgid "Tar"
 msgstr "对照"
 
-#: ../file.py:359
+#: ../file.py:390
 msgid "Tar Archive"
 msgstr ""
 
@@ -3138,7 +3148,7 @@ msgstr "用户名错误,请再输入."
 msgid "The email or the password is incorrect."
 msgstr "密码错误,请再输入."
 
-#: ../calendar/event.py:444
+#: ../calendar/event.py:439
 #, fuzzy
 msgid "The event \"{title}\" has been modified"
 msgstr "预设语言已被改变."
@@ -3178,7 +3188,7 @@ msgstr ""
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
-#: ../popup.py:423
+#: ../popup.py:424
 msgid "The given file is not of the expected type."
 msgstr ""
 
@@ -3330,9 +3340,9 @@ msgctxt "label"
 msgid "Timezone"
 msgstr ""
 
-#: ../tracker/tracker_views.py:52 ../autoform.py:600 ../tracker/issue.py:232
+#: ../tracker/tracker_views.py:52 ../autoform.py:601 ../tracker/issue.py:232
 #: ../views.py:479 ../menu.py:307 ../future/order.py:100
-#: ../future/order.py:172 ../calendar/event.py:212 ../folder_views.py:256
+#: ../future/order.py:172 ../calendar/event.py:207 ../folder_views.py:256
 msgid "Title"
 msgstr "名称"
 
@@ -3360,7 +3370,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar/event.py:76 ../calendar/event.py:214
+#: ../calendar/event.py:76 ../calendar/event.py:209
 msgid "To add an event lasting all day long, leave time fields empty."
 msgstr ""
 
@@ -3460,15 +3470,15 @@ msgctxt "table cell"
 msgid "Type"
 msgstr "种类"
 
-#: ../popup.py:567
+#: ../popup.py:568
 msgid "Type the URL of an external media"
 msgstr ""
 
-#: ../popup.py:479
+#: ../popup.py:480
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../website_views.py:231
+#: ../website_views.py:243
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
@@ -3577,19 +3587,19 @@ msgstr "上载"
 msgid "Upload File"
 msgstr "上载文件"
 
-#: ../popup.py:481
+#: ../popup.py:482
 msgid "Upload a file to the current folder and link to it:"
 msgstr ""
 
-#: ../popup.py:569
+#: ../popup.py:570
 msgid "Upload a media to the current folder and insert it:"
 msgstr ""
 
-#: ../popup.py:539
+#: ../popup.py:540
 msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
-#: ../file.py:54
+#: ../file.py:55
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
@@ -3677,7 +3687,7 @@ msgstr "个人"
 msgid "Versions"
 msgstr "个人"
 
-#: ../file.py:202 ../file.py:203
+#: ../file.py:233 ../file.py:234
 #, fuzzy
 msgid "Video"
 msgstr "浏览"
@@ -3728,11 +3738,11 @@ msgstr ""
 msgid "Windows"
 msgstr ""
 
-#: ../file.py:229
+#: ../file.py:260
 msgid "Word"
 msgstr ""
 
-#: ../file.py:230
+#: ../file.py:261
 #, fuzzy
 msgid "Word Text"
 msgstr "简易文件"
@@ -3749,7 +3759,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../autoform.py:236
+#: ../autoform.py:237
 msgid "Yes"
 msgstr ""
 
@@ -3844,7 +3854,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:133
+#: ../website_views.py:137
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -3854,11 +3864,11 @@ msgctxt "li"
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: ../buttons.py:205 ../file.py:348
+#: ../buttons.py:205 ../file.py:379
 msgid "Zip"
 msgstr ""
 
-#: ../file.py:349
+#: ../file.py:380
 msgid "Zip Archive"
 msgstr ""
 
@@ -3922,7 +3932,7 @@ msgstr ""
 msgid "large"
 msgstr "对照"
 
-#: ../website_views.py:196
+#: ../website_views.py:200
 msgid "lpOD"
 msgstr ""
 
@@ -3935,7 +3945,7 @@ msgstr ""
 msgid "original"
 msgstr "登录"
 
-#: ../website_views.py:195
+#: ../website_views.py:199
 msgid "pygobject"
 msgstr ""
 
@@ -3977,10 +3987,6 @@ msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
-msgstr ""
-
-#: ../comments.py:241
-msgid "xxx"
 msgstr ""
 
 #: ../ui/root/license.xml.en:8
@@ -5904,10 +5910,6 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Table"
 #~ msgstr "名称"
-
-#, fuzzy
-#~ msgid "Target language"
-#~ msgstr "语言"
 
 #, fuzzy
 #~ msgctxt "link"

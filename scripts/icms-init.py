@@ -93,6 +93,11 @@ index-text = 1
 # Set expiration time in minutes for the authentication cookie, where 0
 # means the cookie does not expire (by default it is 0)
 auth-cookie-expires = 0
+
+# The size of images can be controlled by setting the following values.
+# (ie. max-width = 1280) (by default it is None, keeping original size).
+max-width =
+max-height =
 """)
 
 
