@@ -24,6 +24,7 @@ from itools.web import ERROR, INFO, FormError
 from autoadd import AutoAdd
 from buttons import Button, BrowseButton
 from config import Configuration
+from emails import send_email
 from fields import Password_Field
 from messages import MSG_CHANGES_SAVED, MSG_PASSWORD_MISMATCH
 from resource_ import DBResource
@@ -91,12 +92,13 @@ class AddUser(AutoAdd):
 
         # Send email to the new user
         if child:
-            email = form['email']
-            password = form['password']
-            if password is None:
-                child.send_confirmation(context, email)
+            if form['password']:
+                email_id = 'add-user-send-notification'
             else:
-                child.send_registration(context, email)
+                child.update_pending_key()
+                email_id = 'add-user-send-invitation'
+
+            send_email(email_id, context, form['email'], user=child)
 
         # Ok
         return child

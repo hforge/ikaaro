@@ -33,6 +33,7 @@ from pytz import common_timezones
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from autoform import TextWidget
+from emails import send_email
 from folder_views import Folder_BrowseContent
 import messages
 from views import BrowseForm
@@ -106,6 +107,11 @@ class User_ConfirmRegistration(AutoForm):
         # Set cookie
         resource.login(context)
 
+        # Send email
+        to_addr = resource.get_value('email')
+        send_email('register-send-confirmation', context, to_addr,
+                   user=resource)
+
         # Ok
         message = INFO(u'Operation successful! Welcome.')
         return context.come_back(message, goto='./')
@@ -130,7 +136,9 @@ class User_ResendConfirmation(BaseView):
             return context.come_back(msg)
 
         # Resend confirmation
-        resource.send_confirmation(context, resource.get_value('email'))
+        resource.update_pending_key()
+        email = resource.get_value('email')
+        send_email('add-user-send-invitation', context, email, user=resource)
         # Ok
         msg = MSG(u'Confirmation sent!')
         return context.come_back(msg)

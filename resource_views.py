@@ -32,6 +32,7 @@ from itools.web import Conflict, NotImplemented
 
 # Import from ikaaro
 from datatypes import CopyCookie
+from emails import send_email
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 
@@ -234,13 +235,15 @@ class LoginView(STLView):
             if user:
                 email = user.get_value('email')
                 if user.get_value('user_state') == 'invalid':
-                    # TODO Send email
-                    pass
+                    email_id = None # TODO
                 else:
-                    user.send_forgotten_password(context, email)
+                    user.update_pending_key()
+                    email_id = 'forgotten-password-ask-for-confirmation'
             else:
-                # TODO Send email (which is the email address?)
-                pass
+                email_id = None # TODO Which is the email address?
+
+            if email_id:
+                send_email(email_id, context, email, user=user)
 
             # 1.2 Show message (we show the same message even if the user
             # does not exist, because privacy wins over usability)

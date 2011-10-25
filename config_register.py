@@ -27,6 +27,7 @@ from autoform import AutoForm, Widget
 from config import Configuration
 from config_captcha import Captcha_Field
 from datatypes import BirthDate
+from emails import send_email
 from enumerates import Days, Months, Years
 from fields import Boolean_Field, HTMLFile_Field
 from resource_ import DBResource
@@ -147,24 +148,28 @@ class RegisterForm(AutoForm):
 
     def action(self, resource, context, form):
         email = form['email'].strip()
-        results = context.database.search(format='user', email=email)
 
+        # 1. Make the user, or get it
+        results = context.database.search(format='user', email=email)
         if len(results) == 0:
-            # Case 1: new user
+            # New user
             user = context.root.make_user()
             for name in self.fields:
                 field = self.get_field(name)
                 if field and getattr(field, 'persistent', True):
                     user.set_value(name, form[name])
 
-            user.send_confirmation(context, email)
+            user.update_pending_key()
+            email_id = 'register-ask-for-confirmation'
         else:
-            # Case 2: user already registered
-            user = results.get_documents()[0]
-            user = resource.get_resource(user.abspath)
-            user.send_already_registered(context, email)
+            # User already registered
+            user = results.get_resources().next()
+            email_id = 'register-already-registered'
 
-        # Bring the user to the login form
+        # 2. Send email
+        send_email(email_id, context, email, user=user)
+
+        # 3. Show message
         message = MSG(
             u'<div id="registration-end-msg">'
             u'An email has been sent to you, to finish the registration '

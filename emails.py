@@ -1,0 +1,148 @@
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Import from itools
+from itools.core import prototype
+from itools.gettext import MSG
+
+
+###########################################################################
+# Base classes
+###########################################################################
+class Email(prototype):
+
+    subject = None
+    text = None
+
+
+    user = None
+    def get_text_namespace(self, context):
+        host_uri = str(context.uri.resolve('/'))[:-1]
+        namespace = {
+            'host': host_uri,
+            'host_title': context.root.get_title()}
+
+        # User specific information
+        user = self.user
+        if user:
+            namespace['user'] = host_uri + str(user.abspath)
+            namespace['userid'] = user.get_login_name()
+            user_state = user.get_property('user_state')
+            namespace['userkey'] = user_state.get_parameter('key')
+
+        return namespace
+
+
+    def get_text(self, context):
+        namespace = self.get_text_namespace(context)
+        return self.text.gettext(**namespace)
+
+
+
+# Registry
+emails_registry = {}
+
+
+# Public API
+def register_email(cls):
+    emails_registry[cls.class_id] = cls
+
+
+def send_email(email_id, context, to_addr, **kw):
+    email = emails_registry[email_id]
+    email = email(**kw)
+    # Send
+    text = email.get_text(context)
+    context.root.send_email(to_addr, email.subject, text=text)
+
+
+
+###########################################################################
+# Specific classes
+###########################################################################
+class AddUser_SendInvitation(Email):
+
+    class_id = 'add-user-send-invitation'
+    subject = MSG(u'Invitation to register')
+    text = MSG(
+        u'You have been invited to register, to confirm follow this link:\n'
+        u'\n'
+        u' {user}/;confirm_registration?username={userid}&key={userkey}')
+
+
+
+class AddUser_SendNotification(Email):
+
+    class_id = 'add-user-send-notification'
+    subject = MSG(u'Registration notification')
+    text = MSG(
+        u'You have been registered to the "{host_title}" site:\n'
+        u'\n'
+        u' {host}/')
+
+
+
+class Register_AlreadyRegistered(Email):
+
+    class_id = 'register-already-registered'
+    subject = MSG(u"Already registered")
+    text = MSG(
+        u'You already have an account:\n'
+        u'\n'
+        u' {host}/;login?loginname={userid}')
+
+
+
+class Register_AskForConfirmation(Email):
+
+    class_id = 'register-ask-for-confirmation'
+    subject = MSG(u"Confirmation required")
+    text = MSG(
+        u'To confirm your identity, follow this link:\n'
+        u'\n'
+        u' {user}/;confirm_registration?username={userid}&key={userkey}')
+
+
+
+class Register_SendConfirmation(Email):
+
+    class_id = 'register-send-confirmation'
+    subject = MSG(u"Registration confirmed")
+    text = MSG(
+        u'You have been registered to the "{host_title}" site:\n'
+        u'\n'
+        u' {host}/')
+
+
+
+class ForgottenPassword_AskForConfirmation(Email):
+
+    class_id = 'forgotten-password-ask-for-confirmation'
+    subject = MSG(u"Choose a new password")
+    text = MSG(
+        u'To choose a new password, click the link:\n'
+        u'\n'
+        u' {user}/;change_password_forgotten?username={userid}&key={userkey}')
+
+
+
+# Registry
+register_email(AddUser_SendInvitation)
+register_email(AddUser_SendNotification)
+register_email(Register_AlreadyRegistered)
+register_email(Register_AskForConfirmation)
+register_email(Register_SendConfirmation)
+register_email(ForgottenPassword_AskForConfirmation)

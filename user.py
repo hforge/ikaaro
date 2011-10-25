@@ -17,14 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from copy import deepcopy
-
 # Import from itools
 from itools.database import register_field
 from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.uri import Path, Reference
 from itools.web import INFO, get_context
 
 # Import from ikaaro
@@ -83,9 +79,7 @@ class User(DBResource):
                    'edit_password', 'edit_groups']
 
 
-    ########################################################################
-    # Metadata
-    ########################################################################
+    # Fields
     firstname = Text_Field(multilingual=False, indexed=True, stored=True,
                            title=MSG(u'First Name'))
     lastname = Text_Field(multilingual=False, indexed=True, stored=True,
@@ -98,8 +92,7 @@ class User(DBResource):
     user_timezone = Char_Field
     user_state = UserState_Field
     groups = UserGroups_Field
-    # Metadata (backwards compatibility)
-    username = Char_Field(indexed=True, stored=True)
+    username = Char_Field(indexed=True, stored=True) # Backwards compatibility
 
     # Remove some fields
     title = None
@@ -154,6 +147,17 @@ class User(DBResource):
             self.set_value('lastlog', context.timestamp)
 
 
+    def update_pending_key(self):
+        state = self.get_property('user_state')
+        if state.value == 'pending':
+            # TODO Implement expiration
+            return state.get_parameter('key')
+
+        key = generate_password(30)
+        self.set_value('user_state', 'pending', key=key)
+        return key
+
+
     ########################################################################
     # API
     ########################################################################
@@ -188,79 +192,17 @@ class User(DBResource):
                 return False
         return True
 
-    ########################################################################
-    # Email: Register confirmation & Password forgotten
-    ########################################################################
-    already_registered_subject = MSG(u"Already registered")
-    already_registered_txt = MSG(u"You already have an account:\n"
-                                 u"\n {uri}")
-    def send_already_registered(self, context, email):
-        uri = context.uri
-        uri = uri.resolve('%s/;login?loginname=%s' % (self.abspath, email))
-        text = self.already_registered_txt.gettext(uri=uri)
-        # Send email
-        root = context.root
-        root.send_email(email, self.already_registered_subject, text=text)
-
-
-    confirmation_subject = MSG(u"Confirmation required")
-    confirmation_txt = MSG(u"To confirm your identity, click the link:\n"
-                           u"\n {uri}")
-    def send_confirmation(self, context, email):
-        self.send_confirm_url(context, email, self.confirmation_subject,
-            self.confirmation_txt, ';confirm_registration')
-
-
-    registration_subject = MSG(u"Registration confirmed")
-    registration_txt = MSG(
-        u"You are now registered as users of: {site_name}.\n"
-        u"You can follow this link {site_uri} to access to the site.")
-    def send_registration(self, context, email):
-        root = context.root
-        uri = context.uri
-        site_uri = Reference(uri.scheme, uri.authority, '/', {}, None)
-        text = self.registration_txt.gettext(site_name=root.get_title(),
-                                             site_uri=site_uri)
-        root.send_email(email, self.registration_subject.gettext(), text=text)
-
-
-    forgotten_subject = MSG(u"Choose a new password")
-    forgotten_txt = MSG(u"To choose a new password, click the link:\n"
-                        u"\n {uri}")
-    def send_forgotten_password(self, context, email):
-        self.send_confirm_url(context, email, self.forgotten_subject,
-            self.forgotten_txt, ';change_password_forgotten')
-
-
-    def send_confirm_url(self, context, email, subject, text, view):
-        # Set the confirmation key
-        state = self.get_property('user_state')
-        if state.value == 'pending':
-            key = state.get_parameter('key')
-        else:
-            key = generate_password(30)
-            self.set_value('user_state', 'pending', key=key)
-
-        # Build the confirmation link
-        confirm_url = deepcopy(context.uri)
-        path = '/users/%s/%s' % (self.name, view)
-        confirm_url.path = Path(path)
-        confirm_url.query = {'key': key, 'username': self.get_login_name()}
-        confirm_url = str(confirm_url)
-        text = text.gettext(uri=confirm_url)
-        context.root.send_email(email, subject.gettext(), text=text)
-
 
     #######################################################################
     # Views
     #######################################################################
-    resend_confirmation = User_ResendConfirmation()
-    confirm_registration = User_ConfirmRegistration()
-    change_password_forgotten = User_ChangePasswordForgotten()
-    profile = User_Profile()
-    edit_account = User_EditAccount()
-    edit_preferences = User_EditPreferences()
-    edit_password = User_EditPassword()
+    resend_confirmation = User_ResendConfirmation
+    confirm_registration = User_ConfirmRegistration
+    change_password_forgotten = User_ChangePasswordForgotten
+    profile = User_Profile
+    edit_account = User_EditAccount
+    edit_preferences = User_EditPreferences
+    edit_password = User_EditPassword
     edit_groups = AutoEdit(access='is_admin', fields=['groups'],
                            title=MSG(u'Edit groups'))
 
