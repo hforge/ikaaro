@@ -25,7 +25,6 @@ import sys
 # Import from itools
 import itools
 from itools.core import start_subprocess
-from itools.database import Catalog
 from itools.database import Metadata
 
 # Import from ikaaro
@@ -51,10 +50,6 @@ modules = {modules}
 listen-address = 127.0.0.1
 listen-port = {listen_port}
 
-# Administrator email (We send tracebacks)
-
-administrator-email = {administrator_email}
-
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
 # The "smtp-from" variable is the email address used in the From field when
 # sending anonymous emails.  (These options are required for the application
@@ -72,7 +67,10 @@ smtp-password =
 # higher verbosity): 'critical' 'error', 'warning', 'info' and 'debug'.
 # The default is 'warning'.
 #
+# If the "log-email" address is defined error messages will be sent to it.
+#
 log-level = warning
+log-email = {log_email}
 
 # The "database-size" variable defines the number of file handlers to store
 # in the database cache.  It is made of two numbers, the upper limit and the
@@ -146,7 +144,7 @@ def init(parser, options, target):
         listen_port=getattr(options, 'port') or '8080',
         smtp_host=getattr(options, 'smtp_host') or 'localhost',
         smtp_from=email,
-        administrator_email=getattr(options, 'administrator_email'))
+        log_email=getattr(options, 'log_email'))
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
@@ -208,8 +206,8 @@ if __name__ == '__main__':
         help='add the given MODULES to load at start')
     parser.add_option('--profile',
         help="print profile information to the given file")
-    parser.add_option('-a', '--administrator-email',
-                      help='define the administrator email')
+    parser.add_option('--log-email', default='',
+                      help='define the email address we will send errors')
 
     options, args = parser.parse_args()
     if len(args) != 1:
