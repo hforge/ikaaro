@@ -160,8 +160,8 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
 
     # API
     def build_field(self):
-        options = [ {'name': x, 'value': self.get_resource(x).get_title()}
-                    for x in self.get_ordered_values() ]
+        options = [ {'name': x.name, 'value': x.get_title()}
+                    for x in self.get_resources_in_order() ]
         field = Select_Field(widget=self.get_widget())
         field_kw = self.get_field_kw(field)
         return field(options=options, **field_kw)
@@ -259,10 +259,8 @@ class Model(OrderedFolder):
     def get_model_fields(self):
         """Return the resources that represent a field.
         """
-        for field_name in self.get_ordered_values():
-            resource = self.get_resource(field_name)
-            if isinstance(resource, ModelField_Base):
-                yield resource
+        return [ x for x in self.get_resources_in_order()
+                 if isinstance(x, ModelField_Base) ]
 
 
     def build_resource_class(self):

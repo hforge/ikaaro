@@ -140,8 +140,7 @@ class MenuItem(OrderedFolder):
         here_abspath_and_view = '%s/%s' % (here_abspath, here_view_name)
         items = []
 
-        for name in self.get_ordered_values():
-            resource = self.get_resource(name)
+        for resource in self.get_resources_in_order():
             uri = resource.get_value('path')
             if not self._is_allowed_to_access(context, uri):
                 continue
@@ -152,7 +151,7 @@ class MenuItem(OrderedFolder):
             # Case 1: External link
             if ref.scheme:
                 items.append({
-                    'id': 'menu_%s' % name,
+                    'id': 'menu_%s' % resource.name,
                     'path': str(ref),
                     'real_path': None,
                     'title': title,

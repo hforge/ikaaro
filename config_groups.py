@@ -24,8 +24,8 @@ from autoadd import AutoAdd
 from buttons import BrowseButton, RemoveButton, RenameButton
 from config import Configuration
 from config_common import NewResource_Local
-from folder import Folder, Folder_BrowseContent
 from messages import MSG_CHANGES_SAVED
+from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
 from user_views import BrowseUsers
 
@@ -90,7 +90,7 @@ class Group(DBResource):
 
 
 
-class BrowseGroups(Folder_BrowseContent):
+class BrowseGroups(OrderedFolder_BrowseContent):
 
     access = 'is_admin'
     title = MSG(u'Browse groups')
@@ -123,7 +123,7 @@ class BrowseGroups(Folder_BrowseContent):
 
 
 
-class ConfigGroups(Folder):
+class ConfigGroups(OrderedFolder):
 
     class_id = 'config-groups'
     class_title = MSG(u'User Groups')

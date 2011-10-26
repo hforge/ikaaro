@@ -200,6 +200,11 @@ class OrderedFolder(Folder):
         return ordered_names
 
 
+    def get_resources_in_order(self):
+        for name in self.get_ordered_values():
+            yield self.get_resource(name)
+
+
     def order_up(self, ids):
         order = self.get_ordered_values()
         order = list(order)

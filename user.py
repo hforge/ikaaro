@@ -44,7 +44,7 @@ class UserGroups_Datatype(Enumerate):
     def get_options(self):
         resource = get_context().database.get_resource(self._resource_path)
         return [ {'name': str(x.abspath), 'value': x.get_title()}
-                 for x in resource.get_resources() ]
+                 for x in resource.get_resources_in_order() ]
 
 
 class UserGroups_Field(URI_Field):
