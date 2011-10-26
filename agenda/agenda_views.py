@@ -36,6 +36,7 @@ from calendars import Calendars_Enumerate
 from event import Event
 from grid import get_grid_data
 from ikaaro import messages
+from ikaaro.autoform import get_dynDateTime_scripts
 from ikaaro.config_common import NewResource_Local
 from ikaaro.datatypes import FileDataType
 from ikaaro.enumerates import days
@@ -297,7 +298,8 @@ class CalendarView(STLView):
     query_schema = {'start': Date}
 
     styles = ['/ui/agenda/style.css',
-              '/ui/js/fancybox/jquery.fancybox-1.3.4.css']
+              '/ui/js/fancybox/jquery.fancybox-1.3.4.css',
+              '/ui/js_calendar/calendar-aruni.css']
     scripts = ['/ui/js/fancybox/jquery.fancybox-1.3.4.pack.js',
                '/ui/agenda/javascript.js']
 
@@ -305,6 +307,10 @@ class CalendarView(STLView):
     calendar_template = None
     calendar_selector = CalendarSelectorTemplate
     calendar_caption = CalendarCaptionTemplate
+
+
+    def get_scripts(self, context):
+        return self.scripts + get_dynDateTime_scripts()
 
 
     def get_first_day(self):
