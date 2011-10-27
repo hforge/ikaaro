@@ -28,16 +28,23 @@ from itools.core import get_abspath, merge_dicts
 from itools.csv import Property
 from itools.datatypes import Email, String, Unicode, Integer
 from itools.datatypes import Enumerate
+from itools.fs import lfs, FileName
 from itools.gettext import MSG
+from itools.handlers import get_handler_class_by_mimetype
+from itools.html import XHTMLFile
 from itools.i18n import get_languages
-from itools.fs import lfs
-from itools.web import BaseView, STLView, INFO
+from itools.stl import rewrite_uris
+from itools.uri import get_reference
+from itools.web import BaseView, FormError, STLView, INFO
+from itools.xml import get_element, TEXT
 
 # Import from ikaaro
-from autoform import AutoForm, CaptchaDatatype, CaptchaWidget
+from autoform import AutoForm, CaptchaDatatype, CaptchaWidget, FileWidget
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
-from messages import MSG_NEW_RESOURCE
+from datatypes import FileDataType
+from ikaaro.folder import Folder
+from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
 from registry import get_resource_class
 from views_new import NewInstance
 
@@ -272,3 +279,109 @@ class WebSite_NewInstance(NewInstance):
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+
+
+
+class UpdateDocs(AutoForm):
+
+    access = 'is_admin'
+    title = MSG(u'Update docs')
+
+    schema = {
+        'file': FileDataType(mandatory=True),
+        'language': String(mandatory=True, default='en')}
+    widgets = [
+        FileWidget('file', title=MSG(u'File')),
+        TextWidget('language', title=MSG(u'Language'),
+            tip=MSG(u'"en", "fr", ...'))]
+
+    actions = [
+        Button(access='is_admin', css='button-ok', title=MSG(u'Upload'))]
+
+
+    def _get_form(self, resource, context):
+        form = super(UpdateDocs, self)._get_form(resource, context)
+        # Check the mimetype
+        filename, mimetype, body = form['file']
+        if mimetype not in ('application/x-tar', 'application/zip'):
+            raise FormError, MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
+
+        return form
+
+
+    def action(self, resource, context, form):
+        skip = set(['application/javascript', 'application/octet-stream',
+                    'text/css', 'text/plain'])
+        keep = set(['application/pdf', 'image/png'])
+        language = form['language']
+
+        def rewrite(value):
+            if value[0] == '#':
+                return value
+            ref = get_reference(value)
+            if ref.scheme:
+                return value
+            name = ref.path.get_name()
+            name, extension, langage = FileName.decode(name)
+            if extension in ('png', 'pdf'):
+                name = '%s/;download' % name
+            ref.path[-1] = name
+            return '../%s' % ref
+
+        def filter(path, mimetype, body):
+            # HTML
+            if mimetype == 'text/html':
+                source = XHTMLFile(string=body)
+                target = XHTMLFile()
+                elem = get_element(source.events, 'div', **{'class': 'body'})
+                if not elem:
+                    print 'E', path
+                    return None
+                elements = elem.get_content_elements()
+                elements = rewrite_uris(elements, rewrite)
+                elements = list(elements)
+                target.set_body(elements)
+                return target.to_str()
+            # Skip
+            elif mimetype in skip:
+                return None
+            # Keep
+            elif mimetype in keep:
+                return body
+            # Unknown
+            else:
+                print 'X', path, mimetype
+                return body
+
+        def postproc(file):
+            # State
+            file.set_property('state', 'public')
+            # Title
+            if file.class_id != 'webpage':
+                return
+            handler = file.get_handler()
+            events = handler.events
+            elem = get_element(events, 'h1')
+            if elem:
+                title = [
+                    unicode(x[1], 'utf8')
+                    for x in elem.get_content_elements() if x[0] == TEXT ]
+                if title[-1] == u'¶':
+                    title.pop()
+                title = u''.join(title)
+                file.set_property('title', title, language)
+                handler.events = events[:elem.start] + events[elem.end+1:]
+
+        # 1. Make the '/docs/' folder
+        docs = resource.get_resource('docs', soft=True)
+        if not docs:
+            docs = resource.make_resource('docs', Folder)
+        # 2. Extract
+        filename, mimetype, body = form['file']
+        cls = get_handler_class_by_mimetype(mimetype)
+        handler = cls(string=body)
+        docs.extract_archive(handler, language, filter, postproc, True)
+
+        # Ok
+        message = MSG(u'Documentation updated.')
+        return context.come_back(message, goto='./docs')

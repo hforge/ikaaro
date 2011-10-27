@@ -45,6 +45,7 @@ from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
+from website_views import UpdateDocs
 
 
 
@@ -210,6 +211,7 @@ class WebSite(RoleAware, Folder):
     unauthorized = LoginView()
     not_found = NotFoundView()
     upload_stats = UploadStatsView()
+    update_docs = UpdateDocs()
 
 
     #######################################################################
