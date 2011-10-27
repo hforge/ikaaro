@@ -228,7 +228,7 @@ class Model_Browse(OrderedFolder_BrowseContent):
 
 class Model(OrderedFolder):
 
-    class_id = '_model'
+    class_id = '-model'
     class_title = MSG(u'Base model')
     class_description = MSG(u'...')
 
@@ -330,7 +330,7 @@ class ConfigModels(Folder):
     # API
     def get_dynamic_classes(self):
         database = self.database
-        search = database.search(base_classes='_model')
+        search = database.search(base_classes='-model')
         for brain in search.get_documents():
             class_id = brain.abspath
             yield database.get_resource_class(class_id)
