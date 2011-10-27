@@ -54,7 +54,8 @@ class State_Field(Select_Field):
 
 class WorkflowAware(Resource):
 
-    state = State_Field()
+    class_id = '-workflow-aware'
+    state = State_Field
 
 
 

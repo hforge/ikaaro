@@ -478,9 +478,6 @@ class DBResource(Resource):
             if class_id:
                 values['base_classes'].append(class_id)
 
-        from workflow import WorkflowAware
-        values['is_workflow_aware'] = isinstance(self, WorkflowAware)
-
         # Links to other resources
         values['owner'] = self.get_owner()
         values['links'] = list(self.get_links())
@@ -773,4 +770,3 @@ register_field('links', String(multiple=True, indexed=True))
 register_field('text', Unicode(indexed=True))
 # Various classifications
 register_field('is_content', Boolean(indexed=True))
-register_field('is_workflow_aware', Boolean(indexed=True))

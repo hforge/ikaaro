@@ -204,7 +204,7 @@ class AccessRule(DBResource):
 
         # Permission change-state
         if permission == 'change_state':
-            query.append(PhraseQuery('is_workflow_aware', True))
+            query.append(PhraseQuery('base_classes', '-workflow-aware'))
 
         # Ok
         return query
