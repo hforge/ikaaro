@@ -772,6 +772,5 @@ register_field('links', String(multiple=True, indexed=True))
 # Full text search
 register_field('text', Unicode(indexed=True))
 # Various classifications
-register_field('is_role_aware', Boolean(indexed=True))
 register_field('is_content', Boolean(indexed=True))
 register_field('is_workflow_aware', Boolean(indexed=True))
