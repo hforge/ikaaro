@@ -37,11 +37,11 @@ class Calendars_Enumerate(Enumerate):
     def get_options(self):
         context = get_context()
         calendars = context.search(format=Calendar.class_id).get_resources()
-        return [ {'name': str(calendar.abspath), 'value': calendar.get_title(),
-                  'color': calendar.get_value('color')}
-                 for calendar in calendars
-                    if context.user.name
-                        not in calendar.get_value('hidden_for_users')]
+        return [ {'name': str(x.abspath), 'value': x.get_title(),
+                  'color': x.get_value('color')}
+                 for x in calendars
+                 if context.user.name not in x.get_value('hidden_for_users')]
+
 
 #####################################
 # Calendar views

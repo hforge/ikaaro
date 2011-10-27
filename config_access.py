@@ -315,8 +315,7 @@ class ConfigAccess(Folder):
     default_rules = [
         # Authenticated users can see any content
         ('authenticated', 'view', {}),
-        # Members can add new content, edit private content and request
-        # publication
+        # Members can add new content and edit private content
         ('/config/groups/members', 'add', {}),
         ('/config/groups/members', 'edit', {'state': 'private'}),
         # Reviewers can add new content, edit any content and publish
@@ -351,13 +350,8 @@ class ConfigAccess(Folder):
         if is_admin:
             return AllQuery()
 
-        # Build the query
-        # 1. Ownership
+        # Back-office access rules
         query = OrQuery()
-        if user:
-            query.append(PhraseQuery('owner', str(user.abspath)))
-
-        # 2. Access rules
         for rule in self.get_resources():
             if rule.get_value('permission') != permission:
                 continue
@@ -371,6 +365,10 @@ class ConfigAccess(Folder):
                     continue
 
             query.append(rule.get_search_query())
+
+        # Ownership
+        if user:
+            query.append(PhraseQuery('owner', str(user.abspath)))
 
         return query
 
