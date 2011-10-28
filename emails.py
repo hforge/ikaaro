@@ -62,11 +62,11 @@ def register_email(cls):
 
 
 def send_email(email_id, context, to_addr, **kw):
-    email = emails_registry[email_id]
-    email = email(**kw)
-    # Send
-    text = email.get_text(context)
-    context.root.send_email(to_addr, email.subject, text=text)
+    email = emails_registry.get(email_id)
+    if email:
+        email = email(**kw)
+        text = email.get_text(context)
+        context.root.send_email(to_addr, email.subject, text=text)
 
 
 
@@ -144,5 +144,5 @@ register_email(AddUser_SendInvitation)
 register_email(AddUser_SendNotification)
 register_email(Register_AlreadyRegistered)
 register_email(Register_AskForConfirmation)
-register_email(Register_SendConfirmation)
+#register_email(Register_SendConfirmation)
 register_email(ForgottenPassword_AskForConfirmation)
