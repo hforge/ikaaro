@@ -55,6 +55,7 @@ class State_Field(Select_Field):
 class WorkflowAware(Resource):
 
     class_id = '-workflow-aware'
+    class_title = MSG(u'Workflow Aware')
     state = State_Field
 
 
