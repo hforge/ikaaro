@@ -141,9 +141,8 @@ class Image(File):
         return None
 
 
-    def init_resource(self, body=None, filename=None, extension=None, **kw):
-        super(Image, self).init_resource(body=body, filename=filename,
-            extension=extension, **kw)
+    def init_resource(self, **kw):
+        super(Image, self).init_resource(**kw)
         # Resize image at max size
         max_width = self.get_max_width()
         max_height = self.get_max_height()
