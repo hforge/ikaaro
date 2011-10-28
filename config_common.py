@@ -49,7 +49,7 @@ class NewResource_Local(Folder_NewResource):
         items = []
         for cls in Database.resources_registry.values():
             class_id = cls.class_id
-            if class_id[0] != '_' and issubclass(cls, document_types):
+            if class_id[0] != '-' and issubclass(cls, document_types):
                 if root.has_permission(user, 'add', resource, class_id):
                     items.append(cls)
 
