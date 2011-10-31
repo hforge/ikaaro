@@ -361,6 +361,7 @@ class AutoEdit(AutoForm):
 
 
     action_goto = None
+    action_msg = messages.MSG_CHANGES_SAVED
     def action(self, resource, context, form):
         # Check edit conflict
         self.check_edit_conflict(resource, context, form)
@@ -379,7 +380,6 @@ class AutoEdit(AutoForm):
             if self.set_value(resource, context, key, form):
                 return
         # Ok
-        msg = messages.MSG_CHANGES_SAVED
         if self.action_goto:
-            return context.come_back(msg, goto=self.action_goto)
-        context.message = msg
+            return context.come_back(self.action_msg, goto=self.action_goto)
+        context.message = self.action_msg
