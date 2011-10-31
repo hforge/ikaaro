@@ -279,7 +279,7 @@ class LoginView(STLView):
             goto = get_reference('./')
         else:
             path = get_uri_path(referrer)
-            if path.endswith(';login'):
+            if path.endswith(';login') or path.endswith(';register'):
                 goto = get_reference('./')
             else:
                 goto = referrer
