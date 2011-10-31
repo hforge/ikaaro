@@ -71,6 +71,7 @@ class ModelField_Base(DBResource):
     def get_field_kw(self, field):
         return {'multiple': self.get_value('multiple'),
                 'required': self.get_value('required'),
+                'title': self.get_title(),
                 'widget': field.widget(tip=self.get_value('tip'))}
 
 
@@ -281,8 +282,7 @@ class Model(OrderedFolder):
         for resource in self.get_model_fields():
             field_name = resource.name
             if not isinstance(resource, ModelField_Inherited):
-                field = resource.build_field()
-                class_dict[field_name] = field(title=resource.get_title())
+                class_dict[field_name] = resource.build_field()
             fields.append(field_name)
         class_dict['fields'] = fields
 
