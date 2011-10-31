@@ -188,7 +188,7 @@ class User(DBResource):
 
     def account_is_completed(self):
         for name, field in self.get_fields():
-            if field.required and not self.has_property(name):
+            if field.required and self.get_value(name) is None:
                 return False
         return True
 
