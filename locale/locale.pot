@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-10-25 08:10+CET\n"
+"POT-Creation-Date: 2011-11-02 13:11+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,10 @@ msgstr ""
 
 #: ../messages.py:74
 msgid "\n    Action impossible (the resources are in use):\n    <stl:inline stl:repeat=\"resource resources\">\n        <a href=\"${resource/href}\"\n           title=\"${resource/title}\">${resource/title}</a>\n        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n    </stl:inline>"
+msgstr ""
+
+#: ../website_views.py:296
+msgid "\"en\", \"fr\", ..."
 msgstr ""
 
 #: ../tracker/tracker_views.py:834
@@ -52,7 +56,7 @@ msgstr ""
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr ""
 
-#: ../website_views.py:212
+#: ../website_views.py:219
 msgid "%s@%s:%s"
 msgstr ""
 
@@ -68,11 +72,11 @@ msgstr ""
 msgid "--- Comment from: {user} ---\n\n{comment}\n\n{issues}"
 msgstr ""
 
-#: ../website.py:92
+#: ../website.py:93
 msgid "2 + 3"
 msgstr ""
 
-#: ../website.py:93
+#: ../website.py:94
 msgid "5"
 msgstr ""
 
@@ -113,7 +117,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:187
+#: ../website_views.py:194
 msgid "About"
 msgstr ""
 
@@ -466,9 +470,9 @@ msgstr ""
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:110
-#: ../website.py:111
-#: ../website.py:246
+#: ../website_views.py:117
+#: ../website.py:112
+#: ../website.py:248
 msgid "Contact"
 msgstr ""
 
@@ -480,7 +484,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: ../website.py:56
+#: ../website.py:57
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
@@ -496,7 +500,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:219
+#: ../website_views.py:226
 msgid "Credits"
 msgstr ""
 
@@ -541,7 +545,7 @@ msgstr ""
 msgid "December"
 msgstr ""
 
-#: ../website_views.py:240
+#: ../website_views.py:247
 msgid "Default language"
 msgstr ""
 
@@ -567,7 +571,11 @@ msgstr ""
 msgid "Diff between selected revisions"
 msgstr ""
 
-#: ../website_views.py:242
+#: ../website_views.py:386
+msgid "Documentation updated."
+msgstr ""
+
+#: ../website_views.py:249
 msgid "Domain names"
 msgstr ""
 
@@ -721,6 +729,7 @@ msgstr ""
 
 #: ../file_views.py:57
 #: ../file.py:53
+#: ../website_views.py:294
 msgid "File"
 msgstr ""
 
@@ -818,8 +827,8 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: ../website.py:108
-#: ../website.py:243
+#: ../website.py:109
+#: ../website.py:245
 msgid "Home"
 msgstr ""
 
@@ -914,6 +923,10 @@ msgstr ""
 msgid "Keywords"
 msgstr ""
 
+#: ../website_views.py:295
+msgid "Language"
+msgstr ""
+
 #: ../control_panel.py:365
 msgid "Language added."
 msgstr ""
@@ -946,7 +959,7 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: ../website.py:206
+#: ../website.py:207
 msgid "License"
 msgstr ""
 
@@ -1012,15 +1025,15 @@ msgstr ""
 msgid "Message Catalog"
 msgstr ""
 
-#: ../website_views.py:139
+#: ../website_views.py:146
 msgid "Message body"
 msgstr ""
 
-#: ../website_views.py:180
+#: ../website_views.py:187
 msgid "Message sent."
 msgstr ""
 
-#: ../website_views.py:138
+#: ../website_views.py:145
 msgid "Message subject"
 msgstr ""
 
@@ -1196,7 +1209,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:202
+#: ../website_views.py:209
 msgid "Operating System"
 msgstr ""
 
@@ -1372,7 +1385,7 @@ msgstr ""
 msgid "Publish the document."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:208
 #: ../text.py:243
 msgid "Python"
 msgstr ""
@@ -1385,7 +1398,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr ""
 
-#: ../website_views.py:133
+#: ../website_views.py:140
 msgid "Recipient"
 msgstr ""
 
@@ -1596,11 +1609,11 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:241
+#: ../website_views.py:248
 msgid "Select the default language"
 msgstr ""
 
-#: ../website_views.py:111
+#: ../website_views.py:118
 msgid "Send"
 msgstr ""
 
@@ -1842,8 +1855,8 @@ msgstr ""
 
 #: ../theme.py:38
 #: ../control_panel.py:399
-#: ../website.py:104
-#: ../website.py:239
+#: ../website.py:105
+#: ../website.py:241
 msgid "Theme"
 msgstr ""
 
@@ -1954,7 +1967,7 @@ msgstr ""
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../website_views.py:243
+#: ../website_views.py:250
 msgid "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
@@ -1996,12 +2009,20 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
+#: ../website_views.py:288
+msgid "Update docs"
+msgstr ""
+
 #: ../scripts/icms-update.py:144
 msgid "Upgrade to version %s"
 msgstr ""
 
 #: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
+msgstr ""
+
+#: ../website_views.py:299
+msgid "Upload"
 msgstr ""
 
 #: ../file_views.py:51
@@ -2109,7 +2130,7 @@ msgstr ""
 msgid "Web Page"
 msgstr ""
 
-#: ../website.py:55
+#: ../website.py:56
 msgid "Web Site"
 msgstr ""
 
@@ -2214,7 +2235,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:137
+#: ../website_views.py:144
 msgid "Your email address"
 msgstr ""
 
@@ -2267,7 +2288,7 @@ msgstr ""
 msgid "large"
 msgstr ""
 
-#: ../website_views.py:200
+#: ../website_views.py:207
 msgid "lpOD"
 msgstr ""
 
@@ -2279,7 +2300,7 @@ msgstr ""
 msgid "original"
 msgstr ""
 
-#: ../website_views.py:199
+#: ../website_views.py:206
 msgid "pygobject"
 msgstr ""
 
@@ -2321,6 +2342,10 @@ msgstr ""
 
 #: ../skins.py:188
 msgid "{view_title} - {root_title}"
+msgstr ""
+
+#: ../website_views.py:369
+msgid "¶"
 msgstr ""
 
 #: ../future/order.py:76
