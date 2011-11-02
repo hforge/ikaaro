@@ -1,0 +1,24 @@
+The first instance of Ikaaro was named Loco, back in 2002. It was renamed
+to Ikaaro in 2003.
+
+At first the project was hosted at SourceForge, with CVS. Then moved to
+GNU Arch, then to Git.
+
+The following people have contributed with at last one patch:
+
+  Alexis Huet
+  Armel Fortun
+  David Versmisse
+  Gautier Hayoun
+  Guillaume Romanczyk
+  Henry Obein
+  Hervé Cauwelier
+  Jean Philippe Robles
+  Juan David Ibáñez Palomar
+  Luis Arturo Belmar-Letelier
+  Matthieu France
+  Nicolas Deram
+  Norman Khine
+  Romain Gauthier
+  Sébastien Dumont
+  Sylvain Taverne
