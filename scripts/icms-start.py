@@ -65,6 +65,9 @@ def start(options, target):
     # Set-up the server
     server = Server(target, read_only=options.read_only)
 
+    # Update Git tree-cache, to speed things up
+    server.database.worktree.update_tree_cache()
+
     # Find out the IP to listen to
     config = server.config
     address = config.get_value('listen-address').strip()
