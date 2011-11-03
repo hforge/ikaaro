@@ -5,7 +5,6 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <!-- EditArea -->
-  <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
   <script type="text/javascript">
   editAreaLoader.init({
     id : "${id}",		// textarea id
@@ -23,6 +22,6 @@
   </noscript>
 
   <!-- Gets replaced with EditArea -->
-  <textarea id="${id}" name="${name}" rows="15" cols="82">${value}</textarea>
+  <textarea id="${id}" name="${name}" rows="15" cols="82">${value_}</textarea>
 
 </stl:block>

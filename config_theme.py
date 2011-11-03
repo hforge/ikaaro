@@ -56,8 +56,8 @@ class Theme(DBResource):
         self.set_value('banner', data)
 
     # Views
-    class_views = ['edit', 'edit_css', 'browse_content', 'preview_content',
-                   'links', 'backlinks', 'commit_log']
+    class_views = ['edit', 'browse_content', 'preview_content', 'links',
+                   'backlinks', 'commit_log']
 
     edit = AutoEdit(fields=['favicon', 'logo', 'banner', 'style'])
 

@@ -614,7 +614,7 @@ class ProgressBarWidget(Widget):
 
 
 
-class EditAreaWidget(Widget):
+class EditAreaWidget(MultilineWidget):
     """It's an EditArea Widget, for file code edit, used for edit the CSS here,
     see original code here: <http://www.cdolivet.com>"""
 
@@ -635,7 +635,7 @@ class EditAreaWidget(Widget):
 
     def get_prefix(self):
         context = get_context()
-        here = context.resource.get_abspath()
+        here = context.resource.abspath
         prefix = here.get_pathto(self.template)
         return prefix
 

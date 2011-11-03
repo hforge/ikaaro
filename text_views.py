@@ -26,8 +26,7 @@ from itools.gettext import MSG
 from itools.web import STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, get_default_widget
-from autoform import timestamp_widget, editarea_widget
+from autoform import AutoForm, EditAreaWidget, get_default_widget
 from buttons import Button, RemoveButton
 from fields import Textarea_Field
 from file_views import File_Edit
@@ -88,12 +87,7 @@ class CSS_Edit(Text_Edit):
 
     title = "Edit CSS file"
 
-    widgets = [timestamp_widget, editarea_widget]
-
-
-    def _get_schema(self, resource, context):
-        schema = File_Edit._get_schema(self, resource, context)
-        return merge_dicts(schema, data=String)
+    data = Text_Edit.data(widget=EditAreaWidget)
 
 
 
@@ -255,8 +249,7 @@ class RowForm(AutoForm):
         schema = self.get_schema(resource, context)
         return [
             get_default_widget(schema[name])(name, title=title)
-            for name, title in resource.get_columns()
-        ]
+            for name, title in resource.get_columns() ]
 
 
 
