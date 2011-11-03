@@ -54,7 +54,7 @@ from skins import skin_registry
 from user import UserFolder
 from root_views import AboutView, ContactForm, CreditsView
 from root_views import NotFoundView, ForbiddenView
-from root_views import UploadStatsView
+from root_views import UploadStatsView, UpdateDocs
 
 
 # itools source and target languages
@@ -538,4 +538,5 @@ class Root(Folder):
     unauthorized = LoginView()
     not_found = NotFoundView()
     upload_stats = UploadStatsView()
+    update_docs = UpdateDocs()
     _ctrl = CtrlView()

@@ -70,20 +70,18 @@ http://bugs.hforge.org
 Copyright
 =============
 
-Copyright (C) 2003-2010 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-Copyright (C) 2005-2010 Luis Arturo Belmar-Letelier <luis@itaapy.com>
-Copyright (C) 2005-2010 Hervé Cauwelier <herve@itaapy.com>
-Copyright (C) 2005-2010 Nicolas Deram <nicolas@itaapy.com>
+Copyright (C) 2002-2011 The Ikaaro authors
 
-And others. Check the CREDITS file for complete list.
+Check the CREDITS.txt file for the list of authors.
 
 Includes some external free software:
 
 Software        License  Home
 --------------  -------  -----------------------------------------
-jquery          GPL      http://jquery.com
+jQuery          GPL      http://jquery.com
 TinyMCE         LGPL     http://tinymce.moxiecode.com
 DHTML Calendar  LGPL     http://code.google.com/p/dyndatetime/
+Edit area       LGPL     http://www.cdolivet.com/editarea/
 
 And media content:
 
@@ -112,4 +110,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-

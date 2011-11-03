@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2011-10-25 08:10+CET\n"
+"POT-Creation-Date: 2011-11-02 13:11+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -36,6 +36,10 @@ msgid ""
 "           title=\"${resource/title}\">${resource/title}</a>\n"
 "        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n"
 "    </stl:inline>"
+msgstr ""
+
+#: ../website_views.py:296
+msgid "\"en\", \"fr\", ..."
 msgstr ""
 
 #: ../tracker/tracker_views.py:834
@@ -97,7 +101,7 @@ msgid ""
 "files with the same name</g>"
 msgstr ""
 
-#: ../website_views.py:212
+#: ../website_views.py:219
 msgid "%s@%s:%s"
 msgstr ""
 
@@ -183,11 +187,11 @@ msgid ""
 "{issues}"
 msgstr ""
 
-#: ../website.py:92
+#: ../website.py:93
 msgid "2 + 3"
 msgstr ""
 
-#: ../website.py:93
+#: ../website.py:94
 msgid "5"
 msgstr ""
 
@@ -574,7 +578,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:187
+#: ../website_views.py:194
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -1148,7 +1152,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:110 ../website.py:111 ../website.py:246
+#: ../website_views.py:117 ../website.py:112 ../website.py:248
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1172,7 +1176,7 @@ msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr ""
 
-#: ../website.py:56
+#: ../website.py:57
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
@@ -1190,7 +1194,7 @@ msgstr "列出文档"
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:219
+#: ../website_views.py:226
 msgid "Credits"
 msgstr ""
 
@@ -1276,7 +1280,7 @@ msgctxt "table cell"
 msgid "Default"
 msgstr "设置"
 
-#: ../website_views.py:240
+#: ../website_views.py:247
 #, fuzzy
 msgid "Default language"
 msgstr "语言"
@@ -1334,7 +1338,12 @@ msgctxt "li"
 msgid "Document Management."
 msgstr "编辑文档"
 
-#: ../website_views.py:242
+#: ../website_views.py:386
+#, fuzzy
+msgid "Documentation updated."
+msgstr "编辑文档"
+
+#: ../website_views.py:249
 #, fuzzy
 msgid "Domain names"
 msgstr "新文件"
@@ -1591,7 +1600,7 @@ msgctxt "legend"
 msgid "Fields"
 msgstr ""
 
-#: ../file_views.py:57 ../file.py:53
+#: ../file_views.py:57 ../file.py:53 ../website_views.py:294
 msgid "File"
 msgstr ""
 
@@ -1771,7 +1780,7 @@ msgstr ""
 msgid "History"
 msgstr "记录"
 
-#: ../website.py:108 ../website.py:243
+#: ../website.py:109 ../website.py:245
 msgid "Home"
 msgstr "主页"
 
@@ -1914,6 +1923,11 @@ msgstr ""
 msgid "Keywords"
 msgstr ""
 
+#: ../website_views.py:295
+#, fuzzy
+msgid "Language"
+msgstr "语言"
+
 #: ../control_panel.py:365
 msgid "Language added."
 msgstr "语言被加入."
@@ -1956,7 +1970,7 @@ msgstr ""
 msgid "Last Name"
 msgstr "姓名"
 
-#: ../website.py:206
+#: ../website.py:207
 msgid "License"
 msgstr "许可证"
 
@@ -2069,17 +2083,17 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:139
+#: ../website_views.py:146
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
 
-#: ../website_views.py:180
+#: ../website_views.py:187
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:138
+#: ../website_views.py:145
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2377,7 +2391,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:202
+#: ../website_views.py:209
 msgid "Operating System"
 msgstr ""
 
@@ -2603,7 +2617,7 @@ msgstr "公共"
 msgid "Publish the document."
 msgstr "列出文档"
 
-#: ../website_views.py:201 ../text.py:243
+#: ../website_views.py:208 ../text.py:243
 msgid "Python"
 msgstr ""
 
@@ -2616,7 +2630,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:133
+#: ../website_views.py:140
 msgid "Recipient"
 msgstr "收件人"
 
@@ -2919,12 +2933,12 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "你必须选择删除成员."
 
-#: ../website_views.py:241
+#: ../website_views.py:248
 #, fuzzy
 msgid "Select the default language"
 msgstr "你不能改变预设语言."
 
-#: ../website_views.py:111
+#: ../website_views.py:118
 msgid "Send"
 msgstr "发送"
 
@@ -3259,7 +3273,7 @@ msgstr "名称"
 msgid "The {id} record is missing."
 msgstr ""
 
-#: ../theme.py:38 ../control_panel.py:399 ../website.py:104 ../website.py:239
+#: ../theme.py:38 ../control_panel.py:399 ../website.py:105 ../website.py:241
 #, fuzzy
 msgid "Theme"
 msgstr "查阅"
@@ -3478,7 +3492,7 @@ msgstr ""
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../website_views.py:243
+#: ../website_views.py:250
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
@@ -3558,6 +3572,11 @@ msgctxt "button"
 msgid "Update"
 msgstr "更新目录"
 
+#: ../website_views.py:288
+#, fuzzy
+msgid "Update docs"
+msgstr "更新目录"
+
 #: ../tracker/ui/export_to_text.xml.en:22
 msgctxt "button"
 msgid "Update text export"
@@ -3570,6 +3589,11 @@ msgstr ""
 #: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
 msgstr ""
+
+#: ../website_views.py:299
+#, fuzzy
+msgid "Upload"
+msgstr "上载"
 
 #: ../ui/html/popup.xml.en:129
 #, fuzzy
@@ -3708,7 +3732,7 @@ msgstr ""
 msgid "Web Page"
 msgstr ""
 
-#: ../website.py:55
+#: ../website.py:56
 msgid "Web Site"
 msgstr ""
 
@@ -3854,7 +3878,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:137
+#: ../website_views.py:144
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -3932,7 +3956,7 @@ msgstr ""
 msgid "large"
 msgstr "对照"
 
-#: ../website_views.py:200
+#: ../website_views.py:207
 msgid "lpOD"
 msgstr ""
 
@@ -3945,7 +3969,7 @@ msgstr ""
 msgid "original"
 msgstr "登录"
 
-#: ../website_views.py:199
+#: ../website_views.py:206
 msgid "pygobject"
 msgstr ""
 
@@ -4046,6 +4070,10 @@ msgstr "查阅"
 msgctxt "title attribute"
 msgid "« Previous"
 msgstr "查阅"
+
+#: ../website_views.py:369
+msgid "¶"
+msgstr ""
 
 #: ../future/order.py:76 ../utils.py:128
 msgid "…"
@@ -5127,9 +5155,6 @@ msgstr "名称"
 #~ msgid "Document Writer"
 #~ msgstr "编辑文档"
 
-#~ msgid "Document translations created."
-#~ msgstr "编辑文档"
-
 #~ msgid "Documents are where the data is stored"
 #~ msgstr "文件在数据存储处."
 
@@ -6113,10 +6138,6 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Update Catalog"
 #~ msgstr "更新目录"
-
-#, fuzzy
-#~ msgid "Upload"
-#~ msgstr "上载"
 
 #, fuzzy
 #~ msgctxt "heading"

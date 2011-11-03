@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2008 Nicolas Deram <nicolas@itaapy.com>
+# Copyright (C) 2011 Armel FORTUN <armel@tchack.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ from itools.web import STLView, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, get_default_widget
+from autoform import timestamp_widget, editarea_widget
 from buttons import Button, RemoveButton
 from fields import Textarea_Field
 from file_views import File_Edit
@@ -76,6 +78,22 @@ class Text_View(STLView):
 
     def get_namespace(self, resource, context):
         return {'data': resource.handler.to_str()}
+
+
+
+class CSS_Edit(Text_Edit):
+    """Code editor view using the EditArea instead of a basic textarea or
+    the WYSIWYG tinyMCE (that cannot directly edit source, as far as I known
+    [Armel]). Mix CSS_Edit and HTMLEditView"""
+
+    title = "Edit CSS file"
+
+    widgets = [timestamp_widget, editarea_widget]
+
+
+    def _get_schema(self, resource, context):
+        schema = File_Edit._get_schema(self, resource, context)
+        return merge_dicts(schema, data=String)
 
 
 

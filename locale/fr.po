@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-25 08:10+CET\n"
+"POT-Creation-Date: 2011-11-02 13:11+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -59,6 +59,10 @@ msgstr ""
 "           title=\"${resource/title}\">${resource/title}</a>\n"
 "        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n"
 "    </stl:inline>"
+
+#: ../website_views.py:296
+msgid "\"en\", \"fr\", ..."
+msgstr ""
 
 #: ../tracker/tracker_views.py:834
 msgid "#%s"
@@ -116,7 +120,7 @@ msgstr ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Écraser les "
 "fichiers portant le même nom</g>"
 
-#: ../website_views.py:212
+#: ../website_views.py:219
 msgid "%s@%s:%s"
 msgstr ""
 
@@ -207,11 +211,11 @@ msgstr ""
 "\n"
 "{issues}"
 
-#: ../website.py:92
+#: ../website.py:93
 msgid "2 + 3"
 msgstr "2 + 3"
 
-#: ../website.py:93
+#: ../website.py:94
 msgid "5"
 msgstr "5"
 
@@ -637,7 +641,7 @@ msgstr "Un document public est accessible même aux utilisateurs anonymes."
 msgid "ANONYMOUS"
 msgstr "Anonyme"
 
-#: ../website_views.py:187
+#: ../website_views.py:194
 msgid "About"
 msgstr "À propos de"
 
@@ -1169,7 +1173,7 @@ msgstr "Confirmation envoyée !"
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: ../website_views.py:110 ../website.py:111 ../website.py:246
+#: ../website_views.py:117 ../website.py:112 ../website.py:248
 msgid "Contact"
 msgstr "Contact"
 
@@ -1191,7 +1195,7 @@ msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr "Copiez le script <g id='4'>restedit.py</g> où vous le désirez"
 
-#: ../website.py:56
+#: ../website.py:57
 msgid "Create a new Web Site or Work Place."
 msgstr "Créer un nouveau site web"
 
@@ -1207,7 +1211,7 @@ msgstr "Créer et publier un message"
 msgid "Create and publish a Web Page."
 msgstr "Créer et publier une page web."
 
-#: ../website_views.py:219
+#: ../website_views.py:226
 msgid "Credits"
 msgstr "Crédits"
 
@@ -1295,7 +1299,7 @@ msgctxt "table cell"
 msgid "Default"
 msgstr "Par défaut"
 
-#: ../website_views.py:240
+#: ../website_views.py:247
 #, fuzzy
 msgid "Default language"
 msgstr "Choisissez une langue"
@@ -1351,7 +1355,12 @@ msgctxt "li"
 msgid "Document Management."
 msgstr "Gestion de documents."
 
-#: ../website_views.py:242
+#: ../website_views.py:386
+#, fuzzy
+msgid "Documentation updated."
+msgstr "Données mises à jour"
+
+#: ../website_views.py:249
 msgid "Domain names"
 msgstr "Noms de domaine"
 
@@ -1576,7 +1585,7 @@ msgctxt "legend"
 msgid "Fields"
 msgstr "Champs"
 
-#: ../file_views.py:57 ../file.py:53
+#: ../file_views.py:57 ../file.py:53 ../website_views.py:294
 msgid "File"
 msgstr "Fichier"
 
@@ -1743,7 +1752,7 @@ msgstr "Haute priorité"
 msgid "History"
 msgstr "Historique"
 
-#: ../website.py:108 ../website.py:243
+#: ../website.py:109 ../website.py:245
 msgid "Home"
 msgstr "Accueil"
 
@@ -1881,6 +1890,11 @@ msgstr "Les principales fonctionnalités d'iKaaro sont :"
 msgid "Keywords"
 msgstr "Mots clefs"
 
+#: ../website_views.py:295
+#, fuzzy
+msgid "Language"
+msgstr "Langues"
+
 #: ../control_panel.py:365
 msgid "Language added."
 msgstr "Langue ajoutée."
@@ -1919,7 +1933,7 @@ msgstr "Dernière modification"
 msgid "Last Name"
 msgstr "Nom"
 
-#: ../website.py:206
+#: ../website.py:207
 msgid "License"
 msgstr "Licence"
 
@@ -2020,15 +2034,15 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "Catalogue de messages"
 
-#: ../website_views.py:139
+#: ../website_views.py:146
 msgid "Message body"
 msgstr "Corps du message"
 
-#: ../website_views.py:180
+#: ../website_views.py:187
 msgid "Message sent."
 msgstr "Message envoyé."
 
-#: ../website_views.py:138
+#: ../website_views.py:145
 msgid "Message subject"
 msgstr "Sujet du message"
 
@@ -2301,7 +2315,7 @@ msgstr "Classeur au format OpenOffice.org"
 msgid "OpenOffice.org Text"
 msgstr "Texte au format OpenOffice.org"
 
-#: ../website_views.py:202
+#: ../website_views.py:209
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
@@ -2501,7 +2515,7 @@ msgstr "Publier"
 msgid "Publish the document."
 msgstr "Publier le document."
 
-#: ../website_views.py:201 ../text.py:243
+#: ../website_views.py:208 ../text.py:243
 msgid "Python"
 msgstr "Python"
 
@@ -2513,7 +2527,7 @@ msgstr "Texte RTF"
 msgid "RTF Document"
 msgstr "Texte au format RTF"
 
-#: ../website_views.py:133
+#: ../website_views.py:140
 msgid "Recipient"
 msgstr "Destinataire"
 
@@ -2771,12 +2785,12 @@ msgstr "Sélectionner le tableau"
 msgid "Select the contact accounts"
 msgstr "Sélectionner les comptes des contacts"
 
-#: ../website_views.py:241
+#: ../website_views.py:248
 #, fuzzy
 msgid "Select the default language"
 msgstr "Vous ne pouvez pas supprimer la langue par défaut."
 
-#: ../website_views.py:111
+#: ../website_views.py:118
 msgid "Send"
 msgstr "Envoyer"
 
@@ -3077,7 +3091,7 @@ msgstr "L'utilisateur {title} a modifié cette fiche."
 msgid "The {id} record is missing."
 msgstr "L'enregistrement {id} n'a pas été trouvé."
 
-#: ../theme.py:38 ../control_panel.py:399 ../website.py:104 ../website.py:239
+#: ../theme.py:38 ../control_panel.py:399 ../website.py:105 ../website.py:241
 msgid "Theme"
 msgstr "Thème"
 
@@ -3307,7 +3321,7 @@ msgstr "Saisissez l'adresse URL d'un média externe"
 msgid "Type the URL of an external resource"
 msgstr "Saisissez l'adresse URL d'une ressource externe"
 
-#: ../website_views.py:243
+#: ../website_views.py:250
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
@@ -3383,6 +3397,11 @@ msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
 
+#: ../website_views.py:288
+#, fuzzy
+msgid "Update docs"
+msgstr "Mettre à jour"
+
 #: ../tracker/ui/export_to_text.xml.en:22
 msgctxt "button"
 msgid "Update text export"
@@ -3395,6 +3414,10 @@ msgstr "Mise à jour vers la version %s"
 #: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
 msgstr "Mise-à-jour: fixez mtime/auteur"
+
+#: ../website_views.py:299
+msgid "Upload"
+msgstr "Importer"
 
 #: ../ui/html/popup.xml.en:129
 msgctxt "button"
@@ -3521,7 +3544,7 @@ msgstr "Hôtes virtuels"
 msgid "Web Page"
 msgstr "Page web"
 
-#: ../website.py:55
+#: ../website.py:56
 msgid "Web Site"
 msgstr "Site web"
 
@@ -3673,7 +3696,7 @@ msgstr "Vous étiez déjà désinscrit."
 msgid "Your confirmation key is invalid."
 msgstr "Votre clé de confirmation est invalide."
 
-#: ../website_views.py:137
+#: ../website_views.py:144
 msgid "Your email address"
 msgstr "Votre adresse de courriel"
 
@@ -3750,7 +3773,7 @@ msgstr "id"
 msgid "large"
 msgstr "grande"
 
-#: ../website_views.py:200
+#: ../website_views.py:207
 msgid "lpOD"
 msgstr "lpOD"
 
@@ -3762,7 +3785,7 @@ msgstr "moyenne"
 msgid "original"
 msgstr "originale"
 
-#: ../website_views.py:199
+#: ../website_views.py:206
 msgid "pygobject"
 msgstr "pygobject"
 
@@ -3868,6 +3891,10 @@ msgstr "« Précédent"
 msgctxt "title attribute"
 msgid "« Previous"
 msgstr "« Précédent"
+
+#: ../website_views.py:369
+msgid "¶"
+msgstr ""
 
 #: ../future/order.py:76 ../utils.py:128
 msgid "…"
@@ -5248,9 +5275,6 @@ msgstr ""
 #~ msgid "Current window"
 #~ msgstr "Même fenêtre"
 
-#~ msgid "Data updated"
-#~ msgstr "Données mises à jour"
-
 #~ msgctxt "form"
 #~ msgid "Date:"
 #~ msgstr "Date :"
@@ -6304,9 +6328,6 @@ msgstr ""
 #~ msgctxt "title attribute"
 #~ msgid "Unordered list"
 #~ msgstr "Liste à puces"
-
-#~ msgid "Upload"
-#~ msgstr "Importer"
 
 #~ msgctxt "heading"
 #~ msgid "Upload Image"
