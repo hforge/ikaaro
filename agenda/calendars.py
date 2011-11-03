@@ -97,7 +97,7 @@ class Calendars_View(BrowseForm):
             hidden_for_users = item.get_value('hidden_for_users')
             visible = context.user.name not in hidden_for_users
             if column == 'checkbox':
-                return item.get_abspath(), visible
+                return item.abspath, visible
             return MSG(u'Yes') if visible else MSG(u'No')
         elif column == 'color':
             color = item.get_value('color')
@@ -106,14 +106,14 @@ class Calendars_View(BrowseForm):
                 style="background-color:{color}"/>"""
             return XMLParser(data.format(color=color))
         elif column == 'title':
-            return item.get_title(), item.get_abspath()
+            return item.get_title(), item.abspath
         proxy = super(Calendars_View, self)
         return proxy.get_item_value(resource, context, item, column)
 
 
     def action_update_calendar_visibility(self, resource, context, form):
         for calendar in self.get_items(resource, context).get_resources():
-            if str(calendar.get_abspath()) not in form['ids']:
+            if str(calendar.abspath) not in form['ids']:
                 hidden_for_users = calendar.get_value('hidden_for_users')
                 if context.user.name not in hidden_for_users:
                     calendar.set_value('hidden_for_users', context.user.name)

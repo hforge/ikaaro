@@ -388,7 +388,7 @@ class CalendarView(STLView):
         context = get_context()
         for calendar in context.search(format='calendar').get_resources():
             if context.user.name in calendar.get_value('hidden_for_users'):
-                abspath = str(calendar.get_abspath())
+                abspath = str(calendar.abspath)
                 query.append(NotQuery(PhraseQuery('calendar', abspath)))
 
         # Ok

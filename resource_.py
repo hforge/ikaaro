@@ -82,10 +82,6 @@ class DBResource(Resource):
         return self.metadata.database
 
 
-    def get_abspath(self):
-        return self.abspath
-
-
     @lazy
     def parent(self):
         abspath = self.abspath
