@@ -59,8 +59,10 @@ class Database(GitDatabase):
         self.resources_new2old.clear()
 
         # 4. Find out commit author & message
-        git_author = (
-            (userid, user.get_property('email')) if user else ('nobody', ''))
+        if user:
+            git_author = (userid, user.get_property('email'))
+        else:
+            git_author = ('nobody', 'nobody')
 
         git_msg = getattr(context, 'git_message', None)
         if not git_msg:
