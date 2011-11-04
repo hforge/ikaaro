@@ -1,0 +1,89 @@
+ikaaro 0.75.0 (beta) - 2011/XX/XX
+==================================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Changes
+-------
+
+This major release is labeled as beta because the upgrade logic is not
+yet available, we will drop the "beta" label when this is done.
+
+Two major features have been dropped in this release: websites and the
+tracker module. They may, eventually, come back in a different form.
+
+System admin:
+- There is a new configuration option, 'log-email'. If set an email will be
+  sent to the given email address whenever an internal server error (500)
+  happens.
+
+Performance:
+- Now the static files at '/ui/' are served using specific logic, and much
+  faster than before.
+- Now access control is defined by a query to the database, this fixes
+  long-standing bug #535, smooth and fast.
+
+Major features:
+- There is a new configuration system, located at '/config/', where
+  configuration modules are stored. And comes with many small improvements.
+- There is a new access-control system, which can be configured through the
+  back-office at '/config/access'. It is based on user groups instead of
+  roles (a user may belong to several groups), ownership (some resources
+  have an owner), and access rules.
+- It is now possible to define new resource types from the back-office, at
+  '/config/models'. This feature is exposed by the new Agenda module (see
+  below), so it is possible to define events with custom fields.
+
+Minor features:
+- The registration form is back, it includes a captcha, and can be configured
+  through '/config/register'.
+- Users are not folders anymore, but they have an avatar. Users can not be
+  removed but deactivated from the back-office.
+
+Modules:
+- The Calendar module has been renamed to Agenda and has been much improved:
+  support for recurrence rules, reminders, better user interface, now events
+  are attached to calendars (ala Google), etc.
+- The Blog: automatically add posts in a YYYY/MM layout (XXX)
+
+Pogramming Interface:
+- Resource.class_schema has been replaced by fields. It is easier to override
+  fields defined by a parent class, and they are used by autoadd/autoedit
+  (see below) to automatize views.
+- Files are now fields, this allows a resource to have several files
+  attached to it (for instance: user.avatar, user.cv.en, etc.)
+- New AutoAdd/AutoEdit views replace NewInstance/DBResource_Edit. They make
+  much easier to write automatic add/edit views for resources.
+- The autoform has a richer namespace, this allows to easily define custom
+  templates.
+- New search field 'base_classes' allows to search the database for resources
+  which have some parent class.  This replaces 'is_folder', 'is_image' etc.
+- There is the beginnings of a template system for emails.
+- Table resources have been removed. Now everything should be a resource.
+- Now comments are resources on their own.
+- The 'OrderedFolder' class allows to order items in a folder.
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.75/ikaaro-0.75.0.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Documentation
+http://www.hforge.org/ikaaro/docs
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
