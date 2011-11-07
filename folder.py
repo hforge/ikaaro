@@ -34,6 +34,7 @@ from itools.uri import Path
 from itools.web import BaseView, Forbidden, get_context
 
 # Import from ikaaro
+from content import Content
 from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
@@ -45,7 +46,7 @@ from resource_ import DBResource
 
 
 
-class Folder(DBResource):
+class Folder(Content):
 
     class_id = 'folder'
     class_version = '20071215'
