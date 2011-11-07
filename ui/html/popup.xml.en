@@ -84,12 +84,6 @@
                   <input type="text" size="40" id="title" name="title" />
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <label for="state">State</label><br/>
-                  ${state_widget}
-                </td>
-              </tr>
             </table>
             <br/>
             <button value="add_resource" name="action" class="button-ok" type="submit">OK</button>
@@ -116,12 +110,6 @@
                 <td>
                   <label for="file">File</label><br/>
                   <input id="file" name="file" size="35" type="file" />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="state">State</label><br/>
-                  ${state_widget}
                 </td>
               </tr>
             </table>

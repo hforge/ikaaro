@@ -303,7 +303,7 @@ class Event_NewInstance(AutoAdd):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = ['title', 'description', 'state', 'cc_list',
+    fields = ['title', 'description', 'cc_list',
         'calendar', 'dtstart', 'dtend', 'allday', 'place', 'status',
         'rrule', 'rrule_interval', 'rrule_byday', 'reminder']
     allday = AllDay_Field

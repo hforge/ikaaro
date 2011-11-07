@@ -33,14 +33,13 @@ from itools.web import BaseView, STLView, ERROR, get_context
 
 # Import from ikaaro
 from autoform import SelectWidget, TextWidget
-from buttons import PasteButton, PublishButton, RetireButton
+from buttons import PasteButton
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
-from workflow import State_Datatype, WorkflowAware, get_workflow_preview
 import messages
 
 
@@ -316,11 +315,10 @@ class Folder_BrowseContent(BrowseForm):
         ('title', MSG(u'Title')),
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('state', MSG(u'State'))]
+        ('last_author', MSG(u'Last Author'))]
     table_actions = [
         RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
-        PublishButton, RetireButton, ZipButton]
+        ZipButton]
 
 
     def search_content_only(self, resource, context):
@@ -414,29 +412,6 @@ class Folder_BrowseContent(BrowseForm):
         return key
 
 
-    def get_key_sorted_by_state(self):
-        database = get_context().database
-        def key(item, cache={}):
-            # Don't cache by state name because the same name could be
-            # translated differently in two workflows
-            format = item.format
-            state = item.state
-            cache_key = (format, state)
-            if cache_key in cache:
-                return cache[cache_key]
-            cls = database.get_resource_class(format)
-            if issubclass(cls, WorkflowAware):
-                state_title = State_Datatype.get_value(state)
-                value = state_title.gettext().lower().translate(transmap)
-            else:
-                value = None
-            # Group by format
-            value = (value, format)
-            cache[cache_key] = value
-            return value
-        return key
-
-
     def sort_and_batch(self, resource, context, results):
         start = context.query['batch_start']
         size = context.query['batch_size']
@@ -505,9 +480,6 @@ class Folder_BrowseContent(BrowseForm):
             # Last author
             author =  item.get_value('last_author')
             return context.root.get_user_title(author) if author else None
-        elif column == 'state':
-            # The workflow state
-            return get_workflow_preview(item, context)
 
         # Default
         return item.get_value_title(column)
@@ -680,12 +652,6 @@ class Folder_BrowseContent(BrowseForm):
                     continue
                 else:
                     pasted.append(name)
-                    # Fix state
-                    copy = target.get_resource(name)
-                    if isinstance(copy, WorkflowAware):
-                        metadata = copy.metadata
-                        metadata.set_property('state',
-                                              copy.workflow.initstate)
 
         # Cut, clean cookie
         if cut is True:
@@ -701,29 +667,6 @@ class Folder_BrowseContent(BrowseForm):
             message.append(msg)
 
         context.message = message
-
-
-    def _action_workflow(self, resource, context, form, state, message):
-        context.message = messages.MSG_NONE_ALLOWED
-
-        # Change state
-        user = context.user
-        root = context.root
-        for id in form['ids']:
-            item = resource.get_resource(id)
-            if root.has_permission(user, 'change_state', item):
-                item.set_value('state', state)
-                context.message = message
-
-
-    def action_publish(self, resource, context, form):
-        self._action_workflow(resource, context, form, 'public',
-                              messages.MSG_PUBLISHED)
-
-
-    def action_retire(self, resource, context, form):
-        self._action_workflow(resource, context, form, 'private',
-                              messages.MSG_RETIRED)
 
 
     def action_zip(self, resource, context, form):
@@ -829,12 +772,9 @@ class Folder_PreviewContent(Folder_BrowseContent):
         for item in items:
             row = {'checkbox': False,
                    # These are required for internal use
-                   'title_or_name': item.get_title(),
-                   'state': None}
+                   'title_or_name': item.get_title()}
             # XXX Already hard-coded in the catalog search
             row['is_folder'] = (item.class_id == 'folder')
-            if isinstance(item, WorkflowAware):
-                row['state'] = item.get_value_title('state')
             for name, title, sortable, css in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:

@@ -413,7 +413,6 @@ class DatetimeWidget(DateWidget):
 class PathSelectorWidget(TextWidget):
 
     action = 'add_link'
-    display_workflow = True
     tip = MSG(u'Click on button "..." to select a file.')
 
     template = make_stl_template("""
@@ -422,25 +421,8 @@ class PathSelectorWidget(TextWidget):
     <button id="selector-button-${id}" class="button-selector"
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
-    ${workflow_state}
     <label class="language" for="${id}" stl:if="language"
       >${language}</label>""")
-
-
-    def workflow_state(self):
-        from ikaaro.workflow import get_workflow_preview
-
-        if self.display_workflow:
-            value = self.value
-            if type(value) is not str:
-                value = self.datatype.encode(value)
-            if value:
-                context = get_context()
-                resource = context.resource.get_resource(value, soft=True)
-                if resource:
-                    return get_workflow_preview(resource, context)
-
-        return None
 
 
 
@@ -457,7 +439,6 @@ class ImageSelectorWidget(PathSelectorWidget):
     <button id="selector-button-${id}" class="button-selector"
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
-    ${workflow_state}
     <label class="language" for="${id}" stl:if="language"
       >${language}</label>
     <br/>

@@ -471,10 +471,6 @@ class Root(Folder):
         return self.has_permission(user, 'add', resource)
 
 
-    def is_allowed_to_change_state(self, user, resource):
-        return self.has_permission(user, 'change_state', resource)
-
-
     # By default all other change operations (add, remove, copy, etc.)
     # are equivalent to "edit".
     def is_allowed_to_put(self, user, resource):

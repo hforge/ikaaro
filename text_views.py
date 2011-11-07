@@ -39,7 +39,7 @@ class Text_Edit(File_Edit):
     title = MSG(u'Edit')
     icon = 'edit.png'
 
-    fields = ['title', 'state', 'data', 'file', 'description', 'subject']
+    fields = ['title', 'data', 'file', 'description', 'subject']
 
     data = Textarea_Field(title=MSG(u'Content'))
 

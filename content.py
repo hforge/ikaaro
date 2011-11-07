@@ -18,9 +18,8 @@
 from cc import Observable
 from comments import CommentsAware
 from resource_ import DBResource
-from workflow import WorkflowAware
 
 
 
-class Content(CommentsAware, Observable, WorkflowAware, DBResource):
+class Content(CommentsAware, Observable, DBResource):
     pass

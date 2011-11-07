@@ -128,33 +128,6 @@ class PasteButton(BrowseButton):
 
 
 
-class PublishButton(BrowseButton):
-
-    access = 'is_allowed_to_change_state'
-    css = 'button-publish'
-    name = 'publish'
-    title = MSG(u'Publish')
-
-
-    @proto_property
-    def show(self):
-        context = self.context
-        root = context.root
-        for item in self.items:
-            if root.has_permission(context.user, 'change_state', item):
-                return True
-        return False
-
-
-
-class RetireButton(PublishButton):
-
-    css = 'button-retire'
-    name = 'retire'
-    title = MSG(u'Unpublish')
-
-
-
 class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'

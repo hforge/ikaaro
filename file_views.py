@@ -31,7 +31,6 @@ from itools.web import BaseView, STLView, ERROR, FormError
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import PathSelectorWidget
-from autoform import ReadOnlyWidget
 from fields import ProgressBar_Field
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
@@ -40,7 +39,7 @@ from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 class File_NewInstance(AutoAdd):
 
     title = MSG(u'Upload File')
-    fields = ['data', 'title', 'state', 'location', 'progressbar']
+    fields = ['data', 'title', 'location', 'progressbar']
 
     progressbar = ProgressBar_Field
 
@@ -63,7 +62,6 @@ class File_NewInstance(AutoAdd):
         child = container._make_file(name, filename, mimetype, body, language)
         # 2. Set properties
         self.set_value(child, context, 'title', form)
-        self.set_value(child, context, 'state', form)
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -86,17 +84,7 @@ class File_View(STLView):
 
 class File_Edit(AutoEdit):
 
-    fields = ['title', 'state', 'data', 'description', 'subject']
-    def _get_widget(self, resource, context, name):
-        widget = super(File_Edit, self)._get_widget(resource, context, name)
-
-        if name == 'state':
-            root = context.root
-            user = context.user
-            if not root.has_permission(user, 'change_state', resource):
-                return ReadOnlyWidget(name, title=widget.title)
-
-        return widget
+    fields = ['title', 'data', 'description', 'subject']
 
 
 

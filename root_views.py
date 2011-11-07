@@ -308,8 +308,6 @@ class UpdateDocs(AutoForm):
                 return body
 
         def postproc(file):
-            # State
-            file.set_property('state', 'public')
             # Title
             if file.class_id != 'webpage':
                 return

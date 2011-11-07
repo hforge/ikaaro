@@ -36,7 +36,6 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from utils import reduce_string, make_stl_template
-from workflow import WorkflowAware, State_Widget
 
 
 class SelectElement(AddButton):
@@ -76,8 +75,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         ('icon', None),
         ('name', MSG(u'Name')),
         ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('state', MSG(u'State'))]
+        ('last_author', MSG(u'Last Author'))]
 
     table_actions = [SelectElement]
 
@@ -181,7 +179,6 @@ class DBResource_AddBase(STLView):
     template = '/ui/html/popup.xml'
 
     element_to_add = None
-    default_state = 'private'
 
     schema = {
         'target_path': String(mandatory=True),
@@ -196,8 +193,7 @@ class DBResource_AddBase(STLView):
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                search_schema, target=String)
     action_upload_schema = merge_dicts(schema, title=Unicode,
-                                       file=FileDataType(mandatory=True),
-                                       state=String(mandatory=True))
+                                       file=FileDataType(mandatory=True))
 
 
     def get_configuration(self):
@@ -289,8 +285,6 @@ class DBResource_AddBase(STLView):
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
         namespace['mode'] = context.get_form_value('mode')
-        namespace['state_widget'] = State_Widget(name='state',
-                                                 value=self.default_state)
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = root.get_skin(context).get_styles(context)
         browse_content = self.browse_content_class(\
@@ -354,9 +348,6 @@ class DBResource_AddBase(STLView):
             return
 
         kw = {'data': body, 'filename': filename}
-        # WorkflowAware class
-        if issubclass(cls, WorkflowAware):
-            kw['state'] = form['state']
 
         # Add the image to the resource
         child = container.make_resource(name, cls, **kw)
@@ -397,8 +388,7 @@ class DBResource_AddLink(DBResource_AddBase):
     browse_content_class = AddBase_BrowseContent
 
     action_add_resource_schema = merge_dicts(DBResource_AddBase.schema,
-                                             title=Unicode(mandatory=True),
-                                             state=String(mandatory=True))
+                                             title=Unicode(mandatory=True))
 
     text_values = {'title': MSG(u'Insert link'),
        'browse': MSG(u'Browse and link to a File from the workspace'),
@@ -434,9 +424,6 @@ class DBResource_AddLink(DBResource_AddBase):
         cls = self.get_page_type(mode)
         # Create the resource
         child = container.make_resource(name, cls)
-        # WorkflowAware resource
-        if isinstance(child, WorkflowAware):
-            child.set_property('state', form['state'])
         scripts = self.get_scripts(context)
         context.add_script(*scripts)
         return self.get_javascript_return(context, child.abspath)

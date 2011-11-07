@@ -33,7 +33,6 @@ from folder_views import Folder_BrowseContent
 from resource_ import DBResource
 from user import UserGroups_Datatype
 from utils import get_base_path_query, get_content_containers
-from workflow import State_Field
 
 
 ###########################################################################
@@ -99,8 +98,7 @@ class Permission_Datatype(Enumerate):
     options = [
         {'name': 'view', 'value': MSG(u'View')},
         {'name': 'edit', 'value': MSG(u'Remove and modify')},
-        {'name': 'add', 'value': MSG(u'Add')},
-        {'name': 'change_state', 'value': MSG(u'Change workflow state')}]
+        {'name': 'add', 'value': MSG(u'Add')}]
 
 
 class Permissions_Field(Select_Field):
@@ -158,12 +156,11 @@ class AccessRule(DBResource):
     search_path = Path_Field(indexed=True, stored=True)
     search_path_depth = PathDepth_Field()
     search_format = SearchFormat_Field(indexed=True, stored=True)
-    search_state = State_Field(has_empty_option=True, default='')
 
     # Views
     class_views = ['edit', 'results', 'commit_log']
     _fields = ['group', 'permission', 'search_path', 'search_path_depth',
-               'search_format', 'search_state']
+               'search_format']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
     results = AccessRule_Results()
@@ -181,7 +178,7 @@ class AccessRule(DBResource):
         if permission == 'add':
             names = ['path']
         else:
-            names = ['path', 'format', 'state']
+            names = ['path', 'format']
 
         for name in names:
             field_name = 'search_%s' % name
@@ -202,10 +199,6 @@ class AccessRule(DBResource):
 
             query.append(subquery)
 
-        # Permission change-state
-        if permission == 'change_state':
-            query.append(PhraseQuery('base_classes', '-workflow-aware'))
-
         # Ok
         return query
 
@@ -221,8 +214,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     query_schema['reverse'] = query_schema['reverse'](default=False)
 
     # Search form
-    _columns = [
-        'group', 'permission', 'search_path', 'search_format', 'search_state']
+    _columns = ['group', 'permission', 'search_path', 'search_format']
 
     @proto_property
     def _search_fields(self):
@@ -317,11 +309,9 @@ class ConfigAccess(Folder):
         ('authenticated', 'view', {}),
         # Members can add new content and edit private content
         ('/config/groups/members', 'add', {}),
-        ('/config/groups/members', 'edit', {'state': 'private'}),
         # Reviewers can add new content, edit any content and publish
         ('/config/groups/reviewers', 'add', {}),
-        ('/config/groups/reviewers', 'edit', {}),
-        ('/config/groups/reviewers', 'change_state', {})]
+        ('/config/groups/reviewers', 'edit', {})]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)

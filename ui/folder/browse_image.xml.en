@@ -42,8 +42,6 @@
           <stl:block stl:if="row/checkbox">
             <input type="checkbox" id="id-${row/id}" name="ids"
               value="${row/id}" checked="${row/checked}" class="checkbox" />
-            <label class="wf-${row/state}"
-              for="id-${row/id}">${row/title_or_name}</label>
           </stl:block>
           <stl:block stl:if="not row/checkbox">
             <label>${row/title_or_name}</label>

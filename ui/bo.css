@@ -420,7 +420,6 @@ form#form-search div.block-widget-group,
 form#form-search div.block-widget-permission,
 form#form-search div.block-widget-search_path,
 form#form-search div.block-widget-search_format,
-form#form-search div.block-widget-search_state
 {
   float: left;
   margin-right: 0.5em;
@@ -484,21 +483,6 @@ fieldset.search table td {
 fieldset.search button {
   margin-bottom: 0;
 }
-
-/**************************************************************************
- * folder_views.Folder_BrowseContent
- *************************************************************************/
-
-.workflow { text-decoration: none; }
-
-
-/**************************************************************************
- * ui/WorkflowAware_state.xml.en
- *************************************************************************/
-
-.wf-private { color: #c00; }
-.wf-public { color: #4e9a06; }
-
 
 /**************************************************************************
  * ui/website/search_table.xml.en

@@ -115,4 +115,4 @@ class Post(WebPage):
     # Views
     new_instance = Post_NewInstance()
     view = Post_View()
-    edit = File_Edit(fields=['title', 'date', 'state', 'data'])
+    edit = File_Edit(fields=['title', 'date', 'data'])

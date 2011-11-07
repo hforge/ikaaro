@@ -57,14 +57,6 @@ class Folder(DBResource):
                    'links', 'backlinks', 'commit_log']
 
 
-
-    folder_state = 'public'
-    def get_catalog_values(self):
-        values = super(Folder, self).get_catalog_values()
-        values['state'] = self.folder_state
-        return values
-
-
     #########################################################################
     # Gallery properties
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
@@ -327,7 +319,7 @@ class Folder(DBResource):
                 folder.move_handler(src_key, dst_key)
 
 
-    def search_resources(self, cls=None, format=None, state=None):
+    def search_resources(self, cls=None, format=None):
         if cls is None:
             cls = DBResource
 
@@ -337,9 +329,6 @@ class Folder(DBResource):
                 continue
             # Filter by class_id
             if format and resource.metadata.format != format:
-                continue
-            # Filter by workflow state
-            if state and resource.get_value('state') != state:
                 continue
             # All filters passed
             yield resource
