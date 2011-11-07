@@ -24,6 +24,7 @@ from itools.web import get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
+from datatypes import Groups_Datatype
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local
@@ -31,26 +32,12 @@ from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from resource_ import DBResource
-from user import UserGroups_Datatype
 from utils import get_base_path_query, get_content_containers
 
 
 ###########################################################################
 # Fields & datatypes
 ###########################################################################
-class Groups_Datatype(UserGroups_Datatype):
-
-    special_groups = [
-        {'name': 'everybody', 'value': MSG(u'Everybody')},
-        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
-
-
-    def get_options(self):
-        options = super(Groups_Datatype, self).get_options()
-        return options + self.special_groups
-
-
-
 class Path_Datatype(Enumerate):
 
     def get_options(self):
@@ -98,6 +85,7 @@ class Permission_Datatype(Enumerate):
     options = [
         {'name': 'view', 'value': MSG(u'View')},
         {'name': 'edit', 'value': MSG(u'Remove and modify')},
+        {'name': 'share', 'value': MSG(u'Share')},
         {'name': 'add', 'value': MSG(u'Add')}]
 
 
@@ -309,9 +297,11 @@ class ConfigAccess(Folder):
         ('authenticated', 'view', {}),
         # Members can add new content and edit private content
         ('/config/groups/members', 'add', {}),
+        ('/config/groups/members', 'edit', {}),
         # Reviewers can add new content, edit any content and publish
         ('/config/groups/reviewers', 'add', {}),
-        ('/config/groups/reviewers', 'edit', {})]
+        ('/config/groups/reviewers', 'edit', {}),
+        ('/config/groups/reviewers', 'share', {})]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
@@ -340,7 +330,7 @@ class ConfigAccess(Folder):
         if is_admin:
             return AllQuery()
 
-        # Back-office access rules
+        # 1. Back-office access rules
         query = OrQuery()
         for rule in self.get_resources():
             if rule.get_value('permission') != permission:
@@ -356,10 +346,20 @@ class ConfigAccess(Folder):
 
             query.append(rule.get_search_query())
 
-        # Ownership
+        # 2. Share
+        share_query = OrQuery(
+            NotQuery(PhraseQuery('base_classes', '-share-aware')),
+            AndQuery(
+                PhraseQuery('base_classes', '-share-aware'),
+                OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])))
+
+        query = AndQuery(query, share_query)
+
+        # 3. Ownership
         if user:
             query.append(PhraseQuery('owner', str(user.abspath)))
 
+        # Ok
         return query
 
 

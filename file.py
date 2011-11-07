@@ -59,7 +59,7 @@ class File(Content):
     class_handler = FileHandler
 
     # Fields
-    data = File_Field(title=MSG(u'File'), required=True)
+    data = File_Field(required=True)
     filename = Char_Field
 
 

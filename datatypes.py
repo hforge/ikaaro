@@ -23,10 +23,12 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Date, String
+from itools.datatypes import DataType, Date, Enumerate, String
 from itools.fs import FileName
+from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
+from itools.web import get_context
 from itools.xml import XMLParser, is_xml_stream
 
 
@@ -169,3 +171,29 @@ class HTMLBody(XHTMLBody):
         if not is_xml_stream(value):
             value = value.get_body().get_content_elements()
         return stream_to_str_as_html(value)
+
+
+###########################################################################
+# Groups
+###########################################################################
+
+class UserGroups_Datatype(Enumerate):
+
+    _resource_path = '/config/groups'
+    def get_options(self):
+        resource = get_context().database.get_resource(self._resource_path)
+        return [ {'name': str(x.abspath), 'value': x.get_title()}
+                 for x in resource.get_resources_in_order() ]
+
+
+
+class Groups_Datatype(UserGroups_Datatype):
+
+    special_groups = [
+        {'name': 'everybody', 'value': MSG(u'Everybody')},
+        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+
+
+    def get_options(self):
+        options = super(Groups_Datatype, self).get_options()
+        return options + self.special_groups

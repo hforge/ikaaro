@@ -90,6 +90,8 @@ class HiddenWidget(Widget):
 
 class FileWidget(Widget):
 
+    title = MSG(u'File')
+
     template = make_stl_template("""
     <input type="file" id="${id}" name="${name}" maxlength="${maxlength}"
       size="${size}" class="${css}" />

@@ -31,7 +31,7 @@ from itools.web import BaseView, STLView, ERROR, FormError
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import PathSelectorWidget
-from fields import ProgressBar_Field
+from fields import File_Field, ProgressBar_Field
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 
@@ -84,7 +84,8 @@ class File_View(STLView):
 
 class File_Edit(AutoEdit):
 
-    fields = ['title', 'data', 'description', 'subject']
+    fields = ['title', 'data', 'description', 'subject', 'share']
+    data = File_Field # require is false
 
 
 

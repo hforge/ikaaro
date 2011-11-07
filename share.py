@@ -14,13 +14,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from itools
+from itools.database import Resource
+from itools.gettext import MSG
+
 # Import from ikaaro
-from cc import Observable
-from comments import CommentsAware
-from resource_ import DBResource
-from share import Share_Aware
+from autoform import CheckboxWidget
+from datatypes import Groups_Datatype
+from fields import Select_Field
 
 
 
-class Content(CommentsAware, Observable, Share_Aware, DBResource):
-    pass
+class Share_Field(Select_Field):
+
+    access = 'is_allowed_to_share'
+    title = MSG(u'Share')
+    datatype = Groups_Datatype
+    widget = CheckboxWidget
+    multiple = True
+    indexed = True
+
+
+
+class Share_Aware(Resource):
+
+    class_id = '-share-aware'
+    class_title = MSG(u'Share Aware')
+    share = Share_Field

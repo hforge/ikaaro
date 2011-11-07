@@ -303,9 +303,11 @@ class Event_NewInstance(AutoAdd):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = ['title', 'description', 'cc_list',
-        'calendar', 'dtstart', 'dtend', 'allday', 'place', 'status',
-        'rrule', 'rrule_interval', 'rrule_byday', 'reminder']
+    fields = ['title', 'description', 'cc_list', 'calendar',
+              'dtstart', 'dtend', 'allday',
+              'place', 'status',
+              'rrule', 'rrule_interval', 'rrule_byday',
+              'reminder']
     allday = AllDay_Field
     rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)

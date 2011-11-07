@@ -245,9 +245,9 @@ class UpdateDocs(AutoForm):
         'file': FileDataType(mandatory=True),
         'language': String(mandatory=True, default='en')}
     widgets = [
-        FileWidget('file', title=MSG(u'File')),
+        FileWidget('file'),
         TextWidget('language', title=MSG(u'Language'),
-            tip=MSG(u'"en", "fr", ...'))]
+                   tip=MSG(u'"en", "fr", ...'))]
 
     actions = [
         Button(access='is_admin', css='button-ok', title=MSG(u'Upload'))]
@@ -308,6 +308,8 @@ class UpdateDocs(AutoForm):
                 return body
 
         def postproc(file):
+            # Share
+            file.set_value('share', ['everybody'])
             # Title
             if file.class_id != 'webpage':
                 return
