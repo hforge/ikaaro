@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.core import is_prototype, proto_property
-from itools.database import AllQuery, AndQuery, NotQuery, OrQuery, PhraseQuery
+from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
@@ -156,18 +156,13 @@ class AccessRule(DBResource):
     # API
     def get_search_query(self):
         permission = self.get_value('permission')
-
-        # Build query
-        query = AndQuery()
-        # Exclude configuration
-        query.append(NotQuery(PhraseQuery('parent_paths', '/config')))
-
-        # Rules
         if permission == 'add':
             names = ['path']
         else:
             names = ['path', 'format']
 
+        # Query
+        query = AndQuery()
         for name in names:
             field_name = 'search_%s' % name
             field = self.get_field(field_name)
@@ -331,7 +326,7 @@ class ConfigAccess(Folder):
             return AllQuery()
 
         # 1. Back-office access rules
-        query = OrQuery()
+        rules_query = OrQuery()
         for rule in self.get_resources():
             if rule.get_value('permission') != permission:
                 continue
@@ -344,21 +339,18 @@ class ConfigAccess(Folder):
                 if class_id and r_format and class_id != r_format:
                     continue
 
-            query.append(rule.get_search_query())
+            rules_query.append(rule.get_search_query())
 
-        # 2. Share
-        query = AndQuery(
-            query,
-            OrQuery(*[ PhraseQuery('share', x) for x in user_groups ]))
+        # Case: anonymous
+        if not user:
+            return AndQuery(rules_query, PhraseQuery('share', 'everybody'))
 
-        # 3. Ownership
-        if user:
-            query = OrQuery(
-                PhraseQuery('owner', str(user.abspath)),
-                query)
-
-        # Ok
-        return query
+        # Case: authenticated
+        return OrQuery(
+            PhraseQuery('owner', str(user.abspath)),
+            AndQuery(
+                rules_query,
+                OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])))
 
 
     def has_permission(self, user, permission, resource, class_id=None):
