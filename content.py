@@ -15,14 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from ikaaro
-from autoedit import AutoEdit
 from cc import Observable
 from comments import CommentsAware
 from resource_ import DBResource
-from share import Share_Aware
 
 
 
-class Content(CommentsAware, Observable, Share_Aware, DBResource):
-
-    edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
+class Content(CommentsAware, Observable, DBResource):
+    pass

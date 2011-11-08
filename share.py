@@ -38,6 +38,4 @@ class Share_Field(Select_Field):
 
 class Share_Aware(Resource):
 
-    class_id = '-share-aware'
-    class_title = MSG(u'Share Aware')
     share = Share_Field

@@ -22,7 +22,7 @@
 # Import from itools
 from itools.core import is_prototype, lazy
 from itools.csv import Property
-from itools.database import Metadata, Resource, register_field
+from itools.database import Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String, Unicode, URI
 from itools.gettext import MSG
@@ -44,11 +44,12 @@ from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
+from share import Share_Aware
 from utils import get_base_path_query
 
 
 
-class DBResource(Resource):
+class DBResource(Share_Aware):
 
     class_version = '20071215'
     class_description = None
@@ -728,7 +729,7 @@ class DBResource(Resource):
     new_instance = AutoAdd(fields=['title', 'location'])
     login = LoginView()
     logout = LogoutView()
-    edit = AutoEdit()
+    edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
     # Popup views

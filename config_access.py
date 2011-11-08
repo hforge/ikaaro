@@ -347,17 +347,15 @@ class ConfigAccess(Folder):
             query.append(rule.get_search_query())
 
         # 2. Share
-        share_query = OrQuery(
-            NotQuery(PhraseQuery('base_classes', '-share-aware')),
-            AndQuery(
-                PhraseQuery('base_classes', '-share-aware'),
-                OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])))
-
-        query = AndQuery(query, share_query)
+        query = AndQuery(
+            query,
+            OrQuery(*[ PhraseQuery('share', x) for x in user_groups ]))
 
         # 3. Ownership
         if user:
-            query.append(PhraseQuery('owner', str(user.abspath)))
+            query = OrQuery(
+                PhraseQuery('owner', str(user.abspath)),
+                query)
 
         # Ok
         return query
