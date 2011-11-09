@@ -346,11 +346,16 @@ class ConfigAccess(Folder):
             return AndQuery(rules_query, PhraseQuery('share', 'everybody'))
 
         # Case: authenticated
-        return OrQuery(
-            PhraseQuery('owner', str(user.abspath)),
-            AndQuery(
-                rules_query,
-                OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])))
+        query = AndQuery(
+            rules_query,
+            OrQuery(*[ PhraseQuery('share', x) for x in user_groups ]))
+
+        if permission in ('view', 'edit'):
+            return OrQuery(
+                PhraseQuery('owner', str(user.abspath)),
+                query)
+
+        return query
 
 
     def has_permission(self, user, permission, resource, class_id=None):
