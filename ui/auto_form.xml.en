@@ -13,9 +13,9 @@ ${before}
     <legend stl:if="title">${title}</legend>
     <p stl:if="description">${description}</p>
     <stl:block stl:repeat="field fields_list">${field}</stl:block>
-    <p stl:if="actions">
+    <div class="autoform-actions" stl:if="actions">
       <stl:block stl:repeat="action actions">${action}</stl:block>
-    </p>
+    </div>
   </fieldset>
   <script type="text/javascript">
     document.getElementById("${first_widget}").focus();
