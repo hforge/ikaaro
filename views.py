@@ -343,7 +343,7 @@ class BrowseForm(STLView):
         items = self.get_items(resource, context)
         if self.batch is not None:
             total = len(items)
-            batch = Batch(context=context, total=total).render()
+            batch = self.batch(context=context, total=total).render()
 
         # Content
         items = self.sort_and_batch(resource, context, items)
