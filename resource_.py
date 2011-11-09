@@ -22,7 +22,7 @@
 # Import from itools
 from itools.core import is_prototype, lazy
 from itools.csv import Property
-from itools.database import Metadata, register_field
+from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String, Unicode, URI
 from itools.gettext import MSG
@@ -34,6 +34,8 @@ from itools.web import BaseView, get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
+from autoform import CheckboxWidget
+from datatypes import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field
 from fields import Select_Field, Text_Field, Textarea_Field
@@ -44,12 +46,22 @@ from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from share import Share_Aware
 from utils import get_base_path_query
 
 
 
-class DBResource(Share_Aware):
+class Share_Field(Select_Field):
+
+    access = 'is_allowed_to_share'
+    title = MSG(u'Share')
+    datatype = Groups_Datatype
+    widget = CheckboxWidget
+    multiple = True
+    indexed = True
+
+
+
+class DBResource(Resource):
 
     class_version = '20071215'
     class_description = None
@@ -377,6 +389,7 @@ class DBResource(Share_Aware):
                                  hidden_by_default=True)
     subject = Text_Field(indexed=True, title=MSG(u'Keywords'),
                          hidden_by_default=True)
+    share = Share_Field
 
     @property
     def is_content(self):
