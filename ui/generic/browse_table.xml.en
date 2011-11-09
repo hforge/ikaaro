@@ -49,9 +49,9 @@
     </tr>
   </tbody>
 </table>
-<p stl:if="actions">
+<div class="browse-list-actions" stl:if="actions">
   <stl:block stl:repeat="action actions">${action}</stl:block>
-</p>
+</div>
 </form>
 
 </stl:block>
