@@ -44,7 +44,7 @@ default_template = XHTMLFile(string=
       <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}"
         rel="fancybox">
         <img width="16" height="16" src="${add_icon}" />
-      </a><br/>
+      </a>
       ${cell/content/stream}
     </td>""")
 
