@@ -146,6 +146,10 @@ class RegisterForm(AutoForm):
         return widgets
 
 
+    def set_value(self, resource, context, name, form):
+        resource.set_value(name, form[name])
+
+
     def action(self, resource, context, form):
         email = form['email'].strip()
 
@@ -157,7 +161,7 @@ class RegisterForm(AutoForm):
             for name in self.fields:
                 field = self.get_field(name)
                 if field and getattr(field, 'persistent', True):
-                    user.set_value(name, form[name])
+                    self.set_value(user, context, name, form)
 
             user.update_pending_key()
             email_id = 'register-ask-for-confirmation'
