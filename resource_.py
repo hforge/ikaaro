@@ -424,6 +424,10 @@ class DBResource(Share_Aware):
         return self.get_value('owner')
 
 
+    def get_share(self):
+        return self.get_value('share')
+
+
     ########################################################################
     # Indexing
     ########################################################################
@@ -477,6 +481,7 @@ class DBResource(Share_Aware):
 
         # Links to other resources
         values['owner'] = self.get_owner()
+        values['share'] = self.get_share()
         values['links'] = list(self.get_links())
 
         # Full text
