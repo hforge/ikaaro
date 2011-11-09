@@ -198,4 +198,4 @@ class Groups_Datatype(UserGroups_Datatype):
 
     def get_options(self):
         options = super(Groups_Datatype, self).get_options()
-        return options + self.special_groups
+        return self.special_groups + options
