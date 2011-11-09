@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-11-02 13:11+CET\n"
+"POT-Creation-Date: 2011-11-09 14:11+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -150,7 +150,7 @@ msgctxt "label"
 msgid "(<g id='8'>more ...</g>)"
 msgstr ""
 
-#: ../ui/tiny_mce/rte.xml.en:48
+#: ../ui/tiny_mce/rte.xml.en:48 ../ui/editarea/ea.xml.en:22
 msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
 msgstr ""
@@ -616,7 +616,7 @@ msgstr "Oggetti rimossi: %s."
 msgid "Active"
 msgstr "Il titolo"
 
-#: ../buttons.py:196 ../text_views.py:260 ../table_views.py:237
+#: ../buttons.py:196 ../text_views.py:277 ../table_views.py:237
 #: ../views_new.py:54 ../tracker/tracker_views.py:283
 msgid "Add"
 msgstr "Aggiungi"
@@ -654,7 +654,7 @@ msgctxt "heading"
 msgid "Add Resource of Type \"${class_title}\""
 msgstr "Modifica gruppi per <span stl:content=\"fullname\"></span>"
 
-#: ../text_views.py:258
+#: ../text_views.py:275
 #, fuzzy
 msgid "Add Row"
 msgstr "Aggiungi"
@@ -859,7 +859,7 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: ../autoform.py:606
+#: ../autoform.py:640 ../autoform.py:643
 #, fuzzy
 msgid "Body"
 msgstr "Cartella"
@@ -939,7 +939,7 @@ msgctxt "emphasis"
 msgid "CC:"
 msgstr "Aggiungi"
 
-#: ../text.py:93
+#: ../text.py:94
 msgid "CSS"
 msgstr ""
 
@@ -1046,11 +1046,11 @@ msgstr "Modifica le impostazioni di sicurezza"
 msgid "Choose your password"
 msgstr "Modifica l'impostazione predefinita"
 
-#: ../autoform.py:339
+#: ../autoform.py:340
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 
-#: ../autoform.py:394 ../autoform.py:429
+#: ../autoform.py:395 ../autoform.py:430
 msgid "Click on button \"...\" to select a file."
 msgstr ""
 
@@ -1080,7 +1080,7 @@ msgctxt "title attribute"
 msgid "Come back to today"
 msgstr ""
 
-#: ../text.py:278
+#: ../text.py:283
 msgid "Comma Separated Values"
 msgstr ""
 
@@ -1175,7 +1175,7 @@ msgstr ""
 msgid "Contact"
 msgstr "Contenuti"
 
-#: ../text_views.py:53
+#: ../text_views.py:54
 #, fuzzy
 msgid "Content"
 msgstr "Contenuti"
@@ -1316,7 +1316,7 @@ msgstr ""
 msgid "Definitely remove"
 msgstr ""
 
-#: ../autoform.py:603 ../blog/blog.py:42 ../calendar/event.py:79
+#: ../autoform.py:637 ../blog/blog.py:42 ../calendar/event.py:79
 msgid "Description"
 msgstr "Descrizione"
 
@@ -1398,7 +1398,7 @@ msgstr "Utenti"
 msgid "Each time must be filled, or neither."
 msgstr "Deve essere inserito un file"
 
-#: ../resource_views.py:132 ../text_views.py:41 ../text_views.py:98
+#: ../resource_views.py:132 ../text_views.py:42 ../text_views.py:115
 msgid "Edit"
 msgstr "Modifica"
 
@@ -1482,7 +1482,7 @@ msgstr "Testo integrale"
 msgid "Edit record {id}"
 msgstr "Gruppi"
 
-#: ../text_views.py:275
+#: ../text_views.py:292
 #, fuzzy
 msgid "Edit row #{id}"
 msgstr "Gruppi"
@@ -1778,7 +1778,7 @@ msgstr ""
 msgid "Gzip Compressed"
 msgstr ""
 
-#: ../text.py:270
+#: ../text.py:275
 #, fuzzy
 msgid "HTML File"
 msgstr "HTML riparato."
@@ -1926,7 +1926,7 @@ msgstr ""
 msgid "Japanese"
 msgstr "Giapponese"
 
-#: ../text.py:253
+#: ../text.py:258
 #, fuzzy
 msgid "Javascript"
 msgstr "Soggetto"
@@ -1950,7 +1950,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../autoform.py:604
+#: ../autoform.py:638
 msgid "Keywords"
 msgstr ""
 
@@ -2022,7 +2022,7 @@ msgctxt "legend"
 msgid "Linux/Unix"
 msgstr ""
 
-#: ../autoform.py:600
+#: ../autoform.py:634
 #, fuzzy
 msgid "Location"
 msgstr "Azione"
@@ -2110,7 +2110,7 @@ msgid ""
 "</g>"
 msgstr ""
 
-#: ../text.py:80
+#: ../text.py:81
 #, fuzzy
 msgid "Message Catalog"
 msgstr "Salva la traduzione"
@@ -2241,7 +2241,7 @@ msgstr "Parola d'accesso"
 msgid "New record added."
 msgstr "Aggiunta nuova risorsa"
 
-#: ../text_views.py:267
+#: ../text_views.py:284
 #, fuzzy
 msgid "New row added."
 msgstr "Aggiunta nuova risorsa"
@@ -2263,7 +2263,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../autoform.py:237
+#: ../autoform.py:238
 msgid "No"
 msgstr ""
 
@@ -2529,11 +2529,11 @@ msgstr "Anteprima"
 msgid "Performance Improvement"
 msgstr ""
 
-#: ../text.py:60
+#: ../text.py:61
 msgid "Plain Text"
 msgstr "Testo integrale"
 
-#: ../autoform.py:522
+#: ../autoform.py:523
 #, fuzzy
 msgid "Please answer the question below:"
 msgstr "Devi scegliere un collaboratore da rimuovere."
@@ -2655,7 +2655,7 @@ msgstr "pubblicato"
 msgid "Publish the document."
 msgstr "Pubblica il documento."
 
-#: ../website_views.py:208 ../text.py:243
+#: ../website_views.py:208 ../text.py:248
 msgid "Python"
 msgstr ""
 
@@ -2742,7 +2742,7 @@ msgstr "Anteprima"
 msgid "Replace favicon file (ICO 32x32 only)"
 msgstr ""
 
-#: ../autoform.py:608
+#: ../autoform.py:642
 #, fuzzy
 msgid "Replace file"
 msgstr "Carica file"
@@ -2880,7 +2880,7 @@ msgstr "File aggiornato."
 msgid "Roles available"
 msgstr ""
 
-#: ../text_views.py:228
+#: ../text_views.py:245
 #, fuzzy
 msgid "Row deleted."
 msgstr "Nessun oggetto selezionato."
@@ -2889,7 +2889,7 @@ msgstr "Nessun oggetto selezionato."
 msgid "Saturday"
 msgstr ""
 
-#: ../autoform.py:629 ../calendar/event.py:85
+#: ../autoform.py:664 ../calendar/event.py:85
 #, fuzzy
 msgid "Save"
 msgstr "Salva"
@@ -2985,7 +2985,7 @@ msgstr "Non puoi rimuovere il linguaggio predefinito."
 msgid "Send"
 msgstr ""
 
-#: ../autoform.py:605
+#: ../autoform.py:639
 msgid "Separated by comma"
 msgstr ""
 
@@ -3403,7 +3403,7 @@ msgctxt "label"
 msgid "Timezone"
 msgstr ""
 
-#: ../tracker/tracker_views.py:52 ../autoform.py:601 ../tracker/issue.py:232
+#: ../tracker/tracker_views.py:52 ../autoform.py:635 ../tracker/issue.py:232
 #: ../views.py:479 ../menu.py:307 ../future/order.py:100
 #: ../future/order.py:172 ../calendar/event.py:207 ../folder_views.py:256
 msgid "Title"
@@ -3770,7 +3770,7 @@ msgid "Video"
 msgstr "Vedi"
 
 #: ../file_views.py:333 ../file_views.py:382 ../file_views.py:394
-#: ../file_views.py:458 ../text_views.py:85 ../text_views.py:164
+#: ../file_views.py:458 ../text_views.py:86 ../text_views.py:181
 #: ../blog/blog.py:85 ../tracker/tracker_views.py:329 ../user.py:336
 #: ../table_views.py:46 ../menu.py:651 ../future/order.py:261
 #: ../future/order.py:291 ../webpage.py:162 ../folder_views.py:89
@@ -3828,7 +3828,7 @@ msgstr "Testo integrale"
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
-#: ../text.py:262
+#: ../text.py:267
 #, fuzzy
 msgid "XML File"
 msgstr "File"
@@ -3837,7 +3837,7 @@ msgstr "File"
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../autoform.py:237
+#: ../autoform.py:238
 msgid "Yes"
 msgstr ""
 
@@ -4049,6 +4049,11 @@ msgstr "Devi scegliere un collaboratore da rimuovere."
 #, fuzzy
 msgid "small"
 msgstr "Email"
+
+#: ../ui/editarea/ea.xml.en:22
+msgctxt "noscript"
+msgid "the EditArea Editor is unavailable.)"
+msgstr ""
 
 #: ../ui/tiny_mce/rte.xml.en:48
 msgctxt "noscript"
