@@ -151,7 +151,7 @@ class AccessRule(DBResource):
                'search_format']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
-    results = AccessRule_Results()
+    results = AccessRule_Results
 
     # API
     def get_search_query(self):
@@ -378,7 +378,7 @@ class ConfigAccess(Folder):
 
     # Views
     class_views = ['browse_content', 'add_rule', 'edit', 'commit_log']
-    browse_content = ConfigAccess_Browse()
+    browse_content = ConfigAccess_Browse
     add_rule = NewResource_Local(title=MSG(u'Add rule'))
 
 

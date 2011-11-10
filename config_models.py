@@ -182,7 +182,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
 
     # Views
     class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
-    browse_content = ModelField_Choices_Browse()
+    browse_content = ModelField_Choices_Browse
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
     _fields = ModelField_Base._fields + ['choices_widget']
@@ -243,8 +243,8 @@ class Model(OrderedFolder):
 
     # Views
     class_views = ['browse_content', 'add_field', 'edit', 'commit_log']
-    browse_content = Model_Browse()
-    new_instance = Model_NewInstance()
+    browse_content = Model_Browse
+    new_instance = Model_NewInstance
     add_field = NewResource_Local(title=MSG(u'Add field'))
 
     # Order configuration
@@ -343,7 +343,7 @@ class ConfigModels(Folder):
 
     # Views
     class_views = ['browse_content', 'add_model', 'edit', 'commit_log']
-    browse_content = ConfigModels_Browse()
+    browse_content = ConfigModels_Browse
     add_model = NewResource_Local(title=MSG(u'Add model'))
 
     def get_document_types(self):

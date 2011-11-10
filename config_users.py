@@ -152,8 +152,8 @@ class ConfigUsers(DBResource):
 
     # Views
     class_views = ['browse_users', 'add_user']
-    browse_users = ConfigUsers_Browse()
-    add_user = AddUser()
+    browse_users = ConfigUsers_Browse
+    add_user = AddUser
 
     # Configuration
     config_name = 'users'

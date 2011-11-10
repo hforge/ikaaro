@@ -261,4 +261,4 @@ class OrderedFolder(Folder):
 
 
     # Views
-    browse_content = OrderedFolder_BrowseContent()
+    browse_content = OrderedFolder_BrowseContent

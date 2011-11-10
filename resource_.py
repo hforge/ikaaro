@@ -745,24 +745,24 @@ class DBResource(Resource):
 
     # Views
     new_instance = AutoAdd(fields=['title', 'location'])
-    login = LoginView()
-    logout = LogoutView()
+    login = LoginView
+    logout = LogoutView
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
-    get_file = DBResource_GetFile()
-    get_image = DBResource_GetImage()
+    get_file = DBResource_GetFile
+    get_image = DBResource_GetImage
     # Popup views
-    add_image = DBResource_AddImage()
-    add_link = DBResource_AddLink()
-    add_media = DBResource_AddMedia()
+    add_image = DBResource_AddImage
+    add_link = DBResource_AddLink
+    add_media = DBResource_AddMedia
     # Views / Commit log
-    commit_log = DBResource_CommitLog()
-    changes = DBResource_Changes()
+    commit_log = DBResource_CommitLog
+    changes = DBResource_Changes
     # Views / Links
-    backlinks = DBResource_Backlinks()
-    links = DBResource_Links()
+    backlinks = DBResource_Backlinks
+    links = DBResource_Links
     # Views / External editor
-    http_put = Put_View()
-    http_delete = Delete_View()
+    http_put = Put_View
+    http_delete = Delete_View
 
 
 ###########################################################################

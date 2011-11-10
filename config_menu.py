@@ -96,8 +96,8 @@ class MenuItem(OrderedFolder):
     _fields = ['title', 'path', 'target']
     new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
-    browse_content = MenuItem_Browse()
-    add_menu = AddMenu()
+    browse_content = MenuItem_Browse
+    add_menu = AddMenu
 
 
     # API

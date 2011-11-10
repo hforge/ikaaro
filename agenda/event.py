@@ -666,8 +666,8 @@ class Event(Content):
 
 
     # Views
-    new_instance = Event_NewInstance()
-    edit = Event_Edit()
+    new_instance = Event_NewInstance
+    edit = Event_Edit
 
 
 

@@ -337,10 +337,10 @@ class Configuration(Folder):
 
 
     # Views
-    view = Configuration_View()
-    edit_virtual_hosts = Config_EditVirtualHosts()
-    edit_languages = Config_EditLanguages()
-    broken_links = Config_BrokenLinks()
+    view = Configuration_View
+    edit_virtual_hosts = Config_EditVirtualHosts
+    edit_languages = Config_EditLanguages
+    broken_links = Config_BrokenLinks
     orphans = Config_Orphans(config_group='webmaster')
 
 

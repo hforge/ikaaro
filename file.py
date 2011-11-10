@@ -103,12 +103,12 @@ class File(Content):
         return self.get_value('data').get_mimetype()
 
     # Views
-    new_instance = File_NewInstance()
+    new_instance = File_NewInstance
     download = DBResource_GetFile(field_name='data', title=MSG(u'Download'))
-    view = File_View()
-    edit = File_Edit()
-    externaledit = File_ExternalEdit_View()
-    external_edit = File_ExternalEdit()
+    view = File_View
+    edit = File_Edit
+    externaledit = File_ExternalEdit_View
+    external_edit = File_ExternalEdit
 
 
 
@@ -156,7 +156,7 @@ class Image(File):
 
     # Views
     thumb = DBResource_GetImage(field_name='data')
-    view = Image_View()
+    view = Image_View
 
 
 
@@ -176,7 +176,7 @@ class Video(File):
     class_icon48 = 'icons/48x48/flash.png'
 
     # Views
-    view = Video_View()
+    view = Video_View
 
 
 
@@ -188,7 +188,7 @@ class Flash(File):
     class_icon48 = 'icons/48x48/flash.png'
 
     # Views
-    view = Flash_View()
+    view = Flash_View
 
 
 
@@ -310,7 +310,7 @@ class ODP(File):
 ###########################################################################
 class Archive(File):
 
-    view = Archive_View()
+    view = Archive_View
 
 
 

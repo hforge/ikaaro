@@ -70,8 +70,8 @@ class Text(File):
 
 
     # Views
-    view = Text_View()
-    edit = Text_Edit()
+    view = Text_View
+    edit = Text_Edit
 
 
 
@@ -84,7 +84,7 @@ class PO(Text):
     class_handler = POFile
 
     # Views
-    edit = PO_Edit()
+    edit = PO_Edit
 
 
 
@@ -216,7 +216,7 @@ class CSS(Text):
 
 
     # Views
-    edit = CSS_Edit()
+    edit = CSS_Edit
 
 
 
@@ -291,10 +291,10 @@ class CSV(Text):
 
 
     # Views
-    edit = File_Edit()
-    view = CSV_View()
-    add_row = CSV_AddRow()
-    edit_row = CSV_EditRow()
+    edit = File_Edit
+    view = CSV_View
+    add_row = CSV_AddRow
+    edit_row = CSV_EditRow
 
 
 

@@ -27,7 +27,6 @@ from autoadd import AutoAdd
 from database import Database
 from fields import HTMLFile_Field
 from file import File
-from resource_ import DBResource
 
 
 
@@ -92,7 +91,7 @@ class WebPage(File):
     # Views
     #######################################################################
     new_instance = AutoAdd(fields=['title', 'location', 'data'])
-    view = WebPage_View()
+    view = WebPage_View
 
 
 

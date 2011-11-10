@@ -226,7 +226,7 @@ class UserFolder(Folder):
     #######################################################################
     # Back-Office
     #######################################################################
-    browse_content = UserFolder_BrowseContent()
+    browse_content = UserFolder_BrowseContent
     edit = AutoEdit(access='is_admin')
 
 

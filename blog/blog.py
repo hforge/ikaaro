@@ -113,6 +113,6 @@ class Post(WebPage):
     data = WebPage.data(widget=rte)
 
     # Views
-    new_instance = Post_NewInstance()
-    view = Post_View()
+    new_instance = Post_NewInstance
+    view = Post_View
     edit = File_Edit(fields=['title', 'date', 'data', 'share'])

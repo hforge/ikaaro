@@ -334,7 +334,7 @@ class SubscribeForm(CompositeView):
     access = 'is_allowed_to_view'
     title = MSG(u'Subscriptions')
 
-    subviews = [RegisterForm(), ManageForm(), MassSubscriptionForm()]
+    subviews = [RegisterForm, ManageForm, MassSubscriptionForm]
 
 
 
@@ -678,7 +678,7 @@ class Observable(Resource):
     #######################################################################
     # UI
     #######################################################################
-    subscribe = SubscribeForm()
-    confirm_register = ConfirmSubscription()
-    confirm_unregister = ConfirmUnsubscription()
-    accept_invitation = AcceptInvitation()
+    subscribe = SubscribeForm
+    confirm_register = ConfirmSubscription
+    confirm_unregister = ConfirmUnsubscription
+    accept_invitation = AcceptInvitation

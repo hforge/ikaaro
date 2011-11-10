@@ -538,18 +538,18 @@ class Root(Folder):
     #######################################################################
     # Views
     #######################################################################
-    register = RegisterForm()
+    register = RegisterForm
     terms_of_service = TermsOfService_View
     # Public views
-    contact = ContactForm()
-    about = AboutView()
-    credits = CreditsView()
+    contact = ContactForm
+    about = AboutView
+    credits = CreditsView
     license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
     # Special
-    forbidden = ForbiddenView()
-    unauthorized = LoginView()
-    not_found = NotFoundView()
-    upload_stats = UploadStatsView()
-    update_docs = UpdateDocs()
-    _ctrl = CtrlView()
+    forbidden = ForbiddenView
+    unauthorized = LoginView
+    not_found = NotFoundView
+    upload_stats = UploadStatsView
+    update_docs = UpdateDocs
+    _ctrl = CtrlView

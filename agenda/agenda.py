@@ -232,13 +232,13 @@ class ConfigAgenda(Folder):
             i += 1
 
     # Views
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    daily_view = DailyView()
-    new_event = Calendar_NewEvent()
-    edit_timetables = TimetablesForm()
-    export = Calendar_Export()
-    import_ = Calendar_Import()
-    export_form = Calendar_ExportForm()
-    calendars = Calendars_View()
+    monthly_view = MonthlyView
+    weekly_view = WeeklyView
+    daily_view = DailyView
+    new_event = Calendar_NewEvent
+    edit_timetables = TimetablesForm
+    export = Calendar_Export
+    import_ = Calendar_Import
+    export_form = Calendar_ExportForm
+    calendars = Calendars_View
     new_calendar = NewResource_Local(title=MSG(u'Add calendar'))
