@@ -379,6 +379,12 @@ class AutoEdit(AutoForm):
                 continue
             if self.set_value(resource, context, key, form):
                 return
+
+        # Notify
+        from cc import Observable
+        if isinstance(resource, Observable):
+            resource.notify_subscribers(context)
+
         # Ok
         if self.action_goto:
             return context.come_back(self.action_msg, goto=self.action_goto)
