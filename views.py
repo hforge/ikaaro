@@ -31,10 +31,18 @@ from utils import CMSTemplate
 """This module contains some generic views used by different resources.
 """
 
+
+def get_view_styles(view, context):
+    get = getattr(view, 'get_styles', None)
+    if get:
+        return get(context)
+    return getattr(view, 'styles', [])
+
+
 def get_view_scripts(view, context):
-    get_scripts = getattr(view, 'get_scripts', None)
-    if get_scripts:
-        return get_scripts(context)
+    get = getattr(view, 'get_scripts', None)
+    if get:
+        return get(context)
     return getattr(view, 'scripts', [])
 
 
@@ -45,14 +53,12 @@ class CompositeView(STLView):
 
 
     def get_styles(self, context):
-        styles = getattr(self, 'styles', [])
-        for view in self.subviews:
-            _get_styles = getattr(view, 'get_styles', None)
-            if _get_styles is None:
-                extra = getattr(view, 'styles', [])
-            else:
-                extra = _get_styles(context)
-            styles.extend(extra)
+        styles = []
+        for view in self.allowed_subviews:
+            for style in get_view_styles(view, context):
+                if style not in styles:
+                    styles.append(style)
+
         return styles
 
 
