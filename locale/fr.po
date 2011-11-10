@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 14:11+CET\n"
+"POT-Creation-Date: 2011-11-10 11:11+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -1759,6 +1759,16 @@ msgstr "Accueil"
 msgid "Hungarian"
 msgstr "Hongrois"
 
+#: ../ui/base/login.xml.en:42
+msgctxt "label"
+msgid "I don't have an account or I forgot my password."
+msgstr "Je n'ai pas de compte ou j'ai oublié mon mot de passe."
+
+#: ../ui/base/login.xml.en:44
+msgctxt "label"
+msgid "I forgot my password."
+msgstr "J'ai oublié mon mot de passe."
+
 #: ../tracker/tracker_views.py:51
 msgid "Id"
 msgstr "Id"
@@ -1787,8 +1797,8 @@ msgid ""
 "If you don't have an account, enter your email address and check the "
 "checkbox below the password field."
 msgstr ""
-"Si vous n'avez pas de compte, saisissez votre adresse email et cochez "
-"la case située sous le champ du mot de passe."
+"Si vous n'avez pas de compte, saisissez votre adresse email et cochez la "
+"case située sous le champ du mot de passe."
 
 #: ../file.py:181
 msgid "Image"
@@ -2265,7 +2275,7 @@ msgstr "Texte OpenOffice.org"
 msgid "October"
 msgstr "Octobre"
 
-#: ../ui/base/login.xml.en:51 ../blog/ui/Post_view.xml.en:13
+#: ../ui/base/login.xml.en:48 ../blog/ui/Post_view.xml.en:13
 msgctxt "button"
 msgid "Ok"
 msgstr "Ok"
@@ -5518,10 +5528,6 @@ msgstr ""
 #~ msgctxt "heading"
 #~ msgid "Help on ODT Export"
 #~ msgstr "Aide sur l'export ODT"
-
-#~ msgctxt "link"
-#~ msgid "I forgot my password"
-#~ msgstr "J'ai oublié mon mot de passe"
 
 #~ msgctxt "paragraph"
 #~ msgid "If you don't, you can download it from a link below."

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2011-11-09 14:11+CET\n"
+"POT-Creation-Date: 2011-11-10 11:11+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -1661,6 +1661,16 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
+#: ../ui/base/login.xml.en:42
+msgctxt "label"
+msgid "I don't have an account or I forgot my password."
+msgstr ""
+
+#: ../ui/base/login.xml.en:44
+msgctxt "label"
+msgid "I forgot my password."
+msgstr ""
+
 #: ../tracker/tracker_views.py:51
 msgid "Id"
 msgstr ""
@@ -2161,7 +2171,7 @@ msgstr ""
 msgid "October"
 msgstr ""
 
-#: ../ui/base/login.xml.en:51 ../blog/ui/Post_view.xml.en:13
+#: ../ui/base/login.xml.en:48 ../blog/ui/Post_view.xml.en:13
 msgctxt "button"
 msgid "Ok"
 msgstr ""

@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2011-11-09 14:11+CET\n"
+"POT-Creation-Date: 2011-11-10 11:11+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -1798,6 +1798,18 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
+#: ../ui/base/login.xml.en:42
+#, fuzzy
+msgctxt "label"
+msgid "I don't have an account or I forgot my password."
+msgstr "Si olvidaste tu contraseña"
+
+#: ../ui/base/login.xml.en:44
+#, fuzzy
+msgctxt "label"
+msgid "I forgot my password."
+msgstr "Olvidé mi contraseña"
+
 #: ../tracker/tracker_views.py:51
 msgid "Id"
 msgstr ""
@@ -2335,7 +2347,7 @@ msgstr ""
 msgid "October"
 msgstr ""
 
-#: ../ui/base/login.xml.en:51 ../blog/ui/Post_view.xml.en:13
+#: ../ui/base/login.xml.en:48 ../blog/ui/Post_view.xml.en:13
 msgctxt "button"
 msgid "Ok"
 msgstr ""
@@ -4265,14 +4277,6 @@ msgstr ""
 
 #~ msgid "Forum"
 #~ msgstr "Foro"
-
-#~ msgctxt "link"
-#~ msgid "I forgot my password"
-#~ msgstr "Olvidé mi contraseña"
-
-#~ msgctxt "legend"
-#~ msgid "If you have forgotten your password"
-#~ msgstr "Si olvidaste tu contraseña"
 
 #~ msgctxt "title"
 #~ msgid "Insert Image"
