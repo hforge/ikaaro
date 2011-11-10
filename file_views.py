@@ -31,7 +31,7 @@ from itools.web import BaseView, STLView, ERROR, FormError
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import PathSelectorWidget
-from fields import File_Field, ProgressBar_Field
+from fields import ProgressBar_Field
 from folder import Folder
 from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
 
@@ -85,7 +85,12 @@ class File_View(STLView):
 class File_Edit(AutoEdit):
 
     fields = ['title', 'data', 'description', 'subject', 'share']
-    data = File_Field # require is false
+
+    def get_field(self, resource, name):
+        field = super(File_Edit, self).get_field(resource, name)
+        if name == 'data':
+            return field(required=False)
+        return field
 
 
 
