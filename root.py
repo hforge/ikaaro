@@ -82,6 +82,13 @@ class CtrlView(BaseView):
              'read-only': not isinstance(database, RWDatabase)})
 
 
+def user_to_email_header(user, encoding):
+    user_title = user.get_title()
+    user_email = user.get_value('email')
+    return '%s <%s>' % (Header(user_title, encoding), user_email)
+
+
+
 ###########################################################################
 # Resource
 ###########################################################################
@@ -326,7 +333,7 @@ class Root(Folder):
 
     ########################################################################
     # Email
-    def send_email(self, to_addr, subject, from_addr=None, text=None,
+    def send_email(self, to_addr, subject, reply_to=None, text=None,
                    html=None, encoding='utf-8', subject_with_host=True,
                    return_receipt=False, attachment=None):
         # 1. Check input data
@@ -344,26 +351,48 @@ class Root(Folder):
         if html and not isinstance(html, unicode):
             raise TypeError, 'the html must be a Unicode string'
 
-        # 2. Figure out the from address
+        # 2. Local variables
         context = get_context()
         server = context.server
-        mail = context.root.get_resource('config/mail')
-        if from_addr is None:
-            user = context.user
-            if user is not None:
-                from_addr = user.get_title(), user.get_value('email')
-            elif mail.get_value('emails_from_addr'):
-                user_name = mail.get_value('emails_from_addr')
-                user = self.get_resource('/users/%s' % user_name)
-                from_addr = user.get_title(), user.get_value('email')
-            else:
-                from_addr = server.smtp_from
+        mail = self.get_resource('/config/mail')
 
-        # 3. Add the hostname to the subject
+        # 3. Start the message
+        message = MIMEMultipart('related')
+        message['Date'] = formatdate(localtime=True)
+
+        # 4. From
+        username = mail.get_value('emails_from_addr')
+        if username:
+            user = self.get_resource('/users/%s' % username)
+            message['From'] = user_to_email_header(user, encoding)
+        else:
+            message['From'] = server.smtp_from
+
+        # 5. To
+        if isinstance(to_addr, tuple):
+            real_name, address = to_addr
+            to_addr = '%s <%s>' % (Header(real_name, encoding), address)
+        message['To'] = to_addr
+
+        # 6. Subject
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
+        message['Subject'] = Header(subject, encoding)
 
-        # 4. Add signature
+        # 7. Reply-To
+        user = context.user
+        if reply_to:
+            message['Reply-To'] = reply_to
+        elif user:
+            reply_to = user_to_email_header(user, encoding)
+            message['Reply-To'] = reply_to
+
+        # Return Receipt
+        if return_receipt and reply_to:
+            message['Disposition-Notification-To'] = reply_to # Standard
+            message['Return-Receipt-To'] = reply_to           # Outlook 2000
+
+        # 8. Body
         signature = mail.get_value('emails_signature')
         if signature:
             signature = signature.strip()
@@ -371,22 +400,6 @@ class Root(Folder):
                 signature = '-- \n%s' % signature
             text += '\n\n%s' % signature
 
-        # 5. Build the message
-        message = MIMEMultipart('related')
-        message['Subject'] = Header(subject, encoding)
-        message['Date'] = formatdate(localtime=True)
-
-        for key, addr in [('From', from_addr), ('To', to_addr)]:
-            if isinstance(addr, tuple):
-                real_name, address = addr
-                addr = '%s <%s>' % (Header(real_name, encoding), address)
-            message[key] = addr
-        # Return Receipt
-        if return_receipt is True:
-            # Somewhat standard
-            message['Disposition-Notification-To'] = from_addr
-            # XXX For Outlook 2000
-            message['Return-Receipt-To'] = from_addr
         # Create MIMEText
         if html:
             html = html.encode(encoding)
