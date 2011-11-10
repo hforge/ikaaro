@@ -58,6 +58,11 @@ class ModelField_Base(DBResource):
     multiple = Boolean_Field(title=MSG(u'Multiple'))
     tip = Text_Field(title=MSG(u'Tip'))
 
+
+    def get_owner(self):
+        return self.parent.get_owner()
+
+
     def set_value(self, name, value, language=None):
         proxy = super(ModelField_Base, self)
         has_changed = proxy.set_value(name, value, language)
