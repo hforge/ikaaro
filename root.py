@@ -82,12 +82,6 @@ class CtrlView(BaseView):
              'read-only': not isinstance(database, RWDatabase)})
 
 
-def user_to_email_header(user, encoding):
-    user_title = user.get_title()
-    user_email = user.get_value('email')
-    return '%s <%s>' % (Header(user_title, encoding), user_email)
-
-
 
 ###########################################################################
 # Resource
@@ -361,10 +355,10 @@ class Root(Folder):
         message['Date'] = formatdate(localtime=True)
 
         # 4. From
-        username = mail.get_value('emails_from_addr')
-        if username:
-            user = self.get_resource('/users/%s' % username)
-            message['From'] = user_to_email_header(user, encoding)
+        from_addr = mail.get_value('emails_from_addr').strip()
+        if from_addr:
+            # FIXME Parse the address and use Header
+            message['From'] = from_addr.encode(encoding)
         else:
             message['From'] = server.smtp_from
 
@@ -384,7 +378,9 @@ class Root(Folder):
         if reply_to:
             message['Reply-To'] = reply_to
         elif user:
-            reply_to = user_to_email_header(user, encoding)
+            user_title = user.get_title()
+            user_email = user.get_value('email')
+            reply_to = '%s <%s>' % (Header(user_title, encoding), user_email)
             message['Reply-To'] = reply_to
 
         # Return Receipt
