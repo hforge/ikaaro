@@ -374,14 +374,14 @@ class Root(Folder):
         message['Subject'] = Header(subject, encoding)
 
         # 7. Reply-To
-        user = context.user
         if reply_to:
             message['Reply-To'] = reply_to
-        elif user:
-            user_title = user.get_title()
-            user_email = user.get_value('email')
-            reply_to = '%s <%s>' % (Header(user_title, encoding), user_email)
-            message['Reply-To'] = reply_to
+        elif mail.get_value('emails_reply_to'):
+            user = context.user
+            if user:
+                user_title = Header(user.get_title(), encoding)
+                user_email = user.get_value('email')
+                message['Reply-To'] = '%s <%s>' % (user_title, user_email)
 
         # Return Receipt
         if return_receipt and reply_to:

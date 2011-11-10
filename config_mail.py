@@ -25,7 +25,7 @@ from itools.web import get_context
 # Import from ikaaro
 from autoedit import AutoEdit
 from config import Configuration
-from fields import Select_Field, Text_Field, Textarea_Field
+from fields import Boolean_Field, Select_Field, Text_Field, Textarea_Field
 from resource_ import DBResource
 
 
@@ -58,12 +58,8 @@ class ConfigMail_Edit(AutoEdit):
 
     title = MSG(u'Email options')
     description = mail_description
-    fields = ['emails_from_addr', 'emails_signature', 'contacts']
-
-    def _get_schema(self, resource, context):
-        schema = super(ConfigMail_Edit, self)._get_schema(resource, context)
-        schema['contacts'] = ContactsOptions(multiple=True)
-        return schema
+    fields = ['emails_from_addr', 'emails_reply_to', 'emails_signature',
+              'contacts']
 
 
 
@@ -75,10 +71,11 @@ class ConfigMail(DBResource):
     class_icon48 = 'icons/48x48/mail.png'
 
     # Fields
-    contacts = Select_Field(multiple=True,
+    contacts = Select_Field(multiple=True, datatype=ContactsOptions,
                             title=MSG(u'Select the contact accounts'),
                             has_empty_option=False)
     emails_from_addr = Text_Field(title=MSG(u'From header'))
+    emails_reply_to = Boolean_Field(title=MSG(u'Reply to'), default=True)
     emails_signature = Textarea_Field(title=MSG(u'Signature'))
 
     # Views
