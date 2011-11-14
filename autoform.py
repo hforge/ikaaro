@@ -72,6 +72,7 @@ class Widget(CMSTemplate):
             self.name = name
         if self.name:
             self.id = self.name.replace('_', '-')
+            self.id = self.name.replace(':', '-')
 
 
 
