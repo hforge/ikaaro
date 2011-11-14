@@ -138,6 +138,19 @@ class ForgottenPassword_AskForConfirmation(Email):
         u' {user}/;change_password_forgotten?username={userid}&key={userkey}')
 
 
+class SwitchState_Activate(Email):
+
+    class_id = 'switch-state-activate'
+    subject = MSG(u'Your account has been re-activated')
+    text = MSG(u'Your account has been re-activated')
+
+
+class SwitchState_Deactivate(Email):
+
+    class_id = 'switch-state-deactivate'
+    subject = MSG(u'Your account has been canceled')
+    text = MSG(u'Your account has been canceled')
+
 
 # Registry
 register_email(AddUser_SendInvitation)
@@ -146,3 +159,5 @@ register_email(Register_AlreadyRegistered)
 register_email(Register_AskForConfirmation)
 #register_email(Register_SendConfirmation)
 register_email(ForgottenPassword_AskForConfirmation)
+register_email(SwitchState_Activate)
+register_email(SwitchState_Deactivate)

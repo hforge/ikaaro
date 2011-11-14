@@ -130,11 +130,14 @@ class ConfigUsers_Browse(BrowseUsers):
         database = resource.database
         for username in usernames:
             user = database.get_resource('/users/%s' % username)
+            email = user.get_value('email')
             user_state = user.get_value('user_state')
             if user_state == 'active':
                 user.set_value('user_state', 'inactive')
+                send_email('switch-state-deactivate', context, email)
             elif user_state == 'inactive':
                 user.set_value('user_state', 'active')
+                send_email('switch-state-activate', context, email)
             else: # pending
                 continue
 
