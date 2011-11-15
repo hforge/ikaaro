@@ -24,7 +24,6 @@ from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import RemoveButton
 from config import Configuration
 from config_common import NewResource_Local
-from database import Database
 from fields import Boolean_Field, Date_Field, Integer_Field, Select_Field
 from fields import Text_Field, Textarea_Field
 from folder import Folder
@@ -68,7 +67,7 @@ class ModelField_Base(DBResource):
         has_changed = proxy.set_value(name, value, language)
         if has_changed:
             class_id = str(self.parent.abspath)
-            Database.resources_registry.pop(class_id, None)
+            self.database._resources_registry.pop(class_id, None)
 
         return has_changed
 
@@ -298,7 +297,7 @@ class Model(OrderedFolder):
         has_changed = super(Model, self).set_value(name, value, language)
         if has_changed:
             class_id = str(self.abspath)
-            Database.resources_registry.pop(class_id, None)
+            self.database._resources_registry.pop(class_id, None)
 
         return has_changed
 

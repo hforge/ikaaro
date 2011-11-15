@@ -21,7 +21,7 @@ from database import Database
 
 def register_document_type(resource_class, container_cls_id='folder'):
     class_id = resource_class.class_id
-    container_cls = Database.resources_registry[container_cls_id]
+    container_cls = Database._resources_registry[container_cls_id]
 
     # Check if the resource class is already registered
     for cls in container_cls.__mro__:
@@ -40,7 +40,7 @@ def register_document_type(resource_class, container_cls_id='folder'):
 
 def unregister_document_type(resource_class, container_cls_id='folder'):
     class_id = resource_class.class_id
-    container_cls = Database.resources_registry[container_cls_id]
+    container_cls = Database._resources_registry[container_cls_id]
 
     # Check if the resource class is already registered
     for cls in container_cls.__mro__:

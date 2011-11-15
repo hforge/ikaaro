@@ -23,7 +23,6 @@ configuration plugins.
 from itools.core import proto_property
 
 # Import from ikaaro
-from database import Database
 from folder_views import Folder_NewResource
 
 
@@ -47,7 +46,7 @@ class NewResource_Local(Folder_NewResource):
         document_types = tuple(self.document_types)
 
         items = []
-        for cls in Database.resources_registry.values():
+        for cls in context.database.get_resource_classes():
             class_id = cls.class_id
             if class_id[0] != '-' and issubclass(cls, document_types):
                 if root.has_permission(user, 'add', resource, class_id):

@@ -102,7 +102,7 @@ class SearchFormat_Datatype(Enumerate):
         database = get_context().database
 
         options = {}
-        for cls in database.resources_registry.values():
+        for cls in database.get_resource_classes():
             options.setdefault(cls.class_id, cls)
 
         options = [ {'name': class_id, 'value': cls.class_title.gettext()}
