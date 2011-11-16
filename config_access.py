@@ -346,9 +346,9 @@ class ConfigAccess(Folder):
             return AndQuery(rules_query, PhraseQuery('share', 'everybody'))
 
         # Case: authenticated
-        query = AndQuery(
-            rules_query,
-            OrQuery(*[ PhraseQuery('share', x) for x in user_groups ]))
+        share_query = OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])
+        share_query.append(PhraseQuery('share', str(user.abspath)))
+        query = AndQuery(rules_query, share_query)
 
         if permission in ('view', 'edit'):
             return OrQuery(
