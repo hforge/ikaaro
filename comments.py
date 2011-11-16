@@ -189,6 +189,10 @@ class Comment(DBResource):
     owner = Owner_Field
     comment_state = CommentState_Field
 
+    # Sharing is acquired from container
+    share = None
+    def get_share(self):
+        return self.parent.get_share()
 
     # Views
     view = Comment_View
