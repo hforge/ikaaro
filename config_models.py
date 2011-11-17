@@ -81,7 +81,7 @@ class ModelField_Base(DBResource):
 
     # Views
     _fields = ['title', 'required', 'multiple', 'tip']
-    new_instance = AutoAdd(fields=_fields)
+    new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
 
 
@@ -112,7 +112,7 @@ class ModelField_Standard(ModelField_Base):
     # Views
     class_views = ['edit', 'commit_log']
     _fields = ModelField_Base._fields + ['field_type']
-    new_instance = AutoAdd(fields=_fields)
+    new_instance = ModelField_Base.new_instance(fields=_fields)
     edit = AutoEdit(fields=_fields)
 
 
@@ -185,7 +185,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
     _fields = ModelField_Base._fields + ['choices_widget']
-    new_instance = AutoAdd(fields=_fields)
+    new_instance = ModelField_Base.new_instance(fields=_fields)
     edit = AutoEdit(fields=_fields)
 
 
