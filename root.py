@@ -44,7 +44,6 @@ from itools.web import BaseView, STLView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
-from autoform import MultilineWidget
 from config import Configuration
 from config_register import RegisterForm, TermsOfService_View
 from fields import Char_Field
@@ -98,8 +97,6 @@ class Root(Folder):
     abspath = Path('/')
 
     # Fields
-    vhosts = Char_Field(multiple=True, title=MSG(u'Domain names'),
-                        widget=MultilineWidget)
     website_languages = Char_Field(multiple=True, default=['en'])
 
     is_content = True

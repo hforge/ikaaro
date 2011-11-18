@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";edit_virtual_hosts" method="post">
+<form action="." method="post">
   <fieldset>
     <legend>Edit Virtual Hosts</legend>
     <p>Type the hostnames this website will apply to, each one in a different

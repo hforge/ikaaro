@@ -99,32 +99,6 @@ class Configuration_View(STLView):
 
 
 
-class Config_EditVirtualHosts(STLView):
-
-    access = 'is_admin'
-    title = MSG(u'Virtual Hosts')
-    icon = 'website.png'
-    description = MSG(u'Define the domain names for this Web Site.')
-    template = '/ui/website/virtual_hosts.xml'
-    schema = {'vhosts': String}
-
-    config_group = 'webmaster'
-
-
-    def get_namespace(self, resource, context):
-        vhosts = context.root.get_value('vhosts')
-        return {'vhosts': '\n'.join(vhosts)}
-
-
-    def action(self, resource, context, form):
-        vhosts = [ x.strip() for x in form['vhosts'].splitlines() ]
-        vhosts = [ x for x in vhosts if x ]
-        context.root.set_property('vhosts', vhosts)
-        # Ok
-        context.message = MSG_CHANGES_SAVED
-
-
-
 class Config_BrokenLinks(STLView):
 
     access = 'is_admin'
@@ -313,8 +287,7 @@ class Configuration(Folder):
     class_title = MSG(u'Configuration')
     is_content = False
 
-    class_core_views = ['edit_virtual_hosts', 'edit_languages',
-                        'broken_links', 'orphans']
+    class_core_views = ['edit_languages', 'broken_links', 'orphans']
 
 
     def init_resource(self, **kw):
@@ -338,7 +311,6 @@ class Configuration(Folder):
 
     # Views
     view = Configuration_View
-    edit_virtual_hosts = Config_EditVirtualHosts
     edit_languages = Config_EditLanguages
     broken_links = Config_BrokenLinks
     orphans = Config_Orphans(config_group='webmaster')
@@ -356,3 +328,4 @@ import config_register
 import config_seo
 import config_theme
 import config_users
+#import config_vhosts
