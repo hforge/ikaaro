@@ -50,7 +50,6 @@ from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
-from user import UserFolder
 from root_views import AboutView, ContactForm, CreditsView
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView, UpdateDocs
@@ -104,14 +103,12 @@ class Root(Folder):
 
     def init_resource(self, email, password):
         Folder.init_resource(self)
-        # Users
-        self.make_resource('users', UserFolder, title={'en': u'Users'})
-        user = self.make_user(email, password)
-        user.set_value('groups', ['/config/groups/admins'])
-
         # Configuration
         title = {'en': u'Configuration'}
         self.make_resource('config', Configuration, title=title)
+        # First user
+        user = self.make_user(email, password)
+        user.set_value('groups', ['/config/groups/admins'])
 
 
     def make_resource(self, name, cls, **kw):

@@ -327,5 +327,4 @@ import config_models
 import config_register
 import config_seo
 import config_theme
-import config_users
 #import config_vhosts

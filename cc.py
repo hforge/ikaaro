@@ -32,7 +32,7 @@ from autoform import HiddenWidget
 from buttons import Button, BrowseButton
 from fields import Select_Field
 from messages import MSG_BAD_KEY
-from user_views import BrowseUsers
+from users_views import BrowseUsers
 from utils import generate_password
 from views import CompositeView
 

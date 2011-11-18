@@ -27,7 +27,7 @@ from config_common import NewResource_Local
 from messages import MSG_CHANGES_SAVED
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
-from user_views import BrowseUsers
+from users_views import BrowseUsers
 
 
 

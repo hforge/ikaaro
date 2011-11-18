@@ -29,23 +29,7 @@ import root
 from webpage import WebPage
 
 
-# The version
-__version__ = get_version()
-
-
-# Register the itools domain
-path = get_abspath('locale')
-register_domain('ikaaro', path)
-
-# Register document types
-register_document_type(WebPage)
-register_document_type(Folder)
-register_document_type(File)
-
-
-###########################################################################
 # Check for required software
-###########################################################################
 for name, import_path, reason in [
         ("poppler", "itools.pdf.pdftotext", "PDF indexation"),
         ("wv2", "itools.office.doctotext", "DOC indexation"),
@@ -55,3 +39,20 @@ for name, import_path, reason in [
     except ImportError:
         print '%s: You need to install "%s" and reinstall itools.' % (reason,
                 name)
+
+
+# The version
+__version__ = get_version()
+
+
+# Import required modules
+import users
+
+# Register the itools domain
+path = get_abspath('locale')
+register_domain('ikaaro', path)
+
+# Register document types
+register_document_type(WebPage)
+register_document_type(Folder)
+register_document_type(File)

@@ -18,23 +18,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze, merge_dicts, proto_lazy_property
 from itools.database import PhraseQuery, StartQuery, TextQuery
 from itools.database import AndQuery, OrQuery
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import BaseView, STLView, INFO, ERROR
+from itools.web import BaseView, FormError, STLView, INFO, ERROR
 
 # Import from pytz
 from pytz import common_timezones
 
 # Import from ikaaro
+from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
 from autoform import TextWidget
+from buttons import Button, BrowseButton
 from emails import send_email
-from folder_views import Folder_BrowseContent
+from fields import Password_Field
 import messages
 from views import BrowseForm
 
@@ -321,19 +323,9 @@ class User_EditPassword(AutoForm):
 
 
 
-class UserFolder_BrowseContent(Folder_BrowseContent):
-
-    access = 'is_admin'
-
-    search_schema = {'username': Unicode,
-                     'lastname': Unicode,
-                     'firstname': Unicode}
-
-    search_widgets = [TextWidget('username', title=MSG(u'Login')),
-                      TextWidget('lastname', title=MSG(u'Last Name')),
-                      TextWidget('firstname', title=MSG(u'First Name'))]
-
-
+###########################################################################
+# Container
+###########################################################################
 class BrowseUsers(BrowseForm):
 
     access = 'is_admin'
@@ -416,3 +408,117 @@ class BrowseUsers(BrowseForm):
                 return MSG(u'Resend Confirmation'), href
 
             return user.get_value_title('user_state'), None
+
+
+
+class Users_Browse(BrowseUsers):
+
+    table_actions = [
+        BrowseButton(access='is_admin', name='switch_state',
+                     title=MSG(u'Switch state'))]
+
+
+    def action_switch_state(self, resource, context, form):
+        # Verify if after this operation, all is ok
+        usernames = form['ids']
+        if context.user.name in usernames:
+            context.message = ERROR(u'You cannot change your state yourself.')
+            return
+
+        database = resource.database
+        for username in usernames:
+            user = database.get_resource('/users/%s' % username)
+            email = user.get_value('email')
+            user_state = user.get_value('user_state')
+            if user_state == 'active':
+                user.set_value('user_state', 'inactive')
+                send_email('switch-state-deactivate', context, email)
+            elif user_state == 'inactive':
+                user.set_value('user_state', 'active')
+                send_email('switch-state-activate', context, email)
+            else: # pending
+                continue
+
+        # Ok
+        context.message = messages.MSG_CHANGES_SAVED
+
+
+
+class Users_AddUser(AutoAdd):
+
+    access = 'is_admin'
+    title = MSG(u'Add New Member')
+    icon = 'card.png'
+    description = MSG(u'Grant access to a new user.')
+
+    fields = ['email', 'password', 'password2', 'groups']
+
+    password = Password_Field(title=MSG(u'Password'), datatype=String,
+            tip = MSG(u'If no password is given an email will be sent to the '
+                      u' user, asking him to choose his password.'))
+    password2 = Password_Field(title=MSG(u'Repeat password'),
+                               datatype=String)
+
+
+    @proto_lazy_property
+    def _resource_class(self):
+        return self.context.database.get_resource_class('user')
+
+
+    def _get_form(self, resource, context):
+        form = super(Users_AddUser, self)._get_form(resource, context)
+
+        # Check whether the user already exists
+        email = form['email'].strip()
+        results = context.search(email=email)
+        if len(results):
+            raise FormError, ERROR(u'The user is already here.')
+
+        # Check the password is right
+        password = form['password'].strip()
+        if password != form['password2']:
+            raise FormError, messages.MSG_PASSWORD_MISMATCH
+        if password == '':
+            form['password'] = None
+
+        return form
+
+
+    actions = [
+        Button(access='is_admin', css='button-ok',
+               title=MSG(u'Add and view')),
+        Button(access='is_admin', css='button-ok', name='add_and_return',
+               title=MSG(u'Add and return'))]
+
+
+    def get_container(self, resource, context, form):
+        return resource.get_resource('/users')
+
+
+    automatic_resource_name = True
+
+
+    def make_new_resource(self, resource, context, form):
+        proxy = super(Users_AddUser, self)
+        child = proxy.make_new_resource(resource, context, form)
+
+        # Send email to the new user
+        if child:
+            if form['password']:
+                email_id = 'add-user-send-notification'
+            else:
+                child.update_pending_key()
+                email_id = 'add-user-send-invitation'
+
+            send_email(email_id, context, form['email'], user=child)
+
+        # Ok
+        return child
+
+
+    def action_add_and_return(self, resource, context, form):
+        child = self.make_new_resource(resource, context, form)
+        if child is None:
+            return
+
+        context.message = INFO(u'User added.')

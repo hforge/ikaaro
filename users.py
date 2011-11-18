@@ -21,22 +21,21 @@
 from itools.database import register_field
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.web import INFO
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
+from config import Configuration
 from datatypes import UserGroups_Datatype
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
 from fields import File_Field, Select_Field, URI_Field
 from folder import Folder
 from resource_ import DBResource
-from user_views import User_ConfirmRegistration, User_EditAccount
-from user_views import User_EditPassword, User_EditPreferences, User_Profile
-from user_views import User_ResendConfirmation
-from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
+from users_views import User_ConfirmRegistration, User_EditAccount
+from users_views import User_EditPassword, User_EditPreferences, User_Profile
+from users_views import User_ResendConfirmation, User_ChangePasswordForgotten
+from users_views import Users_Browse, Users_AddUser
 from utils import get_secure_hash, generate_password
-from views import MessageView
 
 
 class UserGroups_Field(URI_Field):
@@ -200,45 +199,34 @@ class User(DBResource):
 
 
 
-class UserFolder(Folder):
+###########################################################################
+# Users
+###########################################################################
+class Users(Folder):
 
     class_id = 'users'
-    class_title = MSG(u'User Folder')
-    class_icon16 = 'icons/16x16/userfolder.png'
+    class_title = MSG(u'Users')
+    class_description = MSG(u'Manage users.')
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = ['view', 'browse_content', 'edit']
     is_content = False
-
 
     def get_document_types(self):
         return [self.database.get_resource_class('user')]
 
 
-    #######################################################################
-    # API
-    #######################################################################
-    def get_usernames(self):
-        """Return all user names."""
-        names = self._get_names()
-        return frozenset(names)
+    # Views
+    class_views = ['browse_users', 'add_user', 'edit']
+    browse_users = Users_Browse
+    add_user = Users_AddUser
+
+    # Configuration
+    config_name = '/users'
+    config_group = 'access'
 
 
-    #######################################################################
-    # Back-Office
-    #######################################################################
-    browse_content = UserFolder_BrowseContent
-    edit = AutoEdit(access='is_admin')
 
-
-    #######################################################################
-    # View
-    view = MessageView(
-        access='is_admin',
-        title=MSG(u'View'),
-        icon='view.png',
-        message=INFO(u'To manage the users please go '
-                     u'<a href="/config/users">here</a>.'))
-
-
+###########################################################################
 # Register
+###########################################################################
+Configuration.register_plugin(Users)
 register_field('email_domain', String(indexed=True, stored=True))
