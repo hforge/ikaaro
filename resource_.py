@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from os.path import basename, dirname
+
 # Import from itools
 from itools.core import is_prototype, lazy
 from itools.csv import Property
@@ -195,8 +198,17 @@ class DBResource(Resource):
 
 
     def make_resource(self, name, cls, **kw):
+        # Automatic name
         if name is None:
             name = self.make_resource_name()
+
+        # Make a resource somewhere else
+        if '/' in name:
+            path = dirname(name)
+            name = basename(name)
+            resource = self.get_resource(path)
+            resource.make_resource(name, cls, **kw)
+            return
 
         # Make the metadata
         metadata = Metadata(cls=cls)

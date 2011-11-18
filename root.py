@@ -117,7 +117,7 @@ class Root(Folder):
     def make_resource(self, name, cls, **kw):
         if name == 'ui':
             raise ValueError, 'cannot add a resource with the name "ui"'
-        return Folder.make_resource(self, name, cls, **kw)
+        return super(Root, self).make_resource(name, cls, **kw)
 
 
     ########################################################################
