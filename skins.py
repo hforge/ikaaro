@@ -213,9 +213,8 @@ class Skin(object):
                 'id': 'links-menu-new'})
 
         # Configuration
-        root = context.root
-        view = root.get_resource('config').get_view('view')
-        if context.is_access_allowed(root, view):
+        config = here.get_resource('/config')
+        if context.root.is_allowed_to_view(user, config):
             usermenu.append({
                 'href': '/config',
                 'title': MSG(u'Configuration'),

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import is_prototype, proto_property
+from itools.core import freeze, is_prototype, proto_property
 from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -287,16 +287,17 @@ class ConfigAccess(Folder):
     config_group = 'access'
 
     # Initialization
+    _everything = freeze({'path': '/', 'path_depth': '*'})
     default_rules = [
         # Authenticated users can see any content
-        ('authenticated', 'view', {}),
+        ('authenticated', 'view', _everything),
         # Members can add new content and edit private content
-        ('/config/groups/members', 'add', {}),
-        ('/config/groups/members', 'edit', {}),
+        ('/config/groups/members', 'add', _everything),
+        ('/config/groups/members', 'edit', _everything),
         # Reviewers can add new content, edit any content and publish
-        ('/config/groups/reviewers', 'add', {}),
-        ('/config/groups/reviewers', 'edit', {}),
-        ('/config/groups/reviewers', 'share', {})]
+        ('/config/groups/reviewers', 'add', _everything),
+        ('/config/groups/reviewers', 'edit', _everything),
+        ('/config/groups/reviewers', 'share', _everything)]
 
     def init_resource(self, **kw):
         super(ConfigAccess, self).init_resource(**kw)
@@ -346,7 +347,8 @@ class ConfigAccess(Folder):
             return AndQuery(rules_query, PhraseQuery('share', 'everybody'))
 
         # Case: authenticated
-        share_query = OrQuery(*[ PhraseQuery('share', x) for x in user_groups ])
+        share_query = OrQuery(*[ PhraseQuery('share', x)
+                                 for x in user_groups ])
         share_query.append(PhraseQuery('share', str(user.abspath)))
         query = AndQuery(rules_query, share_query)
 
@@ -366,10 +368,7 @@ class ConfigAccess(Folder):
 
         # Search
         results = get_context().search(query)
-        if len(results) == 0:
-            return False
-
-        return True
+        return len(results) > 0
 
 
     def get_document_types(self):
