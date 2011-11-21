@@ -56,10 +56,9 @@ msgid "${cal_selector} ${calendar} ${calendar_caption}"
 msgstr ""
 
 #: ../ui/popup/template.xhtml.en:26 ../ui/fancybox/template.xhtml.en:27
-#, fuzzy
 msgctxt "div"
 msgid "${location} ${message} ${body}"
-msgstr "${message/body}"
+msgstr ""
 
 #: ../agenda/ui/weekly_view.xml.en:19
 msgctxt "table cell"
@@ -85,7 +84,6 @@ msgstr ""
 "fichiers portant le même nom</g>"
 
 #: ../root.py:156
-#, fuzzy
 msgid ""
 "%s\n"
 "\n"
@@ -93,11 +91,6 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"\n"
-"\n"
-"%s\n"
-"\n"
-"%s"
 
 #: ../root.py:153
 msgid "%s => %s"
@@ -133,9 +126,8 @@ msgid "-- not defined --"
 msgstr "-- indéfini --"
 
 #: ../config_groups.py:84 ../config_models.py:238
-#, fuzzy
 msgid "..."
-msgstr ".."
+msgstr "..."
 
 #: ../config_access.py:73
 msgid "0"
@@ -176,19 +168,17 @@ msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
 #: ../config_register.py:178
-#, fuzzy
 msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
 msgstr ""
-"Un courriel vient de vous être envoyé avec les instructions pour valider "
-"votre inscription."
+"<div id=\"registration-end-msg\">Un courriel vient de vous être envoyé "
+" avec les instructions pour valider votre inscription.</div>"
 
 #: ../agenda/ui/event_render.xml.en:7
-#, fuzzy
 msgctxt "link"
 msgid "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
-msgstr "<g id='11'>Mon profil</g>  <g id='12'>Déconnexion</g>"
+msgstr "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
 
 #: ../ui/tiny_mce/rte.xml.en:55
 msgctxt "label"
@@ -201,11 +191,9 @@ msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
 msgstr ""
 
 #: ../ui/auto_form_field.xml.en:9
-#, fuzzy
 msgctxt "label"
 msgid "<g id='1'>${title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
 msgstr ""
-"<g id='19'>À propos</g>  <g id='20'>Crédits</g>  <g id='21'>Licence</g>"
 
 #: ../ui/comment_view.xml.en:10
 msgctxt "span"
@@ -213,14 +201,11 @@ msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
 msgstr ""
 
 #: ../agenda/ui/monthly_view.xml.en:21
-#, fuzzy
 msgctxt "span"
 msgid ""
 "<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
 "></g>"
 msgstr ""
-"<g id='2'>Parcourir</g>  <g id='3'>Lien Externe</g>  <g id='4'>Insérer</g>  "
-"<g id='5'>Importer</g>"
 
 #: ../ui/aruni/location.xml.en:11
 msgctxt "link"
@@ -264,10 +249,9 @@ msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
 #: ../ui/base/login.xml.en:20
-#, fuzzy
 msgctxt "label"
 msgid "<g id='4'>${login_name_title}</g>  <g id='5'>*</g>"
-msgstr "<g id='9'>Connexion</g>  <g id='10'>Inscription</g>"
+msgstr ""
 
 #: ../ui/comment_view.xml.en:14
 msgctxt "link"
@@ -295,7 +279,7 @@ msgstr "<g id='8'>Supprimer</g>  <g id='9'>Mettre à jour</g>"
 
 #: ../agenda/event.py:239
 msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
-msgstr ""
+msgstr "<p id=\"event-owner\">Créé par <em>%s</em></p>"
 
 #: ../messages.py:49
 msgid "A given name already exists."
@@ -315,11 +299,11 @@ msgstr "À propos de"
 
 #: ../cc.py:446
 msgid "Accept invitation"
-msgstr ""
+msgstr "Accepter l'invitation"
 
 #: ../config_access.py:281
 msgid "Access Control"
-msgstr ""
+msgstr "Contrôle d'accès"
 
 #: ../ui/root/forbidden.xml.en:8
 msgctxt "legend"
@@ -327,9 +311,8 @@ msgid "Access Forbidden"
 msgstr "Accès Interdit"
 
 #: ../config_access.py:138
-#, fuzzy
 msgid "Access rule"
-msgstr "Accès Interdit"
+msgstr "Règle d'accès"
 
 #: ../messages.py:66
 msgid "Action impossible (the resources are in use): {resources}."
@@ -377,48 +360,40 @@ msgid "Add another language"
 msgstr "Ajouter une langue"
 
 #: ../agenda/agenda.py:244
-#, fuzzy
 msgid "Add calendar"
-msgstr "Calendrier"
+msgstr "Ajouter un calendrier"
 
 #: ../config_models.py:185
-#, fuzzy
 msgid "Add choice"
-msgstr "Ajouter une ressource"
+msgstr "Ajouter un choix"
 
 #: ../skins.py:212
-#, fuzzy
 msgid "Add content"
-msgstr "Ajouter un événement"
+msgstr "Ajouter du contenu"
 
 #: ../config_models.py:247
-#, fuzzy
 msgid "Add field"
-msgstr "Ajouter un sous-menu"
+msgstr "Ajouter un champ"
 
 #: ../config_groups.py:141
-#, fuzzy
 msgid "Add group"
-msgstr "Ajouter une ressource"
+msgstr "Ajouter un groupe"
 
 #: ../config_menu.py:74
-#, fuzzy
 msgid "Add item"
-msgstr "Ressources ordonnées"
+msgstr "Ajouter un élément"
 
 #: ../config_models.py:346
-#, fuzzy
 msgid "Add model"
-msgstr "Ajouter un nouvel enregistrement"
+msgstr "Ajouter un modèle"
 
 #: ../autoadd.py:133 ../folder_views.py:141
 msgid "Add resource"
 msgstr "Ajouter une ressource"
 
 #: ../config_access.py:381
-#, fuzzy
 msgid "Add rule"
-msgstr "Ajouter une fiche"
+msgstr "Ajouter une règle"
 
 #: ../order.py:64
 msgid "Add to ordered list"
@@ -433,9 +408,8 @@ msgid "Adding resources to {path} is not allowed."
 msgstr "Ajouter des ressources à {path} n'est pas autorisé."
 
 #: ../config_groups.py:144
-#, fuzzy
 msgid "Admins"
-msgstr "Administrateur"
+msgstr "Administrateurs"
 
 #: ../ui/revisions/changes.xml.en:34
 msgctxt "table cell"
@@ -447,7 +421,6 @@ msgid "Agenda"
 msgstr ""
 
 #: ../agenda/event.py:211
-#, fuzzy
 msgid "All day"
 msgstr "Toute la journée"
 
@@ -456,9 +429,8 @@ msgid "Allow to customize ikaaro skin"
 msgstr "Permettre les modifications sur le thème"
 
 #: ../emails.py:101
-#, fuzzy
 msgid "Already registered"
-msgstr "Fil de discussion créé."
+msgstr "Déjà inscrit"
 
 #: ../ui/website/forgotten_password.xml.en:8
 msgctxt "paragraph"
@@ -470,11 +442,11 @@ msgstr ""
 
 #: ../cc.py:271
 msgid "An invitation will be sent to every address typen below, one by line."
-msgstr ""
+msgstr "Une invitation sera envoyée à chaque adresse saisie ci-dessous, une par ligne."
 
 #: ../config_captcha.py:165
 msgid "Answer"
-msgstr ""
+msgstr "Réponse"
 
 #: ../ui/root/internal_server_error.xml.en:15
 msgctxt "paragraph"
@@ -486,9 +458,8 @@ msgid "April"
 msgstr "Avril"
 
 #: ../comments.py:175
-#, fuzzy
 msgid "Archived"
-msgstr "Archive Tar"
+msgstr "Archivé"
 
 #: ../messages.py:39
 msgid "Are you sure you want to delete the selection?"
@@ -504,7 +475,7 @@ msgstr "Août"
 
 #: ../datatypes.py:196
 msgid "Authenticated"
-msgstr ""
+msgstr "Authentifié"
 
 #: ../revisions_views.py:167
 msgid "Author"
@@ -516,13 +487,12 @@ msgid "Author"
 msgstr "Auteur"
 
 #: ../revisions_views.py:159
-#, fuzzy
 msgid "Author's mail"
 msgstr "Email de l'auteur"
 
 #: ../users.py:81
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: ../ui/folder/browse_image.xml.en:31
 msgctxt "title attribute"
@@ -535,19 +505,19 @@ msgstr "Rétroliens"
 
 #: ../cc.py:374
 msgid "Bad email"
-msgstr ""
+msgstr "Mauvaise email"
 
 #: ../config_theme.py:39
 msgid "Banner"
-msgstr ""
+msgstr "Bannière"
 
 #: ../config_models.py:317
 msgid "Base class"
-msgstr ""
+msgstr "Classe de base"
 
 #: ../config_models.py:237
 msgid "Base model"
-msgstr ""
+msgstr "Modèle de base"
 
 #: ../utils.py:100
 msgid "Basque"
@@ -563,9 +533,8 @@ msgid "Bing site verification key"
 msgstr "Clé de vérification de Bing"
 
 #: ../blog/blog.py:103
-#, fuzzy
 msgid "Blog Post"
-msgstr "Blog"
+msgstr "Billet de blog"
 
 #: ../webpage.py:58 ../autoform.py:642 ../autoform.py:645
 msgid "Body"
@@ -573,7 +542,7 @@ msgstr "Corps du message"
 
 #: ../config_models.py:38
 msgid "Boolean"
-msgstr ""
+msgstr "Booléen"
 
 #: ../config.py:105
 msgid "Broken Links"
@@ -601,21 +570,24 @@ msgid "Browse and link to a File from the workspace"
 msgstr "Parcourir l'application et lier à un fichier de l'espace de travail"
 
 #: ../config_groups.py:96
-#, fuzzy
 msgid "Browse groups"
-msgstr "Membres"
+msgstr "Parcourir les groupes"
 
 #: ../cc.py:443
 msgid ""
 "By accepting the invitation you will receive an email every time this "
 "resource is modified."
 msgstr ""
+"En acceptant cette invitation vous allez recevoir un email à chaque fois "
+"que cette ressource est modifiée."
 
 #: ../cc.py:346
 msgid ""
 "By confirming your subscription to this resource you will receive an email "
 "every time this resource is modified."
 msgstr ""
+"En confirmant votre abonnement à cette ressource, vous allez recevoir un email "
+"à chaque fois que cette ressource est modifiée."
 
 #: ../file.py:349
 msgid "Bzip2"
@@ -642,31 +614,28 @@ msgid "Calendar event"
 msgstr "Évènement du calendrier"
 
 #: ../agenda/calendars.py:69
-#, fuzzy
 msgid "Calendars"
-msgstr "Calendrier"
+msgstr "Calendriers"
 
 #: ../agenda/calendars.py:170
 msgid "Can't remove this calendar"
-msgstr ""
+msgstr "Impossible de supprimer ce calendrier"
 
 #: ../agenda/event.py:85
 msgid "Cancelled"
 msgstr "Annulé"
 
 #: ../config_captcha.py:257
-#, fuzzy
 msgid "Captcha"
-msgstr "Réponse au captcha"
+msgstr "Captcha"
 
 #: ../config_captcha.py:160
 msgid "Captcha question"
 msgstr "Question captcha"
 
 #: ../config_captcha.py:263
-#, fuzzy
 msgid "Captcha type"
-msgstr "Réponse au captcha"
+msgstr "Type de captcha"
 
 #: ../messages.py:31
 msgid "Caption"
@@ -704,11 +673,11 @@ msgstr "Vérifie l'intégrité des liens."
 
 #: ../config_models.py:123
 msgid "Choice"
-msgstr ""
+msgstr "Choix"
 
 #: ../config_models.py:157
 msgid "Choices field"
-msgstr ""
+msgstr "Champs de type 'choix'"
 
 #: ../ui/website/edit_languages.xml.en:48
 msgctxt "option"
@@ -753,7 +722,7 @@ msgstr "Collaboration avec le module wiki, l'outil de suivi, etc."
 
 #: ../agenda/calendars.py:85 ../agenda/calendars.py:205
 msgid "Color"
-msgstr ""
+msgstr "Couleur"
 
 #: ../agenda/ui/cal_selector.xml.en:30
 msgctxt "title attribute"
@@ -782,13 +751,12 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #: ../config_menu.py:247
-#, fuzzy
 msgid "Configuration Menu"
-msgstr "Configuration"
+msgstr "Configuration du menu"
 
 #: ../config_register.py:189
 msgid "Configuration of the user registration process."
-msgstr ""
+msgstr "Configuration du processus d'inscription."
 
 #: ../config_mail.py:54
 msgid "Configure the website email options"
@@ -824,7 +792,8 @@ msgstr "Confirmer l'inscription"
 
 #: ../cc.py:416
 msgid "Confirm to stop receiving emails every time this resource is modified."
-msgstr ""
+msgstr "Confirmez pour arrêter de recevoir des emails à chaque fois que cette "
+"ressource est modifiée."
 
 #: ../cc.py:420
 msgid "Confirm unsubscription"
@@ -856,9 +825,8 @@ msgid "Content &amp;"
 msgstr "Contenu &amp;"
 
 #: ../config_models.py:327
-#, fuzzy
 msgid "Content models"
-msgstr "Contenu"
+msgstr "Modèles de contenu"
 
 #: ../buttons.py:101
 msgid "Copy"
@@ -871,27 +839,24 @@ msgstr "Copiez le script <g id='4'>restedit.py</g> où vous le désirez"
 
 #: ../agenda/calendars.py:53
 msgid "Create a new calendar..."
-msgstr ""
+msgstr "Créer un nouveau calendrier..."
 
 #: ../agenda/agenda_views.py:660
-#, fuzzy
 msgid "Create a new event"
-msgstr "Créer une nouvelle page et la lier :"
+msgstr "Créer un nouvel événement"
 
 #: ../popup.py:396
 msgid "Create a new page and link to it:"
 msgstr "Créer une nouvelle page et la lier :"
 
 #: ../config_register.py:72
-#, fuzzy
 msgid "Create an account"
-msgstr "Modifier le compte"
+msgstr "Créer un compte"
 
 #: ../ui/base/login.xml.en:11
-#, fuzzy
 msgctxt "link"
 msgid "Create an account now"
-msgstr "Modifier le compte"
+msgstr "Créer un compte maintenant"
 
 #: ../blog/blog.py:104
 msgid "Create and publish Post"
@@ -937,7 +902,6 @@ msgstr ""
 "{resource_uri}"
 
 #: ../agenda/event.py:96
-#, fuzzy
 msgid "Daily"
 msgstr "Journalier"
 
@@ -965,13 +929,12 @@ msgid "Date"
 msgstr "Date"
 
 #: ../agenda/agenda_views.py:278
-#, fuzzy
 msgid "Day"
-msgstr "Mai"
+msgstr "Jour"
 
 #: ../agenda/reminders.py:32
 msgid "Days"
-msgstr ""
+msgstr "Jours"
 
 #: ../enumerates.py:91 ../agenda/agenda_views.py:60
 msgid "December"
@@ -984,7 +947,7 @@ msgstr "Par défaut"
 
 #: ../config_models.py:328
 msgid "Define new types of content resources."
-msgstr ""
+msgstr "Définir de nouveaux types de ressources de contenu."
 
 #: ../config.py:191
 msgid "Define the Web Site languages."
@@ -995,13 +958,12 @@ msgid "Define the domain names for this Web Site."
 msgstr "Définir les noms de domaine pour ce site web."
 
 #: ../config_footer.py:30
-#, fuzzy
 msgid "Define the site footer."
-msgstr "Définir les langues du site web."
+msgstr "Définir le footer du site."
 
 #: ../config_access.py:66
 msgid "Depth"
-msgstr ""
+msgstr "Profondeur"
 
 #: ../resource_.py:400 ../autoform.py:639 ../blog/blog.py:40
 msgid "Description"
@@ -1043,10 +1005,9 @@ msgid "Domain names"
 msgstr "Noms de domaine"
 
 #: ../ui/base/login.xml.en:10
-#, fuzzy
 msgctxt "div"
 msgid "Don't have an account?"
-msgstr "Modifier le compte"
+msgstr "Pas encore de compte?"
 
 #: ../file_views.py:74 ../file.py:107
 msgid "Download"
@@ -1094,12 +1055,11 @@ msgstr "Hôtes virtuels"
 
 #: ../config_captcha.py:268
 msgid "Edit captcha"
-msgstr ""
+msgstr "Modifier le captcha"
 
 #: ../users.py:198
-#, fuzzy
 msgid "Edit groups"
-msgstr "Modifier les ressources"
+msgstr "Modifier les groupes"
 
 #: ../text_views.py:275
 msgid "Edit row #{id}"
@@ -1111,9 +1071,8 @@ msgid "Edit the active languages"
 msgstr "Définir les langues du site web."
 
 #: ../config_menu.py:248
-#, fuzzy
 msgid "Edit the global menu."
-msgstr "Modifier le menu"
+msgstr "Modifier le menu global"
 
 #: ../agenda/ui/edit_timetables.xml.en:9
 msgctxt "legend"
@@ -1141,17 +1100,16 @@ msgid "Event"
 msgstr "Événement"
 
 #: ../agenda/event.py:677
-#, fuzzy
 msgid "Event model"
-msgstr "Événement"
+msgstr "Modèle d'événement"
 
 #: ../agenda/event.py:225 ../agenda/event.py:312
 msgid "Every"
-msgstr ""
+msgstr "Chaque"
 
 #: ../datatypes.py:195
 msgid "Everybody"
-msgstr ""
+msgstr "Tout le monde"
 
 #: ../file.py:210
 msgid "Excel"
@@ -1189,16 +1147,15 @@ msgstr ""
 
 #: ../config_captcha.py:258
 msgid "Feature to protect from spammers"
-msgstr ""
+msgstr "Fonctionnalité pour se protéger contre les spammers"
 
 #: ../enumerates.py:81 ../agenda/agenda_views.py:50
 msgid "February"
 msgstr "Février"
 
 #: ../config_models.py:103
-#, fuzzy
 msgid "Field type"
-msgstr "Champs"
+msgstr "Type de champs"
 
 #: ../ui/generic/edit_language_menu.xml.en:23
 msgctxt "legend"
@@ -1246,11 +1203,11 @@ msgstr "Suivez cette <g id='8'> documentation </g>"
 
 #: ../cc.py:475
 msgid "Followers"
-msgstr ""
+msgstr "Personnes suivant la ressource"
 
 #: ../config_footer.py:29
 msgid "Footer"
-msgstr ""
+msgstr "Pied de page"
 
 #: ../ui/website/broken_links.xml.en:8
 msgctxt "paragraph"
@@ -1326,7 +1283,7 @@ msgstr "Accorder l'accès à un nouvel utilisateur."
 
 #: ../users.py:46
 msgid "Groups"
-msgstr ""
+msgstr "Groupes"
 
 #: ../file.py:339
 msgid "Gzip"
@@ -1356,25 +1313,23 @@ msgstr "Accueil"
 
 #: ../agenda/reminders.py:31
 msgid "Hours"
-msgstr ""
+msgstr "Heures"
 
 #: ../utils.py:105
 msgid "Hungarian"
 msgstr "Hongrois"
 
 #: ../ui/base/login.xml.en:40
-#, fuzzy
 msgctxt "label"
 msgid "I forgot my password."
 msgstr "J'ai oublié mon mot de passe"
 
 #: ../users_views.py:457
-#, fuzzy
 msgid ""
 "If no password is given an email will be sent to the  user, asking him to "
 "choose his password."
 msgstr ""
-"Si aucun mot de passe n'est donné, un mél sera envoyé à l'utilisatieur pour "
+"Si aucun mot de passe n'est saisi, un mél sera envoyé à l'utilisateur pour "
 "l'inviter à en choisir un."
 
 #: ../ui/root/license.xml.en:23
@@ -1392,9 +1347,8 @@ msgid "Image"
 msgstr "Image"
 
 #: ../file.py:166
-#, fuzzy
 msgid "Image SVG"
-msgstr "Image"
+msgstr "Image SVG"
 
 #: ../agenda/agenda_views.py:607
 msgid "Import"
@@ -1406,7 +1360,7 @@ msgstr "Inactif"
 
 #: ../config_models.py:92
 msgid "Inherited field"
-msgstr ""
+msgstr "Champs hérités"
 
 #: ../ui/website/config.xml.en:17
 msgctxt "button"
@@ -1432,7 +1386,7 @@ msgstr "Logiciels installés"
 
 #: ../config_models.py:40
 msgid "Integer"
-msgstr ""
+msgstr "Entier"
 
 #: ../ui/root/internal_server_error.xml.en:8
 msgctxt "legend"
@@ -1440,7 +1394,6 @@ msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
 #: ../root.py:155
-#, fuzzy
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
@@ -1454,11 +1407,11 @@ msgstr "Titre invalide."
 
 #: ../cc.py:441 ../cc.py:485
 msgid "Invitation"
-msgstr ""
+msgstr "Invitation"
 
 #: ../emails.py:79
 msgid "Invitation to register"
-msgstr ""
+msgstr "Invitation à vous inscrire"
 
 #: ../utils.py:106
 msgid "Italian"
@@ -1572,7 +1525,6 @@ msgid "Location:"
 msgstr "Emplacement :"
 
 #: ../skins.py:201
-#, fuzzy
 msgid "Log out"
 msgstr "Déconnexion"
 
@@ -1598,20 +1550,17 @@ msgid "Manage Subscriptions"
 msgstr "Gérer les inscriptions"
 
 #: ../agenda/ui/calendar_caption.xml.en:16
-#, fuzzy
 msgctxt "link"
 msgid "Manage my calendars"
-msgstr "Calendrier"
+msgstr "Gérer mes calendriers"
 
 #: ../config_groups.py:130
-#, fuzzy
 msgid "Manage user groups."
-msgstr "Gérer les inscriptions"
+msgstr "Gérer les groupes d'utilisateurs."
 
 #: ../users.py:209
-#, fuzzy
 msgid "Manage users."
-msgstr "Gérer les inscriptions"
+msgstr "Gérer les utilisateurs."
 
 #: ../enumerates.py:82 ../agenda/agenda_views.py:51
 msgid "March"
@@ -1626,9 +1575,8 @@ msgid "May"
 msgstr "Mai"
 
 #: ../config_groups.py:105 ../config_groups.py:146
-#, fuzzy
 msgid "Members"
-msgstr "Membre"
+msgstr "Membres"
 
 #: ../config_menu.py:84
 msgid "Menu"
@@ -1677,10 +1625,9 @@ msgstr "Lundi"
 
 #: ../agenda/agenda_views.py:280
 msgid "Month"
-msgstr ""
+msgstr "Mois"
 
 #: ../agenda/event.py:98
-#, fuzzy
 msgid "Monthly"
 msgstr "Mensuel"
 
@@ -1695,7 +1642,7 @@ msgstr "Interface et contenu multilingues"
 
 #: ../config_models.py:57
 msgid "Multiple"
-msgstr ""
+msgstr "Multiple"
 
 #: ../ui/root/about.xml.en:41
 msgctxt "li"
@@ -1706,7 +1653,7 @@ msgstr ""
 
 #: ../agenda/agenda.py:132
 msgid "My events"
-msgstr ""
+msgstr "Mes événements"
 
 #: ../config_groups.py:103 ../popup.py:76
 msgid "Name"
@@ -1726,10 +1673,9 @@ msgid "New password"
 msgstr "Nouveau mot de passe"
 
 #: ../ui/website/config.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "New plugins"
-msgstr "Nouvelle page"
+msgstr "Nouveaux plugins"
 
 #: ../ui/website/config.xml.en:11
 msgctxt "paragraph"
@@ -1737,10 +1683,12 @@ msgid ""
 "New plugins have been detected, pleae click the button below to initialize "
 "them:"
 msgstr ""
+"De nouveaux plugins ont étés détectés, veuillez cliquer sur le bouton ci-dessous "
+"pour les initialiser :"
 
 #: ../config.py:98
 msgid "New plugins initialized."
-msgstr ""
+msgstr "Nouveaux plugins initialisés."
 
 #: ../text_views.py:267
 msgid "New row added."
@@ -1767,7 +1715,7 @@ msgstr "Non"
 
 #: ../config_access.py:79
 msgid "No limit"
-msgstr ""
+msgstr "Pas de limite"
 
 #: ../messages.py:90
 msgid "No resource allowed."
@@ -1787,9 +1735,8 @@ msgid "Not Found"
 msgstr "Introuvable"
 
 #: ../order.py:116
-#, fuzzy
 msgid "Not ordered"
-msgstr "Votre commande"
+msgstr "Pas ordonné"
 
 #: ../cc.py:221
 msgid "Not subscribed"
@@ -1863,9 +1810,8 @@ msgid "Ok"
 msgstr "Ok"
 
 #: ../agenda/event.py:226 ../agenda/event.py:313
-#, fuzzy
 msgid "On"
-msgstr "Ouvert"
+msgstr "Le"
 
 #: ../ui/file/externaledit.xml.en:52
 msgctxt "paragraph"
@@ -1910,11 +1856,8 @@ msgid "Operation successful! Welcome."
 msgstr "Votre compte est activé. Bienvenue !"
 
 #: ../config_seo.py:28
-#, fuzzy
 msgid "Optimize your website for better ranking in search engine results."
-msgstr ""
-"\n"
-"      Optimiser le référencement du site web dans les moteurs de recherche."
+msgstr "Optimiser le référencement du site web dans les moteurs de recherche."
 
 #: ../config_models.py:144 ../config_models.py:229 ../config_menu.py:61
 #: ../order.py:83 ../order.py:180
@@ -1938,9 +1881,8 @@ msgid "Order up"
 msgstr "Monter"
 
 #: ../order.py:176
-#, fuzzy
 msgid "Ordered Folder"
-msgstr "Table de sélection ordonnée"
+msgstr "Dossier ordonné"
 
 #: ../obsolete/table.py:107
 msgid "Ordered Table"
@@ -1956,7 +1898,7 @@ msgstr "Orphelins"
 
 #: ../config.py:44
 msgid "Other"
-msgstr ""
+msgstr "Autre"
 
 #: ../file.py:260
 msgid "PDF"
@@ -1999,9 +1941,8 @@ msgid "Pending confirmation"
 msgstr "En attente de confirmation"
 
 #: ../config_access.py:94
-#, fuzzy
 msgid "Permission"
-msgstr "Version"
+msgstr "Autorisation"
 
 #: ../text.py:61
 msgid "Plain Text"
@@ -2016,9 +1957,8 @@ msgid "Please choose a new password for your account"
 msgstr "Veuillez choisir un nouveau mot de passe pour votre compte"
 
 #: ../config_captcha.py:44
-#, fuzzy
 msgid "Please enter the words below"
-msgstr "Veuillez répondre à la question ci-dessous :"
+msgstr "Veuillez saisir les mots ci-dessous"
 
 #: ../utils.py:108
 msgid "Portuguese"
@@ -2050,13 +1990,12 @@ msgid "Python"
 msgstr "Python"
 
 #: ../config_captcha.py:164
-#, fuzzy
 msgid "Question"
-msgstr "Description"
+msgstr "Question"
 
 #: ../config_captcha.py:249
 msgid "Question captcha"
-msgstr ""
+msgstr "Question du captcha"
 
 #: ../file.py:270
 msgid "RTF"
@@ -2076,11 +2015,11 @@ msgstr ""
 
 #: ../config_captcha.py:116
 msgid "Recaptcha private key"
-msgstr ""
+msgstr "Clé privé Recaptcha"
 
 #: ../config_captcha.py:115
 msgid "Recaptcha public key"
-msgstr ""
+msgstr "Clé publique recaptcha"
 
 #: ../root_views.py:140
 msgid "Recipient"
@@ -2088,20 +2027,19 @@ msgstr "Destinataire"
 
 #: ../agenda/event.py:443
 msgid "Recurrence"
-msgstr ""
+msgstr "Récurrence"
 
 #: ../emails.py:123
 msgid "Registration confirmed"
 msgstr "Inscription confirmée"
 
 #: ../emails.py:90
-#, fuzzy
 msgid "Registration notification"
-msgstr "Inscription confirmée"
+msgstr "Notification d'inscription"
 
 #: ../agenda/event.py:444
 msgid "Reminder"
-msgstr ""
+msgstr "Rappel"
 
 #: ../buttons.py:83
 msgid "Remove"
@@ -2109,16 +2047,15 @@ msgstr "Supprimer"
 
 #: ../config_access.py:87
 msgid "Remove and modify"
-msgstr ""
+msgstr "Supprimer et modifier"
 
 #: ../order.py:71
 msgid "Remove from ordered list"
 msgstr "Retirer de la liste ordonnée"
 
 #: ../agenda/calendars.py:154
-#, fuzzy
 msgid "Remove this calendar"
-msgstr "Se souvenir de cette recherche"
+msgstr "Supprimer ce calendrier"
 
 #: ../buttons.py:92
 msgid "Rename"
@@ -2147,23 +2084,20 @@ msgid "Replace file"
 msgstr "Remplacer le fichier"
 
 #: ../config_mail.py:78
-#, fuzzy
 msgid "Reply to"
-msgstr "Répondre"
+msgstr "Répondre à"
 
 #: ../config_models.py:56
-#, fuzzy
 msgid "Required"
-msgstr "${required_msg}"
+msgstr "Obligatoire"
 
 #: ../users_views.py:408
 msgid "Resend Confirmation"
 msgstr "Réenvoyer la demande de confirmation"
 
 #: ../config_access.py:117
-#, fuzzy
 msgid "Resource type"
-msgstr "Ressource"
+msgstr "Type de ressource"
 
 #: ../messages.py:96
 msgid "Resources copied."
@@ -2218,9 +2152,8 @@ msgid "Resources retired."
 msgstr "Ressources dépubliées."
 
 #: ../order.py:166
-#, fuzzy
 msgid "Resources unordered."
-msgstr "Ressources montées."
+msgstr "Ressources non ordonnées."
 
 #: ../ui/website/search.xml.en:11
 msgctxt "heading"
@@ -2228,9 +2161,8 @@ msgid "Results"
 msgstr "Résultats"
 
 #: ../config_groups.py:145
-#, fuzzy
 msgid "Reviewers"
-msgstr "Modérateur"
+msgstr "Modérateurs"
 
 #: ../text_views.py:229
 msgid "Row deleted."
@@ -2258,7 +2190,6 @@ msgid "Search"
 msgstr "Rechercher"
 
 #: ../config_seo.py:34
-#, fuzzy
 msgid "Search Engine Optimization"
 msgstr "Référencement (SEO)"
 
@@ -2272,14 +2203,12 @@ msgid "See the GNU General Public License for more details."
 msgstr "Voir la « GNU General Public License » pour plus de détails."
 
 #: ../users_views.py:334
-#, fuzzy
 msgid "See the users."
-msgstr "Voir les utilisateurs et leurs permissions."
+msgstr "Voir les utilisateurs"
 
 #: ../config_models.py:151
-#, fuzzy
 msgid "Select"
-msgstr "Tout sélectionner"
+msgstr "Liste déroulante"
 
 #: ../ui/folder/browse_image.xml.en:13
 msgctxt "label"
@@ -2308,14 +2237,13 @@ msgstr "Choisissez votre langue et votre fuseau horaire préférés."
 
 #: ../config_access.py:88 ../resource_.py:59
 msgid "Share"
-msgstr ""
+msgstr "Partager"
 
 #: ../config.py:160
 msgid "Show resources not linked from anywhere."
 msgstr "Montrer les ressources qui ne sont liées à rien."
 
 #: ../skins.py:190
-#, fuzzy
 msgid "Sign in"
 msgstr "Connexion"
 
@@ -2325,9 +2253,8 @@ msgid "Sign in"
 msgstr "Connexion"
 
 #: ../config_mail.py:79
-#, fuzzy
 msgid "Signature"
-msgstr "Signature du courriel"
+msgstr "Signature"
 
 #: ../skins.py:41
 msgid "Skin"
@@ -2350,7 +2277,7 @@ msgstr "Espagnol"
 
 #: ../config_models.py:100
 msgid "Standard field"
-msgstr ""
+msgstr "Champs standard"
 
 #: ../agenda/event.py:439
 msgid "Start"
@@ -2391,9 +2318,8 @@ msgid "Sunday"
 msgstr "Dimanche"
 
 #: ../users_views.py:418
-#, fuzzy
 msgid "Switch state"
-msgstr "modifier l'état : %s"
+msgstr "Changer l'état"
 
 #: ../ui/root/credits.xml.en:23
 msgctxt "li"
@@ -2426,20 +2352,19 @@ msgstr "Provisoire"
 
 #: ../config_register.py:50
 msgid "Terms of Service"
-msgstr ""
+msgstr "Conditions d'utilisation"
 
 #: ../config_register.py:195
 msgid "Terms of service"
-msgstr ""
+msgstr "Conditions d'utilisation"
 
 #: ../config_models.py:41 ../folder_views.py:304
 msgid "Text"
 msgstr "Texte"
 
 #: ../config_models.py:42
-#, fuzzy
 msgid "Textarea"
-msgstr "Texte"
+msgstr "Textarea"
 
 #: ../messages.py:35
 msgid "The changes have been saved ({time})."
@@ -2499,9 +2424,8 @@ msgid "The given range is already defined."
 msgstr "Cet intervalle est déjà défini."
 
 #: ../resource_views.py:257
-#, fuzzy
 msgid "The login name or the password is incorrect."
-msgstr "L'adresse de courriel ou le mot de passe est incorrect."
+msgstr "L'identifiant de connexion ou le mot de passe est incorrect."
 
 #: ../messages.py:55
 msgid "The name is missing."
@@ -2547,27 +2471,24 @@ msgid "There is already another resource with this name."
 msgstr "Il existe déjà une ressource de ce nom."
 
 #: ../users_views.py:210
-#, fuzzy
 msgid ""
 "There is another user with the \"{value}\" {name}, please choose another one."
 msgstr ""
-"Il existe déjà un utilisateur avec le courriel « {email} », veuillez en "
-"changer."
+"Il existe déjà un utilisateur avec le {name} \"{value}\", veuillez en "
+"choisir un autre."
 
 #: ../folder_views.py:128
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr "Impossible d'affiche une page « index » inexistante."
 
 #: ../ui/user/profile.xml.en:8
-#, fuzzy
 msgctxt "paragraph"
 msgid "This account is not active."
-msgstr "L'utilisateur « $username » n'a pas activé son compte."
+msgstr "Ce compte n'est pas actif."
 
 #: ../agenda/calendars.py:172
-#, fuzzy
 msgid "This calendar has been removed"
-msgstr "La recherche a été supprimée."
+msgstr "Ce calendrier a été supprimé."
 
 #: ../ui/base/login.xml.en:21 ../ui/auto_form_field.xml.en:10
 msgctxt "title attribute"
@@ -2606,9 +2527,8 @@ msgid "Timezone"
 msgstr "Fuseau horaire"
 
 #: ../config_models.py:58
-#, fuzzy
 msgid "Tip"
-msgstr "Zip"
+msgstr "Astuce"
 
 #: ../config_groups.py:104 ../resource_.py:399 ../agenda/calendars.py:86
 #: ../autoform.py:637 ../config_menu.py:57 ../config_models.py:140
@@ -2637,7 +2557,6 @@ msgid "To activate your account, please type a password."
 msgstr "Pour activer votre compte, vous devez saisir un mot de passe."
 
 #: ../emails.py:136
-#, fuzzy
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
@@ -2645,7 +2564,7 @@ msgid ""
 msgstr ""
 "Pour choisir un nouveau mot de passe, cliquez sur le lien :\n"
 "\n"
-" {uri}"
+" {user}/;change_password_forgotten?username={userid}&key={userkey}"
 
 #: ../cc.py:479
 msgid ""
@@ -2702,7 +2621,7 @@ msgstr ""
 
 #: ../agenda/agenda_views.py:207
 msgid "Today"
-msgstr ""
+msgstr "Aujourd'hui"
 
 #: ../ui/PO_edit.xml.en:29
 msgctxt "table cell"
@@ -2832,12 +2751,11 @@ msgstr "Utilisateur"
 
 #: ../config_groups.py:83
 msgid "User Group"
-msgstr ""
+msgstr "Groupe d'utilisateurs"
 
 #: ../config_groups.py:129
-#, fuzzy
 msgid "User Groups"
-msgstr "Utilisateurs"
+msgstr "Groupes de l'utilisateur"
 
 #: ../config_groups.py:40 ../users_views.py:385
 msgid "User ID"
@@ -2849,7 +2767,7 @@ msgstr "Utilisateur ajouté."
 
 #: ../config_access.py:141
 msgid "User group"
-msgstr ""
+msgstr "Groupe d'utilisateur"
 
 #: ../users_views.py:137
 msgid "User has already confirmed his registration!"
@@ -2857,12 +2775,11 @@ msgstr "L'utilisateur a déjà confirmé son inscription !"
 
 #: ../users_views.py:92
 msgid "User is not pending"
-msgstr ""
+msgstr "L'utilisateur n'est pas en attente"
 
 #: ../config_register.py:188
-#, fuzzy
 msgid "User registration"
-msgstr "Présentation au format MS PowerPoint"
+msgstr "Inscription utilisateur"
 
 #: ../messages.py:45
 msgid "User {user} already saved this document, click \"Save\" again to force."
@@ -2884,11 +2801,11 @@ msgstr "Utilisateurs"
 
 #: ../config_register.py:194
 msgid "Users can register by themselves"
-msgstr ""
+msgstr "Les utilisateurs peuvent s'inscrire par eux-mêmes"
 
 #: ../config.py:41
 msgid "Users, Access Control & Security"
-msgstr ""
+msgstr "Utilisateurs, Contrôle d'accès et sécurité"
 
 #: ../ui/root/about.xml.en:16
 msgctxt "table cell"
@@ -2911,9 +2828,8 @@ msgid "View"
 msgstr "Voir"
 
 #: ../config_access.py:127
-#, fuzzy
 msgid "View results"
-msgstr "Résultats"
+msgstr "Voir les résultats"
 
 #: ../config_vhosts.py:33 ../config_vhosts.py:56
 msgid "Virtual Hosts"
@@ -2921,7 +2837,7 @@ msgstr "Hôtes virtuels"
 
 #: ../agenda/calendars.py:87
 msgid "Visible ?"
-msgstr ""
+msgstr "Visible ?"
 
 #: ../webpage.py:50
 msgid "Web Page"
@@ -2936,12 +2852,10 @@ msgid "Wednesday"
 msgstr "Mercredi"
 
 #: ../agenda/agenda_views.py:279
-#, fuzzy
 msgid "Week"
-msgstr "Semaine {n}"
+msgstr "Semaine"
 
 #: ../agenda/event.py:97
-#, fuzzy
 msgid "Weekly"
 msgstr "Hebdomadaire"
 
@@ -2955,11 +2869,11 @@ msgstr "Bienvenu(e) !"
 
 #: ../agenda/event.py:441
 msgid "Where"
-msgstr ""
+msgstr "Où"
 
 #: ../config_models.py:160
 msgid "Widget to use"
-msgstr ""
+msgstr "Widget à utiliser"
 
 #: ../root.py:318
 msgid "Windows"
@@ -2987,7 +2901,7 @@ msgstr "Clé de vérification de Yahoo"
 
 #: ../agenda/event.py:99
 msgid "Yearly"
-msgstr ""
+msgstr "Annuel"
 
 #: ../agenda/calendars.py:101 ../autoform.py:218 ../autoform.py:244
 msgid "Yes"
@@ -3008,11 +2922,13 @@ msgid ""
 "\n"
 " {host}/;login?loginname={userid}"
 msgstr ""
+"Vous avez déjà un compte:\n"
+"\n"
+" {host}/;login?loginname={userid}"
 
 #: ../resource_views.py:199
-#, fuzzy
 msgid "You are already connected"
-msgstr "Vous étiez déjà désinscrit."
+msgstr "Vous êtes déjà connecté"
 
 #: ../ui/root/forbidden.xml.en:9
 msgctxt "fieldset"
@@ -3046,9 +2962,8 @@ msgstr ""
 "ordinateur pour remplacer l'actuel."
 
 #: ../users_views.py:425
-#, fuzzy
 msgid "You cannot change your state yourself."
-msgstr "Vous ne pouvez pas vous supprimer vous-même."
+msgstr "Vous ne pouvez pas changer votre état vous-même."
 
 #: ../messages.py:85
 msgid ""
@@ -3064,6 +2979,9 @@ msgid ""
 "\n"
 " {user}/;confirm_registration?username={userid}&key={userkey}"
 msgstr ""
+"Vous avez été invité à vous inscrire. Pour confirmer, suivez ce lien:\n"
+"\n"
+" {user}/;confirm_registration?username={userid}&key={userkey}"
 
 #: ../emails.py:92 ../emails.py:125
 msgid ""
@@ -3071,10 +2989,13 @@ msgid ""
 "\n"
 " {host}/"
 msgstr ""
+"Vous avez été inscrit sur le site: \"{host_title}\"\n"
+"\n"
+" {host}/"
 
 #: ../agenda/event.py:251 ../agenda/event.py:337
 msgid "You have to fill start and end time"
-msgstr ""
+msgstr "Vous devez saisir la date de début et de fin"
 
 #: ../users_views.py:311
 msgid "You mistyped your actual password, your account is not changed."
@@ -3084,7 +3005,7 @@ msgstr ""
 
 #: ../resource_views.py:272
 msgid "You must complete your account informations"
-msgstr ""
+msgstr "Vous devez compléter vos informations de profil"
 
 #: ../config.py:231
 msgid "You must select one and only one language."
@@ -3108,19 +3029,20 @@ msgid "You were already unsubscribed."
 msgstr "Vous étiez déjà désinscrit."
 
 #: ../emails.py:151 ../emails.py:152
-#, fuzzy
 msgid "Your account has been canceled"
-msgstr "Vos informations de connexion ont été effacées."
+msgstr "Votre compte a été désactivé"
 
 #: ../resource_views.py:264
 msgid ""
 "Your account has been canceled, contact the administrator  if you want to "
 "get access again."
 msgstr ""
+"Votre compte a été désactivé, contactez l'administrateur si vous voulez "
+"le réactiver."
 
 #: ../emails.py:144 ../emails.py:145
 msgid "Your account has been re-activated"
-msgstr ""
+msgstr "Votre compte a été réactivé"
 
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
@@ -3166,7 +3088,7 @@ msgstr "[{title}] a été modifié"
 
 #: ../agenda/event.py:133
 msgid "day(s)"
-msgstr ""
+msgstr "jour(s)"
 
 #: ../file_views.py:181
 msgid "huge"
@@ -3240,7 +3162,7 @@ msgstr "à <x id='5'/>  <g id='6'>Ajouter</g>"
 
 #: ../agenda/event.py:134
 msgid "week(s)"
-msgstr ""
+msgstr "semaine(s)"
 
 #: ../ui/root/license.xml.en:16
 msgctxt "paragraph"
@@ -3253,7 +3175,7 @@ msgstr ""
 
 #: ../agenda/event.py:136
 msgid "year(s)"
-msgstr ""
+msgstr "année(s)"
 
 #: ../ui/root/license.xml.en:8
 msgctxt "paragraph"
