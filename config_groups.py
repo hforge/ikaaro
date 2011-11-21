@@ -35,13 +35,6 @@ class Group_BrowseUsers(BrowseUsers):
 
     schema = {'ids': String(multiple=True)}
 
-    table_columns = [
-        ('checkbox', None),
-        ('user_id', MSG(u'User ID')),
-        ('login_name', MSG(u'Login')),
-        ('firstname', MSG(u'First Name')),
-        ('lastname', MSG(u'Last Name')),
-        ('account_state', MSG(u'State'))]
     table_actions = [
         BrowseButton(access='is_admin', title=MSG(u'Update'))]
 
