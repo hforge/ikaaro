@@ -2691,7 +2691,7 @@ msgstr "Mettre à jour"
 
 #: ../agenda/calendars.py:63
 msgid "Update calendar visibility"
-msgstr ""
+msgstr "Mettre à jour la visibilité des calendriers"
 
 #: ../root_views.py:242
 msgid "Update docs"
