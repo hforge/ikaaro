@@ -344,13 +344,15 @@ class Folder(DBResource):
                 class_id = query.get('type')
                 if class_id:
                     cls = self.database.get_resource_class(class_id)
-                    if is_prototype(cls.new_instance, BaseView):
-                        # XXX Should we really check access here?
+                    view = cls.new_instance
+                    if is_prototype(view, BaseView):
                         context = get_context()
+                        view = view(resource=self, context=context) # bind
+                        # XXX Should we really check access here?
                         root = context.root
                         user = context.user
                         if root.has_permission(user, 'add', self, class_id):
-                            return cls.new_instance
+                            return view
                         # XXX Should raise forbidden, but callers are not
                         # ready for that
                         return None
