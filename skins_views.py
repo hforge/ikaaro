@@ -146,7 +146,8 @@ class LocationTemplate(CMSTemplate):
                 name, args = link, {}
 
             # Active
-            active = context.view.__bases__[0] is here.get_view(name, args)
+            unbound_view = context.view.__bases__[0]
+            active = (unbound_view is here.get_view(name, args).__bases__[0])
 
             # Add the menu
             tabs.append({

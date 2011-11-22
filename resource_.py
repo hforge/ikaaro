@@ -307,6 +307,8 @@ class DBResource(Resource):
         # Explicit view, defined by name
         view = getattr(self, name, None)
         if is_prototype(view, BaseView):
+            context = get_context()
+            view = view(resource=self, context=context) # bind
             return view
 
         return None
