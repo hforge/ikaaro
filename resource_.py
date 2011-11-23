@@ -27,7 +27,7 @@ from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, Integer, String, Unicode, URI
+from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
@@ -791,8 +791,6 @@ register_field('name', String(stored=True, indexed=True))
 # Class related fields
 register_field('format', String(indexed=True, stored=True))
 register_field('base_classes', String(multiple=True, indexed=True))
-# ACL related
-register_field('owner', URI(indexed=True))
 # Referential integrity
 register_field('links', String(multiple=True, indexed=True))
 # Full text search

@@ -381,6 +381,8 @@ class URI_Field(Metadata_Field):
 class Owner_Field(URI_Field):
 
     readonly = True
+    indexed = True
+    stored = True
 
 
 

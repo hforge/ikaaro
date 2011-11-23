@@ -120,14 +120,22 @@ class Root(Folder):
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
-    def get_user_title(self, username):
-        if not username:
+    def get_user_title(self, userid):
+        if not userid:
             return None
-        users = self.get_resource('users')
-        user = users.get_resource(username, soft=True)
+
+        # Userid (abspath) or username
+        if userid[0] != '/':
+            userid = '/users/%s' % userid
+
+        # Get user
+        user = self.get_resource(userid, soft=True)
         if user is None:
+            username = userid.rsplit('/', 1)[-1]
             log_warning('unkwnown user %s' % username, domain='ikaaro')
             return unicode(username)
+
+        # Ok
         return user.get_title()
 
 

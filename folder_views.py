@@ -379,12 +379,28 @@ class Folder_BrowseContent(BrowseForm):
         return key
 
 
+    def _get_key_sorted_by_user(self, field):
+        get_user_title = self.context.root.get_user_title
+        def key(item, cache={}):
+            user = getattr(item, field)
+            if user in cache:
+                return cache[user]
+            if user:
+                title = get_user_title(user)
+                value = title.lower().translate(transmap)
+            else:
+                value = None
+            cache[user] = value
+            return value
+        return key
+
+
     def get_key_sorted_by_title(self):
         return self._get_key_sorted_by_unicode('title')
 
 
     def get_key_sorted_by_format(self):
-        database = get_context().database
+        database = self.context.database
         def key(item, cache={}):
             format = item.format
             if format in cache:
@@ -397,19 +413,7 @@ class Folder_BrowseContent(BrowseForm):
 
 
     def get_key_sorted_by_last_author(self):
-        get_user_title = get_context().root.get_user_title
-        def key(item, cache={}):
-            author = item.last_author
-            if author in cache:
-                return cache[author]
-            if author:
-                title = get_user_title(author)
-                value = title.lower().translate(transmap)
-            else:
-                value = None
-            cache[author] = value
-            return value
-        return key
+        return self._get_key_sorted_by_user('last_author')
 
 
     def sort_and_batch(self, resource, context, results):
@@ -866,4 +870,3 @@ class GoToSpecificDocument(BaseView):
             goto = goto.replace(message=message)
 
         return goto
-
