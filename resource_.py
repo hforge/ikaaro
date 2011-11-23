@@ -270,6 +270,7 @@ class DBResource(CatalogAware, IResource):
         'is_image': Boolean(indexed=True),
         'is_folder': Boolean(indexed=True),
         'is_content': Boolean(indexed=True),
+        'is_video': Boolean(indexed=True),
         })
 
 
@@ -457,6 +458,10 @@ class DBResource(CatalogAware, IResource):
 
         # Content
         values['is_content'] = self.is_content
+
+        # Video
+        from file import Video
+        values['is_video'] = isinstance(self, Video)
 
         # Ok
         return values
