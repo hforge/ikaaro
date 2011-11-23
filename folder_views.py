@@ -426,21 +426,20 @@ class Folder_BrowseContent(BrowseForm):
             get_key = None
         else:
             get_key = getattr(self, 'get_key_sorted_by_' + sort_by, None)
+
+        # Case 1: Custom but slower sort algorithm
         if get_key:
-            # Custom but slower sort algorithm
             items = results.get_documents()
             items.sort(key=get_key(), reverse=reverse)
             if size:
                 items = items[start:start+size]
             elif start:
                 items = items[start:]
-        else:
-            # Faster Xapian sort algorithm
-            items = results.get_documents(sort_by=sort_by, reverse=reverse,
-                                          start=start, size=size)
+            database = resource.database
+            return [ database.get_resource(x.abspath) for x in items ]
 
-        database = resource.database
-        return [ database.get_resource(x.abspath) for x in items ]
+        # Case 2: Faster Xapian sort algorithm
+        return results.get_resources(sort_by, reverse, start, size)
 
 
     def get_item_value(self, resource, context, item, column):

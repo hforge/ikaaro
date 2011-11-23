@@ -337,7 +337,7 @@ class BrowseUsers(BrowseForm):
 
     def get_query_schema(self):
         schema = super(BrowseUsers, self).get_query_schema()
-        return merge_dicts(schema, sort_by=String(default='login_name'))
+        return merge_dicts(schema, sort_by=String(default='email'))
 
 
     search_schema = {'search_term': Unicode}
@@ -352,38 +352,39 @@ class BrowseUsers(BrowseForm):
             or_query = OrQuery(
                 TextQuery('lastname', search_term),
                 TextQuery('firstname', search_term),
-                StartQuery('username', search_term),
+                StartQuery('email', search_term),
                 StartQuery('email_domain', search_term))
             search_query.append(or_query)
 
         # Ok
-        results = context.search(search_query)
-        return results.get_documents()
+        return context.search(search_query)
 
 
-    def sort_and_batch(self, resource, context, items):
-        # Sort
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
-        if sort_by in ('user_id', 'login_name'):
-            f = lambda x: self.get_item_value(resource, context, x, sort_by)
-        elif sort_by == 'account_state':
-            f = lambda x: self.get_item_value(resource, context, x,
-                                              sort_by)[0].gettext()
-        else:
-            f = lambda x: getattr(x, sort_by)
-
-        items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
-        # Batch
+    def sort_and_batch(self, resource, context, results):
         start = context.query['batch_start']
         size = context.query['batch_size']
-        return items[start:start+size]
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+
+        # Slow
+        if sort_by == 'account_state':
+            f = lambda x: self.get_item_value(resource, context, x,
+                                              sort_by)[0].gettext()
+            items = results.get_resources()
+            items = list(items)
+            items.sort(key=lambda x: f(x), reverse=reverse)
+            items = items[start:start+size]
+            database = resource.database
+            return [ database.get_resource(x.abspath) for x in items ]
+
+        # Fast
+        return results.get_resources(sort_by, reverse, start, size)
 
 
     table_columns = [
         ('checkbox', None),
-        ('user_id', MSG(u'User ID')),
-        ('login_name', MSG(u'Login')),
+        ('name', MSG(u'User ID')),
+        ('email', MSG(u'Login')),
         ('firstname', MSG(u'First Name')),
         ('lastname', MSG(u'Last Name')),
         ('account_state', MSG(u'State'))]
@@ -392,22 +393,16 @@ class BrowseUsers(BrowseForm):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             return item.name, False
-        elif column == 'user_id':
-            return item.name, '/users/%s' % item.name
-        elif column == 'login_name':
-            return item.username
-        elif column == 'firstname':
-            return item.firstname
-        elif column == 'lastname':
-            return item.lastname
+        elif column == 'name':
+            return item.name, str(item.abspath)
         elif column == 'account_state':
-            user = context.database.get_resource(item.abspath)
-            user_state = user.get_value('user_state')
-            if user_state == 'pending':
+            if item.get_value('user_state') == 'pending':
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Resend Confirmation'), href
 
-            return user.get_value_title('user_state'), None
+            return item.get_value_title('user_state'), None
+
+        return item.get_value_title(column)
 
 
 
