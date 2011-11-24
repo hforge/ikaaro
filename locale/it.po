@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-11-21 16:11+CET\n"
+"POT-Creation-Date: 2011-11-24 12:11+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -76,7 +76,7 @@ msgid ""
 "files with the same name</g>"
 msgstr ""
 
-#: ../root.py:156
+#: ../root.py:164
 msgid ""
 "%s\n"
 "\n"
@@ -85,7 +85,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../root.py:153
+#: ../root.py:161
 msgid "%s => %s"
 msgstr ""
 
@@ -118,7 +118,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
 
-#: ../config_groups.py:84 ../config_models.py:238
+#: ../config_groups.py:77 ../config_models.py:238
 #, fuzzy
 msgid "..."
 msgstr "..."
@@ -332,7 +332,7 @@ msgctxt "button"
 msgid "Add"
 msgstr "Aggiungi"
 
-#: ../users_views.py:450
+#: ../users_views.py:445
 #, fuzzy
 msgid "Add New Member"
 msgstr "Nuova cartella"
@@ -348,12 +348,12 @@ msgstr "Modifica gruppi per <span stl:content=\"fullname\"></span>"
 msgid "Add Row"
 msgstr "Aggiungi"
 
-#: ../users_views.py:491
+#: ../users_views.py:486
 #, fuzzy
 msgid "Add and return"
 msgstr "Nuovo utente"
 
-#: ../users_views.py:489
+#: ../users_views.py:484
 #, fuzzy
 msgid "Add and view"
 msgstr "Nuovo utente"
@@ -384,7 +384,7 @@ msgstr "Testo integrale"
 msgid "Add field"
 msgstr "Nuovo utente"
 
-#: ../config_groups.py:141
+#: ../config_groups.py:134
 #, fuzzy
 msgid "Add group"
 msgstr "Nuovo utente"
@@ -423,7 +423,7 @@ msgstr "Modifica gruppi per <span stl:content=\"fullname\"></span>"
 msgid "Adding resources to {path} is not allowed."
 msgstr ""
 
-#: ../config_groups.py:144
+#: ../config_groups.py:137
 msgid "Admins"
 msgstr ""
 
@@ -596,7 +596,7 @@ msgstr "» Naviga e collega un'immagine presente nell'area di lavoro: "
 msgid "Browse and link to a File from the workspace"
 msgstr "» Naviga e collega un'immagine presente nell'area di lavoro: "
 
-#: ../config_groups.py:96
+#: ../config_groups.py:89
 #, fuzzy
 msgid "Browse groups"
 msgstr "Naviga tra gli utenti"
@@ -1010,7 +1010,7 @@ msgstr ""
 msgid "Depth"
 msgstr ""
 
-#: ../resource_.py:400 ../autoform.py:639 ../blog/blog.py:40
+#: ../resource_.py:402 ../autoform.py:639 ../blog/blog.py:40
 msgid "Description"
 msgstr "Descrizione"
 
@@ -1251,7 +1251,7 @@ msgstr "Rinomina.."
 msgid "Files extracted"
 msgstr ""
 
-#: ../config_groups.py:42 ../users_views.py:387 ../users.py:75
+#: ../users_views.py:388 ../users.py:75
 #, fuzzy
 msgid "First Name"
 msgstr "Nome completo"
@@ -1307,7 +1307,7 @@ msgstr "Da"
 msgid "From header"
 msgstr ""
 
-#: ../folder_views.py:841
+#: ../folder_views.py:844
 msgid "Front Page"
 msgstr ""
 
@@ -1316,7 +1316,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr ""
 
-#: ../root.py:316
+#: ../root.py:324
 msgid "GNU/Linux"
 msgstr ""
 
@@ -1357,7 +1357,7 @@ msgstr "Non sono presenti messaggi."
 msgid "Google site verification key"
 msgstr ""
 
-#: ../users_views.py:452
+#: ../users_views.py:447
 msgid "Grant access to a new user."
 msgstr ""
 
@@ -1407,7 +1407,7 @@ msgctxt "label"
 msgid "I forgot my password."
 msgstr "Modifica l'impostazione predefinita"
 
-#: ../users_views.py:457
+#: ../users_views.py:452
 msgid ""
 "If no password is given an email will be sent to the  user, asking him to "
 "choose his password."
@@ -1482,7 +1482,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../root.py:155
+#: ../root.py:163
 #, fuzzy
 msgid "Internal server error"
 msgstr "Si è verificato un errore di sistema, nulla di preoccupante."
@@ -1542,7 +1542,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../resource_.py:402 ../autoform.py:640
+#: ../resource_.py:404 ../autoform.py:640
 msgid "Keywords"
 msgstr ""
 
@@ -1575,7 +1575,7 @@ msgstr "Linguaggi"
 msgid "Languages removed."
 msgstr "Linguaggi rimossi"
 
-#: ../config_groups.py:107 ../config_models.py:143 ../config_models.py:228
+#: ../config_groups.py:100 ../config_models.py:143 ../config_models.py:228
 #: ../config_models.py:319 ../popup.py:78 ../config_menu.py:60
 #: ../folder_views.py:318
 msgid "Last Author"
@@ -1586,19 +1586,19 @@ msgstr ""
 msgid "Last Change"
 msgstr "OK"
 
-#: ../config_groups.py:106 ../config_models.py:142 ../config_models.py:227
+#: ../config_groups.py:99 ../config_models.py:142 ../config_models.py:227
 #: ../config_models.py:318 ../popup.py:77 ../config_menu.py:59
 #: ../folder_views.py:317
 #, fuzzy
 msgid "Last Modified"
 msgstr "modificato:"
 
-#: ../config_groups.py:43 ../users_views.py:388 ../users.py:77
+#: ../users_views.py:389 ../users.py:77
 #, fuzzy
 msgid "Last Name"
 msgstr "Nome"
 
-#: ../root.py:537
+#: ../root.py:545
 msgid "License"
 msgstr "Licenza"
 
@@ -1634,7 +1634,7 @@ msgstr "Azione"
 msgid "Log out"
 msgstr "Esci"
 
-#: ../config_groups.py:41 ../users_views.py:386 ../resource_views.py:185
+#: ../users_views.py:387 ../resource_views.py:185
 msgid "Login"
 msgstr "Entra"
 
@@ -1642,7 +1642,7 @@ msgstr "Entra"
 msgid "Logo"
 msgstr ""
 
-#: ../root.py:317
+#: ../root.py:325
 msgid "Mac OS X"
 msgstr ""
 
@@ -1662,7 +1662,7 @@ msgctxt "link"
 msgid "Manage my calendars"
 msgstr ""
 
-#: ../config_groups.py:130
+#: ../config_groups.py:123
 #, fuzzy
 msgid "Manage user groups."
 msgstr "Descrizione"
@@ -1686,7 +1686,7 @@ msgstr "Descrizione"
 msgid "May"
 msgstr ""
 
-#: ../config_groups.py:105 ../config_groups.py:146
+#: ../config_groups.py:98 ../config_groups.py:139
 #, fuzzy
 msgid "Members"
 msgstr "Naviga tra gli utenti"
@@ -1770,7 +1770,7 @@ msgstr ""
 msgid "My events"
 msgstr ""
 
-#: ../config_groups.py:103 ../popup.py:76
+#: ../config_groups.py:96 ../popup.py:76
 msgid "Name"
 msgstr "Nome"
 
@@ -2054,7 +2054,7 @@ msgctxt "li"
 msgid "Paolo Dina (Italian)"
 msgstr ""
 
-#: ../users_views.py:58 ../users_views.py:456
+#: ../users_views.py:58 ../users_views.py:451
 #, fuzzy
 msgid "Password"
 msgstr "Parola d'accesso"
@@ -2127,7 +2127,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Scegli il tuo linguaggio:"
 
-#: ../folder_views.py:686
+#: ../folder_views.py:689
 #, fuzzy
 msgid "Preview Content"
 msgstr "Contenuti"
@@ -2233,7 +2233,7 @@ msgstr "Rinomina.."
 msgid "Rename resources"
 msgstr "Nuova risorsa"
 
-#: ../users_views.py:59 ../users_views.py:459
+#: ../users_views.py:59 ../users_views.py:454
 #, fuzzy
 msgid "Repeat password"
 msgstr "Ripeti la parola d'accesso"
@@ -2258,7 +2258,7 @@ msgstr "Anteprima"
 msgid "Required"
 msgstr ""
 
-#: ../users_views.py:408
+#: ../users_views.py:401
 #, fuzzy
 msgid "Resend Confirmation"
 msgstr "Anteprima"
@@ -2344,7 +2344,7 @@ msgctxt "heading"
 msgid "Results"
 msgstr "Cerca nelle sottocartelle"
 
-#: ../config_groups.py:145
+#: ../config_groups.py:138
 #, fuzzy
 msgid "Reviewers"
 msgstr "Anteprima"
@@ -2373,7 +2373,7 @@ msgstr "Salva"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../users_views.py:344 ../views.py:375 ../views.py:380
+#: ../users_views.py:344 ../views.py:374 ../views.py:379
 msgid "Search"
 msgstr "Cerca"
 
@@ -2491,8 +2491,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr "Stato"
 
-#: ../cc.py:204 ../config_groups.py:44 ../agenda/event.py:442
-#: ../users_views.py:389
+#: ../cc.py:204 ../users_views.py:390 ../agenda/event.py:442
 msgid "State"
 msgstr "Stato"
 
@@ -2520,7 +2519,7 @@ msgstr "Descrizione"
 msgid "Sunday"
 msgstr ""
 
-#: ../users_views.py:418
+#: ../users_views.py:413
 #, fuzzy
 msgid "Switch state"
 msgstr "Stato:"
@@ -2658,7 +2657,7 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr ""
 
-#: ../users_views.py:475
+#: ../users_views.py:470
 #, fuzzy
 msgid "The user is already here."
 msgstr "Tutti gli utenti sono stati aggiunti."
@@ -2756,7 +2755,7 @@ msgstr ""
 msgid "Tip"
 msgstr ""
 
-#: ../config_groups.py:104 ../resource_.py:399 ../agenda/calendars.py:86
+#: ../config_groups.py:97 ../resource_.py:401 ../agenda/calendars.py:86
 #: ../autoform.py:637 ../config_menu.py:57 ../config_models.py:140
 #: ../config_models.py:225 ../config_models.py:316 ../folder_views.py:315
 msgid "Title"
@@ -2899,7 +2898,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "Descrizione"
 
-#: ../config_groups.py:46
+#: ../config_groups.py:39
 #, fuzzy
 msgid "Update"
 msgstr "Aggiorna il catalogo"
@@ -2974,22 +2973,22 @@ msgctxt "table cell"
 msgid "User"
 msgstr "Utente"
 
-#: ../config_groups.py:83
+#: ../config_groups.py:76
 #, fuzzy
 msgid "User Group"
 msgstr "Gruppo"
 
-#: ../config_groups.py:129
+#: ../config_groups.py:122
 #, fuzzy
 msgid "User Groups"
 msgstr "Gruppi"
 
-#: ../config_groups.py:40 ../users_views.py:385
+#: ../users_views.py:386
 #, fuzzy
 msgid "User ID"
 msgstr "Utente"
 
-#: ../users_views.py:524
+#: ../users_views.py:519
 #, fuzzy
 msgid "User added."
 msgstr "Utente aggiunto"
@@ -3110,7 +3109,7 @@ msgstr "Tema"
 msgid "Widget to use"
 msgstr ""
 
-#: ../root.py:318
+#: ../root.py:326
 msgid "Windows"
 msgstr ""
 
@@ -3199,7 +3198,7 @@ msgid ""
 "You can upload a new ical file (.ics extension) to replace the current one."
 msgstr "Puoi caricare un file dal filesystem o creare un nuovo documento."
 
-#: ../users_views.py:425
+#: ../users_views.py:420
 #, fuzzy
 msgid "You cannot change your state yourself."
 msgstr "Non puoi rimuovere il linguaggio predefinito."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-21 16:11+CET\n"
+"POT-Creation-Date: 2011-11-24 12:11+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -83,7 +83,7 @@ msgstr ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Écraser les "
 "fichiers portant le même nom</g>"
 
-#: ../root.py:156
+#: ../root.py:164
 msgid ""
 "%s\n"
 "\n"
@@ -92,7 +92,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../root.py:153
+#: ../root.py:161
 msgid "%s => %s"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr "-- indéfini --"
 
-#: ../config_groups.py:84 ../config_models.py:238
+#: ../config_groups.py:77 ../config_models.py:238
 msgid "..."
 msgstr "..."
 
@@ -172,8 +172,8 @@ msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
 msgstr ""
-"<div id=\"registration-end-msg\">Un courriel vient de vous être envoyé "
-" avec les instructions pour valider votre inscription.</div>"
+"<div id=\"registration-end-msg\">Un courriel vient de vous être envoyé avec "
+"les instructions pour valider votre inscription.</div>"
 
 #: ../agenda/ui/event_render.xml.en:7
 msgctxt "link"
@@ -333,7 +333,7 @@ msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
 
-#: ../users_views.py:450
+#: ../users_views.py:445
 msgid "Add New Member"
 msgstr "Nouveau membre"
 
@@ -346,11 +346,11 @@ msgstr "Ajouter une ressource de type « ${class_title} »"
 msgid "Add Row"
 msgstr "Ajouter une ligne"
 
-#: ../users_views.py:491
+#: ../users_views.py:486
 msgid "Add and return"
 msgstr "Ajouter et revenir"
 
-#: ../users_views.py:489
+#: ../users_views.py:484
 msgid "Add and view"
 msgstr "Ajouter et voir"
 
@@ -375,7 +375,7 @@ msgstr "Ajouter du contenu"
 msgid "Add field"
 msgstr "Ajouter un champ"
 
-#: ../config_groups.py:141
+#: ../config_groups.py:134
 msgid "Add group"
 msgstr "Ajouter un groupe"
 
@@ -407,7 +407,7 @@ msgstr "Ajouter « {class_title} »"
 msgid "Adding resources to {path} is not allowed."
 msgstr "Ajouter des ressources à {path} n'est pas autorisé."
 
-#: ../config_groups.py:144
+#: ../config_groups.py:137
 msgid "Admins"
 msgstr "Administrateurs"
 
@@ -442,7 +442,9 @@ msgstr ""
 
 #: ../cc.py:271
 msgid "An invitation will be sent to every address typen below, one by line."
-msgstr "Une invitation sera envoyée à chaque adresse saisie ci-dessous, une par ligne."
+msgstr ""
+"Une invitation sera envoyée à chaque adresse saisie ci-dessous, une par "
+"ligne."
 
 #: ../config_captcha.py:165
 msgid "Answer"
@@ -505,7 +507,7 @@ msgstr "Rétroliens"
 
 #: ../cc.py:374
 msgid "Bad email"
-msgstr "Mauvaise email"
+msgstr "Mauvais email"
 
 #: ../config_theme.py:39
 msgid "Banner"
@@ -569,7 +571,7 @@ msgstr ""
 msgid "Browse and link to a File from the workspace"
 msgstr "Parcourir l'application et lier à un fichier de l'espace de travail"
 
-#: ../config_groups.py:96
+#: ../config_groups.py:89
 msgid "Browse groups"
 msgstr "Parcourir les groupes"
 
@@ -578,16 +580,16 @@ msgid ""
 "By accepting the invitation you will receive an email every time this "
 "resource is modified."
 msgstr ""
-"En acceptant cette invitation vous allez recevoir un email à chaque fois "
-"que cette ressource est modifiée."
+"En acceptant cette invitation vous allez recevoir un email à chaque fois que "
+"cette ressource est modifiée."
 
 #: ../cc.py:346
 msgid ""
 "By confirming your subscription to this resource you will receive an email "
 "every time this resource is modified."
 msgstr ""
-"En confirmant votre abonnement à cette ressource, vous allez recevoir un email "
-"à chaque fois que cette ressource est modifiée."
+"En confirmant votre abonnement à cette ressource, vous allez recevoir un "
+"email à chaque fois que cette ressource est modifiée."
 
 #: ../file.py:349
 msgid "Bzip2"
@@ -792,7 +794,8 @@ msgstr "Confirmer l'inscription"
 
 #: ../cc.py:416
 msgid "Confirm to stop receiving emails every time this resource is modified."
-msgstr "Confirmez pour arrêter de recevoir des emails à chaque fois que cette "
+msgstr ""
+"Confirmez pour arrêter de recevoir des emails à chaque fois que cette "
 "ressource est modifiée."
 
 #: ../cc.py:420
@@ -965,7 +968,7 @@ msgstr "Définir le footer du site."
 msgid "Depth"
 msgstr "Profondeur"
 
-#: ../resource_.py:400 ../autoform.py:639 ../blog/blog.py:40
+#: ../resource_.py:402 ../autoform.py:639 ../blog/blog.py:40
 msgid "Description"
 msgstr "Description"
 
@@ -1007,7 +1010,7 @@ msgstr "Noms de domaine"
 #: ../ui/base/login.xml.en:10
 msgctxt "div"
 msgid "Don't have an account?"
-msgstr "Pas encore de compte?"
+msgstr "Pas encore de compte ?"
 
 #: ../file_views.py:74 ../file.py:107
 msgid "Download"
@@ -1147,7 +1150,7 @@ msgstr ""
 
 #: ../config_captcha.py:258
 msgid "Feature to protect from spammers"
-msgstr "Fonctionnalité pour se protéger contre les spammers"
+msgstr "Fonctionnalité pour se protéger contre les spammeurs"
 
 #: ../enumerates.py:81 ../agenda/agenda_views.py:50
 msgid "February"
@@ -1180,7 +1183,7 @@ msgstr "Nom de fichier"
 msgid "Files extracted"
 msgstr "Fichiers extraits"
 
-#: ../config_groups.py:42 ../users_views.py:387 ../users.py:75
+#: ../users_views.py:388 ../users.py:75
 msgid "First Name"
 msgstr "Prénom"
 
@@ -1230,9 +1233,9 @@ msgstr "À partir de"
 
 #: ../config_mail.py:77
 msgid "From header"
-msgstr ""
+msgstr "De"
 
-#: ../folder_views.py:841
+#: ../folder_views.py:844
 msgid "Front Page"
 msgstr "Accueil"
 
@@ -1241,7 +1244,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr "Toute la journée"
 
-#: ../root.py:316
+#: ../root.py:324
 msgid "GNU/Linux"
 msgstr "GNU/Linux"
 
@@ -1277,7 +1280,7 @@ msgstr "Message précédent"
 msgid "Google site verification key"
 msgstr "clé de vérification de Google"
 
-#: ../users_views.py:452
+#: ../users_views.py:447
 msgid "Grant access to a new user."
 msgstr "Accorder l'accès à un nouvel utilisateur."
 
@@ -1324,13 +1327,13 @@ msgctxt "label"
 msgid "I forgot my password."
 msgstr "J'ai oublié mon mot de passe"
 
-#: ../users_views.py:457
+#: ../users_views.py:452
 msgid ""
 "If no password is given an email will be sent to the  user, asking him to "
 "choose his password."
 msgstr ""
-"Si aucun mot de passe n'est saisi, un mél sera envoyé à l'utilisateur pour "
-"l'inviter à en choisir un."
+"Si aucun mot de passe n'est saisi, un courriel sera envoyé à l'utilisateur "
+"pour l'inviter à en choisir un."
 
 #: ../ui/root/license.xml.en:23
 msgctxt "paragraph"
@@ -1365,7 +1368,7 @@ msgstr "Champs hérités"
 #: ../ui/website/config.xml.en:17
 msgctxt "button"
 msgid "Initialize new plugins"
-msgstr ""
+msgstr "Initialiser les nouveaux plugins"
 
 #: ../popup.py:447
 msgid "Insert image"
@@ -1393,7 +1396,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
-#: ../root.py:155
+#: ../root.py:163
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
@@ -1447,7 +1450,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr "Les principales fonctionnalités d'iKaaro sont :"
 
-#: ../resource_.py:402 ../autoform.py:640
+#: ../resource_.py:404 ../autoform.py:640
 msgid "Keywords"
 msgstr "Mots clefs"
 
@@ -1477,7 +1480,7 @@ msgstr "Langues"
 msgid "Languages removed."
 msgstr "Langues supprimées."
 
-#: ../config_groups.py:107 ../config_models.py:143 ../config_models.py:228
+#: ../config_groups.py:100 ../config_models.py:143 ../config_models.py:228
 #: ../config_models.py:319 ../popup.py:78 ../config_menu.py:60
 #: ../folder_views.py:318
 msgid "Last Author"
@@ -1487,17 +1490,17 @@ msgstr "Dernier auteur"
 msgid "Last Change"
 msgstr "Dernier changement"
 
-#: ../config_groups.py:106 ../config_models.py:142 ../config_models.py:227
+#: ../config_groups.py:99 ../config_models.py:142 ../config_models.py:227
 #: ../config_models.py:318 ../popup.py:77 ../config_menu.py:59
 #: ../folder_views.py:317
 msgid "Last Modified"
 msgstr "Dernière modification"
 
-#: ../config_groups.py:43 ../users_views.py:388 ../users.py:77
+#: ../users_views.py:389 ../users.py:77
 msgid "Last Name"
 msgstr "Nom"
 
-#: ../root.py:537
+#: ../root.py:545
 msgid "License"
 msgstr "Licence"
 
@@ -1528,7 +1531,7 @@ msgstr "Emplacement :"
 msgid "Log out"
 msgstr "Déconnexion"
 
-#: ../config_groups.py:41 ../users_views.py:386 ../resource_views.py:185
+#: ../users_views.py:387 ../resource_views.py:185
 msgid "Login"
 msgstr "Connexion"
 
@@ -1536,7 +1539,7 @@ msgstr "Connexion"
 msgid "Logo"
 msgstr ""
 
-#: ../root.py:317
+#: ../root.py:325
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
@@ -1554,7 +1557,7 @@ msgctxt "link"
 msgid "Manage my calendars"
 msgstr "Gérer mes calendriers"
 
-#: ../config_groups.py:130
+#: ../config_groups.py:123
 msgid "Manage user groups."
 msgstr "Gérer les groupes d'utilisateurs."
 
@@ -1574,7 +1577,7 @@ msgstr "Inscriptions en masse"
 msgid "May"
 msgstr "Mai"
 
-#: ../config_groups.py:105 ../config_groups.py:146
+#: ../config_groups.py:98 ../config_groups.py:139
 msgid "Members"
 msgstr "Membres"
 
@@ -1655,7 +1658,7 @@ msgstr ""
 msgid "My events"
 msgstr "Mes événements"
 
-#: ../config_groups.py:103 ../popup.py:76
+#: ../config_groups.py:96 ../popup.py:76
 msgid "Name"
 msgstr "Nom"
 
@@ -1683,8 +1686,8 @@ msgid ""
 "New plugins have been detected, pleae click the button below to initialize "
 "them:"
 msgstr ""
-"De nouveaux plugins ont étés détectés, veuillez cliquer sur le bouton ci-dessous "
-"pour les initialiser :"
+"De nouveaux plugins ont étés détectés, veuillez cliquer sur le bouton ci-"
+"dessous pour les initialiser :"
 
 #: ../config.py:98
 msgid "New plugins initialized."
@@ -1913,7 +1916,7 @@ msgctxt "li"
 msgid "Paolo Dina (Italian)"
 msgstr "Paolo Dina (italien)"
 
-#: ../users_views.py:58 ../users_views.py:456
+#: ../users_views.py:58 ../users_views.py:451
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -1977,7 +1980,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Langue"
 
-#: ../folder_views.py:686
+#: ../folder_views.py:689
 msgid "Preview Content"
 msgstr "Aperçu"
 
@@ -2070,7 +2073,7 @@ msgstr "Renommer"
 msgid "Rename resources"
 msgstr "Renommer les objects"
 
-#: ../users_views.py:59 ../users_views.py:459
+#: ../users_views.py:59 ../users_views.py:454
 msgid "Repeat password"
 msgstr "Confirmer le mot de passe"
 
@@ -2091,7 +2094,7 @@ msgstr "Répondre à"
 msgid "Required"
 msgstr "Obligatoire"
 
-#: ../users_views.py:408
+#: ../users_views.py:401
 msgid "Resend Confirmation"
 msgstr "Réenvoyer la demande de confirmation"
 
@@ -2145,7 +2148,7 @@ msgstr "Ressources supprimées : {resources}."
 
 #: ../messages.py:94
 msgid "Resources renamed."
-msgstr "Ressources renommés."
+msgstr "Ressources renommées."
 
 #: ../messages.py:102
 msgid "Resources retired."
@@ -2160,7 +2163,7 @@ msgctxt "heading"
 msgid "Results"
 msgstr "Résultats"
 
-#: ../config_groups.py:145
+#: ../config_groups.py:138
 msgid "Reviewers"
 msgstr "Modérateurs"
 
@@ -2185,7 +2188,7 @@ msgstr "Sauvegarder"
 msgid "Schedule your time with calendar files."
 msgstr "Organisez votre temps à l'aide d'agendas."
 
-#: ../users_views.py:344 ../views.py:375 ../views.py:380
+#: ../users_views.py:344 ../views.py:374 ../views.py:379
 msgid "Search"
 msgstr "Rechercher"
 
@@ -2292,8 +2295,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr "Statistiques"
 
-#: ../cc.py:204 ../config_groups.py:44 ../agenda/event.py:442
-#: ../users_views.py:389
+#: ../cc.py:204 ../users_views.py:390 ../agenda/event.py:442
 msgid "State"
 msgstr "État"
 
@@ -2317,7 +2319,7 @@ msgstr "Inscriptions"
 msgid "Sunday"
 msgstr "Dimanche"
 
-#: ../users_views.py:418
+#: ../users_views.py:413
 msgid "Switch state"
 msgstr "Changer l'état"
 
@@ -2440,7 +2442,7 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr "L'URL demandée « ${uri} » est introuvable sur ce serveur."
 
-#: ../users_views.py:475
+#: ../users_views.py:470
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
@@ -2530,7 +2532,7 @@ msgstr "Fuseau horaire"
 msgid "Tip"
 msgstr "Astuce"
 
-#: ../config_groups.py:104 ../resource_.py:399 ../agenda/calendars.py:86
+#: ../config_groups.py:97 ../resource_.py:401 ../agenda/calendars.py:86
 #: ../autoform.py:637 ../config_menu.py:57 ../config_models.py:140
 #: ../config_models.py:225 ../config_models.py:316 ../folder_views.py:315
 msgid "Title"
@@ -2680,7 +2682,7 @@ msgstr "Décompressez le tarball <g id='3'>restedit-last.tar.gz</g>"
 msgid "Unsubscribe"
 msgstr "Désinscrire"
 
-#: ../config_groups.py:46
+#: ../config_groups.py:39
 msgid "Update"
 msgstr "Mettre à jour"
 
@@ -2749,19 +2751,19 @@ msgctxt "table cell"
 msgid "User"
 msgstr "Utilisateur"
 
-#: ../config_groups.py:83
+#: ../config_groups.py:76
 msgid "User Group"
 msgstr "Groupe d'utilisateurs"
 
-#: ../config_groups.py:129
+#: ../config_groups.py:122
 msgid "User Groups"
 msgstr "Groupes de l'utilisateur"
 
-#: ../config_groups.py:40 ../users_views.py:385
+#: ../users_views.py:386
 msgid "User ID"
 msgstr "ID utilisateur"
 
-#: ../users_views.py:524
+#: ../users_views.py:519
 msgid "User added."
 msgstr "Utilisateur ajouté."
 
@@ -2805,7 +2807,7 @@ msgstr "Les utilisateurs peuvent s'inscrire par eux-mêmes"
 
 #: ../config.py:41
 msgid "Users, Access Control & Security"
-msgstr "Utilisateurs, Contrôle d'accès et sécurité"
+msgstr "Utilisateurs, contrôle d'accès et sécurité"
 
 #: ../ui/root/about.xml.en:16
 msgctxt "table cell"
@@ -2845,7 +2847,7 @@ msgstr "Page web"
 
 #: ../config.py:42
 msgid "Webmaster tools"
-msgstr ""
+msgstr "Outils webmaster"
 
 #: ../enumerates.py:27 ../enumerates.py:39
 msgid "Wednesday"
@@ -2875,7 +2877,7 @@ msgstr "Où"
 msgid "Widget to use"
 msgstr "Widget à utiliser"
 
-#: ../root.py:318
+#: ../root.py:326
 msgid "Windows"
 msgstr "Windows"
 
@@ -2951,7 +2953,7 @@ msgstr "Vous ne pouvez pas supprimer la langue par défaut."
 msgctxt "paragraph"
 msgid "You can specify timetables to limit the range when an event can be set."
 msgstr ""
-"Vous pouvez spécifier les plages horaire où un événement peut être saisi."
+"Vous pouvez spécifier les plages horaires où un événement peut être saisi."
 
 #: ../agenda/ui/upload.xml.en:9
 msgctxt "paragraph"
@@ -2961,7 +2963,7 @@ msgstr ""
 "Vous pouvez importer un nouveau fichier ical (extension .ics) de votre "
 "ordinateur pour remplacer l'actuel."
 
-#: ../users_views.py:425
+#: ../users_views.py:420
 msgid "You cannot change your state yourself."
 msgstr "Vous ne pouvez pas changer votre état vous-même."
 
@@ -3009,7 +3011,7 @@ msgstr "Vous devez compléter vos informations de profil"
 
 #: ../config.py:231
 msgid "You must select one and only one language."
-msgstr "Vous ne devez sélectionner qu'une langue."
+msgstr "Vous ne devez sélectionner qu'une seule langue."
 
 #: ../ui/root/license.xml.en:22
 msgctxt "paragraph"
@@ -3037,8 +3039,8 @@ msgid ""
 "Your account has been canceled, contact the administrator  if you want to "
 "get access again."
 msgstr ""
-"Votre compte a été désactivé, contactez l'administrateur si vous voulez "
-"le réactiver."
+"Votre compte a été désactivé, contactez l'administrateur si vous voulez le "
+"réactiver."
 
 #: ../emails.py:144 ../emails.py:145
 msgid "Your account has been re-activated"
@@ -3122,7 +3124,7 @@ msgstr "moyenne"
 
 #: ../agenda/event.py:135
 msgid "month(s)"
-msgstr ""
+msgstr "mois"
 
 #: ../file_views.py:182
 msgid "original"
