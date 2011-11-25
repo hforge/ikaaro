@@ -462,12 +462,26 @@ database in the production server::
   ikaaro@back ~/0.62/example.com $ rm -rf database
   ikaaro@back ~/0.62/example.com $ git clone ssh://prod/~ikaaro/0.62/example.com/database/.git database
 
-Finally we will setup a cron job in the failover server to make a pull every
-hour::
+The script that will make the synchronization may look like this::
+
+  #!/bin/bash
+
+  PATHS=(
+      "/var/ikaaro/0.62/example.com/database"
+      "/var/ikaaro/0.62/another-example.com/database"
+      )
+
+  n=${#PATHS[@]}
+  for (( i=0; i<${n}; i++ ));
+  do
+      cd ${PATHS[$i]} && git pull -q --rebase origin master
+  done
+
+And it will be called by a cron job in the failover server, for instance once
+every ten minutes::
 
   /etc/cron.d/mirror-ikaaro
-  00 6-22 * * * ikaaro cd /var/ikaaro/0.62/example.com/database && git pull -q --rebase origin master
-
+  00/10 * * * * ikaaro /usr/local/bin/ikaaro_mirror.sh
 
 
 
