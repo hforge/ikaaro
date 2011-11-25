@@ -200,8 +200,6 @@ class RadioWidget(Widget):
     </stl:block>""")
 
     oneline = False
-    has_empty_option = True # Only makes sense for enumerates
-                            # FIXME Do this other way
 
 
     def options(self):
@@ -219,18 +217,10 @@ class RadioWidget(Widget):
             else:
                 options = value
 
-            # Empty option
-            if self.has_empty_option:
-                options.insert(0,
-                    {'name': '', 'value': '',  'selected': False})
-
-            # Select first item if none selected
-            for option in options:
-                if option['selected'] is True:
-                    return options
-
-            if options:
+            # Select item if there is only one
+            if len(options) == 1:
                 options[0]['selected'] = True
+
             return options
 
         # Case 2: Boolean
