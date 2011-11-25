@@ -439,7 +439,8 @@ class Folder_BrowseContent(BrowseForm):
             return [ database.get_resource(x.abspath) for x in items ]
 
         # Case 2: Faster Xapian sort algorithm
-        return results.get_resources(sort_by, reverse, start, size)
+        items = results.get_resources(sort_by, reverse, start, size)
+        return list(items)
 
 
     def get_item_value(self, resource, context, item, column):

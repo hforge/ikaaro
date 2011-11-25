@@ -378,7 +378,8 @@ class BrowseUsers(BrowseForm):
             return [ database.get_resource(x.abspath) for x in items ]
 
         # Fast
-        return results.get_resources(sort_by, reverse, start, size)
+        items = results.get_resources(sort_by, reverse, start, size)
+        return list(items)
 
 
     table_columns = [

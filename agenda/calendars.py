@@ -132,10 +132,9 @@ class Calendars_View(BrowseForm):
         size = context.query['batch_size']
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
-        items = results.get_documents(sort_by=sort_by, reverse=reverse,
+        items = results.get_resources(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
-        database = resource.database
-        return [ database.get_resource(x.abspath) for x in items ]
+        return list(items)
 
 
     action_add_schema = {}
