@@ -34,6 +34,9 @@ class NewResource_Local(Folder_NewResource):
         return self.resource.get_document_types()
 
 
+    include_subclasses = True
+
+
     def get_items(self, resource, context):
         root = context.root
         user = context.user
@@ -43,8 +46,11 @@ class NewResource_Local(Folder_NewResource):
         list(models.get_dynamic_classes())
 
         # 2. The document types
-        document_types = tuple(self.document_types)
+        document_types = self.document_types
+        if self.include_subclasses is False:
+            return document_types
 
+        document_types = tuple(document_types)
         items = []
         for cls in context.database.get_resource_classes():
             class_id = cls.class_id
