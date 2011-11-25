@@ -20,7 +20,7 @@
         jQuery( "input.dateField" ).dynDateTime({
           ifFormat: "%Y-%m-%d",
           onSelect: function(calendar, date){selectDate(calendar, date);},
-          firstDay: ${firstday},
+          firstDay: ${first_weekday},
           button: ".next()" });
       </script>
     </form>

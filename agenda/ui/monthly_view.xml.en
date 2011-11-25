@@ -4,33 +4,29 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <table>
-    <colgroup span="1" width="85px" />
-    <colgroup span="7" width="13%" />
+<table>
+  <colgroup span="7" width="17%" />
 
-    <tr>
-      <th />
-      <th stl:repeat="day days_of_week">
-        <span>${day/name}</span>
-      </th>
-    </tr>
+  <tr>
+    <th stl:repeat="day days_of_week">
+      <span>${day/name}</span>
+    </th>
+  </tr>
 
-    <tr stl:repeat="week weeks" valign="top">
-      <td class="month">${week/month}</td>
-      <td stl:repeat="day week/days" class="day add-event-area">
-        <span stl:if="not day/selected" class="bold">${day/nday}</span>
-        <span stl:if="day/selected" class="cal-day-selected">${day/nday}</span>
+  <tr stl:repeat="week weeks" valign="top">
+    <td stl:repeat="day week" class="day add-event-area">
+      <span stl:if="not day/selected" class="bold">${day/nday}</span>
+      <span stl:if="day/selected" class="cal-day-selected">${day/nday}</span>
 
-        <a stl:if="day/url" class="add-event" href="${day/url}" rel="fancybox">
-          <img width="16" height="16" src="${add_icon}" /></a>
+      <a stl:if="day/url" class="add-event" href="${day/url}" rel="fancybox">
+        <img width="16" height="16" src="${add_icon}" /></a>
 
-        <div class="event ${event/status}" style="background-color: ${event/color}"
-          stl:repeat="event day/events">
-        ${event/stream}
-        </div>
-
-      </td>
-    </tr>
-  </table>
+      <div class="event ${event/status}" style="background-color: ${event/color}"
+        stl:repeat="event day/events">
+      ${event/stream}
+      </div>
+    </td>
+  </tr>
+</table>
 
 </stl:block>

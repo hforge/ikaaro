@@ -23,7 +23,7 @@ from cStringIO import StringIO
 from datetime import date, datetime, timedelta
 
 # Import from itools
-from itools.core import proto_lazy_property
+from itools.core import proto_lazy_property, proto_property
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import Time
@@ -212,9 +212,9 @@ class CalendarSelectorTemplate(CMSTemplate):
         return Date.encode(self.c_date)
 
 
-    @proto_lazy_property
-    def firstday(self):
-        return self.context.view.get_first_day()
+    @proto_property
+    def first_weekday(self):
+        return self.context.view.first_weekday
 
     titlew1 = MSG(u'{m_start} {w_start}, {y_start} - {m_end} {w_end}, {y_end}')
     titlew2 = MSG(u'{m_start} {w_start} - {m_end} {w_end}, {y_start}')
@@ -313,15 +313,21 @@ class CalendarView(STLView):
         return self.scripts + get_dynDateTime_scripts()
 
 
-    def get_first_day(self):
-        """Returns 0 if Sunday is the first day of the week, else 1.
-        For now it has to be overridden to return anything else than 1.
-        """
-        return 1
+    # 0 = Sunday, 1 = Monday
+    first_weekday = 1
 
 
     def get_current_date(self, context):
         return context.query['start'] or date.today()
+
+
+    def get_start_date(self, c_date):
+        # Calculate start of current week: 0 = Monday, ..., 6 = Sunday
+        weekday = c_date.weekday()
+        start = c_date - timedelta(weekday)
+        if self.first_weekday == 0:
+            start = start - timedelta(1)
+        return start
 
 
     def get_with_new_url(self, resource, context):
@@ -337,10 +343,7 @@ class CalendarView(STLView):
         We adjust week numbers to fit rules which are used by French people.
         XXX Check for other countries.
         """
-        if self.get_first_day() == 1:
-            format = '%W'
-        else:
-            format = '%U'
+        format = '%W' if self.first_weekday == 1 else '%U'
         week_number = int(c_date.strftime(format))
         # Get day of 1st January, if < friday and != monday then number++
         day, kk = monthrange(c_date.year, 1)
@@ -349,7 +352,7 @@ class CalendarView(STLView):
         return week_number
 
 
-    # Get days of week based on get_first_day's result for start
+    # Get days of week based on first_weekday for start
     def days_of_week_ns(self, start, num=None, ndays=7, selected=None):
         """
           start : start date of the week
@@ -420,7 +423,7 @@ class CalendarView(STLView):
 
 
 
-class MonthlyView(CalendarView):
+class MultiweekView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
@@ -431,18 +434,17 @@ class MonthlyView(CalendarView):
     css_id = 'cal-monthly-view'
 
     def get_start_date(self, c_date):
-        # Calculate start of previous week
-        # 0 = Monday, ..., 6 = Sunday
-        weekday = c_date.weekday()
-        start = c_date - timedelta(7 + weekday)
-        if self.get_first_day() == 0:
-            start = start - timedelta(1)
-        return start
+        c_date = super(MultiweekView, self).get_start_date(c_date)
+        return c_date - timedelta(7)
+
+
+    def get_nweeks(self, c_date, start):
+        return 5
 
 
     def get_calendar_namespace(self, resource, context):
         # Base namespace
-        proxy = super(MonthlyView, self)
+        proxy = super(MultiweekView, self)
         namespace = proxy.get_calendar_namespace(resource, context)
         # Get today date
         today_date = date.today()
@@ -452,36 +454,60 @@ class MonthlyView(CalendarView):
         with_new_url = self.get_with_new_url(resource, context)
         # Start date
         start = self.get_start_date(c_date)
+        nweeks = self.get_nweeks(c_date, start)
         # Get header line with days of the week
-        namespace['days_of_week'] = self.days_of_week_ns(start, ndays=self.ndays)
+        namespace['days_of_week'] = self.days_of_week_ns(start,
+                                                         ndays=self.ndays)
         # Get the 5 weeks
         namespace['weeks'] = []
         link = ';new_event?dtstart={date}&dtend={date}'
         day = start
-        for w in range(5):
-            ns_week = {'days': [], 'month': u''}
+        for kk in range(nweeks):
+            ns_week = []
             # 7 days a week
             for d in range(7):
                 # Day in timetable
                 if d < self.ndays:
-                    ns_day = {'url': None,
-                              'nday': day.day,
-                              'selected': (day == today_date)}
+                    ns_day = {
+                        'url': None,
+                        'nday': day.day,
+                        'selected': (day == today_date),
+                        'events': []}
+                    if day.day == 1:
+                        month_name = months[day.month].gettext()
+                        ns_day['nday'] = u'%d %s' % (day.day, month_name)
                     if with_new_url:
                         ns_day['url'] = link.format(date=Date.encode(day))
                     # Get a list of events to display on view
-                    ns_day['events'] = []
                     for event in self.get_events(day):
                         ns_day['events'].append(
                           {'stream': event.render(event=event, day=day),
                            'color': event.get_color(),
                            'status': event.get_value('status') or 'cal_busy'})
-                    ns_week['days'].append(ns_day)
-                    if day.day == 1:
-                        ns_week['month'] = months[day.month].gettext()
+                    ns_week.append(ns_day)
                 day = day + timedelta(1)
             namespace['weeks'].append(ns_week)
         return namespace
+
+
+
+class MonthlyView(MultiweekView):
+
+    def get_start_date(self, c_date):
+        c_date = c_date.replace(day=1)
+        return super(MultiweekView, self).get_start_date(c_date)
+
+
+    def get_nweeks(self, c_date, start):
+        one_week = timedelta(7)
+
+        day = start + one_week
+        n = 1
+        while day.month == c_date.month:
+            n += 1
+            day += one_week
+
+        return n
 
 
 
@@ -539,15 +565,6 @@ class WeeklyView(CalendarView):
             current_date += step
 
         return ns_days
-
-
-    def get_start_date(self, c_date):
-        # Calculate start of current week: 0 = Monday, ..., 6 = Sunday
-        weekday = c_date.weekday()
-        start = c_date - timedelta(weekday)
-        if self.get_first_day() == 0:
-            start = start - timedelta(1)
-        return start
 
 
     def get_calendar_namespace(self, resource, context):
