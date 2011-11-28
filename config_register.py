@@ -164,7 +164,7 @@ class RegisterForm(AutoForm):
                     self.set_value(user, context, name, form)
 
             user.update_pending_key()
-            email_id = 'register-ask-for-confirmation'
+            email_id = 'user-ask-for-confirmation'
         else:
             # User already registered
             user = results.get_resources().next()

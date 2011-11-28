@@ -140,7 +140,7 @@ class User_ResendConfirmation(BaseView):
         # Resend confirmation
         resource.update_pending_key()
         email = resource.get_value('email')
-        send_email('add-user-send-invitation', context, email, user=resource)
+        send_email('user-ask-for-confirmation', context, email, user=resource)
         # Ok
         msg = MSG(u'Confirmation sent!')
         return context.come_back(msg)
@@ -504,7 +504,7 @@ class Users_AddUser(AutoAdd):
                 email_id = 'add-user-send-notification'
             else:
                 child.update_pending_key()
-                email_id = 'add-user-send-invitation'
+                email_id = 'user-ask-for-confirmation'
 
             send_email(email_id, context, form['email'], user=child)
 

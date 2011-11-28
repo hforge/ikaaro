@@ -73,12 +73,18 @@ def send_email(email_id, context, to_addr, **kw):
 ###########################################################################
 # Specific classes
 ###########################################################################
-class AddUser_SendInvitation(Email):
+class User_AskForConfirmation(Email):
+    """This email asks the user to confirm his subscription to the web site.
+    It is send in two conditions:
 
-    class_id = 'add-user-send-invitation'
-    subject = MSG(u'Invitation to register')
+    - When he registers through the registration form
+    - When the administrator registers him through the back-office
+    """
+
+    class_id = 'user-ask-for-confirmation'
+    subject = MSG(u'Registration confirmation')
     text = MSG(
-        u'You have been invited to register, to confirm follow this link:\n'
+        u'To confirm your identity, follow this link:\n'
         u'\n'
         u' {user}/;confirm_registration?username={userid}&key={userkey}')
 
@@ -103,17 +109,6 @@ class Register_AlreadyRegistered(Email):
         u'You already have an account:\n'
         u'\n'
         u' {host}/;login?loginname={userid}')
-
-
-
-class Register_AskForConfirmation(Email):
-
-    class_id = 'register-ask-for-confirmation'
-    subject = MSG(u"Confirmation required")
-    text = MSG(
-        u'To confirm your identity, follow this link:\n'
-        u'\n'
-        u' {user}/;confirm_registration?username={userid}&key={userkey}')
 
 
 
@@ -153,10 +148,9 @@ class SwitchState_Deactivate(Email):
 
 
 # Registry
-register_email(AddUser_SendInvitation)
+register_email(User_AskForConfirmation)
 register_email(AddUser_SendNotification)
 register_email(Register_AlreadyRegistered)
-register_email(Register_AskForConfirmation)
 #register_email(Register_SendConfirmation)
 register_email(ForgottenPassword_AskForConfirmation)
 register_email(SwitchState_Activate)
