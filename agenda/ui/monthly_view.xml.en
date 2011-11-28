@@ -4,8 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<table>
-  <colgroup span="7" width="17%" />
+<table width="100%">
+  <colgroup span="7" width="14%" />
 
   <tr>
     <th stl:repeat="day days_of_week">
