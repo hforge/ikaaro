@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from copy import deepcopy
+from types import FunctionType
 
 # Import from itools
 from itools.core import freeze
@@ -81,12 +82,17 @@ class Field(BaseField):
     # XXX For backwards compatibility
     datatype_keys = [
         'default', 'multiple', 'multilingual', 'indexed', 'stored',
-        'hidden_by_default']
+        'hidden_by_default', 'is_valid']
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
-            value = getattr(self, key)
+            try:
+                value = getattr(self, key)
+            except AttributeError:
+                continue
             if value is not None:
+                if type(value) is FunctionType:
+                    value = staticmethod(value)
                 kw[key] = value
 
         return self.datatype(mandatory=self.required, **kw)
