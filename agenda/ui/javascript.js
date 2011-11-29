@@ -56,9 +56,11 @@ function update_rrule_parameters(){
   if (value == "") {
       /* Hide parameters fields */
       $(".block-widget-rrule_interval").hide();
+      $(".block-widget-rrule_until").hide();
   }
   else {
       $(".block-widget-rrule_interval").show();
+      $(".block-widget-rrule_until").show();
       /** Update label on span aside select field **/
       /* Hide any label */
       $(".rrule_interval-daily").hide();

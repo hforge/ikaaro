@@ -29,51 +29,21 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import SelectWidget, RadioWidget
+from ikaaro.autoform import RadioWidget
 from ikaaro.config_models import Model
 from ikaaro.content import Content
-from ikaaro.enumerates import DaysOfWeek, IntegerRange
-from ikaaro.fields import Char_Field, Datetime_Field, Select_Field
-from ikaaro.fields import Owner_Field, SelectDays_Field
-from ikaaro.fields import Boolean_Field
+from ikaaro.enumerates import DaysOfWeek
+from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
+from ikaaro.fields import Datetime_Field, Owner_Field, SelectDays_Field
 from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
 
 # Import from calendar
 from calendars import Calendars_Enumerate
+from recurrence import RRule_Field, RRuleInterval_Field, RRuleUntil_Field
+from recurrence import get_dates
 from reminders import Reminder_Field
-
-
-# Recurrence
-MAX_DELTA = timedelta(3650) # we cannot index an infinite number of values
-
-def next_day(x, delta=timedelta(1)):
-    return x + delta
-
-def next_week(x, delta=timedelta(7)):
-    return x + delta
-
-def next_month(x):
-    year = x.year
-    month = x.month + 1
-    if month == 13:
-        month = 1
-        year = year + 1
-    # FIXME handle invalid dates (like 31 April)
-    return date(year, month, x.day)
-
-def next_year(x):
-    # FIXME handle 29 February
-    return date(x.year + 1, x.month, x.day)
-
-
-rrules = {
-    'daily': next_day,
-    'weekly': next_week,
-    'monthly': next_month,
-    'yearly': next_year}
-
 
 
 class Status(Enumerate):
@@ -83,80 +53,6 @@ class Status(Enumerate):
     options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
                {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
                {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]
-
-
-
-class RRuleIntervalDataType(IntegerRange):
-    count = 31
-
-
-class RRuleDataType(Enumerate):
-
-    options = [
-        {'name': 'daily', 'value': MSG(u'Daily')},
-        {'name': 'weekly', 'value': MSG(u'Weekly')},
-        {'name': 'monthly', 'value': MSG(u'Monthly')},
-        {'name': 'yearly', 'value': MSG(u'Yearly')}]
-
-
-class RRuleWidget(SelectWidget):
-
-    template = make_stl_template("""
-    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
-      class="${css}" onchange="update_rrule_parameters();">
-      <option value="" stl:if="has_empty_option"></option>
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
-    </select>
-    <script>
-     <![CDATA[
-       $(document).ready(function(){
-         update_rrule_parameters();
-       });
-     ]]>
-    </script>""")
-
-
-class RRuleIntervalWidget(SelectWidget):
-
-    template = make_stl_template("""
-    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
-      class="${css}" onchange="update_rrule_parameters();">
-      <option value="" stl:if="has_empty_option"></option>
-        <option stl:repeat="option options" value="${option/name}"
-          selected="${option/selected}">${option/value}</option>
-    </select>
-    <span class="${name}-daily">%s</span>
-    <span class="${name}-weekly">%s</span>
-    <span class="${name}-monthly">%s</span>
-    <span class="${name}-yearly">%s</span>
-    """ % (MSG(u"day(s)").gettext().encode('utf-8'),
-           MSG(u"week(s)").gettext().encode('utf-8'),
-           MSG(u"month(s)").gettext().encode('utf-8'),
-           MSG(u"year(s)").gettext().encode('utf-8')))
-
-
-class RRule_Field(Select_Field):
-    """Recurrence Rule
-        - byday allowed on value 'weekly' only
-        - default byday is MO,TU,WE,TH,FR,SA,SU
-        - interval not allowed on value 'daily'
-        - default interval is 1
-
-        Examples:
-            rrule;byday=MO,WE,FR;interval=1:weekly
-            rrule;interval=2:monthly
-    """
-    datatype = RRuleDataType
-    parameters_schema = {'interval': RRuleIntervalDataType,
-                         'byday': DaysOfWeek(multiple=True)}
-    widget = RRuleWidget
-
-
-class RRuleInterval_Field(Select_Field):
-    datatype = RRuleIntervalDataType
-    has_empty_option = False
-    widget = RRuleIntervalWidget
 
 
 
@@ -218,12 +114,16 @@ class Event_Edit(AutoEdit):
     can_be_open_in_fancybox = True
 
     # Fields
-    fields = AutoEdit.fields + ['calendar', 'dtstart', 'dtend',
-        'allday', 'place', 'status', 'rrule', 'rrule_interval', 'rrule_byday',
+    fields = AutoEdit.fields + [
+        'calendar',
+        'dtstart', 'dtend', 'allday',
+        'place', 'status',
+        'rrule', 'rrule_interval', 'rrule_byday', 'rrule_until',
         'reminder']
     allday = AllDay_Field
-    rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
+    rrule_interval = RRuleInterval_Field
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
+    rrule_until = RRuleUntil_Field
 
 
     def get_scripts(self, context):
@@ -270,20 +170,18 @@ class Event_Edit(AutoEdit):
 
 
     def set_value(self, resource, context, name, form):
-        if name in ('rrule_interval', 'rrule_byday', 'allday'):
+        if name in ('rrule_interval', 'rrule_byday', 'rrule_until', 'allday'):
             return False
         elif name == 'rrule':
             value = form.get(name, None)
             if value:
-                interval = form.get('rrule_interval', None)
+                kw = {
+                    'interval': form.get('rrule_interval', None),
+                    'until': form.get('rrule_until', None)}
                 byday = form.get('rrule_byday', None)
-                kw = {}
-                kw['interval'] = interval
                 if value == 'weekly' and byday:
-                    bydays = []
-                    for v in byday:
-                        bydays.append(DaysOfWeek.get_shortname(v))
-                    kw['byday'] = bydays
+                    kw['byday'] = [ DaysOfWeek.get_shortname(v)
+                                    for v in byday ]
                 resource.set_value(name, value, **kw)
                 return False
         proxy = super(Event_Edit, self)
@@ -306,11 +204,12 @@ class Event_NewInstance(AutoAdd):
     fields = ['title', 'description', 'cc_list', 'calendar',
               'dtstart', 'dtend', 'allday',
               'place', 'status',
-              'rrule', 'rrule_interval', 'rrule_byday',
+              'rrule', 'rrule_interval', 'rrule_byday', 'rrule_until',
               'reminder']
     allday = AllDay_Field
-    rrule_interval = RRuleInterval_Field(title=MSG(u'Every'))
+    rrule_interval = RRuleInterval_Field
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
+    rrule_until = RRuleUntil_Field
 
 
     def get_scripts(self, context):
@@ -345,20 +244,18 @@ class Event_NewInstance(AutoAdd):
 
 
     def set_value(self, resource, context, name, form):
-        if name in ('rrule_interval', 'rrule_byday', 'allday'):
+        if name in ('rrule_interval', 'rrule_byday', 'rrule_until', 'allday'):
             return False
         if name == 'rrule':
             value = form.get(name, None)
             if value:
-                interval = form.get('rrule_interval', None)
+                kw = {
+                    'interval': form.get('rrule_interval', None),
+                    'until': form.get('rrule_until', None)}
                 byday = form.get('rrule_byday', None)
-                kw = {}
-                kw['interval'] = interval
                 if value == 'weekly' and byday:
-                    bydays = []
-                    for v in byday:
-                        bydays.append(DaysOfWeek.get_shortname(v))
-                    kw['byday'] = bydays
+                    kw['byday'] = [ DaysOfWeek.get_shortname(v)
+                                    for v in byday ]
                 resource.set_value(name, value, **kw)
                 return False
 
@@ -459,59 +356,18 @@ class Event(Content):
         start = self.get_value('dtstart')
         if type(start) is datetime:
             start = start.date()
+
         end = self.get_value('dtend')
         if type(end) is datetime:
             end = end.date()
-        days = range((end - start).days + 1)
-
-        dates = set()
-        f = lambda date: dates.update([ date + timedelta(x) for x in days ])
 
         rrule = self.metadata.get_property('rrule')
-        if rrule is not None and rrule.value:
-            rrule_name = rrule.value
-            rrule_interval = int(rrule.get_parameter('interval') or 1)
-            rrule_byday = rrule.get_parameter('byday') or []
-            rrule = rrules.get(rrule_name)
-            if rrule:
-                # Check if "byday" param set
-                bydays = None
-                if rrule_name == 'weekly':
-                    bydays = []
-                    for v in (rrule_byday):
-                        bydays.append(int(DaysOfWeek.get_name_by_shortname(v)))
-                top = max(start, date.today()) + MAX_DELTA
-                while start < top:
-                    interval = rrule_interval
-                    if bydays:
-                        # Check any day of byday parameter
-                        c_day = start
-                        for byday in bydays:
-                            # Skip previous byday values
-                            if byday < c_day.isoweekday():
-                                continue
-                            # Go ahead to current byday value
-                            while c_day.isoweekday() < byday:
-                                c_day = next_day(c_day)
-                            if c_day >= top:
-                                break
-                            # Add current day (== byday value)
-                            f(c_day)
-                    else:
-                        f(start)
-                    # Go to next date based on rrule value and interval
-                    while interval > 0:
-                        start = rrule(start)
-                        interval -= 1
 
-        else:
-            f(start)
-
-        return sorted(dates)
+        return get_dates(start, end, rrule)
 
 
     def get_value(self, name, language=None):
-        if name in ('rrule_interval', 'rrule_byday'):
+        if name in ('rrule_interval', 'rrule_byday', 'rrule_until'):
             f_name, kk, param = name.partition('_')
             property = self.metadata.get_property(f_name, language=language)
             if property:

@@ -62,10 +62,8 @@ class IntegerRange(Enumerate):
 
     @classmethod
     def get_options(cls):
-        options = []
-        for i in range(1, cls.count):
-            options.append({'name': str(i), 'value': str(i)})
-        return options
+        return [
+            {'name': str(i), 'value': str(i)} for i in range(1, cls.count) ]
 
 
 
