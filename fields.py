@@ -23,8 +23,8 @@ from itools.core import freeze
 from itools.csv import Property
 from itools.database import magic
 from itools.database import Field as BaseField
-from itools.datatypes import Boolean, Date, DateTime, Email, Enumerate
-from itools.datatypes import Integer, String, Unicode, URI
+from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
+from itools.datatypes import Enumerate, Integer, String, Unicode, URI
 from itools.handlers import get_handler_class_by_mimetype
 from itools.html import XHTMLFile, xhtml_uri
 from itools.stl import rewrite_uris
@@ -204,6 +204,10 @@ class Email_Field(Metadata_Field):
 
 class Integer_Field(Metadata_Field):
     datatype = Integer
+
+
+class Decimal_Field(Metadata_Field):
+    datatype = Decimal
 
 
 
