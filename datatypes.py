@@ -180,12 +180,23 @@ class HTMLBody(XHTMLBody):
 class UserGroups_Datatype(Enumerate):
 
     def get_options(self):
-        # FIXME Return the resources in order
         context = get_context()
-        groups = context.search(parent_paths='/config/groups')
-        return [
-            {'name': str(x.abspath), 'value': x.get_title() }
-            for x in groups.get_resources() ]
+        config_groups = context.database.get_resource('/config/groups')
+
+        # Security filter
+        allowed_groups = context.search(parent_paths='/config/groups')
+        allowed_groups = [ x.name for x in allowed_groups.get_documents() ]
+        allowed_groups = set(allowed_groups)
+
+        # Namespace
+        groups = []
+        for name in config_groups.get_ordered_values():
+            if name in allowed_groups:
+                group = config_groups.get_resource(name)
+                groups.append({'name': str(group.abspath),
+                               'value': group.get_title()})
+
+        return groups
 
 
 

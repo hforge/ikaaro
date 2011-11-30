@@ -97,7 +97,8 @@ class BrowseGroups(OrderedFolder_BrowseContent):
         ('title', MSG(u'Title')),
         ('members', MSG(u'Members')),
         ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author'))]
+        ('last_author', MSG(u'Last Author')),
+        ('order', MSG(u'Order'))]
     table_actions = [RemoveButton, RenameButton]
 
     @proto_lazy_property
