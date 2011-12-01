@@ -1,0 +1,105 @@
+
+**********************************************************************
+Upgrade to ikaaro 0.75.0
+System Administrators
+**********************************************************************
+
+Configuration file
+==================
+
+XXX
+
+
+Update the database
+====================
+
+As usual instances must be updated following the standard procedure:
+
+  1. Make a backup
+
+  2. Update the database:
+
+     $ icms-update.py xxx
+
+  3. Rebuild the catalog:
+
+     $ icms-update-catalog.py xxx
+
+
+**********************************************************************
+Upgrade to ikaaro 0.75.0
+Developers
+**********************************************************************
+
+Note that the documentation below is not complete.  For any specific
+problem, please ask the mailing list.
+
+Imports
+====================
+
+Some things have changed names, or moved somewhere else.  The table below
+summarizes these changes:
+
+  Before                                  Now
+  -------------------------------------   ---------------------------------
+  ikaaro.workflow                         **DELETED**
+
+
+Resources schema
+=====================
+
+The 'class_schema' class variable has been replaced by fields. Now it is
+easier to override a field:
+
+  # Before
+  class MyUser(User):
+      class_schema = User.class_schema.copy()
+      class_schema['age'] = Integer(source='metadata')
+      class_schema['firstname'] = class_schema['firstname'](mandatory=True)
+      del class_schema['lastname']
+
+  # Now
+  class MyUser(User):
+      age = Integer_Field                         # New field
+      firstname = User.firstname(required=True)   # Override field
+      lastname = None                             # Remove field
+
+Now a resource may have as many file-fields attached as desired (in the
+example below the files will be named <name>.picture1, <name>.picture2,
+<name>.curriculum.en, <name>.curriculum.fr, etc.):
+
+  # Now
+  class MyUser(User):
+      picture1 = File_Field
+      picture2 = File_Field
+      curriculum = HTMLFile_Field
+
+Computed fields that are not stored but only used by the catalog (search) are
+not declared anymore in the "class schema", but explicitly registered:
+
+  # Before
+  class MyFolder(Folder):
+      ...
+      class_schema['foo'] = Integer(indexed=True)
+
+  # Now
+  class MyFolder(Folder):
+  ...
+
+  from itools.database import register_field
+  register_field('age', Integer(indexed=True))
+
+
+Workflow
+=====================
+
+The workflow has been replaced by a Share property. All the resources have
+the Share property, so you don't need to inherit from any particular class.
+Usually you just need to remove any reference to the workflow code.
+
+  # Before
+  from ikaaro.workflow import WorkflowAware
+  class MyClass(WorkflowAware, Folder):
+
+  # Now
+  class MyClass(Folder):
