@@ -100,7 +100,8 @@ class CSS_Edit(Text_Edit):
 
     title = "Edit CSS file"
 
-    widgets = [timestamp_widget, editarea_widget]
+    widgets = [timestamp_widget, title_widget, state_widget, editarea_widget,
+               description_widget, subject_widget]
 
 
     def _get_schema(self, resource, context):
