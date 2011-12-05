@@ -43,12 +43,49 @@ summarizes these changes:
   Before                                  Now
   -------------------------------------   ---------------------------------
   ikaaro.workflow                         **DELETED**
+  ikaaro.user                             ikaaro.users
+  ikaaro.user_views                       ikaaro.users_views
+  ikaaro.user.UserFolder                  ikaaro.users.Users
 
 
-Resources schema
+Simple patterns
 =====================
 
-The 'class_schema' class variable has been replaced by fields. Now it is
+(1) The resource methods 'get_asbapth()' and 'get_canonical_path()' have been
+removed:
+
+  # Before
+  resource.get_abspath()
+  resource.get_canonical_path()
+
+  # Now
+  resource.abspath
+
+(2) Root.init_resource has changed its signature:
+
+  # Before
+  class MyRoot(Root):
+      def init_resource(self, email, password, admins=('0',)):
+          super(MyRoot, self).init_resource(email, password, admins)
+
+  # Now
+  class MyRoot(Root):
+      def init_resource(self, email, password):
+          super(MyRoot, self).init_resource(email, password)
+
+(3) The 'class_skin' variable does not include the 'ui' prefix now:
+
+  # Before
+  class_skin = 'ui/myskin'
+
+  # Now
+  class_skin = 'myskin'
+
+
+Resources
+=====================
+
+(1) The 'class_schema' class variable has been replaced by fields. Now it is
 easier to override a field:
 
   # Before
@@ -88,6 +125,52 @@ not declared anymore in the "class schema", but explicitly registered:
 
   from itools.database import register_field
   register_field('age', Integer(indexed=True))
+
+(2) The method '.get_property' now returns a property object, and not the
+value anymore. Use instead '.get_value':
+
+  # Before
+  resource.get_property(name)
+
+  # Now
+  resource.get_value(name)
+
+
+Views
+=====================
+
+Don't need to instantiate views anymore (this change is not required, just
+recommended):
+
+  # Before
+  view = MyView()
+
+  # Now
+  view = MyView
+
+
+Searching
+=====================
+
+(1) Now there are two programming interfaces to search the database, with and
+without access control (respectively, high and low level). Most often the
+high-level API will be used, choose carefully:
+
+  # Before
+  root.search(query)
+
+  # Now
+  context.search(query)           # Option 1: with access control
+  context.database.search(query)  # Option 2: without access control
+
+(2) A new method allows to get the resources from a search directly:
+
+  # Before
+  resources = ( root.get_resource(brain.abspath)
+	            for brain in results.get_documents() )
+
+  # Now
+  resources = results.get_resources()
 
 
 Workflow
