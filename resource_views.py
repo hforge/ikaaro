@@ -396,14 +396,12 @@ class Rest_View(BaseView):
         """
         # Build a dictionary represeting the resource by its schema.
         representation = {}
-        get_property = resource.get_property
-        for key, datatype in resource.class_schema.iteritems():
-            if getattr(datatype, 'source', None) != 'metadata':
-                continue
-            value = get_property(key)
+        for name, field in resource.get_fields():
+            value = field.get_value(resource, name)
             value_type = value.__class__.__name__
+            datatype = field.get_datatype()
             data = datatype.encode(value)
-            representation[key] = (value_type, data)
+            representation[name] = (value_type, data)
         # Return the appropriate representation
         method = getattr(self, 'read_' + self.format)
         return method(representation, context)
