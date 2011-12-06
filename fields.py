@@ -21,7 +21,7 @@ from types import FunctionType
 # Import from itools
 from itools.core import freeze
 from itools.csv import Property
-from itools.database import magic
+from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
 from itools.datatypes import Enumerate, Integer, String, Unicode, URI
@@ -476,7 +476,7 @@ class File_Field(Field):
         if type(value) is str:
             cls = self.class_handler
             if cls is None:
-                mimetype = magic.buffer(value)
+                mimetype = magic_from_buffer(value)
                 cls = get_handler_class_by_mimetype(mimetype)
             return cls(string=value)
 
