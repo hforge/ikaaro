@@ -38,6 +38,7 @@ from itools.web import Conflict, NotImplemented
 from datatypes import CopyCookie
 from emails import send_email
 from exceptions import ConsistencyError
+from fields import Metadata_Field
 from folder_views import Folder_BrowseContent
 
 
@@ -394,14 +395,36 @@ class Rest_View(BaseView):
     def GET(self, resource, context):
         """The R of CRUD: READ
         """
+        def property_to_json(field, prop):
+            value = field.get_datatype().encode(prop.value)
+            if not field.parameters_schema:
+                return value
+
+            value = {'value': value}
+            if not prop.parameters:
+                return value
+
+            for name, datatype in field.parameters_schema.items():
+                param_value = prop.parameters.get(name)
+                if param_value is not None:
+                    value[name] = datatype.encode(param_value)
+
+            return value
+
         # Build a dictionary represeting the resource by its schema.
         representation = {}
         for name, field in resource.get_fields():
-            value = field.get_value(resource, name)
-            value_type = value.__class__.__name__
-            datatype = field.get_datatype()
-            data = datatype.encode(value)
-            representation[name] = (value_type, data)
+            if issubclass(field, Metadata_Field):
+                prop = resource.metadata.properties.get(name)
+                if not prop:
+                    continue
+                if type(prop) is dict:
+                    prop = prop.values()
+                if type(prop) is list:
+                    value = [ property_to_json(field, x) for x in prop ]
+                else:
+                    value = property_to_json(field, prop)
+                representation[name] = value
         # Return the appropriate representation
         method = getattr(self, 'read_' + self.format)
         return method(representation, context)
