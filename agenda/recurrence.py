@@ -74,7 +74,7 @@ def get_dates(start, end, rrule):
 
     # Case 2: Recurrence rule
     rrule_name = rrule.value
-    rrule_interval = int(rrule.get_parameter('interval'))
+    rrule_interval = int(rrule.get_parameter('interval') or 1)
     bydays = rrule.get_parameter('byday')
     if bydays:
         bydays = [ int(DaysOfWeek.get_name_by_shortname(v))
