@@ -425,10 +425,18 @@ class Skin(UIFolder):
                 if ac.is_allowed_to_view(user, resource):
                     favicon_href = '%s/;download' % context.get_link(resource)
                     favicon_type = resource.metadata.format
+
         if favicon_href is None:
-            # Fallback to default favicon
-            favicon_href = '/ui/favicon.ico'
-            favicon_type = 'image/x-icon'
+            # check to see if we have favicon.ico in the 'ui' folder
+            if self.get_handler('favicon.ico',
+                                cls=self.get_resource_cls('favicon.ico'),
+                                soft=True) is not None:
+                favicon_href =  '%s/favicon.ico' % self.get_canonical_path()
+                favicon_type = 'image/x-icon'
+            else:
+                # Fallback to default favicon
+                favicon_href = '/ui/favicon.ico'
+                favicon_type = 'image/x-icon'
 
         # Logo
         path = theme.get_property('logo')
