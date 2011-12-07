@@ -45,7 +45,7 @@ __all__ = [
 # Register
 register_document_type(Event)
 register_skin('agenda', get_abspath('ui'))
-Configuration.register_plugin(ConfigAgenda)
+Configuration.register_module(ConfigAgenda)
 
 # Silent pyflakes
 Event_Render, Event_Edit, Event_NewInstance

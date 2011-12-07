@@ -284,5 +284,5 @@ class Captcha(Folder):
         return self.get_resource(captcha_type)
 
 
-# Register captcha plugin
-Configuration.register_plugin(Captcha)
+# Register captcha
+Configuration.register_module(Captcha)

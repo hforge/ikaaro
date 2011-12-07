@@ -59,4 +59,4 @@ class SEO(DBResource):
 
 
 # Register
-Configuration.register_plugin(SEO)
+Configuration.register_module(SEO)

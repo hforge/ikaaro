@@ -383,4 +383,4 @@ class ConfigAccess(Folder):
 
 
 # Register
-Configuration.register_plugin(ConfigAccess)
+Configuration.register_module(ConfigAccess)

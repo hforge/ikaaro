@@ -151,4 +151,4 @@ class ConfigGroups(OrderedFolder):
         return [Group]
 
 
-Configuration.register_plugin(ConfigGroups)
+Configuration.register_module(ConfigGroups)

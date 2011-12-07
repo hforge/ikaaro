@@ -228,5 +228,5 @@ class Users(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-Configuration.register_plugin(Users)
+Configuration.register_module(Users)
 register_field('email_domain', String(indexed=True, stored=True))

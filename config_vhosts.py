@@ -71,4 +71,4 @@ class ConfigVHosts(DBResource):
 
 
 # Register
-Configuration.register_plugin(ConfigVHosts)
+Configuration.register_module(ConfigVHosts)

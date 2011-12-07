@@ -239,7 +239,7 @@ class MenuItem(OrderedFolder):
 
 
 ###########################################################################
-# Configuration plugin
+# Configuration
 ###########################################################################
 class ConfigMenu(MenuItem):
 
@@ -313,4 +313,4 @@ class ConfigMenu(MenuItem):
 
 
 # Register
-Configuration.register_plugin(ConfigMenu)
+Configuration.register_module(ConfigMenu)

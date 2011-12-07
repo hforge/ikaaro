@@ -303,7 +303,7 @@ class Model(OrderedFolder):
 
 
 ###########################################################################
-# The configuration plugin
+# The configuration
 ###########################################################################
 class ConfigModels_Browse(Folder_BrowseContent):
 
@@ -349,4 +349,4 @@ class ConfigModels(Folder):
         return [Model]
 
 
-Configuration.register_plugin(ConfigModels)
+Configuration.register_module(ConfigModels)

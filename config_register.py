@@ -203,4 +203,4 @@ class ConfigRegister(DBResource):
     config_group = 'access'
 
 
-Configuration.register_plugin(ConfigRegister)
+Configuration.register_module(ConfigRegister)

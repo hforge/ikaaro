@@ -52,7 +52,7 @@ class Configuration_View(STLView):
     template = '/ui/website/config.xml'
 
     def get_namespace(self, resource, context):
-        newplugins = []
+        newmodules = []
         groups = {}
 
         # Core views (non persistent)
@@ -70,16 +70,16 @@ class Configuration_View(STLView):
                 'url': ';%s' % name})
 
         # Plugins (persistent)
-        for name in resource._plugins:
-            plugin = resource.get_resource(name, soft=True)
-            if plugin is None:
-                newplugins.append(name)
+        for name in resource._modules:
+            module = resource.get_resource(name, soft=True)
+            if module is None:
+                newmodules.append(name)
                 continue
-            group_name = getattr(plugin, 'config_group', 'other')
+            group_name = getattr(module, 'config_group', 'other')
             groups.setdefault(group_name, []).append({
-                'icon': plugin.get_class_icon(48),
-                'title': plugin.class_title,
-                'description': plugin.class_description,
+                'icon': module.get_class_icon(48),
+                'title': module.class_title,
+                'description': module.class_description,
                 'url': name})
 
         groups_ns = [
@@ -87,15 +87,15 @@ class Configuration_View(STLView):
             for (name, title) in GROUPS if name in groups ]
 
         # Ok
-        return {'newplugins': newplugins, 'groups': groups_ns}
+        return {'newmodules': newmodules, 'groups': groups_ns}
 
 
     def action(self, resource, context, form):
-        for name, plugin in resource._plugins.items():
+        for name, module in resource._modules.items():
             if resource.get_resource(name, soft=True) is None:
-                resource.make_resource(name, plugin)
+                resource.make_resource(name, module)
 
-        context.message = MSG(u'New plugins initialized.')
+        context.message = MSG(u'New modules initialized.')
 
 
 
@@ -292,21 +292,21 @@ class Configuration(Folder):
 
     def init_resource(self, **kw):
         super(Configuration, self).init_resource(**kw)
-        for name, plugin in self._plugins.items():
-            self.make_resource(name, plugin)
+        for name, module in self._modules.items():
+            self.make_resource(name, module)
 
     
     # Plugins
-    _plugins = {}
+    _modules = {}
 
     @classmethod
-    def register_plugin(cls, plugin):
-        cls._plugins[plugin.config_name] = plugin
+    def register_module(cls, module):
+        cls._modules[module.config_name] = module
 
 
     @classmethod
-    def unregister_plugin(cls, name):
-        del cls._plugins[name]
+    def unregister_module(cls, name):
+        del cls._modules[name]
 
 
     # Views

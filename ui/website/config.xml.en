@@ -4,17 +4,17 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <form action="" method="post" stl:if="newplugins">
+  <form action="" method="post" stl:if="newmodules">
     <fieldset>
-      <legend>New plugins</legend>
+      <legend>New modules</legend>
       <p>
-      New plugins have been detected, pleae click the button below to
+      New modules have been detected, pleae click the button below to
       initialize them:
       </p>
       <ul>
-        <li stl:repeat="plugin newplugins">${plugin}</li>
+        <li stl:repeat="module newmodules">${module}</li>
       </ul>
-      <button type="submit" class="button-ok">Initialize new plugins</button>
+      <button type="submit" class="button-ok">Initialize new modules</button>
     </fieldset>
     <br/>
   </form>

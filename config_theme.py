@@ -68,4 +68,4 @@ class Theme(DBResource):
 
 
 # Register
-Configuration.register_plugin(Theme)
+Configuration.register_module(Theme)

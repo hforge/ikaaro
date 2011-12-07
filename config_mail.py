@@ -87,4 +87,4 @@ class ConfigMail(DBResource):
     config_group = 'access'
 
 
-Configuration.register_plugin(ConfigMail)
+Configuration.register_module(ConfigMail)

@@ -16,7 +16,7 @@
 
 """
 This module contains some utility code shared accross the different
-configuration plugins.
+configuration modules.
 """
 
 # Import from itools

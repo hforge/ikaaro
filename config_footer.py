@@ -54,4 +54,4 @@ class Footer(WebPage):
 
 
 # Register
-Configuration.register_plugin(Footer)
+Configuration.register_module(Footer)
