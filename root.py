@@ -102,7 +102,7 @@ class Root(Folder):
 
 
     def init_resource(self, email, password):
-        Folder.init_resource(self)
+        super(Root, self).init_resource()
         # Configuration
         title = {'en': u'Configuration'}
         self.make_resource('config', Configuration, title=title)

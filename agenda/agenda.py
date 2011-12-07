@@ -103,7 +103,7 @@ class ConfigAgenda(Folder):
         'edit_timetables', 'new_calendar', 'import_', 'export_form']
 
     # Configuration
-    config_name = 'agenda'
+    config_name = '/agenda'
     config_group = 'content'
 
     # Fields
