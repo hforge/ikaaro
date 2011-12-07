@@ -26,6 +26,7 @@ from itools.web import STLView
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoform import RTEWidget
 from ikaaro.comments import CommentsView
+from ikaaro.config import Configuration
 from ikaaro.fields import Date_Field
 from ikaaro.file_views import File_Edit
 from ikaaro.folder import Folder
@@ -51,23 +52,14 @@ class Post_NewInstance(AutoAdd):
 
     def get_field(self, name):
         if name == 'date':
-            return Date_Field(default=date.today())
+            cls = self._resource_class
+            return cls.date(default=date.today())
 
         return super(Post_NewInstance, self).get_field(name)
 
 
     def get_container(self, resource, context, form):
-        date = form['date']
-        names = ['%04d' % date.year, '%02d' % date.month]
-
-        container = context.root
-        for name in names:
-            folder = container.get_resource(name, soft=True)
-            if folder is None:
-                folder = container.make_resource(name, Folder)
-            container = folder
-
-        return container
+        return context.database.get_resource('/blog')
 
 
 
@@ -116,3 +108,25 @@ class Post(WebPage):
     new_instance = Post_NewInstance
     view = Post_View
     edit = File_Edit(fields=['title', 'date', 'data', 'share'])
+
+
+
+###########################################################################
+# Module
+###########################################################################
+class Blog(Folder):
+
+    class_id = 'blog'
+    class_title = MSG(u'Blog')
+
+    # Configuration
+    config_name = '/blog'
+    config_group = 'content'
+
+    # API
+    def get_document_types(self):
+        return [Post]
+
+
+# Register
+Configuration.register_module(Blog)
