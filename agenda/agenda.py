@@ -149,7 +149,8 @@ class ConfigAgenda(Folder):
 
 
     def get_document_types(self):
-        return [Calendar]
+        return [Calendar, Event]
+
 
     #######################################################################
     # User Interface
