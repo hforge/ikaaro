@@ -317,6 +317,29 @@ class Skin(UIFolder):
         return meta
 
 
+    def get_favicon(self, context):
+        # Case 1: from the database
+        theme = context.site_root.get_resource('theme')
+        path = theme.get_property('favicon')
+        if path:
+            resource = theme.get_resource(path, soft=True)
+            if resource:
+                ac = resource.get_access_control()
+                if ac.is_allowed_to_view(context.user, resource):
+                    return ('%s/;download' % context.get_link(resource),
+                            resource.metadata.format)
+
+        # Case 2: from the skin
+        if self.get_handler('favicon.ico',
+                            cls=self.get_resource_cls('favicon.ico'),
+                            soft=True) is not None:
+            return ('%s/favicon.ico' % self.get_canonical_path(),
+                    'image/x-icon')
+
+        # Case 3: default
+        return ('/ui/favicon.ico', 'image/x-icon')
+
+
     #######################################################################
     # Authenticated user
     #######################################################################
@@ -409,36 +432,18 @@ class Skin(UIFolder):
     # Main
     #######################################################################
     def build_namespace(self, context):
-        context_menus = self._get_context_menus(context)
-        context_menus = list(context_menus)
         user = context.user
 
-        # The favicon.ico
-        site_root = context.site_root
-        theme = site_root.get_resource('theme')
-        path = theme.get_property('favicon')
-        favicon_href = favicon_type = None
-        if path:
-            resource = theme.get_resource(path, soft=True)
-            if resource:
-                ac = resource.get_access_control()
-                if ac.is_allowed_to_view(user, resource):
-                    favicon_href = '%s/;download' % context.get_link(resource)
-                    favicon_type = resource.metadata.format
+        # Context menus
+        context_menus = self._get_context_menus(context)
+        context_menus = list(context_menus)
 
-        if favicon_href is None:
-            # check to see if we have favicon.ico in the 'ui' folder
-            if self.get_handler('favicon.ico',
-                                cls=self.get_resource_cls('favicon.ico'),
-                                soft=True) is not None:
-                favicon_href =  '%s/favicon.ico' % self.get_canonical_path()
-                favicon_type = 'image/x-icon'
-            else:
-                # Fallback to default favicon
-                favicon_href = '/ui/favicon.ico'
-                favicon_type = 'image/x-icon'
+        # The favicon.ico
+        favicon_href, favicon_type = self.get_favicon(context)
 
         # Logo
+        site_root = context.site_root
+        theme = site_root.get_resource('theme')
         path = theme.get_property('logo')
         logo_href = None
         if path:
