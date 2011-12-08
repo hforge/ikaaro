@@ -19,15 +19,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-import json
-
 # Import from itools
 from itools.core import guess_extension, merge_dicts
 from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
-from itools.handlers import checkid
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
@@ -38,7 +34,6 @@ from itools.web import Conflict, NotImplemented
 from datatypes import CopyCookie
 from emails import send_email
 from exceptions import ConsistencyError
-from fields import Metadata_Field
 from folder_views import Folder_BrowseContent
 
 
@@ -348,116 +343,3 @@ class Delete_View(BaseView):
         if str(resource.abspath) in paths:
             context.del_cookie('ikaaro_cp')
             paths = []
-
-
-
-class Rest_View(BaseView):
-    """Generic REST exposure of a resource. Basis for a CRUD API.
-    Export to JSON by default, extensible to other formats.
-    """
-    access = 'is_allowed_to_view'
-    access_POST = 'is_allowed_to_add'
-    access_PUT = 'is_allowed_to_edit'
-    access_DELETE = 'is_allowed_to_remove'
-
-    format = 'json'
-    name_header = 'X-Create-Name'
-    type_header = 'X-Create-Type'
-    format_header = 'X-Create-Format'
-
-
-    def POST(self, resource, context):
-        """The C of CRUD: CREATE
-        """
-        # XXX I guess only folders make sense
-        # Read "bootstrap" from headers since body is used from metadata
-        name = context.get_header(self.name_header)
-        name = checkid(name)
-        class_id = context.get_header(self.type_header)
-        cls = context.database.get_resource_class(class_id)
-        format = context.get_header(self.format_header)
-        child = resource.make_resource(name, cls, format=format)
-        # The rest is an update
-        child.rest.PUT(child, context)
-        # 201 Created
-        context.status = 201
-        # Return the URL of the new resource
-        # XXX 201 may require empty body
-        context.set_content_type('text/plain')
-        return str(context.get_link(child))
-
-
-    def read_json(self, representation, context):
-        context.set_content_type('application/json')
-        return json.dumps(representation)
-
-
-    def GET(self, resource, context):
-        """The R of CRUD: READ
-        """
-        def property_to_json(field, prop):
-            value = field.get_datatype().encode(prop.value)
-            if not field.parameters_schema:
-                return value
-
-            value = {'value': value}
-            if not prop.parameters:
-                return value
-
-            for name, datatype in field.parameters_schema.items():
-                param_value = prop.parameters.get(name)
-                if param_value is not None:
-                    value[name] = datatype.encode(param_value)
-
-            return value
-
-        # Build a dictionary represeting the resource by its schema.
-        representation = {}
-        for name, field in resource.get_fields():
-            if issubclass(field, Metadata_Field):
-                prop = resource.metadata.properties.get(name)
-                if not prop:
-                    continue
-                if type(prop) is dict:
-                    prop = prop.values()
-                if type(prop) is list:
-                    value = [ property_to_json(field, x) for x in prop ]
-                else:
-                    value = property_to_json(field, prop)
-                representation[name] = value
-        # Return the appropriate representation
-        method = getattr(self, 'read_' + self.format)
-        return method(representation, context)
-
-
-    def update_json(self, data):
-        return json.loads(data)
-
-
-    def PUT(self, resource, context):
-        """The U of CRUD: UPDATE
-        """
-        data = context.get_form_value(self.format)
-        method = getattr(self, 'update_' + self.format)
-        representation = method(data)
-        for key, data in representation.iteritems():
-            try:
-                datatype = resource.get_property_datatype(key)
-            except ValueError:
-                pass
-            # TODO encoding? though it should be UTF-8
-            value = datatype.decode(data)
-            # TODO language of multilingual properties from the headers?
-            resource.set_property(key, value)
-        # Empty 200 OK
-        context.set_content_type('text/plain')
-        return ''
-
-
-    def DELETE(self, resource, context):
-        """The D of CRUD: DELETE
-        """
-        # Delete myself
-        resource.parent.del_resource(resource.name)
-        # None means 204
-        return None

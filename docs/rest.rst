@@ -23,14 +23,27 @@ each one a different HTTP method is used:
 Information is exchanged using the `JSON
 <http://en.wikipedia.org/wiki/JSON>`_ format.
 
-**Architecture recall**. In ikaaro information is stored in what we call resources. The resources
-are organized in a tree structure. The path given through the request maps
-exactly to a resource. On a resource you can call a view to get a
-particular representation of the resource.
+.. note:: Architecture recall
 
-A resource is a collection of key-value pairs. There are different types
-of resources, every resource type has an schema which describes these
-key-value pairs.
+   In ikaaro information is stored in what we call resources. The resources
+   are organized in a tree structure. The path given in the request URI maps
+   exactly to a resource. On a resource you can call a view to get a
+   particular representation of the resource.
+
+   A resource is a collection of key-value pairs. There are different types
+   of resources, every resource type has an schema which describes these
+   key-value pairs.
+
+This is the summury of the views and request methods that will be presented
+in this chapter, and which make up the RESTful interface::
+
+  POST /;login               # Authentication
+  GET /.../;rest_query       # Query the database
+  POST /.../;rest            # Create a new resource
+  GET /.../;rest             # Read a reasource
+  PUT /.../;rest             # Update a resource
+  DELETE /.../;rest          # Delete a resource
+
 
 
 Authentication
@@ -64,6 +77,40 @@ like this::
   Host: localhost:8080
   User-Agent: foobar
   Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"
+
+If the authentication failed (wrong login-name or password), the cookie
+will be missing.
+
+
+Query
+==============
+
+The view to query the database is named ``rest_query``. It is available in
+all the resources, and makes a search on the sub-tree. For instance calling
+``GET /a/b/;rest_query`` will return only the resources below the ``/a/b``
+sub-tree. So, to get all the resources in the database, call
+``GET /;rest_query``.
+
+Example::
+
+  GET /;rest_query?format=webpage&fields=title HTTP/1.1
+  Host: localhost:8080
+  User-Agent: foobar
+  Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"
+
+  HTTP/1.1 200 OK
+  Server: itools.web
+  Date: Thu, 08 Dec 2011 15:01:47 GMT
+  Content-Type: application/json
+  Content-Length: 66
+
+  [{"abspath": "/page", "title": [{"lang": "en", "value": "Page"}]}]
+
+By default only the path to the resource is returned. As the example above
+shows, the fields query parameter can be passed to ask for further fields
+to be returned.
+
+
 
 
 Create
@@ -102,3 +149,7 @@ Delete
 
 TODO
 
+Access Control
+==============
+
+TODO

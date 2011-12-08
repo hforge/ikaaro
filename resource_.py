@@ -46,8 +46,9 @@ from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
-from resource_views import Put_View, Delete_View, Rest_View
+from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
+from rest import Rest_View, Rest_Query
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import get_base_path_query
 
@@ -764,20 +765,22 @@ class DBResource(Resource):
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
     get_file = DBResource_GetFile
     get_image = DBResource_GetImage
-    # Popup views
+    # Popups
     add_image = DBResource_AddImage
     add_link = DBResource_AddLink
     add_media = DBResource_AddMedia
-    # Views / Commit log
+    # Commit log
     commit_log = DBResource_CommitLog
     changes = DBResource_Changes
-    # Views / Links
+    # Links
     backlinks = DBResource_Backlinks
     links = DBResource_Links
-    # Views / External editor
+    # External editor
     http_put = Put_View
     http_delete = Delete_View
+    # Rest (web services)
     rest = Rest_View
+    rest_query = Rest_Query
 
 
 ###########################################################################
