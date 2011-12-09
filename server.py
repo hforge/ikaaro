@@ -174,8 +174,7 @@ class Server(WebServer):
             msg = 'configuraion error, unexpected "%s" value for log-level'
             raise ValueError, msg % log_level
         log_level = log_levels[log_level]
-        logger = Logger(log_file, log_level)
-        logger.launch_rotate(timedelta(weeks=3))
+        logger = Logger(log_file, log_level, rotate=timedelta(weeks=3))
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.web')
@@ -245,7 +244,7 @@ class Server(WebServer):
 
 
     def flush_spool(self):
-        cron(self._smtp_send, timedelta(minutes=1))
+        cron(self._smtp_send, timedelta(seconds=1))
 
 
     def send_email(self, message):
@@ -257,27 +256,23 @@ class Server(WebServer):
         nb_max_mails_to_send = 2
         spool = lfs.open(self.spool)
 
-        # Find out emails to send
-        locks = set()
-        names = set()
-        for name in spool.get_names():
-            if name == 'failed':
-                # Skip "failed" special directory
-                continue
-            if name[-5:] == '.lock':
-                locks.add(name[:-5])
-            else:
-                names.add(name)
-        names.difference_update(locks)
-        # Is there something to send?
-        nb_mails_to_send = len(names)
-        if nb_mails_to_send == 0:
-            return False
-        elif nb_mails_to_send > nb_max_mails_to_send:
-            try_again = True
-        else:
-            try_again = False
+        def get_names():
+            # Find out emails to send
+            locks = set()
+            names = set()
+            for name in spool.get_names():
+                if name == 'failed':
+                    # Skip "failed" special directory
+                    continue
+                if name[-5:] == '.lock':
+                    locks.add(name[:-5])
+                else:
+                    names.add(name)
+            names.difference_update(locks)
+            return names
+
         # Send emails
+        names = get_names()
         smtp_host = self.smtp_host
         for name in list(names)[:nb_max_mails_to_send]:
             # 1. Open connection
@@ -285,10 +280,10 @@ class Server(WebServer):
                 smtp = SMTP(smtp_host)
             except gaierror, excp:
                 log_warning('%s: "%s"' % (excp[1], smtp_host))
-                return True
+                return 60 # 1 minute
             except Exception:
                 self.smtp_log_error()
-                return True
+                return 60 # 1 minute
             log_info('CONNECTED to %s' % smtp_host)
 
             # 2. Login
@@ -318,12 +313,12 @@ class Server(WebServer):
                 spool.move(name, 'failed/%s_%s' % (excp.smtp_code, name))
             except Exception:
                 self.smtp_log_error()
-                try_again = True
 
             # 4. Close connection
             smtp.quit()
 
-        return try_again
+        # Is there something left?
+        return 60 if get_names() else False
 
 
     def smtp_log_error(self):
