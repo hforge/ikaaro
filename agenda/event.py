@@ -382,31 +382,30 @@ class Event(Content):
         return proxy.get_value(name, language)
 
 
-    def get_reminders(self):
+    def get_reminders(self, dates=None):
         reminder = self.get_value('reminder')
         if not reminder:
-            return []
-        reminders = []
-        # Get start time
-        dtstart = self.get_value('dtstart')
-        if type(dtstart) is datetime:
-            start_time = dtstart.time()
-        else:
-            # If no time, start_time is midnight
-            start_time = time(0)
+            return None
+
+        # Get start time (if no time, start_time is midnight)
+        start = self.get_value('dtstart')
+        start_time = start.time() if type(start) is datetime else time(0)
+
+        # Dates
+        if dates is None:
+            dates = self.get_dates()
+
         # For every date (reccurences) we add a reminder
-        for d in self.get_dates():
-            d_time = datetime.combine(d, start_time)
-            reminders.append(d_time - timedelta(seconds=reminder))
-        return reminders
+        delta = timedelta(seconds=reminder)
+        return [ datetime.combine(x, start_time) - delta for x in dates ]
 
 
     def get_catalog_values(self):
         values = super(Event, self).get_catalog_values()
-        values['is_event'] = True
         values['calendar'] = self.get_value('calendar')
-        values['dates'] = self.get_dates()
-        values['reminders'] = self.get_reminders()
+        dates = self.get_dates()
+        values['dates'] = dates
+        values['reminders'] = self.get_reminders(dates)
         return values
 
 
@@ -538,5 +537,4 @@ class EventModel(Model):
 
 # Register
 register_field('dates', Date(indexed=True, multiple=True))
-register_field('reminders', DateTime(indexed=True, multiple=True))
-register_field('is_event', Boolean(indexed=True))
+register_field('reminders', DateTime(stored=True, multiple=True))

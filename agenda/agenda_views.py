@@ -383,7 +383,7 @@ class CalendarView(STLView):
     ######################################################################
     def get_events(self, day=None, *args):
         query = AndQuery(*args)
-        query.append(PhraseQuery('is_event', True))
+        query.append(PhraseQuery('base_classes', 'event'))
         if day:
             query.append(PhraseQuery('dates', day))
 
