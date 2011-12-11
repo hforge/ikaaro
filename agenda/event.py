@@ -35,7 +35,6 @@ from ikaaro.content import Content
 from ikaaro.enumerates import DaysOfWeek
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Datetime_Field, Owner_Field, SelectDays_Field
-from ikaaro.folder import Folder
 from ikaaro.utils import CMSTemplate, make_stl_template
 from ikaaro import messages
 
@@ -264,18 +263,7 @@ class Event_NewInstance(AutoAdd):
 
 
     def get_container(self, resource, context, form):
-        # XXX Copied from blog/blog.py
-        date = form['dtstart']
-        names = ['%04d' % date.year, '%02d' % date.month]
-
-        container = context.root
-        for name in names:
-            folder = container.get_resource(name, soft=True)
-            if folder is None:
-                folder = container.make_resource(name, Folder)
-            container = folder
-
-        return container
+        return resource
 
 
     def get_new_resource_name(self, form):

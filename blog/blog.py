@@ -59,7 +59,7 @@ class Post_NewInstance(AutoAdd):
 
 
     def get_container(self, resource, context, form):
-        return context.database.get_resource('/blog')
+        return resource
 
 
 
