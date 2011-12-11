@@ -41,6 +41,11 @@ class CMSContext(Context):
         return goto
 
 
+    @proto_lazy_property
+    def root(self):
+        return self.database.get_resource('/')
+
+
     def find_site_root(self):
         self.site_root = self.root
 

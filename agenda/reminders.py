@@ -16,12 +16,12 @@
 
 # Import from itools
 from itools.core import proto_lazy_property
-from itools.datatypes import Integer, Enumerate
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 
 # Import from ikaaro
-from ikaaro.fields import Metadata_Field
 from ikaaro.autoform import SelectWidget, Widget
+from ikaaro.fields import Integer_Field
 from ikaaro.utils import make_stl_template
 
 
@@ -110,7 +110,6 @@ class Reminder_Widget(Widget):
 
 
 
-class Reminder_Field(Metadata_Field):
+class Reminder_Field(Integer_Field):
 
-    datatype = Integer # (In Seconds)
     widget = Reminder_Widget

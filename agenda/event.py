@@ -332,7 +332,7 @@ class Event(Content):
     # Fields
     owner = Owner_Field
     calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
-                title=MSG(u'Calendar'), indexed=True)
+                            title=MSG(u'Calendar'), indexed=True)
     dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
     dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
     place = Char_Field(title=MSG(u'Where'))
@@ -382,7 +382,13 @@ class Event(Content):
         return proxy.get_value(name, language)
 
 
-    def get_reminders(self, dates=None):
+    def get_catalog_values(self):
+        values = super(Event, self).get_catalog_values()
+        values['dates'] = self.get_dates()
+        return values
+
+
+    def next_time_event(self):
         reminder = self.get_value('reminder')
         if not reminder:
             return None
@@ -392,21 +398,23 @@ class Event(Content):
         start_time = start.time() if type(start) is datetime else time(0)
 
         # Dates
-        if dates is None:
-            dates = self.get_dates()
-
-        # For every date (reccurences) we add a reminder
+        context = get_context()
+        now = context.timestamp
         delta = timedelta(seconds=reminder)
-        return [ datetime.combine(x, start_time) - delta for x in dates ]
+        for date in self.get_dates():
+            reminder = datetime.combine(date, start_time) - delta
+            reminder = context.fix_tzinfo(reminder)
+            if reminder > now:
+                return reminder
+
+        return None
 
 
-    def get_catalog_values(self):
-        values = super(Event, self).get_catalog_values()
-        values['calendar'] = self.get_value('calendar')
-        dates = self.get_dates()
-        values['dates'] = dates
-        values['reminders'] = self.get_reminders(dates)
-        return values
+    def time_event(self):
+        to_addr = self.get_resource(self.get_owner()).get_value('email')
+        subject = MSG(u'Reminder')
+        text = MSG(u'Reminder').gettext()
+        self.get_resource('/').send_email(to_addr, subject, text=text)
 
 
     def get_ns_event(self, current_day, grid=False):
@@ -537,4 +545,3 @@ class EventModel(Model):
 
 # Register
 register_field('dates', Date(indexed=True, multiple=True))
-register_field('reminders', DateTime(stored=True, multiple=True))

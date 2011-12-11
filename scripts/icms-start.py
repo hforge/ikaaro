@@ -25,7 +25,7 @@ from sys import exit
 from itools import __version__
 from itools.core import become_daemon, start_subprocess
 from itools.database import check_database
-from itools.loop import Loop
+from itools.loop import Loop, cron
 
 # Import from ikaaro
 from ikaaro.update import is_instance_up_to_date
@@ -82,6 +82,9 @@ def start(options, target):
 
     server.listen(address, port)
     server.set_context('/', CMSContext)
+    interval = config.get_value('cron-interval')
+    if interval:
+        cron(server.cron_manager, 1)
 
     # Run
     profile = config.get_value('profile-time')

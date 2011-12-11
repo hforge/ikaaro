@@ -174,11 +174,12 @@ def update(parser, options, target):
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
     server = Server(target)
-    # Build a fake context
-    context = get_fake_context()
-    server.init_context(context)
-    # Local variables
     database = server.database
+    # Build a fake context
+    context = get_fake_context(database)
+    context.server = server
+    context.init_context()
+    # Local variables
     root = server.root
 
     mtime = root.get_value('mtime')

@@ -72,12 +72,35 @@ smtp-password =
 log-level = warning
 log-email = {log_email}
 
+# The "cron-interval" variable defines the number of seconds between every
+# call to the cron job manager. If zero (the default) the cron job won't be
+# run at all.
+#
+cron-interval = 0
+
+# Set expiration time in minutes for the authentication cookie, where 0
+# means the cookie does not expire (by default it is 0)
+#
+auth-cookie-expires = 0
+
 # The "database-size" variable defines the number of file handlers to store
 # in the database cache.  It is made of two numbers, the upper limit and the
 # bottom limit: when the cache size hits the upper limit, handlers will be
 # removed from the cache until it hits the bottom limit.
 #
 database-size = 4800:5200
+
+# The "index-text" variable defines whether the catalog must process full-text
+# indexing. It requires (much) more time and third-party applications.
+# To speed up catalog updates, set this option to 0 (default is 1).
+#
+index-text = 1
+
+# The size of images can be controlled by setting the following values.
+# (ie. max-width = 1280) (by default it is None, keeping original size).
+#
+max-width =
+max-height =
 
 # If the "profile-time" variable is set to "1", profiling information will
 # be written to the 'log/profile' file.  If the "profile-space" variable is
@@ -86,20 +109,6 @@ database-size = 4800:5200
 #
 profile-time = 0
 profile-space = 0
-
-# The "index-text" variable defines whether the catalog must process full-text
-# indexing. It requires (much) more time and third-party applications.
-# To speed up catalog updates, set this option to 0 (default is 1).
-index-text = 1
-
-# Set expiration time in minutes for the authentication cookie, where 0
-# means the cookie does not expire (by default it is 0)
-auth-cookie-expires = 0
-
-# The size of images can be controlled by setting the following values.
-# (ie. max-width = 1280) (by default it is None, keeping original size).
-max-width =
-max-height =
 """)
 
 
@@ -154,8 +163,7 @@ def init(parser, options, target):
     mkdir('%s/spool' % target)
 
     # Create a fake context
-    context = get_fake_context()
-    context.database = database
+    context = get_fake_context(database)
     context.set_mtime = True
 
     # Make the root

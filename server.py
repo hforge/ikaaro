@@ -34,7 +34,7 @@ from glib import GError
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import Metadata
+from itools.database import Metadata, RangeQuery
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
@@ -105,9 +105,11 @@ def get_root(database):
     return cls(metadata)
 
 
-def get_fake_context():
-    soup_message = SoupMessage()
-    context = CMSContext(soup_message, '/')
+def get_fake_context(database):
+    context = CMSContext()
+    context.soup_message = SoupMessage()
+    context.path = '/'
+    context.database = database
     set_context(context)
     return context
 
@@ -152,7 +154,7 @@ class Server(WebServer):
 
         # Initialize
         access_log = '%s/log/access' % target
-        WebServer.__init__(self, root, access_log=access_log)
+        super(Server, self).__init__(root, access_log=access_log)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -221,7 +223,7 @@ class Server(WebServer):
 
 
     #######################################################################
-    # Email
+    # Mailing
     #######################################################################
     def get_spool_size(self):
         spool = lfs.open(self.spool)
@@ -327,6 +329,34 @@ class Server(WebServer):
         log_error(summary + details)
 
 
+    #######################################################################
+    # Time events
+    #######################################################################
+    def cron_manager(self):
+        database = self.database
+
+        # Build fake context
+        context = get_fake_context(database)
+        context.server = self
+        context.init_context()
+
+        # Go
+        query = RangeQuery('next_time_event', None, context.timestamp)
+        for resource in database.search(query).get_resources():
+            resource.time_event()
+            # Reindex resource without committing
+            catalog = database.catalog
+            catalog.unindex_document(str(resource.abspath))
+            catalog.index_document(resource.get_catalog_values())
+            catalog.save_changes()
+
+        # Save changes
+        database.save_changes()
+
+        # Again, and again
+        return self.config.get_value('cron-interval')
+
+
 
 class ServerConfig(ConfigFile):
 
@@ -334,19 +364,25 @@ class ServerConfig(ConfigFile):
         'modules': Tokens,
         'listen-address': String(default=''),
         'listen-port': Integer(default=None),
+        # Mailing
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
+        # Logging
         'log-level': String(default='warning'),
         'log-email': Email(default=''),
-        'database-size': String(default='4800:5200'),
-        'profile-time': Boolean(default=False),
-        'profile-space': Boolean(default=False),
-        'index-text': Boolean(default=True),
+        # Time events
+        'cron-interval': Integer(default=0),
+        # Security
         'auth-cookie-expires': ExpireValue(default=timedelta(0)),
+        # Tuning
+        'database-size': String(default='4800:5200'),
+        'index-text': Boolean(default=True),
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
+        'profile-time': Boolean(default=False),
+        'profile-space': Boolean(default=False),
     }
 
 

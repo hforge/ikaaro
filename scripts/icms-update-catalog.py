@@ -34,7 +34,6 @@ def update_catalog(parser, options, target):
     from traceback import format_exc
     from itools.core import vmsize
     from itools.database import check_database, get_register_fields
-    from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
     from itools.database import make_catalog, Resource
     from ikaaro.server import Server, ask_confirmation
@@ -65,10 +64,7 @@ def update_catalog(parser, options, target):
     root = server.root
 
     # Build a fake context
-    context = get_fake_context()
-    context.accept_language = AcceptLanguage()
-    context.database = server.database
-    context.root = root
+    context = get_fake_context(server.database)
 
     # Update
     t0, v0 = time(), vmsize()

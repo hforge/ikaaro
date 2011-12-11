@@ -27,7 +27,7 @@ from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
@@ -527,13 +527,27 @@ class DBResource(Resource):
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
 
+        # Time events
+        values['next_time_event'] = self.next_time_event()
+
         # Ok
         return values
 
 
-    ########################################################################
+    #######################################################################
+    # Time events
+    #######################################################################
+    def next_time_event(self):
+        return None
+
+
+    def time_event(self):
+        raise NotImplementedError
+
+
+    #######################################################################
     # API
-    ########################################################################
+    #######################################################################
     def rename_handlers(self, new_name):
         """Consider we want to rename this resource to the given 'new_name',
         return the old a new names for all the attached handlers (except the
@@ -677,9 +691,9 @@ class DBResource(Resource):
         metadata.version = version
 
 
-    ########################################################################
+    #######################################################################
     # Icons
-    ########################################################################
+    #######################################################################
     @classmethod
     def get_class_icon(cls, size=16):
         icon = getattr(cls, 'class_icon%s' % size, None)
@@ -705,9 +719,9 @@ class DBResource(Resource):
         return '/ui/icons/%s/%s' % (size, icon)
 
 
-    ########################################################################
+    #######################################################################
     # User interface
-    ########################################################################
+    #######################################################################
     def get_views(self):
         context = get_context()
         for name in self.class_views:
@@ -739,9 +753,9 @@ class DBResource(Resource):
         return edit_languages if edit_languages else default
 
 
-    ########################################################################
+    #######################################################################
     # Cut & Paste Resources
-    ########################################################################
+    #######################################################################
     def can_paste(self, source):
         """Is the source resource can be pasted into myself.
         Question is "can I handle this type of resource?"
@@ -801,3 +815,5 @@ register_field('links', String(multiple=True, indexed=True))
 register_field('text', Unicode(indexed=True))
 # Various classifications
 register_field('is_content', Boolean(indexed=True))
+# Time events
+register_field('next_time_event', DateTime(stored=True))
