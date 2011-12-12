@@ -265,7 +265,7 @@ class LoginView(STLView):
                 u' if you want to get access again.')
             return
 
-        user.login(context)
+        user._login(context)
 
         # Check if user account is completed
         if not user.account_is_completed():

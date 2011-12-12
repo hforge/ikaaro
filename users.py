@@ -130,7 +130,9 @@ class User(DBResource):
         return secure_hash == self.get_value('password')
 
 
-    def login(self, context):
+    def _login(self, context):
+        # XXX We call thie method '_login' to avoid a name clash with the
+        # login view.
         context.login(self)
         # To activte this feature set the lastlog field
         lastlog = self.get_field('lastlog')
