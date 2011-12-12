@@ -23,17 +23,6 @@ each one a different HTTP method is used:
 Information is exchanged using the `JSON
 <http://en.wikipedia.org/wiki/JSON>`_ format.
 
-.. note:: Architecture recall
-
-   In ikaaro information is stored in what we call resources. The resources
-   are organized in a tree structure. The path given in the request URI maps
-   exactly to a resource. On a resource you can call a view to get a
-   particular representation of the resource.
-
-   A resource is a collection of key-value pairs. There are different types
-   of resources, every resource type has an schema which describes these
-   key-value pairs.
-
 This is the summury of the views and request methods that will be presented
 in this chapter, and which make up the RESTful interface::
 
@@ -43,7 +32,32 @@ in this chapter, and which make up the RESTful interface::
   GET /.../;rest             # Read a reasource
   PUT /.../;rest             # Update a resource
   DELETE /.../;rest          # Delete a resource
+ 
 
+Architecture recall
+-------------------
+
+In ikaaro information is stored in what we call resources. Resources are
+organized in a tree structure. The path given in the request URI maps exactly
+to a resource. On a resource you can call a view to get a particular
+representation of the resource.
+
+A resource is a collection of key-value pairs (fields). There are different
+types of resources, every resource type has an schema which describes these
+fields.
+
+A standard simple field looks like this in JSON::
+
+  "mtime": "2011-12-12T09:45:11+0000"
+
+Some fields may have multiple values::
+
+  "share": ["everybody", "authenticated"]
+
+Other fields have parameters, for instance multilingual fields like the
+title have a language parameter::
+
+  "title": [{"lang": "en", "value": "Root"}, {"lang": "fr", "value": "Racine"}]
 
 
 Authentication
@@ -106,11 +120,11 @@ Example::
 
   [{"abspath": "/page", "title": [{"lang": "en", "value": "Page"}]}]
 
-By default only the path to the resource is returned. As the example above
-shows, the fields query parameter can be passed to ask for further fields
-to be returned.
+By default only the path to the resource is returned. The ``fields`` query
+parameter can be passed to ask for further fields.
 
-
+Other query parameters can be passed to refine the search. For instance in
+the example above we ask for resources of the ``webpage`` type.
 
 
 Create
