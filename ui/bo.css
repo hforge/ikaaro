@@ -658,3 +658,25 @@ div.helpbox img.helpbox-icon {
 div.helpbox div.helpbox-text {
   margin-left: 52px;
 }
+
+/* Password strength meter */
+span.testresult {
+  font-weight: bold;
+  margin-left: 1em;
+}
+
+span.shortPass {
+  color: red;
+}
+
+span.badPass {
+  color: red;
+}
+
+span.goodPass {
+  color: #ffac00;
+}
+
+span.strongPass {
+  color: green;
+}

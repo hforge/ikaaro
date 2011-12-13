@@ -82,6 +82,7 @@ jQuery          GPL      http://jquery.com
 TinyMCE         LGPL     http://tinymce.moxiecode.com
 DHTML Calendar  LGPL     http://code.google.com/p/dyndatetime/
 Edit area       LGPL     http://www.cdolivet.com/editarea/
+Password meter  BSD      http://mypocket-technologies.com/jquery/
 
 And media content:
 

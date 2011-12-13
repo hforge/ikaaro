@@ -32,8 +32,8 @@ from pytz import common_timezones
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import AutoForm, HiddenWidget, PasswordWidget, ReadOnlyWidget
-from autoform import TextWidget
+from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, TextWidget
+from autoform import PasswordWidget, ChoosePassword_Widget
 from buttons import Button, BrowseButton
 from emails import send_email
 from fields import Password_Field
@@ -55,7 +55,7 @@ class User_ConfirmRegistration(AutoForm):
     widgets = freeze([
         HiddenWidget('key'),
         ReadOnlyWidget('username', title=MSG(u'Username')),
-        PasswordWidget('newpass', title=MSG(u'Password')),
+        ChoosePassword_Widget('newpass', userid='username'),
         PasswordWidget('newpass2', title=MSG(u'Repeat password'))])
 
 

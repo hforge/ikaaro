@@ -116,6 +116,28 @@ class PasswordWidget(Widget):
 
 
 
+class ChoosePassword_Widget(Widget):
+    """Include a js password strength meter.
+    """
+
+    title = MSG(u'Password')
+
+    template = make_stl_template("""
+    <input type="password" id="${id}" name="${name}" maxlength="${maxlength}"
+      size="${size}" class="${css}"/>
+    <script type="text/javascript">
+      jQuery( "#${id}" ).passStrength({
+        userid: "#${userid}"
+      });
+    </script>""")
+
+    scripts = ['/ui/js/password_strength_plugin.js']
+
+    # Password meter configuration
+    userid = None
+
+
+
 class ReadOnlyWidget(Widget):
 
     template = make_stl_template("""
