@@ -30,12 +30,13 @@ from itools.xml import XMLParser
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
 from ikaaro.autoform import RadioWidget
+from ikaaro.buttons import Remove_Button
 from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.enumerates import DaysOfWeek
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Datetime_Field, Owner_Field, SelectDays_Field
-from ikaaro.utils import CMSTemplate, make_stl_template
+from ikaaro.utils import CMSTemplate, make_stl_template, close_fancybox
 from ikaaro import messages
 
 # Import from calendar
@@ -111,6 +112,8 @@ class Event_Edit(AutoEdit):
 
     styles = ['/ui/agenda/style.css']
     can_be_open_in_fancybox = True
+
+    actions = AutoEdit.actions + [Remove_Button]
 
     # Fields
     fields = AutoEdit.fields + [
@@ -192,6 +195,15 @@ class Event_Edit(AutoEdit):
         resource.notify_subscribers(context)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+        return close_fancybox(context)
+
+
+    def action_remove(self, resource, context, form):
+        container = resource.parent
+        container.del_resource(resource.name)
+        # Ok
+        context.message = MSG(u'Resource removed')
+        return close_fancybox(context)
 
 
 

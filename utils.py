@@ -280,3 +280,27 @@ def split_reference(ref):
         view = '/' + name
         path = path[:-1]
     return ref, path, view
+
+
+###########################################################################
+# Fancy box (javascript)
+###########################################################################
+
+_close_fancybox = """
+    <html>
+    <head>
+      <script src="/ui/jquery.js" type="text/javascript"></script>
+    </head>
+    <body>
+      <script type="text/javascript">
+        $(document).ready(function() { parent.$.fancybox.close(); });
+      </script>
+    </body>
+    </html>
+    """
+
+def close_fancybox(context):
+    fancybox = context.get_query_value('fancybox')
+    if fancybox:
+        context.set_content_type('text/html')
+        return _close_fancybox

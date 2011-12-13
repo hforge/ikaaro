@@ -21,7 +21,7 @@ from itools.gettext import MSG
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import CheckboxWidget, RadioWidget, SelectWidget
-from buttons import RemoveButton
+from buttons import Remove_BrowseButton
 from config import Configuration
 from config_common import NewResource_Local
 from fields import Boolean_Field, Date_Field, Integer_Field, Select_Field
@@ -142,7 +142,7 @@ class ModelField_Choices_Browse(OrderedFolder_BrowseContent):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
         ('order', MSG(u'Order'))]
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
 
 class ChoicesWidget_Field(Select_Field):
@@ -227,7 +227,7 @@ class Model_Browse(OrderedFolder_BrowseContent):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
         ('order', MSG(u'Order'))]
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
 
 
@@ -317,7 +317,7 @@ class ConfigModels_Browse(Folder_BrowseContent):
         ('base_class', MSG(u'Base class')),
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author'))]
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
 
 

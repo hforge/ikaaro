@@ -36,8 +36,6 @@ MSG_CHANGES_SAVED2 = INFO(u'The changes have been saved ({time}).')
 
 MSG_DELETE_RESOURCE = MSG(u'Are you sure you want to delete this resource?')
 
-MSG_DELETE_SELECTION = MSG(u'Are you sure you want to delete the selection?')
-
 MSG_EDIT_CONFLICT = ERROR(
     u'Someone already saved this document, click "Save" again to force.')
 

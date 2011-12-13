@@ -34,7 +34,7 @@ from itools.web import BaseView, STLView, ERROR, get_context
 # Import from ikaaro
 from autoform import SelectWidget, TextWidget
 from buttons import PasteButton
-from buttons import RemoveButton, RenameButton, CopyButton, CutButton
+from buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
@@ -317,7 +317,8 @@ class Folder_BrowseContent(BrowseForm):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author'))]
     table_actions = [
-        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
+        Remove_BrowseButton, RenameButton,
+        CopyButton, CutButton, PasteButton,
         ZipButton]
 
 

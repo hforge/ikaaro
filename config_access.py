@@ -25,7 +25,7 @@ from itools.web import get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from datatypes import Groups_Datatype
-from buttons import RemoveButton
+from buttons import Remove_BrowseButton
 from config import Configuration
 from config_common import NewResource_Local
 from fields import Select_Field
@@ -236,7 +236,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
         return columns
 
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
 
     def get_key_sorted_by_group(self):

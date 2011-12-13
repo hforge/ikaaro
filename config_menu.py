@@ -29,7 +29,7 @@ from autoedit import AutoEdit
 from autoform import PathSelectorWidget
 from config import Configuration
 from config_common import NewResource_Local
-from buttons import RemoveButton
+from buttons import Remove_BrowseButton
 from fields import Select_Field, URI_Field
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from utils import split_reference
@@ -59,7 +59,7 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
         ('order', MSG(u'Order'))]
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
     def get_item_value(self, resource, context, item, column):
         if column == 'title':

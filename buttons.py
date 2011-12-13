@@ -21,7 +21,6 @@ from itools.stl import STLTemplate
 
 # Import from ikaaro
 from datatypes import CopyCookie
-import messages
 from utils import make_stl_template
 
 
@@ -61,7 +60,21 @@ class Button(STLTemplate):
         return context.is_access_allowed(context.resource, self)
 
 
+###########################################################################
+# Buttons that apply to one item
+###########################################################################
+class Remove_Button(Button):
 
+    access = 'is_allowed_to_remove'
+    confirm = MSG(u'Are you sure you want to delete this?')
+    css = 'button-delete'
+    name = 'remove'
+    title = MSG(u'Remove')
+
+
+###########################################################################
+# Buttons that apply to several items
+###########################################################################
 class BrowseButton(Button):
 
     @proto_property
@@ -74,13 +87,9 @@ class BrowseButton(Button):
 
 
 
-class RemoveButton(BrowseButton):
+class Remove_BrowseButton(Remove_Button, BrowseButton):
 
-    access = 'is_allowed_to_remove'
-    confirm = messages.MSG_DELETE_SELECTION
-    css = 'button-delete'
-    name = 'remove'
-    title = MSG(u'Remove')
+    confirm = MSG(u'Are you sure you want to delete the selection?')
 
 
 

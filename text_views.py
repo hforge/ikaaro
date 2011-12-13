@@ -27,7 +27,7 @@ from itools.web import STLView, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, EditAreaWidget, get_default_widget
-from buttons import Button, RemoveButton
+from buttons import Button, Remove_BrowseButton
 from fields import Textarea_Field
 from file_views import File_Edit
 import messages
@@ -219,7 +219,7 @@ class CSV_View(BrowseForm):
         return value
 
 
-    table_actions = [RemoveButton]
+    table_actions = [Remove_BrowseButton]
 
 
     def action_remove(self, resource, context, form):
