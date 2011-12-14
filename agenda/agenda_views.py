@@ -399,10 +399,6 @@ class CalendarView(STLView):
         return search.get_resources(sort_by='dtstart')
 
 
-    def get_config_calendar(self, resource):
-        return resource.get_resource('/config/agenda')
-
-
     def get_namespace(self, resource, context):
         c_date = self.get_current_date(context)
         cal_selector = self.calendar_selector(context=context, c_date=c_date)
@@ -532,7 +528,7 @@ class WeeklyView(CalendarView):
     def get_timetables_grid_ns(self, resource, start_date):
         """Build namespace to give as grid to gridlayout factory.
         """
-        timetables = self.get_config_calendar(resource).get_timetables()
+        timetables = resource.get_timetables()
 
         ns_timetables = []
         for start, end in timetables:
