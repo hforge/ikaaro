@@ -70,7 +70,7 @@ def get_dates(start, end, rrule):
     # Case 1: No recurrence rule
     if not rrule or not rrule.value:
         f(start)
-        return sorted(dates)
+        return dates
 
     # Case 2: Recurrence rule
     rrule_name = rrule.value
@@ -110,7 +110,7 @@ def get_dates(start, end, rrule):
             start = next_date(start)
             interval -= 1
 
-    return sorted(dates)
+    return dates
 
 
 

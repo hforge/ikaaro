@@ -35,7 +35,8 @@ from ikaaro.config_models import Model
 from ikaaro.content import Content
 from ikaaro.enumerates import DaysOfWeek
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
-from ikaaro.fields import Datetime_Field, Owner_Field, SelectDays_Field
+from ikaaro.fields import Date_Field, Datetime_Field, Owner_Field
+from ikaaro.fields import SelectDays_Field
 from ikaaro.utils import CMSTemplate, make_stl_template, close_fancybox
 from ikaaro import messages
 
@@ -113,8 +114,6 @@ class Event_Edit(AutoEdit):
     styles = ['/ui/agenda/style.css']
     can_be_open_in_fancybox = True
 
-    actions = AutoEdit.actions + [Remove_Button]
-
     # Fields
     fields = AutoEdit.fields + [
         'calendar',
@@ -126,6 +125,25 @@ class Event_Edit(AutoEdit):
     rrule_interval = RRuleInterval_Field
     rrule_byday = SelectDays_Field(title=MSG(u'On'), multiple=True)
     rrule_until = RRuleUntil_Field
+
+
+    def get_actions(self, resource, context):
+        actions = AutoEdit.actions
+
+        # Singleton
+        if not resource.get_value('rrule'):
+            return actions + [Remove_Button]
+
+        # Recurrent
+        date = context.get_query_value('date', Date)
+        if not date:
+            return actions + [Remove_Button]
+
+        date = context.format_date(date)
+        return actions + [
+            Remove_Button(title=MSG(u'Remove event at {date}', date=date),
+                          name='remove_one_instance'),
+            Remove_Button(title=MSG(u'Remove all events in the series'))]
 
 
     def get_scripts(self, context):
@@ -203,6 +221,14 @@ class Event_Edit(AutoEdit):
         container.del_resource(resource.name)
         # Ok
         context.message = MSG(u'Resource removed')
+        return close_fancybox(context)
+
+
+    def action_remove_one_instance(self, resource, context, form):
+        date = context.get_query_value('date', Date)
+        resource.set_value('exdate', date)
+        # Ok
+        context.message = MSG(u'Instance removed')
         return close_fancybox(context)
 
 
@@ -338,6 +364,7 @@ class Event(Content):
     place = Char_Field(title=MSG(u'Where'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = RRule_Field(title=MSG(u'Recurrence'))
+    exdate = Date_Field(multiple=True)
     reminder = Reminder_Field(title=MSG(u'Reminder'))
     uid = Char_Field(readonly=True)
 
@@ -361,9 +388,14 @@ class Event(Content):
         if type(end) is datetime:
             end = end.date()
 
+        # Recurrence
         rrule = self.metadata.get_property('rrule')
-
-        return get_dates(start, end, rrule)
+        dates = get_dates(start, end, rrule)
+        # Exclude dates
+        exdate = self.get_value('exdate')
+        dates.difference_update(exdate)
+        # Ok
+        return sorted(dates)
 
 
     def get_value(self, name, language=None):
@@ -418,9 +450,9 @@ class Event(Content):
 
 
     def get_ns_event(self, current_day, grid=False):
-        context = get_context()
-        ns = {'id': str(self.abspath),
-              'link': context.get_link(self),
+        abspath = str(self.abspath)
+        ns = {'id': abspath,
+              'link': abspath,
               'title': self.get_title(),
               'cal': 0,
               'color': self.get_color(),
@@ -431,10 +463,8 @@ class Event(Content):
         ###############################################################
         # URL
         context = get_context()
-        user = context.user
-        root = context.root
-        if root.is_allowed_to_view(user, self):
-            ns['url'] = '%s/;edit' % context.get_link(self)
+        if context.root.is_allowed_to_view(context.user, self):
+            ns['url'] = '%s/;edit?date=%s' % (abspath, current_day)
         else:
             ns['url'] = None
 
@@ -522,10 +552,6 @@ class Event(Content):
     def get_color(self):
         calendar = self.get_resource(self.get_value('calendar'))
         return calendar.get_value('color')
-
-
-    def get_config_calendar(self):
-        return self.get_resource('/config/agenda')
 
 
     # Views
