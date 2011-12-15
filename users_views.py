@@ -461,10 +461,10 @@ class Users_AddUser(AutoAdd):
     fields = ['email', 'password', 'password2', 'groups']
 
     password = Password_Field(title=MSG(u'Password'), datatype=String,
+                              widget=ChoosePassword_Widget(userid='email'),
             tip = MSG(u'If no password is given an email will be sent to the '
                       u' user, asking him to choose his password.'))
-    password2 = Password_Field(title=MSG(u'Repeat password'),
-                               datatype=String)
+    password2 = Password_Field(title=MSG(u'Repeat password'), datatype=String)
 
 
     @proto_lazy_property

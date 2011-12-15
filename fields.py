@@ -38,7 +38,7 @@ from autoform import BirthDateWidget, CheckboxWidget, DateWidget
 from autoform import DatetimeWidget, FileWidget, MultilineWidget, RadioWidget
 from autoform import PasswordWidget, SelectWidget, TextWidget
 from autoform import ColorPickerWidget, rte_widget
-from datatypes import BirthDate, HexadecimalColor, HTMLBody, Password
+from datatypes import BirthDate, HexadecimalColor, HTMLBody, Password_Datatype
 from enumerates import DaysOfWeek
 from utils import get_secure_hash, split_reference
 
@@ -212,7 +212,7 @@ class Decimal_Field(Metadata_Field):
 
 
 class Password_Field(Metadata_Field):
-    datatype = Password
+    datatype = Password_Datatype
     widget = PasswordWidget
 
     def set_value(self, resource, name, value, language=None, **kw):

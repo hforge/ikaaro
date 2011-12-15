@@ -35,7 +35,7 @@ from itools.web import STLView, get_context
 
 # Import from ikaaro
 from buttons import Button
-from datatypes import BirthDate, Password
+from datatypes import BirthDate, Password_Datatype
 from enumerates import Days, Months, Years
 from utils import CMSTemplate, make_stl_template
 
@@ -869,7 +869,7 @@ widgets_registry = {
         DateTime: DatetimeWidget,
         Email: TextWidget,
         Enumerate: SelectWidget,
-        Password: PasswordWidget,
+        Password_Datatype: PasswordWidget,
         PathDataType: PathSelectorWidget}
 
 def get_default_widget(datatype):

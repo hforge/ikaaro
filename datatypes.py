@@ -74,7 +74,7 @@ class FileDataType(DataType):
 
 
 
-class Password(DataType):
+class Password_Datatype(DataType):
 
     @staticmethod
     def decode(data):
