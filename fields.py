@@ -33,12 +33,13 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import ProgressBarWidget, Widget
-from autoform import BirthDateWidget, CheckboxWidget, DateWidget
-from autoform import DatetimeWidget, FileWidget, MultilineWidget, RadioWidget
-from autoform import PasswordWidget, SelectWidget, TextWidget
-from autoform import ColorPickerWidget, rte_widget
-from datatypes import BirthDate, HexadecimalColor, HTMLBody, Password_Datatype
+from autoform import Widget, FileWidget, MultilineWidget, TextWidget
+from autoform import CheckboxWidget, RadioWidget, SelectWidget
+from autoform import BirthDateWidget, DateWidget, DatetimeWidget
+from autoform import PasswordWidget, ChoosePassword_Widget
+from autoform import ColorPickerWidget, ProgressBarWidget, rte_widget
+from datatypes import BirthDate, HexadecimalColor, HTMLBody
+from datatypes import Password_Datatype, ChoosePassword_Datatype
 from enumerates import DaysOfWeek
 from utils import get_secure_hash, split_reference
 
@@ -222,6 +223,13 @@ class Password_Field(Metadata_Field):
         # super
         proxy = super(Password_Field, self)
         return proxy.set_value(resource, name, value, language, **kw)
+
+
+class ChoosePassword_Field(Password_Field):
+    datatype = ChoosePassword_Datatype
+    widget = ChoosePassword_Widget
+    widget_keys = Password_Field.widget_keys + ['userid']
+
 
 
 class ProgressBar_Field(Metadata_Field):

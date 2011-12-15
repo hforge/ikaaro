@@ -35,8 +35,9 @@ from autoedit import AutoEdit
 from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, TextWidget
 from autoform import PasswordWidget, ChoosePassword_Widget
 from buttons import Button, BrowseButton
+from datatypes import ChoosePassword_Datatype
 from emails import send_email
-from fields import Password_Field
+from fields import Password_Field, ChoosePassword_Field
 import messages
 from views import BrowseForm
 
@@ -50,7 +51,7 @@ class User_ConfirmRegistration(AutoForm):
     schema = freeze({
         'key': String(mandatory=True),
         'username': String,
-        'newpass': String(mandatory=True),
+        'newpass': ChoosePassword_Datatype(mandatory=True),
         'newpass2': String(mandatory=True)})
     widgets = freeze([
         HiddenWidget('key'),
@@ -276,7 +277,7 @@ class User_EditPassword(AutoForm):
 
     schema = freeze({
         'username': String,
-        'newpass': String(mandatory=True),
+        'newpass': ChoosePassword_Datatype(mandatory=True),
         'newpass2': String(mandatory=True)})
     widgets = [
         HiddenWidget('username'),
@@ -460,10 +461,9 @@ class Users_AddUser(AutoAdd):
 
     fields = ['email', 'password', 'password2', 'groups']
 
-    password = Password_Field(title=MSG(u'Password'), datatype=String,
-                              widget=ChoosePassword_Widget(userid='email'),
-            tip = MSG(u'If no password is given an email will be sent to the '
-                      u' user, asking him to choose his password.'))
+    password = ChoosePassword_Field(title=MSG(u'Password'), userid='email')
+    password.tip = MSG(u'If no password is given an email will be sent to the'
+                       u' user, asking him to choose his password.')
     password2 = Password_Field(title=MSG(u'Repeat password'), datatype=String)
 
 

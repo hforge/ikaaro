@@ -86,6 +86,13 @@ class Password_Datatype(DataType):
         return quote(encodestring(value))
 
 
+class ChoosePassword_Datatype(String):
+
+    @staticmethod
+    def is_valid(value):
+        return len(value) >= 4
+
+
 
 class CopyCookie(DataType):
 
