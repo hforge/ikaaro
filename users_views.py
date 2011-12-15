@@ -275,10 +275,13 @@ class User_EditPassword(AutoForm):
     icon = 'lock.png'
 
     schema = freeze({
+        'username': String,
         'newpass': String(mandatory=True),
         'newpass2': String(mandatory=True)})
     widgets = [
-        PasswordWidget('newpass', title=MSG(u'New password')),
+        HiddenWidget('username'),
+        ChoosePassword_Widget('newpass', userid='username',
+                              title=MSG(u'New password')),
         PasswordWidget('newpass2', title=MSG(u'Confirm'))]
 
 
@@ -293,6 +296,14 @@ class User_EditPassword(AutoForm):
             return self.widgets
         title = MSG(u'Type your current password')
         return self.widgets + [PasswordWidget('password', title=title)]
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'username':
+            return resource.get_login_name()
+
+        proxy = super(User_EditPassword, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
