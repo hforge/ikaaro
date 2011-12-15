@@ -86,6 +86,14 @@ class User_ConfirmRegistration(AutoForm):
         return proxy.get_namespace(resource, context)
 
 
+    def _get_form(self, resource, context):
+        proxy = super(User_ConfirmRegistration, self)
+        form = proxy._get_form(resource, context)
+        if form['username'] == form['newpass']:
+            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+        return form
+
+
     def action(self, resource, context, form):
         # Check register key
         key = resource.get_property('user_state').get_parameter('key')
@@ -307,6 +315,13 @@ class User_EditPassword(AutoForm):
         return proxy.get_value(resource, context, name, datatype)
 
 
+    def _get_form(self, resource, context):
+        form = super(User_EditPassword, self)._get_form(resource, context)
+        if form['username'] == form['newpass']:
+            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+        return form
+
+
     def action(self, resource, context, form):
         # Check the new password matches
         newpass = form['newpass'].strip()
@@ -474,6 +489,10 @@ class Users_AddUser(AutoAdd):
 
     def _get_form(self, resource, context):
         form = super(Users_AddUser, self)._get_form(resource, context)
+
+        # Check the password is not equal to the username
+        if form['email'] == form['newpass']:
+            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
 
         # Check whether the user already exists
         email = form['email'].strip()
