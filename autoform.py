@@ -21,10 +21,12 @@
 
 # Import from the Standard Library
 from datetime import datetime, date
+from os.path import basename
 from random import randint
 
 # Import from itools
-from itools.core import freeze, get_abspath, is_prototype, proto_lazy_property
+from itools.core import freeze, get_abspath
+from itools.core import is_prototype, proto_property, proto_lazy_property
 from itools.datatypes import Boolean, Email, Enumerate, PathDataType
 from itools.datatypes import Date, DateTime, Time
 from itools.fs import lfs
@@ -131,7 +133,11 @@ class ChoosePassword_Widget(Widget):
       });
     </script>""")
 
-    scripts = ['/ui/js/password_strength_plugin.js']
+    @proto_property
+    def scripts(self):
+        context = get_context()
+        handler = context.get_template('/ui/js/password_strength_plugin.js')
+        return ['/ui/js/%s' % basename(handler.key)]
 
     # Password meter configuration
     userid = None
