@@ -29,6 +29,7 @@ from agenda_views import DailyView, MonthlyView, WeeklyView
 from event import Event, EventModel, Event_Edit, Event_NewInstance
 from event import Event_Render
 from calendars import Calendar, Calendars_Enumerate, Calendars_View
+from emails import Event_Reminder_Email
 
 
 __all__ = [
@@ -39,7 +40,9 @@ __all__ = [
     'EventModel',
     'DailyView',
     'MonthlyView',
-    'WeeklyView']
+    'WeeklyView',
+    # Emails
+    'Event_Reminder_Email']
 
 
 # Register

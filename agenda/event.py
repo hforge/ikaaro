@@ -33,6 +33,7 @@ from ikaaro.autoform import RadioWidget
 from ikaaro.buttons import Remove_Button
 from ikaaro.config_models import Model
 from ikaaro.content import Content
+from ikaaro.emails import send_email
 from ikaaro.enumerates import DaysOfWeek
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Date_Field, Datetime_Field, Owner_Field
@@ -443,10 +444,9 @@ class Event(Content):
 
 
     def time_event(self):
+        context = get_context()
         to_addr = self.get_resource(self.get_owner()).get_value('email')
-        subject = MSG(u'Reminder')
-        text = MSG(u'Reminder').gettext()
-        self.get_resource('/').send_email(to_addr, subject, text=text)
+        send_email('event-reminder', context, to_addr, event=self)
 
 
     def get_ns_event(self, current_day, grid=False):

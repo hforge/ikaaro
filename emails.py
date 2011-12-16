@@ -28,20 +28,11 @@ class Email(prototype):
     text = None
 
 
-    user = None
     def get_text_namespace(self, context):
         host_uri = str(context.uri.resolve('/'))[:-1]
         namespace = {
             'host': host_uri,
             'host_title': context.root.get_title()}
-
-        # User specific information
-        user = self.user
-        if user:
-            namespace['user'] = host_uri + str(user.abspath)
-            namespace['userid'] = user.get_login_name()
-            user_state = user.get_property('user_state')
-            namespace['userkey'] = user_state.get_parameter('key')
 
         return namespace
 
@@ -71,9 +62,25 @@ def send_email(email_id, context, to_addr, **kw):
 
 
 ###########################################################################
-# Specific classes
+# User email
 ###########################################################################
-class User_AskForConfirmation(Email):
+class User_Email(Email):
+
+    user = None
+    def get_text_namespace(self, context):
+        namespace = super(User_Email, self).get_text_namespae(context)
+        # User specific information
+        user = self.user
+        if user:
+            namespace['user'] = namespace['host'] + str(user.abspath)
+            namespace['userid'] = user.get_login_name()
+            user_state = user.get_property('user_state')
+            namespace['userkey'] = user_state.get_parameter('key')
+
+        return namespace
+
+
+class User_AskForConfirmation(User_Email):
     """This email asks the user to confirm his subscription to the web site.
     It is send in two conditions:
 
@@ -90,7 +97,7 @@ class User_AskForConfirmation(Email):
 
 
 
-class AddUser_SendNotification(Email):
+class AddUser_SendNotification(User_Email):
 
     class_id = 'add-user-send-notification'
     subject = MSG(u'Registration notification')
@@ -101,7 +108,7 @@ class AddUser_SendNotification(Email):
 
 
 
-class Register_AlreadyRegistered(Email):
+class Register_AlreadyRegistered(User_Email):
 
     class_id = 'register-already-registered'
     subject = MSG(u"Already registered")
@@ -112,7 +119,7 @@ class Register_AlreadyRegistered(Email):
 
 
 
-class Register_SendConfirmation(Email):
+class Register_SendConfirmation(User_Email):
 
     class_id = 'register-send-confirmation'
     subject = MSG(u"Registration confirmed")
@@ -123,7 +130,7 @@ class Register_SendConfirmation(Email):
 
 
 
-class ForgottenPassword_AskForConfirmation(Email):
+class ForgottenPassword_AskForConfirmation(User_Email):
 
     class_id = 'forgotten-password-ask-for-confirmation'
     subject = MSG(u"Choose a new password")
@@ -133,14 +140,14 @@ class ForgottenPassword_AskForConfirmation(Email):
         u' {user}/;change_password_forgotten?username={userid}&key={userkey}')
 
 
-class SwitchState_Activate(Email):
+class SwitchState_Activate(User_Email):
 
     class_id = 'switch-state-activate'
     subject = MSG(u'Your account has been re-activated')
     text = MSG(u'Your account has been re-activated')
 
 
-class SwitchState_Deactivate(Email):
+class SwitchState_Deactivate(User_Email):
 
     class_id = 'switch-state-deactivate'
     subject = MSG(u'Your account has been canceled')
