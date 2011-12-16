@@ -38,8 +38,8 @@ MAX_DELTA = timedelta(3650) # we cannot index an infinite number of values
 def next_day(x, delta=timedelta(1)):
     return x + delta
 
-def next_week(x, delta=timedelta(7)):
-    return x + delta
+def next_week(x):
+    return x + timedelta(7 - x.weekday())
 
 def next_month(x):
     year = x.year
@@ -91,18 +91,17 @@ def get_dates(start, end, rrule):
         interval = rrule_interval
         if bydays:
             # Check any day of byday parameter
-            c_day = start
             for byday in bydays:
                 # Skip previous byday values
-                if byday < c_day.isoweekday():
+                if start.isoweekday() > byday:
                     continue
                 # Go ahead to current byday value
-                while c_day.isoweekday() < byday:
-                    c_day = next_day(c_day)
-                if c_day >= until:
+                while start.isoweekday() < byday:
+                    start = next_day(start)
+                if start >= until:
                     break
                 # Add current day (== byday value)
-                f(c_day)
+                f(start)
         else:
             f(start)
         # Go to next date based on rrule value and interval
