@@ -351,13 +351,19 @@ class Folder_BrowseContent(BrowseForm):
         form = context.query
         for key, datatype in self.search_schema.items():
             value = form[key]
-            if value and key == 'text':
-                query.append(TextQuery(key, form[key]))
-            elif value and datatype.multiple is True:
-                query.append(
-                    OrQuery(*[ PhraseQuery(key, x) for x in form[key] ]))
-            elif value:
-                query.append(PhraseQuery(key, form[key]))
+            if not value:
+                continue
+            # Special case: search on text, title and name
+            if key == 'text':
+                query.append(OrQuery(TextQuery('title', value),
+                                     TextQuery('text', value),
+                                     PhraseQuery('name', value)))
+            # Multiple
+            elif datatype.multiple is True:
+                query.append(OrQuery(*[ PhraseQuery(key, x) for x in value ]))
+            # Singleton
+            else:
+                query.append(PhraseQuery(key, value))
         return query
 
 
