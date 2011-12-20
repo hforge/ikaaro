@@ -91,13 +91,13 @@ class OurWrapper(TextWrapper):
 
 
 
-def indent(text):
+def indent(text, width=95):
     """Replace URLs by HTML links.  Wrap lines (with spaces) to 95 chars.
     """
     text = text.encode('utf-8')
     # Wrap
     buffer = []
-    text_wrapper = OurWrapper(width=95)
+    text_wrapper = OurWrapper(width=width)
     for line in text.splitlines():
         line = text_wrapper.fill(line) + '\n'
         for segment in url_expr.split(line):
@@ -126,6 +126,7 @@ class Comment_View(STLView):
     # Configuration
     comment_index = None
     edit_mode = False
+    width = 95
 
 
     def get_comment_columns(self, resource, context):
@@ -138,7 +139,8 @@ class Comment_View(STLView):
         elif column == 'datetime':
             return context.format_datetime(item.get_value('mtime'))
         elif column == 'comment':
-            return indent(item.get_value('description'))
+            comment = item.get_value('description')
+            return indent(comment, self.width)
         elif column == 'workflow':
             datatype = item.comment_state.get_datatype()
             if self.edit_mode is False or datatype is None:

@@ -174,6 +174,24 @@ class Skin(object):
         return meta
 
 
+    def get_favicon(self, context):
+        # Case 1: from the database
+        theme = context.database.get_resource('/config/theme')
+        favicon = theme.get_value('favicon')
+        if favicon:
+            favicon_href = '/config/theme/;get_file?name=favicon'
+            favicon_type = favicon.get_mimetype()
+            return favicon_href, favicon_type
+
+        # Case 2: from the skin
+        favicon = '%s/favicon.ico' % self.base_path
+        if context.get_template(favicon):
+            return (favicon, 'image/x-icon')
+
+        # Case 3: default
+        return ('/ui/favicon.ico', 'image/x-icon')
+
+
     #######################################################################
     # Authenticated user
     #######################################################################
@@ -304,30 +322,24 @@ class Skin(object):
     # Main
     #######################################################################
     def build_namespace(self, context):
+        # Context menus
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
         # The favicon.ico
-        root = context.root
-        theme = root.get_resource('config/theme')
-        favicon = theme.get_value('favicon')
-        if favicon:
-            favicon_href = '/config/theme/;get_file?name=favicon'
-            favicon_type = favicon.get_mimetype()
-        else:
-            favicon_href = '/ui/favicon.ico'
-            favicon_type = 'image/x-icon'
+        favicon_href, favicon_type = self.get_favicon(context)
 
         # Logo
+        theme = context.database.get_resource('/config/theme')
         logo = theme.get_value('logo')
         logo_href = '/config/theme/;get_file?name=logo' if logo else None
 
         # Menu
+        root = context.root
         menu = root.get_resource('config/menu')
         menu_ns = menu.get_menu_namespace(context)
 
         # The document language
-        here = context.resource
         languages = root.get_value('website_languages')
         language = context.accept_language.select_language(languages)
 
