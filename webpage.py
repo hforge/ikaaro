@@ -65,15 +65,9 @@ class WebPage(File):
         return 'application/xhtml+xml; charset=UTF-8'
 
 
+    # XXX Obsolete: remove and call 'get_html_field_body_stream' instead
     def get_html_data(self, language=None):
-        document = self.get_value('data', language=language)
-        if not document:
-            document = self.data.class_handler()
-
-        body = document.get_body()
-        if not body:
-            return None
-        return body.get_content_elements()
+        return self.get_html_field_body_stream('data', language)
 
 
     def to_text(self, languages=None):
@@ -84,7 +78,6 @@ class WebPage(File):
             handler = self.get_value('data', language=language)
             result[language] = handler.to_text()
         return result
-
 
 
     #######################################################################

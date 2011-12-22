@@ -34,9 +34,11 @@ from itools.uri import Path
 from itools.web import BaseView, Forbidden, get_context
 
 # Import from ikaaro
+from autoedit import AutoEdit
 from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
+from fields import HTMLFile_Field
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
@@ -55,6 +57,9 @@ class Folder(DBResource):
     class_icon48 = 'icons/48x48/folder.png'
     class_views = ['view', 'browse_content', 'preview_content', 'edit',
                    'links', 'backlinks', 'commit_log']
+
+    # Fields
+    index = HTMLFile_Field
 
 
     #########################################################################
@@ -363,6 +368,8 @@ class Folder(DBResource):
 
     # Views
     view = Folder_View
+    edit = AutoEdit(fields=['title', 'index', 'description', 'subject',
+                            'share'])
     new_resource = Folder_NewResource
     browse_content = Folder_BrowseContent
     rename = Folder_Rename

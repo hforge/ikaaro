@@ -27,9 +27,9 @@ from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.handlers.utils import transmap
-from itools.stl import set_prefix
+from itools.html import stream_is_empty
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLView, ERROR, get_context
+from itools.web import BaseView, STLView, get_context
 
 # Import from ikaaro
 from autoform import SelectWidget, TextWidget
@@ -120,18 +120,9 @@ class Folder_View(BaseView):
 
 
     def GET(self, resource, context):
-        from webpage import WebPage
-
-        index = resource.get_resource('index', soft=True)
-        if not isinstance(index, WebPage):
-            context.message = ERROR(
-                u'There is not an "index" web page. Could not render this '
-                u'view.')
-            return ''
-
-        # Rewrite the URLs
-        stream = index.get_html_data()
-        return set_prefix(stream, 'index/')
+        stream = resource.get_html_field_body_stream('index')
+        stream = list(stream)
+        return stream if not stream_is_empty(stream) else ''
 
 
 

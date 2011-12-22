@@ -40,7 +40,7 @@ from autoedit import AutoEdit
 from autoform import CheckboxWidget
 from datatypes import Groups_Datatype
 from exceptions import ConsistencyError
-from fields import Char_Field, Datetime_Field, File_Field
+from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
@@ -345,6 +345,26 @@ class DBResource(Resource):
             datatype = field.get_datatype()
             return datatype.get_value(value)
         return value
+
+
+    def get_html_field_body_stream(self, name, language=None):
+        """Utility method, returns the stream for the given html field.
+        """
+        # 1. Check it is an html-file field
+        field = self.get_field(name)
+        if not is_prototype(field, HTMLFile_Field):
+            raise ValueError, 'expected html-file field'
+
+        # 2. Get the handler
+        handler = field.get_value(self, name, language)
+        if not handler:
+            handler = field.class_handler()
+
+        # 3. Get the body
+        body = handler.get_body()
+        if not body:
+            raise ValueError, 'html file does not have a body'
+        return body.get_content_elements()
 
 
     def get_property(self, name, language=None):
