@@ -68,7 +68,7 @@ class User_Email(Email):
 
     user = None
     def get_text_namespace(self, context):
-        namespace = super(User_Email, self).get_text_namespae(context)
+        namespace = super(User_Email, self).get_text_namespace(context)
         # User specific information
         user = self.user
         if user:
