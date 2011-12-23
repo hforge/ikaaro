@@ -62,7 +62,8 @@ class Text(File):
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'commit_log']
-    class_handler = TextFile
+    # Fields
+    fields = File.data(class_handler=TextFile)
 
 
     def get_content_type(self):
@@ -81,7 +82,8 @@ class PO(Text):
     class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
-    class_handler = POFile
+    # Fields
+    data = Text.data(class_handler=POFile)
 
     # Views
     edit = PO_Edit
@@ -226,7 +228,8 @@ class Python(Text):
     class_title = MSG(u'Python')
     class_icon16 = 'icons/16x16/python.png'
     class_icon48 = 'icons/48x48/python.png'
-    class_handler = PythonFile
+    # Fields
+    data = Text.data(class_handler=PythonFile)
 
 
 
@@ -243,7 +246,8 @@ class XML(Text):
 
     class_id = 'text/xml'
     class_title = MSG(u'XML File')
-    class_handler = XMLFile
+    # Fields
+    data = Text.data(class_handler=XMLFile)
 
 
 
@@ -251,7 +255,8 @@ class HTML(Text):
 
     class_id = 'text/html'
     class_title = MSG(u'HTML File')
-    class_handler = HTMLFile
+    # Fields
+    data = Text.data(class_handler=HTMLFile)
 
 
 
@@ -260,7 +265,8 @@ class CSV(Text):
     class_id = 'text/comma-separated-values'
     class_title = MSG(u'Comma Separated Values')
     class_views = ['view', 'add_row', 'edit', 'externaledit', 'commit_log']
-    class_handler = CSVFile
+    # Fields
+    data = Text.data(class_handler=CSVFile)
 
 
     def get_columns(self):

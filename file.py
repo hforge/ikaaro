@@ -56,10 +56,9 @@ class File(Content):
     class_icon48 = 'icons/48x48/file.png'
     class_views = ['view', 'edit', 'externaledit', 'links', 'backlinks',
                    'commit_log']
-    class_handler = FileHandler
 
     # Fields
-    data = File_Field(required=True)
+    data = File_Field(required=True, class_handler=FileHandler)
     filename = Char_Field
 
 
@@ -123,7 +122,8 @@ class Image(File):
     class_icon48 = 'icons/48x48/image.png'
     class_views = ['view', 'download', 'edit', 'externaledit', 'links',
                    'backlinks', 'commit_log']
-    class_handler = ImageHandler
+    # Fields
+    data = File.data(class_handler=ImageHandler)
 
     def get_max_width(self):
         # Auto-reduce width on init
@@ -161,10 +161,10 @@ class Image(File):
 
 
 class SVG(Image):
-
     class_id = 'image/svg+xml'
     class_title = MSG(u'Image SVG')
-    class_handler = SVGFile
+    # Fields
+    data = Image.data(class_handler=SVGFile)
 
 
 
@@ -201,7 +201,8 @@ class MSWord(File):
     class_description = MSG(u'Word Text')
     class_icon16 = 'icons/16x16/word.png'
     class_icon48 = 'icons/48x48/word.png'
-    class_handler = MSWordFile
+    # Fields
+    data = File.data(class_handler=MSWordFile)
 
 
 
@@ -211,7 +212,8 @@ class MSExcel(File):
     class_description = MSG(u'Excel Spreadsheet')
     class_icon16 = 'icons/16x16/excel.png'
     class_icon48 = 'icons/48x48/excel.png'
-    class_handler = MSExcelFile
+    # Fields
+    data = File.data(class_handler=MSExcelFile)
 
 
 
@@ -221,7 +223,8 @@ class MSPowerPoint(File):
     class_description = MSG(u'PowerPoint Presentation')
     class_icon16 = 'icons/16x16/powerpoint.png'
     class_icon48 = 'icons/48x48/powerpoint.png'
-    class_handler = MSPowerPointFile
+    # Fields
+    data = File.data(class_handler=MSPowerPointFile)
 
 
 
@@ -231,7 +234,8 @@ class OOWriter(File):
     class_description = MSG(u'OpenOffice.org Text')
     class_icon16 = 'icons/16x16/oowriter.png'
     class_icon48 = 'icons/48x48/oowriter.png'
-    class_handler = SXWFile
+    # Fields
+    data = File.data(class_handler=SXWFile)
 
 
 
@@ -241,7 +245,8 @@ class OOCalc(File):
     class_description = MSG(u'OpenOffice.org Spreadsheet')
     class_icon16 = 'icons/16x16/oocalc.png'
     class_icon48 = 'icons/48x48/oocalc.png'
-    class_handler = SXCFile
+    # Fields
+    data = File.data(class_handler=SXCFile)
 
 
 
@@ -251,7 +256,8 @@ class OOImpress(File):
     class_description = MSG(u'OpenOffice.org Presentation')
     class_icon16 = 'icons/16x16/ooimpress.png'
     class_icon48 = 'icons/48x48/ooimpress.png'
-    class_handler = SXIFile
+    # Fields
+    data = File.data(class_handler=SXIFile)
 
 
 
@@ -261,7 +267,8 @@ class PDF(File):
     class_description = MSG(u'PDF Document')
     class_icon16 = 'icons/16x16/pdf.png'
     class_icon48 = 'icons/48x48/pdf.png'
-    class_handler = PDFFile
+    # Fields
+    data = File.data(class_handler=PDFFile)
 
 
 
@@ -271,7 +278,8 @@ class RTF(File):
     class_description = MSG(u'RTF Document')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_handler = RTFFile
+    # Fields
+    data = File.data(class_handler=RTFFile)
 
 
 
@@ -281,7 +289,8 @@ class ODT(File):
     class_description = MSG(u'OpenDocument Text')
     class_icon16 = 'icons/16x16/odt.png'
     class_icon48 = 'icons/48x48/odt.png'
-    class_handler = ODTFile
+    # Fields
+    data = File.data(class_handler=ODTFile)
 
 
 
@@ -291,7 +300,8 @@ class ODS(File):
     class_description = MSG(u'OpenDocument Spreadsheet')
     class_icon16 = 'icons/16x16/ods.png'
     class_icon48 = 'icons/48x48/ods.png'
-    class_handler = ODSFile
+    # Fields
+    data = File.data(class_handler=ODSFile)
 
 
 
@@ -301,7 +311,8 @@ class ODP(File):
     class_description = MSG(u'OpenDocument Presentation')
     class_icon16 = 'icons/16x16/odp.png'
     class_icon48 = 'icons/48x48/odp.png'
-    class_handler = ODPFile
+    # Fields
+    data = File.data(class_handler=ODPFile)
 
 
 
@@ -320,7 +331,8 @@ class ZipArchive(Archive):
     class_description = MSG(u'Zip Archive')
     class_icon16 = 'icons/16x16/zip.png'
     class_icon48 = 'icons/48x48/zip.png'
-    class_handler = ZIPFile
+    # Fields
+    data = Archive.data(class_handler=ZIPFile)
 
 
 
@@ -330,7 +342,8 @@ class TarArchive(Archive):
     class_description = MSG(u'Tar Archive')
     class_icon16 = 'icons/16x16/tar.png'
     class_icon48 = 'icons/48x48/tar.png'
-    class_handler = TARFile
+    # Fields
+    data = Archive.data(class_handler=TARFile)
 
 
 
@@ -340,7 +353,8 @@ class Gzip(File):
     class_description = MSG(u'Gzip Compressed')
     class_icon16 = 'icons/16x16/gzip.png'
     class_icon48 = 'icons/48x48/gzip.png'
-    class_handler = GzipFile
+    # Fields
+    data = File.data(class_handler=GzipFile)
 
 
 
@@ -350,10 +364,12 @@ class Bzip2(File):
     class_description = MSG(u'Bzip2 Compressed')
     class_icon16 = 'icons/16x16/bzip.png'
     class_icon48 = 'icons/48x48/bzip.png'
-    class_handler = Bzip2File
+    # Fields
+    data = File.data(class_handler=Bzip2File)
 
 
 ###########################################################################
 # Register
 ###########################################################################
 Database.register_resource_class(File, 'application/octet-stream')
+Database.register_resource_class(ZipArchive, 'application/x-zip-compressed')
