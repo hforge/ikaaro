@@ -24,7 +24,6 @@ from zipfile import ZipFile
 
 # Import from itools
 from itools.core import is_prototype
-from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -42,7 +41,7 @@ from fields import HTMLFile_Field
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
-from messages import MSG_BAD_NAME, MSG_NAME_CLASH
+from messages import MSG_NAME_CLASH
 from resource_ import DBResource
 
 
@@ -142,55 +141,45 @@ class Folder(DBResource):
     def extract_archive(self, handler, default_language, filter=None,
                         postproc=None, update=False):
         change_resource = self.database.change_resource
-        for u_path in handler.get_contents():
+        for path_str in handler.get_contents():
             # 1. Skip folders
-            path_str = Unicode.encode(u_path)
-
             path = Path(path_str)
             if path.endswith_slash:
+                continue
+
+            # Skip the owner file (garbage produced by microsoft)
+            filename = path[-1]
+            if filename.startswith('~$'):
                 continue
 
             # 2. Create parent folders if needed
             folder = self
             for name in path[:-1]:
-                # call checkid on name to avoid capitalized name
-                try:
-                    checkid_name = checkid(name)
-                except UnicodeEncodeError:
-                    checkid_name = None
-                if checkid_name is None:
-                    raise RuntimeError, MSG_BAD_NAME
-
-                subfolder = folder.get_resource(checkid_name, soft=True)
+                name, title = process_name(name)
+                subfolder = folder.get_resource(name, soft=True)
                 if subfolder is None:
-                    folder = folder.make_resource(checkid_name, Folder)
+                    folder = folder.make_resource(name, Folder)
+                    folder.set_value('title', title, default_language)
                 elif not isinstance(subfolder, Folder):
                     raise RuntimeError, MSG_NAME_CLASH
                 else:
                     folder = subfolder
 
             # 3. Get the new body
-            filename = path[-1]
             name, extension, language = FileName.decode(filename)
             if language is None:
                 language = default_language
 
-            body = handler.get_file(u_path)
+            body = handler.get_file(path_str)
             mimetype = guess_mimetype(filename, 'application/octet-stream')
             if filter:
-                body = filter(u_path, mimetype, body)
+                body = filter(path_str, mimetype, body)
                 if body is None:
                     continue
 
             # 4. Update or make file
-            try:
-                checkid_name = checkid(name)
-            except UnicodeEncodeError:
-                checkid_name = None
-            if checkid_name is None:
-                raise RuntimeError, MSG_BAD_NAME
-
-            file = folder.get_resource(checkid_name, soft=True)
+            name, title = process_name(name)
+            file = folder.get_resource(name, soft=True)
             if file:
                 if update is False:
                     msg = 'unexpected resource at {path}'
@@ -210,8 +199,9 @@ class Folder(DBResource):
                     change_resource(file)
             else:
                 # Case 1: the resource does not exist
-                file = folder._make_file(checkid_name, filename, mimetype,
-                                         body, language)
+                file = folder._make_file(name, filename, mimetype, body,
+                                         language)
+                file.set_value('title', title, language=language)
                 if postproc:
                     postproc(file)
 
@@ -375,6 +365,25 @@ class Folder(DBResource):
     rename = Folder_Rename
     preview_content = Folder_PreviewContent
     thumb = Folder_Thumbnail
+
+
+
+def process_name(name):
+    for encoding in 'utf-8', 'iso-8859-1', 'cp437':
+        try:
+            title = unicode(name, encoding)
+            checkid_name = checkid(title, soft=False)
+            break
+        except UnicodeError:
+            pass
+    else:
+        raise ValueError, name
+
+    if checkid_name is None:
+        raise ValueError, name
+
+    # Ok
+    return checkid_name, title
 
 
 ###########################################################################

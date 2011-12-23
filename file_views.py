@@ -33,7 +33,7 @@ from autoedit import AutoEdit
 from autoform import PathSelectorWidget
 from fields import ProgressBar_Field
 from folder import Folder
-from messages import MSG_NAME_CLASH, MSG_NEW_RESOURCE
+from messages import MSG_NEW_RESOURCE
 
 
 class File_NewInstance(AutoAdd):
@@ -237,12 +237,9 @@ class Archive_View(STLView):
         contents = resource.get_value('data').get_contents()
         contents = '\n'.join(contents)
         # Extract archive
-        root = context.root
-        extract = root.is_allowed_to_edit(context.user, resource)
+        extract = context.root.is_allowed_to_edit(context.user, resource)
         if extract:
             widget = PathSelectorWidget('target', value='..').render()
-        else:
-            widget = None
         # Ok
         return {'filename': filename, 'contents': contents,
                 'extract': extract, 'widget': widget}
@@ -274,12 +271,7 @@ class Archive_View(STLView):
 
         # Make the resources
         language = resource.get_edit_languages(context)[0]
-        try:
-            target.extract_archive(handler, language, update=form['update'])
-        except RuntimeError, message:
-            context.commit = False
-            context.message = MSG_NAME_CLASH
-            return
+        target.extract_archive(handler, language, update=form['update'])
 
         # Ok
         message = MSG(u'Files extracted')
