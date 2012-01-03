@@ -166,20 +166,22 @@ class Folder(DBResource):
                 else:
                     folder = subfolder
 
-            # 3. Get the new body
-            name, extension, language = FileName.decode(filename)
-            if language is None:
-                language = default_language
-
-            body = handler.get_file(path_str)
+            # 3. Find out the resource name, the file mimetype and language
             mimetype = guess_mimetype(filename, 'application/octet-stream')
+            name, extension, language = FileName.decode(filename)
+            language = language or default_language
+            if mimetype not in ('application/xhtml+xml', 'text/html'):
+                name = FileName.encode((name, extension, None))
+            name, title = process_name(name)
+
+            # 4. Get the new body
+            body = handler.get_file(path_str)
             if filter:
                 body = filter(path_str, mimetype, body)
                 if body is None:
                     continue
 
-            # 4. Update or make file
-            name, title = process_name(name)
+            # 5. Update or make file
             file = folder.get_resource(name, soft=True)
             if file:
                 if update is False:
@@ -255,7 +257,7 @@ class Folder(DBResource):
 
         # Copy the content
         database = self.database
-        fs =  database.fs
+        fs = database.fs
         new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
