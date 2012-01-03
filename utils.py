@@ -146,8 +146,20 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
 ###########################################################################
 # Tidy HTML
 ###########################################################################
+encodings = ['utf-8', 'windows-1252', 'cp437']
+def to_utf8(data):
+    for encoding in encodings:
+        try:
+            return unicode(data, encoding).encode('utf-8')
+        except UnicodeError:
+            pass
+
+    raise UnicodeError, 'unable to find out encoding'
+
+
 def tidy_html(body):
     if tidy:
+        body = to_utf8(body)
         body = tidy.parseString(body, indent=1, char_encoding='utf8',
                                 output_xhtml=1, word_2000=1)
         body = str(body)

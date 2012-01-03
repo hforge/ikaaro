@@ -166,15 +166,16 @@ class Folder(DBResource):
                 else:
                     folder = subfolder
 
-            # 3. Find out the resource name, the file mimetype and language
+            # 3. Find out the resource name and title, the file mimetype and language
             mimetype = guess_mimetype(filename, 'application/octet-stream')
             name, extension, language = FileName.decode(filename)
+            name, title = process_name(name)
             language = language or default_language
+            # Keep the filename extension (except in webpages)
             if mimetype not in ('application/xhtml+xml', 'text/html'):
                 name = FileName.encode((name, extension, None))
-            name, title = process_name(name)
 
-            # 4. Get the new body
+            # 4. The body
             body = handler.get_file(path_str)
             if filter:
                 body = filter(path_str, mimetype, body)
@@ -371,8 +372,9 @@ class Folder(DBResource):
 
 
 
+encodings = ['utf-8', 'windows-1252', 'cp437']
 def process_name(name):
-    for encoding in 'utf-8', 'iso-8859-1', 'cp437':
+    for encoding in encodings:
         try:
             title = unicode(name, encoding)
             checkid_name = checkid(title, soft=False)
