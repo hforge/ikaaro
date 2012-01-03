@@ -20,10 +20,17 @@
 from hashlib import sha1
 from random import sample
 
+# Import from other modules
+try:
+    import tidy
+except ImportError:
+    tidy = None
+
 # Import from itools
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
 from itools.database import RangeQuery
 from itools.datatypes import Unicode
+from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.stl import STLTemplate, stl_namespaces
 from itools.uri import get_reference, Reference
 from itools.web import get_context
@@ -134,6 +141,18 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
         if not title.endswith(ellipsis):
             title += ellipsis
     return title
+
+
+###########################################################################
+# Tidy HTML
+###########################################################################
+def tidy_html(body):
+    if tidy:
+        body = tidy.parseString(body, indent=1, char_encoding='utf8',
+                                output_xhtml=1, word_2000=1)
+        body = str(body)
+
+    return stream_to_str_as_xhtml(HTMLParser(body))
 
 
 ###########################################################################

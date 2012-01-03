@@ -27,7 +27,7 @@ from itools.core import is_prototype
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.html import HTMLParser, stream_to_str_as_xhtml
+from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
 from itools.web import BaseView, Forbidden, get_context
@@ -43,6 +43,7 @@ from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
 from messages import MSG_NAME_CLASH
 from resource_ import DBResource
+from utils import tidy_html
 
 
 
@@ -89,7 +90,7 @@ class Folder(DBResource):
         name = name or kk
         # Web Pages are first class citizens
         if mimetype == 'text/html':
-            body = stream_to_str_as_xhtml(HTMLParser(body))
+            body = tidy_html(body)
             class_id = 'webpage'
         elif mimetype == 'application/xhtml+xml':
             class_id = 'webpage'
@@ -98,16 +99,16 @@ class Folder(DBResource):
         cls = self.database.get_resource_class(class_id)
 
         # Special case: web pages
-        kw = {'filename': filename}
+        kw = {'filename': filename, 'data': body}
         if issubclass(cls, WebPage):
             if language is None:
-                text = cls.class_handler(string=body).to_text()
+                text = XHTMLFile(string=body).to_text()
                 language = guess_language(text) or default_language
-            kw['language'] = language
+            kw['data'] = {language: body}
 #       else:
 #           kw['extension'] = extension
 
-        return self.make_resource(name, cls, data=body, **kw)
+        return self.make_resource(name, cls, **kw)
 
 
     def export_zip(self, paths):
@@ -185,7 +186,7 @@ class Folder(DBResource):
                     msg = 'unexpected resource at {path}'
                     raise RuntimeError, msg.format(path=path_str)
                 if mimetype == 'text/html':
-                    body = stream_to_str_as_xhtml(HTMLParser(body))
+                    body = tidy_html(body)
                     file_handler = file.get_handler(language)
                 else:
                     file_handler = file.get_handler()

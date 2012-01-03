@@ -20,11 +20,12 @@ The scripts included are:
 Requirements
 =============
 
-Software    Version  Used by           Home
-----------  -------  ----------------  --------------------------------------
-Python          2.6  ikaaro            http://www.python.org/
-itools       0.62.1  ikaaro            http://www.hforge.org/itools
-guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
+Software    Version  Used by            Home
+----------  -------  -----------------  -------------------------------------
+Python          2.6  ikaaro             http://www.python.org/
+itools       0.62.1  ikaaro             http://www.hforge.org/itools
+utidylib             ikaaro (optional)  http://utidylib.berlios.de/
+guppy         0.1.8  Memory profiling   http://guppy-pe.sourceforge.net/
 
 Check the itools requirements.
 
