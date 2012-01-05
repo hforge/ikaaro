@@ -560,9 +560,7 @@ class LogoutView(BaseView):
 
 
     def GET(self, resource, context):
-        # Log-out
-        context.del_cookie('__ac')
-        context.user = None
+        context.logout()
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')

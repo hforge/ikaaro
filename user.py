@@ -36,7 +36,7 @@ from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
-from utils import crypt_password, generate_password
+from utils import get_secure_hash, generate_password
 from views import MessageView
 
 

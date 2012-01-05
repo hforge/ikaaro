@@ -113,7 +113,11 @@ def generate_password(length=6):
     return ''.join(sample(tokens, length))
 
 
+# DEPRECATED, replaced by get_secure_hash
 def crypt_password(password):
+    return sha1(password).digest()
+
+def get_secure_hash(password):
     return sha1(password).digest()
 
 
