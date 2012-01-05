@@ -17,7 +17,8 @@
             <label for="search_comment">Comment</label><br/>
             <input size="35" name="search_comment" type="text"
                    value="${search_comment}"/>
-            <button type="submit" class="button-search">Search</button>
+            <button type="submit" class="button-search">Search
+            </button>
           </td>
         </tr>
       </table>
