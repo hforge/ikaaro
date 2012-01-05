@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.database import PhraseQuery
 from itools.gettext import MSG
 from itools.web import INFO, get_context
 
@@ -93,6 +94,14 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
             buttons += [OrderButton, UnOrderButton]
 
         return buttons
+
+
+    def get_search_query(self, resource, context):
+        proxy = super(OrderedFolder_BrowseContent, self)
+        query = proxy.get_search_query(resource, context)
+        if resource.base_classes:
+            query.append(PhraseQuery('base_classes', resource.base_classes))
+        return query
 
 
     def get_key_sorted_by_order(self):
@@ -184,10 +193,22 @@ class OrderedFolder(Folder):
 
     def make_resource(self, name, cls, **kw):
         resource = super(OrderedFolder, self).make_resource(name, cls, **kw)
-        order = self.get_value('order')
-        order = order + [resource.name]
-        self.set_value('order', order)
+        if self.can_be_ordered(cls):
+            order = self.get_value('order')
+            order = order + [resource.name]
+            self.set_value('order', order)
         return resource
+
+
+    base_classes = None
+    def can_be_ordered(self, cls):
+        if not self.base_classes:
+            return True
+        for base_class in cls.__mro__:
+            if getattr(base_class, 'class_id', None) in self.base_classes:
+                return True
+        return False
+
 
 
     def get_ordered_values(self):
