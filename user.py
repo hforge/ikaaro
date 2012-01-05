@@ -87,6 +87,38 @@ class User(AccessControl, Folder):
 
 
     ########################################################################
+    # API / Authentication
+    ########################################################################
+    def get_user_id(self):
+        # Used by itools.web
+        return str(self.name)
+
+
+    def get_auth_token(self):
+        # Used by itools.web
+        return self.get_property('password')
+
+
+    def set_password(self, password):
+        secure_hash = get_secure_hash(password)
+        self.set_property('password', secure_hash)
+
+
+    def authenticate(self, password, clear=None):
+        if clear is not None:
+            log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
+
+        secure_hash = get_secure_hash(password)
+        return secure_hash == self.get_property('password')
+
+
+    def set_auth_cookie(self, context, password):
+        msg = "user.set_auth_cookie is DEPRECATED, use context.login(user)"
+        log_warning(msg, domain='ikaaro')
+        context.login(self)
+
+
+    ########################################################################
     # API
     ########################################################################
     def get_title(self, language=None):
@@ -109,18 +141,6 @@ class User(AccessControl, Folder):
         return self.get_property('email')
 
 
-    def set_password(self, password):
-        crypted = crypt_password(password)
-        self.set_property('password', crypted)
-
-
-    def authenticate(self, password, clear=False):
-        if clear:
-            password = crypt_password(password)
-
-        return password == self.get_property('password')
-
-
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
@@ -133,15 +153,8 @@ class User(AccessControl, Folder):
         return tuple(groups)
 
 
-    def set_auth_cookie(self, context, password):
-        username = str(self.name)
-        crypted = crypt_password(password)
-        cookie = Password.encode('%s:%s' % (username, crypted))
-        expires = context.get_form_value('iAuthExpires')
-        if expires is None:
-            context.set_cookie('__ac', cookie, path='/')
-        else:
-            context.set_cookie('__ac', cookie, path='/', expires=expires)
+    def get_timezone(self):
+        return self.get_property('user_timezone')
 
 
     ########################################################################

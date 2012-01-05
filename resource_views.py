@@ -535,16 +535,7 @@ class LoginView(STLForm):
             context.message = message
             return
 
-        # Check the password is right
-        if not user.authenticate(password, clear=True):
-            context.message = ERROR(u'The password is wrong.')
-            return
-
-        # Set cookie
-        user.set_auth_cookie(context, password)
-
-        # Set context
-        context.user = user
+        context.login(user)
 
         # Come back
         referrer = context.get_referrer()
