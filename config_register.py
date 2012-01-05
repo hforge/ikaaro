@@ -31,7 +31,6 @@ from emails import send_email
 from enumerates import Days, Months, Years
 from fields import Boolean_Field, HTMLFile_Field
 from resource_ import DBResource
-from utils import make_stl_template
 
 
 class TermsOfService_View(STLView):
@@ -47,22 +46,9 @@ class TermsOfService_View(STLView):
 
 class TermsOfService_Widget(Widget):
 
+    template = '/ui/register_terms_of_service.xml'
     title = MSG(u'Terms of Service')
     inline = True
-
-    template = make_stl_template("""
-    <iframe src="/;terms_of_service" width="500px" stl:if="inline">
-      <p>Your browser does not support iframes.</p>
-    </iframe>
-    <div>
-      <input type="checkbox" id="tos" name="tos" value="1" />
-      <label for="tos">Please check this box to accept the
-        <a href="/;terms_of_service" target="_blank"
-          onclick="return popup('/;terms_of_service', 640, 480);"
-          >Terms of Service</a>.
-      </label>
-    </div>
-    """)
 
 
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<iframe src="/;terms_of_service" width="500px" stl:if="inline">
+  <p>Your browser does not support iframes.</p>
+</iframe>
+<div>
+  <input type="checkbox" id="tos" name="tos" value="1" />
+  <label for="tos">Please check this box to accept the
+    <a href="/;terms_of_service" target="_blank"
+      onclick="return popup('/;terms_of_service', 640, 480);"
+      >Terms of Service</a>.
+  </label>
+</div>
+
+</stl:block>

@@ -168,7 +168,7 @@ msgstr ""
 "/ <a stl:if=\"x/url\" stl:content=\"x/name\" stl:attributes=\"href x/url\"></"
 "a>"
 
-#: ../config_register.py:178
+#: ../config_register.py:166
 msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
@@ -811,7 +811,7 @@ msgstr "Anteprima"
 msgid "Configuration Menu"
 msgstr "Anteprima"
 
-#: ../config_register.py:189
+#: ../config_register.py:177
 msgid "Configuration of the user registration process."
 msgstr ""
 
@@ -906,7 +906,7 @@ msgstr ""
 msgid "Create a new page and link to it:"
 msgstr ""
 
-#: ../config_register.py:72
+#: ../config_register.py:60
 #, fuzzy
 msgid "Create an account"
 msgstr "Modifica l'impostazione predefinita"
@@ -2125,6 +2125,11 @@ msgstr "Testo integrale"
 msgid "Please answer the question below:"
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
+#: ../ui/register_terms_of_service.xml.en:12
+msgctxt "label"
+msgid "Please check this box to accept the <g id='3'>Terms of Service</g>."
+msgstr ""
+
 #: ../users_views.py:134
 msgid "Please choose a new password for your account"
 msgstr ""
@@ -2604,7 +2609,7 @@ msgstr "Il titolo"
 msgid "Terms of Service"
 msgstr ""
 
-#: ../config_register.py:195
+#: ../config_register.py:183
 msgid "Terms of service"
 msgstr ""
 
@@ -3049,7 +3054,7 @@ msgstr ""
 msgid "User is not pending"
 msgstr ""
 
-#: ../config_register.py:188
+#: ../config_register.py:176
 msgid "User registration"
 msgstr ""
 
@@ -3070,7 +3075,7 @@ msgstr "Nome utente"
 msgid "Users"
 msgstr "Utenti"
 
-#: ../config_register.py:194
+#: ../config_register.py:182
 msgid "Users can register by themselves"
 msgstr ""
 
@@ -3310,6 +3315,11 @@ msgstr ""
 
 #: ../emails.py:146 ../emails.py:147
 msgid "Your account has been re-activated"
+msgstr ""
+
+#: ../ui/register_terms_of_service.xml.en:8
+msgctxt "paragraph"
+msgid "Your browser does not support iframes."
 msgstr ""
 
 #: ../messages.py:26
