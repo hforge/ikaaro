@@ -29,7 +29,7 @@ in this chapter, and which make up the RESTful interface::
   POST /;login               # Authentication
   GET /.../;rest_query       # Query the database
   POST /.../;rest            # Create a new resource
-  GET /.../;rest             # Read a reasource
+  GET /.../;rest             # Read a resource
   PUT /.../;rest             # Update a resource
   DELETE /.../;rest          # Delete a resource
  

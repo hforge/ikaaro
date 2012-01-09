@@ -20,7 +20,7 @@ import json
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery
-from itools.datatypes import String
+from itools.datatypes import HTTPDate, String
 from itools.handlers import checkid
 from itools.web import BaseView
 
@@ -104,10 +104,15 @@ class Rest_View(BaseView):
         """
         # Build a dictionary represeting the resource by its schema.
         representation = {}
+        representation['format'] = resource.class_id
         for field_name in resource.fields:
             value = field_to_json(resource, field_name)
             if value is not None:
                 representation[field_name] = value
+
+        # Set last modification time
+        mtime = resource.get_value('mtime')
+        context.set_header('Last-Modified', mtime)
 
         # Ok
         context.set_content_type('application/json')
