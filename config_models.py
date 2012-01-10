@@ -105,7 +105,7 @@ class ModelField_Standard(ModelField_Base):
     # API
     def build_field(self):
         field_type = self.get_value('field_type')
-        field = FieldType_Field.fields_map[field_type]
+        field = self.field_type.fields_map[field_type]
         field_kw = self.get_field_kw(field)
         return field(**field_kw)
 
