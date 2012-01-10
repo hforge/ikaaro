@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from operator import itemgetter
+
 # Import from itools
 from itools.core import merge_dicts
 from itools.datatypes import Enumerate, String
@@ -37,10 +40,12 @@ class Calendars_Enumerate(Enumerate):
     def get_options(self):
         context = get_context()
         calendars = context.search(format=Calendar.class_id).get_resources()
-        return [ {'name': str(x.abspath), 'value': x.get_title(),
+        options = [ {'name': str(x.abspath), 'value': x.get_title(),
                   'color': x.get_value('color')}
                  for x in calendars
                  if context.user.name not in x.get_value('hidden_for_users')]
+        options.sort(key=itemgetter('value'))
+        return options
 
 
 #####################################
