@@ -20,8 +20,11 @@ each one a different HTTP method is used:
 - Update (PUT)
 - Delete (DELETE)
 
-Information is exchanged using the `JSON
-<http://en.wikipedia.org/wiki/JSON>`_ format.
+Information is exchanged using a subset of the `JSON
+<http://en.wikipedia.org/wiki/JSON>`_ format. Only objects, arrays and
+strings are used.
+
+The only encoding supported is UTF-8.
 
 This is the summury of the views and request methods that will be presented
 in this chapter, and which make up the RESTful interface::
@@ -48,11 +51,11 @@ fields.
 
 A standard simple field looks like this in JSON::
 
-  "mtime": "2011-12-12T09:45:11+0000"
+  "mtime": {"value": "2011-12-12T09:45:11+0000"}
 
 Some fields may have multiple values::
 
-  "share": ["everybody", "authenticated"]
+  "share": [{"value": "everybody"}, {"value": "authenticated"}]
 
 Other fields have parameters, for instance multilingual fields like the
 title have a language parameter::
@@ -155,7 +158,24 @@ May be answered with the given response::
 Update
 ==============
 
-TODO
+The PUT request method is used to update a resource. Such a request looks
+like this::
+
+  PUT /;rest HTTP/1.1
+  Content-Type: application/json
+  ...
+
+  [["title", "NEW TITLE", {"lang": "en"}]]
+
+The JSON data represents a list of changes to be applied to the resource.
+Every change has three elements:
+
+- the name of the field
+- the new value for the field
+- the associated parameters
+
+For multilingual fields (like title shown in the example above), the *lang*
+parameter is required.
 
 
 Delete

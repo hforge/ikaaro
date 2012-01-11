@@ -20,7 +20,7 @@ import json
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery
-from itools.datatypes import HTTPDate, String
+from itools.datatypes import String
 from itools.handlers import checkid
 from itools.web import BaseView
 
@@ -30,11 +30,11 @@ from utils import get_base_path_query
 
 
 def property_to_json(field, prop):
+    # The value
     value = field.get_datatype().encode(prop.value)
-    if not field.parameters_schema:
-        return value
-
     value = {'value': value}
+
+    # The parameters
     if not prop.parameters:
         return value
 
@@ -122,17 +122,25 @@ class Rest_View(BaseView):
     def PUT(self, resource, context):
         """The U of CRUD: UPDATE
         """
-        data = context.get_form_value('data')
-        representation = json.loads(data)
-        for key, data in representation.iteritems():
-            try:
-                datatype = resource.get_property_datatype(key)
-            except ValueError:
-                pass
-            # TODO encoding? though it should be UTF-8
-            value = datatype.decode(data)
-            # TODO language of multilingual properties from the headers?
-            resource.set_property(key, value)
+        data = context.body['body']
+        changes = json.loads(data) # TODO USe a custom JSONDecoder
+        for name, value, parameters in changes:
+            # The name
+            name = str(name)
+            # The value
+            value = str(value)
+            datatype = resource.get_field(name).get_datatype()
+            value = datatype.decode(value)
+            # The language
+            lang = parameters.pop('lang', None)
+            if lang is not None:
+                lang = str(lang)
+            # The parameters (TODO)
+            # Action
+            from pprint import pprint
+            pprint([name, value, lang, parameters])
+            resource.set_value(name, value, lang, **parameters)
+
         # Empty 200 OK
         context.set_content_type('text/plain')
         return ''
