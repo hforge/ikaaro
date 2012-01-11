@@ -3268,7 +3268,7 @@ msgstr ""
 
 #: ../agenda/agenda_views.py:223
 msgid "{weekday}, {month} {day}, {year}"
-msgstr ""
+msgstr "{weekday} {day} {month} {year}"
 
 #: ../ui/aruni/languages.xml.en:7
 msgctxt "div"
