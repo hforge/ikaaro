@@ -98,7 +98,7 @@ class AllDayWidget(RadioWidget):
       </script>""")
 
     def widget(self):
-        return RadioWidget(datatype=Boolean,
+        return RadioWidget(datatype=Boolean, oneline=True,
             value=self.value, id=self.id, name=self.name)
 
 
