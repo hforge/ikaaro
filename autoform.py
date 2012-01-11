@@ -388,9 +388,10 @@ class DatetimeWidget(DateWidget):
 
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_date}" id="${id}"
-      class="dateField" size="10" />
+      class="dateField" size="10" maxlength="10"/>
     <button class="${css} button-selector">...</button>
-    <input type="text" name="${name}_time" value="${value_time}" size="5" />
+    <input type="text" id="${name}-time" name="${name}_time"
+        value="${value_time}" size="5" maxlength="5"/>
     <script type="text/javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
