@@ -339,7 +339,7 @@ class DateWidget(Widget):
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_}" id="${id}"
       class="dateField" size="${size}" />
-    <button class="${css} button-selector">...</button>
+    <button class="${css} button-selector button-selector-agenda">...</button>
     <script type="text/javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
@@ -389,7 +389,7 @@ class DatetimeWidget(DateWidget):
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_date}" id="${id}"
       class="dateField" size="10" maxlength="10"/>
-    <button class="${css} button-selector">...</button>
+    <button class="${css} button-selector button-selector-agenda">...</button>
     <input type="text" id="${name}-time" name="${name}_time"
         value="${value_time}" size="5" maxlength="5"/>
     <script type="text/javascript">
@@ -440,7 +440,7 @@ class PathSelectorWidget(TextWidget):
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <button id="selector-button-${id}" class="button-selector"
+    <button id="selector-button-${id}" class="button-selector button-selector-path"
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
     <label class="language" for="${id}" stl:if="language"
@@ -458,7 +458,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <button id="selector-button-${id}" class="button-selector"
+    <button id="selector-button-${id}" class="button-selector button-selector-image"
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
     <label class="language" for="${id}" stl:if="language"
