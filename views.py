@@ -368,10 +368,14 @@ class BrowseForm(STLView):
     ##################################################
     # Search
     ##################################################
-    def get_search_namespace(self, resource, context):
+    def get_search_actions(self, resource, context):
         search_button = Button(access=True,
             resource=resource, context=context,
             css='button-search', title=MSG(u'Search'))
+        return [search_button]
+
+
+    def get_search_namespace(self, resource, context):
         form = AutoForm(
             form_id=self.search_form_id,
             template=self.search_template,
@@ -380,7 +384,7 @@ class BrowseForm(STLView):
             method='get',
             schema=self.search_schema,
             widgets=self.search_widgets,
-            actions=[search_button])
+            actions=self.get_search_actions(resource, context))
         return form.GET(resource, context)
 
 
