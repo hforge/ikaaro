@@ -29,6 +29,9 @@ from fields import Metadata_Field
 from utils import get_base_path_query
 
 
+###########################################################################
+# Utility functions
+###########################################################################
 def fix_json(obj):
     """Utility function, given a json object as returned by json.loads
     transform the unicode strings to strings.
@@ -43,6 +46,27 @@ def fix_json(obj):
     if obj_type is dict:
         return { fix_json(x): fix_json(y) for x, y in obj.items() }
     return obj
+
+
+def load_json(context):
+    """Utility method that loads the json from the request entity. Used
+    by POST and PUT request methods.
+    """
+    data = context.body['body']
+    data = json.loads(data) # TODO Use a custom JSONDecoder
+    return fix_json(data)
+
+
+
+def update_resource(resource, changes):
+    for name, value, parameters in changes:
+        # The value
+        datatype = resource.get_field(name).get_datatype()
+        value = datatype.decode(value)
+        # The language
+        lang = parameters.pop('lang', None)
+        # Action
+        resource.set_value(name, value, lang, **parameters)
 
 
 def property_to_json(field, prop):
@@ -81,23 +105,16 @@ def field_to_json(resource, field_name):
 
 
 
-class Rest_View(BaseView):
-    """Generic REST exposure of a resource. Basis for a CRUD API.
-    Export to JSON by default, extensible to other formats.
+###########################################################################
+# The CRUD Views
+###########################################################################
+class Rest_Read(BaseView):
+    """The R of CRUD: READ
     """
+
     access = 'is_allowed_to_view'
-    access_POST = 'is_allowed_to_add'
-    access_PUT = 'is_allowed_to_edit'
-    access_DELETE = 'is_allowed_to_remove'
-
-    name_header = 'X-Create-Name'
-    type_header = 'X-Create-Type'
-    format_header = 'X-Create-Format'
-
 
     def GET(self, resource, context):
-        """The R of CRUD: READ
-        """
         # Build a dictionary represeting the resource by its schema.
         representation = {}
         representation['format'] = {'value': resource.class_id}
@@ -115,30 +132,14 @@ class Rest_View(BaseView):
         return json.dumps(representation)
 
 
-    def _get_request_json(self, context):
-        """Utility method that loads the json from the request entity. Used
-        by POST and PUT request methods.
-        """
-        data = context.body['body']
-        data = json.loads(data) # TODO Use a custom JSONDecoder
-        return fix_json(data)
+class Rest_Create(BaseView):
+    """The C of CRUD: CREATE
+    """
 
-
-    def _modify_resource(self, resource, changes):
-        for name, value, parameters in changes:
-            # The value
-            datatype = resource.get_field(name).get_datatype()
-            value = datatype.decode(value)
-            # The language
-            lang = parameters.pop('lang', None)
-            # Action
-            resource.set_value(name, value, lang, **parameters)
-
+    access = 'is_allowed_to_add'
 
     def POST(self, resource, context):
-        """The C of CRUD: CREATE
-        """
-        name, class_id, changes = self._get_request_json(context)
+        name, class_id, changes = load_json(context)
 
         # 1. Make the resource
         if name is not None:
@@ -146,7 +147,7 @@ class Rest_View(BaseView):
         cls = context.database.get_resource_class(class_id)
         child = resource.make_resource(name, cls)
         # 2. Modify the resource
-        self._modify_resource(child, changes)
+        update_resource(child, changes)
 
         # 3. Return the URL of the new resource
         path = child.abspath
@@ -156,27 +157,36 @@ class Rest_View(BaseView):
         return str(path)
 
 
-    def PUT(self, resource, context):
-        """The U of CRUD: UPDATE
-        """
-        changes = self._get_request_json(context)
-        self._modify_resource(resource, changes)
+
+class Rest_Update(BaseView):
+    """The U of CRUD: UPDATE
+    """
+
+    access = 'is_allowed_to_edit'
+
+    def POST(self, resource, context):
+        changes = load_json(context)
+        update_resource(resource, changes)
 
         # Empty 200 OK
         context.set_content_type('text/plain')
         return ''
 
 
-    def DELETE(self, resource, context):
-        """The D of CRUD: DELETE
-        """
-        # Delete myself
-        resource.parent.del_resource(resource.name)
-        # None means 204
-        return None
+#   access_DELETE = 'is_allowed_to_remove'
+#   def DELETE(self, resource, context):
+#       """The D of CRUD: DELETE
+#       """
+#       # Delete myself
+#       resource.parent.del_resource(resource.name)
+#       # None means 204
+#       return None
 
 
 
+###########################################################################
+# Other views
+###########################################################################
 class Rest_Query(BaseView):
 
     access = 'is_allowed_to_view'

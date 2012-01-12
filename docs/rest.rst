@@ -11,30 +11,17 @@ Introduction
 
 The Web Services interface provided follows the `REST
 <http://en.wikipedia.org/wiki/Representational_state_transfer>`_ paradigm.
-Four operations are supported (`CRUD
-<http://en.wikipedia.org/wiki/Create,_read,_update_and_delete>`_), for
-each one a different HTTP method is used:
-
-- Create (POST)
-- Read (GET)
-- Update (PUT)
-- Delete (DELETE)
-
 Information is exchanged using a subset of the `JSON
-<http://en.wikipedia.org/wiki/JSON>`_ format. Only objects, arrays and
-strings are used.
+<http://en.wikipedia.org/wiki/JSON>`_ format (only objects, arrays, strings
+and nulls are used). The only encoding supported is UTF-8.
 
-The only encoding supported is UTF-8.
-
-This is the summury of the views and request methods that will be presented
-in this chapter, and which make up the RESTful interface::
+The table below summurizes the interface::
 
   POST /;login               # Authentication
   GET /.../;rest_query       # Query the database
-  POST /.../;rest            # Create a new resource
-  GET /.../;rest             # Read a resource
-  PUT /.../;rest             # Update a resource
-  DELETE /.../;rest          # Delete a resource
+  POST /.../;rest_create     # Create a new resource
+  GET /.../;rest_read        # Read a resource
+  POST /.../;rest_update     # Update a resource
  
 
 Architecture recall
@@ -130,20 +117,13 @@ Other query parameters can be passed to refine the search. For instance in
 the example above we ask for resources of the ``webpage`` type.
 
 
-CRUD
-==============
-
-Every resource in ikaaro has a ``rest`` view, which can be called with
-four different request methods (GET, POST, PUT, DELETE).
-
-
 Read
---------------
+==============
 
 The GET request method is used to get information about a resource. For
 instance, the given request::
 
-  GET /;rest HTTP/1.1
+  GET /;rest_read HTTP/1.1
   Host: localhost:8080
   ...
 
@@ -157,12 +137,12 @@ May be answered with the given response::
 
 
 Update
---------------
+==============
 
 The PUT request method is used to update a resource. Such a request looks
 like this::
 
-  PUT /;rest HTTP/1.1
+  POST /;rest_update HTTP/1.1
   Content-Type: application/json
   ...
 
@@ -180,11 +160,11 @@ parameter is required.
 
 
 Create
---------------
+==============
 
 The POST request method is used to create a new resource::
 
-  PUT /;rest HTTP/1.1
+  POST /;rest_create HTTP/1.1
   Content-Type: application/json
   ...
 
@@ -202,6 +182,6 @@ created resource in the ``Location`` header field.
 
 
 Delete
---------------
+==============
 
 TODO
