@@ -130,17 +130,18 @@ Other query parameters can be passed to refine the search. For instance in
 the example above we ask for resources of the ``webpage`` type.
 
 
-Create
+CRUD
 ==============
 
-TODO
+Every resource in ikaaro has a ``rest`` view, which can be called with
+four different request methods (GET, POST, PUT, DELETE).
 
 
 Read
-==============
+--------------
 
-Every resource in ikaaro has a ``rest`` view, which can be called using any
-of the four methods above, for instance, the given request::
+The GET request method is used to get information about a resource. For
+instance, the given request::
 
   GET /;rest HTTP/1.1
   Host: localhost:8080
@@ -156,7 +157,7 @@ May be answered with the given response::
 
 
 Update
-==============
+--------------
 
 The PUT request method is used to update a resource. Such a request looks
 like this::
@@ -170,20 +171,37 @@ like this::
 The JSON data represents a list of changes to be applied to the resource.
 Every change has three elements:
 
-- the name of the field
-- the new value for the field
-- the associated parameters
+- The name of the field
+- The new value for the field
+- The associated parameters
 
 For multilingual fields (like title shown in the example above), the *lang*
 parameter is required.
 
 
+Create
+--------------
+
+The POST request method is used to create a new resource::
+
+  PUT /;rest HTTP/1.1
+  Content-Type: application/json
+  ...
+
+  ["page", "webpage", []]
+
+The JSON data is a list with three fields:
+
+- The name of the new resource
+- The resource type identifier
+- And the list of changes to apply to the new resource once it has been
+  created (similar to the data sent in PUT requests)
+
+On success a *201 Created* response is returned, with the URI of the
+created resource in the ``Location`` header field.
+
+
 Delete
-==============
-
-TODO
-
-Access Control
-==============
+--------------
 
 TODO

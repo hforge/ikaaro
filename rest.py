@@ -29,6 +29,22 @@ from fields import Metadata_Field
 from utils import get_base_path_query
 
 
+def fix_json(obj):
+    """Utility function, given a json object as returned by json.loads
+    transform the unicode strings to strings.
+
+    TODO Use a custom JSONDecoder instead.
+    """
+    obj_type = type(obj)
+    if obj_type is unicode:
+        return obj.encode('utf-8')
+    if obj_type is list:
+        return [ fix_json(x) for x in obj ]
+    if obj_type is dict:
+        return { fix_json(x): fix_json(y) for x, y in obj.items() }
+    return obj
+
+
 def property_to_json(field, prop):
     # The value
     value = field.get_datatype().encode(prop.value)
@@ -79,32 +95,12 @@ class Rest_View(BaseView):
     format_header = 'X-Create-Format'
 
 
-    def POST(self, resource, context):
-        """The C of CRUD: CREATE
-        """
-        # Read "bootstrap" from headers since body is used from metadata
-        name = context.get_header(self.name_header)
-        name = checkid(name)
-        class_id = context.get_header(self.type_header)
-        cls = context.database.get_resource_class(class_id)
-        format = context.get_header(self.format_header)
-        child = resource.make_resource(name, cls, format=format)
-        # The rest is an update
-        child.rest.PUT(child, context)
-        # 201 Created
-        context.status = 201
-        # Return the URL of the new resource
-        # XXX 201 may require empty body
-        context.set_content_type('text/plain')
-        return str(context.get_link(child))
-
-
     def GET(self, resource, context):
         """The R of CRUD: READ
         """
         # Build a dictionary represeting the resource by its schema.
         representation = {}
-        representation['format'] = resource.class_id
+        representation['format'] = {'value': resource.class_id}
         for field_name in resource.fields:
             value = field_to_json(resource, field_name)
             if value is not None:
@@ -119,27 +115,52 @@ class Rest_View(BaseView):
         return json.dumps(representation)
 
 
-    def PUT(self, resource, context):
-        """The U of CRUD: UPDATE
+    def _get_request_json(self, context):
+        """Utility method that loads the json from the request entity. Used
+        by POST and PUT request methods.
         """
         data = context.body['body']
-        changes = json.loads(data) # TODO USe a custom JSONDecoder
+        data = json.loads(data) # TODO Use a custom JSONDecoder
+        return fix_json(data)
+
+
+    def _modify_resource(self, resource, changes):
         for name, value, parameters in changes:
-            # The name
-            name = str(name)
             # The value
-            value = str(value)
             datatype = resource.get_field(name).get_datatype()
             value = datatype.decode(value)
             # The language
             lang = parameters.pop('lang', None)
-            if lang is not None:
-                lang = str(lang)
-            # The parameters (TODO)
             # Action
-            from pprint import pprint
-            pprint([name, value, lang, parameters])
             resource.set_value(name, value, lang, **parameters)
+
+
+    def POST(self, resource, context):
+        """The C of CRUD: CREATE
+        """
+        name, class_id, changes = self._get_request_json(context)
+
+        # 1. Make the resource
+        if name is not None:
+            name = checkid(name)
+        cls = context.database.get_resource_class(class_id)
+        child = resource.make_resource(name, cls)
+        # 2. Modify the resource
+        self._modify_resource(child, changes)
+
+        # 3. Return the URL of the new resource
+        path = child.abspath
+        context.status = 201
+        context.set_header('Location', str(context.uri.resolve(path)))
+        context.set_content_type('text/plain')
+        return str(path)
+
+
+    def PUT(self, resource, context):
+        """The U of CRUD: UPDATE
+        """
+        changes = self._get_request_json(context)
+        self._modify_resource(resource, changes)
 
         # Empty 200 OK
         context.set_content_type('text/plain')
