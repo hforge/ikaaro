@@ -215,7 +215,7 @@ class CaptchaWidget(Widget):
 
 
 class Captcha_Field(Field):
-    
+
     required = True
     datatype = CaptchaDatatype
     widget = CaptchaWidget

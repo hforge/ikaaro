@@ -32,7 +32,7 @@ from utils import get_content_containers, make_stl_template
 
 
 
-class ContainerPathDatatype(Enumerate):
+class Location_Datatype(Enumerate):
 
     def get_options(cls):
         context = get_context()
@@ -50,7 +50,7 @@ class ContainerPathDatatype(Enumerate):
 
 
 
-class LocationWidget(SelectWidget):
+class Location_Widget(SelectWidget):
     """This widget is only used in add forms. It is a hack because it is a
     composite widget and ikaaro does not allow to do this easily.
     """
@@ -70,7 +70,11 @@ class LocationWidget(SelectWidget):
         return get_context().query['name']
 
 
-location_widget = LocationWidget('path')
+
+class Location_Field(Field):
+
+    datatype = Location_Datatype
+    widget = Location_Widget
 
 
 
@@ -82,6 +86,7 @@ class AutoAdd(AutoForm):
     goto_view = None
 
 
+    # Fields
     fields = []
     def get_fields(self):
         cls = self._resource_class
@@ -105,6 +110,9 @@ class AutoAdd(AutoForm):
         if field is None or not is_prototype(field, Field):
             field = cls.get_field(name)
         return field
+
+
+    location = Location_Field
 
 
     #######################################################################
@@ -160,18 +168,15 @@ class AutoAdd(AutoForm):
             'cls_description': Unicode,
             'referrer': URI}
         for name in self.get_fields():
-            # Special case: location
-            if name == 'location':
-                schema['path'] = ContainerPathDatatype
-                schema['name'] = String(default='')
-                continue
-
             datatype = self._get_datatype(resource, context, name)
             if datatype is None:
                 continue
 
+            # Special case: location
+            if name == 'location':
+                schema['name'] = String(default='') # XXX Should be location_name
             # Special case: datetime
-            if issubclass(datatype, DateTime):
+            elif issubclass(datatype, DateTime):
                 schema['%s_time' % name] = Time
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
@@ -186,9 +191,6 @@ class AutoAdd(AutoForm):
 
 
     def _get_widget(self, resource, context, name):
-        if name == 'location':
-            return location_widget
-
         field = self.get_field(name)
         return field.get_widget(name)
 
@@ -212,8 +214,8 @@ class AutoAdd(AutoForm):
         elif name == 'referrer':
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()
-#       elif name == 'path':
-#           return context.root.get_pathto(resource)
+        elif name == 'location':
+            return str(resource.abspath)
 
         value = context.query.get(name)
         if value is None:
@@ -235,7 +237,7 @@ class AutoAdd(AutoForm):
         # Container
         container = resource
         if 'location' in self.get_fields():
-            path = form['path']
+            path = form['location']
             if path is not None:
                 container = resource.get_resource(path)
 
