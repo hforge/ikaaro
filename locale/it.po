@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2012-01-16 16:01+CET\n"
+"POT-Creation-Date: 2012-01-16 18:01+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -285,7 +285,7 @@ msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr ""
 
 #: ../agenda/event.py:160
-msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
+msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
 #: ../messages.py:47

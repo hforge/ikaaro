@@ -157,9 +157,9 @@ class Event_Edit(AutoEdit):
         # Set organizer infos in ${before}
         owner = resource.get_owner()
         owner = resource.get_resource(owner).get_title()
-        owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
-        owner = owner.gettext().encode('utf-8')
-        return XMLParser(owner)
+        owner_msg = MSG(u'<p id="event-owner">Created by <em>{owner}</em></p>')
+        owner_msg = owner_msg.gettext(owner=owner).encode('utf-8')
+        return XMLParser(owner_msg)
 
 
     def _get_form(self, resource, context):

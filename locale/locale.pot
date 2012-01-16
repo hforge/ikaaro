@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-01-16 16:01+CET\n"
+"POT-Creation-Date: 2012-01-16 18:01+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgid "<div id=\"registration-end-msg\">An email has been sent to you, to finish
 msgstr ""
 
 #: ../agenda/event.py:160
-msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
+msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
 #: ../messages.py:47

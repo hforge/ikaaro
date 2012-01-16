@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-16 16:01+CET\n"
+"POT-Creation-Date: 2012-01-16 18:01+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -291,8 +291,8 @@ msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr "<g id='8'>Supprimer</g>  <g id='9'>Mettre à jour</g>"
 
 #: ../agenda/event.py:160
-msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
-msgstr "<p id=\"event-owner\">Créé par <em>%s</em></p>"
+msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
+msgstr "<p id=\"event-owner\">Créé par <em>{owner}</em></p>"
 
 #: ../messages.py:47
 msgid "A given name already exists."
@@ -2895,7 +2895,8 @@ msgstr "Visible ?"
 
 #: ../agenda/emails.py:29
 msgid "We remind you the event \"{title}\" is scheduled at {date}, {time}."
-msgstr "Nous vous rappelons que l'événement \"{title}\" est prévu le {date} à {time}"
+msgstr ""
+"Nous vous rappelons que l'événement \"{title}\" est prévu le {date} à {time}"
 
 #: ../webpage.py:50
 msgid "Web Page"

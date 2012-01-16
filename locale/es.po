@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2012-01-16 16:01+CET\n"
+"POT-Creation-Date: 2012-01-16 18:01+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -295,7 +295,7 @@ msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr "<g id='10'>Buscar</g>  <g id='11'>Contacto</g>"
 
 #: ../agenda/event.py:160
-msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
+msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
 #: ../messages.py:47
