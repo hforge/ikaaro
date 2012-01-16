@@ -3248,15 +3248,15 @@ msgstr ""
 
 #: ../agenda/agenda_views.py:220
 msgid "{m_start} {w_start} - {m_end} {w_end}, {y_start}"
-msgstr ""
+msgstr "Du {w_start} {m_start} au {w_end} {m_end} {y_start}"
 
 #: ../agenda/agenda_views.py:221
 msgid "{m_start} {w_start} - {w_end}, {y_start}"
-msgstr ""
+msgstr "Du {w_start} au {w_end} {m_start} {y_start}"
 
 #: ../agenda/agenda_views.py:219
 msgid "{m_start} {w_start}, {y_start} - {m_end} {w_end}, {y_end}"
-msgstr ""
+msgstr "Du {w_start} {m_start} {y_start} au {w_end} {m_end} {y_end}"
 
 #: ../agenda/agenda_views.py:222
 msgid "{month} {year}"
