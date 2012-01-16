@@ -491,7 +491,8 @@ class Users_AddUser(AutoAdd):
         form = super(Users_AddUser, self)._get_form(resource, context)
 
         # Check the password is not equal to the username
-        if form['email'] == form['newpass']:
+        password = form['password'].strip()
+        if form['email'] == password:
             raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
 
         # Check whether the user already exists
@@ -501,7 +502,6 @@ class Users_AddUser(AutoAdd):
             raise FormError, ERROR(u'The user is already here.')
 
         # Check the password is right
-        password = form['password'].strip()
         if password != form['password2']:
             raise FormError, messages.MSG_PASSWORD_MISMATCH
         if password == '':
