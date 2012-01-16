@@ -22,7 +22,6 @@ from itools.gettext import MSG
 # Import from ikaaro
 from ikaaro.autoform import SelectWidget, Widget
 from ikaaro.fields import Integer_Field
-from ikaaro.utils import make_stl_template
 
 
 class Reminder_Unit(Enumerate):
@@ -39,42 +38,7 @@ class Reminder_Widget(Widget):
     the same hack that DateTimeWidget
     """
 
-    template = make_stl_template("""
-    <input type="checkbox" id="${name}-checkbox"
-      name="${name}-checbkox" checked="${has_remind}"/>
-    <label for="${name}-checbkox">I want to be remind</label>
-    <span id="${name}-area">
-      <input type="hidden" name="${name}" value="${value}" id="${id}"/>
-      <input type="text" name="${name}-number" value="${number_value}"
-        size="3" id="${id}-number"/>
-      ${reminders}
-      before the event.
-    </span>
-    <script type="text/javascript">
-      display_reminder();
-      function calculate_seconds(){
-        $("#${id}").val($("#${name}-number").val() * $("#${name}-unit").val());
-      }
-      function display_reminder(){
-        if($("#${id}-checkbox:checked").length == 0){
-          $("#${id}").val(0);
-          $("#${name}-area").hide();
-        }else{
-          calculate_seconds();
-          $("#${name}-area").show();
-        }
-      }
-      $("#${id}-checkbox").change(function(){
-        display_reminder();
-      });
-      $("#${id}-number").change(function(){
-        calculate_seconds();
-      });
-      $("#${id}-unit").change(function(){
-        calculate_seconds();
-      });
-    </script>
-    """)
+    template = '/ui/agenda/reminder_widget.xml'
 
     @proto_lazy_property
     def has_remind(self):
@@ -88,7 +52,6 @@ class Reminder_Widget(Widget):
         if not self.value:
             return 10
         return int(self.value) / self.reminder_value
-
 
 
     @proto_lazy_property

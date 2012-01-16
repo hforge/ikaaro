@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2012-01-05 09:01+CET\n"
+"POT-Creation-Date: 2012-01-16 16:01+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -152,7 +152,7 @@ msgstr ""
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
-#: ../config_register.py:166
+#: ../config_register.py:164
 msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
@@ -222,6 +222,13 @@ msgstr ""
 #: ../ui/website/edit_languages.xml.en:33
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
+msgstr ""
+
+#: ../agenda/ui/reminder_widget.xml.en:9
+msgctxt "label"
+msgid ""
+"<g id='2'>I want to be remind</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
+"${reminders} before the event. </g>"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
@@ -301,7 +308,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: ../buttons.py:144 ../config_access.py:89 ../autoadd.py:81
+#: ../buttons.py:144 ../config_access.py:89 ../autoadd.py:85
 #: ../text_views.py:260
 msgid "Add"
 msgstr ""
@@ -365,7 +372,7 @@ msgstr ""
 msgid "Add model"
 msgstr ""
 
-#: ../autoadd.py:133 ../folder_views.py:132
+#: ../autoadd.py:141 ../folder_views.py:132
 msgid "Add resource"
 msgstr ""
 
@@ -373,15 +380,15 @@ msgstr ""
 msgid "Add rule"
 msgstr ""
 
-#: ../order.py:64
+#: ../order.py:65
 msgid "Add to ordered list"
 msgstr ""
 
-#: ../autoadd.py:130
+#: ../autoadd.py:138
 msgid "Add {class_title}"
 msgstr ""
 
-#: ../autoadd.py:247
+#: ../autoadd.py:249
 msgid "Adding resources to {path} is not allowed."
 msgstr ""
 
@@ -520,7 +527,7 @@ msgstr ""
 msgid "Blog Post"
 msgstr ""
 
-#: ../webpage.py:58 ../autoform.py:660 ../autoform.py:663
+#: ../webpage.py:58 ../autoform.py:661 ../autoform.py:664
 msgid "Body"
 msgstr ""
 
@@ -584,7 +591,7 @@ msgstr ""
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:362 ../agenda/calendars.py:198
+#: ../agenda/event.py:362 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr ""
 
@@ -592,11 +599,11 @@ msgstr ""
 msgid "Calendar event"
 msgstr ""
 
-#: ../agenda/calendars.py:69
+#: ../agenda/calendars.py:74
 msgid "Calendars"
 msgstr ""
 
-#: ../agenda/calendars.py:169
+#: ../agenda/calendars.py:174
 msgid "Can't remove this calendar"
 msgstr ""
 
@@ -679,7 +686,7 @@ msgstr ""
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 
-#: ../autoform.py:437 ../autoform.py:455
+#: ../autoform.py:438 ../autoform.py:456
 msgid "Click on button \"...\" to select a file."
 msgstr ""
 
@@ -698,7 +705,7 @@ msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr ""
 
-#: ../agenda/calendars.py:85 ../agenda/calendars.py:204
+#: ../agenda/calendars.py:90 ../agenda/calendars.py:209
 msgid "Color"
 msgstr ""
 
@@ -732,7 +739,7 @@ msgstr ""
 msgid "Configuration Menu"
 msgstr ""
 
-#: ../config_register.py:177
+#: ../config_register.py:175
 msgid "Configuration of the user registration process."
 msgstr ""
 
@@ -808,7 +815,7 @@ msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr ""
 
-#: ../agenda/calendars.py:53
+#: ../agenda/calendars.py:58
 msgid "Create a new calendar..."
 msgstr ""
 
@@ -820,7 +827,7 @@ msgstr ""
 msgid "Create a new page and link to it:"
 msgstr ""
 
-#: ../config_register.py:60
+#: ../config_register.py:58
 msgid "Create an account"
 msgstr ""
 
@@ -896,7 +903,7 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: ../agenda/reminders.py:32
+#: ../agenda/reminders.py:31
 msgid "Days"
 msgstr ""
 
@@ -929,7 +936,7 @@ msgstr ""
 msgid "Depth"
 msgstr ""
 
-#: ../resource_.py:423 ../autoform.py:657 ../blog/blog.py:41
+#: ../resource_.py:423 ../autoform.py:658 ../blog/blog.py:41
 msgid "Description"
 msgstr ""
 
@@ -1277,7 +1284,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: ../agenda/reminders.py:31
+#: ../agenda/reminders.py:30
 msgid "Hours"
 msgstr ""
 
@@ -1411,7 +1418,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../resource_.py:425 ../autoform.py:658
+#: ../resource_.py:425 ../autoform.py:659
 msgid "Keywords"
 msgstr ""
 
@@ -1579,7 +1586,7 @@ msgctxt "legend"
 msgid "Microsoft Windows (32-bit)"
 msgstr ""
 
-#: ../agenda/reminders.py:30
+#: ../agenda/reminders.py:29
 msgid "Minutes"
 msgstr ""
 
@@ -1669,7 +1676,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../agenda/calendars.py:101 ../autoform.py:236
+#: ../agenda/calendars.py:106 ../autoform.py:236
 msgid "No"
 msgstr ""
 
@@ -1694,7 +1701,7 @@ msgctxt "legend"
 msgid "Not Found"
 msgstr ""
 
-#: ../order.py:116
+#: ../order.py:125
 msgid "Not ordered"
 msgstr ""
 
@@ -1819,27 +1826,27 @@ msgid "Optimize your website for better ranking in search engine results."
 msgstr ""
 
 #: ../config_groups.py:101 ../config_models.py:144 ../config_models.py:229
-#: ../config_menu.py:61 ../order.py:83 ../order.py:180
+#: ../config_menu.py:61 ../order.py:84 ../order.py:189
 msgid "Order"
 msgstr ""
 
-#: ../order.py:57
+#: ../order.py:58
 msgid "Order bottom"
 msgstr ""
 
-#: ../order.py:41
+#: ../order.py:42
 msgid "Order down"
 msgstr ""
 
-#: ../order.py:49
+#: ../order.py:50
 msgid "Order top"
 msgstr ""
 
-#: ../order.py:33
+#: ../order.py:34
 msgid "Order up"
 msgstr ""
 
-#: ../order.py:176
+#: ../order.py:185
 msgid "Ordered Folder"
 msgstr ""
 
@@ -2029,11 +2036,11 @@ msgstr ""
 msgid "Remove event at {date}"
 msgstr ""
 
-#: ../order.py:71
+#: ../order.py:72
 msgid "Remove from ordered list"
 msgstr ""
 
-#: ../agenda/calendars.py:153
+#: ../agenda/calendars.py:158
 msgid "Remove this calendar"
 msgstr ""
 
@@ -2059,7 +2066,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr ""
 
-#: ../autoform.py:662
+#: ../autoform.py:663
 msgid "Replace file"
 msgstr ""
 
@@ -2099,19 +2106,19 @@ msgstr ""
 msgid "Resources not allowed to remove: {resources}."
 msgstr ""
 
-#: ../order.py:142
+#: ../order.py:151
 msgid "Resources ordered down."
 msgstr ""
 
-#: ../order.py:154 ../order.py:160
+#: ../order.py:163 ../order.py:169
 msgid "Resources ordered on bottom."
 msgstr ""
 
-#: ../order.py:148
+#: ../order.py:157
 msgid "Resources ordered on top."
 msgstr ""
 
-#: ../order.py:136
+#: ../order.py:145
 msgid "Resources ordered up."
 msgstr ""
 
@@ -2135,7 +2142,7 @@ msgstr ""
 msgid "Resources retired."
 msgstr ""
 
-#: ../order.py:166
+#: ../order.py:175
 msgid "Resources unordered."
 msgstr ""
 
@@ -2156,7 +2163,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: ../agenda/calendars.py:150 ../autoform.py:688
+#: ../agenda/calendars.py:155 ../autoform.py:689
 msgid "Save"
 msgstr ""
 
@@ -2169,7 +2176,7 @@ msgstr ""
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../users_views.py:371 ../views.py:374 ../views.py:379
+#: ../users_views.py:371 ../views.py:374 ../views.py:383
 msgid "Search"
 msgstr ""
 
@@ -2207,7 +2214,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ../autoform.py:659
+#: ../autoform.py:660
 msgid "Separated by comma"
 msgstr ""
 
@@ -2335,7 +2342,7 @@ msgstr ""
 msgid "Terms of Service"
 msgstr ""
 
-#: ../config_register.py:183
+#: ../config_register.py:181
 msgid "Terms of service"
 msgstr ""
 
@@ -2420,7 +2427,7 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr ""
 
-#: ../users_views.py:501
+#: ../users_views.py:502
 msgid "The user is already here."
 msgstr ""
 
@@ -2460,7 +2467,7 @@ msgctxt "paragraph"
 msgid "This account is not active."
 msgstr ""
 
-#: ../agenda/calendars.py:171
+#: ../agenda/calendars.py:176
 msgid "This calendar has been removed"
 msgstr ""
 
@@ -2502,8 +2509,8 @@ msgstr ""
 msgid "Tip"
 msgstr ""
 
-#: ../config_groups.py:97 ../resource_.py:422 ../agenda/calendars.py:86
-#: ../autoform.py:655 ../config_menu.py:57 ../config_models.py:140
+#: ../config_groups.py:97 ../resource_.py:422 ../agenda/calendars.py:91
+#: ../autoform.py:656 ../config_menu.py:57 ../config_models.py:140
 #: ../config_models.py:225 ../config_models.py:316 ../folder_views.py:306
 msgid "Title"
 msgstr ""
@@ -2648,7 +2655,7 @@ msgctxt "button"
 msgid "Update"
 msgstr ""
 
-#: ../agenda/calendars.py:63
+#: ../agenda/calendars.py:68
 msgid "Update calendar visibility"
 msgstr ""
 
@@ -2735,7 +2742,7 @@ msgstr ""
 msgid "User is not pending"
 msgstr ""
 
-#: ../config_register.py:176
+#: ../config_register.py:174
 msgid "User registration"
 msgstr ""
 
@@ -2755,7 +2762,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: ../config_register.py:182
+#: ../config_register.py:180
 msgid "Users can register by themselves"
 msgstr ""
 
@@ -2791,7 +2798,7 @@ msgstr ""
 msgid "Virtual Hosts"
 msgstr ""
 
-#: ../agenda/calendars.py:87
+#: ../agenda/calendars.py:92
 msgid "Visible ?"
 msgstr ""
 
@@ -2863,7 +2870,7 @@ msgstr ""
 msgid "Yearly"
 msgstr ""
 
-#: ../agenda/calendars.py:101 ../autoform.py:236 ../autoform.py:262
+#: ../agenda/calendars.py:106 ../autoform.py:236 ../autoform.py:262
 msgid "Yes"
 msgstr ""
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-05 09:01+CET\n"
+"POT-Creation-Date: 2012-01-16 16:01+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -171,7 +171,7 @@ msgstr ":"
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
-#: ../config_register.py:166
+#: ../config_register.py:164
 msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
@@ -246,6 +246,16 @@ msgstr ""
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr "<g id='2'>Changer la valeur par défaut</g>  <g id='3'>Supprimer</g>"
+
+#: ../agenda/ui/reminder_widget.xml.en:9
+#, fuzzy
+msgctxt "label"
+msgid ""
+"<g id='2'>I want to be remind</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
+"${reminders} before the event. </g>"
+msgstr ""
+"<g id='2'>Titre</g>  <g id='3'>* </g>  <x id='4'/>  <g id='5'>${title/error} "
+"<x id='6'/></g>"
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
 msgctxt "link"
@@ -327,7 +337,7 @@ msgstr ""
 msgid "Active"
 msgstr "Actif"
 
-#: ../buttons.py:144 ../config_access.py:89 ../autoadd.py:81
+#: ../buttons.py:144 ../config_access.py:89 ../autoadd.py:85
 #: ../text_views.py:260
 msgid "Add"
 msgstr "Ajouter"
@@ -391,7 +401,7 @@ msgstr "Ajouter un élément"
 msgid "Add model"
 msgstr "Ajouter un modèle"
 
-#: ../autoadd.py:133 ../folder_views.py:132
+#: ../autoadd.py:141 ../folder_views.py:132
 msgid "Add resource"
 msgstr "Ajouter une ressource"
 
@@ -399,15 +409,15 @@ msgstr "Ajouter une ressource"
 msgid "Add rule"
 msgstr "Ajouter une règle"
 
-#: ../order.py:64
+#: ../order.py:65
 msgid "Add to ordered list"
 msgstr "Ajouter aux éléments ordonnés"
 
-#: ../autoadd.py:130
+#: ../autoadd.py:138
 msgid "Add {class_title}"
 msgstr "Ajouter « {class_title} »"
 
-#: ../autoadd.py:247
+#: ../autoadd.py:249
 msgid "Adding resources to {path} is not allowed."
 msgstr "Ajouter des ressources à {path} n'est pas autorisé."
 
@@ -552,7 +562,7 @@ msgstr "Billet de blog"
 msgid "Blog Post"
 msgstr "Billet de blog"
 
-#: ../webpage.py:58 ../autoform.py:660 ../autoform.py:663
+#: ../webpage.py:58 ../autoform.py:661 ../autoform.py:664
 msgid "Body"
 msgstr "Corps du message"
 
@@ -621,7 +631,7 @@ msgstr "Feuille de style CSS"
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:362 ../agenda/calendars.py:198
+#: ../agenda/event.py:362 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr "Calendrier"
 
@@ -629,11 +639,11 @@ msgstr "Calendrier"
 msgid "Calendar event"
 msgstr "Évènement du calendrier"
 
-#: ../agenda/calendars.py:69
+#: ../agenda/calendars.py:74
 msgid "Calendars"
 msgstr "Calendriers"
 
-#: ../agenda/calendars.py:169
+#: ../agenda/calendars.py:174
 msgid "Can't remove this calendar"
 msgstr "Impossible de supprimer ce calendrier"
 
@@ -717,7 +727,7 @@ msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 "Cliquez sur le bouton \"...\" pour choisir une date (Format: \"yyyy-mm-dd\")."
 
-#: ../autoform.py:437 ../autoform.py:455
+#: ../autoform.py:438 ../autoform.py:456
 msgid "Click on button \"...\" to select a file."
 msgstr "Cliquez sur le bouton \"...\" pour sélectionner un fichier"
 
@@ -736,7 +746,7 @@ msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr "Collaboration avec le module wiki, l'outil de suivi, etc."
 
-#: ../agenda/calendars.py:85 ../agenda/calendars.py:204
+#: ../agenda/calendars.py:90 ../agenda/calendars.py:209
 msgid "Color"
 msgstr "Couleur"
 
@@ -770,7 +780,7 @@ msgstr "Configuration"
 msgid "Configuration Menu"
 msgstr "Configuration du menu"
 
-#: ../config_register.py:177
+#: ../config_register.py:175
 msgid "Configuration of the user registration process."
 msgstr "Configuration du processus d'inscription."
 
@@ -854,7 +864,7 @@ msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr "Copiez le script <g id='4'>restedit.py</g> où vous le désirez"
 
-#: ../agenda/calendars.py:53
+#: ../agenda/calendars.py:58
 msgid "Create a new calendar..."
 msgstr "Créer un nouveau calendrier..."
 
@@ -866,7 +876,7 @@ msgstr "Créer un nouvel événement"
 msgid "Create a new page and link to it:"
 msgstr "Créer une nouvelle page et la lier :"
 
-#: ../config_register.py:60
+#: ../config_register.py:58
 msgid "Create an account"
 msgstr "Créer un compte"
 
@@ -949,7 +959,7 @@ msgstr "Date"
 msgid "Day"
 msgstr "Jour"
 
-#: ../agenda/reminders.py:32
+#: ../agenda/reminders.py:31
 msgid "Days"
 msgstr "Jours"
 
@@ -982,7 +992,7 @@ msgstr "Définir le footer du site."
 msgid "Depth"
 msgstr "Profondeur"
 
-#: ../resource_.py:423 ../autoform.py:657 ../blog/blog.py:41
+#: ../resource_.py:423 ../autoform.py:658 ../blog/blog.py:41
 msgid "Description"
 msgstr "Description"
 
@@ -1333,7 +1343,7 @@ msgstr "Hervé Cauwelier (français)"
 msgid "Home"
 msgstr "Accueil"
 
-#: ../agenda/reminders.py:31
+#: ../agenda/reminders.py:30
 msgid "Hours"
 msgstr "Heures"
 
@@ -1472,7 +1482,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr "Les principales fonctionnalités d'iKaaro sont :"
 
-#: ../resource_.py:425 ../autoform.py:658
+#: ../resource_.py:425 ../autoform.py:659
 msgid "Keywords"
 msgstr "Mots clefs"
 
@@ -1640,7 +1650,7 @@ msgctxt "legend"
 msgid "Microsoft Windows (32-bit)"
 msgstr ""
 
-#: ../agenda/reminders.py:30
+#: ../agenda/reminders.py:29
 msgid "Minutes"
 msgstr ""
 
@@ -1737,7 +1747,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr "Nicolas Deram (français)"
 
-#: ../agenda/calendars.py:101 ../autoform.py:236
+#: ../agenda/calendars.py:106 ../autoform.py:236
 msgid "No"
 msgstr "Non"
 
@@ -1762,7 +1772,7 @@ msgctxt "legend"
 msgid "Not Found"
 msgstr "Introuvable"
 
-#: ../order.py:116
+#: ../order.py:125
 msgid "Not ordered"
 msgstr "Pas ordonné"
 
@@ -1888,27 +1898,27 @@ msgid "Optimize your website for better ranking in search engine results."
 msgstr "Optimiser le référencement du site web dans les moteurs de recherche."
 
 #: ../config_groups.py:101 ../config_models.py:144 ../config_models.py:229
-#: ../config_menu.py:61 ../order.py:83 ../order.py:180
+#: ../config_menu.py:61 ../order.py:84 ../order.py:189
 msgid "Order"
 msgstr "Ordre"
 
-#: ../order.py:57
+#: ../order.py:58
 msgid "Order bottom"
 msgstr "Tout en bas"
 
-#: ../order.py:41
+#: ../order.py:42
 msgid "Order down"
 msgstr "Descendre"
 
-#: ../order.py:49
+#: ../order.py:50
 msgid "Order top"
 msgstr "Tout en haut"
 
-#: ../order.py:33
+#: ../order.py:34
 msgid "Order up"
 msgstr "Monter"
 
-#: ../order.py:176
+#: ../order.py:185
 msgid "Ordered Folder"
 msgstr "Dossier ordonné"
 
@@ -1988,7 +1998,8 @@ msgstr "Veuillez répondre à la question ci-dessous :"
 msgctxt "label"
 msgid "Please check this box to accept the <g id='3'>Terms of Service</g>."
 msgstr ""
-"Cocher cette case pour signifier que vous acceptez les <g id='3'>conditions d’utilisation</g>."
+"Cocher cette case pour signifier que vous acceptez les <g id='3'>conditions "
+"d’utilisation</g>."
 
 #: ../users_views.py:134
 msgid "Please choose a new password for your account"
@@ -2100,11 +2111,11 @@ msgstr "Supprimer et modifier"
 msgid "Remove event at {date}"
 msgstr ""
 
-#: ../order.py:71
+#: ../order.py:72
 msgid "Remove from ordered list"
 msgstr "Retirer de la liste ordonnée"
 
-#: ../agenda/calendars.py:153
+#: ../agenda/calendars.py:158
 msgid "Remove this calendar"
 msgstr "Supprimer ce calendrier"
 
@@ -2130,7 +2141,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "Remplacer"
 
-#: ../autoform.py:662
+#: ../autoform.py:663
 msgid "Replace file"
 msgstr "Remplacer le fichier"
 
@@ -2171,19 +2182,19 @@ msgstr "Interdiction de coller ces ressources ici : {resources}."
 msgid "Resources not allowed to remove: {resources}."
 msgstr "Interdiction de supprimer ces ressources : {resources}."
 
-#: ../order.py:142
+#: ../order.py:151
 msgid "Resources ordered down."
 msgstr "Ressources descendues."
 
-#: ../order.py:154 ../order.py:160
+#: ../order.py:163 ../order.py:169
 msgid "Resources ordered on bottom."
 msgstr "Ressources déplacées tout en bas."
 
-#: ../order.py:148
+#: ../order.py:157
 msgid "Resources ordered on top."
 msgstr "Ressources déplacées tout en haut."
 
-#: ../order.py:136
+#: ../order.py:145
 msgid "Resources ordered up."
 msgstr "Ressources montées."
 
@@ -2207,7 +2218,7 @@ msgstr "Ressources renommées."
 msgid "Resources retired."
 msgstr "Ressources dépubliées."
 
-#: ../order.py:166
+#: ../order.py:175
 msgid "Resources unordered."
 msgstr "Ressources non ordonnées."
 
@@ -2228,7 +2239,7 @@ msgstr "Ligne supprimée."
 msgid "Saturday"
 msgstr "Samedi"
 
-#: ../agenda/calendars.py:150 ../autoform.py:688
+#: ../agenda/calendars.py:155 ../autoform.py:689
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -2241,7 +2252,7 @@ msgstr "Sauvegarder"
 msgid "Schedule your time with calendar files."
 msgstr "Organisez votre temps à l'aide d'agendas."
 
-#: ../users_views.py:371 ../views.py:374 ../views.py:379
+#: ../users_views.py:371 ../views.py:374 ../views.py:383
 msgid "Search"
 msgstr "Rechercher"
 
@@ -2279,7 +2290,7 @@ msgstr "Sélectionner les comptes des contacts"
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../autoform.py:659
+#: ../autoform.py:660
 msgid "Separated by comma"
 msgstr "Séparés par des virgules"
 
@@ -2409,7 +2420,7 @@ msgstr "Provisoire"
 msgid "Terms of Service"
 msgstr "Conditions d'utilisation"
 
-#: ../config_register.py:183
+#: ../config_register.py:181
 msgid "Terms of service"
 msgstr "Conditions d'utilisation"
 
@@ -2495,7 +2506,7 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr "L'URL demandée « ${uri} » est introuvable sur ce serveur."
 
-#: ../users_views.py:501
+#: ../users_views.py:502
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
@@ -2537,7 +2548,7 @@ msgctxt "paragraph"
 msgid "This account is not active."
 msgstr "Ce compte n'est pas actif."
 
-#: ../agenda/calendars.py:171
+#: ../agenda/calendars.py:176
 msgid "This calendar has been removed"
 msgstr "Ce calendrier a été supprimé."
 
@@ -2581,8 +2592,8 @@ msgstr "Fuseau horaire"
 msgid "Tip"
 msgstr "Astuce"
 
-#: ../config_groups.py:97 ../resource_.py:422 ../agenda/calendars.py:86
-#: ../autoform.py:655 ../config_menu.py:57 ../config_models.py:140
+#: ../config_groups.py:97 ../resource_.py:422 ../agenda/calendars.py:91
+#: ../autoform.py:656 ../config_menu.py:57 ../config_models.py:140
 #: ../config_models.py:225 ../config_models.py:316 ../folder_views.py:306
 msgid "Title"
 msgstr "Titre"
@@ -2744,7 +2755,7 @@ msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: ../agenda/calendars.py:63
+#: ../agenda/calendars.py:68
 msgid "Update calendar visibility"
 msgstr "Mettre à jour la visibilité des calendriers"
 
@@ -2832,7 +2843,7 @@ msgstr "L'utilisateur a déjà confirmé son inscription !"
 msgid "User is not pending"
 msgstr "L'utilisateur n'est pas en attente"
 
-#: ../config_register.py:176
+#: ../config_register.py:174
 msgid "User registration"
 msgstr "Inscription utilisateur"
 
@@ -2854,7 +2865,7 @@ msgstr "Nom d'utilisateur"
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: ../config_register.py:182
+#: ../config_register.py:180
 msgid "Users can register by themselves"
 msgstr "Les utilisateurs peuvent s'inscrire par eux-mêmes"
 
@@ -2890,7 +2901,7 @@ msgstr "Voir les résultats"
 msgid "Virtual Hosts"
 msgstr "Hôtes virtuels"
 
-#: ../agenda/calendars.py:87
+#: ../agenda/calendars.py:92
 msgid "Visible ?"
 msgstr "Visible ?"
 
@@ -2962,7 +2973,7 @@ msgstr "Clé de vérification de Yahoo"
 msgid "Yearly"
 msgstr "Annuel"
 
-#: ../agenda/calendars.py:101 ../autoform.py:236 ../autoform.py:262
+#: ../agenda/calendars.py:106 ../autoform.py:236 ../autoform.py:262
 msgid "Yes"
 msgstr "Oui"
 
@@ -4260,14 +4271,6 @@ msgstr ""
 #~ msgstr ""
 #~ "<g id='2'>Intranet</g>  <x id='3'/> L'authentification est nécessaire "
 #~ "pour tous les niveaux d'accès."
-
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='2'>Title</g>  <g id='3'>* </g>  <x id='4'/>  <g id='5'>${title/"
-#~ "error} <x id='6'/></g>"
-#~ msgstr ""
-#~ "<g id='2'>Titre</g>  <g id='3'>* </g>  <x id='4'/>  <g id='5'>${title/"
-#~ "error} <x id='6'/></g>"
 
 #~ msgctxt "label"
 #~ msgid "<g id='21'>State</g><x id='22'/> ${state_widget}"
