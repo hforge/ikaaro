@@ -65,6 +65,7 @@ def update_catalog(parser, options, target):
 
     # Build a fake context
     context = get_fake_context(server.database)
+    context.server = server
 
     # Update
     t0, v0 = time(), vmsize()
