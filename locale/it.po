@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2012-01-16 18:01+CET\n"
+"POT-Creation-Date: 2012-01-17 10:01+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -200,6 +200,14 @@ msgstr "Titolo"
 #, fuzzy
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr "Titolo"
+
+#: ../agenda/ui/rrule_interval_widget.xml.en:13
+#, fuzzy
+msgctxt "span"
+msgid ""
+"<g id='1'>day(s)</g>  <g id='2'>week(s)</g>  <g id='3'>month(s)</g>  <g "
+"id='4'>year(s)</g>"
 msgstr "Titolo"
 
 #: ../agenda/ui/monthly_view.xml.en:18
@@ -962,7 +970,7 @@ msgid ""
 "{resource_uri}"
 msgstr ""
 
-#: ../agenda/recurrence.py:167
+#: ../agenda/recurrence.py:154
 #, fuzzy
 msgid "Daily"
 msgstr "Il titolo"
@@ -1193,7 +1201,7 @@ msgstr "Testo integrale"
 msgid "Event reminder"
 msgstr "Testo integrale"
 
-#: ../agenda/recurrence.py:145
+#: ../agenda/recurrence.py:132
 msgid "Every"
 msgstr ""
 
@@ -1772,7 +1780,7 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: ../agenda/recurrence.py:169
+#: ../agenda/recurrence.py:156
 msgid "Monthly"
 msgstr ""
 
@@ -2949,7 +2957,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "Descrizione"
 
-#: ../agenda/recurrence.py:159
+#: ../agenda/recurrence.py:146
 msgid "Until"
 msgstr ""
 
@@ -3146,7 +3154,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: ../agenda/recurrence.py:168
+#: ../agenda/recurrence.py:155
 #, fuzzy
 msgid "Weekly"
 msgstr "Il titolo"
@@ -3194,7 +3202,7 @@ msgstr "File"
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../agenda/recurrence.py:170
+#: ../agenda/recurrence.py:157
 msgid "Yearly"
 msgstr ""
 
@@ -3373,10 +3381,6 @@ msgstr ""
 msgid "[{title}] has been modified"
 msgstr "Il linguaggio predefinito è stato modificato."
 
-#: ../agenda/recurrence.py:137
-msgid "day(s)"
-msgstr ""
-
 #: ../file_views.py:181
 #, fuzzy
 msgid "huge"
@@ -3404,10 +3408,6 @@ msgstr ""
 
 #: ../file_views.py:179
 msgid "medium"
-msgstr ""
-
-#: ../agenda/recurrence.py:139
-msgid "month(s)"
 msgstr ""
 
 #: ../file_views.py:182
@@ -3448,19 +3448,11 @@ msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
 msgstr ""
 
-#: ../agenda/recurrence.py:138
-msgid "week(s)"
-msgstr ""
-
 #: ../ui/root/license.xml.en:16
 msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
-msgstr ""
-
-#: ../agenda/recurrence.py:140
-msgid "year(s)"
 msgstr ""
 
 #: ../ui/root/license.xml.en:8

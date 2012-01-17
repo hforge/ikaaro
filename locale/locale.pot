@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-01-16 18:01+CET\n"
+"POT-Creation-Date: 2012-01-17 10:01+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -594,7 +594,7 @@ msgstr ""
 msgid "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n{resource_uri}"
 msgstr ""
 
-#: ../agenda/recurrence.py:167
+#: ../agenda/recurrence.py:154
 msgid "Daily"
 msgstr ""
 
@@ -732,7 +732,7 @@ msgstr ""
 msgid "Event reminder"
 msgstr ""
 
-#: ../agenda/recurrence.py:145
+#: ../agenda/recurrence.py:132
 msgid "Every"
 msgstr ""
 
@@ -1108,7 +1108,7 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: ../agenda/recurrence.py:169
+#: ../agenda/recurrence.py:156
 msgid "Monthly"
 msgstr ""
 
@@ -1949,7 +1949,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr ""
 
-#: ../agenda/recurrence.py:159
+#: ../agenda/recurrence.py:146
 msgid "Until"
 msgstr ""
 
@@ -2113,7 +2113,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: ../agenda/recurrence.py:168
+#: ../agenda/recurrence.py:155
 msgid "Weekly"
 msgstr ""
 
@@ -2157,7 +2157,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../agenda/recurrence.py:170
+#: ../agenda/recurrence.py:157
 msgid "Yearly"
 msgstr ""
 
@@ -2276,10 +2276,6 @@ msgstr ""
 msgid "[{title}] has been modified"
 msgstr ""
 
-#: ../agenda/recurrence.py:137
-msgid "day(s)"
-msgstr ""
-
 #: ../file_views.py:181
 msgid "huge"
 msgstr ""
@@ -2300,10 +2296,6 @@ msgstr ""
 msgid "medium"
 msgstr ""
 
-#: ../agenda/recurrence.py:139
-msgid "month(s)"
-msgstr ""
-
 #: ../file_views.py:182
 msgid "original"
 msgstr ""
@@ -2318,14 +2310,6 @@ msgstr ""
 
 #: ../file_views.py:178
 msgid "small"
-msgstr ""
-
-#: ../agenda/recurrence.py:138
-msgid "week(s)"
-msgstr ""
-
-#: ../agenda/recurrence.py:140
-msgid "year(s)"
 msgstr ""
 
 #: ../skins.py:71
@@ -3070,6 +3054,11 @@ msgstr ""
 #: ../ui/comment_view.xml.en:10
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr ""
+
+#: ../agenda/ui/rrule_interval_widget.xml.en:13
+msgctxt "span"
+msgid "<g id='1'>day(s)</g>  <g id='2'>week(s)</g>  <g id='3'>month(s)</g>  <g id='4'>year(s)</g>"
 msgstr ""
 
 #: ../agenda/ui/monthly_view.xml.en:18

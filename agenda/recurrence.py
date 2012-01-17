@@ -123,21 +123,8 @@ class RRuleInterval_Datatype(IntegerRange):
 
 class RRuleInterval_Widget(SelectWidget):
 
-    template = make_stl_template("""
-    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
-      class="${css}" onchange="update_rrule_parameters();">
-      <option value="" stl:if="has_empty_option"></option>
-        <option stl:repeat="option options" value="${option/name}"
-          selected="${option/selected}">${option/value}</option>
-    </select>
-    <span class="${name}-daily">%s</span>
-    <span class="${name}-weekly">%s</span>
-    <span class="${name}-monthly">%s</span>
-    <span class="${name}-yearly">%s</span>
-    """ % (MSG(u"day(s)").gettext().encode('utf-8'),
-           MSG(u"week(s)").gettext().encode('utf-8'),
-           MSG(u"month(s)").gettext().encode('utf-8'),
-           MSG(u"year(s)").gettext().encode('utf-8')))
+    template = '/ui/agenda/rrule_interval_widget.xml'
+
 
 
 class RRuleInterval_Field(Select_Field):
@@ -155,7 +142,7 @@ class RRuleUntil_Datatype(Date):
 
 
 class RRuleUntil_Field(Date_Field):
-    
+
     title = MSG(u'Until')
     datatype = RRuleUntil_Datatype
 

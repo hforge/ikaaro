@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-16 18:01+CET\n"
+"POT-Creation-Date: 2012-01-17 10:01+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -203,6 +203,15 @@ msgstr ""
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
 msgstr ""
+
+#: ../agenda/ui/rrule_interval_widget.xml.en:13
+msgctxt "span"
+msgid ""
+"<g id='1'>day(s)</g>  <g id='2'>week(s)</g>  <g id='3'>month(s)</g>  <g "
+"id='4'>year(s)</g>"
+msgstr ""
+"<g id='1'>jour(s)</g>  <g id='2'>semaine(s)</g>  <g id='3'>mois</g>  <g "
+"id='4'>année(s)</g>"
 
 #: ../agenda/ui/monthly_view.xml.en:18
 msgctxt "span"
@@ -925,7 +934,7 @@ msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE. Pour voir les modifications, allez sur :\n"
 "{resource_uri}"
 
-#: ../agenda/recurrence.py:167
+#: ../agenda/recurrence.py:154
 msgid "Daily"
 msgstr "Journalier"
 
@@ -1131,7 +1140,7 @@ msgstr "Modèle d'événement"
 msgid "Event reminder"
 msgstr "Rappel d'évènement"
 
-#: ../agenda/recurrence.py:145
+#: ../agenda/recurrence.py:132
 msgid "Every"
 msgstr "Chaque"
 
@@ -1655,7 +1664,7 @@ msgstr "Lundi"
 msgid "Month"
 msgstr "Mois"
 
-#: ../agenda/recurrence.py:169
+#: ../agenda/recurrence.py:156
 msgid "Monthly"
 msgstr "Mensuel"
 
@@ -2730,7 +2739,7 @@ msgstr "Décompressez le tarball <g id='3'>restedit-last.tar.gz</g>"
 msgid "Unsubscribe"
 msgstr "Désinscrire"
 
-#: ../agenda/recurrence.py:159
+#: ../agenda/recurrence.py:146
 msgid "Until"
 msgstr "Jusqu'au"
 
@@ -2914,7 +2923,7 @@ msgstr "Mercredi"
 msgid "Week"
 msgstr "Semaine"
 
-#: ../agenda/recurrence.py:168
+#: ../agenda/recurrence.py:155
 msgid "Weekly"
 msgstr "Hebdomadaire"
 
@@ -2958,7 +2967,7 @@ msgstr "Fichier XML"
 msgid "Yahoo site verification key"
 msgstr "Clé de vérification de Yahoo"
 
-#: ../agenda/recurrence.py:170
+#: ../agenda/recurrence.py:157
 msgid "Yearly"
 msgstr "Annuel"
 
@@ -3140,10 +3149,6 @@ msgstr ""
 msgid "[{title}] has been modified"
 msgstr "[{title}] a été modifié"
 
-#: ../agenda/recurrence.py:137
-msgid "day(s)"
-msgstr "jour(s)"
-
 #: ../file_views.py:181
 msgid "huge"
 msgstr "énorme"
@@ -3173,10 +3178,6 @@ msgstr "lpOD"
 #: ../file_views.py:179
 msgid "medium"
 msgstr "moyenne"
-
-#: ../agenda/recurrence.py:139
-msgid "month(s)"
-msgstr "mois"
 
 #: ../file_views.py:182
 msgid "original"
@@ -3214,10 +3215,6 @@ msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
 msgstr "à <x id='5'/>  <g id='6'>Ajouter</g>"
 
-#: ../agenda/recurrence.py:138
-msgid "week(s)"
-msgstr "semaine(s)"
-
 #: ../ui/root/license.xml.en:16
 msgctxt "paragraph"
 msgid ""
@@ -3226,10 +3223,6 @@ msgid ""
 msgstr ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
-
-#: ../agenda/recurrence.py:140
-msgid "year(s)"
-msgstr "année(s)"
 
 #: ../ui/root/license.xml.en:8
 msgctxt "paragraph"
@@ -6783,6 +6776,9 @@ msgstr ""
 #~ msgid "customer"
 #~ msgstr "client"
 
+#~ msgid "day(s)"
+#~ msgstr "jour(s)"
+
 #~ msgctxt "table cell"
 #~ msgid "days ago"
 #~ msgstr "jours"
@@ -6816,6 +6812,9 @@ msgstr ""
 #~ msgid "lpoD default template"
 #~ msgstr "Gabarit par défaut de LpOD"
 
+#~ msgid "month(s)"
+#~ msgstr "mois"
+
 #~ msgid "no version found"
 #~ msgstr "pas de version trouvée"
 
@@ -6825,6 +6824,12 @@ msgstr ""
 
 #~ msgid "undefined"
 #~ msgstr "indéfini"
+
+#~ msgid "week(s)"
+#~ msgstr "semaine(s)"
+
+#~ msgid "year(s)"
+#~ msgstr "année(s)"
 
 #~ msgid "{field}: {old_value} to {new_value}"
 #~ msgstr "{field}: {old_value} vers {new_value}"

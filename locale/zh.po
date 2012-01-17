@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2012-01-16 18:01+CET\n"
+"POT-Creation-Date: 2012-01-17 10:01+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -191,6 +191,14 @@ msgstr "名称"
 #, fuzzy
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr "名称"
+
+#: ../agenda/ui/rrule_interval_widget.xml.en:13
+#, fuzzy
+msgctxt "span"
+msgid ""
+"<g id='1'>day(s)</g>  <g id='2'>week(s)</g>  <g id='3'>month(s)</g>  <g "
+"id='4'>year(s)</g>"
 msgstr "名称"
 
 #: ../agenda/ui/monthly_view.xml.en:18
@@ -943,7 +951,7 @@ msgid ""
 "{resource_uri}"
 msgstr ""
 
-#: ../agenda/recurrence.py:167
+#: ../agenda/recurrence.py:154
 #, fuzzy
 msgid "Daily"
 msgstr "名称"
@@ -1172,7 +1180,7 @@ msgstr "简易文件"
 msgid "Event reminder"
 msgstr "简易文件"
 
-#: ../agenda/recurrence.py:145
+#: ../agenda/recurrence.py:132
 msgid "Every"
 msgstr ""
 
@@ -1741,7 +1749,7 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: ../agenda/recurrence.py:169
+#: ../agenda/recurrence.py:156
 msgid "Monthly"
 msgstr ""
 
@@ -2902,7 +2910,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "名称"
 
-#: ../agenda/recurrence.py:159
+#: ../agenda/recurrence.py:146
 msgid "Until"
 msgstr ""
 
@@ -3099,7 +3107,7 @@ msgstr ""
 msgid "Week"
 msgstr ""
 
-#: ../agenda/recurrence.py:168
+#: ../agenda/recurrence.py:155
 #, fuzzy
 msgid "Weekly"
 msgstr "名称"
@@ -3145,7 +3153,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../agenda/recurrence.py:170
+#: ../agenda/recurrence.py:157
 msgid "Yearly"
 msgstr ""
 
@@ -3316,10 +3324,6 @@ msgstr ""
 msgid "[{title}] has been modified"
 msgstr "预设语言已被改变."
 
-#: ../agenda/recurrence.py:137
-msgid "day(s)"
-msgstr ""
-
 #: ../file_views.py:181
 #, fuzzy
 msgid "huge"
@@ -3347,10 +3351,6 @@ msgstr ""
 
 #: ../file_views.py:179
 msgid "medium"
-msgstr ""
-
-#: ../agenda/recurrence.py:139
-msgid "month(s)"
 msgstr ""
 
 #: ../file_views.py:182
@@ -3390,19 +3390,11 @@ msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
 msgstr ""
 
-#: ../agenda/recurrence.py:138
-msgid "week(s)"
-msgstr ""
-
 #: ../ui/root/license.xml.en:16
 msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
-msgstr ""
-
-#: ../agenda/recurrence.py:140
-msgid "year(s)"
 msgstr ""
 
 #: ../ui/root/license.xml.en:8
