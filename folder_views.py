@@ -344,11 +344,20 @@ class Folder_BrowseContent(BrowseForm):
             value = form[key]
             if not value:
                 continue
-            # Special case: search on text, title and name
+            # Special case: search on text, title and name AS AndQuery
             if key == 'text':
-                query.append(OrQuery(TextQuery('title', value),
-                                     TextQuery('text', value),
-                                     PhraseQuery('name', value)))
+                text_query = []
+                value = value.split(' ')
+                for v in value:
+                    t_query = OrQuery(TextQuery('title', v),
+                                      TextQuery('text', v),
+                                      PhraseQuery('name', v))
+                    text_query.append(t_query)
+                if len(text_query) == 1:
+                    text_query = text_query[0]
+                else:
+                    text_query = AndQuery(*text_query)
+                query.append(text_query)
             # Multiple
             elif datatype.multiple is True:
                 query.append(OrQuery(*[ PhraseQuery(key, x) for x in value ]))
