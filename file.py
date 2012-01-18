@@ -26,8 +26,11 @@ from itools.handlers import Image as ImageHandler, SVGFile
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
-from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
+from itools.office import RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
+from itools.office import MSPowerPoint as MSPowerPointFile
+from itools.office import MSWordX as MSWordXFile, MSExcelX as MSExcelXFile
+from itools.office import MSPowerPointX as MSPowerPointXFile
 from itools.web import get_context
 
 # Import from ikaaro
@@ -225,6 +228,39 @@ class MSPowerPoint(File):
     class_icon48 = 'icons/48x48/powerpoint.png'
     # Fields
     data = File.data(class_handler=MSPowerPointFile)
+
+
+
+class MSWordX(File):
+    class_id = MSWordXFile.class_mimetypes[0]
+    class_title = MSG(u'Word')
+    class_description = MSG(u'Word Text')
+    class_icon16 = 'icons/16x16/word.png'
+    class_icon48 = 'icons/48x48/word.png'
+    # Fields
+    data = File.data(class_handler=MSWordXFile)
+
+
+
+class MSExcelX(File):
+    class_id = MSExcelXFile.class_mimetypes[0]
+    class_title = MSG(u'Excel')
+    class_description = MSG(u'Excel Spreadsheet')
+    class_icon16 = 'icons/16x16/excel.png'
+    class_icon48 = 'icons/48x48/excel.png'
+    # Fields
+    data = File.data(class_handler=MSExcelXFile)
+
+
+
+class MSPowerPointX(File):
+    class_id = MSPowerPointXFile.class_mimetypes[0]
+    class_title = MSG(u'PowerPoint')
+    class_description = MSG(u'PowerPoint Presentation')
+    class_icon16 = 'icons/16x16/powerpoint.png'
+    class_icon48 = 'icons/48x48/powerpoint.png'
+    # Fields
+    data = File.data(class_handler=MSPowerPointXFile)
 
 
 
