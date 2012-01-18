@@ -86,8 +86,9 @@ class Folder(DBResource):
     def _make_file(self, name, filename, mimetype, body, default_language):
         from webpage import WebPage
 
-        kk, extension, language = FileName.decode(filename)
-        name = name or kk
+        if type(name) is not str:
+            raise TypeError, 'expected string, got %s' % repr(name)
+
         # Web Pages are first class citizens
         if mimetype == 'text/html':
             body = tidy_html(body)
@@ -101,12 +102,11 @@ class Folder(DBResource):
         # Special case: web pages
         kw = {'filename': filename, 'data': body}
         if issubclass(cls, WebPage):
+            kk, kk, language = FileName.decode(filename)
             if language is None:
                 text = XHTMLFile(string=body).to_text()
                 language = guess_language(text) or default_language
             kw['data'] = {language: body}
-#       else:
-#           kw['extension'] = extension
 
         return self.make_resource(name, cls, **kw)
 
@@ -166,7 +166,8 @@ class Folder(DBResource):
                 else:
                     folder = subfolder
 
-            # 3. Find out the resource name and title, the file mimetype and language
+            # 3. Find out the resource name and title, the file mimetype and
+            # language
             mimetype = guess_mimetype(filename, 'application/octet-stream')
             name, extension, language = FileName.decode(filename)
             name, title = process_name(name)

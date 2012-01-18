@@ -67,7 +67,7 @@ class Text(File):
 
 
     def get_content_type(self):
-        return '%s; charset=UTF-8' % File.get_content_type(self)
+        return '%s; charset=UTF-8' % super(Text, self).get_content_type()
 
 
     # Views

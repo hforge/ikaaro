@@ -49,7 +49,11 @@ class File_NewInstance(AutoAdd):
             return name
 
         filename, mimetype, body = form['data']
-        name, type, language = FileName.decode(filename)
+        name, extension, language = FileName.decode(filename)
+
+        if mimetype not in ('application/xhtml+xml', 'text/html'):
+            name = FileName.encode((name, extension, None))
+
         return name
 
 
