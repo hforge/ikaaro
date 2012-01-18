@@ -34,6 +34,7 @@ from autoform import PathSelectorWidget
 from fields import ProgressBar_Field
 from folder import Folder
 from messages import MSG_NEW_RESOURCE
+from resource_views import DBResource_GetFile
 
 
 class File_NewInstance(AutoAdd):
@@ -97,13 +98,30 @@ class File_Edit(AutoEdit):
         return field
 
 
+class File_Download(DBResource_GetFile):
+
+    field_name = 'data'
+    title = MSG(u'Download')
+
+
+    def get_filename(self, handler, field_name, resource):
+        return resource.name
+
+
+    def get_content_type(self, handler):
+        mimetype = self.resource.class_id
+        if '/' in mimetype:
+            return mimetype
+
+        return super(File_Download, self).get_content_type(handler)
+
+
 
 class File_ExternalEdit_View(STLView):
     access = 'is_allowed_to_edit'
     template = '/ui/file/externaledit.xml'
     title = MSG(u'External Editor')
     icon = 'external.png'
-
 
 
 

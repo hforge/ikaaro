@@ -39,9 +39,10 @@ from database import Database
 from fields import Char_Field, File_Field
 from file_views import File_NewInstance, File_View
 from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
+from file_views import File_Download
 from file_views import Image_View, Video_View, Archive_View
 from file_views import Flash_View
-from resource_views import DBResource_GetFile, DBResource_GetImage
+from resource_views import DBResource_GetImage
 
 
 
@@ -106,7 +107,7 @@ class File(Content):
 
     # Views
     new_instance = File_NewInstance
-    download = DBResource_GetFile(field_name='data', title=MSG(u'Download'))
+    download = File_Download
     view = File_View
     edit = File_Edit
     externaledit = File_ExternalEdit_View
