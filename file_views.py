@@ -111,7 +111,7 @@ class File_Download(DBResource_GetFile):
 
 
     def get_filename(self, handler, field_name, resource):
-        return resource.name
+        return resource.get_value('filename') or resource.name
 
 
     def get_content_type(self, handler):
