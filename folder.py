@@ -26,7 +26,6 @@ from zipfile import ZipFile
 from itools.core import is_prototype
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.handlers import checkid
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
@@ -43,7 +42,7 @@ from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
 from messages import MSG_NAME_CLASH
 from resource_ import DBResource
-from utils import tidy_html
+from utils import process_name, tidy_html
 
 
 
@@ -370,26 +369,6 @@ class Folder(DBResource):
     rename = Folder_Rename
     preview_content = Folder_PreviewContent
     thumb = Folder_Thumbnail
-
-
-
-encodings = ['utf-8', 'windows-1252', 'cp437']
-def process_name(name):
-    for encoding in encodings:
-        try:
-            title = unicode(name, encoding)
-            checkid_name = checkid(title, soft=False)
-            break
-        except UnicodeError:
-            pass
-    else:
-        raise ValueError, name
-
-    if checkid_name is None:
-        raise ValueError, name
-
-    # Ok
-    return checkid_name, title
 
 
 ###########################################################################

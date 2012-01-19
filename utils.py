@@ -30,6 +30,7 @@ except ImportError:
 from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
 from itools.database import RangeQuery
 from itools.datatypes import Unicode
+from itools.handlers import checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.stl import STLTemplate, stl_namespaces
 from itools.uri import get_reference, Reference
@@ -141,6 +142,25 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
         if not title.endswith(ellipsis):
             title += ellipsis
     return title
+
+
+encodings = ['utf-8', 'windows-1252', 'cp437']
+def process_name(name):
+    for encoding in encodings:
+        try:
+            title = unicode(name, encoding)
+            checkid_name = checkid(title, soft=False)
+            break
+        except UnicodeError:
+            pass
+    else:
+        raise ValueError, name
+
+    if checkid_name is None:
+        raise ValueError, name
+
+    # Ok
+    return checkid_name, title
 
 
 ###########################################################################

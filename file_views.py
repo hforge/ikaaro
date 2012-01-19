@@ -35,6 +35,7 @@ from fields import ProgressBar_Field
 from folder import Folder
 from messages import MSG_NEW_RESOURCE
 from resource_views import DBResource_GetFile
+from utils import process_name
 
 
 class File_NewInstance(AutoAdd):
@@ -256,12 +257,15 @@ class Archive_View(STLView):
 
     def get_namespace(self, resource, context):
         filename = resource.get_value('filename') or resource.get_title()
-        contents = resource.get_value('data').get_contents()
-        contents = '\n'.join(contents)
+        contents = [ process_name(x)[1] + u'\n'
+                     for x in resource.get_value('data').get_contents() ]
+        contents = ''.join(contents)
         # Extract archive
         extract = context.root.is_allowed_to_edit(context.user, resource)
         if extract:
             widget = PathSelectorWidget('target', value='..').render()
+        else:
+            widget = None
         # Ok
         return {'filename': filename, 'contents': contents,
                 'extract': extract, 'widget': widget}
