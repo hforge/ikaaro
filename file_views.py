@@ -83,7 +83,12 @@ class File_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        filename = resource.get_value('filename') or resource.get_title()
+        filename = resource.get_value('filename')
+        if filename:
+            filename = process_name(filename)[1]
+        else:
+            filename = resource.get_title()
+
         return {'filename': filename}
 
 
