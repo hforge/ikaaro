@@ -151,7 +151,7 @@ class Image(File):
         max_width = self.get_max_width()
         max_height = self.get_max_height()
         if max_width or max_height:
-            handler = self.handler
+            handler = self.get_value('data')
             xsize, ysize = handler.get_size()
             thumb, format = handler.get_thumbnail(
                 min(xsize, max_width or xsize),
