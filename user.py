@@ -23,6 +23,7 @@ from copy import deepcopy
 # Import from itools
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
+from itools.log import log_warning
 from itools.uri import Path
 from itools.web import INFO
 
