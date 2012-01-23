@@ -806,9 +806,9 @@ class AutoForm(STLView):
 
             # Get value
             if self.method == 'get':
-                # XXX AutoForm get widget value from the form not from the
-                # query
-                value = context.get_query_value(widget.name)
+                value = context.get_query_value(widget.name, datatype)
+                if issubclass(datatype, Enumerate):
+                    value = datatype.get_namespace(value)
             else:
                 value = field_ns['value']
                 if is_prototype(datatype, DateTime) and len(value) <= 10:
