@@ -91,7 +91,6 @@ class Root(Folder):
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
     class_skin = 'aruni'
-    class_views = Folder.class_views + ['control_panel']
 
     abspath = Path('/')
 
