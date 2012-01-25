@@ -505,7 +505,10 @@ class Root(Folder):
 
     def is_allowed_to_view_folder(self, user, resource):
         stream = resource.get_html_field_body_stream('index')
-        return not stream_is_empty(stream)
+        if stream_is_empty(stream):
+            return False
+
+        return self.is_allowed_to_view(user, resource)
 
 
     def get_user(self, name):
