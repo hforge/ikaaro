@@ -23,10 +23,10 @@ from itools.gettext import MSG
 from autoedit import AutoEdit
 from config import Configuration
 from fields import File_Field, TextFile_Field
-from resource_ import DBResource
+from folder import Folder
 
 
-class Theme(DBResource):
+class Theme(Folder):
 
     class_id = 'config-theme'
     class_title = MSG(u'Theme')
@@ -42,6 +42,8 @@ class Theme(DBResource):
 
     def init_resource(self, **kw):
         super(Theme, self).init_resource(**kw)
+        # Access
+        self.set_value('share', 'everybody')
         # CSS file
         path = get_abspath('ui/themes/style.css')
         data = open(path).read()
@@ -59,7 +61,7 @@ class Theme(DBResource):
     class_views = ['edit', 'browse_content', 'preview_content', 'links',
                    'backlinks', 'commit_log']
 
-    edit = AutoEdit(fields=['favicon', 'logo', 'banner', 'style'])
+    edit = AutoEdit(fields=['favicon', 'logo', 'banner', 'style', 'share'])
 
     # Configuration
     config_name = 'theme'

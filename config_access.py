@@ -19,6 +19,7 @@ from itools.core import freeze, is_prototype, proto_property
 from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
+from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
@@ -32,7 +33,7 @@ from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from resource_ import DBResource
-from utils import get_base_path_query, get_content_containers
+from utils import get_base_path_query
 
 
 ###########################################################################
@@ -44,8 +45,8 @@ class Path_Datatype(Enumerate):
         context = get_context()
 
         items = []
-        for resource in get_content_containers(context):
-            path = resource.abspath
+        for doc in context.search(base_classes='folder').get_documents():
+            path = Path(doc.abspath)
             title = '/' if not path else ('%s/' % path)
             items.append({'name': path, 'value': title, 'selected': False})
 
@@ -289,6 +290,8 @@ class ConfigAccess(Folder):
     # Initialization
     _everything = freeze({'path': '/', 'path_depth': '*'})
     default_rules = [
+        # Everybody can see the theme
+        ('everybody', 'view', {'path': '/config/theme', 'path_depth': '*'}),
         # Authenticated users can see any content
         ('authenticated', 'view', _everything),
         # Members can add new content and edit private content
