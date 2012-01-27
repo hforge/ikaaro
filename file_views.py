@@ -33,7 +33,6 @@ from autoedit import AutoEdit
 from autoform import PathSelectorWidget
 from fields import ProgressBar_Field
 from folder import Folder
-from messages import MSG_NEW_RESOURCE
 from resource_views import DBResource_GetFile
 from utils import process_name
 
@@ -59,18 +58,16 @@ class File_NewInstance(AutoAdd):
         return name
 
 
-    def action(self, resource, context, form):
+    def make_new_resource(self, resource, context, form):
         # 1. Make the resource
         container = form['container']
         name = form['name']
         filename, mimetype, body = form['data']
         language = container.get_edit_languages(context)[0]
         child = container._make_file(name, filename, mimetype, body, language)
+        form['child'] = child
         # 2. Set properties
-        self.set_value(child, context, 'title', form)
-        # Ok
-        goto = str(resource.get_pathto(child))
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+        return self.init_new_resource(resource, context, form)
 
 
 

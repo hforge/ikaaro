@@ -313,16 +313,9 @@ class AutoAdd(AutoForm):
         return False
 
 
-    def make_new_resource(self, resource, context, form):
-        """Returns None if there is an error, otherwise return the new
-        resource.
-        """
-        # 1. Make the resource
-        container = form['container']
-        cls = self._resource_class
-        child = container.make_resource(form['name'], cls)
-        form['child'] = child
-        # 2. Set properties
+    def init_new_resource(self, resource, context, form):
+        child = form['child']
+
         schema = self.get_schema(resource, context)
         for name in self.get_fields():
             datatype = schema.get(name)
@@ -333,9 +326,19 @@ class AutoAdd(AutoForm):
             if persistent and not readonly:
                 if self.set_value(child, context, name, form):
                     return None
-
-        # Ok
         return child
+
+
+    def make_new_resource(self, resource, context, form):
+        """Returns None if there is an error, otherwise return the new
+        resource.
+        """
+        # 1. Make the resource
+        container = form['container']
+        cls = self._resource_class
+        form['child'] = container.make_resource(form['name'], cls)
+        # 2. Set properties
+        return self.init_new_resource(resource, context, form)
 
 
     def action(self, resource, context, form):
