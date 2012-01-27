@@ -349,4 +349,5 @@ class ConfigModels(Folder):
         return [Model]
 
 
-Configuration.register_module(ConfigModels)
+# Register
+#Configuration.register_module(ConfigModels)
