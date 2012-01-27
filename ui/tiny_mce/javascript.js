@@ -33,7 +33,7 @@ function tiny_mce_set_uri_value(uri) {
  * Use our own filebrowser
  */
 function ikaaro_filebrowser(field_name, url, type, win) {
-    var cms_location = window.location.href;
+    var cms_location = unescape(window.location.href);
 
     // Strip the view
     var cms_index = cms_location.indexOf(';');
