@@ -40,7 +40,7 @@ from autoform import PasswordWidget, ChoosePassword_Widget
 from autoform import ColorPickerWidget, ProgressBarWidget, rte_widget
 from datatypes import BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
-from enumerates import DaysOfWeek
+from datatypes import DaysOfWeek
 from utils import get_secure_hash, split_reference
 
 
@@ -87,10 +87,7 @@ class Field(BaseField):
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
-            try:
-                value = getattr(self, key)
-            except AttributeError:
-                continue
+            value = getattr(self, key, None)
             if value is not None:
                 if type(value) is FunctionType:
                     value = staticmethod(value)

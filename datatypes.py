@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from datetime import date
+
 # Import from the Standard Library
 from base64 import decodestring, encodestring
 from datetime import timedelta
@@ -28,7 +31,6 @@ from itools.fs import FileName
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
-from itools.web import get_context
 from itools.xml import XMLParser, is_xml_stream
 
 
@@ -180,40 +182,84 @@ class HTMLBody(XHTMLBody):
         return stream_to_str_as_html(value)
 
 
+
 ###########################################################################
-# Groups
+# Enumerates
 ###########################################################################
-
-class UserGroups_Datatype(Enumerate):
-
-    def get_options(self):
-        context = get_context()
-        config_groups = context.database.get_resource('/config/groups')
-
-        # Security filter
-        allowed_groups = context.search(parent_paths='/config/groups')
-        allowed_groups = [ x.name for x in allowed_groups.get_documents() ]
-        allowed_groups = set(allowed_groups)
-
-        # Namespace
-        groups = []
-        for name in config_groups.get_ordered_values():
-            if name in allowed_groups:
-                group = config_groups.get_resource(name)
-                groups.append({'name': str(group.abspath),
-                               'value': group.get_title()})
-
-        return groups
+days = {
+    0: MSG(u'Monday'),
+    1: MSG(u'Tuesday'),
+    2: MSG(u'Wednesday'),
+    3: MSG(u'Thursday'),
+    4: MSG(u'Friday'),
+    5: MSG(u'Saturday'),
+    6: MSG(u'Sunday')}
 
 
+class DaysOfWeek(Enumerate):
 
-class Groups_Datatype(UserGroups_Datatype):
+    options = [
+        {'name':'1', 'value': MSG(u'Monday'), 'shortname': 'MO'},
+        {'name':'2', 'value': MSG(u'Tuesday'), 'shortname': 'TU'},
+        {'name':'3', 'value': MSG(u'Wednesday'), 'shortname': 'WE'},
+        {'name':'4', 'value': MSG(u'Thursday'), 'shortname': 'TH'},
+        {'name':'5', 'value': MSG(u'Friday'), 'shortname': 'FR'},
+        {'name':'6', 'value': MSG(u'Saturday'), 'shortname': 'SA'},
+        {'name':'7', 'value': MSG(u'Sunday'), 'shortname': 'SU'}]
 
-    special_groups = [
-        {'name': 'everybody', 'value': MSG(u'Everybody')},
-        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+    @classmethod
+    def get_shortname(cls, name):
+        for option in cls.options:
+            if option['name'] == name:
+                return option['shortname']
 
 
-    def get_options(self):
-        options = super(Groups_Datatype, self).get_options()
-        return self.special_groups + options
+    @classmethod
+    def get_name_by_shortname(cls, shortname):
+        for option in cls.options:
+            if option['shortname'] == shortname:
+                return option['name']
+
+
+
+class IntegerRange(Enumerate):
+    count = 4
+
+    @classmethod
+    def get_options(cls):
+        return [
+            {'name': str(i), 'value': str(i)} for i in range(1, cls.count) ]
+
+
+
+class Days(IntegerRange):
+    count = 32
+
+
+
+class Months(Enumerate):
+
+    options = [
+        {'name': '1', 'value': MSG(u'January')},
+        {'name': '2', 'value': MSG(u'February')},
+        {'name': '3', 'value': MSG(u'March')},
+        {'name': '4', 'value': MSG(u'April')},
+        {'name': '5', 'value': MSG(u'May')},
+        {'name': '6', 'value': MSG(u'June')},
+        {'name': '7', 'value': MSG(u'July')},
+        {'name': '8', 'value': MSG(u'August')},
+        {'name': '9', 'value': MSG(u'September')},
+        {'name': '10', 'value': MSG(u'October')},
+        {'name': '11', 'value': MSG(u'November')},
+        {'name': '12', 'value': MSG(u'December')}]
+
+
+
+class Years(Enumerate):
+
+    start = 1900
+
+    @classmethod
+    def get_options(cls):
+        return [ {'name': str(d), 'value': str(d)}
+                 for d in range(cls.start, date.today().year) ]

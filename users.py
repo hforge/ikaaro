@@ -26,7 +26,7 @@ from itools.gettext import MSG
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
 from config import Configuration
-from datatypes import UserGroups_Datatype
+from enumerates import UserGroups_Datatype
 from fields import Char_Field, Email_Field, Password_Field, Text_Field
 from fields import File_Field, Select_Field, URI_Field
 from folder import Folder

@@ -32,7 +32,7 @@ from itools.web import get_context
 from autoform import AutoForm, HiddenWidget
 from autoform import timestamp_widget
 from datatypes import BirthDate
-from enumerates import Days, Months, Years
+from datatypes import Days, Months, Years
 from fields import Field
 import messages
 from views import ContextMenu

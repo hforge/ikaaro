@@ -24,8 +24,8 @@ from itools.web import get_context, ERROR, FormError
 # Import from ikaaro
 from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, SelectWidget
 from datatypes import BirthDate
+from datatypes import Days, Months, Years
 from buttons import Button
-from enumerates import Days, Months, Years
 from fields import Field
 import messages
 from utils import get_content_containers, make_stl_template

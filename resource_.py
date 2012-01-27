@@ -38,7 +38,7 @@ from itools.web import BaseView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
-from datatypes import Groups_Datatype
+from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import Select_Field, Text_Field, Textarea_Field

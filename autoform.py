@@ -38,7 +38,7 @@ from itools.web import STLView, get_context
 # Import from ikaaro
 from buttons import Button
 from datatypes import BirthDate, Password_Datatype
-from enumerates import Days, Months, Years
+from datatypes import Days, Months, Years
 from utils import CMSTemplate, make_stl_template
 
 

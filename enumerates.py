@@ -14,89 +14,67 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
-from datetime import date
-
 # Import from itools
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
+from itools.web import get_context
 
-days = {
-    0: MSG(u'Monday'),
-    1: MSG(u'Tuesday'),
-    2: MSG(u'Wednesday'),
-    3: MSG(u'Thursday'),
-    4: MSG(u'Friday'),
-    5: MSG(u'Saturday'),
-    6: MSG(u'Sunday')}
-
-
-class DaysOfWeek(Enumerate):
-
-    options = [
-        {'name':'1', 'value': MSG(u'Monday'), 'shortname': 'MO'},
-        {'name':'2', 'value': MSG(u'Tuesday'), 'shortname': 'TU'},
-        {'name':'3', 'value': MSG(u'Wednesday'), 'shortname': 'WE'},
-        {'name':'4', 'value': MSG(u'Thursday'), 'shortname': 'TH'},
-        {'name':'5', 'value': MSG(u'Friday'), 'shortname': 'FR'},
-        {'name':'6', 'value': MSG(u'Saturday'), 'shortname': 'SA'},
-        {'name':'7', 'value': MSG(u'Sunday'), 'shortname': 'SU'}]
-
-    @classmethod
-    def get_shortname(cls, name):
-        for option in cls.options:
-            if option['name'] == name:
-                return option['shortname']
-
-
-    @classmethod
-    def get_name_by_shortname(cls, shortname):
-        for option in cls.options:
-            if option['shortname'] == shortname:
-                return option['name']
+# Import from ikaaro
+from fields import URI_Field
 
 
 
-class IntegerRange(Enumerate):
-    count = 4
+###########################################################################
+# Dynamic enumerates
+###########################################################################
 
-    @classmethod
-    def get_options(cls):
-        return [
-            {'name': str(i), 'value': str(i)} for i in range(1, cls.count) ]
+class DynamicEnumerate_Datatype(Enumerate):
 
+    resource_path = None
+    def get_options(self):
+        path = self.resource_path
 
+        context = get_context()
+        resource = context.database.get_resource(path)
 
-class Days(IntegerRange):
-    count = 32
+        # Security filter
+        allowed = context.search(parent_paths=path)
+        allowed = [ x.name for x in allowed.get_documents() ]
+        allowed = set(allowed)
 
-
-
-class Months(Enumerate):
-
-    options = [
-        {'name': '1', 'value': MSG(u'January')},
-        {'name': '2', 'value': MSG(u'February')},
-        {'name': '3', 'value': MSG(u'March')},
-        {'name': '4', 'value': MSG(u'April')},
-        {'name': '5', 'value': MSG(u'May')},
-        {'name': '6', 'value': MSG(u'June')},
-        {'name': '7', 'value': MSG(u'July')},
-        {'name': '8', 'value': MSG(u'August')},
-        {'name': '9', 'value': MSG(u'September')},
-        {'name': '10', 'value': MSG(u'October')},
-        {'name': '11', 'value': MSG(u'November')},
-        {'name': '12', 'value': MSG(u'December')}]
-
-
-
-class Years(Enumerate):
-
-    start = 1900
-
-    @classmethod
-    def get_options(cls):
+        # Namespace
         options = []
-        for d in range(cls.start, date.today().year):
-            options.append({'name': str(d), 'value': str(d)})
+        for name in resource.get_ordered_values():
+            if name in allowed:
+                option = resource.get_resource(name)
+                options.append({'name': str(option.abspath),
+                                'value': option.get_title()})
+
         return options
+
+
+class DynamicEnumerate_Field(URI_Field):
+
+    datatype = DynamicEnumerate_Datatype
+    datatype_keys = URI_Field.datatype_keys + ['resource_path']
+
+
+###########################################################################
+# User Groups
+###########################################################################
+
+class UserGroups_Datatype(DynamicEnumerate_Datatype):
+    resource_path = '/config/groups'
+
+
+
+class Groups_Datatype(UserGroups_Datatype):
+
+    special_groups = [
+        {'name': 'everybody', 'value': MSG(u'Everybody')},
+        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+
+
+    def get_options(self):
+        options = super(Groups_Datatype, self).get_options()
+        return self.special_groups + options

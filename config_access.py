@@ -25,10 +25,10 @@ from itools.web import get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from datatypes import Groups_Datatype
 from buttons import Remove_BrowseButton
 from config import Configuration
 from config_common import NewResource_Local
+from enumerates import Groups_Datatype
 from fields import Select_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent

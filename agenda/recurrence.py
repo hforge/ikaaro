@@ -24,7 +24,7 @@ from itools.gettext import MSG
 
 # Import from ikaaro
 from ikaaro.autoform import SelectWidget
-from ikaaro.enumerates import DaysOfWeek, IntegerRange
+from ikaaro.datatypes import DaysOfWeek, IntegerRange
 from ikaaro.fields import Date_Field, Select_Field
 from ikaaro.utils import make_stl_template
 

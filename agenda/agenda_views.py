@@ -39,7 +39,7 @@ from ikaaro import messages
 from ikaaro.autoform import get_dynDateTime_scripts
 from ikaaro.config_common import NewResource_Local
 from ikaaro.datatypes import FileDataType
-from ikaaro.enumerates import days
+from ikaaro.datatypes import days
 from ikaaro.utils import CMSTemplate
 
 resolution = timedelta.resolution

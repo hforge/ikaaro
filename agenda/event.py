@@ -33,8 +33,8 @@ from ikaaro.autoform import RadioWidget
 from ikaaro.buttons import Remove_Button
 from ikaaro.config_models import Model
 from ikaaro.content import Content
+from ikaaro.datatypes import DaysOfWeek
 from ikaaro.emails import send_email
-from ikaaro.enumerates import DaysOfWeek
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Date_Field, Datetime_Field, Owner_Field
 from ikaaro.fields import SelectDays_Field

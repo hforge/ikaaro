@@ -27,8 +27,8 @@ from autoform import AutoForm, Widget
 from config import Configuration
 from config_captcha import Captcha_Field
 from datatypes import BirthDate
+from datatypes import Days, Months, Years
 from emails import send_email
-from enumerates import Days, Months, Years
 from fields import Boolean_Field, HTMLFile_Field
 from resource_ import DBResource
 
