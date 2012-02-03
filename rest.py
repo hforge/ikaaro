@@ -44,7 +44,10 @@ def fix_json(obj):
     if obj_type is list:
         return [ fix_json(x) for x in obj ]
     if obj_type is dict:
-        return { fix_json(x): fix_json(y) for x, y in obj.items() }
+        aux = {}
+        for x, y in obj.items():
+            aux[fix_json(x)] = fix_json(y)
+        return aux
     return obj
 
 
