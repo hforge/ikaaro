@@ -42,8 +42,9 @@ class NewResource_Local(Folder_NewResource):
         user = context.user
 
         # 1. Load dynamic classes
-        models = resource.get_resource('/config/models')
-        list(models.get_dynamic_classes())
+        models = resource.get_resource('/config/models', soft=True)
+        if models is not None:
+            list(models.get_dynamic_classes())
 
         # 2. The document types
         document_types = self.document_types
