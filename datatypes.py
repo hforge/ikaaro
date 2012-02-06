@@ -222,6 +222,42 @@ class DaysOfWeek(Enumerate):
 
 
 
+class Boolean3(Enumerate):
+    """ Boolean 3 states : Yes/No/Any useful on search form."""
+    default = ''
+    options = [
+        #{'name': '', 'value': u''},
+        {'name': '1', 'value': MSG(u'Yes')},
+        {'name': '0', 'value': MSG(u'No')}]
+
+    @staticmethod
+    def decode(value):
+        if value is '':
+            return None
+        return bool(int(value))
+
+
+    @staticmethod
+    def encode(value):
+        if value is True:
+            return '1'
+        elif value is False:
+            return '0'
+        return None
+
+
+    @staticmethod
+    def is_valid(value):
+        return value in (True, False, None)
+
+
+    def get_namespace(cls, name):
+        if name in (True, False, None):
+            name = Boolean3.encode(name)
+        return Enumerate(options=cls.get_options()).get_namespace(name)
+
+
+
 class IntegerRange(Enumerate):
     count = 4
 

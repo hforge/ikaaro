@@ -38,7 +38,7 @@ from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from autoform import BirthDateWidget, DateWidget, DatetimeWidget
 from autoform import PasswordWidget, ChoosePassword_Widget
 from autoform import ColorPickerWidget, ProgressBarWidget, rte_widget
-from datatypes import BirthDate, HexadecimalColor, HTMLBody
+from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
 from utils import get_secure_hash, split_reference
@@ -170,6 +170,21 @@ class Boolean_Field(Metadata_Field):
     datatype = Boolean
     widget = RadioWidget
     widget_keys = Metadata_Field.widget_keys + ['label', 'oneline']
+
+
+
+class Boolean3_Field(Metadata_Field):
+    datatype = Boolean3
+    widget = SelectWidget
+    widget_keys = Metadata_Field.widget_keys + ['label']
+
+    def get_value(self, resource, name, language=None):
+        value = super(Boolean3_Field, self).get_value(resource, name, language)
+        if value is True:
+            return '1'
+        elif value is False:
+            return '0'
+        return ''
 
 
 
