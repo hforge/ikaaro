@@ -197,6 +197,7 @@ class Datetime_Field(Metadata_Field):
 
 class Email_Field(Metadata_Field):
     datatype = Email
+    size = 40
 
 
 
