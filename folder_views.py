@@ -22,7 +22,7 @@ except ImportError:
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.database import AndQuery, PhraseQuery, OrQuery, TextQuery
+from itools.database import AndQuery, NotQuery, PhraseQuery, OrQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -342,7 +342,7 @@ class Folder_BrowseContent(BrowseForm):
         form = context.query
         for key, datatype in self.search_schema.items():
             value = form[key]
-            if not value:
+            if value is None or value == '':
                 continue
             # Special case: search on text, title and name AS AndQuery
             if key == 'text':
@@ -363,7 +363,11 @@ class Folder_BrowseContent(BrowseForm):
                 query.append(OrQuery(*[ PhraseQuery(key, x) for x in value ]))
             # Singleton
             else:
-                query.append(PhraseQuery(key, value))
+                if value is False:
+                    # FIXME No value means False in xapian
+                    query.append(NotQuery(PhraseQuery(key, True)))
+                else:
+                    query.append(PhraseQuery(key, value))
         return query
 
 
