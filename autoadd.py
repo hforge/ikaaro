@@ -85,6 +85,7 @@ class AutoAdd(AutoForm):
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     goto_view = None
     goto_parent_view = None
+    msg_new_resource = messages.MSG_NEW_RESOURCE
 
 
     # Fields
@@ -353,4 +354,4 @@ class AutoAdd(AutoForm):
             goto = './;%s' % self.goto_parent_view
         elif self.goto_view:
             goto = '%s/;%s' % (goto, self.goto_view)
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(self.msg_new_resource, goto=goto)
