@@ -267,11 +267,19 @@ class LoginView(STLView):
 
         user._login(context)
 
+        # Goto
+        return self.get_goto(user)
+
+
+    def get_goto(self, user):
+        context = self.context
+
         # Check if user account is completed
-        if not user.account_is_completed():
-            msg = MSG(u'You must complete your account informations')
-            goto = '/users/%s/;edit_account' % user.name
-            return context.come_back(msg, goto)
+        for name, field in user.get_fields():
+            if field.required and user.get_value(name) is None:
+                msg = MSG(u'You must complete your account informations')
+                goto = '/users/%s/;edit_account' % user.name
+                return context.come_back(msg, goto)
 
         # Come back
         referrer = context.get_referrer()

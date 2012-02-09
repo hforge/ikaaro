@@ -179,13 +179,6 @@ class User(DBResource):
         return self.get_value('user_timezone')
 
 
-    def account_is_completed(self):
-        for name, field in self.get_fields():
-            if field.required and self.get_value(name) is None:
-                return False
-        return True
-
-
     #######################################################################
     # Views
     #######################################################################
