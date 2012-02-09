@@ -358,6 +358,11 @@ class Folder_BrowseContent(BrowseForm):
                 else:
                     text_query = AndQuery(*text_query)
                 query.append(text_query)
+            # Special case: type
+            elif key == 'format':
+                squery = [ PhraseQuery('format', x) for x in value.split(',') ]
+                squery = squery[0] if len(squery) == 1 else OrQuery(*squery)
+                query.append(squery)
             # Multiple
             elif datatype.multiple is True:
                 query.append(OrQuery(*[ PhraseQuery(key, x) for x in value ]))
