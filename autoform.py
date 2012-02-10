@@ -829,7 +829,7 @@ class AutoForm(STLView):
                                     language=language_title)
                     widgets_html.append(widget)
                     if first_widget is None and widget.focus:
-                        first_widget = widget.name
+                        first_widget = widget.id
                 # fix label
                 if widgets_html:
                     field_ns['name'] = widgets_html[0].name
@@ -837,7 +837,7 @@ class AutoForm(STLView):
                 widget = widget(datatype=datatype, value=value)
                 widgets_html.append(widget)
                 if first_widget is None and widget.focus:
-                    first_widget = widget.name
+                    first_widget = widget.id
 
             # Ok
             stream = stl(template, field_ns)
