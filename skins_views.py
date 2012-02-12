@@ -130,6 +130,9 @@ class LocationTemplate(CMSTemplate):
         """
         # Get resource & access control
         context = self.context
+        if context.user is None:
+            return []
+
         here = context.resource
         here_link = context.get_link(here)
 
