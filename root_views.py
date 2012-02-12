@@ -229,9 +229,9 @@ class CreditsView(STLView):
 
     def get_namespace(self, resource, context):
         # Build the namespace
-        credits = get_abspath('CREDITS')
+        credits = get_abspath('CREDITS.txt')
         lines = lfs.open(credits).readlines()
-        names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
+        names = [ x[2:].strip() for x in lines if x.startswith('  ') ]
 
         return {'hackers': names}
 
