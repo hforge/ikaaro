@@ -326,7 +326,7 @@ class DBResource(Resource):
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value(self, name)
+        return field.get_value(self, name, language)
 
 
     def set_value(self, name, value, language=None, **kw):

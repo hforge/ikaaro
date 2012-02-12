@@ -823,7 +823,7 @@ class AutoForm(STLView):
             if getattr(datatype, 'multilingual', False):
                 for language in languages:
                     language_title = get_language_msg(language)
-                    widget = widget(name='%s:%s' % (widget.name, language),
+                    widget = widget(name='%s:%s' % (widget_name, language),
                                     datatype=datatype,
                                     value=value[language],
                                     language=language_title)
