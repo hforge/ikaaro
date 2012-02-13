@@ -341,7 +341,7 @@ class DateWidget(Widget):
       class="dateField" size="${size}" />
     <button class="${css} button-selector button-selector-agenda">...</button>
     <script type="text/javascript">
-      jQuery( "input.dateField" ).dynDateTime({
+      jQuery( "input#${id}" ).dynDateTime({
         ifFormat: "${format}",
         showsTime: ${show_time_js},
         timeFormat: "24",
