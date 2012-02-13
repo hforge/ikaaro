@@ -63,7 +63,7 @@ class Text(File):
     class_icon48 = 'icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'commit_log']
     # Fields
-    fields = File.data(class_handler=TextFile)
+    data = File.data(class_handler=TextFile)
 
 
     def get_content_type(self):
