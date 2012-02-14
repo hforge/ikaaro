@@ -72,9 +72,9 @@ class Widget(CMSTemplate):
     def __init__(self, name=None, **kw):
         if name:
             self.name = name
-        if self.name:
-            self.id = self.name.replace('_', '-')
-            self.id = self.id.replace(':', '-')
+        if self.name and not self.id:
+            id = self.name
+            self.id = id.replace('_', '-').replace(':', '-')
 
 
 
