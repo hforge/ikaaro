@@ -338,23 +338,23 @@ class Folder(DBResource):
     #######################################################################
     def get_view(self, name, query=None):
         # Add resource form
-        if name == 'new_resource':
-            if query:
-                class_id = query.get('type')
-                if class_id:
-                    cls = self.database.get_resource_class(class_id)
-                    view = cls.new_instance
-                    if is_prototype(view, BaseView):
-                        context = get_context()
-                        view = view(resource=self, context=context) # bind
-                        # XXX Should we really check access here?
-                        root = context.root
-                        user = context.user
-                        if root.has_permission(user, 'add', self, class_id):
-                            return view
-                        # XXX Should raise forbidden, but callers are not
-                        # ready for that
+        if name == 'new_resource' and query:
+            class_id = query.get('type')
+            if class_id:
+                cls = self.database.get_resource_class(class_id)
+                view = cls.new_instance
+                if is_prototype(view, BaseView):
+                    context = get_context()
+                    view = view(resource=self, context=context) # bind
+                    # XXX Should we really check access here?
+                    # Should raise forbidden, but callers are not ready.
+                    root = context.root
+                    user = context.user
+                    if not root.has_permission(user, 'add', self, class_id):
                         return None
+                    if not context.is_access_allowed(self, view):
+                        return None
+                    return view
 
         # Default
         return super(Folder, self).get_view(name, query)
