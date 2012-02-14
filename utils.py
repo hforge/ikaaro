@@ -350,8 +350,13 @@ _close_fancybox = """
     </html>
     """
 
-def close_fancybox(context):
+def close_fancybox(context, default=None):
+    # Case 1: fancybox
     fancybox = context.get_query_value('fancybox')
     if fancybox:
         context.set_content_type('text/html')
         return _close_fancybox
+
+    # Case 2: normal
+    goto = context.get_form_value('referrer') or default
+    return get_reference(goto) if type(goto) is str else goto

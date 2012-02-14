@@ -222,7 +222,7 @@ class Event_Edit(AutoEdit):
         container.del_resource(resource.name)
         # Ok
         context.message = MSG(u'Resource removed')
-        return close_fancybox(context)
+        return close_fancybox(context, default=str(resource.abspath[:-1]))
 
 
     def action_remove_one_instance(self, resource, context, form):
