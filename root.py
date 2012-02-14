@@ -465,6 +465,8 @@ class Root(Folder):
 
 
     def has_permission(self, user, permission, resource, class_id=None):
+        if resource is None:
+            return False
         access = self.get_resource('config/access')
         return access.has_permission(user, permission, resource, class_id)
 
