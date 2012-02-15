@@ -75,7 +75,7 @@ class File(Content):
         elif format == 'application/x-bzip2':
             extensions = ['bz2', 'tbz2']
         else:
-            cls = self.class_handler
+            cls = self.data.class_handler
             extensions = [ x[1:] for x in guess_all_extensions(format) ]
             if cls.class_extension in extensions:
                 extensions.remove(cls.class_extension)
