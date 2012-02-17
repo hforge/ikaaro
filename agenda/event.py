@@ -451,22 +451,23 @@ class Event(Content):
 
     def get_ns_event(self, current_day, grid=False):
         abspath = str(self.abspath)
-        ns = {'id': abspath,
-              'link': abspath,
-              'title': self.get_title(),
-              'cal': 0,
-              'color': self.get_color(),
-              'current_day': current_day,
-              'description': self.get_value('description'),
-              'status': self.get_value('status') or 'cal_busy'}
+        ns = {
+            'id': abspath,
+            'link': abspath,
+            'title': self.get_title(),
+            'cal': 0,
+            'color': self.get_color(),
+            'current_day': current_day,
+            'description': self.get_value('description'),
+            'status': self.get_value('status') or 'cal_busy',
+            'url': None}
 
         ###############################################################
         # URL
         context = get_context()
-        if context.root.is_allowed_to_view(context.user, self):
+        view = self.get_view('edit')
+        if context.is_access_allowed(self, view, context.user):
             ns['url'] = '%s/;edit?date=%s' % (abspath, current_day)
-        else:
-            ns['url'] = None
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
