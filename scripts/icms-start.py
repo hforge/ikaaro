@@ -23,7 +23,7 @@ from sys import exit
 
 # Import from itools
 from itools import __version__
-from itools.core import become_daemon, start_subprocess
+from itools.core import become_daemon
 from itools.database import check_database
 from itools.loop import Loop, cron
 
@@ -38,6 +38,7 @@ def start(options, target):
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
         return 1
+    # XXX Obsolete code, remove by 0.70
     sub_pid = get_pid('%s/pid-subprocess' % target)
     if sub_pid is not None:
         print ('[%s] The Web Server subprocess is running, please use '
@@ -60,12 +61,11 @@ def start(options, target):
     if options.detach:
         become_daemon()
 
-    # Start
-    start_subprocess('%s/database' % target,
-                     pid_file='%s/pid-subprocess' % target)
-
     # Set-up the server
     server = Server(target, read_only=options.read_only)
+
+    # Update Git tree-cache, to speed things up
+    server.database.worktree.update_tree_cache()
 
     # Find out the IP to listen to
     config = server.config

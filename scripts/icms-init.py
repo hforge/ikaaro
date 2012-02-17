@@ -24,7 +24,6 @@ import sys
 
 # Import from itools
 import itools
-from itools.core import start_subprocess
 from itools.database import Metadata
 
 # Import from ikaaro
@@ -157,7 +156,6 @@ def init(parser, options, target):
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
-    start_subprocess('.')
     database = make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)

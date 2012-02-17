@@ -16,7 +16,6 @@
 
 # Import from standard library
 from re import compile
-from subprocess import CalledProcessError
 
 # Import from itools
 from itools.database import Metadata
@@ -117,7 +116,7 @@ def get_older_state(resource, revision, context):
     cls = resource.handler.__class__
     try:
         handler = database.get_blob_by_revision_and_path(revision, path, cls)
-    except CalledProcessError:
+    except EnvironmentError:
         # Phantom handler or renamed file
         handler = None
 
@@ -153,8 +152,7 @@ class DBResource_CommitLog(BrowseForm):
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
 
-    schema = {
-        'ids': IndexRevision(multiple=True, mandatory=True)}
+    schema = {'ids': IndexRevision(multiple=True, mandatory=True)}
 
     search_widgets = [TextWidget('search_mail', title=MSG(u"Author's mail")),
                       TextWidget('search_comment', title=MSG(u'Comment'))]
@@ -165,7 +163,7 @@ class DBResource_CommitLog(BrowseForm):
         ('checkbox', None),
         ('date', MSG(u'Last Change'), False),
         ('username', MSG(u'Author'), False),
-        ('message', MSG(u'Comment'), False)]
+        ('message_short', MSG(u'Comment'), False)]
     table_actions = [DiffButton]
 
 
@@ -189,10 +187,11 @@ class DBResource_CommitLog(BrowseForm):
         # Add username / index by only for the showed commits
         users_cache = {}
         for i, item in enumerate(results):
-            username = users_cache.get(item['username'])
+            author_name = item['author_name']
+            username = users_cache.get(author_name)
             if username is None:
-                username = root.get_user_title(item['username'])
-                users_cache[item['username']] = username
+                username = root.get_user_title(author_name)
+                users_cache[author_name] = username
             item['username'] = username
             # Used for keeping revisions order
             item['index'] = i
@@ -202,9 +201,10 @@ class DBResource_CommitLog(BrowseForm):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
-            return ('%s_%s' % (item['index'], item['revision']), False)
+            return ('%s_%s' % (item['index'], item['sha']), False)
         elif column == 'date':
-            return (item['date'], './;changes?revision=%s' % item['revision'])
+            date = context.format_datetime(item['author_date'])
+            return (date, './;changes?revision=%s' % item['sha'])
         return item[column]
 
 
@@ -213,7 +213,7 @@ class DBResource_CommitLog(BrowseForm):
         ids = sorted(form['ids'])
         # Each item is a (index, revision) tuple
         revision = ids.pop()[1]
-        to = ids and ids.pop(0)[1] or 'HEAD'
+        to = ids.pop(0)[1] if ids else 'HEAD'
         # FIXME same hack than rename to call a GET from a POST
         query = encode_query({'revision': revision, 'to': to})
         uri = '%s/;changes?%s' % (context.get_link(resource), query)
@@ -231,58 +231,38 @@ class DBResource_Changes(STLView):
 
     query_schema = {
         'revision': String(mandatory=True),
-        'to': String,
-        }
+        'to': String}
 
     def get_namespace(self, resource, context):
         revision = context.query['revision']
         to = context.query['to']
         root = context.root
-        database = context.database
+        worktree = context.database.worktree
 
         if to is None:
             # Case 1: show one commit
             try:
-                metadata = database.get_diff(revision)
-            except CalledProcessError, e:
+                diff = worktree.git_diff(revision)
+            except EnvironmentError, e:
                 error = unicode(str(e), 'utf_8')
                 context.message = ERROR(u"Git failed: {error}", error=error)
                 return {'metadata': None, 'stat': None, 'changes': None}
+
+            metadata = worktree.get_metadata()
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            stat = database.get_stats(revision)
-            diff = metadata['diff']
+            stat = worktree.git_stats(revision)
         else:
             # Case 2: show a set of commits
             metadata = None
-            # Get the list of commits affecting the resource
-            revisions = [
-                x['revision'] for x in resource.get_revisions(content=True) ]
-            # Filter revisions in our range
-            # Below
-            while revisions and revisions[-1] != revision:
-                revisions.pop()
-            if not revisions:
-                error = ERROR(u'Commit {commit} not found', commit=revision)
-                context.message = error
-                return {'metadata': None, 'stat': None, 'changes': None}
-            # Above
-            if to != 'HEAD':
-                while revisions and revisions[0] != to:
-                    revisions.pop(0)
-                if not revisions:
-                    error = ERROR(u'Commit {commit} not found', commit=to)
-                    context.message = error
-                    return {'metadata': None, 'stat': None, 'changes': None}
             # Get the list of files affected in this series
-            files = database.get_files_affected(revisions)
+            files = worktree.get_files_changed(revision, to)
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
-            stat = database.get_stats(revision, to, paths=files)
-
+            stat = worktree.git_stats(revision, to, paths=files)
             # Reuse the list of files to limit diff produced
-            diff = database.get_diff_between(revision, to, paths=files)
+            diff = worktree.git_diff(revision, to, paths=files)
 
         # Ok
         return {

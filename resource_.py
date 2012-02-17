@@ -459,13 +459,8 @@ class DBResource(Resource):
         else:
             files = self.get_files_to_archive(content)
 
-        database = self.database
-        return database.get_revisions(files, n, author_pattern, grep_pattern)
-
-
-    def get_last_revision(self):
-        files = self.get_files_to_archive()
-        return self.database.get_last_revision(files)
+        worktree = self.database.worktree
+        return worktree.git_log(files, n, author_pattern, grep_pattern)
 
 
     def get_owner(self):

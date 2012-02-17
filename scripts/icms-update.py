@@ -18,14 +18,12 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from datetime import datetime
 from optparse import OptionParser
 from sys import exit, stdout
 from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import fixed_offset, start_subprocess, send_subprocess
 from itools.database import check_database
 from itools.web import get_context
 
@@ -161,10 +159,6 @@ def update(parser, options, target):
     if options.quick is False and check_database(target) is False:
         return 1
 
-    # Start subprocess
-    path = '%s/database' % target
-    start_subprocess(path)
-
     # Load the modules
     config = get_config(target)
     load_modules(config)
@@ -195,32 +189,12 @@ def update(parser, options, target):
         print 'STAGE 0: Initializing mtime/author'
         # Load cache
         git_cache = {}
-        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
-               '--name-only']
-        data = send_subprocess(cmd)
-        lines = data.splitlines()
-        utc = fixed_offset(0)
-        i = 0
-        while i < len(lines):
-            date = int(lines[i + 2])
-            author = lines[i + 1]
-            if author not in usernames:
-                author = None
-            commit = {
-                'revision': lines[i],                      # commit
-                'username': author,                        # author name
-                'date': datetime.fromtimestamp(date, utc), # author date
-                'message': lines[i + 3]}                   # subject
-
-            # Modified files
-            i += 4
-            while i < len(lines) and lines[i]:
-                path = lines[i]
-                if path not in git_cache or not git_cache[path]['username']:
+        for commit in database.worktree.git_log(include_files=True):
+            if commit['author_name'] not in usernames:
+                commit['author_name'] = None
+            for path in commit['paths']:
+                if path not in git_cache or not git_cache[path]['author_name']:
                     git_cache[path] = commit
-                i += 1
-            # Next entry is separated by an empty line
-            i += 1
 
         # Set mtime/author
         for resource in root.traverse_resources():
@@ -233,11 +207,11 @@ def update(parser, options, target):
                 commit = git_cache.get(file)
                 if not commit:
                     continue
-                if not last_commit or commit['date'] > last_commit['date']:
+                if not last_commit or commit['author_date'] > last_commit['author_date']:
                     last_commit = commit
             metadata = resource.metadata
-            metadata.set_property('mtime', last_commit['date'])
-            metadata.set_property('last_author', last_commit['username'])
+            metadata.set_property('mtime', last_commit['author_date'])
+            metadata.set_property('last_author', last_commit['author_name'])
 
         # Commit
         context.git_message = u'Upgrade: set mtime/author'

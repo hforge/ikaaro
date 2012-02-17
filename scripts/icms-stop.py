@@ -36,6 +36,7 @@ def stop(parser, options, target):
     if pid is None:
         print '[%s] Web Server not running.' % target
 
+        # XXX Obsolete code, remove by 0.70
         # Eventually stop the subprocess
         sub_pid = get_pid('%s/pid-subprocess' % target)
         if sub_pid is not None:
