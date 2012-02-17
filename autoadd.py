@@ -210,6 +210,11 @@ class AutoAdd(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'cls_description':
+            # View cls_description
+            value = getattr(self, name, None)
+            if value is not None:
+                return value.gettext() if value else u''
+            # Resource cls_description
             cls = self._resource_class
             value = cls.class_description
             return value.gettext() if value else u''
