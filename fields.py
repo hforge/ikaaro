@@ -37,7 +37,7 @@ from autoform import Widget, FileWidget, MultilineWidget, TextWidget
 from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from autoform import BirthDateWidget, DateWidget, DatetimeWidget
 from autoform import PasswordWidget, ChoosePassword_Widget
-from autoform import ColorPickerWidget, ProgressBarWidget, rte_widget
+from autoform import ColorPickerWidget, ProgressBarWidget, RTEWidget
 from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
@@ -523,7 +523,7 @@ class HTMLFile_Field(File_Field):
     class_handler = XHTMLFile
     datatype = HTMLBody
     multilingual = True
-    widget = rte_widget
+    widget = RTEWidget
 
 
     def _get_handler_from_value(self, value):
