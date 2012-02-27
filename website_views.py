@@ -170,7 +170,7 @@ class ContactForm(AutoForm):
     def action(self, resource, context, form):
         # Get form values
         contact = form['to']
-        from_addr = form['from'].strip()
+        reply_to = form['from'].strip()
         subject = form['subject'].strip()
         body = form['message_body'].strip()
 
@@ -182,7 +182,7 @@ class ContactForm(AutoForm):
             contact = (contact_title, contact)
         # Send the email
         root = resource.get_root()
-        root.send_email(contact, subject, from_addr=from_addr, text=body)
+        root.send_email(contact, subject, reply_to=reply_to, text=body)
         # Ok
         context.message = INFO(u'Message sent.')
 

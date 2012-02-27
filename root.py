@@ -33,7 +33,7 @@ from email.header import Header
 import traceback
 
 # Import from itools
-from itools.core import freeze, get_abspath
+from itools.core import freeze, get_abspath, is_thingy
 from itools.database import GitDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
@@ -74,6 +74,13 @@ class CtrlView(BaseView):
         return dumps(
             {'packages': resource.get_version_of_packages(context),
              'read-only': not isinstance(database, GitDatabase)})
+
+
+def user_to_email_header(user, encoding):
+    user_title = user.get_title()
+    user_email = user.get_property('email')
+    return '%s <%s>' % (Header(user_title, encoding), user_email)
+
 
 
 class Root(WebSite):
@@ -257,12 +264,17 @@ class Root(WebSite):
 
     ########################################################################
     # Email
-    def send_email(self, to_addr, subject, from_addr=None, text=None,
+    def send_email(self, to_addr, subject, reply_to=None, text=None,
                    html=None, encoding='utf-8', subject_with_host=True,
                    return_receipt=False, attachment=None):
-        # Check input data
-        if not isinstance(subject, unicode):
-            raise TypeError, 'the subject must be a Unicode string'
+        # 1. Check input data
+        if type(subject) is unicode:
+            subject = subject.encode(encoding)
+        elif is_thingy(subject, MSG):
+            subject = subject.gettext()
+        else:
+            raise TypeError, 'unexpected subject of type %s' % type(subject)
+
         if len(subject.splitlines()) > 1:
             raise ValueError, 'the subject cannot have more than one line'
         if text and not isinstance(text, unicode):
@@ -270,48 +282,55 @@ class Root(WebSite):
         if html and not isinstance(html, unicode):
             raise TypeError, 'the html must be a Unicode string'
 
-        # Figure out the from address
+        # 2. Local variables
         context = get_context()
         server = context.server
         site_root = context.site_root
-        if from_addr is None:
-            user = context.user
-            if user is not None:
-                from_addr = user.get_title(), user.get_property('email')
-            elif site_root.get_property('emails_from_addr'):
-                user_name = site_root.get_property('emails_from_addr')
-                user = self.get_resource('/users/%s' % user_name)
-                from_addr = user.get_title(), user.get_property('email')
-            else:
-                from_addr = server.smtp_from
 
-        # Set the subject
-        subject = subject.encode(encoding)
+        # 3. Start the message
+        message = MIMEMultipart('related')
+        message['Date'] = formatdate(localtime=True)
+
+        # 4. From
+        username = site_root.get_property('emails_from_addr')
+        if username:
+            user = self.get_resource('/users/%s' % username)
+            message['From'] = user_to_email_header(user, encoding)
+        else:
+            message['From'] = server.smtp_from
+
+        # 5. To
+        if isinstance(to_addr, tuple):
+            real_name, address = to_addr
+            to_addr = '%s <%s>' % (Header(real_name, encoding), address)
+        message['To'] = to_addr
+
+        # 6. Subject
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
-        # Add signature
+        message['Subject'] = Header(subject, encoding)
+
+        # 7. Reply-To
+        user = context.user
+        if reply_to:
+            message['Reply-To'] = reply_to
+        elif user:
+            reply_to = user_to_email_header(user, encoding)
+            message['Reply-To'] = reply_to
+
+        # Return Receipt
+        if return_receipt and reply_to:
+            message['Disposition-Notification-To'] = reply_to # Standard
+            message['Return-Receipt-To'] = reply_to           # Outlook 2000
+
+        # 8. Body
         signature = site_root.get_property('emails_signature')
         if signature:
             signature = signature.strip()
             if not signature.startswith('--'):
                 signature = '-- \n%s' % signature
             text += '\n\n%s' % signature
-        # Build the message
-        message = MIMEMultipart('related')
-        message['Subject'] = Header(subject, encoding)
-        message['Date'] = formatdate(localtime=True)
 
-        for key, addr in [('From', from_addr), ('To', to_addr)]:
-            if isinstance(addr, tuple):
-                real_name, address = addr
-                addr = '%s <%s>' % (Header(real_name, encoding), address)
-            message[key] = addr
-        # Return Receipt
-        if return_receipt is True:
-            # Somewhat standard
-            message['Disposition-Notification-To'] = from_addr
-            # XXX For Outlook 2000
-            message['Return-Receipt-To'] = from_addr
         # Create MIMEText
         if html:
             html = html.encode(encoding)
@@ -342,7 +361,8 @@ class Root(WebSite):
             message_attachment.add_header('Content-Disposition', 'attachment',
                                           filename=attachment.name)
             message.attach(message_attachment)
-        # Send email
+
+        # 6. Send email
         server.send_email(message)
 
 
