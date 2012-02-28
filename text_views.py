@@ -76,7 +76,8 @@ class Text_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        return {'data': resource.handler.to_str()}
+        data = resource.get_value('data')
+        return {'data': data.to_str() if data else ''}
 
 
 
