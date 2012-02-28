@@ -32,6 +32,7 @@ from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
+from autoform import MultilineWidget
 from database import Database
 from file import File
 from file_views import File_Edit
@@ -63,7 +64,7 @@ class Text(File):
     class_icon48 = 'icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'commit_log']
     # Fields
-    data = File.data(class_handler=TextFile)
+    data = File.data(class_handler=TextFile, widget=MultilineWidget)
 
 
     def get_content_type(self):

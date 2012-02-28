@@ -23,12 +23,13 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
+from itools.handlers import TextFile
 from itools.web import STLView, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, EditAreaWidget, get_default_widget
 from buttons import Button, Remove_BrowseButton
-from fields import Textarea_Field
+from fields import File_Field
 from file_views import File_Edit
 import messages
 from views import BrowseForm
@@ -41,29 +42,32 @@ class Text_Edit(File_Edit):
 
     fields = ['title', 'data', 'file', 'description', 'subject', 'share']
 
-    data = Textarea_Field(title=MSG(u'Content'))
-
 
     def get_value(self, resource, context, name, datatype):
         if name == 'data':
-            return resource.handler.to_str()
-        return File_Edit.get_value(self, resource, context, name, datatype)
+            data = resource.get_value('data')
+            if data is None:
+                return ''
+            return data.to_str()
+        proxy = super(Text_Edit, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def set_value(self, resource, context, name, form):
         if name == 'data':
             if form.get('file'):
                 return False
-            handler = resource.handler
-            old_value = handler.to_str()
-            data = form['data']
-            if old_value == data:
+            old_data = resource.get_value('data')
+            old_value = old_data.to_str()
+            value = form['data']
+            if old_value == value:
                 return False
-            handler.load_state_from_string(data)
+            # Save new text
+            old_data.load_state_from_string(value)
             context.database.change_resource(resource)
             return False
 
-        return File_Edit.set_value(self, resource, context, name, form)
+        return super(Text_Edit, self).set_value(resource, context, name, form)
 
 
 
@@ -88,7 +92,8 @@ class CSS_Edit(Text_Edit):
 
     title = "Edit CSS file"
 
-    data = Text_Edit.data(widget=EditAreaWidget)
+    data = File_Field(required=True, class_handler=TextFile,
+        widget=EditAreaWidget)
 
 
 
