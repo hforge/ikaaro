@@ -60,6 +60,8 @@ class Text_Edit(File_Edit):
             old_data = resource.get_value('data')
             old_value = old_data.to_str()
             value = form['data']
+            # Remove ^M character
+            value = '\n'.join(value.splitlines())
             if old_value == value:
                 return False
             # Save new text
