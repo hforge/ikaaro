@@ -318,6 +318,25 @@ class Folder_BrowseContent(BrowseForm):
         return resource.is_content
 
 
+    def get_scripts(self, context):
+        scripts = []
+        for widget in self.search_widgets:
+            for script in widget.scripts:
+                if script not in scripts:
+                    scripts.append(script)
+
+        return scripts
+
+
+    def get_styles(self, context):
+        styles = []
+        for widget in self.search_widgets:
+            for style in widget.styles:
+                if style not in styles:
+                    styles.append(style)
+        return styles
+
+
     depth = None
     base_classes = None
     def get_items_query(self, resource, context):
