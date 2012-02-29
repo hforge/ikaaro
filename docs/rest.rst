@@ -17,7 +17,7 @@ and nulls are used). The only encoding supported is UTF-8.
 
 The table below summurizes the interface::
 
-  POST /;login               # Authentication
+  POST /;rest_login          # Authentication
   GET /.../;rest_query       # Query the database
   POST /.../;rest_create     # Create a new resource
   GET /.../;rest_read        # Read a resource
@@ -54,10 +54,10 @@ Authentication
 ==============
 
 Authentication is done with a cookie named ``iauth``. To get the value of
-this cookie a ``POST`` request to the ``login`` view must be send. For
+this cookie a ``POST`` request to the ``rest_login`` view must be send. For
 instance, the given request::
 
-  POST /;login HTTP/1.1
+  POST /;rest_login HTTP/1.1
   Host: localhost:8080
   User-Agent: foobar
   Content-Type: application/x-www-form-urlencoded
@@ -67,11 +67,10 @@ instance, the given request::
 
 May return the given response::
 
-  HTTP/1.1 302 Found
+  HTTP/1.1 204 No Content
   Server: itools.web
   Date: Thu, 08 Dec 2011 10:33:07 GMT
   Set-Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"; path=/
-  Location: http://localhost:8080/?info=Welcome%21
   Content-Length: 0
 
 Grab the value of the ``iauth`` cookie and send it in subsequent requests,

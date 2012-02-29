@@ -26,6 +26,7 @@ from itools.web import BaseView
 
 # Import from ikaaro
 from fields import Metadata_Field
+from resource_views import LoginView
 from utils import get_base_path_query
 
 
@@ -105,6 +106,17 @@ def field_to_json(resource, field_name):
         return property_to_json(field, prop)
 
     # TODO Files
+
+
+
+###########################################################################
+# Login
+###########################################################################
+class Rest_Login(LoginView):
+
+    def POST(self, resource, context):
+        super(Rest_Login, self).POST(resource, context)
+        return None
 
 
 
