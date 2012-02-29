@@ -134,6 +134,8 @@ May be answered with the given response::
 
   {"title": [{"lang": "en", "value": "Root"}], ...}
 
+Binaray content, like images, is returned in Base64 encoding (see RFC 3548).
+
 
 Update
 ==============

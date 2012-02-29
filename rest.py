@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from base64 import b64encode
 import json
 
 # Import from itools
@@ -25,7 +26,7 @@ from itools.handlers import checkid
 from itools.web import BaseView
 
 # Import from ikaaro
-from fields import Metadata_Field
+from fields import Metadata_Field, File_Field
 from resource_views import LoginView
 from utils import get_base_path_query
 
@@ -95,6 +96,7 @@ def field_to_json(resource, field_name):
     if field is None:
         return None
 
+    # Metadata
     if issubclass(field, Metadata_Field):
         prop = resource.metadata.properties.get(field_name)
         if prop is None:
@@ -105,7 +107,15 @@ def field_to_json(resource, field_name):
             return [ property_to_json(field, x) for x in prop ]
         return property_to_json(field, prop)
 
-    # TODO Files
+    # Files
+    if issubclass(field, File_Field):
+        handler = field.get_value(resource, field_name)
+        if not handler:
+            return None
+        return {'value': b64encode(handler.to_str())}
+
+    # Error
+    raise ValueError, 'unexpected field type %s' % repr(field)
 
 
 
