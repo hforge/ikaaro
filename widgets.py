@@ -21,19 +21,21 @@
 
 # Import from the Standard Library
 from datetime import datetime, date
+from operator import itemgetter
 from os.path import basename
 from random import randint
+from urllib import quote
 
 # Import from itools
 from itools.core import freeze, get_abspath
 from itools.core import proto_property, proto_lazy_property
-from itools.datatypes import Boolean, Email, Enumerate, PathDataType
+from itools.datatypes import Boolean, Email, Enumerate, PathDataType, String
 from itools.datatypes import Date, DateTime
 from itools.fs import lfs
 from itools.gettext import MSG
 from itools.handlers import Image
 from itools.stl import stl
-from itools.web import get_context
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from datatypes import Password_Datatype
@@ -642,6 +644,196 @@ class EditAreaWidget(MultilineWidget):
         prefix = self.get_prefix()
         template = self.get_template()
         return stl(events=template, namespace=self, prefix=prefix)
+
+
+
+###########################################################################
+# Common widgets to reuse
+###########################################################################
+class GetFolders(BaseView):
+    """ Get folders within a folder (combined with ajax).
+    """
+    access = 'is_allowed_to_view'
+    query_schema = {'level0': String, 'level1': String, 'level2': String,
+                    'level3': String, 'level4': String}
+
+    def GET(self, resource, context):
+        context.set_content_type('text/plain')
+
+        query = context.query
+        for key in ('level4', 'level3', 'level2', 'level1', 'level0'):
+            value = query[key]
+            if value:
+                r_value = resource.get_resource(value, soft=True)
+                if r_value:
+                    options = []
+                    for r_c in r_value.search_resources(format='folder'):
+                        c = r_c.name
+                        c_path = value + '/' + c
+                        r_c = resource.get_resource(c_path, soft=True)
+                        if r_c is not None:
+                            options.append({'name': quote(c_path),
+                                'value': r_c.get_title()})
+                    if len(options) < 1:
+                        return ''
+                    elif len(options) == 1 and options[0]['name'] == '':
+                        return ''
+                    options.sort(key=itemgetter('value'))
+                    name = 'folder%s' % (int(key[-1])+1)
+                    level = int(key[-1]) + 1
+                    widget = FolderWidget(name, value='', level=level,
+                                          lower=(level+1),
+                                          datatype=Enumerate(options=options))
+                    return widget.render()
+        return ''
+
+
+
+class FolderWidget(SelectWidget):
+    has_empty_option = True
+    template = make_stl_template("""
+        <select id="${id}" name="${name}"
+          onchange="clean_subfolders(${lower});
+            $('#f${lower}').load('/;get_folders?level${level}='+$(this).val())">
+          <option value="" stl:if="has_empty_option"></option>
+          <option stl:repeat="option options" value="${option/name}"
+            selected="${option/selected}">${option/value}</option>
+        </select>
+        """)
+
+    @proto_property
+    def value(self):
+        return quote(self._value)
+
+
+
+class FoldersWidget(Widget):
+    template = make_stl_template("""
+      <script type="text/javascript">
+          $(function(){
+            $("#folder0").change(function(){
+              $("#f1").load('/;get_folders?level0='+$(this).val());
+            });
+          });
+      </script>
+      <div id="f0">${folder0}</div>
+      <div id="f1">${folder1}</div>
+      <div id="f2">${folder2}</div>
+      <div id="f3">${folder3}</div>
+      <div id="f4">${folder4}</div>
+    """)
+    folder = None
+
+    def folderX(self, x):
+        """ folders -> folder courant
+            folder  -> folder complet
+            value   -> folder fils sélectionné
+        """
+        if self.folder is None:
+            return None
+        name = 'folder%s' % x
+        folder_path = self.folder.abspath
+        value = quote(str(folder_path[:x+1]))
+
+        if len(folder_path) < x:
+            return None
+        base_folder = folder_path[:x]
+        base_folder = get_context().database.get_resource(base_folder)
+
+        # On affiche la liste si elle contient des items
+        if list(base_folder.search_resources(format='folder')):
+            return FolderWidget(name,
+                datatype=FoldersEnumerate(base_folder=base_folder),
+                value=value, lower=x+1, level=x).render()
+        return None
+
+
+    @proto_lazy_property
+    def folder0(self):
+        return self.folderX(0)
+
+    @proto_lazy_property
+    def folder1(self):
+        return self.folderX(1)
+
+    @proto_lazy_property
+    def folder2(self):
+        return self.folderX(2)
+
+    @proto_lazy_property
+    def folder3(self):
+        return self.folderX(3)
+
+    @proto_lazy_property
+    def folder4(self):
+        return self.folderX(4)
+
+
+
+class DynamicEnumerate(Enumerate):
+    """
+    Automaticaly build an enumerate with all resources
+    of a given class_id.
+    results = [{'name': resource1.get_abspath()
+                'title': resource1.get_title()}
+               {'name': resource2.get_abspath()
+                'title': resource2.get_title()}]
+    """
+
+    format = None
+
+    @classmethod
+    def get_options(cls):
+        context = get_context()
+        return [
+            {'name': quote(str(res.abspath)), 'value': res.get_title()}
+            for res in context.search(format=cls.format).get_resources() ]
+
+    @classmethod
+    def get_resource(cls, name):
+        return get_context().database.get_resource(name)
+
+
+    @classmethod
+    def get_value(cls, name, default=None):
+        if name is None:
+            return
+        resource = cls.get_resource(name)
+        return resource.get_title()
+
+
+
+class FoldersEnumerate(DynamicEnumerate):
+
+    widget = FolderWidget
+
+    @proto_lazy_property
+    def base_folder(self):
+        return get_context().root
+
+    @proto_lazy_property
+    def _value(self):
+        return self.base_folder.abspath
+
+    @proto_lazy_property
+    def value(self):
+        return quote(str(self._value))
+
+    def get_options(self):
+        base_folder = self.base_folder
+        value = str(base_folder.get_resource(self._value).abspath)
+        options = []
+        for item in base_folder.search_resources(format='folder'):
+            if item is not None:
+                i_abspath = str(item.abspath)
+                options.append({'name': quote(i_abspath),
+                    'value': item.get_title(),
+                    'selected': i_abspath in value})
+        # Si 1 option, elle est sélectionnée
+        if len(options) == 1:
+            options[0]['selected'] = True
+        options.sort(key=itemgetter('value'))
+        return options
 
 
 
