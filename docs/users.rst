@@ -44,51 +44,11 @@ page* (see figure). From the profile page the user will be able to:
    User's Profile Page
 
 
-Access Control
-==============
-
-.. _users-security:
-
-Security Policy
----------------
-
-If the user has the administrative role she will be able to modify the
-application's settings. Most notably to choose the *security policy* between
-three options (see figure):
-
-* **Intranet** Authentication will be required for any level of access.  Only
-  administrators will be able to register new users. (This is the default
-  security policy.)
-* **Extranet**  Non authenticated users will be able to access published
-  content, and to register by themselves.
-* **Community site** Non authenticated users will be able to access published
-  content, and to register by themselves.
-
-.. figure:: figures/settings.*
-   :width: 740px
-
-   Application's Settings
-
-.. _users-users:
-
-Users
------
-
-As the administrator she will be able to manage the users of the application:
-to add new users and to define their access roles (see figure).
-
-
-.. figure:: figures/members.*
-   :width: 740px
-
-   Managing Users
-
-
 Multiple Web Sites
 ==================
 
 It is possible to host several Web Sites with a single :mod:`ikaaro` instance,
-each one with its own settings (see section :ref:`users-security`) and members
+each one with its own settings (see section :ref:`security`) and members
 (see section :ref:`users-users`).  For this purpose the :class:`WebSite`
 object exists.
 
@@ -128,7 +88,7 @@ Workflow
 Access to content is controlled through a three-state workflow system (see
 figure), where every document or image is in one of these states: *private*,
 *pending* or *public*. The exact meaning of these states depends on the chosen
-security policy (see section :ref:`users-security`).
+security policy (see section :ref:`security`).
 
 .. figure:: figures/workflow.*
    :width: 740px
