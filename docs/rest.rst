@@ -24,13 +24,19 @@ The table below summurizes the interface::
   POST /.../;rest_update     # Update a resource
  
 
-Architecture recall
--------------------
+The database
+--------------
 
-In ikaaro information is stored in what we call resources. Resources are
-organized in a tree structure. The path given in the request URI maps exactly
-to a resource. On a resource you can call a view to get a particular
-representation of the resource.
+Ikaaro uses the ``itools.database`` NoSQL database system, of the
+`document-store <http://en.wikipedia.org/wiki/Document-oriented_database>`_
+type, except the main unit of information is called *resource* (instead of
+document).
+
+Resources are organized in a hierarchical structure, so the key to lookup
+a resource in the the database is its absolute path. A query API is also
+available to retrieve a collection of resources matching some criterias,
+this query API is backed by the `Xapian <http://xapian.org/>`_ search engine
+library.
 
 A resource is a collection of key-value pairs (fields). There are different
 types of resources, every resource type has an schema which describes these
@@ -48,6 +54,21 @@ Other fields have parameters, for instance multilingual fields like the
 title have a language parameter::
 
   "title": [{"lang": "en", "value": "Root"}, {"lang": "fr", "value": "Racine"}]
+
+
+The URL
+--------------
+
+The URL path is split in two parts, first the path to the resource, last
+the view on the resource. A view returns a particular representation of the
+resource::
+
+    http://example.com/a/b/c/;rest_read
+
+In the URL above the path to the resource is ``/a/b/c`` and the name of
+the view is ``rest_read``. Note the semicolon, it allows to unambigously
+specify where the resource path ends, and where the view name starts.
+
 
 
 Authentication
