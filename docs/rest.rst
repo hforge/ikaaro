@@ -70,7 +70,6 @@ the view is ``rest_read``. Note the semicolon, it allows to unambigously
 specify where the resource path ends, and where the view name starts.
 
 
-
 Authentication
 ==============
 
@@ -104,6 +103,48 @@ like this::
 
 If the authentication failed (wrong login-name or password), the cookie
 will be missing.
+
+
+Schema
+==============
+
+This view is intended to help developers learn about the application. It
+shows the schema of the resource, which describes its fields::
+
+  GET /;rest_schema
+  Host: localhost:8080
+  User-Agent: foobar
+  Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"
+
+  HTTP/1.1 200 OK
+  Server: itools.web
+  Date: Fri, 02 Mar 2012 17:45:56 GMT
+  Content-Type: application/json
+  Content-Length: 1428
+
+  {"index": {...}, ...}
+
+The value returned is a dictionary, where the key is the name of the field
+and the value is another dictionary describing that field:
+
+- *type* -- the field type (text, datetime, etc.)
+- *default* -- the default value for the field, when the resource does not
+  define one.
+- *multiple* -- boolean indicating whether the field may have multiple values
+  or not.
+- *multilingual* -- boolean indicating whether the field is multilingual or
+  not.
+- *parameters* -- the parameters of the field, for instance multilingual
+  fields have a language paramer.
+- *readonly* -- boolean, if true it means the field cannot be explicitely
+  modified (exemple: the modification time).
+- *required* -- boolean, if true it means this field is required.
+- *indexed* -- boolean indicating whether the field is indexed or not (used
+  by the Xapian search engine library).
+- *stored* -- boolean indicating whether the field is stored or not (used by
+  the Xapian search engine library).
+- *choices* -- available only in select-fields, a list with the possible
+  values of the field.
 
 
 Query

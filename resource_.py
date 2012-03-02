@@ -48,7 +48,8 @@ from resource_views import DBResource_Backlinks
 from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
-from rest import Rest_Login, Rest_Query, Rest_Create, Rest_Read, Rest_Update
+from rest import Rest_Login
+from rest import Rest_Schema, Rest_Query, Rest_Create, Rest_Read, Rest_Update
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import get_base_path_query
 
@@ -813,6 +814,7 @@ class DBResource(Resource):
     rest_create = Rest_Create
     rest_read = Rest_Read
     rest_update = Rest_Update
+    rest_schema = Rest_Schema
 
 
 ###########################################################################

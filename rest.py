@@ -239,3 +239,19 @@ class Rest_Query(BaseView):
         # Ok
         context.set_content_type('application/json')
         return json.dumps(items)
+
+
+
+class Rest_Schema(BaseView):
+
+    access = 'is_allowed_to_view'
+
+
+    def GET(self, resource, context):
+        schema = {}
+        for name, field in resource.get_fields():
+            schema[name] = field.rest()
+
+        # Ok
+        context.set_content_type('application/json')
+        return json.dumps(schema)

@@ -47,6 +47,8 @@ from utils import get_secure_hash, split_reference
 
 class Field(BaseField):
 
+    rest_type = 'undefined' # Used by the rest interface
+
     default = None
     multilingual = False
     required = False
@@ -127,6 +129,29 @@ class Field(BaseField):
         pass
 
 
+    # Rest representation
+    def rest(self):
+        rest = {'type': self.rest_type}
+        # From the datatype
+        datatype = self.get_datatype()
+        for key in 'multiple', 'multilingual', 'indexed', 'stored':
+            value = getattr(datatype, key)
+            rest[key] = Boolean.encode(value)
+
+        # Default value
+        default = self.get_default()
+        if default is not None:
+            rest['default'] = datatype.encode(default)
+
+        # Other
+        for key in 'required', 'readonly':
+            value = getattr(self, key)
+            rest[key] = Boolean.encode(value)
+
+        # Ok
+        return rest
+
+
 ###########################################################################
 # Metadata properties
 ###########################################################################
@@ -157,6 +182,12 @@ class Metadata_Field(Field):
             value = Property(value, **kw)
 
         resource.metadata.set_property(name, value)
+
+
+    def rest(self):
+        rest = super(Metadata_Field, self).rest()
+        rest['parameters'] = self.parameters_schema.keys()
+        return rest
 
 
 
@@ -191,6 +222,7 @@ class Boolean3_Field(Metadata_Field):
 class Char_Field(Metadata_Field):
     datatype = String
     widget = TextWidget
+    rest_type = 'bytes'
 
 
 class Color_Field(Metadata_Field):
@@ -207,6 +239,7 @@ class Date_Field(Metadata_Field):
 class Datetime_Field(Metadata_Field):
     datatype = DateTime
     widget = DatetimeWidget
+    rest_type = 'datetime'
 
 
 
@@ -251,6 +284,7 @@ class ProgressBar_Field(Metadata_Field):
 
 
 class Select_Field(Metadata_Field):
+    rest_type = 'select'
     datatype = Enumerate
     widget = SelectWidget
     options = None # Must be overriden by subclasses: [{}, ...]
@@ -259,8 +293,16 @@ class Select_Field(Metadata_Field):
     widget_keys = Metadata_Field.widget_keys + ['has_empty_option']
 
 
+    def rest(self):
+        rest = super(Select_Field, self).rest()
+        datatype = self.get_datatype()
+        rest['choices'] = [ x['name'] for x in datatype.get_options() ]
+        return rest
+
+
 
 class Text_Field(Metadata_Field):
+    rest_type = 'text'
     datatype = Unicode
     multilingual = True
     parameters_schema = {'lang': String} # useful only when multilingual
@@ -270,6 +312,7 @@ class Text_Field(Metadata_Field):
 
 class Textarea_Field(Text_Field):
     widget = MultilineWidget
+    rest_type = 'textarea'
 
 
 
@@ -422,6 +465,7 @@ class Owner_Field(URI_Field):
 ###########################################################################
 class File_Field(Field):
 
+    rest_type = 'file'
     class_handler = None
     datatype = String
     widget = FileWidget
@@ -520,6 +564,7 @@ map = {'a': 'href', 'img': 'src', 'iframe': 'src',
 
 class HTMLFile_Field(File_Field):
 
+    rest_type = 'file-html'
     class_handler = XHTMLFile
     datatype = HTMLBody
     multilingual = True
