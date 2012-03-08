@@ -419,8 +419,11 @@ class BrowseForm(STLView):
 
 
     def get_item_value(self, resource, context, item, column):
-        name = 'get_item_value'
-        raise NotImplementedError, "the '%s' method is not defined" % name
+        if column == 'row_css':
+            return None
+
+        # Default
+        raise ValueError, 'unexpected "%s"' % column
 
 
     def get_table_actions(self, resource, context):
