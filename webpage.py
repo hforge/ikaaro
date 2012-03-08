@@ -76,7 +76,8 @@ class WebPage(File):
         result = {}
         for language in languages:
             handler = self.get_value('data', language=language)
-            result[language] = handler.to_text()
+            if handler:
+                result[language] = handler.to_text()
         return result
 
 
