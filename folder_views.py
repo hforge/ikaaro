@@ -520,6 +520,8 @@ class Folder_BrowseContent(BrowseForm):
             # Last author
             author =  item.get_value('last_author')
             return context.root.get_user_title(author) if author else None
+        elif column == 'row_css':
+            return None
 
         # Default
         return item.get_value_title(column)

@@ -524,9 +524,11 @@ class BrowseForm(STLView):
                     column_ns['value'] = value
                     column_ns['href'] = href
                 row_columns.append(column_ns)
+            # Row css
+            row_css = self.get_item_value(resource, context, item, 'row_css')
 
             # Append
-            rows.append({'columns': row_columns})
+            rows.append({'css': row_css, 'columns': row_columns})
 
         # Ok
         return {
