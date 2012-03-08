@@ -78,6 +78,13 @@ class Database(RWDatabase):
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
 
 
+    def get_dynamic_classes(self):
+        search = self.search(base_classes='-model')
+        for brain in search.get_documents():
+            class_id = brain.abspath
+            yield self.get_resource_class(class_id)
+
+
 
 def make_database(path):
     size_min, size_max = 4800, 5200

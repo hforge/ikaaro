@@ -333,15 +333,6 @@ class ConfigModels(Folder):
     config_name = 'models'
     config_group = 'content'
 
-    # API
-    def get_dynamic_classes(self):
-        database = self.database
-        search = database.search(base_classes='-model')
-        for brain in search.get_documents():
-            class_id = brain.abspath
-            yield database.get_resource_class(class_id)
-
-
     # Views
     class_views = ['browse_content', 'add_model', 'edit', 'commit_log']
     browse_content = ConfigModels_Browse

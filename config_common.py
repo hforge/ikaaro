@@ -38,22 +38,22 @@ class NewResource_Local(Folder_NewResource):
 
 
     def get_items(self, resource, context):
-        root = context.root
-        user = context.user
+        # Load dynamic classes
+        database = context.database
+        list(database.get_dynamic_classes())
 
-        # 1. Load dynamic classes
-        models = resource.get_resource('/config/models', soft=True)
-        if models is not None:
-            list(models.get_dynamic_classes())
-
-        # 2. The document types
+        # Case 1: do not include subclasses
         document_types = self.document_types
         if self.include_subclasses is False:
             return document_types
 
+        # Case 2: include subclasses
+        root = context.root
+        user = context.user
+
         document_types = tuple(document_types)
         items = []
-        for cls in context.database.get_resource_classes():
+        for cls in database.get_resource_classes():
             class_id = cls.class_id
             if class_id[0] != '-' and issubclass(cls, document_types):
                 if root.has_permission(user, 'add', resource, class_id):
