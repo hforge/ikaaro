@@ -275,7 +275,9 @@ class Model(OrderedFolder):
         # dict
         class_dict = {
             'class_id': str(self.abspath),
-            'class_title': MSG(self.get_value('title'))}
+            'class_title': MSG(self.get_value('title')),
+            'fields_soft': True, # dynamic classes are fragile
+            }
 
         fields = []
         for field_name in base_class.fields:
