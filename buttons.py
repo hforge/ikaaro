@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import proto_property
+from itools.core import proto_property, proto_lazy_property
 from itools.gettext import MSG
 from itools.stl import STLTemplate
 
@@ -54,7 +54,7 @@ class Button(STLTemplate):
         return u'return confirm("%s");' % confirm.gettext()
 
 
-    @proto_property
+    @proto_lazy_property
     def show(self):
         context = self.context
         return context.is_access_allowed(context.resource, self)
@@ -77,7 +77,7 @@ class Remove_Button(Button):
 ###########################################################################
 class BrowseButton(Button):
 
-    @proto_property
+    @proto_lazy_property
     def show(self):
         context = self.context
         for item in self.items:
@@ -128,7 +128,7 @@ class PasteButton(BrowseButton):
     title = MSG(u'Paste')
 
 
-    @proto_property
+    @proto_lazy_property
     def show(cls):
         cut, paths = cls.context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:

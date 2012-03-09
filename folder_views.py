@@ -747,7 +747,9 @@ class Folder_PreviewContent(Folder_BrowseContent):
     # Table
     table_template = '/ui/folder/browse_image.xml'
 
-    def get_table_head(self, resource, context, items, actions=None):
+    def get_table_head(self, resource, context, items):
+        actions = self.actions_namespace
+
         # Get from the query
         query = context.query
         sort_by = query['sort_by']
@@ -800,13 +802,11 @@ class Folder_PreviewContent(Folder_BrowseContent):
         current_size = max(min_size, min(current_size, max_size))
 
         # (1) Actions (submit buttons)
-        actions = []
-        for button in self.get_table_actions(resource, context):
-            actions.append(button(resource=resource, context=context,
-                items=items))
+        self._items = items
+        actions = self.actions_namespace
 
         # (2) Table Head: columns
-        table_head = self.get_table_head(resource, context, items, actions)
+        table_head = self.get_table_head(resource, context, items)
 
         # (3) Table Body: rows
         columns = self._get_table_columns(resource, context)

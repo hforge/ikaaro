@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts, proto_property
+from itools.core import merge_dicts, proto_property, proto_lazy_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -122,11 +122,18 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         return proxy.get_items(self.target, context)
 
 
-    def get_actions_namespace(self, resource, context, items):
+    @proto_lazy_property
+    def actions_namespace(self):
+        resource = self.resource
+        context = self.context
+        items = self._items
+
         actions = []
         for button in self.get_table_actions(resource, context):
-            actions.append(button(resource=resource, context=context,
-                items=items, element_to_add=self.element_to_add))
+            button = button(resource=resource, context=context,
+                            items=items, element_to_add=self.element_to_add)
+            if button.show:
+                actions.append(button)
         return actions
 
 

@@ -432,7 +432,9 @@ class BrowseForm(STLView):
 
     #######################################################################
     # Table
-    def get_table_head(self, resource, context, items, actions=None):
+    def get_table_head(self, resource, context, items):
+        actions = self.actions_namespace
+
         # Get from the query
         query = context.query
         sort_by = query['sort_by']
@@ -475,16 +477,27 @@ class BrowseForm(STLView):
         return columns_ns
 
 
-    def get_actions_namespace(self, resource, context, items):
-        return [ button(resource=resource, context=context, items=items)
-                 for button in self.get_table_actions(resource, context) ]
+    @proto_lazy_property
+    def actions_namespace(self):
+        resource = self.resource
+        context = self.context
+        items = self._items
+
+        actions = []
+        for button in self.get_table_actions(resource, context):
+            button = button(resource=resource, context=context, items=items)
+            if button.show:
+                actions.append(button)
+
+        return actions
 
 
     def get_table_namespace(self, resource, context, items):
         # (1) Actions (submit buttons)
-        actions = self.get_actions_namespace(resource, context, items)
+        self._items = items
+        actions = self.actions_namespace
         # (2) Table Head: columns
-        table_head = self.get_table_head(resource, context, items, actions)
+        table_head = self.get_table_head(resource, context, items)
 
         # (3) Table Body: rows
         columns = self.get_table_columns(resource, context)
