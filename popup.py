@@ -294,10 +294,12 @@ class DBResource_AddBase(STLView):
         namespace['mode'] = context.get_form_value('mode')
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = root.get_skin(context).get_styles(context)
-        browse_content = self.browse_content_class(\
+        browse_content = self.browse_content_class(
                            element_to_add=self.element_to_add,
                            resource_action=self.get_resource_action(context),
-                           target=target, popup_root=popup_root)
+                           target=target, popup_root=popup_root,
+                           # bind
+                           resource=resource, context=context)
         namespace['browse_table'] = browse_content.GET(resource, context)
         return namespace
 
