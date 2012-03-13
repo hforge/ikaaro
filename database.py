@@ -17,6 +17,9 @@
 # Import from the Standard Library
 from datetime import datetime
 
+# Import from xapian
+from xapian import DatabaseError, DatabaseOpeningError
+
 # Import from itools
 from itools.core import get_pipe, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
@@ -37,8 +40,11 @@ class ReadOnlyDatabase(ROGitDatabase):
 
         # Database/Catalog
         ROGitDatabase.__init__(self, self.path, size_min, size_max)
-        self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
-                               read_only=True)
+        try:
+            self.catalog = Catalog('%s/catalog' % target,
+                                   get_register_fields(), read_only=True)
+        except (DatabaseError, DatabaseOpeningError):
+            self.catalog = None
 
         # Git cache (lazy load)
         self.git_cache = None
