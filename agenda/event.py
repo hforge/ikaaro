@@ -320,7 +320,11 @@ class Event_NewInstance(AutoAdd):
 
         # Ok
         goto = str(resource.get_pathto(child))
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        if self.goto_parent_view:
+            goto = './;%s' % self.goto_parent_view
+        elif self.goto_view:
+            goto = '%s/;%s' % (goto, self.goto_view)
+        return context.come_back(self.msg_new_resource, goto=goto)
 
 
 
