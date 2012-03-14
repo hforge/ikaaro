@@ -269,8 +269,8 @@ class Event_NewInstance(AutoAdd):
 
         dtstart = form['dtstart']
         dtend = form['dtend']
-        if not form['allday'] and (not form['dtstart_time'] or
-                                   not form['dtend_time']):
+        allday = form.get('allday', False)
+        if allday and (not form['dtstart_time'] or not form['dtend_time']):
             msg = ERROR(u"You have to fill start and end time")
             raise FormError(msg)
 
