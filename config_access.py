@@ -355,10 +355,8 @@ class ConfigAccess(Folder):
         share_query.append(PhraseQuery('share', str(user.abspath)))
         query = AndQuery(rules_query, share_query)
 
-        if permission in ('view', 'edit'):
-            return OrQuery(
-                PhraseQuery('owner', str(user.abspath)),
-                query)
+        if permission != 'share':
+            return OrQuery(PhraseQuery('owner', str(user.abspath)), query)
 
         return query
 

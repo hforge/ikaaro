@@ -182,7 +182,7 @@ class DBResource_AddBase(STLView):
     by the Web Page editor).
     """
 
-    access = 'is_allowed_to_edit'
+    access = 'is_allowed_to_add'
     template = '/ui/html/popup.xml'
 
     element_to_add = None
