@@ -205,7 +205,7 @@ class DBResource_CommitLog(BrowseForm):
         elif column == 'date':
             date = context.format_datetime(item['author_date'])
             return (date, './;changes?revision=%s' % item['sha'])
-        return item[column]
+        return item.get(column, None)
 
 
     def action_diff(self, resource, context, form):
