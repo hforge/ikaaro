@@ -28,7 +28,7 @@ from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
 from itools.web import BaseView, STLView, INFO, ERROR
-from itools.web import Conflict, NotImplemented
+from itools.web import Conflict, NotFound, NotImplemented
 
 # Import from ikaaro
 from datatypes import CopyCookie
@@ -59,7 +59,10 @@ class DBResource_GetFile(BaseView):
 
     def get_mtime(self, resource):
         field_name = self.get_field_name()
-        return self.get_handler(resource, field_name).get_mtime()
+        handler = self.get_handler(resource, field_name)
+        if handler is None:
+            raise NotFound
+        return handler.get_mtime()
 
 
     def get_content_type(self, handler):
