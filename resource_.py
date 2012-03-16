@@ -337,15 +337,11 @@ class DBResource(Resource):
         return field.set_value(self, name, value, language, **kw)
 
 
-    def get_value_title(self, name):
+    def get_value_title(self, name, language=None):
         field = self.get_field(name)
         if field is None:
             return None
-        value = field.get_value(self, name)
-        if issubclass(field, Select_Field):
-            datatype = field.get_datatype()
-            return datatype.get_value(value)
-        return value
+        return field.get_value_title(self, name, language)
 
 
     def get_html_field_body_stream(self, name, language=None):

@@ -82,6 +82,10 @@ class Field(BaseField):
         return True
 
 
+    def get_value_title(self, resource, name, language=None):
+        return self.get_value(resource, name, language)
+
+
     # XXX For backwards compatibility
     datatype_keys = [
         'default', 'multiple', 'multilingual', 'indexed', 'stored',
@@ -291,6 +295,14 @@ class Select_Field(Metadata_Field):
 
     datatype_keys = Metadata_Field.datatype_keys + ['options']
     widget_keys = Metadata_Field.widget_keys + ['has_empty_option']
+
+
+    def get_value_title(self, resource, name, language=None):
+        value = self.get_value(resource, name, language)
+        datatype = self.get_datatype()
+        if self.multiple:
+            return [datatype.get_value(x) for x in value]
+        return datatype.get_value(value)
 
 
     def rest(self):
