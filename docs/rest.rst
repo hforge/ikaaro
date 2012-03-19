@@ -74,8 +74,8 @@ Authentication
 ==============
 
 Authentication is done with a cookie named ``iauth``. To get the value of
-this cookie a ``POST`` request to the ``rest_login`` view must be send. For
-instance, the given request::
+this cookie a ``POST`` request to the ``rest_login`` view must be send. Such
+a request looks like this::
 
   POST /;rest_login HTTP/1.1
   Host: localhost:8080
@@ -85,12 +85,31 @@ instance, the given request::
 
   loginname=admin&password=a
 
-May return the given response::
+There are two possible results:
+
+============ =================== ========
+.            Success             Failure
+============ =================== ========
+Status       200                 204
+Set-Cookie   iauth="..."; path=/
+Body         /users/0
+============ =================== ========
+
+Example, on success::
+
+  HTTP/1.1 200 Ok
+  Server: itools.web
+  Date: Thu, 08 Dec 2011 10:33:07 GMT
+  Set-Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"; path=/
+  Content-Length: 8
+
+  /users/0
+
+Example, on failure::
 
   HTTP/1.1 204 No Content
   Server: itools.web
   Date: Thu, 08 Dec 2011 10:33:07 GMT
-  Set-Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"; path=/
   Content-Length: 0
 
 Grab the value of the ``iauth`` cookie and send it in subsequent requests,
@@ -100,9 +119,6 @@ like this::
   Host: localhost:8080
   User-Agent: foobar
   Cookie: iauth="MDoE5qfkFUj8aKyr3A/bresG8EVNNOaLwN54zHxW%0A"
-
-If the authentication failed (wrong login-name or password), the cookie
-will be missing.
 
 
 Schema

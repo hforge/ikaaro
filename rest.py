@@ -126,7 +126,13 @@ class Rest_Login(LoginView):
 
     def POST(self, resource, context):
         super(Rest_Login, self).POST(resource, context)
-        return None
+        # Failed
+        user = context.user
+        if user is None:
+            return None
+        # Ok
+        context.set_content_type('text/plain')
+        return str(user.abspath)
 
 
 
