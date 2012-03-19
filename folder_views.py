@@ -574,8 +574,10 @@ class Folder_BrowseContent(BrowseForm):
             items = []
             for name in referenced:
                 item = resource.get_resource(name)
-                items.append({'title': item.get_title(),
-                              'href': '%s/;backlinks' % context.get_link(item)})
+                view = item.get_view('backlinks')
+                if context.is_access_allowed(item, view):
+                    items.append({'title': item.get_title(),
+                                  'href': '%s/;backlinks' % item.abspath})
             msg = messages.MSG_RESOURCES_REFERENCED_HTML(resources=items)
             message.append(msg)
         if not_removed:
