@@ -36,7 +36,7 @@ from itools.web import get_context
 # Import from ikaaro
 from content import Content
 from database import Database
-from fields import Char_Field, File_Field
+from fields import Char_Field, File_Field, Owner_Field
 from file_views import File_NewInstance, File_View
 from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import File_Download
@@ -64,6 +64,7 @@ class File(Content):
     # Fields
     data = File_Field(required=True, class_handler=FileHandler)
     filename = Char_Field
+    owner = Owner_Field
 
 
     def get_all_extensions(self):
