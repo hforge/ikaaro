@@ -371,8 +371,9 @@ class DateWidget(Widget):
 
         # ['2007-08-01\r\n2007-08-02']
         if self.datatype.multiple and isinstance(value, list):
-            return value[0]
-
+            value = value[0]
+        if type(value) != str:
+            return value.strftime(self.format)
         return value
 
 
