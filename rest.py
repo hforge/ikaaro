@@ -21,7 +21,6 @@ import json
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery
-from itools.datatypes import String
 from itools.handlers import checkid
 from itools.web import BaseView
 
@@ -223,19 +222,20 @@ class Rest_Query(BaseView):
     access = 'is_allowed_to_view'
 
     def GET(self, resource, context):
-        field_names = context.get_query_value('fields', String(multiple=True))
-
         # Build the query
         query = get_base_path_query(resource.abspath)
         for key, value in context.uri.query.items():
-            if key != 'fields':
-                query = AndQuery(query, PhraseQuery(key, value))
+            if key == 'abspath' and value == 'myself':
+                value = str(context.user.abspath)
+            query = AndQuery(query, PhraseQuery(key, value))
 
         # Search
         items = []
         for resource in context.search(query).get_resources():
-            item = {'abspath': str(resource.abspath)}
-            for field_name in field_names:
+            item = {'abspath': {'value': str(resource.abspath)}}
+            for field_name in resource.fields:
+                if field_name == 'password':
+                    continue
                 value = field_to_json(resource, field_name)
                 if value is not None:
                     item[field_name] = value
