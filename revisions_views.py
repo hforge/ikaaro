@@ -187,7 +187,11 @@ class DBResource_CommitLog(BrowseForm):
         # Add username / index by only for the showed commits
         users_cache = {}
         for i, item in enumerate(results):
-            author_name = item['author_name']
+            try:
+                author_name = str(item['author_name'])
+            except UnicodeEncodeError:
+                author_name = None
+
             username = users_cache.get(author_name)
             if username is None:
                 username = root.get_user_title(author_name)
