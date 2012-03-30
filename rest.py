@@ -113,8 +113,9 @@ def field_to_json(resource, field_name):
             return None
         return {'value': b64encode(handler.to_str())}
 
-    # Error
-    raise ValueError, 'unexpected field type %s' % repr(field)
+    # Computed
+    value = field.get_value(resource, field_name)
+    return {'value': value}
 
 
 
@@ -138,7 +139,17 @@ class Rest_Login(LoginView):
 ###########################################################################
 # The CRUD Views
 ###########################################################################
-class Rest_Read(BaseView):
+class Rest_BaseView(BaseView):
+    """Base class for other for the RESTful interface.
+    """
+
+    def return_json(self, data):
+        self.context.set_content_type('application/json')
+        return json.dumps(data)
+
+
+
+class Rest_Read(Rest_BaseView):
     """The R of CRUD: READ
     """
 
@@ -156,13 +167,11 @@ class Rest_Read(BaseView):
         # Set last modification time
         mtime = resource.get_value('mtime')
         context.set_header('Last-Modified', mtime)
-
         # Ok
-        context.set_content_type('application/json')
-        return json.dumps(representation)
+        return self.return_json(representation)
 
 
-class Rest_Create(BaseView):
+class Rest_Create(Rest_BaseView):
     """The C of CRUD: CREATE
     """
 
@@ -188,7 +197,7 @@ class Rest_Create(BaseView):
 
 
 
-class Rest_Update(BaseView):
+class Rest_Update(Rest_BaseView):
     """The U of CRUD: UPDATE
     """
 
@@ -217,7 +226,7 @@ class Rest_Update(BaseView):
 ###########################################################################
 # Other views
 ###########################################################################
-class Rest_Query(BaseView):
+class Rest_Query(Rest_BaseView):
 
     access = 'is_allowed_to_view'
 
@@ -234,6 +243,7 @@ class Rest_Query(BaseView):
         for resource in context.search(query).get_resources():
             item = {'abspath': {'value': str(resource.abspath)}}
             for field_name in resource.fields:
+                print field_name
                 if field_name == 'password':
                     continue
                 value = field_to_json(resource, field_name)
@@ -243,12 +253,11 @@ class Rest_Query(BaseView):
             items.append(item)
 
         # Ok
-        context.set_content_type('application/json')
-        return json.dumps(items)
+        return self.return_json(items)
 
 
 
-class Rest_Schema(BaseView):
+class Rest_Schema(Rest_BaseView):
 
     access = 'is_allowed_to_view'
 
@@ -259,5 +268,4 @@ class Rest_Schema(BaseView):
             schema[name] = field.rest()
 
         # Ok
-        context.set_content_type('application/json')
-        return json.dumps(schema)
+        return self.return_json(schema)
