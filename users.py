@@ -126,8 +126,12 @@ class User(DBResource):
 
 
     def authenticate(self, password):
-        secure_hash = get_secure_hash(password)
-        return secure_hash == self.get_value('password')
+        my_password = self.get_property('password')
+        algo = my_password.get_parameter('algo', 'sha1')
+        salt = my_password.get_parameter('salt', '')
+
+        password_hashed, salt = get_secure_hash(password, algo, salt)
+        return password_hashed == my_password.value
 
 
     def _login(self, context):

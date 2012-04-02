@@ -266,9 +266,14 @@ class Password_Field(Metadata_Field):
     datatype = Password_Datatype
     widget = PasswordWidget
 
+    parameters_schema = {'algo': String, 'salt': String}
+
     def set_value(self, resource, name, value, language=None, **kw):
         if value is not None:
-            value = get_secure_hash(value)
+            algo = 'sha256'
+            value, salt = get_secure_hash(value, algo)
+            kw['algo'] = algo
+            kw['salt'] = salt
 
         # super
         proxy = super(Password_Field, self)

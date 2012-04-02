@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from hashlib import sha1
+from hashlib import sha1, sha256
 from random import sample
 
 # Import from other modules
@@ -196,8 +196,16 @@ def generate_password(length=6):
     return ''.join(sample(tokens, length))
 
 
-def get_secure_hash(password):
-    return sha1(password).digest()
+
+algos = {
+    'sha1': sha1,
+    'sha256': sha256}
+def get_secure_hash(password, algo, salt=None):
+    if salt is None:
+        salt = generate_password()
+
+    return algos[algo](password + salt).digest(), salt
+
 
 
 ###########################################################################

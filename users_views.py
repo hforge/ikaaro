@@ -317,33 +317,40 @@ class User_EditPassword(AutoForm):
 
     def _get_form(self, resource, context):
         form = super(User_EditPassword, self)._get_form(resource, context)
+
+        # Strip password
+        newpass = form['newpass'].strip()
+        form['newpass'] = newpass
+
+        # Check username is different from password
         if form['username'] == form['newpass']:
             raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+
+        # Check the new password matches
+        if newpass != form['newpass2']:
+            raise FormError, ERROR(u"Passwords mismatch, please try again.")
+
+        # Check old password
+        if resource.name == context.user.name:
+            password = form['password']
+            if not resource.authenticate(password):
+                message = ERROR(
+                    u"You mistyped your actual password, your account is"
+                    u" not changed.")
+                raise FormError, message
+
+        # Ok
         return form
 
 
     def action(self, resource, context, form):
-        # Check the new password matches
-        newpass = form['newpass'].strip()
-        newpass2 = form['newpass2']
-        if newpass != newpass2:
-            context.message = ERROR(u"Passwords mismatch, please try again.")
-            return
-
-        # Check password to confirm changes
-        if resource.name == context.user.name:
-            password = form['password']
-            if not resource.authenticate(password):
-                context.message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-                return
-
-            context.login(resource)
-
         # Clear confirmation key and set password
         resource.set_value('user_state', None)
-        resource.set_value('password', newpass)
+        resource.set_value('password', form['newpass'].strip())
+
+        # Relogin
+        if resource.name == context.user.name:
+            context.login(resource)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
