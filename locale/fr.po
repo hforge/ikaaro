@@ -256,13 +256,13 @@ msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr "<g id='2'>Changer la valeur par défaut</g>  <g id='3'>Supprimer</g>"
 
-#: ../agenda/ui/reminder_widget.xml.en:9
+#: ../agenda/ui/widgets/reminder.xml.en:9
 msgctxt "label"
 msgid ""
-"<g id='2'>I want to be remind</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
+"<g id='2'>I want to get an email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
 "${reminders} before the event. </g>"
 msgstr ""
-"<g id='2'>Je veux être averti</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
+"<g id='2'>Je veux recevoir un email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
 "${reminders} avant l'évènement. </g>"
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16

@@ -38,7 +38,7 @@ class Reminder_Widget(Widget):
     the same hack that DateTimeWidget
     """
 
-    template = '/ui/agenda/reminder_widget.xml'
+    template = '/ui/agenda/widgets/reminder.xml'
 
     @proto_lazy_property
     def has_remind(self):

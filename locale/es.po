@@ -255,11 +255,11 @@ msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
 
-#: ../agenda/ui/reminder_widget.xml.en:9
+#: ../agenda/ui/widgets/reminder.xml.en:9
 #, fuzzy
 msgctxt "label"
 msgid ""
-"<g id='2'>I want to be remind</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
+"<g id='2'>I want to get an email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
 "${reminders} before the event. </g>"
 msgstr ""
 "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g id='3'>"

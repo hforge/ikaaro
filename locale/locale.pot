@@ -2526,9 +2526,9 @@ msgctxt "label"
 msgid "<g id='1'>${title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
 msgstr ""
 
-#: ../agenda/ui/reminder_widget.xml.en:9
+#: ../agenda/ui/widgets/reminder.xml.en:9
 msgctxt "label"
-msgid "<g id='2'>I want to be remind</g>  <g id='3'>  <x id='4'/>  <x id='5'/> ${reminders} before the event. </g>"
+msgid "<g id='2'>I want to get an email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> ${reminders} before the event. </g>"
 msgstr ""
 
 #: ../ui/base/login.xml.en:20

@@ -5,12 +5,12 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <input type="checkbox" id="${name}-checkbox" name="${name}-checbkox"
-  checked="${has_remind}"/>
-<label for="${name}-checbkox">I want to be remind</label>
+  checked="${has_remind}" />
+<label for="${name}-checbkox">I want to get an email</label>
 <span id="${name}-area">
-  <input type="hidden" name="${name}" value="${value}" id="${id}"/>
-  <input type="text" name="${name}-number" value="${number_value}"
-    size="3" id="${id}-number"/>
+  <input type="hidden" name="${name}" value="${value}" id="${id}" />
+  <input type="text" name="${name}-number" value="${number_value}" size="3"
+    id="${id}-number" />
   ${reminders} before the event.
 </span>
 <script type="text/javascript">
