@@ -292,7 +292,7 @@ msgctxt "button"
 msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr ""
 
-#: ../agenda/event.py:159
+#: ../agenda/event.py:125
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
@@ -455,7 +455,7 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: ../agenda/event.py:108
+#: ../agenda/event.py:74
 msgid "All day"
 msgstr ""
 
@@ -660,11 +660,11 @@ msgstr ""
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:365 ../agenda/calendars.py:203
+#: ../agenda/event.py:331 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr ""
 
-#: ../agenda/event.py:354
+#: ../agenda/event.py:320
 msgid "Calendar event"
 msgstr ""
 
@@ -950,7 +950,7 @@ msgstr ""
 msgid "Cut"
 msgstr "Taglia"
 
-#: ../agenda/event.py:539
+#: ../agenda/event.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1174,7 +1174,7 @@ msgstr ""
 msgid "Email options"
 msgstr "Azione"
 
-#: ../agenda/event.py:367
+#: ../agenda/event.py:333
 msgid "End"
 msgstr ""
 
@@ -1182,12 +1182,12 @@ msgstr ""
 msgid "English"
 msgstr "Inglese"
 
-#: ../agenda/event.py:353
+#: ../agenda/event.py:319
 #, fuzzy
 msgid "Event"
 msgstr "Testo integrale"
 
-#: ../agenda/event.py:570
+#: ../agenda/event.py:536
 #, fuzzy
 msgid "Event model"
 msgstr "Testo integrale"
@@ -1505,7 +1505,7 @@ msgctxt "legend"
 msgid "Installed software"
 msgstr ""
 
-#: ../agenda/event.py:231
+#: ../agenda/event.py:197
 #, fuzzy
 msgid "Instance removed"
 msgstr "Utente rimosso."
@@ -1524,7 +1524,7 @@ msgstr ""
 msgid "Internal server error"
 msgstr "Si è verificato un errore di sistema, nulla di preoccupante."
 
-#: ../agenda/event.py:175 ../agenda/event.py:277
+#: ../agenda/event.py:141 ../agenda/event.py:243
 msgid "Invalid dates."
 msgstr ""
 
@@ -1974,7 +1974,7 @@ msgctxt "button"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../agenda/event.py:126 ../agenda/event.py:248
+#: ../agenda/event.py:92 ../agenda/event.py:214
 msgid "On"
 msgstr ""
 
@@ -2220,7 +2220,7 @@ msgstr ""
 msgid "Recipient"
 msgstr "Anteprima"
 
-#: ../agenda/event.py:370
+#: ../agenda/event.py:336
 #, fuzzy
 msgid "Recurrence"
 msgstr "Preferenze"
@@ -2240,7 +2240,7 @@ msgstr "Anteprima"
 msgid "Registration notification"
 msgstr "Anteprima"
 
-#: ../agenda/event.py:372
+#: ../agenda/event.py:338
 #, fuzzy
 msgid "Reminder"
 msgstr "Re-indicizza"
@@ -2249,7 +2249,7 @@ msgstr "Re-indicizza"
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ../agenda/event.py:146
+#: ../agenda/event.py:112
 msgid "Remove all events in the series"
 msgstr ""
 
@@ -2257,7 +2257,7 @@ msgstr ""
 msgid "Remove and modify"
 msgstr ""
 
-#: ../agenda/event.py:144
+#: ../agenda/event.py:110
 msgid "Remove event at {date}"
 msgstr ""
 
@@ -2317,7 +2317,7 @@ msgstr ""
 msgid "Resend Confirmation"
 msgstr "Anteprima"
 
-#: ../agenda/event.py:223
+#: ../agenda/event.py:189
 #, fuzzy
 msgid "Resource removed"
 msgstr "Oggetti rinominati."
@@ -2535,7 +2535,7 @@ msgstr "Spagnolo"
 msgid "Standard field"
 msgstr ""
 
-#: ../agenda/event.py:366
+#: ../agenda/event.py:332
 #, fuzzy
 msgid "Start"
 msgstr "Stato"
@@ -2550,7 +2550,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr "Stato"
 
-#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:369
+#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:335
 msgid "State"
 msgstr "Stato"
 
@@ -2652,7 +2652,7 @@ msgstr "Il nome del documento contiene caratteri illegali, scegline un altro."
 msgid "The email address provided is invalid."
 msgstr "Il nome utente è errato, tenta di nuovo"
 
-#: ../agenda/event.py:536
+#: ../agenda/event.py:502
 #, fuzzy
 msgid "The event \"{title}\" has been modified"
 msgstr "Il linguaggio predefinito è stato modificato."
@@ -3163,7 +3163,7 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: ../agenda/event.py:368
+#: ../agenda/event.py:334
 #, fuzzy
 msgid "Where"
 msgstr "Tema"
@@ -3204,6 +3204,11 @@ msgstr ""
 
 #: ../widgets.py:233 ../widgets.py:259 ../agenda/calendars.py:106
 #: ../datatypes.py:230
+msgid "Yes"
+msgstr ""
+
+#: ../agenda/ui/widgets/allday.xml.en:9
+msgctxt "label"
 msgid "Yes"
 msgstr ""
 
@@ -3280,7 +3285,7 @@ msgid ""
 " {host}/"
 msgstr ""
 
-#: ../agenda/event.py:171 ../agenda/event.py:273
+#: ../agenda/event.py:137 ../agenda/event.py:239
 msgid "You have to fill start and end time"
 msgstr ""
 

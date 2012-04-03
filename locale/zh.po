@@ -283,7 +283,7 @@ msgctxt "button"
 msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr ""
 
-#: ../agenda/event.py:159
+#: ../agenda/event.py:125
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
@@ -446,7 +446,7 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: ../agenda/event.py:108
+#: ../agenda/event.py:74
 msgid "All day"
 msgstr ""
 
@@ -642,11 +642,11 @@ msgstr ""
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:365 ../agenda/calendars.py:203
+#: ../agenda/event.py:331 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr ""
 
-#: ../agenda/event.py:354
+#: ../agenda/event.py:320
 msgid "Calendar event"
 msgstr ""
 
@@ -931,7 +931,7 @@ msgstr ""
 msgid "Cut"
 msgstr "剪切"
 
-#: ../agenda/event.py:539
+#: ../agenda/event.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1153,7 +1153,7 @@ msgstr ""
 msgid "Email options"
 msgstr "登录"
 
-#: ../agenda/event.py:367
+#: ../agenda/event.py:333
 msgid "End"
 msgstr ""
 
@@ -1161,12 +1161,12 @@ msgstr ""
 msgid "English"
 msgstr "英语"
 
-#: ../agenda/event.py:353
+#: ../agenda/event.py:319
 #, fuzzy
 msgid "Event"
 msgstr "简易文件"
 
-#: ../agenda/event.py:570
+#: ../agenda/event.py:536
 #, fuzzy
 msgid "Event model"
 msgstr "简易文件"
@@ -1478,7 +1478,7 @@ msgctxt "legend"
 msgid "Installed software"
 msgstr ""
 
-#: ../agenda/event.py:231
+#: ../agenda/event.py:197
 #, fuzzy
 msgid "Instance removed"
 msgstr "用户被删除."
@@ -1496,7 +1496,7 @@ msgstr ""
 msgid "Internal server error"
 msgstr ""
 
-#: ../agenda/event.py:175 ../agenda/event.py:277
+#: ../agenda/event.py:141 ../agenda/event.py:243
 msgid "Invalid dates."
 msgstr ""
 
@@ -1938,7 +1938,7 @@ msgctxt "button"
 msgid "Ok"
 msgstr ""
 
-#: ../agenda/event.py:126 ../agenda/event.py:248
+#: ../agenda/event.py:92 ../agenda/event.py:214
 msgid "On"
 msgstr ""
 
@@ -2183,7 +2183,7 @@ msgstr ""
 msgid "Recipient"
 msgstr "收件人"
 
-#: ../agenda/event.py:370
+#: ../agenda/event.py:336
 #, fuzzy
 msgid "Recurrence"
 msgstr "优先"
@@ -2203,7 +2203,7 @@ msgstr "查阅"
 msgid "Registration notification"
 msgstr "查阅"
 
-#: ../agenda/event.py:372
+#: ../agenda/event.py:338
 #, fuzzy
 msgid "Reminder"
 msgstr "发件人"
@@ -2212,7 +2212,7 @@ msgstr "发件人"
 msgid "Remove"
 msgstr "删除"
 
-#: ../agenda/event.py:146
+#: ../agenda/event.py:112
 msgid "Remove all events in the series"
 msgstr ""
 
@@ -2220,7 +2220,7 @@ msgstr ""
 msgid "Remove and modify"
 msgstr ""
 
-#: ../agenda/event.py:144
+#: ../agenda/event.py:110
 msgid "Remove event at {date}"
 msgstr ""
 
@@ -2280,7 +2280,7 @@ msgstr ""
 msgid "Resend Confirmation"
 msgstr "查阅"
 
-#: ../agenda/event.py:223
+#: ../agenda/event.py:189
 #, fuzzy
 msgid "Resource removed"
 msgstr "物件被更名"
@@ -2495,7 +2495,7 @@ msgstr "西班牙语"
 msgid "Standard field"
 msgstr ""
 
-#: ../agenda/event.py:366
+#: ../agenda/event.py:332
 #, fuzzy
 msgid "Start"
 msgstr "状态"
@@ -2510,7 +2510,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr "状态"
 
-#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:369
+#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:335
 msgid "State"
 msgstr "状态"
 
@@ -2611,7 +2611,7 @@ msgstr "文件名中含有不符规定的符号,请更名."
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: ../agenda/event.py:536
+#: ../agenda/event.py:502
 #, fuzzy
 msgid "The event \"{title}\" has been modified"
 msgstr "预设语言已被改变."
@@ -3116,7 +3116,7 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: ../agenda/event.py:368
+#: ../agenda/event.py:334
 msgid "Where"
 msgstr ""
 
@@ -3155,6 +3155,11 @@ msgstr ""
 
 #: ../widgets.py:233 ../widgets.py:259 ../agenda/calendars.py:106
 #: ../datatypes.py:230
+msgid "Yes"
+msgstr ""
+
+#: ../agenda/ui/widgets/allday.xml.en:9
+msgctxt "label"
 msgid "Yes"
 msgstr ""
 
@@ -3226,7 +3231,7 @@ msgid ""
 " {host}/"
 msgstr ""
 
-#: ../agenda/event.py:171 ../agenda/event.py:273
+#: ../agenda/event.py:137 ../agenda/event.py:239
 msgid "You have to fill start and end time"
 msgstr ""
 

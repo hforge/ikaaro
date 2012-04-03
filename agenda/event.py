@@ -37,7 +37,7 @@ from ikaaro.emails import send_email
 from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Date_Field, Datetime_Field, Owner_Field
 from ikaaro.fields import SelectDays_Field
-from ikaaro.utils import CMSTemplate, make_stl_template, close_fancybox
+from ikaaro.utils import CMSTemplate, close_fancybox
 from ikaaro.widgets import CheckboxWidget
 from ikaaro import messages
 
@@ -60,41 +60,7 @@ class Status(Enumerate):
 
 class AllDayWidget(CheckboxWidget):
 
-    template = make_stl_template("""
-      <input type="checkbox" id="${id}" name="${name}" value="1"
-        checked="${checked}" />
-      <label for="${id}">Yes</label>
-      <script>
-         $(document).ready(function(){
-          var old_value_dtstart_time;
-          var old_value_dtend_time;
-          var dtstart_time = $("input[name='dtstart_time']");
-          var dtend_time = $("input[name='dtend_time']");
-          var has_changed_value = 0;
-          $("#${id}").click(function() {
-            change_all_day();
-          });
-          function change_all_day(){
-            if($("input:checkbox[name=${name}]:checked").val() == '1'){
-              old_value_dtstart_time = dtstart_time.val();
-              old_value_dtend_time = dtend_time.val();
-              has_changed_value = 1;
-              dtstart_time.val('');
-              dtend_time.val('');
-              dtstart_time.hide();
-              dtend_time.hide();
-            } else {
-              if (has_changed_value == 1){
-                dtstart_time.val(old_value_dtstart_time);
-                dtend_time.val(old_value_dtend_time);
-              }
-              dtstart_time.show();
-              dtend_time.show();
-            }
-          }
-          change_all_day();
-         });
-      </script>""")
+    template = '/ui/agenda/widgets/allday.xml'
 
 
     def checked(self):

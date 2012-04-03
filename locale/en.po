@@ -270,7 +270,7 @@ msgctxt "button"
 msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr ""
 
-#: ../agenda/event.py:159
+#: ../agenda/event.py:125
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
@@ -412,7 +412,7 @@ msgstr ""
 msgid "Agenda"
 msgstr ""
 
-#: ../agenda/event.py:108
+#: ../agenda/event.py:74
 msgid "All day"
 msgstr ""
 
@@ -598,11 +598,11 @@ msgstr ""
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:365 ../agenda/calendars.py:203
+#: ../agenda/event.py:331 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr ""
 
-#: ../agenda/event.py:354
+#: ../agenda/event.py:320
 msgid "Calendar event"
 msgstr ""
 
@@ -859,7 +859,7 @@ msgstr ""
 msgid "Cut"
 msgstr ""
 
-#: ../agenda/event.py:539
+#: ../agenda/event.py:505
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1059,7 +1059,7 @@ msgstr ""
 msgid "Email options"
 msgstr ""
 
-#: ../agenda/event.py:367
+#: ../agenda/event.py:333
 msgid "End"
 msgstr ""
 
@@ -1067,11 +1067,11 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: ../agenda/event.py:353
+#: ../agenda/event.py:319
 msgid "Event"
 msgstr ""
 
-#: ../agenda/event.py:570
+#: ../agenda/event.py:536
 msgid "Event model"
 msgstr ""
 
@@ -1358,7 +1358,7 @@ msgctxt "legend"
 msgid "Installed software"
 msgstr ""
 
-#: ../agenda/event.py:231
+#: ../agenda/event.py:197
 msgid "Instance removed"
 msgstr ""
 
@@ -1375,7 +1375,7 @@ msgstr ""
 msgid "Internal server error"
 msgstr ""
 
-#: ../agenda/event.py:175 ../agenda/event.py:277
+#: ../agenda/event.py:141 ../agenda/event.py:243
 msgid "Invalid dates."
 msgstr ""
 
@@ -1779,7 +1779,7 @@ msgctxt "button"
 msgid "Ok"
 msgstr ""
 
-#: ../agenda/event.py:126 ../agenda/event.py:248
+#: ../agenda/event.py:92 ../agenda/event.py:214
 msgid "On"
 msgstr ""
 
@@ -2003,7 +2003,7 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
-#: ../agenda/event.py:370
+#: ../agenda/event.py:336
 msgid "Recurrence"
 msgstr ""
 
@@ -2019,7 +2019,7 @@ msgstr ""
 msgid "Registration notification"
 msgstr ""
 
-#: ../agenda/event.py:372
+#: ../agenda/event.py:338
 msgid "Reminder"
 msgstr ""
 
@@ -2027,7 +2027,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: ../agenda/event.py:146
+#: ../agenda/event.py:112
 msgid "Remove all events in the series"
 msgstr ""
 
@@ -2035,7 +2035,7 @@ msgstr ""
 msgid "Remove and modify"
 msgstr ""
 
-#: ../agenda/event.py:144
+#: ../agenda/event.py:110
 msgid "Remove event at {date}"
 msgstr ""
 
@@ -2085,7 +2085,7 @@ msgstr ""
 msgid "Resend Confirmation"
 msgstr ""
 
-#: ../agenda/event.py:223
+#: ../agenda/event.py:189
 msgid "Resource removed"
 msgstr ""
 
@@ -2271,7 +2271,7 @@ msgstr ""
 msgid "Standard field"
 msgstr ""
 
-#: ../agenda/event.py:366
+#: ../agenda/event.py:332
 msgid "Start"
 msgstr ""
 
@@ -2284,7 +2284,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr ""
 
-#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:369
+#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:335
 msgid "State"
 msgstr ""
 
@@ -2373,7 +2373,7 @@ msgstr ""
 msgid "The email address provided is invalid."
 msgstr ""
 
-#: ../agenda/event.py:536
+#: ../agenda/event.py:502
 msgid "The event \"{title}\" has been modified"
 msgstr ""
 
@@ -2837,7 +2837,7 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: ../agenda/event.py:368
+#: ../agenda/event.py:334
 msgid "Where"
 msgstr ""
 
@@ -2875,6 +2875,11 @@ msgstr ""
 
 #: ../widgets.py:233 ../widgets.py:259 ../agenda/calendars.py:106
 #: ../datatypes.py:230
+msgid "Yes"
+msgstr ""
+
+#: ../agenda/ui/widgets/allday.xml.en:9
+msgctxt "label"
 msgid "Yes"
 msgstr ""
 
@@ -2943,7 +2948,7 @@ msgid ""
 " {host}/"
 msgstr ""
 
-#: ../agenda/event.py:171 ../agenda/event.py:273
+#: ../agenda/event.py:137 ../agenda/event.py:239
 msgid "You have to fill start and end time"
 msgstr ""
 
