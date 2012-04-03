@@ -45,6 +45,9 @@ def start(options, target):
     # Set-up the server
     server = Server(target, read_only=options.read_only)
 
+    # Update Git tree-cache, to speed things up
+    server.database.worktree.update_tree_cache()
+
     # Check instance is up to date
     context = get_fake_context()
     server.init_context(context)
