@@ -21,7 +21,7 @@ from datetime import date, datetime, time, timedelta
 
 # Import from itools
 from itools.database import register_field
-from itools.datatypes import Boolean, Date, DateTime, Enumerate, Time
+from itools.datatypes import Date, DateTime, Enumerate, Time
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, get_context
 from itools.xml import XMLParser
@@ -29,7 +29,6 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from ikaaro.autoadd import AutoAdd
 from ikaaro.autoedit import AutoEdit
-from ikaaro.autoform import RadioWidget
 from ikaaro.buttons import Remove_Button
 from ikaaro.config_models import Model
 from ikaaro.content import Content
@@ -39,6 +38,7 @@ from ikaaro.fields import Boolean_Field, Char_Field, Select_Field
 from ikaaro.fields import Date_Field, Datetime_Field, Owner_Field
 from ikaaro.fields import SelectDays_Field
 from ikaaro.utils import CMSTemplate, make_stl_template, close_fancybox
+from ikaaro.widgets import CheckboxWidget
 from ikaaro import messages
 
 # Import from calendar
@@ -58,10 +58,12 @@ class Status(Enumerate):
 
 
 
-class AllDayWidget(RadioWidget):
+class AllDayWidget(CheckboxWidget):
 
     template = make_stl_template("""
-      ${widget}
+      <input type="checkbox" id="${id}" name="${name}" value="1"
+        checked="${checked}" />
+      <label for="${id}">Yes</label>
       <script>
          $(document).ready(function(){
           var old_value_dtstart_time;
@@ -69,14 +71,11 @@ class AllDayWidget(RadioWidget):
           var dtstart_time = $("input[name='dtstart_time']");
           var dtend_time = $("input[name='dtend_time']");
           var has_changed_value = 0;
-          $("#${id}-1").click(function(){
-            change_all_day();
-          });
-          $("#${id}-0").click(function(){
+          $("#${id}").click(function() {
             change_all_day();
           });
           function change_all_day(){
-            if($("input:radio[name=${name}]:checked").val() == '1'){
+            if($("input:checkbox[name=${name}]:checked").val() == '1'){
               old_value_dtstart_time = dtstart_time.val();
               old_value_dtend_time = dtend_time.val();
               has_changed_value = 1;
@@ -84,7 +83,7 @@ class AllDayWidget(RadioWidget):
               dtend_time.val('');
               dtstart_time.hide();
               dtend_time.hide();
-            }else{
+            } else {
               if (has_changed_value == 1){
                 dtstart_time.val(old_value_dtstart_time);
                 dtend_time.val(old_value_dtend_time);
@@ -97,9 +96,9 @@ class AllDayWidget(RadioWidget):
          });
       </script>""")
 
-    def widget(self):
-        return RadioWidget(datatype=Boolean, oneline=True,
-            value=self.value, id=self.id, name=self.name)
+
+    def checked(self):
+        return self.value in [True, 1, '1']
 
 
 
