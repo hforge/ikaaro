@@ -58,7 +58,7 @@ class Folder(DBResource):
                    'links', 'backlinks', 'commit_log']
 
     # Fields
-    index = HTMLFile_Field
+    index = HTMLFile_Field(title=MSG(u'Index'))
 
 
     #########################################################################
