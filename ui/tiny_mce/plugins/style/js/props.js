@@ -1,12 +1,12 @@
 tinyMCEPopup.requireLangPack();
 
-var defaultFonts = "" +
-	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" +
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
-	"Courier New, Courier, mono=Courier New, Courier, mono;" +
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
-	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" +
-	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" +
+var defaultFonts = "" + 
+	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" + 
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
+	"Courier New, Courier, mono=Courier New, Courier, mono;" + 
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
+	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" + 
+	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" + 
 	"Geneva, Arial, Helvetica, sans-serif=Geneva, Arial, Helvetica, sans-serif";
 
 var defaultSizes = "9;10;12;14;16;18;24;xx-small;x-small;small;medium;large;x-large;xx-large;smaller;larger";
@@ -144,6 +144,8 @@ function setupFormData() {
 	f.text_overline.checked = inStr(ce.style.textDecoration, 'overline');
 	f.text_linethrough.checked = inStr(ce.style.textDecoration, 'line-through');
 	f.text_blink.checked = inStr(ce.style.textDecoration, 'blink');
+	f.text_none.checked = inStr(ce.style.textDecoration, 'none');
+	updateTextDecorations();
 
 	// Setup background fields
 
@@ -177,11 +179,7 @@ function setupFormData() {
 
 	f.box_height.value = getNum(ce.style.height);
 	selectByValue(f, 'box_height_measurement', getMeasurement(ce.style.height));
-
-	if (tinymce.isGecko)
-		selectByValue(f, 'box_float', ce.style.cssFloat, true, true);
-	else
-		selectByValue(f, 'box_float', ce.style.styleFloat, true, true);
+	selectByValue(f, 'box_float', ce.style.cssFloat || ce.style.styleFloat, true, true);
 
 	selectByValue(f, 'box_clear', ce.style.clear, true, true);
 
@@ -376,7 +374,7 @@ function applyAction() {
 	generateCSS();
 
 	tinyMCEPopup.restoreSelection();
-	ed.dom.setAttrib(ed.selection.getNode(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
+	ed.dom.setAttrib(ed.selection.getSelectedBlocks(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
 }
 
 function updateAction() {
@@ -440,9 +438,7 @@ function generateCSS() {
 	ce.style.width = f.box_width.value + (isNum(f.box_width.value) ? f.box_width_measurement.value : "");
 	ce.style.height = f.box_height.value + (isNum(f.box_height.value) ? f.box_height_measurement.value : "");
 	ce.style.styleFloat = f.box_float.value;
-
-	if (tinymce.isGecko)
-		ce.style.cssFloat = f.box_float.value;
+	ce.style.cssFloat = f.box_float.value;
 
 	ce.style.clear = f.box_clear.value;
 
@@ -452,7 +448,7 @@ function generateCSS() {
 		ce.style.paddingBottom = f.box_padding_bottom.value + (isNum(f.box_padding_bottom.value) ? f.box_padding_bottom_measurement.value : "");
 		ce.style.paddingLeft = f.box_padding_left.value + (isNum(f.box_padding_left.value) ? f.box_padding_left_measurement.value : "");
 	} else
-		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");
+		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");		
 
 	if (!f.box_margin_same.checked) {
 		ce.style.marginTop = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
@@ -460,7 +456,7 @@ function generateCSS() {
 		ce.style.marginBottom = f.box_margin_bottom.value + (isNum(f.box_margin_bottom.value) ? f.box_margin_bottom_measurement.value : "");
 		ce.style.marginLeft = f.box_margin_left.value + (isNum(f.box_margin_left.value) ? f.box_margin_left_measurement.value : "");
 	} else
-		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
+		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");		
 
 	// Build border styles
 
@@ -636,6 +632,19 @@ function synch(fr, to) {
 
 	if (f.elements[fr + "_measurement"])
 		selectByValue(f, to + "_measurement", f.elements[fr + "_measurement"].value);
+}
+
+function updateTextDecorations(){
+	var el = document.forms[0].elements;
+
+	var textDecorations = ["text_underline", "text_overline", "text_linethrough", "text_blink"];
+	var noneChecked = el["text_none"].checked;
+	tinymce.each(textDecorations, function(id) {
+		el[id].disabled = noneChecked;
+		if (noneChecked) {
+			el[id].checked = false;
+		}
+	});
 }
 
 tinyMCEPopup.onInit.add(init);
