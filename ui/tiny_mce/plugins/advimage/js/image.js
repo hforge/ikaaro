@@ -1,3 +1,22 @@
+//=========================================
+//=========================================
+// iKaaro helper
+// source: http://www.netlobo.com/url_query_string_javascript.html
+function gup(string, name)
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  // var results = regex.exec( window.location.href );
+  var results = regex.exec( string );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+//=========================================
+//=========================================
+
 var ImageDialog = {
 	preInit : function() {
 		var url;
@@ -22,6 +41,24 @@ var ImageDialog = {
 			nl.src.value = dom.getAttrib(n, 'src');
 			nl.width.value = dom.getAttrib(n, 'width');
 			nl.height.value = dom.getAttrib(n, 'height');
+
+      //=======================================================
+      //=======================================================
+      // iKaaro
+      // If the image src ends with ';thumb' get the width/height from the query
+      var regexpr = new RegExp(";thumb");
+      if (regexpr.test(nl.src.value)) {
+          var width = gup(nl.src.value, 'width');
+          var height = gup(nl.src.value, 'height');
+          width = width || height;
+          height = height || width;
+          // Hook nl.width and nl.height
+          nl.width.value = width;
+          nl.height.value = height;
+      }
+      //=======================================================
+      //=======================================================
+
 			nl.alt.value = dom.getAttrib(n, 'alt');
 			nl.title.value = dom.getAttrib(n, 'title');
 			nl.vspace.value = this.getAttrib(n, 'vspace');
@@ -141,10 +178,77 @@ var ImageDialog = {
 			};
 		}
 
-		tinymce.extend(args, {
-			src : nl.src.value.replace(/ /g, '%20'),
-			width : nl.width.value,
-			height : nl.height.value,
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    // iKaaro
+    // Transform to thumb if width or height is defined
+    // And if the path is relative
+    var img_src = nl.src.value;
+    var img_width_attr = nl.width.value;
+    var img_height_attr = nl.height.value;
+    var thumb_regexpr = new RegExp("/;thumb");
+    if (img_width_attr == '' && img_height_attr == '') {
+        // Force download
+        if (thumb_regexpr.test(img_src)) {
+            query_index = img_src.indexOf(";thumb");
+            if (query_index) {
+                img_src = img_src.substring(0, query_index);
+            }
+            img_src += ';download';
+        }
+    } else {
+        var download_regexpr = new RegExp(";download$");
+
+        // Check if width/height equal to real width/height of the image
+        if (this.preloadImg &&
+            parseInt(img_width_attr) == this.preloadImg.width &&
+            parseInt(img_height_attr) == this.preloadImg.height) {
+            // force ;download
+            if (thumb_regexpr.test(img_src)) {
+                query_index = img_src.indexOf(";thumb");
+                if (query_index) {
+                    img_src = img_src.substring(0, query_index);
+                }
+                img_src += ';download';
+            }
+        } else {
+            var thumb_width = img_width_attr || img_height_attr;
+            var thumb_height = img_height_attr || img_width_attr;
+            if (download_regexpr.test(img_src)) {
+                // transform ;download into ;thumb?width=width&height=height
+                img_src =  img_src.replace(download_regexpr, ";thumb?width=" + thumb_width + "&height=" + thumb_height);
+                // Reset img_width_attr and img_height_attr
+                // thumb may not have the right width/height
+                // TODO Set the real thumb width/height
+                img_width_attr = img_height_attr = '';
+            } else if (thumb_regexpr.test(img_src)) {
+                // update thumb
+                // FIXME drop the query
+                query_index = img_src.indexOf("?");
+                if (query_index) {
+                    img_src = img_src.substring(0, query_index);
+                }
+                img_src = img_src + '?width=' + thumb_width + '&height=' + thumb_height;
+                // TODO Set the real thumb width/height
+                img_width_attr = img_height_attr = '';
+            }
+        }
+    }
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+
+
+    tinymce.extend(args, {
+      // =======================
+      // Ikaaro
+      // =======================
+			src : img_src.replace(/ /g, '%20'),
+			width : img_width_attr,
+			height : img_height_attr,
+      // =======================
+      // =======================
 			alt : nl.alt.value,
 			title : nl.title.value,
 			'class' : getSelectValue(f, 'class_list'),
