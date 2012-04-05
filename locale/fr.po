@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-03 15:04+CET\n"
+"POT-Creation-Date: 2012-04-05 13:04+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -262,8 +262,8 @@ msgid ""
 "<g id='2'>I want to get an email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
 "${reminders} before the event. </g>"
 msgstr ""
-"<g id='2'>Je veux recevoir un email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
-"${reminders} avant l'évènement. </g>"
+"<g id='2'>Je veux recevoir un email</g>  <g id='3'>  <x id='4'/>  <x id='5'/"
+"> ${reminders} avant l'évènement. </g>"
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
 msgctxt "link"
@@ -962,8 +962,8 @@ msgid "Day"
 msgstr "Jour"
 
 #: ../agenda/reminders.py:31
-msgid "Days"
-msgstr "Jours"
+msgid "Day(s)"
+msgstr "Jour(s)"
 
 #: ../agenda/agenda_views.py:60 ../datatypes.py:290
 msgid "December"
@@ -1345,8 +1345,8 @@ msgid "Home"
 msgstr "Accueil"
 
 #: ../agenda/reminders.py:30
-msgid "Hours"
-msgstr "Heures"
+msgid "Hour(s)"
+msgstr "Heure(s)"
 
 #: ../utils.py:113
 msgid "Hungarian"
@@ -1390,6 +1390,10 @@ msgstr "Importer"
 #: ../users.py:58
 msgid "Inactive"
 msgstr "Inactif"
+
+#: ../folder.py:61
+msgid "Index"
+msgstr ""
 
 #: ../config_models.py:92
 msgid "Inherited field"
@@ -1649,7 +1653,7 @@ msgid "Microsoft Windows (32-bit)"
 msgstr ""
 
 #: ../agenda/reminders.py:29
-msgid "Minutes"
+msgid "Minute(s)"
 msgstr ""
 
 #: ../datatypes.py:190 ../datatypes.py:202
@@ -4979,6 +4983,9 @@ msgstr ""
 #~ msgid "Date:"
 #~ msgstr "Date :"
 
+#~ msgid "Days"
+#~ msgstr "Jours"
+
 #~ msgid "Default"
 #~ msgstr "Par défaut"
 
@@ -6780,9 +6787,6 @@ msgstr ""
 
 #~ msgid "customer"
 #~ msgstr "client"
-
-#~ msgid "day(s)"
-#~ msgstr "jour(s)"
 
 #~ msgctxt "table cell"
 #~ msgid "days ago"

@@ -26,9 +26,9 @@ from ikaaro.fields import Integer_Field
 
 class Reminder_Unit(Enumerate):
 
-    options = [{'name': 60, 'value': MSG(u'Minutes')},
-               {'name': 3600, 'value': MSG(u'Hours')},
-               {'name': 86400, 'value': MSG(u'Days')}]
+    options = [{'name': 60, 'value': MSG(u'Minute(s)')},
+               {'name': 3600, 'value': MSG(u'Hour(s)')},
+               {'name': 86400, 'value': MSG(u'Day(s)')}]
 
 
 

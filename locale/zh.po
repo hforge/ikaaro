@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2012-04-03 15:04+CET\n"
+"POT-Creation-Date: 2012-04-05 13:04+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -985,7 +985,7 @@ msgid "Day"
 msgstr ""
 
 #: ../agenda/reminders.py:31
-msgid "Days"
+msgid "Day(s)"
 msgstr ""
 
 #: ../agenda/agenda_views.py:60 ../datatypes.py:290
@@ -1402,7 +1402,7 @@ msgid "Home"
 msgstr "主页"
 
 #: ../agenda/reminders.py:30
-msgid "Hours"
+msgid "Hour(s)"
 msgstr ""
 
 #: ../utils.py:113
@@ -1448,6 +1448,10 @@ msgstr "简易文件"
 #, fuzzy
 msgid "Inactive"
 msgstr "名称"
+
+#: ../folder.py:61
+msgid "Index"
+msgstr ""
 
 #: ../config_models.py:92
 msgid "Inherited field"
@@ -1734,7 +1738,7 @@ msgid "Microsoft Windows (32-bit)"
 msgstr ""
 
 #: ../agenda/reminders.py:29
-msgid "Minutes"
+msgid "Minute(s)"
 msgstr ""
 
 #: ../datatypes.py:190 ../datatypes.py:202

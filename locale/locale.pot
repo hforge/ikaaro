@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-04-03 15:04+CET\n"
+"POT-Creation-Date: 2012-04-05 13:04+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -605,7 +605,7 @@ msgid "Day"
 msgstr ""
 
 #: ../agenda/reminders.py:31
-msgid "Days"
+msgid "Day(s)"
 msgstr ""
 
 #: ../agenda/agenda_views.py:60
@@ -864,7 +864,7 @@ msgid "Home"
 msgstr ""
 
 #: ../agenda/reminders.py:30
-msgid "Hours"
+msgid "Hour(s)"
 msgstr ""
 
 #: ../utils.py:113
@@ -889,6 +889,10 @@ msgstr ""
 
 #: ../users.py:58
 msgid "Inactive"
+msgstr ""
+
+#: ../folder.py:61
+msgid "Index"
 msgstr ""
 
 #: ../config_models.py:92
@@ -1091,7 +1095,7 @@ msgid "Message subject"
 msgstr ""
 
 #: ../agenda/reminders.py:29
-msgid "Minutes"
+msgid "Minute(s)"
 msgstr ""
 
 #: ../datatypes.py:190
