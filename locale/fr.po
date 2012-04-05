@@ -2929,7 +2929,7 @@ msgstr "Hebdomadaire"
 
 #: ../resource_views.py:298
 msgid "Welcome!"
-msgstr "Bienvenu(e) !"
+msgstr "Bienvenue !"
 
 #: ../agenda/event.py:334
 msgid "Where"
