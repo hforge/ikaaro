@@ -6,12 +6,12 @@
 
 <input type="checkbox" id="${name}-checkbox" name="${name}-checbkox"
   checked="${has_remind}" />
-<label for="${name}-checbkox">I want to get an email</label>
+<label for="${name}-checbkox">I want to get a reminder e-mail</label>
 <span id="${name}-area">
   <input type="hidden" name="${name}" value="${value}" id="${id}" />
   <input type="text" name="${name}-number" value="${number_value}" size="3"
     id="${id}-number" />
-  ${reminders} before the event.
+  ${reminders} before the start of the event.
 </span>
 <script type="text/javascript">
   display_reminder();

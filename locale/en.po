@@ -234,8 +234,8 @@ msgstr ""
 #: ../agenda/ui/widgets/reminder.xml.en:9
 msgctxt "label"
 msgid ""
-"<g id='2'>I want to get an email</g>  <g id='3'>  <x id='4'/>  <x id='5'/> "
-"${reminders} before the event. </g>"
+"<g id='2'>I want to get a reminder e-mail</g>  <g id='3'>  <x id='4'/>  <x "
+"id='5'/> ${reminders} before the start of the event. </g>"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
