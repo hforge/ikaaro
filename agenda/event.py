@@ -293,11 +293,22 @@ class Event_NewInstance(AutoAdd):
 
 
 
-class EventDatetime_Field(Datetime_Field):
+class Start_Field(Datetime_Field):
 
     datatype = DateTime(time_is_required=False)
     stored = True
+    title = MSG(u'Start')
+    required = True
+    widget = Datetime_Field.widget(value_time_default=time(9, 0))
 
+
+class End_Field(Datetime_Field):
+
+    datatype = DateTime(time_is_required=False)
+    stored = True
+    title = MSG(u'End')
+    required = True
+    widget = Datetime_Field.widget(value_time_default=time(10, 0))
 
 
 class Event_Render(CMSTemplate):
@@ -329,8 +340,8 @@ class Event(Content):
     owner = Owner_Field
     calendar = Select_Field(datatype=Calendars_Enumerate, required=True,
                             title=MSG(u'Calendar'), indexed=True)
-    dtstart = EventDatetime_Field(required=True, title=MSG(u'Start'))
-    dtend = EventDatetime_Field(required=True, title=MSG(u'End'))
+    dtstart = Start_Field
+    dtend = End_Field
     place = Char_Field(title=MSG(u'Where'))
     status = Select_Field(datatype=Status, title=MSG(u'State'))
     rrule = RRule_Field(title=MSG(u'Recurrence'))
@@ -492,7 +503,7 @@ class Event(Content):
                     if not starts_on:
                         value = '...' + value
                 if value:
-                    ns['TIME'] = '(' + value + ')'
+                    ns['TIME'] = value
         return ns
 
 

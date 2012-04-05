@@ -389,7 +389,7 @@ class DatetimeWidget(DateWidget):
       class="dateField" size="10" maxlength="10"/>
     <button class="${css} button-selector button-selector-agenda">...</button>
     <input type="text" id="${id}-time" name="${name}_time"
-        value="${value_time}" size="5" maxlength="5"/>
+      value="${value_time}" size="5" maxlength="5"/>
     <script type="text/javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
@@ -418,15 +418,24 @@ class DatetimeWidget(DateWidget):
         return Date.encode(value)
 
 
+
+    value_time_default = None
+
     @proto_lazy_property
     def value_time(self):
-        if self.value is None:
+        value = self.value
+        if value is None:
             return ''
 
-        value = self.datatype.decode(self.value)
-        if type(value) is date:
-            return ''
-        return value.time().strftime('%H:%M')
+        value = self.datatype.decode(value)
+        if type(value) is datetime:
+            value = value.time()
+        else:
+            value = self.value_time_default
+            if value is None:
+                return ''
+
+        return value.strftime('%H:%M')
 
 
 
