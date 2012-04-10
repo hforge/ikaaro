@@ -77,7 +77,7 @@ class User(DBResource):
                           title=MSG(u'Last Name'))
     email = Email_Field(indexed=True, stored=True, required=True,
                         unique=True, title=MSG(u'E-mail Address'))
-    password = Password_Field
+    password = Password_Field(multiple=True)
     avatar = File_Field(title=MSG(u'Avatar'))
     user_language = Char_Field
     user_timezone = Char_Field
@@ -120,13 +120,19 @@ class User(DBResource):
         return str(self.name)
 
 
+    def get_password(self):
+        password = self.get_property('password')
+        return password[-1] if password else None
+
+
     def get_auth_token(self):
         # Used by itools.web
-        return self.get_value('password')
+        password = self.get_password()
+        return password.value if password else None
 
 
     def authenticate(self, password):
-        my_password = self.get_property('password')
+        my_password = self.get_password()
         algo = my_password.get_parameter('algo', 'sha1')
         salt = my_password.get_parameter('salt', '')
 
