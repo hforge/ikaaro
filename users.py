@@ -19,16 +19,17 @@
 
 # Import from itools
 from itools.database import register_field
-from itools.datatypes import String
+from itools.datatypes import Boolean, String
 from itools.gettext import MSG
+from itools.web import ERROR
 
 # Import from ikaaro
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
 from config import Configuration
 from enumerates import UserGroups_Datatype
-from fields import Char_Field, Email_Field, Password_Field, Text_Field
-from fields import File_Field, Select_Field, URI_Field
+from fields import Char_Field, Datetime_Field, Email_Field, File_Field
+from fields import Password_Field, Select_Field, Text_Field, URI_Field
 from folder import Folder
 from resource_ import DBResource
 from users_views import User_ConfirmRegistration, User_EditAccount
@@ -36,6 +37,13 @@ from users_views import User_EditPassword, User_EditPreferences, User_Profile
 from users_views import User_ResendConfirmation, User_ChangePasswordForgotten
 from users_views import Users_Browse, Users_AddUser
 from utils import get_secure_hash, generate_password
+
+
+class Lastlog_Field(Datetime_Field):
+
+    parameters_schema = {'success': Boolean}
+    readonly = True
+    multiple = True
 
 
 class UserGroups_Field(URI_Field):
@@ -140,14 +148,28 @@ class User(DBResource):
         return password_hashed == my_password.value
 
 
-    def _login(self, context):
-        # XXX We call thie method '_login' to avoid a name clash with the
-        # login view.
-        context.login(self)
-        # To activte this feature set the lastlog field
+    def _login(self, password, context):
+        # We call this method '_login' to avoid a name clash with the login
+        # view.
+
+        if not self.authenticate(password):
+            error = ERROR(u'The login name or the password is incorrect.')
+        elif self.get_value('user_state') == 'inactive':
+            error = ERROR(
+                u'Your account has been canceled, contact the administrator '
+                u' if you want to get access again.')
+        else:
+            error = None
+            context.login(self)
+
+        # To activate this feature set the lastlog field
         lastlog = self.get_field('lastlog')
         if lastlog:
-            self.set_value('lastlog', context.timestamp)
+            success = error is None
+            self.set_value('lastlog', context.timestamp, success=success)
+
+        # Ok
+        return error
 
 
     def update_pending_key(self):

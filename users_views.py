@@ -116,7 +116,7 @@ class User_ConfirmRegistration(AutoForm):
         resource.set_value('password', password)
         resource.del_property('user_state')
         # Set cookie
-        resource._login(context)
+        resource._login(password, context)
 
         # Send email
         to_addr = resource.get_value('email')

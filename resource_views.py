@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
-from itools.web import BaseView, STLView, INFO, ERROR
+from itools.web import BaseView, STLView, INFO
 from itools.web import Conflict, NotFound, NotImplemented
 
 # Import from ikaaro
@@ -255,22 +255,11 @@ class LoginView(STLView):
             return stl(handler)
 
         # Case 2: Login
-        password = form['password']
-        if user is None or not user.authenticate(password):
-            message = ERROR(u'The login name or the password is incorrect.')
-            context.message = message
+        error = user._login(form['password'], context)
+        if error:
+            context.message = error
             return
 
-        # Check if the user account is valid
-        if user.get_value('user_state') == 'inactive':
-            context.message = ERROR(
-                u'Your account has been canceled, contact the administrator '
-                u' if you want to get access again.')
-            return
-
-        user._login(context)
-
-        # Goto
         return self.get_goto(user)
 
 
