@@ -35,6 +35,7 @@ from datatypes import CopyCookie
 from emails import send_email
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
+from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
 
 
 class DBResource_GetFile(BaseView):
@@ -255,6 +256,10 @@ class LoginView(STLView):
             return stl(handler)
 
         # Case 2: Login
+        if user is None:
+            context.message = MSG_LOGIN_WRONG_NAME_OR_PASSWORD
+            return
+
         error = user._login(form['password'], context)
         if error:
             context.message = error

@@ -102,3 +102,6 @@ MSG_PUBLISHED = INFO(u'Resources published.')
 MSG_RETIRED = INFO(u'Resources retired.')
 
 MSG_UNEXPECTED_MIMETYPE = ERROR(u'Unexpected file of mimetype {mimetype}.')
+
+MSG_LOGIN_WRONG_NAME_OR_PASSWORD = ERROR(
+    u'The login name or the password is incorrect.')

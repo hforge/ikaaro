@@ -31,6 +31,7 @@ from enumerates import UserGroups_Datatype
 from fields import Char_Field, Datetime_Field, Email_Field, File_Field
 from fields import Password_Field, Select_Field, Text_Field, URI_Field
 from folder import Folder
+from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
 from resource_ import DBResource
 from users_views import User_ConfirmRegistration, User_EditAccount
 from users_views import User_EditPassword, User_EditPreferences, User_Profile
@@ -153,7 +154,7 @@ class User(DBResource):
         # view.
 
         if not self.authenticate(password):
-            error = ERROR(u'The login name or the password is incorrect.')
+            error = MSG_LOGIN_WRONG_NAME_OR_PASSWORD
         elif self.get_value('user_state') == 'inactive':
             error = ERROR(
                 u'Your account has been canceled, contact the administrator '
