@@ -45,8 +45,7 @@ import messages
 
 class SearchTypes_Enumerate(Enumerate):
 
-    @classmethod
-    def get_options(cls):
+    def get_options(self):
         context = get_context()
         resource = context.resource
         view = context.view
@@ -76,6 +75,12 @@ class SearchTypes_Enumerate(Enumerate):
         types.sort(key=lambda x: x['value'].lower())
 
         return types
+
+
+    # This is done to fix an error: select one resource type, remove all
+    # resources, then traceback.
+    def is_valid(self, value):
+        return True
 
 
 
