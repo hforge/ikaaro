@@ -77,10 +77,10 @@ log-email = {log_email}
 #
 cron-interval = 0
 
-# Set expiration time in minutes for the authentication cookie, where 0
-# means the cookie does not expire (by default it is 0)
+# If the "session-timeout" variable is different from zero (the default), the
+# user will be automatically logged out after the specified number of minutes.
 #
-auth-cookie-expires = 0
+session-timeout = 0
 
 # The "database-size" variable defines the number of file handlers to store
 # in the database cache.  It is made of two numbers, the upper limit and the

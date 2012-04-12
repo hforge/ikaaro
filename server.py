@@ -181,8 +181,8 @@ class Server(WebServer):
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.web')
 
-        # Authentication cookie timedelta
-        self.auth_cookie_expires = get_value('auth-cookie-expires')
+        # Session timeout
+        self.session_timeout = get_value('session-timeout')
 
 
     def get_pid(self):
@@ -375,7 +375,7 @@ class ServerConfig(ConfigFile):
         # Time events
         'cron-interval': Integer(default=0),
         # Security
-        'auth-cookie-expires': ExpireValue(default=timedelta(0)),
+        'session-timeout': ExpireValue(default=timedelta(0)),
         # Tuning
         'database-size': String(default='4800:5200'),
         'index-text': Boolean(default=True),
