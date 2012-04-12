@@ -329,6 +329,11 @@ class Skin(object):
         return footer.get_html_data()
 
 
+    def get_menu_namespace(self, context):
+        menu = context.root.get_resource('config/menu')
+        return menu.get_menu_namespace(context)
+
+
     #######################################################################
     # Main
     #######################################################################
@@ -344,13 +349,8 @@ class Skin(object):
         logo = self._get_theme_file(context, 'logo')
         logo_href = '/config/theme/;get_file?name=logo' if logo else None
 
-        # Menu
-        root = context.root
-        menu = root.get_resource('config/menu')
-        menu_ns = menu.get_menu_namespace(context)
-
         # The document language
-        languages = root.get_value('website_languages')
+        languages = context.root.get_value('website_languages')
         language = context.accept_language.select_language(languages)
 
         # The base URI
@@ -381,7 +381,7 @@ class Skin(object):
             # Usermenu (the links at the top)
             'usermenu': self.get_usermenu(context),
             # menu
-            'menu': menu_ns,
+            'menu': self.get_menu_namespace(context),
             # Location & Views
             'location': location_template,
             'languages': self.languages_template(context=context),
