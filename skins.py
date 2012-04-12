@@ -79,6 +79,16 @@ class Skin(object):
                                 view_title=view_title)
 
 
+    def _get_theme_file(self, context, name):
+        theme = context.database.get_resource('/config/theme')
+        if context.root.is_allowed_to_view(context.user, theme):
+            value = theme.get_value(name)
+            if value:
+                return value
+
+        return None
+
+
     def get_styles(self, context):
         # Generic
         styles = ['/ui/bo.css']
@@ -96,7 +106,9 @@ class Skin(object):
         styles.extend(extra)
 
         # Database style
-        styles.append('/config/theme/;get_file?name=style&mimetype=text/css')
+        if self._get_theme_file(context, 'style'):
+            styles.append(
+                '/config/theme/;get_file?name=style&mimetype=text/css')
 
         # Ok
         return styles
@@ -176,8 +188,7 @@ class Skin(object):
 
     def get_favicon(self, context):
         # Case 1: from the database
-        theme = context.database.get_resource('/config/theme')
-        favicon = theme.get_value('favicon')
+        favicon = self._get_theme_file(context, 'favicon')
         if favicon:
             favicon_href = '/config/theme/;get_file?name=favicon'
             favicon_type = favicon.get_mimetype()
@@ -330,8 +341,7 @@ class Skin(object):
         favicon_href, favicon_type = self.get_favicon(context)
 
         # Logo
-        theme = context.database.get_resource('/config/theme')
-        logo = theme.get_value('logo')
+        logo = self._get_theme_file(context, 'logo')
         logo_href = '/config/theme/;get_file?name=logo' if logo else None
 
         # Menu
