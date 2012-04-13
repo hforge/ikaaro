@@ -26,6 +26,7 @@ from socket import gethostname
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.csv import Property
+from itools.database import GitDatabase
 from itools.datatypes import Email, String, Unicode, Integer
 from itools.datatypes import Enumerate
 from itools.fs import lfs, FileName
@@ -47,6 +48,19 @@ from ikaaro.folder import Folder
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
 from registry import get_resource_class
 from views_new import NewInstance
+
+
+
+class CtrlView(BaseView):
+    access = True
+
+    def GET(self, resource, context):
+        context.content_type = 'text/plain'
+        database = context.database
+        root = resource.get_root()
+        return dumps(
+            {'packages': root.get_version_of_packages(context),
+             'read-only': not isinstance(database, GitDatabase)})
 
 
 

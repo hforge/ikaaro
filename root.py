@@ -20,7 +20,6 @@
 
 # Import from the Standard Library
 import sys
-from json import dumps
 
 # Import from the Standard Library
 from email.charset import add_charset, add_codec, QP
@@ -34,13 +33,12 @@ import traceback
 
 # Import from itools
 from itools.core import freeze, get_abspath, is_thingy
-from itools.database import GitDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import get_context
 
 # Import from ikaaro
 from folder import Folder
@@ -49,6 +47,7 @@ from skins import UI, ui_path
 from user import UserFolder
 from utils import get_secure_hash
 from website import WebSite
+from website_views import CtrlView
 
 
 # itools source and target languages
@@ -62,18 +61,6 @@ itools_target_languages = config.get_value('target_languages')
 add_charset('utf-8', QP, None, 'utf-8')
 add_codec('utf-8', 'utf_8')
 
-
-
-class CtrlView(BaseView):
-
-    access = True
-
-    def GET(self, resource, context):
-        context.content_type = 'text/plain'
-        database = context.database
-        return dumps(
-            {'packages': resource.get_version_of_packages(context),
-             'read-only': not isinstance(database, GitDatabase)})
 
 
 def user_to_email_header(user, encoding):
