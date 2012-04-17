@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime, date
+from datetime import datetime
 from operator import itemgetter
 from os.path import basename
 from random import randint
@@ -372,7 +372,7 @@ class DateWidget(Widget):
         # ['2007-08-01\r\n2007-08-02']
         if self.datatype.multiple and isinstance(value, list):
             value = value[0]
-        if type(value) != str:
+        if type(value) is not str:
             return value.strftime(self.format)
         return value
 
@@ -408,14 +408,35 @@ class DatetimeWidget(DateWidget):
 
 
     @proto_lazy_property
-    def value_date(self):
-        if self.value is None:
-            return ''
+    def value_(self):
+        value = self.value
+        if value is None:
+            return '', ''
 
-        value = self.datatype.decode(self.value)
+        try:
+            value = self.datatype.decode(value)
+        except StandardError:
+            # XXX Heuristic here
+            from itools.web import get_context
+            context = get_context()
+            return (context.get_form_value(self.name),
+                    context.get_form_value('%s_time' % self.name))
+
         if type(value) is datetime:
-            value = value.date()
-        return Date.encode(value)
+            value_date = value.date()
+            value_time = value.time()
+        else:
+            value_date = value
+            value_time = self.value_time_default
+            if value_time is None:
+                return Date.encode(value_date), ''
+
+        return Date.encode(value_date), value_time.strftime('%H:%M')
+
+
+    @proto_lazy_property
+    def value_date(self):
+        return self.value_[0]
 
 
 
@@ -423,19 +444,7 @@ class DatetimeWidget(DateWidget):
 
     @proto_lazy_property
     def value_time(self):
-        value = self.value
-        if value is None:
-            return ''
-
-        value = self.datatype.decode(value)
-        if type(value) is datetime:
-            value = value.time()
-        else:
-            value = self.value_time_default
-            if value is None:
-                return ''
-
-        return value.strftime('%H:%M')
+        return self.value_[1]
 
 
 
