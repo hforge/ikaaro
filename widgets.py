@@ -517,20 +517,18 @@ class BirthDateWidget(Widget):
 class ColorPickerWidget(TextWidget):
 
     template = make_stl_template("""
-    <div id="${id}-picker"/>
+    <div id="${id}-picker" />
     <input type="${type}" id="${id}" name="${name}" value="${value}"
       maxlength="${maxlength}" size="${size}" class="${css}"/>
-      <label class="language" for="${id}" stl:if="language"
-      >${language}</label>
-      <script>
-        $(document).ready(function() {
-          $('head').append('<link rel="stylesheet" href="/ui/js/farbtastic/farbtastic.css" type="text/css" />');
-          $('#${id}-picker').farbtastic('#${id}');
-        });
-      </script>
-      """)
+    <label class="language" for="${id}" stl:if="language">${language}</label>
+    <script>
+      $(document).ready(function() {
+        $('#${id}-picker').farbtastic('#${id}');
+      });
+    </script>""")
 
     scripts = ['/ui/js/farbtastic/farbtastic.js']
+    styles = ['/ui/js/farbtastic/farbtastic.css']
 
 
 
