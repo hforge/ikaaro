@@ -30,14 +30,13 @@ class Event_Reminder_Email(Email):
 
 
     event = None
+    date = None
     def get_text_namespace(self, context):
         proxy = super(Event_Reminder_Email, self)
         namespace = proxy.get_text_namespace(context)
-        event = self.event
-        namespace['title'] = event.get_title()
-        start = event.get_value('dtstart')
-        namespace['date'] = context.format_date(start) # FIXME when recurrent
-        namespace['time'] = context.format_time(start)
+        namespace['title'] = self.event.get_title()
+        namespace['date'] = context.format_date(self.date)
+        namespace['time'] = context.format_time(self.date)
         return namespace
 
 

@@ -21,7 +21,8 @@
 # Import from the Standard Library
 from datetime import timedelta
 from email.parser import HeaderParser
-from json import loads
+import json
+import pickle
 from os import fdopen, getpgid
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
@@ -219,7 +220,7 @@ class Server(WebServer):
             return False
 
         data = h.read()
-        return loads(data)['read-only'] is False
+        return json.loads(data)['read-only'] is False
 
 
     #######################################################################
@@ -342,8 +343,10 @@ class Server(WebServer):
 
         # Go
         query = RangeQuery('next_time_event', None, context.timestamp)
-        for resource in database.search(query).get_resources():
-            resource.time_event()
+        for brain in database.search(query).get_documents():
+            payload = pickle.loads(brain.next_time_event_payload)
+            resource = database.get_resource(brain.abspath)
+            resource.time_event(payload)
             # Reindex resource without committing
             catalog = database.catalog
             catalog.unindex_document(str(resource.abspath))

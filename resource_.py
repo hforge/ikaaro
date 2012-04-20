@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from pickle import dumps
 from os.path import basename, dirname
 
 # Import from itools
@@ -540,7 +541,9 @@ class DBResource(Resource):
                 log_warning(log, domain='ikaaro')
 
         # Time events
-        values['next_time_event'] = self.next_time_event()
+        reminder, payload = self.next_time_event()
+        values['next_time_event'] = reminder
+        values['next_time_event_payload'] = dumps(payload)
 
         # Ok
         return values
@@ -550,10 +553,10 @@ class DBResource(Resource):
     # Time events
     #######################################################################
     def next_time_event(self):
-        return None
+        return None, None
 
 
-    def time_event(self):
+    def time_event(self, payload):
         raise NotImplementedError
 
 
@@ -833,3 +836,4 @@ register_field('text', Unicode(indexed=True))
 register_field('is_content', Boolean(indexed=True))
 # Time events
 register_field('next_time_event', DateTime(stored=True))
+register_field('next_time_event_payload', String(stored=True))
