@@ -124,9 +124,7 @@ u'Spanish'
 def reduce_string(title='', word_treshold=15, phrase_treshold=40):
     """Reduce words and string size.
     """
-    ellipsis = '…'
-    if isinstance(title, unicode):
-        ellipsis = u'…'
+    ellipsis = u'…' if type(title) is unicode else '…'
     words = title.strip().split(' ')
     for i, word in enumerate(words):
         if len(word) > word_treshold:
@@ -136,10 +134,10 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
     title = ' '.join(words)
     if len(title) > phrase_treshold:
         # Remove right trailling whitespaces
-        title = title[:phrase_treshold].rstrip()
+        title = title[:phrase_treshold - 1].rstrip()
         # Only add ellipsis if the last word does not already
         # end with one
-        if not title.endswith(ellipsis):
+        if title[-1] != ellipsis:
             title += ellipsis
     return title
 
