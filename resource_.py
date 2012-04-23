@@ -39,14 +39,16 @@ from itools.web import BaseView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
+from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
-from resource_views import DBResource_Backlinks
-from resource_views import DBResource_Links, LoginView, LogoutView
+from resource_views import DBResource_Remove
+from resource_views import DBResource_Links, DBResource_Backlinks
+from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login
@@ -259,6 +261,7 @@ class DBResource(Resource):
             raise ValueError, 'Incorrect ref_action "%s"' % ref_action
 
         # Events, remove
+        path = str(resource.abspath)
         database.remove_resource(resource)
         # Remove
         fs = database.fs
@@ -267,6 +270,11 @@ class DBResource(Resource):
             if fs.exists(handler.key):
                 database.del_handler(handler.key)
         self.handler.del_handler('%s.metadata' % name)
+        # Clear cookie
+        context = get_context()
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
+        if path in paths:
+            context.del_cookie('ikaaro_cp')
 
 
     def copy_resource(self, source, target):
@@ -789,11 +797,13 @@ class DBResource(Resource):
 
     # Views
     new_instance = AutoAdd(fields=['title', 'location'])
-    login = LoginView
-    logout = LogoutView
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
+    remove = DBResource_Remove
     get_file = DBResource_GetFile
     get_image = DBResource_GetImage
+    # Login/Logout
+    login = LoginView
+    logout = LogoutView
     # Popups
     add_image = DBResource_AddImage
     add_link = DBResource_AddLink

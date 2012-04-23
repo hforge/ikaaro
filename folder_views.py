@@ -538,16 +538,12 @@ class Folder_BrowseContent(BrowseForm):
     def action_remove(self, resource, context, form):
         ids = form['ids']
 
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-
         # Remove resources
         removed = []
         referenced = []
         not_removed = []
         user = context.user
         root = context.root
-        abspath = resource.abspath
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
@@ -563,10 +559,6 @@ class Folder_BrowseContent(BrowseForm):
                     referenced.append(name)
                     continue
                 removed.append(name)
-                # Clean cookie
-                if str(abspath.resolve2(name)) in paths:
-                    context.del_cookie('ikaaro_cp')
-                    paths = []
             else:
                 not_removed.append(name)
 

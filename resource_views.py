@@ -27,15 +27,42 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
-from itools.web import BaseView, STLView, INFO
+from itools.web import BaseView, STLView, INFO, ERROR
 from itools.web import Conflict, NotFound, NotImplemented
 
 # Import from ikaaro
-from datatypes import CopyCookie
+from autoform import AutoForm
+from buttons import Remove_Button
 from emails import send_email
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
+
+
+
+class DBResource_Remove(AutoForm):
+
+    access = 'is_allowed_to_remove'
+    title = MSG(u'Remove')
+
+    actions = [Remove_Button]
+
+    def action_remove(self, resource, context, form):
+        container = resource.parent
+
+        try:
+            container.del_resource(resource.name)
+        except ConsistencyError:
+            err = (
+                u'Referenced resource cannot be removed, check the'
+                u' <a href=";backlinks">backlinks</a>.')
+            context.message = ERROR(err, format='html')
+            return
+
+        # Ok
+        message = MSG(u'Resource removed')
+        return context.come_back(message, goto=str(container.abspath))
+
 
 
 class DBResource_GetFile(BaseView):
@@ -341,10 +368,3 @@ class Delete_View(BaseView):
             parent.del_resource(name)
         except ConsistencyError:
             raise Conflict
-
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-        # Clean cookie
-        if str(resource.abspath) in paths:
-            context.del_cookie('ikaaro_cp')
-            paths = []

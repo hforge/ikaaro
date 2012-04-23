@@ -51,8 +51,6 @@ class WebPage(File):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = ['view', 'edit', 'externaledit', 'subscribe', 'links',
-                   'backlinks', 'commit_log']
 
 
     data = HTMLFile_Field(title=MSG(u'Body'))
