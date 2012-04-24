@@ -218,7 +218,7 @@ Binaray content, like images, is returned in Base64 encoding (see RFC 3548).
 Update
 ==============
 
-The PUT request method is used to update a resource. Such a request looks
+The POST request method is used to update a resource. Such a request looks
 like this::
 
   POST /;rest_update HTTP/1.1
@@ -254,7 +254,7 @@ The JSON data is a list with three fields:
 - The name of the new resource
 - The resource type identifier
 - And the list of changes to apply to the new resource once it has been
-  created (similar to the data sent in PUT requests)
+  created (similar to the data sent in update requests)
 
 On success a *201 Created* response is returned, with the URI of the
 created resource in the ``Location`` header field.
