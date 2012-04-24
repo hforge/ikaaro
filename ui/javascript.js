@@ -156,7 +156,7 @@ function startProgressBar()
             $("#progress-bar-box").css("display", "none")
             return;
           }
-          var percent = Math.floor(data.percent);
+          var percent = Math.floor((parseFloat(data.uploaded_size) / data.total_size)*100);
 
           $("#progress-bar").progressbar("option", "value", percent);
           var toText = sizeToText(data.uploaded_size, data.total_size, percent);
