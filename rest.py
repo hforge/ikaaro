@@ -212,15 +212,19 @@ class Rest_Update(Rest_BaseView):
         return ''
 
 
-#   access_DELETE = 'is_allowed_to_remove'
-#   def DELETE(self, resource, context):
-#       """The D of CRUD: DELETE
-#       """
-#       # Delete myself
-#       resource.parent.del_resource(resource.name)
-#       # None means 204
-#       return None
+class Rest_Delete(Rest_BaseView):
+    """The D of CRUD: DELETE
+    """
 
+    access = 'is_allowed_to_remove'
+
+    def POST(self, resource, context):
+        """The D of CRUD: DELETE
+        """
+        # Delete myself
+        resource.parent.del_resource(resource.name)
+        # None means 204
+        return None
 
 
 ###########################################################################

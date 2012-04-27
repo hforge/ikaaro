@@ -263,4 +263,9 @@ created resource in the ``Location`` header field.
 Delete
 ==============
 
-TODO
+The POST request method is used to delete a resource::
+
+  POST /page/;rest_delete HTTP/1.1
+  Content-Length: 0
+
+In the example above we delete the resource ``/page``.
