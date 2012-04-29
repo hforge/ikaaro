@@ -1,0 +1,44 @@
+ikaaro 0.62.9 (2012/05/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Changes
+-------
+
+Now libgit2 and pygit2 are used instead of Git whenever possible. This
+increases the speed of the operations concerned, like write actions.
+
+New configuration option "auth-cookie-expires", if set the user will be
+automatically logged out after the specified number of minutes.
+
+Now emails sent by the application have the user's email address set in
+the "Reply-To" field, instead of "From". This helps emails not to be
+considered as spam.
+
+Upgrade tinymce to 3.4.9
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.62/ikaaro-0.62.9.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Documentation
+http://www.hforge.org/ikaaro/docs
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
