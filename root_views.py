@@ -79,12 +79,7 @@ class UploadStatsView(BaseView):
             return dumps({'valid_id': False})
 
         uploaded_size, total_size = stats
-        if total_size != 0:
-            percent = float(uploaded_size) / total_size * 100.0
-        else:
-            percent = 0.0
         return dumps({'valid_id': True,
-                      'percent': percent,
                       'uploaded_size': uploaded_size,
                       'total_size': total_size})
 

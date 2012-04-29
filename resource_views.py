@@ -233,6 +233,13 @@ class LoginView(STLView):
         return super(LoginView, self).GET(resource, context)
 
 
+    def POST(self, resource, context):
+        if context.status == 401:
+            # Don't submit login with data from another form
+            return self.GET
+        return super(LoginView, self).POST(resource, context)
+
+
     def get_value(self, resource, context, name, datatype):
         if name == 'loginname':
             return context.query['loginname']
