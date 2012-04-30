@@ -353,6 +353,12 @@ class DBResource(Resource):
         return field.get_value_title(self, name, language)
 
 
+    def get_brain_value(self, name):
+        brain = get_context().database.search(
+            PhraseQuery('abspath', str(self.abspath))).get_documents()[0]
+        return getattr(brain, name, None)
+
+
     def get_html_field_body_stream(self, name, language=None):
         """Utility method, returns the stream for the given html field.
         """
