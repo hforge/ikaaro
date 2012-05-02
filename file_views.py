@@ -23,7 +23,7 @@ from os.path import basename, splitext
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Integer, Unicode, String, HTTPDate
+from itools.datatypes import Boolean, Integer, Unicode, String, HTTPDate
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
@@ -310,7 +310,8 @@ class Image_Thumbnail(BaseView):
     access = 'is_allowed_to_view'
 
     query_schema = {'width': Integer(default=48),
-                    'height': Integer(default=48)}
+                    'height': Integer(default=48),
+                    'fit': Boolean(default=False)}
 
     def get_mtime(self, resource):
         return resource.handler.get_mtime()
@@ -319,10 +320,11 @@ class Image_Thumbnail(BaseView):
     def GET(self, resource, context):
         width = context.query['width']
         height = context.query['height']
+        fit = context.query['fit']
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
-        data, format = resource.handler.get_thumbnail(width, height, format)
+        data, format = resource.handler.get_thumbnail(width, height, format, fit)
         if data is None:
             default = resource.get_resource('/ui/icons/48x48/image.png')
             data = default.to_str()
