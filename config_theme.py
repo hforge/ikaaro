@@ -18,6 +18,7 @@
 # Import from itools
 from itools.core import get_abspath
 from itools.gettext import MSG
+from itools.handlers import TextFile
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -37,7 +38,7 @@ class Theme(Folder):
     logo = File_Field(title=MSG(u'Logo'))
     favicon = File_Field(title=MSG(u'Favicon'))
     banner = File_Field(title=MSG(u'Banner'))
-    style = TextFile_Field(title=MSG(u'CSS Style'))
+    style = TextFile_Field(title=MSG(u'CSS Style'), class_handler=TextFile)
 
 
     def init_resource(self, **kw):
