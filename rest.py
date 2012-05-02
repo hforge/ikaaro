@@ -247,7 +247,6 @@ class Rest_Query(Rest_BaseView):
         for resource in context.search(query).get_resources():
             item = {'abspath': {'value': str(resource.abspath)}}
             for field_name in resource.fields:
-                print field_name
                 if field_name == 'password':
                     continue
                 value = field_to_json(resource, field_name)
