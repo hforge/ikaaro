@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from json import dumps
+
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
@@ -25,10 +28,11 @@ from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.fs import lfs
-from itools.web import STLView, INFO, ERROR
+from itools.web import BaseView, STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
+from database import ReadOnlyDatabase
 from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
@@ -36,6 +40,20 @@ from utils import get_base_path_query
 from views import SearchForm
 from views_new import ProxyNewInstance
 
+
+
+class CtrlView(BaseView):
+
+    access = True
+    query_schema = {'name': String}
+
+    def GET(self, resource, context):
+        context.content_type = 'text/plain'
+        database = context.database
+        root = resource.get_root()
+        return dumps(
+            {'packages': root.get_version_of_packages(context),
+             'read-only': type(database) is ReadOnlyDatabase})
 
 
 class NotFoundView(STLView):

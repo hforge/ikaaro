@@ -42,7 +42,7 @@ from skins import UI, ui_path
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import SiteSearchView, NotFoundView, ForbiddenView
-from website_views import WebSite_NewInstance
+from website_views import WebSite_NewInstance, CtrlView
 
 
 
@@ -192,6 +192,10 @@ class WebSite(RoleAware, Folder):
     forbidden = ForbiddenView()
     unauthorized = LoginView()
     not_found = NotFoundView()
+
+    # Web services
+    _ctrl = CtrlView()
+
 
 
 ###########################################################################
