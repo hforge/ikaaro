@@ -1,64 +1,90 @@
-ikaaro 0.75.0 (beta) - 2011/XX/XX
+ikaaro 0.75.0 (beta) - 2012/05/XX
 ==================================
 
-This is a Content Management System built on Python & itools, among
-other features ikaaro provides:
+This is a CMS and web framework written in Python. Learn more about it at:
 
- - content and document management (index&search, metadata, etc.)
- - multilingual user interfaces and content
- - high level modules: wiki, forum, tracker, etc.
+  http://www.hforge.org/ikaaro
 
-Changes
--------
 
 This major release is labeled as beta because the upgrade logic is not
 yet available, we will drop the "beta" label when this is done.
 
-Two major features have been dropped in this release: websites and the
-tracker module. They may, eventually, come back in a different form.
+Some features have been dropped in this release:
+- the ability to setup several web-sites in a single ikaaro instance
+- the tracker module (will eventually come back in a future release)
+- the three-state workflow (replaced by sharing as part of the access
+  control overhaul)
 
-System admin:
-- There is a new configuration option, 'log-email'. If set an email will be
-  sent to the given email address whenever an internal server error (500)
-  happens.
+Most changes in this release are addressed to developers rather than
+end users, improving ikaaro as a web-framework.
 
-Performance:
-- Now the static files at '/ui/' are served using specific logic, and much
-  faster than before.
-- Now access control is defined by a query to the database, this fixes
-  long-standing bug #535, smooth and fast.
+Major changes
+---------------------
 
-Major features:
-- There is a new configuration system, located at '/config/', where
-  configuration modules are stored. And comes with many small improvements.
-- There is a new access-control system, which can be configured through the
-  back-office at '/config/access'. It is based on user groups instead of
-  roles (a user may belong to several groups), ownership (some resources
-  have an owner), and access rules.
-- It is now possible to define new resource types from the back-office, at
-  '/config/models'. This feature is exposed by the new Agenda module (see
-  below), so it is possible to define events with custom fields.
+Fields. The way a resource schema is defined has been re-done with the
+introduction of fields:
 
-Minor features:
-- The registration form is back, it includes a captcha, and can be configured
-  through '/config/register'.
-- Users are not folders anymore, but they have an avatar. Users can not be
-  removed but deactivated from the back-office.
+- Resource.class_schema has been replaced by fields. It is easier to
+  override fields defined by a parent class, and they are used by
+  autoadd/autoedit (see below) to automatize views.
 
-Modules:
-- The Calendar module has been renamed to Agenda and has been much improved:
-  support for recurrence rules, reminders, better user interface, now events
-  are attached to calendars (ala Google), etc.
-- The Blog: automatically add posts in a YYYY/MM layout (XXX)
-
-Pogramming Interface:
-- Resource.class_schema has been replaced by fields. It is easier to override
-  fields defined by a parent class, and they are used by autoadd/autoedit
-  (see below) to automatize views.
 - Files are now fields, this allows a resource to have several files
   attached to it (for instance: user.avatar, user.cv.en, etc.)
+
 - New AutoAdd/AutoEdit views replace NewInstance/DBResource_Edit. They make
   much easier to write automatic add/edit views for resources.
+
+Access Control has been rewritten. There are two major changes:
+
+- Now access is defined in terms of a database search. This has allowed to
+  fix long-standing bug #535.
+
+- The back-office offers extended possibilities to configure accees rights.
+  Access control is now defined in terms of: user groups, permissions,
+  ownership, access rules and sharing.
+
+Timeout events (cron). There is a new programming interface that allows
+to easily define events for a resource. This is used for instead by the
+Agenda module, to send email reminders when some event approaches.
+
+Dynamic models. There is now a mechanism that allows to define types of
+resources in the database. This feature is not yet visible in a bare
+ikaaro, but it may be useful in ikaaro-based applications: defining a
+new kind of resource, and adding custom fields to it through a web
+interface.
+
+The Calendar module has been renamed to Agenda and has been much improved:
+support for recurrence rules, reminders, better user interface, now events
+are attached to calendars (ala Google), etc.
+
+There is now a RESTful WebServices interface, details are available in
+the documentation.
+
+User visible changes
+---------------------
+
+There are many big and small user interface improvements:
+
+- The configuration back-office has been much improved with a ton of big
+  and small changes to discover.
+- Add view to remove a resource from the resource.
+- Improve uploading and extracting Zip files
+- Add support for OOXML files.
+- Search form, do an AndQuery (instead of OrQuery) in search terms.
+- The registration form is back, it includes a captcha, and can be configured
+  through /config/register
+- Users are not folders anymore, but they have an avatar. Users cannot be
+  removed but deactivated from the back-office.
+
+Programming interface
+---------------------
+
+Besides the major features seen above, there are many smaller improvements
+to the programmint interface:
+
+- New DynamicEnumerate base classes. This simplifies creating resources in
+  the database that define a set of choices (to build enumerate fields).
+- Add get_brain_value method.
 - The autoform has a richer namespace, this allows to easily define custom
   templates.
 - New search field 'base_classes' allows to search the database for resources
@@ -67,10 +93,28 @@ Pogramming Interface:
 - Table resources have been removed. Now everything should be a resource.
 - Now comments are resources on their own.
 - The 'OrderedFolder' class allows to order items in a folder.
+- Now 'make_resource' can take a path instead of a name.
+- Update jquery to 1.5.2
+
+System administrators
+---------------------
+
+Changes to the configuration file:
+- New "log-email" option': if set an email will be sent to the given email
+  address whenever an internal server error (500) happens.
+- New "cron-interval" option: controls how ofter the cron manager is run.
+- Option "auth-cookie-expires" renamed to "session-timeout".
+
+Security:
+- Use SHA256 and salt for new passwords.
+
+Performance:
+- Now the static files at '/ui/' are served using specific logic, and much
+  faster than before.
 
 
 Resources
----------
+=========
 
 Download
 http://download.hforge.org/ikaaro/0.75/ikaaro-0.75.0.tar.gz

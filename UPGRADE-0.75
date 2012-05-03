@@ -1,13 +1,17 @@
 
+XXX
+This document is still work-in-progress.
+XXX
+
 **********************************************************************
-Upgrade to ikaaro 0.75.0
+Upgrade to ikaaro 0.75
 System Administrators
 **********************************************************************
 
 Configuration file
 ==================
 
-XXX
+- Rename auth-cookie-expires to session-timeout.
 
 
 Update the database
@@ -27,7 +31,7 @@ As usual instances must be updated following the standard procedure:
 
 
 **********************************************************************
-Upgrade to ikaaro 0.75.0
+Upgrade to ikaaro 0.75
 Developers
 **********************************************************************
 
@@ -42,6 +46,8 @@ summarizes these changes:
 
   Before                                  Now
   -------------------------------------   ---------------------------------
+  ikaaro.buttons.RemoveButton             ikaaro.buttons.Remove_BrowseButton
+  ikaaro.datatypes.Password               ikaaro.datatypes.Password_Datatype
   ikaaro.workflow                         **DELETED**
   ikaaro.user                             ikaaro.users
   ikaaro.user_views                       ikaaro.users_views
