@@ -240,6 +240,12 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     table_actions = [Remove_BrowseButton]
 
 
+    def get_key_sorted_by_abspath(self):
+        def key(item):
+            return int(item.name)
+        return key
+
+
     def get_key_sorted_by_group(self):
         def key(item, cache={}):
             title = Groups_Datatype.get_value(item.group)
