@@ -147,8 +147,8 @@ class Server(WebServer):
         else:
             size_min = size_max = cache_size
         size_min, size_max = int(size_min), int(size_max)
-        database = get_database(target, size_min, size_max,
-                read_only=read_only)
+        read_only = read_only or config.get_value('database-readonly')
+        database = get_database(target, size_min, size_max, read_only)
         self.database = database
 
         # Find out the root class
@@ -382,6 +382,7 @@ class ServerConfig(ConfigFile):
         'session-timeout': ExpireValue(default=timedelta(0)),
         # Tuning
         'database-size': String(default='4800:5200'),
+        'database-readonly': Boolean(default=False),
         'index-text': Boolean(default=True),
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),

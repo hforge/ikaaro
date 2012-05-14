@@ -87,7 +87,11 @@ session-timeout = 0
 # bottom limit: when the cache size hits the upper limit, handlers will be
 # removed from the cache until it hits the bottom limit.
 #
+# The "database-readonly" variable, when set to 1 starts the database in
+# read-only mode, all write operations will fail.
+#
 database-size = 4800:5200
+database-readonly = 0
 
 # The "index-text" variable defines whether the catalog must process full-text
 # indexing. It requires (much) more time and third-party applications.
