@@ -101,8 +101,7 @@ class AutoAdd(AutoForm):
                 continue
 
             # Access control
-            access = getattr(field, 'access', True)
-            if access is True or self.context.is_access_allowed(cls, field):
+            if field.access('write', cls):
                 yield name
 
 

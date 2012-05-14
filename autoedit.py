@@ -141,8 +141,7 @@ class AutoEdit(AutoForm):
                 continue
 
             # Access control
-            access = getattr(field, 'access', True)
-            if access is True or context.is_access_allowed(resource, field):
+            if field.access('write', resource):
                 yield name
 
 

@@ -60,12 +60,16 @@ from utils import get_base_path_query
 
 class Share_Field(Select_Field):
 
-    access = 'is_allowed_to_share'
     title = MSG(u'Share')
     datatype = Groups_Datatype
     widget = CheckboxWidget
     multiple = True
     indexed = True
+
+
+    def access(self, mode, resource):
+        context = get_context()
+        return context.root.is_allowed_to_share(context.user, resource)
 
 
 

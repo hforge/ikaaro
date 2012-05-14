@@ -65,7 +65,11 @@ def load_json(context):
 def update_resource(resource, changes):
     for name, value, parameters in changes:
         # The value
-        datatype = resource.get_field(name).get_datatype()
+        field = resource.get_field(name)
+        if not field.access('write', resource):
+            continue # XXX raise an error? log a message?
+
+        datatype = field.get_datatype()
         value = datatype.decode(value)
         # The language
         lang = parameters.pop('lang', None)
@@ -93,6 +97,9 @@ def property_to_json(field, prop):
 def field_to_json(resource, field_name):
     field = resource.get_field(field_name)
     if field is None:
+        return None
+
+    if not field.access('read', resource):
         return None
 
     # Metadata
@@ -247,8 +254,6 @@ class Rest_Query(Rest_BaseView):
         for resource in context.search(query).get_resources():
             item = {'abspath': {'value': str(resource.abspath)}}
             for field_name in resource.fields:
-                if field_name == 'password':
-                    continue
                 value = field_to_json(resource, field_name)
                 if value is not None:
                     item[field_name] = value

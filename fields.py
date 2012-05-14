@@ -263,10 +263,15 @@ class Decimal_Field(Metadata_Field):
 
 
 class Password_Field(Metadata_Field):
+
     datatype = Password_Datatype
+    parameters_schema = {'algo': String, 'salt': String, 'date': DateTime}
     widget = PasswordWidget
 
-    parameters_schema = {'algo': String, 'salt': String, 'date': DateTime}
+
+    def access(self, mode, resource):
+        return mode == 'write'
+
 
     def set_value(self, resource, name, value, language=None, **kw):
         if value is not None:

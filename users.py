@@ -56,6 +56,14 @@ class UserGroups_Field(URI_Field):
     widget = CheckboxWidget
 
 
+    def access(self, mode, resource):
+        if mode == 'read':
+            return True
+
+        context = get_context()
+        return context.root.is_admin(context.user, resource)
+
+
 
 class UserState_Field(Select_Field):
 
