@@ -62,7 +62,8 @@ def start(options, target):
         become_daemon()
 
     # Set-up the server
-    server = Server(target, read_only=options.read_only)
+    server = Server(target, read_only=options.read_only,
+                    profile_space=options.profile_space)
 
     # Update Git tree-cache, to speed things up
     server.database.worktree.update_tree_cache()
@@ -87,7 +88,7 @@ def start(options, target):
         cron(server.cron_manager, 1)
 
     # Run
-    profile = config.get_value('profile-time')
+    profile = options.profile_time
     profile = ('%s/log/profile' % target) if profile else None
     loop = Loop(pid_file='%s/pid' % target, profile=profile)
     loop.run()
@@ -113,6 +114,12 @@ if __name__ == '__main__':
     parser.add_option(
         '--quick', action="store_true", default=False,
         help="Do not check the database consistency.")
+    parser.add_option(
+        '--profile-time', action="store_true", default=False,
+        help="Write profile information tot the 'log/profile' file.")
+    parser.add_option(
+        '--profile-space', action="store_true", default=False,
+        help="Enable remote monitoring by guppy, http://guppy-pe.sf.net/")
 
     # Parse arguments
     options, args = parser.parse_args()

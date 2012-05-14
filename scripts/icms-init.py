@@ -100,14 +100,6 @@ index-text = 1
 #
 max-width =
 max-height =
-
-# If the "profile-time" variable is set to "1", profiling information will
-# be written to the 'log/profile' file.  If the "profile-space" variable is
-# set to "1", remote monitoring will be enabled (see http://guppy-pe.sf.net/
-# to learn more).
-#
-profile-time = 0
-profile-space = 0
 """)
 
 

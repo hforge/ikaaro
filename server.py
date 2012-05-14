@@ -118,7 +118,8 @@ def get_fake_context(database):
 
 class Server(WebServer):
 
-    def __init__(self, target, read_only=False, cache_size=None):
+    def __init__(self, target, read_only=False, cache_size=None,
+                 profile_space=False):
         target = lfs.get_absolute_path(target)
         self.target = target
 
@@ -135,7 +136,7 @@ class Server(WebServer):
                                             default=True)
 
         # Profile Memory
-        if config.get_value('profile-space') is True:
+        if profile_space is True:
             import guppy.heapy.RM
 
         # The database
@@ -384,8 +385,6 @@ class ServerConfig(ConfigFile):
         'index-text': Boolean(default=True),
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
-        'profile-time': Boolean(default=False),
-        'profile-space': Boolean(default=False),
     }
 
 
