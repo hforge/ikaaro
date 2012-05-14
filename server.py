@@ -381,7 +381,7 @@ class ServerConfig(ConfigFile):
         # Security
         'session-timeout': ExpireValue(default=timedelta(0)),
         # Tuning
-        'database-size': String(default='4800:5200'),
+        'database-size': String(default='19500:20500'),
         'database-readonly': Boolean(default=False),
         'index-text': Boolean(default=True),
         'max-width': Integer(default=None),

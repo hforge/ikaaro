@@ -87,7 +87,7 @@ class Database(RWDatabase):
 
 
 def make_database(path):
-    size_min, size_max = 4800, 5200
+    size_min, size_max = 19500, 20500
     make_git_database(path, size_min, size_max)
     return Database(path, size_min, size_max)
 

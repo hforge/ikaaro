@@ -90,7 +90,7 @@ session-timeout = 0
 # The "database-readonly" variable, when set to 1 starts the database in
 # read-only mode, all write operations will fail.
 #
-database-size = 4800:5200
+database-size = 19500:20500
 database-readonly = 0
 
 # The "index-text" variable defines whether the catalog must process full-text
