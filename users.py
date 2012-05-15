@@ -21,7 +21,7 @@
 from itools.database import register_field
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
-from itools.web import ERROR
+from itools.web import ERROR, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
