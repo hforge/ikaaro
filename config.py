@@ -295,7 +295,7 @@ class Configuration(Folder):
         for name, module in self._modules.items():
             self.make_resource(name, module)
 
-    
+
     # Plugins
     _modules = {}
 
