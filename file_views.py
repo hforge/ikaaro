@@ -235,16 +235,16 @@ class Image_View(STLView):
 
 
 
-# FIXME This is broken, check http://alistapart.com/articles/byebyeembed
 class Video_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Video_view.xml'
+    scripts = ['/ui/js/jquery.media.js']
 
 
     def get_namespace(self, resource, context):
-        return {'format': resource.get_value('data').get_mimetype()}
+        return {'href': str(resource.abspath)}
 
 
 

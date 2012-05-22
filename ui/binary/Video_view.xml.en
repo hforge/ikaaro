@@ -4,23 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<object>
-<!--
-  id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA"
-  width="320" height="30">
--->
-  <param name="src" value="." />
-  <!--
-  <param name="autostart" value="true" />
-  <param name="controls" value="ControlPanel" />
-  <param name="console" value="video" />
-  -->
-  <embed src=";download" type="${format}">
-<!--
-    width="320" height="30" controls="ControlPanel"
-    console="video" autostart="true">
--->
-  </embed>
-</object>
+<a class="media" href="${href}/;download">Video</a>
+<script type="text/javascript">
+  $('.media').media();
+</script>
 
 </stl:block>
