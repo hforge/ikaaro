@@ -234,6 +234,14 @@ class MenuItem(OrderedFolder):
         if x is not None:
             items[x]['class'] = 'in-path'
 
+        if len(items) > 0:
+            # Add class "first" to the first item
+            css = items[0]['class'] or ''
+            items[0]['class'] = css + ' first'
+            # Add class "last" to the last item
+            css = items[-1]['class'] or ''
+            items[-1]['class'] = css + ' last'
+
         return items
 
 
