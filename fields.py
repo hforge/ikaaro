@@ -305,7 +305,7 @@ class Select_Field(Metadata_Field):
     options = None # Must be overriden by subclasses: [{}, ...]
 
     datatype_keys = Metadata_Field.datatype_keys + ['options']
-    widget_keys = Metadata_Field.widget_keys + ['has_empty_option']
+    widget_keys = Metadata_Field.widget_keys + ['has_empty_option', 'oneline']
 
 
     def get_value_title(self, resource, name, language=None):
