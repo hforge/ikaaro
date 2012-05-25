@@ -28,7 +28,6 @@ from itools.csv import Property
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
-from itools.web import STLView
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -42,7 +41,7 @@ from folder import Folder
 from resource_views import LoginView
 from skins import UI, ui_path
 from theme import Theme
-from website_views import AboutView, ContactForm, CreditsView, CtrlView
+from website_views import PoweredBy, ContactForm, CtrlView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance, UploadStatsView
 from website_views import UpdateDocs
@@ -202,10 +201,7 @@ class WebSite(RoleAware, Folder):
     orphans = CPOrphans()
     # Public views
     contact = ContactForm()
-    about = AboutView()
-    credits = CreditsView()
-    license = STLView(access=True, title=MSG(u'License'),
-                      template='/ui/root/license.xml')
+    powered_by = PoweredBy()
     # Special
     forbidden = ForbiddenView()
     unauthorized = LoginView()

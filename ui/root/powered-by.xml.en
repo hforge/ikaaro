@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<!-- Powered by -->
+<h2>Powered by Ikaaro</h2>
+
+<fieldset style="float: right" stl:if="is_admin">
+  <legend>Installed software</legend>
+  <p>
+  <tt>${location}</tt>
+  </p>
+  <table id="browse-list">
+    <thead>
+      <tr class="odd">
+        <th style="width: 8em">Software</th>
+        <th style="width: 8em">Version</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr stl:repeat="package packages" class="${repeat/package/even}">
+        <td>${package/name}</td>
+        <td>${package/version}</td>
+      </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+<p>
+  iKaaro is a Content Management System, written in the
+  <a href="http://www.python.org">Python</a> programming language,
+  and based on the <a href="http://www.hforge.org/itools">itools</a>
+  library.
+</p>
+
+<p>
+Key features of iKaaro include:
+</p>
+<ul>
+  <li>Content &amp; Document Management.</li>
+  <li>Collaboration with the Wiki module, the issue tracker, etc.</li>
+  <li>Multiple web sites in one instance, with separate access rights.</li>
+  <li>Mulitilingual interfaces and content.</li>
+</ul>
+
+<p>
+  To learn more visit the project's <a
+  href="http://www.hforge.org/ikaaro">Web Site</a>.
+</p>
+
+<!-- License -->
+<h2>License</h2>
+
+<p>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+</p>
+
+<p>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+</p>
+
+<p>
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see
+<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+</p>
+
+
+<!-- Credits -->
+<h2>Credits</h2>
+<table style="float: left">
+  <tr>
+    <th align="right" valign="top">Coders</th>
+    <td>
+      <stl:block stl:repeat="name hackers">${name}<br/></stl:block>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <th align="right" valign="top">Translators</th>
+    <td align="left" valign="top">
+      Hervé Cauwelier (French)<br/>
+      Nicolas Deram (French)<br/>
+      Paolo Dina (Italian)<br/>
+      Juan David Ibáñez Palomar (Spanish)<br/>
+      Zhou Li (Chinese)<br/>
+      Sylvain Taverne (French)<br/>
+    </td>
+  </tr>
+</table>
+
+
+</stl:block>
