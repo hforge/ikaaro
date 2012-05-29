@@ -182,53 +182,44 @@ class ContactForm(AutoForm):
         context.message = INFO(u'Message sent.')
 
 
-
-class AboutView(STLView):
+class PoweredBy(STLView):
 
     access = True
-    title = MSG(u'About')
-    template = '/ui/root/about.xml'
+    title = MSG(u'Powered by')
+    template = '/ui/root/powered-by.xml'
 
 
     def get_namespace(self, resource, context):
-        # Case 1: not admin
-        root = context.root
-        if not root.is_admin(context.user, resource):
-            return {'is_admin': False}
-
-        # Case 2: admin
-        package2title = {
-            'gio': u'pygobject',
-            'lpod': u'lpOD',
-            'sys': u'Python',
-            'os': MSG(u'Operating System')}
-        packages = [
-            {'name': package2title.get(x, x),
-             'version': y or MSG('no version found')}
-                 for x, y in root.get_version_of_packages(context).items()]
-
-        location = (getuser(), gethostname(), context.server.target)
-        return {'is_admin': True,
-                'packages': packages,
-                'location': u'%s@%s:%s' % location}
-
-
-
-class CreditsView(STLView):
-
-    access = True
-    title = MSG(u'Credits')
-    template = '/ui/root/credits.xml'
-    styles = ['/ui/credits.css']
-
-
-    def get_namespace(self, resource, context):
-        # Build the namespace
+        namespace = {}
+        # Credits
         credits = get_abspath('CREDITS.txt')
         lines = lfs.open(credits).readlines()
         names = [ x[2:].strip() for x in lines if x.startswith('  ') ]
+        namespace['hackers'] = names
 
-        return {'hackers': names}
+        # Installed software
+        root = context.root
+        is_admin = root.is_admin(context.user, resource)
+        namespace['is_admin'] = is_admin
+
+        if is_admin:
+            package2title = {
+                'gio': u'pygobject',
+                'lpod': u'lpOD',
+                'sys': u'Python',
+                'os': MSG(u'Operating System')}
+            packages = [
+                {'name': package2title.get(x, x),
+                 'version': y or MSG('no version found')}
+                for x, y in root.get_version_of_packages(context).items() ]
+
+            location = (getuser(), gethostname(), context.server.target)
+            namespace['packages'] = packages
+            namespace['location'] = u'%s@%s:%s' % location
+
+        # Ok
+        return namespace
+
 
 
 class UpdateDocs(AutoForm):

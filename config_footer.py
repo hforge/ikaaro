@@ -43,9 +43,7 @@ class Footer(WebPage):
         body = """
         <html xmlns="http://www.w3.org/1999/xhtml">
         <body>
-        <a href="/;about">About</a>
-        <a href="/;credits">Credits</a>
-        <a href="/;license">License</a>
+        <a href="/;powered_by">Powered by Ikaaro</a>
         </body>
         </html>
         """

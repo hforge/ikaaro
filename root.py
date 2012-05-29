@@ -40,7 +40,7 @@ from itools.html import stream_is_empty, stream_to_str_as_html, xhtml_doctype
 from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, STLView, get_context
+from itools.web import BaseView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
@@ -50,7 +50,7 @@ from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
-from root_views import AboutView, ContactForm, CreditsView
+from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView, UpdateDocs
 
@@ -544,10 +544,7 @@ class Root(Folder):
     terms_of_service = TermsOfService_View
     # Public views
     contact = ContactForm
-    about = AboutView
-    credits = CreditsView
-    license = STLView(access=True, title=MSG(u'License'),
-                      template='/ui/root/license.xml')
+    powered_by = PoweredBy
     # Special
     forbidden = ForbiddenView
     unauthorized = LoginView
