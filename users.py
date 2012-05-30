@@ -150,6 +150,8 @@ class User(DBResource):
 
     def authenticate(self, password):
         my_password = self.get_password()
+        if my_password is None:
+            return False
         algo = my_password.get_parameter('algo', 'sha1')
         salt = my_password.get_parameter('salt', '')
 
