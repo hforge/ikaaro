@@ -87,6 +87,7 @@ class CtrlView(BaseView):
 class Root(Folder):
 
     class_id = 'iKaaro'
+    class_version = '20100702'
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
