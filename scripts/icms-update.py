@@ -53,10 +53,6 @@ def find_versions_to_update(root, force=False):
 
     # Find out the versions to upgrade
     for resource in root.traverse_resources():
-        # Skip non-database resources
-        if not isinstance(resource, DBResource):
-            continue
-
         # Skip up-to-date resources
         obj_version = resource.metadata.version
         cls_version = resource.class_version
