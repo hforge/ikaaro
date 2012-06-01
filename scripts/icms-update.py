@@ -169,8 +169,7 @@ def update(parser, options, target):
     load_modules(config)
 
     #######################################################################
-    # STAGE 0: Set mtime/author
-    # XXX Specific to the migration from 0.61 to 0.62
+    # STAGE 1: Find out the versions to upgrade
     #######################################################################
     server = Server(target)
     database = server.database
@@ -181,52 +180,6 @@ def update(parser, options, target):
     # Local variables
     root = server.root
 
-    mtime = root.get_value('mtime')
-    if mtime is None or options.mtime:
-        message = 'STAGE 0: Set mtime and author in the metadata (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            abort()
-
-        # Find out set of valid usernames
-        usernames = root.get_names('users')
-        usernames = set(usernames)
-
-        print 'STAGE 0: Initializing mtime/author'
-        # Load cache
-        git_cache = {}
-        for commit in database.worktree.git_log(include_files=True):
-            if commit['author_name'] not in usernames:
-                commit['author_name'] = None
-            for path in commit['paths']:
-                if path not in git_cache or not git_cache[path]['author_name']:
-                    git_cache[path] = commit
-
-        # Set mtime/author
-        for resource in root.traverse_resources():
-            if not isinstance(resource, DBResource):
-                continue
-
-            files = resource.get_files_to_archive()
-            last_commit = None
-            for file in files:
-                commit = git_cache.get(file)
-                if not commit:
-                    continue
-                if not last_commit or commit['author_date'] > last_commit['author_date']:
-                    last_commit = commit
-            metadata = resource.metadata
-            metadata.set_property('mtime', last_commit['author_date'])
-            metadata.set_property('last_author', last_commit['author_name'])
-
-        # Commit
-        context.git_message = u'Upgrade: set mtime/author'
-        context.set_mtime = False # Do not override the mtime/author
-        database.save_changes()
-
-
-    #######################################################################
-    # STAGE 1: Find out the versions to upgrade
-    #######################################################################
     print 'STAGE 1: Find out the versions to upgrade (may take a while).'
     version, paths = find_versions_to_update(root, options.force)
     while version:
@@ -263,8 +216,6 @@ if __name__ == '__main__':
         help="start the update without asking confirmation")
     parser.add_option('--force', action='store_true', default=False,
         help="continue the upgrade process in spite of errors")
-    parser.add_option('--mtime', action='store_true', default=False,
-        help="set mtime/author even when the root is up-to-date")
     parser.add_option('--profile',
         help="print profile information to the given file")
     parser.add_option(
