@@ -33,6 +33,11 @@ from ikaaro.server import Server, ask_confirmation, get_config
 from ikaaro.server import get_fake_context, get_pid, load_modules
 
 
+# Monkey patch, so all resources are soft and we don't fail loading
+DBResource.fields_soft = True
+
+
+
 def abort():
     print '*'
     print '* Upgrade process not finished!'
