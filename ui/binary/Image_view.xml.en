@@ -17,8 +17,14 @@
     <a stl:if="prev_link" href="${prev_link}/;view?size=${size}&amp;width=${width}&amp;height=${height}" title="Previous"><img
         src="/ui/icons/16x16/previous.png"
         style="vertical-align: bottom" /></a>
+    <a stl:if="not prev_link">
+      <img src="/ui/icons/16x16/empty.png" style="vertical-align: bottom" />
+    </a>
     <a stl:if="next_link" href="${next_link}/;view?size=${size}&amp;width=${width}&amp;height=${height}" title="Next"><img
         src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>
+    <a stl:if="not next_link">
+      <img src="/ui/icons/16x16/empty.png" style="vertical-align: bottom" />
+    </a>
     <a href="?size=${size}&amp;width=${option/name}&amp;height=${option/name}"
       stl:omit-tag="option/selected"
       stl:repeat="option widths">${option/value}</a>
