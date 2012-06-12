@@ -293,7 +293,7 @@ class Configuration(Folder):
     def init_resource(self, **kw):
         super(Configuration, self).init_resource(**kw)
         for name, module in self._modules.items():
-            self.make_resource(name, module)
+            self.make_resource(name, module, soft=True)
 
 
     # Plugins

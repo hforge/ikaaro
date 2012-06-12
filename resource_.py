@@ -206,7 +206,7 @@ class DBResource(Resource):
         return str(max_id + 1)
 
 
-    def make_resource(self, name, cls, **kw):
+    def make_resource(self, name, cls, soft=False, **kw):
         # Automatic name
         if name is None:
             name = self.make_resource_name()
@@ -216,8 +216,14 @@ class DBResource(Resource):
             path = dirname(name)
             name = basename(name)
             resource = self.get_resource(path)
-            resource.make_resource(name, cls, **kw)
+            resource.make_resource(name, cls, soft=soft, **kw)
             return
+
+        # Soft
+        if soft is True:
+            resource = self.get_resource(name, soft=True)
+            if resource:
+                return resource
 
         # Make the metadata
         metadata = Metadata(cls=cls)

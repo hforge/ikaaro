@@ -88,6 +88,7 @@ class Root(Folder):
 
     class_id = 'iKaaro'
     class_version = '20100702'
+    #class_version = '20120601'
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
@@ -553,3 +554,18 @@ class Root(Folder):
     upload_stats = UploadStatsView
     update_docs = UpdateDocs
     _ctrl = CtrlView
+
+
+    #######################################################################
+    # Upgrade
+    #######################################################################
+#   def update_20120601(self):
+#       # Configuration
+#       title = {'en': u'Configuration'}
+#       self.make_resource('config', Configuration, title=title)
+
+#       # User groups
+#       users = self.get_resource('users')
+#       for p in self.get_property('admins'):
+#           user = users.get_resource(p.value)
+#           user.set_value('groups', '/config/groups/admins')
