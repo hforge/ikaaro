@@ -35,7 +35,7 @@
   </thead>
   <tbody>
     <tr stl:repeat="row rows" class="${repeat/row/even} ${row/css}">
-      <td stl:repeat="column row/columns">
+      <td stl:repeat="column row/columns" class="${column/css}">
         <!-- checkbox -->
         <input stl:if="column/is_checkbox" type="checkbox" name="ids"
           value="${column/value}" checked="${column/checked}" class="checkbox"
