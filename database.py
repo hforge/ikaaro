@@ -30,7 +30,7 @@ from itools.xapian import Catalog, make_catalog
 # Import from ikaaro
 from folder import Folder
 from registry import get_register_fields
-
+from table import Table
 
 
 class ReadOnlyDatabase(ROGitDatabase):
@@ -214,6 +214,10 @@ class Database(ReadOnlyDatabase, GitDatabase):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
                 new2old[path] = None
+                # Reindex each record of tables (cf. Paste table)
+                item_resource = resource.get_resource(path, soft=True)
+                if item_resource and isinstance(item_resource, Table):
+                    item_resource.reindex_records()
         else:
             path = str(resource.get_canonical_path())
             new2old[path] = None
