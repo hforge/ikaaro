@@ -41,6 +41,13 @@ class Table(File):
     form = []
 
 
+    def reindex_records(self):
+        # Reindex each record
+        handler = self.handler
+        for record in handler.get_records():
+            handler.reindex_record(record)
+
+
     def get_schema(self):
         return self.handler.record_properties
 

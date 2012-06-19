@@ -536,7 +536,7 @@ class LoginView(STLForm):
             return
 
         # Check password is correct
-        if not user.authenticate(password, clear=True):
+        if not user.authenticate(password):
             context.message = ERROR(u'The email or the password is incorrect.')
             return
 
