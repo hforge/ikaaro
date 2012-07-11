@@ -52,15 +52,6 @@ def fix_json(obj):
     return obj
 
 
-def load_json(context):
-    """Utility method that loads the json from the request entity. Used
-    by POST and PUT request methods.
-    """
-    data = context.body['body']
-    data = json.loads(data) # TODO Use a custom JSONDecoder
-    return fix_json(data)
-
-
 
 def update_resource(resource, changes):
     for name, value, parameters in changes:
@@ -155,6 +146,14 @@ class Rest_BaseView(BaseView):
         return json.dumps(data)
 
 
+    def load_json(self):
+        """Utility method that loads the json from the request entity. Used
+        by POST and PUT request methods.
+        """
+        data = self.context.body['body']
+        data = json.loads(data) # TODO Use a custom JSONDecoder
+        return fix_json(data)
+
 
 class Rest_Read(Rest_BaseView):
     """The R of CRUD: READ
@@ -185,7 +184,7 @@ class Rest_Create(Rest_BaseView):
     access = 'is_allowed_to_add'
 
     def POST(self, resource, context):
-        name, class_id, changes = load_json(context)
+        name, class_id, changes = self.load_json()
 
         # 1. Make the resource
         if name is not None:
@@ -211,7 +210,7 @@ class Rest_Update(Rest_BaseView):
     access = 'is_allowed_to_edit'
 
     def POST(self, resource, context):
-        changes = load_json(context)
+        changes = self.load_json()
         update_resource(resource, changes)
 
         # Empty 200 OK
