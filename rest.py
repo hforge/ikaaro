@@ -20,6 +20,7 @@ from base64 import b64encode
 import json
 
 # Import from itools
+from itools.core import proto_lazy_property
 from itools.database import AndQuery, PhraseQuery
 from itools.handlers import checkid
 from itools.web import BaseView
@@ -146,13 +147,25 @@ class Rest_BaseView(BaseView):
         return json.dumps(data)
 
 
-    def load_json(self):
+    @proto_lazy_property
+    def json(self):
         """Utility method that loads the json from the request entity. Used
         by POST and PUT request methods.
         """
         data = self.context.body['body']
         data = json.loads(data) # TODO Use a custom JSONDecoder
         return fix_json(data)
+
+
+    def created(self, resource):
+        context = self.context
+
+        path = resource.abspath
+        context.status = 201
+        context.set_header('Location', str(context.uri.resolve(path)))
+        context.set_content_type('text/plain')
+        return str(path)
+
 
 
 class Rest_Read(Rest_BaseView):
@@ -184,7 +197,7 @@ class Rest_Create(Rest_BaseView):
     access = 'is_allowed_to_add'
 
     def POST(self, resource, context):
-        name, class_id, changes = self.load_json()
+        name, class_id, changes = self.json
 
         # 1. Make the resource
         if name is not None:
@@ -195,11 +208,7 @@ class Rest_Create(Rest_BaseView):
         update_resource(child, changes)
 
         # 3. Return the URL of the new resource
-        path = child.abspath
-        context.status = 201
-        context.set_header('Location', str(context.uri.resolve(path)))
-        context.set_content_type('text/plain')
-        return str(path)
+        return self.created(child)
 
 
 
@@ -210,7 +219,7 @@ class Rest_Update(Rest_BaseView):
     access = 'is_allowed_to_edit'
 
     def POST(self, resource, context):
-        changes = self.load_json()
+        changes = self.json
         update_resource(resource, changes)
 
         # Empty 200 OK
