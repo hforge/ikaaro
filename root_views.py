@@ -91,7 +91,7 @@ class ContactOptions(Enumerate):
         resource = cls.resource
 
         users = resource.get_resource('/users')
-        mail = resource.get_resource('config/mail')
+        mail = resource.get_resource('/config/mail')
 
         options = []
         for name in mail.get_value('contacts'):
