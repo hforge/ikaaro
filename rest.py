@@ -58,6 +58,8 @@ def update_resource(resource, changes):
     for name, value, parameters in changes:
         # The value
         field = resource.get_field(name)
+        if field is None:
+            raise ValueError, "undefined field '%s'"  % name
         if not field.access('write', resource):
             continue # XXX raise an error? log a message?
 
@@ -65,6 +67,9 @@ def update_resource(resource, changes):
         value = datatype.decode(value)
         # The language
         lang = parameters.pop('lang', None)
+        # Decode parameters
+        for pname, pvalue in parameters.items():
+            parameters[pname] = field.parameters_schema[pname].decode(pvalue)
         # Action
         resource.set_value(name, value, lang, **parameters)
 

@@ -425,6 +425,8 @@ class DBResource(Resource):
         # Keyword parameters
         for name, value in kw.items():
             field = self.get_field(name)
+            if field is None:
+                raise ValueError, 'undefined field "%s"' % name
             if type(value) is dict:
                 for lang in value:
                     field._set_value(self, name, value[lang], lang)
