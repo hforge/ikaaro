@@ -1,7 +1,5 @@
 
-XXX
-This document is still work-in-progress.
-XXX
+!! THESE UPGRADE NOTES ARE WORK IN PROGRESS !!
 
 **********************************************************************
 Upgrade to ikaaro 0.75
@@ -11,7 +9,10 @@ System Administrators
 Configuration file
 ==================
 
-- Rename auth-cookie-expires to session-timeout.
+- Rename auth-cookie-expires to session-timeout
+- Remove the profile-time and profile-space options (now they are
+  command line parameters for the icms-start.py script)
+- New boolean option database-readonly
 
 
 Update the database

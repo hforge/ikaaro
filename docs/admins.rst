@@ -69,9 +69,9 @@ Virtualenv
 We advice to install ikaaro within a virtual environment, this is the
 procedure::
 
-  $ virtualenv --unzip-setuptools 0.62
-  $ ./0.62/bin/pip install itools
-  $ ./0.62/bin/pip install ikaaro
+  $ virtualenv --unzip-setuptools 075
+  $ ./075/bin/pip install itools
+  $ ./075/bin/pip install ikaaro
 
 
 The command line tools
@@ -344,10 +344,10 @@ it this way::
 Then you can create one or more virtual environments, this is useful to have
 different software installed in different environments::
 
-  ikaaro $ virtualenv --unzip-setuptools 0.62
-  ikaaro $ ./0.62/bin/pip install itools
-  ikaaro $ ./0.62/bin/pip install ikaaro
-  ikaaro $ cd 0.62
+  ikaaro $ virtualenv --unzip-setuptools 075
+  ikaaro $ ./075/bin/pip install itools
+  ikaaro $ ./075/bin/pip install ikaaro
+  ikaaro $ cd 075
 
 Now you can make one or more ikaaro instances::
 
@@ -432,7 +432,7 @@ server named *back*.
 We have this layout in the production server::
 
   /var/ikaaro/      # The ikaaro's user home
-    0.62/           # The Python virtual environment
+    075/            # The Python virtual environment
       example.com/  # The ikaaro instance
 
 We are going to use a fetch strategy. This is to say, the failover server
@@ -453,26 +453,26 @@ to SSH into the production server, to do so we need an SSH key::
 Now, for every ikaaro instance we want to mirror, we need to reproduce the
 layout in the failover server::
 
-  ikaaro@back ~ $ virtualenv --unzip-setuptools 0.62
-  ikaaro@back ~ $ cd 0.62
-  ikaaro@back ~/0.62 $ ./bin/pip install itools
-  ikaaro@back ~/0.62 $ ./bin/pip install ikaaro
-  ikaaro@back ~/0.62 $ ./bin/icms-init.py -e toto example.com
+  ikaaro@back ~ $ virtualenv --unzip-setuptools 075
+  ikaaro@back ~ $ cd 075
+  ikaaro@back ~/075 $ ./bin/pip install itools
+  ikaaro@back ~/075 $ ./bin/pip install ikaaro
+  ikaaro@back ~/075 $ ./bin/icms-init.py -e toto example.com
 
 We will throw away the database created this way, and make a clone of the
 database in the production server::
 
-  ikaaro@back ~/0.62 $ cd example.com
-  ikaaro@back ~/0.62/example.com $ rm -rf database
-  ikaaro@back ~/0.62/example.com $ git clone ssh://prod/~ikaaro/0.62/example.com/database/.git database
+  ikaaro@back ~/075 $ cd example.com
+  ikaaro@back ~/075/example.com $ rm -rf database
+  ikaaro@back ~/075/example.com $ git clone ssh://prod/~ikaaro/075/example.com/database/.git database
 
 The script that will make the synchronization may look like this::
 
   #!/bin/bash
 
   PATHS=(
-      "/var/ikaaro/0.62/example.com/database"
-      "/var/ikaaro/0.62/another-example.com/database"
+      "/var/ikaaro/075/example.com/database"
+      "/var/ikaaro/075/another-example.com/database"
       )
 
   n=${#PATHS[@]}

@@ -1,4 +1,4 @@
-ikaaro 0.75.0 (beta) - 2012/05/XX
+ikaaro 0.75.0 (beta) - 2012/07/26
 ==================================
 
 This is a CMS and web framework written in Python. Learn more about it at:
@@ -126,8 +126,7 @@ Documentation
 http://www.hforge.org/ikaaro/docs
 
 Mailing list
-http://www.hforge.org/community/
-http://archives.hforge.org/index.cgi?list=itools
+http://lists.hforge.org/mailman/listinfo/itools
 
 Bug Tracker
 http://bugs.hforge.org/
