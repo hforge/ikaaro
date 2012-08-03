@@ -36,7 +36,7 @@ from itools.core import get_abspath, is_prototype
 from itools.database import RWDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
-from itools.html import stream_is_empty, stream_to_str_as_html, xhtml_doctype
+from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
@@ -505,14 +505,6 @@ class Root(Folder):
 
     def is_allowed_to_move(self, user, resource):
         return self.has_permission(user, 'edit', resource)
-
-
-    def is_allowed_to_view_folder(self, user, resource):
-        stream = resource.get_html_field_body_stream('index')
-        if stream_is_empty(stream):
-            return False
-
-        return self.is_allowed_to_view(user, resource)
 
 
     def get_user(self, name):

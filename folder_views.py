@@ -120,7 +120,7 @@ class ZoomMenu(ContextMenu):
 
 class Folder_View(BaseView):
 
-    access = 'is_allowed_to_view_folder'
+    access = 'is_allowed_to_view'
     title = MSG(u'View')
 
 
