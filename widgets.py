@@ -97,7 +97,7 @@ class FileWidget(Widget):
       size="${size}" class="${css}" />
     <label class="language" for="${id}" stl:if="language" >${language}</label>
     <br/>
-    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}&amp;fit=${fit}"
+    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}"
       stl:if="thumb"/>""")
 
     width = 128
