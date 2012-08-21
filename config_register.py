@@ -173,6 +173,7 @@ class ConfigRegister(DBResource):
     class_id = 'config-register'
     class_title = MSG(u'User registration')
     class_description = MSG(u'Configuration of the user registration process.')
+    class_icon16 = 'icons/16x16/signin.png'
     class_icon48 = 'icons/48x48/signin.png'
 
     # Fields

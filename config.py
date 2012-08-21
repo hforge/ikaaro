@@ -64,7 +64,7 @@ class Configuration_View(STLView):
                 continue
             group_name = getattr(view, 'config_group', 'other')
             groups.setdefault(group_name, []).append({
-                'icon': resource.get_method_icon(view, size='48x48'),
+                'icon': resource.get_method_icon(view, size='16x16'),
                 'title': view.title,
                 'description': view.description,
                 'url': ';%s' % name})
@@ -77,7 +77,7 @@ class Configuration_View(STLView):
                 continue
             group_name = getattr(module, 'config_group', 'other')
             groups.setdefault(group_name, []).append({
-                'icon': module.get_class_icon(48),
+                'icon': module.get_class_icon(16),
                 'title': module.class_title,
                 'description': module.class_description,
                 'url': name})

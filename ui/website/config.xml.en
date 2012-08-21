@@ -4,35 +4,34 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <form action="" method="post" stl:if="newmodules">
-    <fieldset>
-      <legend>New modules</legend>
-      <p>
-      New modules have been detected, pleae click the button below to
-      initialize them:
-      </p>
-      <ul>
-        <li stl:repeat="module newmodules">${module}</li>
-      </ul>
-      <button type="submit" class="button-ok">Initialize new modules</button>
-    </fieldset>
-    <br/>
-  </form>
+<form action="" method="post" stl:if="newmodules">
+  <fieldset>
+    <legend>New modules</legend>
+    <p>
+    New modules have been detected, pleae click the button below to
+    initialize them:
+    </p>
+    <ul>
+      <li stl:repeat="module newmodules">${module}</li>
+    </ul>
+    <button type="submit" class="button-ok">Initialize new modules</button>
+  </fieldset>
+  <br/>
+</form>
 
+<table>
   <stl:block stl:repeat="group groups">
-    <h3>${group/title}</h3>
-    <table stl:repeat="item group/items" class="new-resource-thumb">
-      <tr>
-        <td valign="top" style="width: 48px">
-          <a href="${item/url}"><img alt="" src="${item/icon}" /></a>
-        </td>
-        <td valign="top">
-          <a href="${item/url}">${item/title}</a>
-          <p>${item/description}</p>
-        </td>
-      </tr>
-    </table>
-    <div class="clear"></div>
+    <tr>
+      <th colspan="3" align="left">${group/title}</th>
+    </tr>
+    <tr stl:repeat="item group/items">
+      <td valign="top">
+        <a href="${item/url}"><img alt="" src="${item/icon}" /></a>
+      </td>
+      <td valign="top"><a href="${item/url}">${item/title}</a></td>
+      <td valign="top">${item/description}</td>
+    </tr>
   </stl:block>
+</table>
 
 </stl:block>

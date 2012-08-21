@@ -256,6 +256,7 @@ class Captcha(Folder):
     class_id = 'config-captcha'
     class_title = MSG(u'Captcha')
     class_description = MSG(u'Feature to protect from spammers')
+    class_icon16 = 'icons/16x16/captcha.png'
     class_icon48 = 'icons/48x48/captcha.png'
 
     # Fields

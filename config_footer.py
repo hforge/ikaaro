@@ -28,6 +28,7 @@ class Footer(WebPage):
     class_id = 'config-footer'
     class_title = MSG(u'Footer')
     class_description = MSG(u'Define the site footer.')
+    class_icon16 = 'icons/16x16/footer.png'
     class_icon48 = 'icons/48x48/footer.png'
 
     # Configuration

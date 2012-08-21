@@ -68,6 +68,7 @@ class ConfigMail(DBResource):
     class_id = 'config-mail'
     class_title = MSG(u'Email options')
     class_description = mail_description
+    class_icon16 = 'icons/16x16/mail.png'
     class_icon48 = 'icons/48x48/mail.png'
 
     # Fields

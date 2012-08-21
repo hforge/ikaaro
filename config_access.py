@@ -287,6 +287,7 @@ class ConfigAccess(Folder):
     class_version = '20110606'
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
+    class_icon16 = 'icons/16x16/lock.png'
     class_icon48 = 'icons/48x48/lock.png'
 
     # Configuration

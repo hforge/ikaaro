@@ -245,6 +245,7 @@ class Users(Folder):
     class_id = 'users'
     class_title = MSG(u'Users')
     class_description = MSG(u'Manage users.')
+    class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
     is_content = False
 
