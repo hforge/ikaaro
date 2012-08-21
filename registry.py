@@ -19,7 +19,7 @@
 from database import Database
 
 
-def register_document_type(resource_class, container_cls_id='folder'):
+def register_document_type(resource_class, container_cls_id='webpage'):
     class_id = resource_class.class_id
     container_cls = Database._resources_registry[container_cls_id]
 

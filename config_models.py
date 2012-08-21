@@ -23,13 +23,13 @@ from autoedit import AutoEdit
 from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import Remove_BrowseButton
 from config import Configuration
-from config_common import NewResource_Local
 from fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
+from views import NewResource_Local
 
 
 class FieldType_Field(Select_Field):

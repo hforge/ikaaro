@@ -23,11 +23,11 @@ from itools.gettext import MSG
 from autoadd import AutoAdd
 from buttons import BrowseButton, Remove_BrowseButton, RenameButton
 from config import Configuration
-from config_common import NewResource_Local
 from messages import MSG_CHANGES_SAVED
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
 from users_views import BrowseUsers
+from views import NewResource_Local
 
 
 

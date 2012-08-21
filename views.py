@@ -25,7 +25,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from autoform import AutoForm
 from buttons import Button
-from utils import CMSTemplate
+from utils import CMSTemplate, get_content_containers
 
 
 """This module contains some generic views used by different resources.
@@ -586,3 +586,97 @@ class ContextMenu(CMSTemplate):
 
         return items
 
+
+###########################################################################
+# New Resource
+###########################################################################
+class NewResource(IconsView):
+
+    access = 'is_allowed_to_add'
+    title = MSG(u'Add resource')
+    icon = 'new.png'
+
+
+    def GET(self, resource, context):
+        # If only one type of event, we redirect on it
+        items = self.get_items(resource, context)
+        if len(items) == 1:
+            return self.get_url(items[0].class_id, context)
+
+        return super(NewResource, self).GET(resource, context)
+
+
+    def get_url(self, class_id, context):
+        query = context.uri.query.copy()
+        query['type'] = class_id
+        query['referrer'] = context.get_referrer()
+        uri = context.uri.resolve('./;new_resource')
+        uri.query = query
+        return uri
+
+
+    def get_items(self, resource, context):
+        # 1. Static classes
+        aux = set()
+        document_types = []
+        for container in get_content_containers(context):
+            if container.class_id in aux:
+                continue
+            aux.add(container.class_id)
+            for cls in container.get_document_types():
+                if cls not in document_types:
+                    document_types.append(cls)
+
+        # 2. Add dynamic models
+        for cls in context.database.get_dynamic_classes():
+            document_types.append(cls)
+
+        # Ok
+        return document_types
+
+
+    def get_namespace(self, resource, context):
+        items = [
+            {'icon': '/ui/' + cls.class_icon48,
+             'title': cls.class_title,
+             'description': cls.class_description,
+             'url': self.get_url(cls.class_id, context)}
+            for cls in self.get_items(resource, context) ]
+
+        return {'batch': None, 'items': items}
+
+
+
+class NewResource_Local(NewResource):
+
+    @proto_property
+    def document_types(self):
+        return self.resource.get_document_types()
+
+
+    include_subclasses = True
+
+
+    def get_items(self, resource, context):
+        # Load dynamic classes
+        database = context.database
+        list(database.get_dynamic_classes())
+
+        # Case 1: do not include subclasses
+        document_types = self.document_types
+        if self.include_subclasses is False:
+            return document_types
+
+        # Case 2: include subclasses
+        root = context.root
+        user = context.user
+
+        document_types = tuple(document_types)
+        items = []
+        for cls in database.get_resource_classes():
+            class_id = cls.class_id
+            if class_id[0] != '-' and issubclass(cls, document_types):
+                if root.has_permission(user, 'add', resource, class_id):
+                    items.append(cls)
+
+        return items

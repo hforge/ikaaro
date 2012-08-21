@@ -44,6 +44,7 @@ from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import Select_Field, Text_Field, Textarea_Field
+from folder_views import Folder_BrowseContent
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -55,6 +56,7 @@ from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from utils import get_base_path_query
+from views import NewResource
 
 
 
@@ -303,6 +305,19 @@ class DBResource(Resource):
                 yield x
 
 
+    def get_document_types(self):
+        document_types = []
+        for ancestor_class in reversed(self.__class__.__mro__):
+            items = ancestor_class.__dict__.get('_register_document_types')
+            if items:
+                document_types.extend(items)
+
+        # class_id to class
+        database = self.database
+        return [ database.get_resource_class(class_id)
+                 for class_id in document_types ]
+
+
     #######################################################################
     # API / Views
     #######################################################################
@@ -325,10 +340,28 @@ class DBResource(Resource):
             if name is None:
                 return None
 
+        # Add resource form
+        context = get_context()
+        if name == 'new_resource' and query:
+            class_id = query.get('type')
+            if class_id:
+                cls = self.database.get_resource_class(class_id)
+                view = cls.new_instance
+                if is_prototype(view, BaseView):
+                    view = view(resource=self, context=context) # bind
+                    # XXX Should we really check access here?
+                    # Should raise forbidden, but callers are not ready.
+                    root = context.root
+                    user = context.user
+                    if not root.has_permission(user, 'add', self, class_id):
+                        return None
+                    if not context.is_access_allowed(self, view):
+                        return None
+                    return view
+
         # Explicit view, defined by name
         view = getattr(self, name, None)
         if is_prototype(view, BaseView):
-            context = get_context()
             view = view(resource=self, context=context) # bind
             return view
 
@@ -816,11 +849,13 @@ class DBResource(Resource):
 
 
     # Views
+    new_resource = NewResource
     new_instance = AutoAdd(fields=['title', 'location'])
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
     remove = DBResource_Remove
     get_file = DBResource_GetFile
     get_image = DBResource_GetImage
+    browse_content = Folder_BrowseContent
     # Login/Logout
     login = LoginView
     logout = LogoutView

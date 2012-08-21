@@ -29,9 +29,9 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
-from ikaaro.config_common import NewResource_Local
 from ikaaro.fields import Char_Field
 from ikaaro.folder import Folder
+from ikaaro.views import NewResource_Local
 from agenda_views import Calendar_Export, Calendar_ExportForm
 from agenda_views import Calendar_Import, TimetablesForm
 from agenda_views import MonthlyView, WeeklyView, DailyView

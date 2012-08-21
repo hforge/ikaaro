@@ -293,7 +293,7 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
 ###########################################################################
 def get_content_containers(context, class_id=None):
     query = AndQuery(
-        PhraseQuery('base_classes', 'folder'),
+        PhraseQuery('base_classes', 'webpage'),
         PhraseQuery('is_content', True))
 
     root = context.root

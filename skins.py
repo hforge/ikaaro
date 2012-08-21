@@ -31,7 +31,6 @@ from itools.web import get_context, ERROR, INFO
 
 # Import from ikaaro
 from context import register_ui
-from folder import Folder
 from views import get_view_scripts
 from skins_views import LanguagesTemplate, LocationTemplate
 
@@ -232,9 +231,11 @@ class Skin(object):
 
         # Add content
         container = here
-        if isinstance(here, Folder) is False:
-            container = here.parent
         view = container.get_view('new_resource')
+        while view is None:
+            container = here.parent
+            view = container.get_view('new_resource')
+
         if context.is_access_allowed(container, view):
             usermenu.append({
                 'href': '%s/;new_resource' % context.get_link(container),

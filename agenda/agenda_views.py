@@ -37,10 +37,10 @@ from event import Event
 from grid import get_grid_data
 from ikaaro import messages
 from ikaaro.autoform import get_dynDateTime_scripts
-from ikaaro.config_common import NewResource_Local
 from ikaaro.datatypes import FileDataType
 from ikaaro.datatypes import days
 from ikaaro.utils import CMSTemplate
+from ikaaro.views import NewResource_Local
 
 resolution = timedelta.resolution
 

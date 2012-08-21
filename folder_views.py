@@ -38,8 +38,8 @@ from buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
-from utils import generate_name, get_base_path_query, get_content_containers
-from views import IconsView, BrowseForm, ContextMenu
+from utils import generate_name, get_base_path_query
+from views import BrowseForm, ContextMenu
 import messages
 
 
@@ -128,63 +128,6 @@ class Folder_View(BaseView):
         stream = resource.get_html_field_body_stream('index')
         stream = list(stream)
         return stream if not stream_is_empty(stream) else ''
-
-
-
-class Folder_NewResource(IconsView):
-
-    access = 'is_allowed_to_add'
-    title = MSG(u'Add resource')
-    icon = 'new.png'
-
-
-    def GET(self, resource, context):
-        # If only one type of event, we redirect on it
-        items = self.get_items(resource, context)
-        if len(items) == 1:
-            return self.get_url(items[0].class_id, context)
-
-        return super(Folder_NewResource, self).GET(resource, context)
-
-
-    def get_url(self, class_id, context):
-        query = context.uri.query.copy()
-        query['type'] = class_id
-        query['referrer'] = context.get_referrer()
-        uri = context.uri.resolve('./;new_resource')
-        uri.query = query
-        return uri
-
-
-    def get_items(self, resource, context):
-        # 1. Static classes
-        aux = set()
-        document_types = []
-        for container in get_content_containers(context):
-            if container.class_id in aux:
-                continue
-            aux.add(container.class_id)
-            for cls in container.get_document_types():
-                if cls not in document_types:
-                    document_types.append(cls)
-
-        # 2. Add dynamic models
-        for cls in context.database.get_dynamic_classes():
-            document_types.append(cls)
-
-        # Ok
-        return document_types
-
-
-    def get_namespace(self, resource, context):
-        items = [
-            {'icon': '/ui/' + cls.class_icon48,
-             'title': cls.class_title,
-             'description': cls.class_description,
-             'url': self.get_url(cls.class_id, context)}
-            for cls in self.get_items(resource, context) ]
-
-        return {'batch': None, 'items': items}
 
 
 

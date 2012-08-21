@@ -28,11 +28,11 @@ from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import PathSelectorWidget
 from config import Configuration
-from config_common import NewResource_Local
 from buttons import Remove_BrowseButton
 from fields import Select_Field, URI_Field
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from utils import split_reference
+from views import NewResource_Local
 
 
 

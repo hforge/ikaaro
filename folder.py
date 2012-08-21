@@ -23,13 +23,11 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 
 # Import from itools
-from itools.core import is_prototype
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView, Forbidden, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -37,8 +35,8 @@ from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from fields import HTMLFile_Field
-from folder_views import Folder_BrowseContent, Folder_PreviewContent
-from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
+from folder_views import Folder_PreviewContent
+from folder_views import Folder_Rename, Folder_Thumbnail
 from folder_views import Folder_View
 from messages import MSG_NAME_CLASH
 from resource_ import DBResource
@@ -61,22 +59,8 @@ class Folder(DBResource):
     index = HTMLFile_Field(title=MSG(u'Index'))
 
 
-    #########################################################################
     # Gallery properties
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
-
-
-    def get_document_types(self):
-        document_types = []
-        for ancestor_class in reversed(self.__class__.__mro__):
-            items = ancestor_class.__dict__.get('_register_document_types')
-            if items:
-                document_types.extend(items)
-
-        # class_id to class
-        database = self.database
-        return [ database.get_resource_class(class_id)
-                 for class_id in document_types ]
 
 
     #######################################################################
@@ -334,38 +318,11 @@ class Folder(DBResource):
 
 
     #######################################################################
-    # User interface
-    #######################################################################
-    def get_view(self, name, query=None):
-        # Add resource form
-        if name == 'new_resource' and query:
-            class_id = query.get('type')
-            if class_id:
-                cls = self.database.get_resource_class(class_id)
-                view = cls.new_instance
-                if is_prototype(view, BaseView):
-                    context = get_context()
-                    view = view(resource=self, context=context) # bind
-                    # XXX Should we really check access here?
-                    # Should raise forbidden, but callers are not ready.
-                    root = context.root
-                    user = context.user
-                    if not root.has_permission(user, 'add', self, class_id):
-                        return None
-                    if not context.is_access_allowed(self, view):
-                        return None
-                    return view
-
-        # Default
-        return super(Folder, self).get_view(name, query)
-
-
     # Views
+    #######################################################################
     view = Folder_View
     edit = AutoEdit(fields=['title', 'index', 'description', 'subject',
                             'share'])
-    new_resource = Folder_NewResource
-    browse_content = Folder_BrowseContent
     rename = Folder_Rename
     preview_content = Folder_PreviewContent
     thumb = Folder_Thumbnail

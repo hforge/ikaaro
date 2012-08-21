@@ -47,12 +47,12 @@ from itools.xml import XMLParser, is_xml_stream
 from config import Configuration
 from config_register import RegisterForm, TermsOfService_View
 from fields import Char_Field
-from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView, UpdateDocs
+from webpage import WebPage
 
 
 # itools source and target languages
@@ -84,7 +84,7 @@ class CtrlView(BaseView):
 ###########################################################################
 # Resource
 ###########################################################################
-class Root(Folder):
+class Root(WebPage):
 
     class_id = 'iKaaro'
     class_version = '20100702'

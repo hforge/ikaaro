@@ -54,5 +54,4 @@ register_domain('ikaaro', path)
 
 # Register document types
 register_document_type(WebPage)
-register_document_type(Folder)
 register_document_type(File)
