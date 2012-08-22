@@ -45,12 +45,8 @@ button {
   box-shadow: 2px 2px 2px #aaa;
 }
 
-button:hover {
-  box-shadow: -2px -2px 2px #aaa;
-  position: relative;
-  top: 2px;
-  left: 2px;
-}
+button:hover
+{ box-shadow: inset 2px 2px 2px #aaa; }
 
 /* HELPERS */
 .clear
