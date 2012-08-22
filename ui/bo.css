@@ -305,33 +305,30 @@ table.new-resource-thumb p {
 #browse-list th a.sort-up,
 #browse-list th a.sort-up-active,
 #browse-list th a.sort-down,
-#browse-list th a.sort-down-active {
-  background: transparent url(/ui/aruni/images/sprite_sort.png) no-repeat;
-}
+#browse-list th a.sort-down-active
+{ background: transparent url(/ui/aruni/images/sprite_sort.png) no-repeat; }
 
 #browse-list th a.sort-down { background-position: -10px -10px; }
 #browse-list th a.sort-down-active { background-position: -10px -29px; }
 #browse-list th a.sort-up { background-position: -10px -48px; }
 #browse-list th a.sort-up-active { background-position: -10px -67px; }
 
-#browse-list td a {
-  text-decoration: none;
-}
+#browse-list td a
+{ text-decoration: none; }
 
-#browse-list td a:hover {
-  text-decoration: underline;
-}
+#browse-list td a:hover
+{ text-decoration: underline; }
 
-form#form-search div.block-widget-text,
-form#form-search div.block-widget-format,
-form#form-search div.block-widget-group,
-form#form-search div.block-widget-permission,
-form#form-search div.block-widget-search_path,
-form#form-search div.block-widget-search_format
-{
-  float: left;
-  margin-right: 0.5em;
-}
+#form-search div.block-widget-text,
+#form-search div.block-widget-format,
+#form-search div.block-widget-group,
+#form-search div.block-widget-permission,
+#form-search div.block-widget-search_path,
+#form-search div.block-widget-search_format
+{ float: left; margin-right: 0.5em; }
+
+#form-search .autoform-actions
+{ position: relative; top: 1em; }
 
 form.autoform div.block-widget-search_path,
 form.autoform div.block-widget-search_path_depth

@@ -36,8 +36,8 @@
           <td class="languages">${languages}</td>
           <td class="search">
             <form action="/;browse_content" method="get">
-              <input name="text" class="search_box" type="text"
-                value="" size="15" />
+              <input name="text" class="search_box" type="text" value=""
+                size="25" />
             </form>
           </td>
         </tr>
