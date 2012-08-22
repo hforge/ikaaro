@@ -773,9 +773,7 @@ class DBResource(Resource):
     @classmethod
     def get_class_icon(cls, size=16):
         icon = getattr(cls, 'class_icon%s' % size, None)
-        if icon is None:
-            return None
-        return '/ui/%s' % icon
+        return '/ui/%s' % icon if icon else None
 
 
     @classmethod

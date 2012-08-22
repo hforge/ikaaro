@@ -22,7 +22,6 @@ from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import Remove_BrowseButton
-from config import Configuration
 from fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from folder import Folder
@@ -332,10 +331,6 @@ class ConfigModels(Folder):
     class_title = MSG(u'Content models')
     class_description = MSG(u'Define new types of content resources.')
 
-    # Configuration
-    config_name = 'models'
-    config_group = 'content'
-
     # Views
     class_views = ['browse_content', 'add_model', 'edit', 'commit_log']
     browse_content = ConfigModels_Browse
@@ -343,7 +338,3 @@ class ConfigModels(Folder):
 
     def get_document_types(self):
         return [Model]
-
-
-# Register
-#Configuration.register_module(ConfigModels)

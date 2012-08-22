@@ -40,9 +40,7 @@ from utils import get_base_path_query
 GROUPS = [
     ('access', MSG(u'Users, Access Control & Security')),
     ('webmaster', MSG(u'Webmaster tools')),
-    ('content', MSG(u'Content')),
-    ('other', MSG(u'Other')),
-    ]
+    ('extension', MSG(u'Extensions'))]
 
 
 class Configuration_View(STLView):
@@ -51,50 +49,51 @@ class Configuration_View(STLView):
     title = MSG(u'Configuration')
     template = '/ui/website/config.xml'
 
-    def get_namespace(self, resource, context):
-        newmodules = []
-        groups = {}
+    schema = {'extensions': String(multiple=True)}
 
+    def get_namespace(self, resource, context):
         # Core views (non persistent)
+        groups = {}
         for name in resource.class_core_views:
             view = resource.get_view(name)
             if view is None:
                 continue
             if not context.is_access_allowed(resource, view):
                 continue
-            group_name = getattr(view, 'config_group', 'other')
-            groups.setdefault(group_name, []).append({
+            groups.setdefault(view.config_group, []).append({
                 'icon': resource.get_method_icon(view, size='16x16'),
                 'title': view.title,
                 'description': view.description,
-                'url': ';%s' % name})
+                'url': ';%s' % name,
+                'new': False})
 
         # Plugins (persistent)
-        for name in resource._modules:
-            module = resource.get_resource(name, soft=True)
-            if module is None:
-                newmodules.append(name)
-                continue
-            group_name = getattr(module, 'config_group', 'other')
-            groups.setdefault(group_name, []).append({
-                'icon': module.get_class_icon(16),
-                'title': module.class_title,
-                'description': module.class_description,
-                'url': name})
+        newmodules = False
+        for name, cls in resource._modules.items():
+            new = resource.get_resource(name, soft=True) is None
+            groups.setdefault(cls.config_group, []).append({
+                'icon': cls.get_class_icon(16),
+                'title': cls.class_title,
+                'description': cls.class_description,
+                'url': name,
+                'new': new})
+            if new:
+                newmodules = True
 
         groups_ns = [
             {'title': title, 'items': groups[name]}
             for (name, title) in GROUPS if name in groups ]
 
         # Ok
-        return {'newmodules': newmodules, 'groups': groups_ns}
+        return {'groups': groups_ns, 'new': newmodules}
 
 
     def action(self, resource, context, form):
-        for name, module in resource._modules.items():
-            if resource.get_resource(name, soft=True) is None:
-                resource.make_resource(name, module)
+        for name in form['extensions']:
+            cls = resource._modules[name]
+            resource.make_resource(name, cls)
 
+        # Ok
         context.message = MSG(u'New modules initialized.')
 
 

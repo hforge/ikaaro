@@ -4,34 +4,30 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="" method="post" stl:if="newmodules">
-  <fieldset>
-    <legend>New modules</legend>
-    <p>
-    New modules have been detected, pleae click the button below to
-    initialize them:
-    </p>
-    <ul>
-      <li stl:repeat="module newmodules">${module}</li>
-    </ul>
-    <button type="submit" class="button-ok">Initialize new modules</button>
-  </fieldset>
-  <br/>
+<form action="" method="post" stl:omit-tag="not new">
+  <table id="browse-list" width="100%">
+    <stl:block stl:repeat="group groups">
+      <tr>
+        <th colspan="4" align="left"
+          style="color: #fff; background: #555; padding: .3em .5em;">
+          ${group/title}
+        </th>
+      </tr>
+      <tr stl:repeat="item group/items">
+        <td valign="top" width="16"><img alt="" src="${item/icon}" /></td>
+        <td valign="top">
+          <a href="${item/url}" stl:omit-tag="item/new">${item/title}</a>
+        </td>
+        <td valign="top">${item/description}</td>
+        <td>
+          <input type="checkbox" name="extensions" value="${item/url}"
+            stl:if="item/new" />
+        </td>
+      </tr>
+    </stl:block>
+  </table>
+  <button type="submit" class="button-ok" stl:if="new" style="float: right"
+    >Install</button>
 </form>
-
-<table>
-  <stl:block stl:repeat="group groups">
-    <tr>
-      <th colspan="3" align="left">${group/title}</th>
-    </tr>
-    <tr stl:repeat="item group/items">
-      <td valign="top">
-        <a href="${item/url}"><img alt="" src="${item/icon}" /></a>
-      </td>
-      <td valign="top"><a href="${item/url}">${item/title}</a></td>
-      <td valign="top">${item/description}</td>
-    </tr>
-  </stl:block>
-</table>
 
 </stl:block>

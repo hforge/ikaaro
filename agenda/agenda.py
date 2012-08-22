@@ -104,7 +104,7 @@ class ConfigAgenda(Folder):
 
     # Configuration
     config_name = '/agenda'
-    config_group = 'content'
+    config_group = 'extension'
 
     # Fields
     timetables = Char_Field(datatype=Timetables, multiple=True,

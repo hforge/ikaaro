@@ -118,10 +118,13 @@ class Blog(Folder):
 
     class_id = 'blog'
     class_title = MSG(u'Blog')
+    class_description = MSG(u'Post news, keep a diary ...')
+    class_icon16 = 'blog/Blog16.png'
+    class_icon48 = 'blog/Blog48.png'
 
     # Configuration
     config_name = '/blog'
-    config_group = 'content'
+    config_group = 'extension'
 
     # API
     def get_document_types(self):
