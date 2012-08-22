@@ -25,28 +25,34 @@ input[disabled] {
 
 /* IE7 fix */
 input[type=radio],
-input[type=checkbox] {
-  border: none;
-}
+input[type=checkbox]
+{ border: none; }
 
-button:focus, input:focus, select:focus, textarea:focus {
-  border-color: black;
-}
+button:focus, input:focus, select:focus, textarea:focus
+{ border-color: black; }
 
-textarea {
-  font-size: 1.2em;
-}
+textarea
+{ font-size: 1.2em; }
 
 button {
-  background-position: 3px center;
-  background-repeat: no-repeat;
-  margin: 2px;
-  padding: 0px 3px;
+  background-color: #eee;
+  color: #555;
+  font-weight: bold;
+  border-radius: 3px;
+  margin: 5px;
+  padding: .1em .5em;
+  box-shadow: 2px 2px 2px #aaa;
 }
 
-.clear {
-  clear: both;
+button:hover {
+  box-shadow: -2px -2px 2px #aaa;
+  position: relative;
+  top: 2px;
+  left: 2px;
 }
+
+.clear
+{ clear: both; }
 
 
 /**************************************************************************
@@ -66,104 +72,6 @@ button {
   font-weight: bold;
 }
 
-
-/**************************************************************************
- * Buttons
- *************************************************************************/
-.button-ok {
-  background-image: url(icons/16x16/ok.png);
-  padding-left: 19px;
-}
-
-.button-cancel {
-  background-image: url(icons/16x16/cancel.png);
-  padding-left: 19px;
-}
-
-.button-search {
-  background-image: url(icons/16x16/search.png);
-  padding-left: 19px;
-}
-
-.button-calendar {
-  background-image: url(icons/16x16/calendar.png);
-  padding-left: 19px;
-}
-
-.button-upload {
-  background-image: url(icons/16x16/upload.png);
-  padding-left: 19px;
-}
-
-.button-external {
-  background-image: url(icons/16x16/external.png);
-  padding-left: 19px;
-}
-
-.button-rename {
-  background-image: url(icons/16x16/rename.png);
-  padding-left: 19px;
-}
-
-.button-delete {
-  background-image: url(icons/16x16/delete.png);
-  padding-left: 19px;
-}
-
-.button-copy {
-  background-image: url(icons/16x16/copy.png);
-  padding-left: 19px;
-}
-
-.button-cut {
-  background-image: url(icons/16x16/cut.png);
-  padding-left: 19px;
-}
-
-.button-paste {
-  background-image: url(icons/16x16/paste.png);
-  padding-left: 19px;
-}
-
-.button-translate {
-  background-image: url(icons/16x16/languages.png);
-  padding-left: 19px;
-}
-
-.button-compare {
-  background-image: url(icons/16x16/compare.png);
-  padding-left: 19px;
-}
-
-.button-add {
-  background-image: url(icons/16x16/add.png);
-  padding-left: 19px;
-}
-
-.button-select-all {
-  background-image: url(icons/16x16/select_all.png);
-  padding-left: 19px;
-}
-
-.button-select-none {
-  background-image: url(icons/16x16/select_none.png);
-  padding-left: 19px;
-}
-
-.button-publish {
-  background-image: url(icons/16x16/public.png);
-  padding-left: 19px;
-}
-
-.button-retire {
-  background-image: url(icons/16x16/private.png);
-  padding-left: 19px;
-}
-
-.button-zip {
-  background-image: url(icons/16x16/zip.png);
-  padding-left: 19px;
-}
 
 /**************************************************************************
  * ui/aruni/location.xml.en
