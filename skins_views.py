@@ -34,7 +34,7 @@ from utils import CMSTemplate, reduce_string
 ###########################################################################
 class LanguagesTemplate(CMSTemplate):
 
-    template = '/ui/aruni/languages.xml'
+    template = '/ui/default/languages.xml'
 
 
     @proto_lazy_property
@@ -71,7 +71,7 @@ class LanguagesTemplate(CMSTemplate):
 ###########################################################################
 class LocationTemplate(CMSTemplate):
 
-    template = '/ui/aruni/location.xml'
+    template = '/ui/default/location.xml'
 
     keep_view_and_query = False
 

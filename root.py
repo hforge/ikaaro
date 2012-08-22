@@ -92,7 +92,7 @@ class Root(WebPage):
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
-    class_skin = 'aruni'
+    class_skin = 'default'
 
     abspath = Path('/')
 
@@ -220,7 +220,7 @@ class Root(WebPage):
         # Back-Office
         hostname = context.uri.authority
         if hostname[:3] in ['bo.', 'bo-']:
-            return skin_registry['aruni']
+            return skin_registry['default']
         # Fron-Office
         return skin_registry[self.class_skin]
 

@@ -90,7 +90,7 @@ class Skin(object):
 
     def get_styles(self, context):
         # Generic
-        styles = ['/ui/bo.css']
+        styles = []
 
         # Skin
         if isfile('%s/style.css' % self.key):
@@ -302,7 +302,7 @@ class Skin(object):
 
         namespace = {'messages': messages_ns}
 
-        template = context.get_template('/ui/aruni/message.xml')
+        template = context.get_template('/ui/default/message.xml')
         return stl(template, namespace)
 
 
@@ -398,7 +398,7 @@ class Skin(object):
     def get_template(self, context):
         paths = [
             '%s/template.xhtml' % self.base_path,
-            '/ui/aruni/template.xhtml']
+            '/ui/default/template.xhtml']
         for path in paths:
             template = context.get_template(path)
             if template:
@@ -453,7 +453,7 @@ def register_skin(name, skin):
 
 # Register the built-in skins
 ui_path = get_abspath('ui')
-register_skin('aruni', '%s/aruni' % ui_path)
+register_skin('default', '%s/default' % ui_path)
 register_skin('popup', '%s/popup' % ui_path)
 register_skin('fancybox', FancyboxSkin('%s/fancybox' % ui_path))
 register_ui('/ui/', ui_path)

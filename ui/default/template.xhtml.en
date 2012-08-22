@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="${language}"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<!-- HEAD -->
+<head>
+  <title>${title}</title>
+  <base href="${base_uri}" />
+  <!-- Meta -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}"
+    content="${meta/content}" />
+  <!-- Canonical URL for search engines -->
+  <link rel="canonical" href="${canonical_uri}" />
+  <!-- CSS -->
+  <link type="text/css" rel="stylesheet" stl:repeat="style styles"
+    href="${style}" />
+  <!-- JavaScript -->
+  <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+    />
+  <!-- Icon -->
+  <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
+</head>
+
+<!-- BODY -->
+<body>
+  <!-- Header -->
+  <div id="header-out">
+    <div id="header">
+      <div id="links">
+        <a stl:repeat="link usermenu" href="${link/href}" id="${link/id}"
+          title="${link/title}">${link/title}</a>
+      </div>
+      <!-- Languages & Searchbar -->
+      <form action="/;browse_content" method="get" class="search">
+        <input name="text" class="search_box" type="text" size="25" />
+      </form>
+      <div class="languages">${languages}</div>
+      <!-- Menu -->
+      <ul stl:if="menu" id="menu">
+        <li stl:repeat="menu menu" class="${menu/class}">
+          <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
+             title="${menu/title}">${menu/title}</a>
+        </li>
+      </ul>
+      <!-- Logo -->
+      <a href="/" stl:if="logo_href" id="logo"><img src="${logo_href}"/></a>
+    </div>
+    <div class="clear" />
+  </div>
+
+  <!-- Body -->
+  <div id="body-out">
+    <div id="body">
+      <div id="location" stl:if="location">${location}</div>
+      <div class="clear"></div>
+      <h1 stl:if="page_title">${page_title}</h1>
+      ${message}
+      <div id="content">${body}</div>
+      <div id="sidebar" stl:if="context_menus">
+        <stl:block stl:repeat="menu context_menus">${menu}</stl:block>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer-out">
+    <div id="footer">${footer}</div>
+  </div>
+
+</body>
+
+</html>

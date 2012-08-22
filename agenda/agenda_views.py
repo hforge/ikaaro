@@ -299,7 +299,7 @@ class CalendarView(STLView):
 
     styles = ['/ui/agenda/style.css',
               '/ui/js/fancybox/jquery.fancybox-1.3.4.css',
-              '/ui/js_calendar/calendar-aruni.css']
+              '/ui/js_calendar/style.css']
     scripts = ['/ui/js/fancybox/jquery.fancybox-1.3.4.pack.js',
                '/ui/agenda/javascript.js']
 

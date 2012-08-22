@@ -345,7 +345,7 @@ class DateWidget(Widget):
         button: ".next()" });
     </script>""")
 
-    styles = ['/ui/js_calendar/calendar-aruni.css']
+    styles = ['/ui/js_calendar/style.css']
 
     css = None
     format = '%Y-%m-%d'
@@ -399,7 +399,7 @@ class DatetimeWidget(DateWidget):
         $("input[name=${name}_time]").val("${value_time}");
     </script>""")
 
-    styles = ['/ui/js_calendar/calendar-aruni.css']
+    styles = ['/ui/js_calendar/style.css']
 
     @proto_lazy_property
     def scripts(self):
@@ -535,7 +535,7 @@ class ColorPickerWidget(TextWidget):
 class RTEWidget(Widget):
 
     template = '/ui/tiny_mce/rte.xml'
-    rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
+    rte_css = ['/ui/default/style.css', '/ui/tiny_mce/content.css']
     scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
         '/ui/tiny_mce/javascript.js']
