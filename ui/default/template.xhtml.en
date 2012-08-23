@@ -26,18 +26,16 @@
 
 <!-- BODY -->
 <body>
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <div class="inner">${toolbar}</div>
+  </div>
+
   <!-- Header -->
-  <div id="header-out">
-    <div id="header">
-      <div id="links">
-        <a stl:repeat="link usermenu" href="${link/href}" id="${link/id}"
-          title="${link/title}">${link/title}</a>
-      </div>
+  <div id="header">
+    <div class="inner">
       <!-- Languages & Searchbar -->
-      <form action="/;browse_content" method="get" class="search">
-        <input name="text" class="search_box" type="text" size="25" />
-      </form>
-      <div class="languages">${languages}</div>
+      <div id="languages">${languages}</div>
       <!-- Menu -->
       <ul stl:if="menu" id="menu">
         <li stl:repeat="menu menu" class="${menu/class}">
@@ -45,17 +43,23 @@
              title="${menu/title}">${menu/title}</a>
         </li>
       </ul>
+      <form action="/;browse_content" method="get" id="global-search">
+        <input name="text" type="text" />
+      </form>
       <!-- Logo -->
       <a href="/" stl:if="logo_href" id="logo"><img src="${logo_href}"/></a>
     </div>
-    <div class="clear" />
   </div>
 
+  <!-- Location -->
+  <div id="location" stl:if="location">
+    <div class="inner">${location}</div>
+  </div>
+  <div class="clear"></div>
+
   <!-- Body -->
-  <div id="body-out">
-    <div id="body">
-      <div id="location" stl:if="location">${location}</div>
-      <div class="clear"></div>
+  <div id="main">
+    <div class="inner">
       <h1 stl:if="page_title">${page_title}</h1>
       ${message}
       <div id="content">${body}</div>
@@ -66,8 +70,8 @@
   </div>
 
   <!-- Footer -->
-  <div id="footer-out">
-    <div id="footer">${footer}</div>
+  <div id="footer">
+    <div class="inner">${footer}</div>
   </div>
 
 </body>

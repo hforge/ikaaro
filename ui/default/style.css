@@ -1,5 +1,12 @@
 /* RESET */
-* { border: 0; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box; -moz-box-sizing: border-box;
+  border: 0; margin: 0; padding: 0;
+}
+
+ul {
+  list-style: none;
+}
 
 /* UNRESET */
 fieldset
@@ -53,6 +60,81 @@ button:hover
 { clear: both; }
 
 
+
+/**************************************************************************
+ * TEMPLATE
+ *************************************************************************/
+
+/* BACKOFFICE BAR */
+#toolbar {
+  background-color: #333;
+  color: #fff;
+  font-size: 0.9em;
+  padding: .4em 0;
+  height: 2em;
+}
+
+#toolbar .level-1 > li {
+  float: left;
+  /*position: relative;*/
+}
+
+#toolbar a {
+  color: #fff;
+  text-decoration: none;
+  background-position: left center;
+  background-repeat: no-repeat;
+  margin-right: 1em;
+  padding: 4px 0 4px 19px;
+}
+
+#toolbar a:hover
+{ text-decoration: underline; }
+
+#toolbar #toolbar-signin
+{ background-image: url("../icons/16x16/signin.png"); }
+
+#toolbar #toolbar-profile
+{ background-image: url("../icons/16x16/action_home.png"); }
+
+#toolbar #toolbar-logout
+{ background-image: url("../icons/16x16/action_logout.png"); }
+
+#toolbar a#toolbar-add-content
+{ background-image: url(../icons/16x16/new.png); }
+
+#toolbar a#toolbar-configuration
+{ background-image: url(../icons/16x16/config.png); }
+
+#toolbar .level-1 > li {
+  position: relative;
+}
+
+#toolbar li ul {
+  background-color: #333;
+  padding: .6em 3px;
+  width: 10em;
+  border-radius: 0 0 .5em .5em;
+  position: absolute; z-index: 5;
+  display: none;
+}
+
+#toolbar li:hover ul
+{ display: block; }
+
+#toolbar li ul a {
+  display: block;
+  width: 100%;
+}
+
+#toolbar li ul a:hover {
+  text-decoration: none;
+  background-color: #0467BA;
+}
+
+
+
+
 /**************************************************************************
  * itools.web.BaseForm
  *************************************************************************/
@@ -71,6 +153,8 @@ button:hover
 
 /**************************************************************************
  * ui/default/location.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
  *************************************************************************/
 
 #location {
@@ -80,48 +164,16 @@ button:hover
   width: 100%;
 }
 
-#tabs {
-  padding: 2px 4px 2px 0px;
-  float: right;
-}
+#location li
+{ float: left; }
 
-#tabs a {
+#location a {
   text-decoration: none;
-  white-space: nowrap;
-}
-
-#tabs .menu a
-{ padding: 2px 4px 2px 4px; }
-
-#tabs .menu a:hover {
-  background-color: #3465a4;
-  color: #ffffff;
-}
-
-#tabs .active a
-{ font-weight: bold; }
-
-
-/**************************************************************************
- * ui/default/location.xml.en
- * ui/html/addlink.xml.en
- * ui/html/addimage.xml.en
- *************************************************************************/
-
-#breadcrumbs {
+  padding: 0 4px 0 4px;
   float: left;
-  margin: 2px 0px 2px 0px;
 }
 
-#breadcrumbs span
-{ color: #888a85; }
-
-#breadcrumbs a {
-  text-decoration: none;
-  padding: 2px 4px 2px 4px;
-}
-
-#breadcrumbs a:hover {
+#loation a:hover {
   background-color: #3465a4;
   color: #ffffff;
 }
@@ -537,20 +589,19 @@ body
 .popup, .mceContentBody
 { background: #fff; }
 
-#header-out {
-  background-color: #0467BA;
-  margin-bottom: 1em;
-}
+.inner
+{ margin: 0 auto; max-width: 960px; }
 
 #header {
-  margin: 0 auto;
-  max-width: 960px;
+  background-color: #0467BA;
+  margin-bottom: 0em;
+}
 
+#header .inner {
   text-align: right;
   color: #fff;
   min-height: 90px;
   height: auto;
-  padding: 6px 10px 3px 10px;
   position: relative;
 }
 
@@ -566,60 +617,35 @@ body
 #header a:hover
 { text-decoration: underline; }
 
-#header #links
-{ float: left; }
-
-#header #links a {
-  background-position: left center;
-  background-repeat: no-repeat;
-  color: #fff;
-  margin-right: 10px;
-  padding: 4px 0 4px 19px;
-}
-
-#header #links-menu-login
-{ background-image: url("../icons/16x16/signin.png"); }
-
-#header #links-menu-profile
-{ background-image: url("../icons/16x16/action_home.png"); }
-
-#header #links-menu-logout
-{ background-image: url("../icons/16x16/action_logout.png"); }
-
-#header a#links-menu-new
-{ background-image: url(../icons/16x16/new.png); }
-
-#header a#links-menu-configuration
-{ background-image: url(../icons/16x16/config.png); }
-
 #header #languages
-{ float: right; margin: 0 1em; }
+{
+  position: absolute; top: .2em; right: 0;
+  font-size: .9em;
+}
 
 #header #languages a.selected
 { font-weight: bold; }
 
-#header #logo {
-  position: absolute;
-  bottom: 0px;
-  left: 8px;
+#header #logo
+{ position: absolute; bottom: 0px; left: 0; }
+
+/* header */
+#header #global-search
+{ position: absolute; bottom: .5em; right: 0; }
+
+#header #global-search input {
+  background: #fff url(../icons/14x14/search-bw.png) no-repeat 6px center;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 2px #aaa;
+  border: none;
+  padding: 3px 12px 3px 23px;
+  width: 12em;
 }
-
-/* header toolbar */
-#header .search { float: right; }
-
-#header .search .search_box {
-  background: #fff url(../icons/14x14/search-bw.png) no-repeat 3px center;
-  border-radius: 3px;
-  padding: 3px 3px 3px 20px;
-}
-
-#header .button-search
-{ background: #fff; }
 
 #header #menu {
   position: absolute;
   bottom: 0;
-  right: 0;
+  right: 12em;
   padding-right: 10px;
 }
 
@@ -636,7 +662,7 @@ body
   border-radius: 5px 5px 0 0;
   color: #fff;
   display: block;
-  padding: 5px 15px;
+  padding: .5em 15px;
   text-decoration: none;
 }
 
@@ -679,9 +705,7 @@ body
  * ui/html/addimage.xml.en
  *************************************************************************/
 
-#body {
-  margin: 0 auto;
-  max-width: 960px;
+#main .inner {
   padding: 10px;
   min-height: 450px;
   overflow: auto;

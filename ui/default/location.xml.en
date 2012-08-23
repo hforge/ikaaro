@@ -5,20 +5,13 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <!-- Location-->
-<div id="breadcrumbs" stl:if="breadcrumb">
-  <span stl:repeat="item breadcrumb"><a stl:omit-tag="not item/url"
-    href="${item/url}" title="${item/name}">${item/short_name}</a
-    ><stl:inline stl:if="not repeat/item/end">/</stl:inline></span>
-</div>
-
-<!-- Views -->
-<div id="tabs" stl:if="tabs">
-  [
-  <span class="menu ${menu/class}" stl:repeat="menu tabs">
-    <a href="${menu/name}">${menu/label}</a>
-    <stl:inline stl:if="not repeat/menu/end">|</stl:inline>
-  </span>
-  ]
-</div>
+<ul>
+  <li>You are here:</li>
+  <li stl:repeat="item breadcrumb">
+    <a stl:omit-tag="not item/url" href="${item/url}" title="${item/name}"
+      >${item/short_name}</a>
+    <stl:inline stl:if="not repeat/item/end">></stl:inline>
+  </li>
+</ul>
 
 </stl:block>

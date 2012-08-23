@@ -32,7 +32,7 @@ from itools.web import get_context, ERROR, INFO
 # Import from ikaaro
 from context import register_ui
 from views import get_view_scripts
-from skins_views import LanguagesTemplate, LocationTemplate
+from skins_views import Toolbar, LanguagesTemplate, LocationTemplate
 
 
 class Skin(object):
@@ -42,6 +42,7 @@ class Skin(object):
     class_icon48 = 'icons/48x48/skin.png'
 
     # User Interface widgets
+    toolbar_template = Toolbar
     languages_template = LanguagesTemplate
     location_template = LocationTemplate
 
@@ -360,11 +361,6 @@ class Skin(object):
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
-        # Location template
-        location_template = self.location_template
-        if location_template:
-            location_template = location_template(context=context)
-
         # Ok
         return {
             # HTML head
@@ -380,11 +376,12 @@ class Skin(object):
             # logo
             'logo_href': logo_href,
             # Usermenu (the links at the top)
-            'usermenu': self.get_usermenu(context),
+            'toolbar': self.toolbar_template(resource=context.resource,
+                                             context=context),
             # menu
             'menu': self.get_menu_namespace(context),
             # Location & Views
-            'location': location_template,
+            'location': self.location_template(context=context),
             'languages': self.languages_template(context=context),
             # Body
             'page_title': self._get_page_title(context),

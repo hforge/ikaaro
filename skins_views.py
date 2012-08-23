@@ -20,13 +20,12 @@
 
 # Import from itools
 from itools.core import proto_lazy_property
-from itools.gettext import get_domain
+from itools.gettext import MSG, get_domain
 from itools.i18n import get_language_name
 from itools.uri import decode_query
 
 # Import from ikaaro
 from utils import CMSTemplate, reduce_string
-
 
 
 ###########################################################################
@@ -123,22 +122,77 @@ class LocationTemplate(CMSTemplate):
         return breadcrumb
 
 
+
+class Toolbar(CMSTemplate):
+
+    template = '/ui/default/toolbar.xml'
+
+
     @proto_lazy_property
-    def tabs(self):
-        """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
-        [{name, label, active, style}...].
+    def resource_title(self):
+        return self.resource.get_title()
+
+
+    @proto_lazy_property
+    def items(self):
+        """Return the available views of a resource.
         """
-        # Get resource & access control
         context = self.context
-        if context.user is None:
-            return []
+        resource = self.resource
+        base_path = context.get_link(resource)
 
-        here = context.resource
-        here_link = context.get_link(here)
+        # Case 1: Anonymous
+        user = context.user
+        if user is None:
+            return [{'url': '%s/;login' % base_path,
+                     'title': MSG(u'Sign in'),
+                     'css_id': 'toolbar-signin',
+                     'subitems': None}]
 
-        # Tabs
-        tabs = []
-        for link, view in here.get_views():
+        # Case 2: Authenticated
+        items = [
+            # User's profile
+            {'url': '/users/%s' % user.name,
+             'title': user.get_title(),
+             'css_id': 'toolbar-profile',
+             'subitems': None},
+            # Logout
+            {'url': '%s/;logout' % base_path,
+             'title': MSG(u'Log out'),
+             'css_id': 'toolbar-logout',
+             'subitems': None}]
+
+        # Add content
+        container = resource
+        view = container.get_view('new_resource')
+        while view is None:
+            container = resource.parent
+            view = container.get_view('new_resource')
+
+        if context.is_access_allowed(container, view):
+            items.append({
+                'url': '%s/;new_resource' % context.get_link(container),
+                'title': MSG(u'Add content'),
+                'css_id': 'toolbar-add-content',
+                'subitems': None})
+
+        # Configuration
+        config = resource.get_resource('/config')
+        if context.root.is_allowed_to_view(user, config):
+            items.append({
+                'url': '/config',
+                'title': MSG(u'Configuration'),
+                'css_id': 'toolbar-configuration',
+                'subitems': None})
+
+        # Resource specific
+        items.append({
+            'url': None,
+            'title': MSG(u'Actions...'),
+            'css_id': None,
+            'subitems': []})
+
+        for link, view in resource.get_views():
             # From method?param1=value1&param2=value2&...
             # we separate method and arguments, then we get a dict with
             # the arguments and the subview active state
@@ -150,18 +204,13 @@ class LocationTemplate(CMSTemplate):
 
             # Active
             unbound_view = context.view.__bases__[0]
-            active = (unbound_view is here.get_view(name, args).__bases__[0])
+            active = (
+                unbound_view is resource.get_view(name, args).__bases__[0])
 
             # Add the menu
-            tabs.append({
-                'name': '%s/;%s' % (here_link, link),
-                'label': view.get_title(context),
-                'active': active,
-                'class': 'active' if active else None})
+            items[-1]['subitems'].append({
+                'url': '%s/;%s' % (base_path, link),
+                'title': view.get_title(context),
+                'css_id': 'active-view' if active else None})
 
-        return tabs
-
-
-    @proto_lazy_property
-    def location(self):
-        return bool(self.breadcrumb) or bool(self.tabs)
+        return items
