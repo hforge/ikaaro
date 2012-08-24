@@ -161,7 +161,7 @@ class User_Profile(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u'Profile')
     description = MSG(u"User's profile page.")
-    icon = 'action_home.png'
+    icon = 'home.png'
     template = '/ui/user/profile.xml'
 
     items = ['edit_account', 'edit_preferences', 'edit_password']

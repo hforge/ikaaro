@@ -74,10 +74,8 @@ button:hover
   height: 2em;
 }
 
-#toolbar .level-1 > li {
-  float: left;
-  /*position: relative;*/
-}
+#toolbar .level-1 > li
+{ float: left; }
 
 #toolbar a {
   color: #fff;
@@ -95,20 +93,22 @@ button:hover
 { background-image: url("../icons/16x16/signin.png"); }
 
 #toolbar #toolbar-profile
-{ background-image: url("../icons/16x16/action_home.png"); }
+{ background-image: url("../icons/16x16/home.png"); }
 
 #toolbar #toolbar-logout
-{ background-image: url("../icons/16x16/action_logout.png"); }
+{ background-image: url("../icons/16x16/exit.png"); }
 
-#toolbar a#toolbar-add-content
+#toolbar #toolbar-add-content
 { background-image: url(../icons/16x16/new.png); }
 
-#toolbar a#toolbar-configuration
+#toolbar #toolbar-configuration
 { background-image: url(../icons/16x16/config.png); }
 
-#toolbar .level-1 > li {
-  position: relative;
-}
+#toolbar #toolbar-actions
+{ background-image: url(../icons/16x16/actions.png); }
+
+#toolbar .level-1 > li
+{ position: relative; }
 
 #toolbar li ul {
   background-color: #333;

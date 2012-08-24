@@ -189,7 +189,7 @@ class Toolbar(CMSTemplate):
         items.append({
             'url': None,
             'title': MSG(u'Actions...'),
-            'css_id': None,
+            'css_id': 'toolbar-actions',
             'subitems': []})
 
         for link, view in resource.get_views():
