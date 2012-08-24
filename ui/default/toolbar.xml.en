@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<ul class="level-1">
+<ul class="top">
   <li stl:repeat="item items">
     <a href="${item/url}" id="${item/css_id}">${item/title}</a>
     <ul stl:if="item/subitems">

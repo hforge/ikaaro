@@ -70,24 +70,23 @@ button:hover
   background-color: #333;
   color: #fff;
   font-size: 0.9em;
-  padding: .4em 0;
   height: 2em;
 }
 
-#toolbar .level-1 > li
+#toolbar .top > li
 { float: left; }
 
 #toolbar a {
-  color: #fff;
+  color: #999;
+  display: block;
   text-decoration: none;
-  background-position: left center;
+  background-position: 10px 60%;
   background-repeat: no-repeat;
-  margin-right: 1em;
-  padding: 4px 0 4px 19px;
+  padding: 6px 11px 4px 31px;
 }
 
 #toolbar a:hover
-{ text-decoration: underline; }
+{ color: #fff; }
 
 #toolbar #toolbar-signin
 { background-image: url("../icons/16x16/signin.png"); }
@@ -107,14 +106,14 @@ button:hover
 #toolbar #toolbar-actions
 { background-image: url(../icons/16x16/actions.png); }
 
-#toolbar .level-1 > li
+#toolbar .top > li
 { position: relative; }
 
 #toolbar li ul {
   background-color: #333;
-  padding: .6em 3px;
-  width: 10em;
+  padding: 0 0 .6em 0;
   border-radius: 0 0 .5em .5em;
+  border: 2px solid #333;
   position: absolute; z-index: 5;
   display: none;
 }
@@ -123,15 +122,9 @@ button:hover
 { display: block; }
 
 #toolbar li ul a {
-  display: block;
-  width: 100%;
+  width: 12em;
+  margin: 0 0;
 }
-
-#toolbar li ul a:hover {
-  text-decoration: none;
-  background-color: #0467BA;
-}
-
 
 
 
@@ -173,7 +166,7 @@ button:hover
   float: left;
 }
 
-#loation a:hover {
+#location a:hover {
   background-color: #3465a4;
   color: #ffffff;
 }
