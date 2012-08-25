@@ -12,8 +12,8 @@ ul
 { list-style: none; }
 
 /* Sticky footer */
-body
-{ display: table; width: 100%; }
+#wrapper
+{ display: table; width: 100%; height: 100%; }
 
 #toolbar, #header, #location, #main, #footer
 { display: table-row; height: 1px; }
