@@ -1,12 +1,37 @@
-/* RESET */
-* {
+/* Reset */
+*
+{
   box-sizing: border-box; -moz-box-sizing: border-box;
   border: 0; margin: 0; padding: 0;
 }
 
-ul {
-  list-style: none;
-}
+html, body
+{ height: 100%; }
+
+ul
+{ list-style: none; }
+
+/* Sticky footer */
+body
+{ display: table; width: 100%; }
+
+#toolbar, #header, #location, #main, #footer
+{ display: table-row; height: 1px; }
+
+#main
+{ height: auto; }
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* UNRESET */
 fieldset
@@ -576,9 +601,6 @@ legend { font-weight: bold; }
  * ui/default/template.xhtml.en
  *************************************************************************/
 
-body
-{ background: #fff; }
-
 .popup, .mceContentBody
 { background: #fff; }
 
@@ -681,6 +703,9 @@ body
   vertical-align: center;
 }
 
+#footer .inner
+{ margin: 1em auto; }
+
 #footer a {
   color: #fff;
   margin-left: 20px;
@@ -700,7 +725,6 @@ body
 
 #main .inner {
   padding: 10px;
-  min-height: 450px;
   overflow: auto;
 }
 
@@ -711,7 +735,7 @@ body
 #content ul li { list-style-type: square; }
 
 #content form fieldset
-{ border-bottom: 1px solid #d3d7cf; }
+{ border: 1px solid #d3d7cf; }
 
 #content form legend
 { font-size: 0.9em; }

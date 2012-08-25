@@ -26,6 +26,7 @@
 
 <!-- BODY -->
 <body>
+
   <!-- Toolbar -->
   <div id="toolbar">
     <div class="inner">${toolbar}</div>
@@ -75,5 +76,4 @@
   </div>
 
 </body>
-
 </html>
