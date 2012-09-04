@@ -5,10 +5,10 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div class="context-menu" stl:if="items">
-  <div class="context-menu-title">${title}</div>
-  <ul>
+  <div class="title">${title}</div>
+  <ul class="main">
     <li class="${item/class}" stl:repeat="item items">
-      <img stl:if="item/src" src="${item/src}" alt="" width="16" height="16" />
+      <img stl:if="item/src" src="${item/src}" width="16" height="16" />
       <a href="${item/href}" stl:omit-tag="not item/href">${item/title}</a>
     </li>
   </ul>

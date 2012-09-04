@@ -363,6 +363,7 @@ class Skin(object):
 
         # Ok
         return {
+            'user': context.user is not None,
             # HTML head
             'language': language,
             'title': self.get_template_title(context),

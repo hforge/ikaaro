@@ -3,9 +3,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-  <div id="message">
-    <div stl:repeat="message messages" class="${message/class}">
-      ${message/message}
-    </div>
+  <div stl:repeat="message messages" class="${message/class}">
+    ${message/message}
   </div>
 </stl:block>

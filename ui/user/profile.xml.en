@@ -8,7 +8,6 @@
   This account is not active.
   </p>
 
-  <div style="float: right">
   <table stl:repeat="item items" class="new-resource-thumb"
     style="float: none">
     <tr>
@@ -22,7 +21,6 @@
       </td>
     </tr>
   </table>
-  </div>
 
   <img src=";get_file?name=avatar" stl:if="avatar" />
   <p>${firstname}</p>

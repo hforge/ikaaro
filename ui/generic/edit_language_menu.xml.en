@@ -5,9 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div class="context-menu" stl:if="display">
-  <div class="context-menu-title">${title}</div>
-  <form id="edit-language" name="edit-languages" action="${action}"
-    method="get">
+  <div class="title">${title}</div>
+  <form class="main" name="edit-languages" action="${action}" method="get">
     <fieldset stl:if="items">
       <legend>Languages</legend>
       <ul>
@@ -30,7 +29,7 @@
       </ul>
     </fieldset>
     <input stl:repeat="field hidden_fields" type="hidden"
-           name="${field/name}" value="${field/value}" />
+       name="${field/name}" value="${field/value}" />
     <p>
       <button type="submit" class="button-ok">Update</button>
     </p>
