@@ -14,3 +14,4 @@ locale/*.mo
 *.xhtml.fr
 *.xhtml.it
 *.xhtml.zh
+.sass-cache
