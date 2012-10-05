@@ -273,9 +273,10 @@ class Model(OrderedFolder):
         base_class = self.base_class
         bases = (base_class,)
         # dict
+        title = self.get_value('title')
         class_dict = {
             'class_id': str(self.abspath),
-            'class_title': MSG(self.get_value('title')),
+            'class_title': MSG(title) if title else base_class.class_title,
             'fields_soft': True, # dynamic classes are fragile
             }
 
