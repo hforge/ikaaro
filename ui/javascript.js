@@ -61,7 +61,7 @@ function tabme() {
 /* IE6-7-8 Fix button */
 /* Note: For IE8, the problem occurred only inside the popup (ex: upload form) */
 $(document).ready(function() {
-    if ($.browser.msie && $.browser.version.substr(0,1) < 9) {
+    if (jQuery.browser.msie && jQuery.browser.version.substr(0,1) < 9) {
         var elements, element = null;
 
         function _fix_button(button) {
