@@ -24,8 +24,8 @@ from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import Remove_BrowseButton
 from config import Configuration
 from config_common import NewResource_Local
-from fields import Boolean_Field, Date_Field, Integer_Field, Select_Field
-from fields import Text_Field, Textarea_Field
+from fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
+from fields import Select_Field, Text_Field, Textarea_Field
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from order import OrderedFolder, OrderedFolder_BrowseContent
@@ -37,6 +37,7 @@ class FieldType_Field(Select_Field):
     options = [
         {'name': 'boolean', 'value': MSG(u'Boolean')},
         {'name': 'date', 'value': MSG(u'Date')},
+        {'name': 'email', 'value': MSG(u'Email')},
         {'name': 'integer', 'value': MSG(u'Integer')},
         {'name': 'text', 'value': MSG(u'Text')},
         {'name': 'textarea', 'value': MSG(u'Textarea')}]
@@ -44,6 +45,7 @@ class FieldType_Field(Select_Field):
     fields_map = {
         'boolean': Boolean_Field,
         'date': Date_Field,
+        'email': Email_Field,
         'integer': Integer_Field,
         'text': Text_Field,
         'textarea': Textarea_Field}
