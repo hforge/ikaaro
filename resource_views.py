@@ -147,7 +147,9 @@ class DBResource_GetImage(DBResource_GetFile):
         width = context.query['width'] or image_width
         height = context.query['height'] or image_height
 
-        format = 'jpeg' if lossy else None
+        format = 'jpeg'
+        if lossy is False:
+            format = handler.get_mimetype().split('/')[1]
         data, format = handler.get_thumbnail(width, height, format, fit)
         if data is None:
             default = context.get_template('/ui/icons/48x48/image.png')
