@@ -55,6 +55,7 @@ def register_email(cls):
 def send_email(email_id, context, to_addr, **kw):
     email = emails_registry.get(email_id)
     if email:
+        kw['to_addr'] = to_addr
         email = email(**kw)
         text = email.get_text(context)
         context.root.send_email(to_addr, email.subject, text=text)
