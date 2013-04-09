@@ -190,7 +190,7 @@ class MultilineWidget(Widget):
         value = self.value
         if type(value) is str:
             return value
-        return value.to_str()
+        return str(value)
 
 
 

@@ -321,6 +321,7 @@ def render_namespace(items, times, with_new_url, current_date):
                 if cell.end is not None:
                     x = datetime.combine(current_date, cell.end)
                     query.append('dtend=%s' % DateTime.encode(x))
+                query.append('allday=0')
                 ns_cell['newurl'] = '%s?%s' % (url, '&'.join(query))
             ns_cells.append(ns_cell)
         ns_rows.append({'cells': ns_cells})

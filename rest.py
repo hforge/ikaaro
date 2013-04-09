@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from base64 import b64encode
+from base64 import b64encode, b64decode
 import json
 
 # Import from itools
@@ -62,9 +62,11 @@ def update_resource(resource, changes):
             raise ValueError, "undefined field '%s'"  % name
         if not field.access('write', resource):
             continue # XXX raise an error? log a message?
-
-        datatype = field.get_datatype()
-        value = datatype.decode(value)
+        if issubclass(field, File_Field):
+            value = b64decode(value)
+        else:
+            datatype = field.get_datatype()
+            value = datatype.decode(value)
         # The language
         lang = parameters.pop('lang', None)
         # Decode parameters

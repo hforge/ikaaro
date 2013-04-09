@@ -855,7 +855,7 @@ class Folder_Thumbnail(BaseView):
     default_icon = '/ui/gallery/folder.png'
 
     def GET(self, resource, context):
-        default_icon = resource.get_resource(self.default_icon)
+        default_icon = context.get_template(self.default_icon)
         if PILImage is None:
             # Full size but better than nothing
             data = default_icon.to_str()
