@@ -246,6 +246,8 @@ class AutoAdd(AutoForm):
             path = form['location']
             if path is not None:
                 container = resource.get_resource(path)
+        else:
+            path = str(container.abspath)
 
         # Access control
         class_id = context.query['type']
