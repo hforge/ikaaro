@@ -10,7 +10,7 @@
     tinyMCE.init({
         mode : "exact",
         readonly: ${is_readonly},
-        elements : "${id}",
+        elements : "${name}",
 
         theme : "advanced",
         plugins : "${plugins}",
