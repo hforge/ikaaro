@@ -213,13 +213,13 @@ class AutoForm(STLView):
             if getattr(datatype, 'multilingual', False):
                 for language in languages:
                     language_title = get_language_msg(language)
-                    widget = widget(name='%s:%s' % (widget_name, language),
+                    lwidget = widget(name='%s:%s' % (widget_name, language),
                                     datatype=datatype,
                                     value=value[language],
                                     language=language_title)
-                    widgets_html.append(widget)
-                    if first_widget is None and widget.focus:
-                        first_widget = widget.id
+                    widgets_html.append(lwidget)
+                    if first_widget is None and lwidget.focus:
+                        first_widget = lwidget.id
                 # fix label
                 if widgets_html:
                     field_ns['name'] = widgets_html[0].name
