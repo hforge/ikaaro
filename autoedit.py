@@ -386,5 +386,12 @@ class AutoEdit(AutoForm):
 
         # Ok
         if self.action_goto:
-            return context.come_back(self.action_msg, goto=self.action_goto)
+            # Get same redirection from x/y/z/;edit and x/y/z and x/y/z/
+            goto = self.action_goto
+            if goto[0] not in ('/', 'http://'):
+                path = str(context.uri.path)
+                if ('/;' not in path and '/?' not in path
+                        and not path.endswith('/')):
+                    goto = '%s/%s' % (resource.name, goto)
+            return context.come_back(self.action_msg, goto=goto)
         context.message = self.action_msg
