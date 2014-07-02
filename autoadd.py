@@ -83,8 +83,9 @@ class AutoAdd(AutoForm):
     access = 'is_allowed_to_add'
 
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
+    action_goto = None
     goto_view = None
-    goto_parent_view = None
+    goto_parent_view = None # DEPRECATED -> use action_goto
     msg_new_resource = messages.MSG_NEW_RESOURCE
 
 
@@ -355,9 +356,20 @@ class AutoAdd(AutoForm):
             return
 
         # Ok
+        if self.action_goto:
+            # Get same redirection from x/y/z/;edit and x/y/z and x/y/z/
+            goto = self.action_goto
+            if goto[0] not in ('/', 'http://'):
+                path = str(context.uri.path)
+                if ('/;' not in path and '/?' not in path
+                        and not path.endswith('/')):
+                    goto = '%s/%s' % (resource.name, goto)
+            return context.come_back(self.msg_new_resource, goto=goto)
+        # goto_parent_view # Deprecated : To replace by action_goto
         goto = str(resource.get_pathto(child))
         if self.goto_parent_view:
             goto = './;%s' % self.goto_parent_view
+        # goto_view (from Child)
         elif self.goto_view:
             goto = '%s/;%s' % (goto, self.goto_view)
         return context.come_back(self.msg_new_resource, goto=goto)
