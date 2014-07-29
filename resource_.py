@@ -231,9 +231,9 @@ class DBResource(Resource):
         metadata.set_property('mtime', get_context().timestamp)
         # Initialize
         resource = self.get_resource(name)
+        self.database.add_resource(resource)
         resource.init_resource(**kw)
         # Ok
-        self.database.add_resource(resource)
         return resource
 
 
