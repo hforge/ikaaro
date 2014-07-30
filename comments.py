@@ -196,6 +196,11 @@ class Comment(DBResource):
     def get_share(self):
         return self.parent.get_share()
 
+
+    def get_onchange_reindex(self):
+        return [str(self.parent.abspath)]
+
+
     # Views
     view = Comment_View
 
