@@ -75,9 +75,10 @@ class Database(RWDatabase):
         docs_to_index = list(set(docs_to_index) | to_reindex)
         aux = []
         for path in docs_to_index:
-            resource = root.get_resource(path)
-            values = resource.get_catalog_values()
-            aux.append((resource, values))
+            resource = root.get_resource(path, soft=True)
+            if resource:
+                values = resource.get_catalog_values()
+                aux.append((resource, values))
         docs_to_index = aux
         self.resources_new2old.clear()
 
