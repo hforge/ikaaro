@@ -157,7 +157,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                     path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
             else:
                 path = item.abspath
-                path_to_icon = ";thumb?width48=&height=48"
+                path_to_icon = ";thumb?width=48&height=48"
                 if path:
                     path_to_resource = Path(str(path) + '/')
                     path_to_icon = path_to_resource.resolve(path_to_icon)
