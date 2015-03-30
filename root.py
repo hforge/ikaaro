@@ -447,6 +447,15 @@ class Root(Folder):
     # Access control
     #######################################################################
     def make_user(self, loginname=None, password=None):
+        """
+        Create a new user into the database.
+        :param loginname: The user login (not mandatory)
+        :param password: The user password (not mandatory)
+        :return: the user or None if a user with the same login already exist
+        """
+        # Check if the user with the same login exist
+        if self.get_user_from_login(loginname) is not None:
+            return
         # Create the user
         users = self.get_resource('/users')
         cls = self.database.get_resource_class('user')
