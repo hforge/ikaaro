@@ -85,7 +85,8 @@ class Database(RWDatabase):
 
         # 6. Find out commit author & message
         if user:
-            git_author = (userid, user.get_value('email'))
+            user_email = user.get_value('email')
+            git_author = (userid, user_email or 'nobody')
         else:
             git_author = ('nobody', 'nobody')
 
