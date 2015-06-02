@@ -274,7 +274,7 @@ class LoginView(STLView):
             # 1.1 Send email
             if user:
                 email = user.get_value('email')
-                if user.get_value('user_state') == 'invalid':
+                if user.get_value('user_state') == 'inactive':
                     email_id = None # TODO
                 else:
                     user.update_pending_key()

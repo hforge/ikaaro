@@ -231,9 +231,9 @@ class DBResource(Resource):
         metadata.set_property('mtime', get_context().timestamp)
         # Initialize
         resource = self.get_resource(name)
+        self.database.add_resource(resource)
         resource.init_resource(**kw)
         # Ok
-        self.database.add_resource(resource)
         return resource
 
 
@@ -552,6 +552,7 @@ class DBResource(Resource):
         values['owner'] = self.get_owner()
         values['share'] = self.get_share()
         values['links'] = list(self.get_links())
+        values['onchange_reindex'] = self.get_onchange_reindex()
 
         # Full text
         context = get_context()
@@ -575,6 +576,10 @@ class DBResource(Resource):
 
         # Ok
         return values
+
+
+    def get_onchange_reindex(self):
+        return None
 
 
     #######################################################################
@@ -861,6 +866,7 @@ register_field('format', String(indexed=True, stored=True))
 register_field('base_classes', String(multiple=True, indexed=True))
 # Referential integrity
 register_field('links', String(multiple=True, indexed=True))
+register_field('onchange_reindex', String(multiple=True, indexed=True))
 # Full text search
 register_field('text', Unicode(indexed=True))
 # Various classifications

@@ -16,6 +16,7 @@
 
 # Import from itools
 from itools.database import RODatabase, RWDatabase, make_git_database
+from itools.database import OrQuery, PhraseQuery
 from itools.uri import Path
 from itools.web import get_context
 
@@ -39,25 +40,49 @@ class Database(RWDatabase):
             resource = root.get_resource(target)
             resource._on_move_resource(source)
 
-        # 2. Documents to unindex (the update_links methods calls
+        # 2. Find out resources to re-index because they depend on another
+        # resource that changed
+        to_reindex = set()
+        aux = set()
+        aux2 = set(self.resources_old2new.keys())
+        while len(aux) != len(aux2):
+            aux = set(aux2)
+            query = [ PhraseQuery('onchange_reindex', x) for x in aux ]
+            query = OrQuery(*query)
+            search = self.search(query)
+            for brain in search.get_documents():
+                path = brain.abspath
+                aux2.add(path)
+                to_reindex.add(path)
+
+        # 3. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
         docs_to_unindex = self.resources_old2new.keys()
+        docs_to_unindex = list(set(docs_to_unindex) | to_reindex)
         self.resources_old2new.clear()
 
-        # 3. Index
+        # 4. Update mtime/last_author
         user = context.user
         userid = user.name if user else None
-        docs_to_index = []
-        for path in self.resources_new2old:
-            resource = root.get_resource(path)
-            if context.set_mtime:
+        if context.set_mtime:
+            for path in self.resources_new2old:
+                resource = root.get_resource(path)
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
-            values = resource.get_catalog_values()
-            docs_to_index.append((resource, values))
+
+        # 5. Index
+        docs_to_index = self.resources_new2old.keys()
+        docs_to_index = list(set(docs_to_index) | to_reindex)
+        aux = []
+        for path in docs_to_index:
+            resource = root.get_resource(path, soft=True)
+            if resource:
+                values = resource.get_catalog_values()
+                aux.append((resource, values))
+        docs_to_index = aux
         self.resources_new2old.clear()
 
-        # 4. Find out commit author & message
+        # 6. Find out commit author & message
         if user:
             git_author = (userid, user.get_value('email'))
         else:
