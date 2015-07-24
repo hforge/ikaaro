@@ -185,7 +185,7 @@ class MultilineWidget(Widget):
     rows = 5
     cols = 60
 
-    @proto_lazy_property
+    @proto_property
     def value_(self):
         value = self.value
         if type(value) is str:
