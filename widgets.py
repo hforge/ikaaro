@@ -205,7 +205,8 @@ class RadioWidget(Widget):
     </stl:block>""")
 
     oneline = False
-
+    label_true = MSG(u'Yes')
+    label_false = MSG(u'No')
 
     def options(self):
         datatype = self.datatype
@@ -230,7 +231,7 @@ class RadioWidget(Widget):
 
         # Case 2: Boolean
         if issubclass(datatype, Boolean):
-            default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
+            default_labels = {'yes': self.label_true, 'no': self.label_false}
             labels = getattr(self, 'labels', default_labels)
             yes_selected = value in [True, 1, '1']
             return [
