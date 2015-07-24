@@ -326,6 +326,7 @@ class BrowseForm(STLView):
 
     # Content
     table_template = '/ui/generic/browse_table.xml'
+    table_form_id = 'form-table'
     table_css = None
     table_columns = []
     table_actions = []
@@ -556,6 +557,7 @@ class BrowseForm(STLView):
         # Ok
         return {
             'css': self.table_css,
+            'form_id': self.table_form_id,
             'columns': table_head,
             'rows': rows,
             'actions': actions,
