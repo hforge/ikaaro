@@ -73,6 +73,7 @@ class AutoForm(STLView):
     template_field = '/ui/auto_form_field.xml'
 
     form_id = None
+    form_css = 'autoform'
     widgets = []
     description = None
     method = 'post'
@@ -246,6 +247,7 @@ class AutoForm(STLView):
         # Build namespace
         return {
             'form_id': self.form_id,
+            'form_css': self.form_css,
             'before': before,
             'actions': actions,
             'method': self.method,

@@ -7,7 +7,7 @@
 ${before}
 
 <form method="${method}" enctype="${enctype}"
-  name="autoform" class="autoform" id="${form_id}" onsubmit="${onsubmit}"
+  name="autoform" class="${form_css}" id="${form_id}" onsubmit="${onsubmit}"
   stl:omit-tag="not actions">
   <fieldset>
     <legend stl:if="title">${title}</legend>
