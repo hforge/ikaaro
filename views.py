@@ -492,6 +492,10 @@ class BrowseForm(STLView):
         return actions
 
 
+    def get_column_css(self, resource, context, column):
+        return None
+
+
     def get_table_namespace(self, resource, context, items):
         # (1) Actions (submit buttons)
         self._items = items
@@ -516,6 +520,7 @@ class BrowseForm(STLView):
                     'is_checkbox': False,
                     'is_icon': False,
                     'is_link': False,
+                    'css': self.get_column_css(resource, context, column),
                 }
                 # Type: empty
                 if value is None:
