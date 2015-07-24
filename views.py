@@ -318,6 +318,7 @@ class BrowseForm(STLView):
 
     # Search configuration
     search_form_id = 'form-search'
+    search_form_css = ''
     search_template = '/ui/auto_form.xml'
     search_template_field = '/ui/auto_form_field.xml'
     search_schema = {}
@@ -378,6 +379,7 @@ class BrowseForm(STLView):
     def get_search_namespace(self, resource, context):
         form = AutoForm(
             form_id=self.search_form_id,
+            form_css=self.search_form_css,
             template=self.search_template,
             template_field=self.search_template_field,
             title=MSG(u'Search'),
