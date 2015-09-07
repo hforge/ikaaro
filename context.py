@@ -31,6 +31,15 @@ class CMSContext(Context):
     set_mtime = True
     message = None
     content_type = None
+    is_cron = False
+
+
+    def init_context(self):
+        # Init context
+        super(CMSContext, self).init_context()
+        # Set CRON flag
+        self.is_cron = False
+
 
     def come_back(self, message, goto=None, keep=freeze([]), **kw):
         goto = super(CMSContext, self).come_back(message, goto, keep, **kw)
@@ -106,6 +115,10 @@ class CMSContext(Context):
 
 
     def search(self, query=None, **kw):
+        if self.is_cron:
+            # If the search is done by a CRON we don't
+            # care about the default ACLs rules
+            return self.database.search(query)
         return self._user_search.search(query, **kw)
 
 

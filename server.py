@@ -341,6 +341,7 @@ class Server(WebServer):
         context = get_fake_context(database)
         context.server = self
         context.init_context()
+        context.is_cron = True
 
         # Go
         query = RangeQuery('next_time_event', None, context.timestamp)
