@@ -65,6 +65,9 @@ class CMSTemplate(STLTemplate):
         # Case 2: a path to a template in the filesystem (ui)
         if type(template) is str:
             handler = get_context().get_template(template)
+            if handler is None:
+                msg = 'Template "{0}" was not found'
+                raise ValueError(msg.format(template))
             return handler.events
 
         raise ValueError, 'bad value for the template attribute'
