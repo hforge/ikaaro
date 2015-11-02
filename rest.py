@@ -159,9 +159,7 @@ class Rest_BaseView(BaseView):
         """Utility method that loads the json from the request entity. Used
         by POST and PUT request methods.
         """
-        data = self.context.body['body']
-        data = json.loads(data) # TODO Use a custom JSONDecoder
-        return fix_json(data)
+        return self.context.body
 
 
     def created(self, resource):
