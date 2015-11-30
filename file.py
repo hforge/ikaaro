@@ -88,7 +88,8 @@ class File(Content):
     # Versioning & Indexing
     #######################################################################
     def to_text(self):
-        return self.get_value('data').to_text()
+        data = self.get_value('data')
+        return data and data.to_text() or u''
 
 
     def get_files_to_archive(self, content=False):
