@@ -26,10 +26,11 @@ from itools import __version__
 from itools.core import become_daemon
 from itools.database import check_database
 from itools.loop import Loop, cron
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, CMSContext, get_pid
+from ikaaro.server import Server, get_pid
 
 
 def start(options, target):
@@ -81,8 +82,16 @@ def start(options, target):
     if port is None:
         raise ValueError, 'listen-port is missing from config.conf'
 
+    # Listen & set context
+    root = server.root
     server.listen(address, port)
-    server.set_context('/', CMSContext)
+    server.set_context('/', root.context_cls)
+
+    # Call method on root at start
+    context = get_context()
+    root.launch_at_start(context)
+
+    # Set cron interval
     interval = config.get_value('cron-interval')
     if interval:
         cron(server.cron_manager, 1)

@@ -46,6 +46,7 @@ from itools.xml import XMLParser, is_xml_stream
 # Import from ikaaro
 from config import Configuration
 from config_register import RegisterForm, TermsOfService_View
+from context import CMSContext
 from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
@@ -95,6 +96,9 @@ class Root(Folder):
     class_skin = 'aruni'
 
     abspath = Path('/')
+
+    # Config
+    context_cls = CMSContext
 
     # Fields
     website_languages = Char_Field(multiple=True, default=['en'])
@@ -184,6 +188,11 @@ class Root(Folder):
 
     def get_default_edit_languages(self):
         return [self.get_default_language()]
+
+
+    def launch_at_start(self, context):
+        """Method called at instance start"""
+        pass
 
 
     def before_traverse(self, context, min=Decimal('0.000001'),

@@ -106,8 +106,8 @@ def get_root(database):
     return cls(metadata)
 
 
-def get_fake_context(database):
-    context = CMSContext()
+def get_fake_context(database, context_cls=CMSContext):
+    context = context_cls()
     context.soup_message = SoupMessage()
     context.path = '/'
     context.database = database
@@ -154,6 +154,10 @@ class Server(WebServer):
         # Find out the root class
         root = get_root(database)
 
+        # Init fake context
+        context = get_fake_context(database, root.context_cls)
+        context.server = self
+
         # Initialize
         access_log = '%s/log/access' % target
         super(Server, self).__init__(root, access_log=access_log)
@@ -194,6 +198,7 @@ class Server(WebServer):
     def set_context(self, path, context):
         context = super(Server, self).set_context(path, context)
         context.database = self.database
+        return context
 
 
     def listen(self, address, port):
@@ -338,7 +343,7 @@ class Server(WebServer):
         database = self.database
 
         # Build fake context
-        context = get_fake_context(database)
+        context = get_fake_context(database, self.root.context_cls)
         context.server = self
         context.init_context()
         context.is_cron = True
