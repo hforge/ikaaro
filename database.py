@@ -64,9 +64,10 @@ class Database(RWDatabase):
         # 4. Update mtime/last_author
         user = context.user
         userid = user.name if user else None
-        if context.set_mtime:
-            for path in self.resources_new2old:
-                resource = root.get_resource(path)
+        for path in self.resources_new2old:
+            resource = root.get_resource(path)
+            resource.update_resource(context)
+            if context.set_mtime:
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
 

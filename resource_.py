@@ -436,6 +436,11 @@ class DBResource(Resource):
                 field._set_value(self, name, value)
 
 
+    def update_resource(self, context):
+        """ Method called every time the resource is changed"""
+        pass
+
+
     def load_handlers(self):
         self.get_handlers()
 
