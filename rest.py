@@ -149,10 +149,6 @@ class Rest_BaseView(BaseView):
     """Base class for other for the RESTful interface.
     """
 
-    def return_json(self, data):
-        self.context.set_content_type('application/json')
-        return json.dumps(data)
-
 
     @proto_lazy_property
     def json(self):
@@ -192,7 +188,7 @@ class Rest_Read(Rest_BaseView):
         mtime = resource.get_value('mtime')
         context.set_header('Last-Modified', mtime)
         # Ok
-        return self.return_json(representation)
+        return self.return_json(representation, context)
 
 
 class Rest_Create(Rest_BaseView):
@@ -274,7 +270,7 @@ class Rest_Query(Rest_BaseView):
             items.append(item)
 
         # Ok
-        return self.return_json(items)
+        return self.return_json(items, context)
 
 
 
@@ -289,4 +285,4 @@ class Rest_Schema(Rest_BaseView):
             schema[name] = field.rest()
 
         # Ok
-        return self.return_json(schema)
+        return self.return_json(schema, context)
