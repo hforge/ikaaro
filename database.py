@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from copy import deepcopy
+
 # Import from itools
 from itools.database import RODatabase, RWDatabase, make_git_database
 from itools.database import OrQuery, PhraseQuery
@@ -28,6 +31,11 @@ class Database(RWDatabase):
     def _before_commit(self):
         context = get_context()
         root = context.root
+
+        # Update resources
+        for path in deepcopy(self.resources_new2old):
+            resource = root.get_resource(path)
+            resource.update_resource(context)
 
         # 1. Update links when resources moved
         # XXX With this code '_on_move_resource' is called for new resources,
@@ -65,9 +73,8 @@ class Database(RWDatabase):
         user = context.user
         userid = user.name if user else None
         for path in self.resources_new2old:
-            resource = root.get_resource(path)
-            resource.update_resource(context)
             if context.set_mtime:
+                resource = root.get_resource(path)
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
 
