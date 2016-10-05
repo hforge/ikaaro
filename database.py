@@ -47,13 +47,17 @@ class Database(RWDatabase):
         aux2 = set(self.resources_old2new.keys())
         while len(aux) != len(aux2):
             aux = set(aux2)
-            query = [ PhraseQuery('onchange_reindex', x) for x in aux ]
-            query = OrQuery(*query)
-            search = self.search(query)
-            for brain in search.get_documents():
-                path = brain.abspath
-                aux2.add(path)
-                to_reindex.add(path)
+            # XXX we regroup items by 200 because Xapian is slow
+            # when there's too much items in OrQuery
+            l_aux = list(aux)
+            for sub_aux in [l_aux[n:n+200] for n in range(0, len(l_aux), 200)]:
+                query = [ PhraseQuery('onchange_reindex', x) for x in sub_aux ]
+                query = OrQuery(*query)
+                search = self.search(query)
+                for brain in search.get_documents():
+                    path = brain.abspath
+                    aux2.add(path)
+                    to_reindex.add(path)
 
         # 3. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
