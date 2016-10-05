@@ -28,7 +28,8 @@ from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
+from itools.datatypes import Boolean, DateTime, Date
+from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
@@ -54,6 +55,7 @@ from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
+from update import class_version_to_date
 from utils import get_base_path_query
 
 
@@ -552,6 +554,7 @@ class DBResource(Resource):
             class_id = getattr(cls, 'class_id', None)
             if class_id:
                 values['base_classes'].append(class_id)
+        values['class_version'] = class_version_to_date(self.metadata.version)
 
         # Links to other resources
         values['owner'] = self.get_owner()
@@ -869,6 +872,7 @@ register_field('name', String(stored=True, indexed=True))
 # Class related fields
 register_field('format', String(indexed=True, stored=True))
 register_field('base_classes', String(multiple=True, indexed=True))
+register_field('class_version', Date(indexed=True, stored=True))
 # Referential integrity
 register_field('links', String(multiple=True, indexed=True))
 register_field('onchange_reindex', String(multiple=True, indexed=True))
