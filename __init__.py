@@ -26,6 +26,7 @@ from file import File
 from folder import Folder
 from registry import register_document_type
 import root
+import text
 from webpage import WebPage
 
 

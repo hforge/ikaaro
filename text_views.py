@@ -112,7 +112,7 @@ class PO_Edit(STLView):
 
     def get_namespace(self, resource, context):
         # Get the translation units (all but the header)
-        handler = resource.handler
+        handler = resource.get_po_handler()
         units = handler.get_units()
         units.sort(key=lambda x: x.source)
         if units and ''.join(units[0].source) == '':
@@ -154,7 +154,8 @@ class PO_Edit(STLView):
         msgctxt = None if not form['msgctxt'] else form['msgctxt']
         msgid = form['msgid'].replace('\r', '')
         msgstr = form['msgstr'].replace('\r', '')
-        resource.handler.set_msgstr(msgid, msgstr, msgctxt)
+        handler = resource.get_po_handler()
+        handler.set_msgstr(msgid, msgstr, msgctxt)
         # Events, change
         context.database.change_resource(resource)
 
@@ -174,10 +175,11 @@ class CSV_View(BrowseForm):
 
     search_schema = {}
     search_widgets = []
-
+    table_actions = [Remove_BrowseButton(show=True)]
 
     def get_items(self, resource, context):
-        return list(resource.handler.get_rows())
+        handler = resource.get_csv_handler()
+        return list(handler.get_rows())
 
 
     def sort_and_batch(self, resource, context, items):
@@ -185,7 +187,7 @@ class CSV_View(BrowseForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
         if sort_by:
-            handler = resource.handler
+            handler = resource.get_csv_handler()
             if handler.schema is None:
                 sort_by = int(sort_by)
             else:
@@ -211,9 +213,11 @@ class CSV_View(BrowseForm):
         elif column == 'index':
             index = item.number
             return index, ';edit_row?index=%s' % index
+        elif column == 'row_css':
+            return ''
 
         # A value from the schema
-        handler = resource.handler
+        handler = resource.get_csv_handler()
         datatype = handler.get_datatype(column)
         if handler.schema is None:
             value = item[int(column)]
@@ -227,12 +231,11 @@ class CSV_View(BrowseForm):
         return value
 
 
-    table_actions = [Remove_BrowseButton]
-
 
     def action_remove(self, resource, context, form):
         ids = form['ids']
-        resource.handler.del_rows(ids)
+        handler = resource.get_csv_handler()
+        handler.del_rows(ids)
         # Ok
         context.message = INFO(u'Row deleted.')
 
@@ -243,7 +246,8 @@ class RowForm(AutoForm):
     access = 'is_allowed_to_edit'
 
     def get_schema(self, resource, context):
-        schema = resource.handler.schema
+        handler = resource.get_csv_handler()
+        schema = handler.schema
         if schema is not None:
             return schema
         # Default
@@ -270,7 +274,8 @@ class CSV_AddRow(RowForm):
 
     def action(self, resource, context, form):
         row = [ form[name] for name, title in resource.get_columns() ]
-        row = resource.handler.add_row(row)
+        handler = resource.get_csv_handler()
+        row = handler.add_row(row)
         # Ok
         message = INFO(u'New row added.')
         goto = ';edit_row?index=%s' % row.number
@@ -293,13 +298,15 @@ class CSV_EditRow(RowForm):
 
     def get_value(self, resource, context, name, datatype):
         id = context.query['index']
-        row = resource.handler.get_row(id)
+        handler = resource.get_csv_handler()
+        row = handler.get_row(id)
         return row.get_value(name)
 
 
     def action(self, resource, context, form):
         index = context.query['index']
-        resource.handler.update_row(index, **form)
+        handler = resource.get_csv_handler()
+        handler.update_row(index, **form)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
