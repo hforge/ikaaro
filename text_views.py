@@ -112,7 +112,7 @@ class PO_Edit(STLView):
 
     def get_namespace(self, resource, context):
         # Get the translation units (all but the header)
-        handler = resource.handler
+        handler = resource.get_po_handler()
         units = handler.get_units()
         units.sort(key=lambda x: x.source)
         if units and ''.join(units[0].source) == '':
@@ -154,7 +154,8 @@ class PO_Edit(STLView):
         msgctxt = None if not form['msgctxt'] else form['msgctxt']
         msgid = form['msgid'].replace('\r', '')
         msgstr = form['msgstr'].replace('\r', '')
-        resource.handler.set_msgstr(msgid, msgstr, msgctxt)
+        handler = resource.get_po_handler()
+        handler.set_msgstr(msgid, msgstr, msgctxt)
         # Events, change
         context.database.change_resource(resource)
 

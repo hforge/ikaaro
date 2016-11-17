@@ -84,8 +84,12 @@ class PO(Text):
     class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
+
     # Fields
     data = Text.data(class_handler=POFile)
+
+    def get_po_handler(self):
+        return self.get_value('data')
 
     # Views
     edit = PO_Edit
