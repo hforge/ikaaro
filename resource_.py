@@ -44,7 +44,7 @@ from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import Select_Field, Text_Field, Textarea_Field
+from fields import SelectAbspath_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -60,7 +60,7 @@ from utils import get_base_path_query
 
 
 
-class Share_Field(Select_Field):
+class Share_Field(SelectAbspath_Field):
 
     title = MSG(u'Share')
     datatype = Groups_Datatype
