@@ -731,6 +731,10 @@ class DBResource(Resource):
 
 
     def update(self, version):
+        """
+        Update the ressource to a new version.
+        :param version: The target version
+        """
         # Action
         getattr(self, 'update_%s' % version)()
 
@@ -742,6 +746,8 @@ class DBResource(Resource):
         # Update version
         metadata.set_changed()
         metadata.version = version
+        # Set resource as changed (to reindex class_version)
+        self.database.change_resource(self)
 
 
     #######################################################################
