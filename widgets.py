@@ -104,6 +104,7 @@ class FileWidget(Widget):
     height = 128
     fit = 1
 
+    @proto_property
     def thumb(self):
         return isinstance(self.value, Image)
 
@@ -130,7 +131,7 @@ class ChoosePassword_Widget(Widget):
       });
     </script>""")
 
-    @proto_property
+    @proto_lazy_property
     def scripts(self):
         context = get_context()
         handler = context.get_template('/ui/js/password_strength_plugin.js')
@@ -162,6 +163,7 @@ class ReadOnlyWidget(Widget):
         return value
 
 
+    @proto_property
     def displayed_(self):
         if self.displayed is not None:
             return self.displayed
@@ -300,6 +302,7 @@ class SelectWidget(Widget):
     size = None
 
 
+    @proto_lazy_property
     def multiple(self):
         return self.datatype.multiple
 
@@ -359,6 +362,7 @@ class DateWidget(Widget):
         return get_dynDateTime_scripts()
 
 
+    @proto_lazy_property
     def show_time_js(self):
         # True -> true for Javascript
         return 'true' if self.show_time else 'false'
@@ -378,6 +382,7 @@ class DateWidget(Widget):
         return value
 
 
+    @proto_lazy_property
     def dates(self):
         return self.value_.splitlines()
 
@@ -502,14 +507,17 @@ class BirthDateWidget(Widget):
                             has_empty_option=False).render()
 
 
+    @proto_lazy_property
     def day(self):
         return self.get_widget('day', Days)
 
 
+    @proto_lazy_property
     def month(self):
         return self.get_widget('month', Months)
 
 
+    @proto_lazy_property
     def year(self):
         return self.get_widget('year', Years)
 
@@ -563,20 +571,24 @@ class RTEWidget(Widget):
     table_styles = None
 
 
+    @proto_lazy_property
     def rte_language(self):
         path = get_abspath('ui/tiny_mce/langs')
         languages = [ x[:-3] for x in lfs.get_names(path) ]
         return get_context().accept_language.select_language(languages)
 
 
+    @proto_lazy_property
     def css(self):
         return ','.join(self.rte_css)
 
 
+    @proto_lazy_property
     def resizing_js(self):
         return 'true' if self.resizing else 'false'
 
 
+    @proto_lazy_property
     def is_readonly(self):
         # True -> true for Javascript
         return 'true' if self.readonly else 'false'
