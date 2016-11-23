@@ -248,8 +248,10 @@ class Folder(DBResource):
         # Check compatibility
         if (not target_parent.can_paste(source)
                 or not source.can_paste_into(target_parent)):
-            message = 'resource type "%r" cannot be copied into type "%r"'
-            raise ConsistencyError, message % (source, target_parent)
+            message = 'resource type "{0}" cannot be copied into type "{1}"'
+            message = message.format(source.class_title.gettext(),
+                                     target_parent.class_title.gettext())
+            raise ConsistencyError(message)
 
         # Copy the metadata
         folder = self.handler
