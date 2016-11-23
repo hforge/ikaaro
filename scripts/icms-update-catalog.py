@@ -63,7 +63,7 @@ def update_catalog(parser, options, target):
     root = server.root
 
     # Build a fake context
-    context = get_fake_context(server.database)
+    context = get_fake_context(server.database, root.context_cls)
     context.server = server
 
     # Update
