@@ -41,8 +41,8 @@ from autoform import ColorPickerWidget, ProgressBarWidget, RTEWidget
 from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
-from utils import get_secure_hash, split_reference
-
+from links import get_abspath_links, update_abspath_links
+from utils import split_reference
 
 
 class Field(BaseField):
@@ -323,6 +323,38 @@ class Select_Field(Metadata_Field):
         return rest
 
 
+class SelectAbspath_Field(Select_Field):
+    """
+    Select_Field with values linking to resources abspath
+    """
+
+    def get_links(self, links, resource, field_name, languages):
+        return get_abspath_links(self, links, resource, field_name, languages)
+
+
+    def update_links(self, resource, field_name, source, target, languages,
+                     old_base, new_base):
+        update_abspath_links(self, resource, field_name, source, target,
+                         languages, old_base, new_base)
+
+
+    def update_incoming_links(self, resource, field_name, source, languages):
+        pass
+
+
+    def get_value_title(self, resource, name, language=None, mode=None):
+        abspath = self.get_value(resource, name, language=language)
+        if not abspath:
+            return None
+        if self.multiple is False:
+            return resource.get_resource(abspath).get_title()
+        titles = []
+        for x in abspath:
+            r = resource.get_resource(x)
+            titles.append(r.get_title())
+        return ', '.join(titles)
+
+
 
 class Text_Field(Metadata_Field):
     rest_type = 'text'
@@ -478,134 +510,6 @@ class URI_Field(Metadata_Field):
 # Abspath_Field
 ########################################
 
-def update_abspath_incoming_links(self, resource, field_name, source, languages):
-    resources_old2new = resource.database.resources_old2new
-    if not self.multilingual:
-        languages = [None]
-
-    for lang in languages:
-        prop = resource.metadata.get_property(field_name, lang)
-        if prop is None:
-            continue
-        if self.multiple:
-            # Multiple
-            new_values = []
-            for p in prop:
-                value = p.value
-                if not value:
-                    continue
-                # Get the reference, path and view
-                ref, path, view = split_reference(value)
-                if ref.scheme:
-                    continue
-                # Calculate the old absolute path
-                old_abs_path = source.resolve2(path)
-                # Check if the target path has not been moved
-                new_abs_path = resources_old2new.get(old_abs_path,
-                                                     old_abs_path)
-                new_value = str(new_abs_path) + view
-                new_values.append(new_value)
-            self._set_value(resource, field_name, new_values, lang)
-        else:
-            # Singleton
-            value = prop.value
-            if not value:
-                continue
-            # Get the reference, path and view
-            ref, path, view = split_reference(value)
-            if ref.scheme:
-                continue
-            # Calculate the old absolute path
-            old_abs_path = source.resolve2(path)
-            # Check if the target path has not been moved
-            new_abs_path = resources_old2new.get(old_abs_path,
-                                                 old_abs_path)
-
-            # Explicitly call str because URI.encode does nothing
-            new_value = str(new_abs_path) + view
-            self._set_value(resource, field_name, new_value, lang)
-
-
-def update_abspath_links(self, resource, field_name, source, target, languages,
-                 old_base, new_base):
-    if not self.multilingual:
-        languages = [None]
-
-    for lang in languages:
-        prop = resource.metadata.get_property(field_name, lang)
-        if prop is None:
-            continue
-        if self.multiple:
-            # Multiple
-            new_values = []
-            for p in prop:
-                value = p.value
-                if not value:
-                    continue
-                # Get the reference, path and view
-                ref, path, view = split_reference(value)
-                if ref.scheme:
-                    continue
-                path = old_base.resolve2(path)
-                if path == source:
-                    # Explicitly call str because URI.encode does
-                    # nothing
-                    new_value = str(target) + view
-                    new_values.append(new_value)
-                else:
-                    new_values.append(p)
-            self._set_value(resource, field_name, new_values, lang)
-        else:
-            # Singleton
-            value = prop.value
-            if not value:
-                continue
-            # Get the reference, path and view
-            ref, path, view = split_reference(value)
-            if ref.scheme:
-                continue
-            path = old_base.resolve2(path)
-            if path == source:
-                # Hit the old name
-                # Build the new reference with the right path
-                # Explicitly call str because URI.encode does nothing
-                new_value = str(target) + view
-                self._set_value(resource, field_name, new_value, lang)
-
-
-def get_abspath_links(self, links, resource, field_name, languages):
-    if not self.multilingual:
-        languages = [None]
-
-    for lang in languages:
-        prop = resource.metadata.get_property(field_name, lang)
-        if prop is None:
-            continue
-        if self.multiple:
-            # Multiple
-            for x in prop:
-                value = x.value
-                if not value:
-                    continue
-                # Get the reference, path and view
-                ref, path, view = split_reference(value)
-                if ref.scheme:
-                    continue
-                links.add(str(path))
-        else:
-            value = prop.value
-            if not value:
-                continue
-            # Get the reference, path and view
-            ref, path, view = split_reference(value)
-            if ref.scheme:
-                continue
-            # Singleton
-            links.add(str(path))
-    return links
-
-
-
 class Abspath_Field(URI_Field):
     """
     Same that URI_Field but when we update links we use abspath
@@ -622,8 +526,7 @@ class Abspath_Field(URI_Field):
 
 
     def update_incoming_links(self, resource, field_name, source, languages):
-        update_abspath_incoming_links(self, resource, field_name, source,
-                                  languages)
+        pass
 
 
 

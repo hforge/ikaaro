@@ -20,8 +20,7 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from fields import URI_Field
-
+from fields import Abspath_Field
 
 
 ###########################################################################
@@ -53,10 +52,10 @@ class DynamicEnumerate_Datatype(Enumerate):
         return options
 
 
-class DynamicEnumerate_Field(URI_Field):
+class DynamicEnumerate_Field(Abspath_Field):
 
     datatype = DynamicEnumerate_Datatype
-    datatype_keys = URI_Field.datatype_keys + ['resource_path']
+    datatype_keys = Abspath_Field.datatype_keys + ['resource_path']
 
 
 ###########################################################################
