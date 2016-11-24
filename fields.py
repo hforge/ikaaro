@@ -53,7 +53,6 @@ class Field(BaseField):
     multilingual = False
     required = False
     title = None
-    hidden_by_default = False
     readonly = False # Means the field should not be editable by the user
     datatype = None
     widget = None
@@ -88,8 +87,7 @@ class Field(BaseField):
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored',
-        'hidden_by_default', 'is_valid']
+        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'is_valid']
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
