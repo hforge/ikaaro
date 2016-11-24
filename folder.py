@@ -26,10 +26,11 @@ from zipfile import ZipFile
 from itools.core import is_prototype
 from itools.fs import FileName
 from itools.gettext import MSG
+from itools.handlers import checkid
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView, Forbidden, get_context
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -143,7 +144,10 @@ class Folder(DBResource):
         change_resource = self.database.change_resource
         for path_str in handler.get_contents():
             # 1. Skip folders
-            path = Path(path_str)
+            clean_path = "/".join([
+              checkid(x) or 'file'
+              if x else 'file' for x in path_str.split("/")])
+            path = Path(clean_path)
             if path.endswith_slash:
                 continue
 
