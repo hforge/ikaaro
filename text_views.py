@@ -269,7 +269,8 @@ class CSV_AddRow(RowForm):
 
     title = MSG(u'Add Row')
     icon = 'new.png'
-    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
+    actions = [Button(access=True, css='button-ok',
+        title=MSG(u'Add'), show=True)]
 
 
     def action(self, resource, context, form):
