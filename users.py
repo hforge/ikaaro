@@ -75,6 +75,14 @@ class UserState_Field(Select_Field):
         {'name': 'inactive', 'value': MSG(u'Inactive')}]
 
 
+class UserEmail_Field(Email_Field):
+
+    title = MSG(u'E-mail Address')
+    indexed = True
+    stored = True
+    required = True
+    unique = True
+
 
 class User(DBResource):
 
@@ -92,8 +100,7 @@ class User(DBResource):
                            title=MSG(u'First Name'))
     lastname = Text_Field(multilingual=False, indexed=True, stored=True,
                           title=MSG(u'Last Name'))
-    email = Email_Field(indexed=True, stored=True, required=True,
-                        unique=True, title=MSG(u'E-mail Address'))
+    email = UserEmail_Field
     password = Password_Field(multiple=True)
     avatar = File_Field(title=MSG(u'Avatar'))
     user_language = Char_Field
