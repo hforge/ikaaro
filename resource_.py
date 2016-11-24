@@ -253,24 +253,26 @@ class DBResource(Resource):
 
         # Referential action
         if ref_action == 'restrict':
-            # Check referencial-integrity (FIXME Check sub-resources too)
+            # Check referencial-integrity
             path = str(resource.abspath)
-            query_base_path = get_base_path_query(path)
-            query = AndQuery(PhraseQuery('links', path),
-                             NotQuery(query_base_path))
-            results = database.search(query)
-            # A resource may have been updated in the same transaction,
-            # so not yet reindexed: we need to check that the resource
-            # really links.
-            for referrer in results.get_resources():
-                if path in referrer.get_links():
-                    err = 'cannot delete, resource "%s" is referenced'
-                    raise ConsistencyError, err % path
+            query = NotQuery(get_base_path_query(path))
+            sub_search = database.search(query)
+            for sub_resource in resource.traverse_resources():
+                path = str(sub_resource.abspath)
+                query = PhraseQuery('links', path)
+                results = sub_search.search(query)
+                # A resource may have been updated in the same transaction,
+                # so not yet reindexed: we need to check that the resource
+                # really links.
+                for referrer in results.get_resources():
+                    if path in referrer.get_links():
+                        err = 'cannot delete, resource "{}" is referenced'
+                        raise ConsistencyError(err.format(path))
         elif ref_action == 'force':
             # Do not check referencial-integrity
             pass
         else:
-            raise ValueError, 'Incorrect ref_action "%s"' % ref_action
+            raise ValueError,('Incorrect ref_action "{}"'.format(ref_action))
 
         # Events, remove
         path = str(resource.abspath)
