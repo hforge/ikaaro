@@ -235,7 +235,7 @@ class Folder(DBResource):
         return source_path, target_path
 
 
-    def copy_resource(self, source_path, target_path):
+    def copy_resource(self, source_path, target_path, exclude_patterns=None):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
@@ -268,7 +268,7 @@ class Folder(DBResource):
             src_key = fs.resolve(source_path, old_name)
             dst_key = fs.resolve(target_path, new_name)
             if folder.has_handler(src_key):
-                folder.copy_handler(src_key, dst_key)
+                folder.copy_handler(src_key, dst_key, exclude_patterns)
 
         # Events, add
         resource = self.get_resource(target_path)
