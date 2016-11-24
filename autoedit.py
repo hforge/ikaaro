@@ -49,31 +49,6 @@ class EditLanguageMenu(ContextMenu):
         return Reference(uri.scheme, uri.authority, uri.path, {}, None)
 
 
-    def get_fields(self):
-        context = self.context
-        resource = self.resource
-        view = self.view
-
-        widgets = view._get_widgets(resource, context)
-        # Build widgets list
-        fields, to_keep = view._get_query_fields(resource, context)
-
-        return [ {'name': widget.name,
-                  'title': getattr(widget, 'title', 'name'),
-                  'selected': widget.name in fields}
-                 for widget in widgets if widget.name not in to_keep ]
-
-
-    def fields(self):
-        items = self.get_fields()
-        # Defaults
-        for item in items:
-            for name in ['class', 'src', 'items']:
-                item.setdefault(name, None)
-
-        return items
-
-
     def _get_items(self):
         multilingual = False
         schema = self.view._get_schema(self.resource, self.context)
@@ -102,23 +77,10 @@ class EditLanguageMenu(ContextMenu):
         return items
 
 
-    def get_hidden_fields(self):
-        return self.view._get_query_to_keep(self.resource, self.context)
-
-
-    def hidden_fields(self):
-        return self.get_hidden_fields()
-
-
     def display(self):
         """Do not display the form is there is nothing to show"""
         items = self.get_items()
-        if len(items):
-            return True
-        fields = self.get_fields()
-        if len(fields):
-            return True
-        return len(self.hidden_fields())
+        return len(items) > 0
 
 
 
@@ -188,8 +150,6 @@ class AutoEdit(AutoForm):
         to_keep = set()
 
         for key, datatype in schema.iteritems():
-            if getattr(datatype, 'hidden_by_default', False):
-                continue
             # Keep readonly and mandatory widgets
             if getattr(datatype, 'mandatory', False):
                 to_keep.add(key)

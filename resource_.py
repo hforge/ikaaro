@@ -453,10 +453,8 @@ class DBResource(Resource):
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
-    description = Textarea_Field(indexed=True, title=MSG(u'Description'),
-                                 hidden_by_default=True)
-    subject = Text_Field(indexed=True, title=MSG(u'Keywords'),
-                         hidden_by_default=True)
+    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
+    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
     share = Share_Field
 
     @property
