@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-05 13:04+CET\n"
+"POT-Creation-Date: 2016-11-28 17:11+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -38,7 +38,7 @@ msgstr ""
 "        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n"
 "    </stl:inline>"
 
-#: ../root_views.py:250
+#: ../root_views.py:236
 msgid "\"en\", \"fr\", ..."
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "%d %s"
 msgstr ""
 
-#: ../root.py:163
+#: ../root.py:170
 msgid ""
 "%s\n"
 "\n"
@@ -96,7 +96,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../root.py:160
+#: ../root.py:167
 msgid "%s => %s"
 msgstr ""
 
@@ -114,10 +114,15 @@ msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
 msgstr ""
 
-#: ../ui/tiny_mce/rte.xml.en:49 ../ui/editarea/ea.xml.en:21
+#: ../ui/tiny_mce/rte.xml.en:51 ../ui/editarea/ea.xml.en:21
 msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
 msgstr "(Javascript est désactivé ou manquant :"
+
+#: ../ui/update_instance.xml.en:28
+msgctxt "link"
+msgid "+"
+msgstr "+"
 
 #: ../ui/user/edit_preferences.xml.en:27
 msgctxt "option"
@@ -129,7 +134,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr "-- indéfini --"
 
-#: ../config_groups.py:77 ../config_models.py:238
+#: ../config_groups.py:77 ../config_models.py:240
 msgid "..."
 msgstr "..."
 
@@ -184,7 +189,7 @@ msgctxt "link"
 msgid "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
 msgstr "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
 
-#: ../ui/tiny_mce/rte.xml.en:55
+#: ../ui/tiny_mce/rte.xml.en:57
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
 msgstr ""
@@ -262,8 +267,8 @@ msgid ""
 "<g id='2'>I want to get a reminder e-mail</g>  <g id='3'>  <x id='4'/>  <x "
 "id='5'/> ${reminders} before the start of the event. </g>"
 msgstr ""
-"<g id='2'>Je souhaite recevoir un e-mail de rappel</g>  <g id='3'>  <x id='4'/>  <x "
-"id='5'/> ${reminders} avant le début de l'évènement. </g>"
+"<g id='2'>Je souhaite recevoir un e-mail de rappel</g>  <g id='3'>  <x "
+"id='4'/>  <x id='5'/> ${reminders} avant le début de l'évènement. </g>"
 
 #: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
 msgctxt "link"
@@ -283,6 +288,12 @@ msgid ""
 msgstr ""
 "<g id='4'><g id='5'>Commentaire ${number}</g></g>  <g id='6'>[<g "
 "id='7'>Répondre</g>]</g> ${workflow} ${index}"
+
+#: ../ui/update_instance.xml.en:69
+#, fuzzy
+msgctxt "button"
+msgid "<g id='5'>Update</g>  <g id='6'>Force update</g>"
+msgstr "<g id='8'>Supprimer</g>  <g id='9'>Mettre à jour</g>"
 
 #: ../ui/PO_edit.xml.en:19
 msgctxt "link"
@@ -315,15 +326,16 @@ msgstr "Un message vous a été envoyé pour confirmer votre identité."
 msgid "A new resource has been added."
 msgstr "Nouvelle ressource ajoutée."
 
-#: ../root_views.py:194
-msgid "About"
-msgstr "À propos de"
+#: ../ui/update_instance.xml.en:18
+msgctxt "table cell"
+msgid "Abspath"
+msgstr ""
 
 #: ../cc.py:446
 msgid "Accept invitation"
 msgstr "Accepter l'invitation"
 
-#: ../config_access.py:282
+#: ../config_access.py:288
 msgid "Access Control"
 msgstr "Contrôle d'accès"
 
@@ -341,12 +353,12 @@ msgid "Action impossible (the resources are in use): {resources}."
 msgstr ""
 "Action impossible (les ressources sont en cours d'utilisation) : {resources}."
 
-#: ../users.py:56
+#: ../users.py:73
 msgid "Active"
 msgstr "Actif"
 
 #: ../buttons.py:144 ../config_access.py:90 ../autoadd.py:85
-#: ../text_views.py:268
+#: ../text_views.py:273
 msgid "Add"
 msgstr "Ajouter"
 
@@ -364,7 +376,7 @@ msgctxt "heading"
 msgid "Add Resource of Type \"${class_title}\""
 msgstr "Ajouter une ressource de type « ${class_title} »"
 
-#: ../text_views.py:266
+#: ../text_views.py:270
 msgid "Add Row"
 msgstr "Ajouter une ligne"
 
@@ -385,15 +397,15 @@ msgstr "Ajouter une langue"
 msgid "Add calendar"
 msgstr "Ajouter un calendrier"
 
-#: ../config_models.py:185
+#: ../config_models.py:187
 msgid "Add choice"
 msgstr "Ajouter un choix"
 
-#: ../skins.py:230
+#: ../skins.py:241
 msgid "Add content"
 msgstr "Ajouter du contenu"
 
-#: ../config_models.py:247
+#: ../config_models.py:249
 msgid "Add field"
 msgstr "Ajouter un champ"
 
@@ -405,15 +417,15 @@ msgstr "Ajouter un groupe"
 msgid "Add item"
 msgstr "Ajouter un élément"
 
-#: ../config_models.py:339
+#: ../config_models.py:342
 msgid "Add model"
 msgstr "Ajouter un modèle"
 
-#: ../autoadd.py:143 ../folder_views.py:132
+#: ../autoadd.py:143 ../folder_views.py:137
 msgid "Add resource"
 msgstr "Ajouter une ressource"
 
-#: ../config_access.py:382
+#: ../config_access.py:388
 msgid "Add rule"
 msgstr "Ajouter une règle"
 
@@ -425,7 +437,7 @@ msgstr "Ajouter aux éléments ordonnés"
 msgid "Add {class_title}"
 msgstr "Ajouter « {class_title} »"
 
-#: ../autoadd.py:256
+#: ../autoadd.py:258
 msgid "Adding resources to {path} is not allowed."
 msgstr "Ajouter des ressources à {path} n'est pas autorisé."
 
@@ -446,11 +458,11 @@ msgstr ""
 msgid "All day"
 msgstr "Toute la journée"
 
-#: ../config_theme.py:33
+#: ../config_theme.py:34
 msgid "Allow to customize ikaaro skin"
 msgstr "Permettre les modifications sur le thème"
 
-#: ../emails.py:114
+#: ../emails.py:115
 msgid "Already registered"
 msgstr "Déjà inscrit"
 
@@ -501,7 +513,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer cela ?"
 msgid "August"
 msgstr "Août"
 
-#: ../enumerates.py:75
+#: ../enumerates.py:74
 msgid "Authenticated"
 msgstr "Authentifié"
 
@@ -518,7 +530,7 @@ msgstr "Auteur"
 msgid "Author's mail"
 msgstr "Email de l'auteur"
 
-#: ../users.py:81
+#: ../users.py:105
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -527,7 +539,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr "Retour"
 
-#: ../resource_views.py:175
+#: ../resource_views.py:205
 msgid "Backlinks"
 msgstr "Rétroliens"
 
@@ -535,19 +547,19 @@ msgstr "Rétroliens"
 msgid "Bad email"
 msgstr "Mauvais email"
 
-#: ../config_theme.py:39
+#: ../config_theme.py:40
 msgid "Banner"
 msgstr "Bannière"
 
-#: ../config_models.py:319
+#: ../config_models.py:322
 msgid "Base class"
 msgstr "Classe de base"
 
-#: ../config_models.py:237
+#: ../config_models.py:239
 msgid "Base model"
 msgstr "Modèle de base"
 
-#: ../utils.py:108
+#: ../utils.py:111
 msgid "Basque"
 msgstr "Basque"
 
@@ -568,7 +580,7 @@ msgstr "Blog"
 msgid "Blog Post"
 msgstr "Billet de blog"
 
-#: ../widgets.py:851 ../webpage.py:58
+#: ../widgets.py:880 ../webpage.py:56
 msgid "Body"
 msgstr "Corps du message"
 
@@ -580,7 +592,7 @@ msgstr "Booléen"
 msgid "Broken Links"
 msgstr "Liens cassés"
 
-#: ../folder_views.py:284
+#: ../folder_views.py:294
 msgid "Browse Content"
 msgstr "Parcourir"
 
@@ -621,27 +633,27 @@ msgstr ""
 "En confirmant votre abonnement à cette ressource, vous allez recevoir un "
 "email à chaque fois que cette ressource est modifiée."
 
-#: ../file.py:401
+#: ../file.py:402
 msgid "Bzip2"
 msgstr "Bzip2"
 
-#: ../file.py:402
+#: ../file.py:403
 msgid "Bzip2 Compressed"
 msgstr "Compacté en bzip2"
 
-#: ../text.py:97
+#: ../text.py:102
 msgid "CSS"
 msgstr "Feuille de style CSS"
 
-#: ../config_theme.py:40
+#: ../config_theme.py:41
 msgid "CSS Style"
 msgstr "Syle CSS"
 
-#: ../agenda/event.py:331 ../agenda/calendars.py:203
+#: ../agenda/event.py:342 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr "Calendrier"
 
-#: ../agenda/event.py:320
+#: ../agenda/event.py:331
 msgid "Calendar event"
 msgstr "Évènement du calendrier"
 
@@ -673,7 +685,7 @@ msgstr "Type de captcha"
 msgid "Caption"
 msgstr "Légende"
 
-#: ../utils.py:109
+#: ../utils.py:112
 msgid "Catalan"
 msgstr "Catalan"
 
@@ -687,7 +699,7 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr "Modifier les métadonnées"
 
-#: ../comments.py:241
+#: ../comments.py:246
 msgid "Change state"
 msgstr "Modifier l'état"
 
@@ -703,11 +715,11 @@ msgstr "Modifications"
 msgid "Check the referential integrity."
 msgstr "Vérifie l'intégrité des liens."
 
-#: ../config_models.py:123
+#: ../config_models.py:125
 msgid "Choice"
 msgstr "Choix"
 
-#: ../config_models.py:157
+#: ../config_models.py:159
 msgid "Choices field"
 msgstr "Champs de type 'choix'"
 
@@ -716,11 +728,11 @@ msgctxt "option"
 msgid "Choose a language"
 msgstr "Choisissez une langue"
 
-#: ../emails.py:136
+#: ../emails.py:137
 msgid "Choose a new password"
 msgstr "Choisissez un nouveau mot de passe"
 
-#: ../config_access.py:283
+#: ../config_access.py:289
 msgid "Choose the security policy."
 msgstr "Choisir la politique de sécurité du site web."
 
@@ -728,12 +740,12 @@ msgstr "Choisir la politique de sécurité du site web."
 msgid "Choose your password"
 msgstr "Choisissez votre mot de passe"
 
-#: ../widgets.py:354
+#: ../widgets.py:358
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 "Cliquez sur le bouton \"...\" pour choisir une date (Format: \"yyyy-mm-dd\")."
 
-#: ../widgets.py:436 ../widgets.py:454
+#: ../widgets.py:460 ../widgets.py:478
 msgid "Click on button \"...\" to select a file."
 msgstr "Cliquez sur le bouton \"...\" pour sélectionner un fichier"
 
@@ -742,12 +754,35 @@ msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr "Cliquez pour sélectionner/désélectionner toutes les lignes"
 
+#: ../ui/update_instance.xml.en:14 ../ui/update_instance.xml.en:53
+msgctxt "table cell"
+msgid "Cls ID"
+msgstr ""
+
+#: ../ui/update_instance.xml.en:15 ../ui/update_instance.xml.en:54
+#, fuzzy
+msgctxt "table cell"
+msgid "Cls title"
+msgstr "Titre invalide."
+
+#: ../ui/update_instance.xml.en:16 ../ui/update_instance.xml.en:50
+#, fuzzy
+msgctxt "table cell"
+msgid "Cls version"
+msgstr "Version"
+
 #: ../ui/website/edit_languages.xml.en:16
 msgctxt "table cell"
 msgid "Code"
 msgstr "Code"
 
-#: ../ui/root/about.xml.en:40
+#: ../ui/root/powered-by.xml.en:81
+#, fuzzy
+msgctxt "table cell"
+msgid "Coders"
+msgstr "Code"
+
+#: ../ui/root/powered-by.xml.en:43
 msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr "Collaboration avec le module wiki, l'outil de suivi, etc."
@@ -761,7 +796,7 @@ msgctxt "title attribute"
 msgid "Come back to today"
 msgstr "Revenir à aujourd'hui"
 
-#: ../text.py:267
+#: ../text.py:272
 msgid "Comma Separated Values"
 msgstr "Format CSV"
 
@@ -773,12 +808,12 @@ msgstr "Commentaire"
 msgid "Commit Log"
 msgstr "Commit Log"
 
-#: ../config.py:51 ../config.py:287 ../skins.py:238 ../root.py:106
+#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:113
 #: ../autoedit.py:43
 msgid "Configuration"
 msgstr "Configuration"
 
-#: ../config_menu.py:247
+#: ../config_menu.py:255
 msgid "Configuration Menu"
 msgstr "Configuration du menu"
 
@@ -840,7 +875,7 @@ msgstr "Confirmation envoyée !"
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: ../config_menu.py:255 ../root_views.py:117
+#: ../config_menu.py:263 ../root_views.py:112
 msgid "Contact"
 msgstr "Contact"
 
@@ -848,12 +883,12 @@ msgstr "Contact"
 msgid "Content"
 msgstr "Contenu"
 
-#: ../ui/root/about.xml.en:39
+#: ../ui/root/powered-by.xml.en:42
 msgctxt "li"
 msgid "Content &amp;"
 msgstr "Contenu &amp;"
 
-#: ../config_models.py:329
+#: ../config_models.py:332
 msgid "Content models"
 msgstr "Modèles de contenu"
 
@@ -895,7 +930,9 @@ msgstr "Créer et publier un message"
 msgid "Create and publish a Web Page."
 msgstr "Créer et publier une page web."
 
-#: ../root_views.py:225
+#: ../ui/root/powered-by.xml.en:78
+#, fuzzy
+msgctxt "heading"
 msgid "Credits"
 msgstr "Crédits"
 
@@ -907,7 +944,7 @@ msgstr "Même page"
 msgid "Cut"
 msgstr "Couper"
 
-#: ../agenda/event.py:505
+#: ../agenda/event.py:516
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -974,7 +1011,7 @@ msgctxt "table cell"
 msgid "Default"
 msgstr "Par défaut"
 
-#: ../config_models.py:330
+#: ../config_models.py:333
 msgid "Define new types of content resources."
 msgstr "Définir de nouveaux types de ressources de contenu."
 
@@ -994,7 +1031,7 @@ msgstr "Définir le footer du site."
 msgid "Depth"
 msgstr "Profondeur"
 
-#: ../resource_.py:420 ../widgets.py:846 ../blog/blog.py:41
+#: ../resource_.py:458 ../widgets.py:875 ../blog/blog.py:41
 msgid "Description"
 msgstr "Description"
 
@@ -1020,12 +1057,12 @@ msgstr ""
 "Afficher les commentaires dont l'état est ${filter} <g id='1'>Mettre à jour "
 "l'affichage</g>"
 
-#: ../ui/root/about.xml.en:39
+#: ../ui/root/powered-by.xml.en:42
 msgctxt "li"
 msgid "Document Management."
 msgstr "Gestion de documents."
 
-#: ../root_views.py:340
+#: ../root_views.py:326
 msgid "Documentation updated."
 msgstr "Documentation mise à jour"
 
@@ -1052,11 +1089,11 @@ msgctxt "li"
 msgid "Download <g id='7'>restedit</g>"
 msgstr "Télécharger <g id='7'>restedit</g>"
 
-#: ../cc.py:105 ../users.py:79
+#: ../cc.py:105 ../users.py:80
 msgid "E-mail Address"
 msgstr "Adresse de courriel"
 
-#: ../text_views.py:40 ../text_views.py:105 ../autoedit.py:128
+#: ../text_views.py:40 ../text_views.py:105 ../autoedit.py:90
 msgid "Edit"
 msgstr "Modifier"
 
@@ -1086,11 +1123,11 @@ msgstr "Hôtes virtuels"
 msgid "Edit captcha"
 msgstr "Modifier le captcha"
 
-#: ../users.py:197
+#: ../users.py:243
 msgid "Edit groups"
 msgstr "Modifier les groupes"
 
-#: ../text_views.py:283
+#: ../text_views.py:289
 msgid "Edit row #{id}"
 msgstr "Modifier la ligne #{id}"
 
@@ -1099,7 +1136,7 @@ msgctxt "legend"
 msgid "Edit the active languages"
 msgstr "Définir les langues du site web."
 
-#: ../config_menu.py:248
+#: ../config_menu.py:256
 msgid "Edit the global menu."
 msgstr "Modifier le menu global"
 
@@ -1112,23 +1149,37 @@ msgstr "Modifier les plages horaires"
 msgid "Edit your name and email address."
 msgstr "Modifier votre adresse de courriel."
 
+#: ../config_models.py:40
+msgid "Email"
+msgstr "Courriel"
+
 #: ../config_mail.py:59 ../config_mail.py:69
 msgid "Email options"
 msgstr "Options de contact"
 
-#: ../agenda/event.py:333
+#: ../agenda/event.py:309
 msgid "End"
 msgstr "Fin"
 
-#: ../utils.py:110
+#: ../utils.py:113
 msgid "English"
 msgstr "Anglais"
 
-#: ../agenda/event.py:319
+#: ../update.py:187
+msgid "Error during update method. See logs."
+msgstr ""
+
+#: ../ui/update_instance.xml.en:8
+#, fuzzy
+msgctxt "heading"
+msgid "Errors"
+msgstr "Erreur : {msg}"
+
+#: ../agenda/event.py:330
 msgid "Event"
 msgstr "Événement"
 
-#: ../agenda/event.py:536
+#: ../agenda/event.py:547
 msgid "Event model"
 msgstr "Modèle d'événement"
 
@@ -1140,15 +1191,15 @@ msgstr "Rappel d'évènement"
 msgid "Every"
 msgstr "Chaque"
 
-#: ../enumerates.py:74
+#: ../enumerates.py:73
 msgid "Everybody"
 msgstr "Tout le monde"
 
-#: ../file.py:216 ../file.py:249
+#: ../file.py:217 ../file.py:250
 msgid "Excel"
 msgstr "Classeur MS Excel"
 
-#: ../file.py:217 ../file.py:250
+#: ../file.py:218 ../file.py:251
 msgid "Excel Spreadsheet"
 msgstr "Classeur au format MS Excel"
 
@@ -1174,7 +1225,7 @@ msgstr "Extraire le contenu"
 msgid "Failed to load the file, may contain errors."
 msgstr "Échec lors du chargement du fichier, il doit contenir des erreurs."
 
-#: ../config_theme.py:38
+#: ../config_theme.py:39
 msgid "Favicon"
 msgstr ""
 
@@ -1186,14 +1237,9 @@ msgstr "Fonctionnalité pour se protéger contre les spammeurs"
 msgid "February"
 msgstr "Février"
 
-#: ../config_models.py:103
+#: ../config_models.py:105
 msgid "Field type"
 msgstr "Type de champs"
-
-#: ../ui/generic/edit_language_menu.xml.en:23
-msgctxt "legend"
-msgid "Fields"
-msgstr "Champs"
 
 #: ../file.py:56 ../widgets.py:93
 msgid "File"
@@ -1213,19 +1259,19 @@ msgstr "Nom de fichier"
 msgid "Files extracted"
 msgstr "Fichiers extraits"
 
-#: ../users_views.py:423 ../users.py:75
+#: ../users_views.py:423 ../users.py:100
 msgid "First Name"
 msgstr "Prénom"
 
-#: ../file.py:190
+#: ../file.py:191
 msgid "Flash"
 msgstr "Animation Flash"
 
-#: ../file.py:191
+#: ../file.py:192
 msgid "Flash Document"
 msgstr "Animation au format Flash"
 
-#: ../folder.py:53
+#: ../folder.py:54
 msgid "Folder"
 msgstr "Dossier"
 
@@ -1247,7 +1293,7 @@ msgctxt "paragraph"
 msgid "Found <g id='1'>${total}</g> broken links."
 msgstr "<g id='1'>${total}</g> liens cassés ont été trouvés."
 
-#: ../utils.py:111
+#: ../utils.py:114
 msgid "French"
 msgstr "Français"
 
@@ -1265,7 +1311,7 @@ msgstr "À partir de"
 msgid "From header"
 msgstr "De"
 
-#: ../folder_views.py:885
+#: ../folder_views.py:894
 msgid "Front Page"
 msgstr "Accueil"
 
@@ -1274,11 +1320,11 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr "Toute la journée"
 
-#: ../root.py:323
+#: ../root.py:335
 msgid "GNU/Linux"
 msgstr "GNU/Linux"
 
-#: ../utils.py:112
+#: ../utils.py:115
 msgid "German"
 msgstr "Allemand"
 
@@ -1314,33 +1360,31 @@ msgstr "clé de vérification de Google"
 msgid "Grant access to a new user."
 msgstr "Accorder l'accès à un nouvel utilisateur."
 
-#: ../users.py:46
+#: ../users.py:55
 msgid "Groups"
 msgstr "Groupes"
 
-#: ../file.py:390
+#: ../file.py:391
 msgid "Gzip"
 msgstr "Gzip"
 
-#: ../file.py:391
+#: ../file.py:392
 msgid "Gzip Compressed"
 msgstr "Compacté en GZip"
 
-#: ../text.py:258
+#: ../text.py:263
 msgid "HTML File"
 msgstr "Fichier HTML"
 
-#: ../ui/root/credits.xml.en:10
-msgctxt "heading"
-msgid "Hacking"
-msgstr "Codeurs"
+#: ../ui/root/powered-by.xml.en:91
+msgctxt "table cell"
+msgid ""
+"Hervé Cauwelier (French)<x id='7'/> Nicolas Deram (French)<x id='8'/> Paolo "
+"Dina (Italian)<x id='9'/> Juan David Ibáñez Palomar (Spanish)<x id='10'/> "
+"Zhou Li (Chinese)<x id='11'/> Sylvain Taverne (French)"
+msgstr ""
 
-#: ../ui/root/credits.xml.en:18
-msgctxt "li"
-msgid "Hervé Cauwelier (French)"
-msgstr "Hervé Cauwelier (français)"
-
-#: ../config_menu.py:255
+#: ../config_menu.py:263
 msgid "Home"
 msgstr "Accueil"
 
@@ -1348,7 +1392,7 @@ msgstr "Accueil"
 msgid "Hour(s)"
 msgstr "Heure(s)"
 
-#: ../utils.py:113
+#: ../utils.py:116
 msgid "Hungarian"
 msgstr "Hongrois"
 
@@ -1365,9 +1409,10 @@ msgstr ""
 "Si aucun mot de passe n'est saisi, un courriel sera envoyé à l'utilisateur "
 "pour l'inviter à en choisir un."
 
-#: ../ui/root/license.xml.en:23
+#: ../ui/root/powered-by.xml.en:72
+#, fuzzy
 msgctxt "paragraph"
-msgid "If not, see <g id='1'>http://www.gnu.org/licenses/</g>."
+msgid "If not, see <g id='5'>http://www.gnu.org/licenses/</g>."
 msgstr "Sinon, cf. <g id='1'>http://www.gnu.org/licenses/</g>."
 
 #: ../ui/root/internal_server_error.xml.en:11
@@ -1375,11 +1420,11 @@ msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
 msgstr "Si l'erreur persiste, contactez l'administrateur du site."
 
-#: ../file.py:125
+#: ../file.py:126
 msgid "Image"
 msgstr "Image"
 
-#: ../file.py:170
+#: ../file.py:171
 msgid "Image SVG"
 msgstr "Image SVG"
 
@@ -1387,15 +1432,15 @@ msgstr "Image SVG"
 msgid "Import"
 msgstr "Importer"
 
-#: ../users.py:58
+#: ../users.py:75
 msgid "Inactive"
 msgstr "Inactif"
 
-#: ../folder.py:61
+#: ../folder.py:62
 msgid "Index"
 msgstr ""
 
-#: ../config_models.py:92
+#: ../config_models.py:94
 msgid "Inherited field"
 msgstr "Champs hérités"
 
@@ -1416,7 +1461,7 @@ msgstr "Insérer un lien"
 msgid "Insert media"
 msgstr "Insérer un media"
 
-#: ../ui/root/about.xml.en:8
+#: ../ui/root/powered-by.xml.en:11
 msgctxt "legend"
 msgid "Installed software"
 msgstr "Logiciels installés"
@@ -1425,7 +1470,7 @@ msgstr "Logiciels installés"
 msgid "Instance removed"
 msgstr "L'instance a été supprimée"
 
-#: ../config_models.py:40
+#: ../config_models.py:41
 msgid "Integer"
 msgstr "Entier"
 
@@ -1434,7 +1479,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
-#: ../root.py:162
+#: ../root.py:169
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
@@ -1450,7 +1495,7 @@ msgstr "Titre invalide."
 msgid "Invitation"
 msgstr "Invitation"
 
-#: ../utils.py:114
+#: ../utils.py:117
 msgid "Italian"
 msgstr "Italien"
 
@@ -1458,18 +1503,13 @@ msgstr "Italien"
 msgid "January"
 msgstr "Janvier"
 
-#: ../utils.py:115
+#: ../utils.py:118
 msgid "Japanese"
 msgstr "Japonais"
 
-#: ../text.py:240
+#: ../text.py:245
 msgid "Javascript"
 msgstr "Javascript"
-
-#: ../ui/root/credits.xml.en:21
-msgctxt "li"
-msgid "Juan David Ibáñez Palomar (Spanish)"
-msgstr "Juan David Ibáñez Palomar (espagnol)"
 
 #: ../agenda/agenda_views.py:55 ../datatypes.py:285
 msgid "July"
@@ -1479,16 +1519,16 @@ msgstr "Juillet"
 msgid "June"
 msgstr "Juin"
 
-#: ../ui/root/about.xml.en:36
+#: ../ui/root/powered-by.xml.en:39
 msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr "Les principales fonctionnalités d'iKaaro sont :"
 
-#: ../resource_.py:422 ../widgets.py:847
+#: ../resource_.py:459 ../widgets.py:876
 msgid "Keywords"
 msgstr "Mots clefs"
 
-#: ../root_views.py:249
+#: ../root_views.py:235
 msgid "Language"
 msgstr "Langue"
 
@@ -1514,9 +1554,9 @@ msgstr "Langues"
 msgid "Languages removed."
 msgstr "Langues supprimées."
 
-#: ../config_groups.py:100 ../config_models.py:143 ../config_models.py:228
-#: ../config_models.py:321 ../popup.py:78 ../config_menu.py:60
-#: ../folder_views.py:308
+#: ../config_groups.py:100 ../config_models.py:145 ../config_models.py:230
+#: ../config_models.py:324 ../popup.py:78 ../config_menu.py:60
+#: ../folder_views.py:318
 msgid "Last Author"
 msgstr "Dernier auteur"
 
@@ -1524,17 +1564,19 @@ msgstr "Dernier auteur"
 msgid "Last Change"
 msgstr "Dernier changement"
 
-#: ../config_groups.py:99 ../config_models.py:142 ../config_models.py:227
-#: ../config_models.py:320 ../popup.py:77 ../config_menu.py:59
-#: ../folder_views.py:307
+#: ../config_groups.py:99 ../config_models.py:144 ../config_models.py:229
+#: ../config_models.py:323 ../popup.py:77 ../config_menu.py:59
+#: ../folder_views.py:317
 msgid "Last Modified"
 msgstr "Dernière modification"
 
-#: ../users_views.py:424 ../users.py:77
+#: ../users_views.py:424 ../users.py:102
 msgid "Last Name"
 msgstr "Nom"
 
-#: ../root.py:549
+#: ../ui/root/powered-by.xml.en:54
+#, fuzzy
+msgctxt "heading"
 msgid "License"
 msgstr "Licence"
 
@@ -1543,7 +1585,7 @@ msgctxt "table cell"
 msgid "Lines Changed"
 msgstr "Lignes modifiées"
 
-#: ../resource_views.py:144
+#: ../resource_views.py:174
 msgid "Links"
 msgstr "Liens"
 
@@ -1561,19 +1603,19 @@ msgctxt "label"
 msgid "Location:"
 msgstr "Emplacement :"
 
-#: ../skins.py:219
+#: ../skins.py:230
 msgid "Log out"
 msgstr "Déconnexion"
 
-#: ../users_views.py:422 ../resource_views.py:188
+#: ../users_views.py:422 ../resource_views.py:218
 msgid "Login"
 msgstr "Connexion"
 
-#: ../config_theme.py:37
+#: ../config_theme.py:38
 msgid "Logo"
 msgstr ""
 
-#: ../root.py:324
+#: ../root.py:336
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
@@ -1595,7 +1637,7 @@ msgstr "Gérer mes calendriers"
 msgid "Manage user groups."
 msgstr "Gérer les groupes d'utilisateurs."
 
-#: ../users.py:208
+#: ../users.py:254
 msgid "Manage users."
 msgstr "Gérer les utilisateurs."
 
@@ -1631,19 +1673,19 @@ msgid ""
 "</g>"
 msgstr ""
 
-#: ../text.py:83
+#: ../text.py:84
 msgid "Message Catalog"
 msgstr "Catalogue de messages"
 
-#: ../root_views.py:146
+#: ../root_views.py:141
 msgid "Message body"
 msgstr "Corps du message"
 
-#: ../root_views.py:187
+#: ../root_views.py:182
 msgid "Message sent."
 msgstr "Message envoyé."
 
-#: ../root_views.py:145
+#: ../root_views.py:140
 msgid "Message subject"
 msgstr "Sujet du message"
 
@@ -1672,16 +1714,16 @@ msgstr "Mensuel"
 msgid "Monthly View"
 msgstr "Mensuel"
 
-#: ../ui/root/about.xml.en:42
+#: ../ui/root/powered-by.xml.en:45
 msgctxt "li"
 msgid "Mulitilingual interfaces and content."
 msgstr "Interface et contenu multilingues"
 
-#: ../config_models.py:57
+#: ../config_models.py:59
 msgid "Multiple"
 msgstr "Multiple"
 
-#: ../ui/root/about.xml.en:41
+#: ../ui/root/powered-by.xml.en:44
 msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
@@ -1700,6 +1742,12 @@ msgstr "Nom"
 msgctxt "table cell"
 msgid "Name"
 msgstr "Nom"
+
+#: ../ui/update_instance.xml.en:52
+#, fuzzy
+msgctxt "table cell"
+msgid "Nb resources to update"
+msgstr "Ressources collées."
 
 #: ../ui/website/config.xml.en:9
 msgctxt "legend"
@@ -1727,7 +1775,7 @@ msgstr "Nouvelle page"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
-#: ../text_views.py:275
+#: ../text_views.py:281
 msgid "New row added."
 msgstr "Nouvelle colonne ajoutée."
 
@@ -1741,12 +1789,7 @@ msgctxt "title attribute"
 msgid "Next »"
 msgstr "Suivant »"
 
-#: ../ui/root/credits.xml.en:19
-msgctxt "li"
-msgid "Nicolas Deram (French)"
-msgstr "Nicolas Deram (français)"
-
-#: ../widgets.py:233 ../agenda/calendars.py:106 ../datatypes.py:231
+#: ../widgets.py:211 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
 msgstr "Non"
 
@@ -1765,6 +1808,12 @@ msgstr "Aucune ressource supprimée."
 #: ../messages.py:88
 msgid "No resource selected."
 msgstr "Aucune ressource sélectionnée."
+
+#: ../ui/update_instance.xml.en:42
+#, fuzzy
+msgctxt "div"
+msgid "No resource to update"
+msgstr "Aucune ressource n'a de permission."
 
 #: ../ui/root/not_found.xml.en:8
 msgctxt "legend"
@@ -1804,15 +1853,15 @@ msgstr "Novembre"
 msgid "Num."
 msgstr ""
 
-#: ../file.py:348
+#: ../file.py:349
 msgid "ODP"
 msgstr "Présentation OpenDocument"
 
-#: ../file.py:337
+#: ../file.py:338
 msgid "ODS"
 msgstr "Classeur OpenDocument"
 
-#: ../file.py:326
+#: ../file.py:327
 msgid "ODT"
 msgstr "Texte OpenDocument"
 
@@ -1825,15 +1874,15 @@ msgctxt "button"
 msgid "OK"
 msgstr "OK"
 
-#: ../file.py:282
+#: ../file.py:283
 msgid "OOo Calc"
 msgstr "Classeur OpenOffice.org"
 
-#: ../file.py:293
+#: ../file.py:294
 msgid "OOo Impress"
 msgstr "Présentation OpenOffice.org"
 
-#: ../file.py:271
+#: ../file.py:272
 msgid "OOo Writer"
 msgstr "Texte OpenOffice.org"
 
@@ -1860,31 +1909,31 @@ msgstr ""
 msgid "Open"
 msgstr "Ouvert"
 
-#: ../file.py:349
+#: ../file.py:350
 msgid "OpenDocument Presentation"
 msgstr "Présentation au format OpenDocument"
 
-#: ../file.py:338
+#: ../file.py:339
 msgid "OpenDocument Spreadsheet"
 msgstr "Classeur au format OpenDocument"
 
-#: ../file.py:327
+#: ../file.py:328
 msgid "OpenDocument Text"
 msgstr "Texte au format OpenDocument"
 
-#: ../file.py:294
+#: ../file.py:295
 msgid "OpenOffice.org Presentation"
 msgstr "Présentation au format OpenOffice.org"
 
-#: ../file.py:283
+#: ../file.py:284
 msgid "OpenOffice.org Spreadsheet"
 msgstr "Classeur au format OpenOffice.org"
 
-#: ../file.py:272
+#: ../file.py:273
 msgid "OpenOffice.org Text"
 msgstr "Texte au format OpenOffice.org"
 
-#: ../root_views.py:209
+#: ../root_views.py:210
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
@@ -1896,7 +1945,7 @@ msgstr "Votre compte est activé. Bienvenue !"
 msgid "Optimize your website for better ranking in search engine results."
 msgstr "Optimiser le référencement du site web dans les moteurs de recherche."
 
-#: ../config_groups.py:101 ../config_models.py:144 ../config_models.py:229
+#: ../config_groups.py:101 ../config_models.py:146 ../config_models.py:231
 #: ../config_menu.py:61 ../order.py:84 ../order.py:189
 msgid "Order"
 msgstr "Ordre"
@@ -1925,7 +1974,7 @@ msgstr "Dossier ordonné"
 msgid "Ordered Table"
 msgstr "Table de sélection ordonnée"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Organize your files and documents with folders."
 msgstr "Organisez vos fichiers et documents dans des dossiers."
 
@@ -1937,20 +1986,15 @@ msgstr "Orphelins"
 msgid "Other"
 msgstr "Autre"
 
-#: ../file.py:304
+#: ../file.py:305
 msgid "PDF"
 msgstr "Document PDF"
 
-#: ../file.py:305
+#: ../file.py:306
 msgid "PDF Document"
 msgstr "Document au format PDF"
 
-#: ../ui/root/credits.xml.en:20
-msgctxt "li"
-msgid "Paolo Dina (Italian)"
-msgstr "Paolo Dina (italien)"
-
-#: ../users_views.py:486 ../widgets.py:122
+#: ../users_views.py:486 ../widgets.py:123
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -1971,13 +2015,13 @@ msgstr "Les mots de passe sont différents, veuillez réessayez."
 msgid "Paste"
 msgstr "Coller"
 
-#: ../config_access.py:61 ../folder_views.py:304 ../config_menu.py:56
-#: ../config_menu.py:87 ../config_models.py:139 ../config_models.py:224
-#: ../config_models.py:317
+#: ../config_access.py:61 ../folder_views.py:314 ../config_menu.py:56
+#: ../config_menu.py:87 ../config_models.py:141 ../config_models.py:226
+#: ../config_models.py:320
 msgid "Path"
 msgstr "Chemin"
 
-#: ../cc.py:218 ../users.py:57
+#: ../cc.py:218 ../users.py:74
 msgid "Pending confirmation"
 msgstr "En attente de confirmation"
 
@@ -1985,7 +2029,7 @@ msgstr "En attente de confirmation"
 msgid "Permission"
 msgstr "Autorisation"
 
-#: ../text.py:62
+#: ../text.py:63
 msgid "Plain Text"
 msgstr "Texte brut"
 
@@ -2008,24 +2052,33 @@ msgstr "Veuillez choisir un nouveau mot de passe pour votre compte"
 msgid "Please enter the words below"
 msgstr "Veuillez saisir les mots ci-dessous"
 
-#: ../utils.py:116
+#: ../utils.py:119
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: ../file.py:227 ../file.py:260
+#: ../file.py:228 ../file.py:261
 msgid "PowerPoint"
 msgstr "Présentation MS PowerPoint"
 
-#: ../file.py:228 ../file.py:261
+#: ../file.py:229 ../file.py:262
 msgid "PowerPoint Presentation"
 msgstr "Présentation au format MS PowerPoint"
+
+#: ../root_views.py:188
+msgid "Powered by"
+msgstr ""
+
+#: ../ui/root/powered-by.xml.en:8
+msgctxt "heading"
+msgid "Powered by Ikaaro"
+msgstr ""
 
 #: ../ui/user/edit_preferences.xml.en:13
 msgctxt "label"
 msgid "Preferred Language"
 msgstr "Langue"
 
-#: ../folder_views.py:730
+#: ../folder_views.py:739
 msgid "Preview Content"
 msgstr "Aperçu"
 
@@ -2033,7 +2086,7 @@ msgstr "Aperçu"
 msgid "Profile"
 msgstr "Profil"
 
-#: ../text.py:229 ../root_views.py:208
+#: ../text.py:234 ../root_views.py:209
 msgid "Python"
 msgstr "Python"
 
@@ -2045,15 +2098,15 @@ msgstr "Question"
 msgid "Question captcha"
 msgstr "Question du captcha"
 
-#: ../file.py:315
+#: ../file.py:316
 msgid "RTF"
 msgstr "Texte RTF"
 
-#: ../file.py:316
+#: ../file.py:317
 msgid "RTF Document"
 msgstr "Texte au format RTF"
 
-#: ../config_models.py:150
+#: ../config_models.py:152
 msgid "Radio/Checkbox"
 msgstr ""
 
@@ -2069,31 +2122,37 @@ msgstr "Clé privé Recaptcha"
 msgid "Recaptcha public key"
 msgstr "Clé publique recaptcha"
 
-#: ../root_views.py:140
+#: ../root_views.py:135
 msgid "Recipient"
 msgstr "Destinataire"
 
-#: ../agenda/event.py:336
+#: ../agenda/event.py:347
 msgid "Recurrence"
 msgstr "Récurrence"
 
-#: ../emails.py:92
+#: ../resource_views.py:57
+msgid ""
+"Referenced resource cannot be removed, check the <a href=\";backlinks"
+"\">backlinks</a>."
+msgstr ""
+
+#: ../emails.py:93
 msgid "Registration confirmation"
 msgstr "Confirmation d'inscription"
 
-#: ../emails.py:125
+#: ../emails.py:126
 msgid "Registration confirmed"
 msgstr "Inscription confirmée"
 
-#: ../emails.py:103
+#: ../emails.py:104
 msgid "Registration notification"
 msgstr "Notification d'inscription"
 
-#: ../agenda/event.py:338
+#: ../agenda/event.py:349
 msgid "Reminder"
 msgstr "Rappel"
 
-#: ../buttons.py:72
+#: ../buttons.py:72 ../resource_views.py:46
 msgid "Remove"
 msgstr "Supprimer"
 
@@ -2126,7 +2185,7 @@ msgctxt "button"
 msgid "Rename"
 msgstr "Renommer"
 
-#: ../folder_views.py:189
+#: ../folder_views.py:194
 msgid "Rename resources"
 msgstr "Renommer les objects"
 
@@ -2139,7 +2198,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "Remplacer"
 
-#: ../widgets.py:850
+#: ../widgets.py:879
 msgid "Replace file"
 msgstr "Remplacer le fichier"
 
@@ -2147,7 +2206,7 @@ msgstr "Remplacer le fichier"
 msgid "Reply to"
 msgstr "Répondre à"
 
-#: ../config_models.py:56
+#: ../config_models.py:58
 msgid "Required"
 msgstr "Obligatoire"
 
@@ -2155,13 +2214,19 @@ msgstr "Obligatoire"
 msgid "Resend Confirmation"
 msgstr "Réenvoyer la demande de confirmation"
 
-#: ../agenda/event.py:189
+#: ../agenda/event.py:189 ../resource_views.py:63
 msgid "Resource removed"
 msgstr "La resource a été supprimée"
 
 #: ../config_access.py:118
 msgid "Resource type"
 msgstr "Type de ressource"
+
+#: ../ui/update_instance.xml.en:17
+#, fuzzy
+msgctxt "table cell"
+msgid "Resource version"
+msgstr "Ressources"
 
 #: ../messages.py:96
 msgid "Resources copied."
@@ -2228,7 +2293,7 @@ msgstr "Résultats"
 msgid "Reviewers"
 msgstr "Modérateurs"
 
-#: ../text_views.py:237
+#: ../text_views.py:240
 msgid "Row deleted."
 msgstr "Ligne supprimée."
 
@@ -2236,7 +2301,7 @@ msgstr "Ligne supprimée."
 msgid "Saturday"
 msgstr "Samedi"
 
-#: ../agenda/calendars.py:155 ../autoform.py:79
+#: ../agenda/calendars.py:155 ../autoform.py:80
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -2249,7 +2314,7 @@ msgstr "Sauvegarder"
 msgid "Schedule your time with calendar files."
 msgstr "Organisez votre temps à l'aide d'agendas."
 
-#: ../users_views.py:378 ../views.py:374 ../views.py:383
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Rechercher"
 
@@ -2261,7 +2326,7 @@ msgstr "Référencement (SEO)"
 msgid "Search engine optimization"
 msgstr "Référencement (SEO)"
 
-#: ../ui/root/license.xml.en:17
+#: ../ui/root/powered-by.xml.en:66
 msgctxt "paragraph"
 msgid "See the GNU General Public License for more details."
 msgstr "Voir la « GNU General Public License » pour plus de détails."
@@ -2270,7 +2335,7 @@ msgstr "Voir la « GNU General Public License » pour plus de détails."
 msgid "See the users."
 msgstr "Voir les utilisateurs"
 
-#: ../config_models.py:151
+#: ../config_models.py:153
 msgid "Select"
 msgstr "Liste déroulante"
 
@@ -2283,11 +2348,11 @@ msgstr "Tout sélectionner"
 msgid "Select the contact accounts"
 msgstr "Sélectionner les comptes des contacts"
 
-#: ../root_views.py:118
+#: ../root_views.py:113
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../widgets.py:848
+#: ../widgets.py:877
 msgid "Separated by comma"
 msgstr "Séparés par des virgules"
 
@@ -2299,7 +2364,7 @@ msgstr "Septembre"
 msgid "Set your preferred language and timezone."
 msgstr "Choisissez votre langue et votre fuseau horaire préférés."
 
-#: ../config_access.py:89 ../resource_.py:61
+#: ../config_access.py:89 ../resource_.py:65
 msgid "Share"
 msgstr "Partager"
 
@@ -2307,7 +2372,7 @@ msgstr "Partager"
 msgid "Show resources not linked from anywhere."
 msgstr "Montrer les ressources qui ne sont liées à rien."
 
-#: ../skins.py:208
+#: ../skins.py:219
 msgid "Sign in"
 msgstr "Connexion"
 
@@ -2324,7 +2389,7 @@ msgstr "Signature"
 msgid "Skin"
 msgstr "Habillage"
 
-#: ../ui/root/about.xml.en:15
+#: ../ui/root/powered-by.xml.en:18
 msgctxt "table cell"
 msgid "Software"
 msgstr "Logiciel"
@@ -2335,15 +2400,15 @@ msgstr ""
 "Un utilisateur a déjà sauvegardé ce document, cliquez sur « Sauvegarder » de "
 "nouveau pour écraser."
 
-#: ../utils.py:117
+#: ../utils.py:120
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: ../config_models.py:100
+#: ../config_models.py:102
 msgid "Standard field"
 msgstr "Champs standard"
 
-#: ../agenda/event.py:332
+#: ../agenda/event.py:300
 msgid "Start"
 msgstr "Début"
 
@@ -2356,7 +2421,7 @@ msgctxt "heading"
 msgid "Stat"
 msgstr "Statistiques"
 
-#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:335
+#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:346
 msgid "State"
 msgstr "État"
 
@@ -2384,16 +2449,11 @@ msgstr "Dimanche"
 msgid "Switch state"
 msgstr "Changer l'état"
 
-#: ../ui/root/credits.xml.en:23
-msgctxt "li"
-msgid "Sylvain Taverne (French)"
-msgstr "Sylvain Taverne (français)"
-
-#: ../file.py:379
+#: ../file.py:380
 msgid "Tar"
 msgstr "Tar"
 
-#: ../file.py:380
+#: ../file.py:381
 msgid "Tar Archive"
 msgstr "Archive Tar"
 
@@ -2421,11 +2481,11 @@ msgstr "Conditions d'utilisation"
 msgid "Terms of service"
 msgstr "Conditions d'utilisation"
 
-#: ../config_models.py:41 ../folder_views.py:294
+#: ../config_models.py:42 ../folder_views.py:304
 msgid "Text"
 msgstr "Texte"
 
-#: ../config_models.py:42
+#: ../config_models.py:43
 msgid "Textarea"
 msgstr "Textarea"
 
@@ -2446,7 +2506,7 @@ msgstr ""
 msgid "The email address provided is invalid."
 msgstr "L'adresse de courriel est incorrecte, veuillez réessayer."
 
-#: ../agenda/event.py:502
+#: ../agenda/event.py:513
 msgid "The event \"{title}\" has been modified"
 msgstr "L'évènement \"{title}\" a été modifié"
 
@@ -2486,7 +2546,7 @@ msgstr "Ce fichier n'est pas du type attendu."
 msgid "The given range is already defined."
 msgstr "Cet intervalle est déjà défini."
 
-#: ../resource_views.py:260
+#: ../messages.py:107
 msgid "The login name or the password is incorrect."
 msgstr "L'identifiant de connexion ou le mot de passe est incorrect."
 
@@ -2507,11 +2567,11 @@ msgstr "L'URL demandée « ${uri} » est introuvable sur ce serveur."
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
-#: ../config_theme.py:32
+#: ../config_theme.py:33
 msgid "Theme"
 msgstr "Thème"
 
-#: ../views.py:203
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr "Il y a {n} éléments."
 
@@ -2525,7 +2585,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "Une erreur s'est produite, veuillez réessayer plus tard."
 
-#: ../views.py:202
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr "Il y a 1 élément."
 
@@ -2554,7 +2614,7 @@ msgctxt "title attribute"
 msgid "This field is required"
 msgstr "Le champ est obligatoire"
 
-#: ../ui/root/license.xml.en:15
+#: ../ui/root/powered-by.xml.en:64
 msgctxt "paragraph"
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
@@ -2563,7 +2623,7 @@ msgstr ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
 
-#: ../ui/root/license.xml.en:8
+#: ../ui/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid "This program is free software:"
 msgstr "This program is free software:"
@@ -2585,13 +2645,13 @@ msgctxt "label"
 msgid "Timezone"
 msgstr "Fuseau horaire"
 
-#: ../config_models.py:58
+#: ../config_models.py:60
 msgid "Tip"
 msgstr "Astuce"
 
-#: ../config_groups.py:97 ../resource_.py:419 ../agenda/calendars.py:91
-#: ../config_menu.py:57 ../config_models.py:140 ../config_models.py:225
-#: ../config_models.py:318 ../widgets.py:844 ../folder_views.py:305
+#: ../config_groups.py:97 ../resource_.py:457 ../agenda/calendars.py:91
+#: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
+#: ../config_models.py:321 ../widgets.py:873 ../folder_views.py:315
 msgid "Title"
 msgstr "Titre"
 
@@ -2615,7 +2675,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr "Pour activer votre compte, vous devez saisir un mot de passe."
 
-#: ../emails.py:138
+#: ../emails.py:139
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
@@ -2645,7 +2705,7 @@ msgstr ""
 "\n"
 " {uri}\n"
 
-#: ../emails.py:94
+#: ../emails.py:95
 msgid ""
 "To confirm your identity, follow this link:\n"
 "\n"
@@ -2672,7 +2732,7 @@ msgstr ""
 "Pour éditer ce fichier directement sur votre PC avec l'application de votre "
 "choix, installez <g id='1'>restedit</g>:"
 
-#: ../ui/root/about.xml.en:46
+#: ../ui/root/powered-by.xml.en:49
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='4'>Web Site</g>."
 msgstr ""
@@ -2687,8 +2747,9 @@ msgctxt "table cell"
 msgid "Translation"
 msgstr "Traduction"
 
-#: ../ui/root/credits.xml.en:16
-msgctxt "heading"
+#: ../ui/root/powered-by.xml.en:89
+#, fuzzy
+msgctxt "table cell"
 msgid "Translators"
 msgstr "Traducteurs"
 
@@ -2696,8 +2757,8 @@ msgstr "Traducteurs"
 msgid "Tuesday"
 msgstr "Mardi"
 
-#: ../config_models.py:141 ../config_models.py:226 ../folder_views.py:295
-#: ../folder_views.py:306
+#: ../config_models.py:143 ../config_models.py:228 ../folder_views.py:305
+#: ../folder_views.py:316
 msgid "Type"
 msgstr "Type"
 
@@ -2730,6 +2791,10 @@ msgstr "URI"
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr "Fichier de type mime « {mimetype} » inattendu."
 
+#: ../update.py:90
+msgid "Unknow"
+msgstr ""
+
 #: ../ui/file/externaledit.xml.en:20
 msgctxt "li"
 msgid "Unpack the tarball <g id='3'>restedit-last.tar.gz</g>"
@@ -2747,7 +2812,7 @@ msgstr "Jusqu'au"
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: ../ui/generic/edit_language_menu.xml.en:35
+#: ../ui/generic/edit_language_menu.xml.en:23
 msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
@@ -2756,19 +2821,40 @@ msgstr "Mettre à jour"
 msgid "Update calendar visibility"
 msgstr "Mettre à jour la visibilité des calendriers"
 
-#: ../root_views.py:242
+#: ../root_views.py:228
 msgid "Update docs"
 msgstr "Mettre à jour la documentation"
 
-#: ../scripts/icms-update.py:134
+#: ../update.py:175
+#, fuzzy
+msgid "Update instance"
+msgstr "Mettre à jour la documentation"
+
+#: ../ui/update_instance.xml.en:51
+msgctxt "table cell"
+msgid "Update method title"
+msgstr ""
+
+#: ../ui/update_instance.xml.en:39
+#, fuzzy
+msgctxt "heading"
+msgid "Update methods"
+msgstr "Mettre à jour la documentation"
+
+#: ../update.py:193
+msgid "Updated method has been launched"
+msgstr ""
+
+#: ../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
 msgstr "Mise à jour vers la version %s"
 
-#: ../scripts/icms-update.py:217
-msgid "Upgrade: set mtime/author"
-msgstr "Mise-à-jour: fixez mtime/auteur"
+#: ../update.py:163
+#, fuzzy
+msgid "Upgrade to version {0}"
+msgstr "Mise à jour vers la version %s"
 
-#: ../root_views.py:253
+#: ../root_views.py:239
 msgid "Upload"
 msgstr "Importer"
 
@@ -2803,7 +2889,7 @@ msgid "Upload office documents, images, media files, etc."
 msgstr ""
 "Importer des documents bureautiques, des images, des fichiers de média, etc."
 
-#: ../users.py:66
+#: ../users.py:91
 msgid "User"
 msgstr "Utilisateur"
 
@@ -2858,7 +2944,7 @@ msgstr "Page de profil d'un utilisateur"
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: ../users.py:207
+#: ../users.py:253
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -2870,7 +2956,7 @@ msgstr "Les utilisateurs peuvent s'inscrire par eux-mêmes"
 msgid "Users, Access Control & Security"
 msgstr "Utilisateurs, contrôle d'accès et sécurité"
 
-#: ../ui/root/about.xml.en:16
+#: ../ui/root/powered-by.xml.en:19
 msgctxt "table cell"
 msgid "Version"
 msgstr "Version"
@@ -2879,14 +2965,20 @@ msgstr "Version"
 msgid "Version uploaded"
 msgstr "Version chargée"
 
-#: ../file.py:178 ../file.py:179
+#: ../file.py:179 ../file.py:180
 msgid "Video"
 msgstr "Vidéo"
 
-#: ../file_views.py:193 ../file_views.py:242 ../file_views.py:254
+#: ../ui/binary/Video_view.xml.en:7
+#, fuzzy
+msgctxt "link"
+msgid "Video"
+msgstr "Vidéo"
+
+#: ../file_views.py:193 ../file_views.py:241 ../file_views.py:254
 #: ../file_views.py:313 ../config_access.py:87 ../webpage.py:35
-#: ../blog/blog.py:69 ../text_views.py:79 ../text_views.py:170
-#: ../folder_views.py:119
+#: ../blog/blog.py:69 ../text_views.py:79 ../text_views.py:171
+#: ../folder_views.py:124
 msgid "View"
 msgstr "Voir"
 
@@ -2931,27 +3023,27 @@ msgstr "Hebdomadaire"
 msgid "Weekly View"
 msgstr "Hebdomadaire"
 
-#: ../resource_views.py:298
+#: ../resource_views.py:328
 msgid "Welcome!"
 msgstr "Bienvenue !"
 
-#: ../agenda/event.py:334
+#: ../agenda/event.py:345
 msgid "Where"
 msgstr "Où"
 
-#: ../config_models.py:160
+#: ../config_models.py:162
 msgid "Widget to use"
 msgstr "Widget à utiliser"
 
-#: ../root.py:325
+#: ../root.py:337
 msgid "Windows"
 msgstr "Windows"
 
-#: ../file.py:205 ../file.py:238
+#: ../file.py:206 ../file.py:239
 msgid "Word"
 msgstr "Texte MS Word"
 
-#: ../file.py:206 ../file.py:239
+#: ../file.py:207 ../file.py:240
 msgid "Word Text"
 msgstr "Texte au format MS Word"
 
@@ -2959,7 +3051,7 @@ msgstr "Texte au format MS Word"
 msgid "Wrong time selection (HH:MM)."
 msgstr "Horaire incorrect (HH:MM)."
 
-#: ../text.py:249
+#: ../text.py:254
 msgid "XML File"
 msgstr "Fichier XML"
 
@@ -2971,7 +3063,7 @@ msgstr "Clé de vérification de Yahoo"
 msgid "Yearly"
 msgstr "Annuel"
 
-#: ../widgets.py:233 ../widgets.py:259 ../agenda/calendars.py:106
+#: ../widgets.py:210 ../widgets.py:262 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
 msgstr "Oui"
@@ -2986,11 +3078,11 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr "Oui"
 
-#: ../resource_views.py:312
+#: ../resource_views.py:342
 msgid "You Are Now Logged out."
 msgstr "Vous êtes maintenant déconnecté."
 
-#: ../emails.py:116
+#: ../emails.py:117
 msgid ""
 "You already have an account:\n"
 "\n"
@@ -3000,7 +3092,7 @@ msgstr ""
 "\n"
 " {host}/;login?loginname={userid}"
 
-#: ../resource_views.py:202
+#: ../resource_views.py:232
 msgid "You are already connected"
 msgstr "Vous êtes déjà connecté"
 
@@ -3047,7 +3139,7 @@ msgstr ""
 "Vous avez déjà confirmé votre inscription. Essayez de vous connecter ou bien "
 "demandez un nouveau mot de passe."
 
-#: ../emails.py:105 ../emails.py:127
+#: ../emails.py:106 ../emails.py:128
 msgid ""
 "You have been registered to the \"{host_title}\" site:\n"
 "\n"
@@ -3067,7 +3159,7 @@ msgstr ""
 "Vous avez mal saisi votre mot de passe actuel, votre compte n'a pas été "
 "modifié."
 
-#: ../resource_views.py:283
+#: ../resource_views.py:313
 msgid "You must complete your account informations"
 msgstr "Vous devez compléter vos informations de profil"
 
@@ -3075,7 +3167,7 @@ msgstr "Vous devez compléter vos informations de profil"
 msgid "You must select one and only one language."
 msgstr "Vous ne devez sélectionner qu'une seule langue."
 
-#: ../ui/root/license.xml.en:22
+#: ../ui/root/powered-by.xml.en:71
 msgctxt "paragraph"
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
@@ -3092,11 +3184,11 @@ msgstr "Vous étiez déjà inscrit."
 msgid "You were already unsubscribed."
 msgstr "Vous étiez déjà désinscrit."
 
-#: ../emails.py:153 ../emails.py:154
+#: ../emails.py:154 ../emails.py:155
 msgid "Your account has been canceled"
 msgstr "Votre compte a été désactivé"
 
-#: ../resource_views.py:267
+#: ../users.py:177
 msgid ""
 "Your account has been canceled, contact the administrator  if you want to "
 "get access again."
@@ -3104,7 +3196,7 @@ msgstr ""
 "Votre compte a été désactivé, contactez l'administrateur si vous voulez le "
 "réactiver."
 
-#: ../emails.py:146 ../emails.py:147
+#: ../emails.py:147 ../emails.py:148
 msgid "Your account has been re-activated"
 msgstr "Votre compte a été réactivé"
 
@@ -3117,32 +3209,27 @@ msgstr "Votre navigateur ne supporte pas les iframes."
 msgid "Your confirmation key is invalid."
 msgstr "Votre clé de confirmation est invalide."
 
-#: ../root_views.py:144
+#: ../root_views.py:139
 msgid "Your email address"
 msgstr "Votre adresse de courriel"
 
-#: ../ui/root/credits.xml.en:22
-msgctxt "li"
-msgid "Zhou Li (Chinese)"
-msgstr "Zhou Li (chinois)"
-
-#: ../buttons.py:153 ../file.py:368
+#: ../buttons.py:153 ../file.py:369
 msgid "Zip"
 msgstr "Zip"
 
-#: ../file.py:369
+#: ../file.py:370
 msgid "Zip Archive"
 msgstr "Archive Zip"
 
-#: ../folder_views.py:84
+#: ../folder_views.py:89
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../folder_views.py:106
+#: ../folder_views.py:111
 msgid "Zoom In"
 msgstr "Zoomer"
 
-#: ../folder_views.py:109
+#: ../folder_views.py:114
 msgid "Zoom Out"
 msgstr "Dézoomer"
 
@@ -3159,11 +3246,11 @@ msgstr "[{title}] a été modifié"
 msgid "huge"
 msgstr "énorme"
 
-#: ../root.py:90
+#: ../root.py:94
 msgid "iKaaro"
 msgstr ""
 
-#: ../ui/root/about.xml.en:29
+#: ../ui/root/powered-by.xml.en:32
 msgctxt "paragraph"
 msgid ""
 "iKaaro is a Content Management System, written in the <g id='2'>Python</g> "
@@ -3177,7 +3264,7 @@ msgstr ""
 msgid "large"
 msgstr "grande"
 
-#: ../root_views.py:207
+#: ../root_views.py:208
 msgid "lpOD"
 msgstr "lpOD"
 
@@ -3189,7 +3276,7 @@ msgstr "moyenne"
 msgid "original"
 msgstr "originale"
 
-#: ../root_views.py:206
+#: ../root_views.py:207
 msgid "pygobject"
 msgstr "pygobject"
 
@@ -3206,7 +3293,7 @@ msgctxt "noscript"
 msgid "the EditArea Editor is unavailable.)"
 msgstr "l'éditeur EditArea n'est pas disponible.)"
 
-#: ../ui/tiny_mce/rte.xml.en:49
+#: ../ui/tiny_mce/rte.xml.en:51
 msgctxt "noscript"
 msgid "the Rich Text Editor is unavailable.)"
 msgstr "l'éditeur de texte n'est pas disponible.)"
@@ -3221,7 +3308,7 @@ msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
 msgstr "à <x id='5'/>  <g id='6'>Ajouter</g>"
 
-#: ../ui/root/license.xml.en:16
+#: ../ui/root/powered-by.xml.en:65
 msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
@@ -3230,7 +3317,7 @@ msgstr ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 
-#: ../ui/root/license.xml.en:8
+#: ../ui/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid ""
 "you can redistribute it and/or modify it under the terms of the GNU General "
@@ -3293,7 +3380,7 @@ msgctxt "title attribute"
 msgid "« Previous"
 msgstr "« Précédent"
 
-#: ../root_views.py:323
+#: ../root_views.py:309
 msgid "¶"
 msgstr ""
 
@@ -3306,7 +3393,7 @@ msgctxt "link"
 msgid "»"
 msgstr ""
 
-#: ../utils.py:129
+#: ../utils.py:130
 msgid "…"
 msgstr "…"
 
@@ -3777,8 +3864,8 @@ msgstr ""
 
 #~ msgid "${title} <a href=\";search?${search_parameters}\">(Edit search)</a>"
 #~ msgstr ""
-#~ "${title} <a href=\";search?${search_parameters}\">(Modifier la recherche)"
-#~ "</a>"
+#~ "${title} <a href=\";search?${search_parameters}\">(Modifier la "
+#~ "recherche)</a>"
 
 #~ msgid "${title} <em stl:if=\"user_must_confirm\">(Not confirm)</em>"
 #~ msgstr "${title} <em stl:if=\"user_must_confirm\">(Ne pas confirmer)</em>"
@@ -3896,10 +3983,6 @@ msgstr ""
 #~ msgctxt "table cell"
 #~ msgid "(HH:MM)"
 #~ msgstr "(HH:MM)"
-
-#~ msgctxt "link"
-#~ msgid "+"
-#~ msgstr "+"
 
 #~ msgid ", "
 #~ msgstr ", "
@@ -4119,21 +4202,21 @@ msgstr ""
 
 #~ msgctxt "label"
 #~ msgid ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(mandatory)</g>  <g id='3'>"
-#~ "(multiple)</g>  <g id='4'>${widget/tip}</g>"
+#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(mandatory)</g>  <g "
+#~ "id='3'>(multiple)</g>  <g id='4'>${widget/tip}</g>"
 #~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatoire)</g>  <g id='3'>"
-#~ "(multiple)</g>  <g id='4'>${widget/tip}</g>"
+#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatoire)</g>  <g "
+#~ "id='3'>(multiple)</g>  <g id='4'>${widget/tip}</g>"
 
 #~ msgctxt "label"
 #~ msgid ""
-#~ "<g id='1'>${widget/title} </g>  <g id='2'>(mandatory) </g>  <g id='3'>"
-#~ "(multiple) </g>  <g id='4'>${widget/tip}</g>  <x id='5'/> ${widget/"
+#~ "<g id='1'>${widget/title} </g>  <g id='2'>(mandatory) </g>  <g "
+#~ "id='3'>(multiple) </g>  <g id='4'>${widget/tip}</g>  <x id='5'/> ${widget/"
 #~ "widget} ${widget/suffix}"
 #~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatoire)</g>  <g id='3'>"
-#~ "(multiple)</g>  <g id='4'>${widget/tip}</g>  <x id='5'/> ${widget/widget} "
-#~ "${widget/suffix}"
+#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatoire)</g>  <g "
+#~ "id='3'>(multiple)</g>  <g id='4'>${widget/tip}</g>  <x id='5'/> ${widget/"
+#~ "widget} ${widget/suffix}"
 
 #~ msgctxt "link"
 #~ msgid "<g id='1'>Download External Editor for Windows</g>."
@@ -4590,6 +4673,9 @@ msgstr ""
 
 #~ msgid "ANONYMOUS"
 #~ msgstr "Anonyme"
+
+#~ msgid "About"
+#~ msgstr "À propos de"
 
 #~ msgid "Accept the document."
 #~ msgstr "Accepter le document"
@@ -5140,9 +5226,6 @@ msgstr ""
 #~ msgid "Edit your personal data"
 #~ msgstr "Modifier vous informations personnelles"
 
-#~ msgid "Email"
-#~ msgstr "Courriel"
-
 #~ msgid "Email Address"
 #~ msgstr "Adresse de courriel"
 
@@ -5171,9 +5254,6 @@ msgstr ""
 #~ msgctxt "title"
 #~ msgid "Epoz-Toolbox"
 #~ msgstr "boîte à outils Epoz"
-
-#~ msgid "Error: {msg}"
-#~ msgstr "Erreur : {msg}"
 
 #~ msgid "Event definitely deleted."
 #~ msgstr "Événement définitivement supprimé."
@@ -5207,6 +5287,10 @@ msgstr ""
 
 #~ msgid "Failed to load the file: {error}"
 #~ msgstr "Échec lors du chargement du fichier : {error}"
+
+#~ msgctxt "legend"
+#~ msgid "Fields"
+#~ msgstr "Champs"
 
 #~ msgid "Firstname:"
 #~ msgstr "Prénom :"
@@ -5272,6 +5356,10 @@ msgstr ""
 #~ msgid "HTML"
 #~ msgstr "Source HTML"
 
+#~ msgctxt "heading"
+#~ msgid "Hacking"
+#~ msgstr "Codeurs"
+
 #~ msgctxt "span"
 #~ msgid "Heading 1"
 #~ msgstr "Titre 1"
@@ -5322,6 +5410,10 @@ msgstr ""
 #~ msgctxt "heading"
 #~ msgid "Help on ODT Export"
 #~ msgstr "Aide sur l'export ODT"
+
+#~ msgctxt "li"
+#~ msgid "Hervé Cauwelier (French)"
+#~ msgstr "Hervé Cauwelier (français)"
 
 #~ msgid "High"
 #~ msgstr "Haute"
@@ -5416,6 +5508,10 @@ msgstr ""
 #~ msgctxt "title attribute"
 #~ msgid "Italic"
 #~ msgstr "Italique"
+
+#~ msgctxt "li"
+#~ msgid "Juan David Ibáñez Palomar (Spanish)"
+#~ msgstr "Juan David Ibáñez Palomar (espagnol)"
 
 #~ msgid "Keep your notes with plain text files."
 #~ msgstr "Conserver vos notes dans des fichiers texte."
@@ -5593,6 +5689,10 @@ msgstr ""
 #~ msgid "Next"
 #~ msgstr "Suivant"
 
+#~ msgctxt "li"
+#~ msgid "Nicolas Deram (French)"
+#~ msgstr "Nicolas Deram (français)"
+
 #~ msgid "No data to export."
 #~ msgstr "Aucune donnée à exporter."
 
@@ -5755,6 +5855,10 @@ msgstr ""
 #~ msgid "Pages listed as a subitem will see their title level incremented."
 #~ msgstr ""
 #~ "Les pages dans des sous-listes verront leur niveau de titre incrémenté."
+
+#~ msgctxt "li"
+#~ msgid "Paolo Dina (Italian)"
+#~ msgstr "Paolo Dina (italien)"
 
 #~ msgid "Password changed."
 #~ msgstr "Mot de passe modifié."
@@ -5991,9 +6095,6 @@ msgstr ""
 #~ msgid "Resource:"
 #~ msgstr "Ressource :"
 
-#~ msgid "Resources"
-#~ msgstr "Ressources"
-
 #~ msgid "Resources Ordered Table"
 #~ msgstr "Tableau ordonné de ressources"
 
@@ -6005,9 +6106,6 @@ msgstr ""
 
 #~ msgid "Resources assigned to issues"
 #~ msgstr "Ressources assignées aux fiches"
-
-#~ msgid "Resources pasted."
-#~ msgstr "Ressources collées."
 
 #~ msgid "Retire the document."
 #~ msgstr "Dépublier le document."
@@ -6192,6 +6290,10 @@ msgstr ""
 #~ msgctxt "table cell"
 #~ msgid "Summary"
 #~ msgstr "Résumé"
+
+#~ msgctxt "li"
+#~ msgid "Sylvain Taverne (French)"
+#~ msgstr "Sylvain Taverne (français)"
 
 #~ msgid "Syntax error, please check the view for details."
 #~ msgstr "Erreur de syntaxe, merci de vérifier la vue pour plus de détails."
@@ -6523,6 +6625,9 @@ msgstr ""
 #~ msgid "Update text export"
 #~ msgstr "Mettre à jour l'export texte"
 
+#~ msgid "Upgrade: set mtime/author"
+#~ msgstr "Mise-à-jour: fixez mtime/auteur"
+
 #~ msgctxt "heading"
 #~ msgid "Upload Image"
 #~ msgstr "Remplacer par une autre image"
@@ -6752,6 +6857,10 @@ msgstr ""
 
 #~ msgid "Your orders"
 #~ msgstr "vos commandes"
+
+#~ msgctxt "li"
+#~ msgid "Zhou Li (Chinese)"
+#~ msgstr "Zhou Li (chinois)"
 
 #~ msgid "Zip:"
 #~ msgstr "Zip :"
