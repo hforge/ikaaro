@@ -42,7 +42,7 @@ from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
 from links import get_abspath_links, update_abspath_links
-from utils import split_reference
+from utils import split_reference, get_secure_hash
 
 
 class Field(BaseField):
