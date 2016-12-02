@@ -10,7 +10,9 @@ locale/*.mo
 *.xml.fr
 *.xml.it
 *.xml.zh
+*.xml.nl
 *.xhtml.es
 *.xhtml.fr
 *.xhtml.it
 *.xhtml.zh
+*.xhtml.nl
