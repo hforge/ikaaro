@@ -255,7 +255,8 @@ class DBResource(Resource):
         if ref_action == 'restrict':
             # Check referencial-integrity
             path = str(resource.abspath)
-            query = NotQuery(get_base_path_query(path))
+            query = AndQuery(NotQuery(PhraseQuery('abspath', path)),
+                             NotQuery(get_base_path_query(path)))
             sub_search = database.search(query)
             for sub_resource in resource.traverse_resources():
                 path = str(sub_resource.abspath)
