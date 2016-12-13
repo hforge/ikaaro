@@ -364,8 +364,10 @@ class Text_Field(Metadata_Field):
 
 
 class Textarea_Field(Text_Field):
+
     widget = MultilineWidget
     rest_type = 'textarea'
+    widget_keys = Text_Field.widget_keys + ['rows', 'cols']
 
 
 
