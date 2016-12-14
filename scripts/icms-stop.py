@@ -19,36 +19,12 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-from os import kill
-from signal import SIGINT, SIGTERM
 
 # Import from itools
 import itools
 
 # Import from ikaaro
-from ikaaro.server import get_pid
-
-
-
-def stop(parser, options, target):
-    # Stop the Web Server
-    pid = get_pid('%s/pid' % target)
-    if pid is None:
-        print '[%s] Web Server not running.' % target
-
-        # XXX Obsolete code, remove by 0.70
-        # Eventually stop the subprocess
-        sub_pid = get_pid('%s/pid-subprocess' % target)
-        if sub_pid is not None:
-            kill(sub_pid, SIGTERM)
-            print '[%s] Web Server subprocess is running, i kill it' % target
-    else:
-        signal = SIGTERM if options.force else SIGINT
-        kill(pid, signal)
-        if options.force:
-            print '[%s] Web Server shutting down...' % target
-        else:
-            print '[%s] Web Server shutting down (gracefully)...' % target
+from ikaaro.server import Server
 
 
 if __name__ == '__main__':
@@ -69,4 +45,5 @@ if __name__ == '__main__':
 
     # Action!
     for target in args:
-        stop(parser, options, target)
+        server = Server(target)
+        server.stop(force=options.force)

@@ -23,8 +23,10 @@ from datetime import timedelta
 from email.parser import HeaderParser
 import json
 import pickle
-from os import fdopen, getpgid
+from os import fdopen, getpgid, kill
+from psutil import pid_exists
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
+from signal import SIGINT, SIGTERM
 from socket import gaierror
 import sys
 from tempfile import mkstemp
@@ -34,23 +36,25 @@ from traceback import format_exc
 from glib import GError
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import become_daemon, get_abspath
 from itools.database import Metadata, RangeQuery
+from itools.database import check_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
-from itools.loop import cron
+from itools.loop import Loop, cron
 from itools.web import WebServer, WebLogger
-from itools.web import StaticContext, set_context
+from itools.web import StaticContext, set_context, get_context
 from itools.web import SoupMessage
 
 # Import from ikaaro
 from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
+from update import is_instance_up_to_date
 from skins import skin_registry
 
 
@@ -191,8 +195,101 @@ class Server(WebServer):
         self.session_timeout = get_value('session-timeout')
 
 
+    def check_consistency(self, quick):
+        # Check the server is not running
+        pid = get_pid('%s/pid' % self.target)
+        if pid is not None:
+            print '[%s] The Web Server is already running.' % self.target
+            return False
+
+        # Check for database consistency
+        if quick is False and check_database(self.target) is False:
+            return False
+
+        # Check instance is up to date
+        if not is_instance_up_to_date(self.target):
+            print 'The instance is not up-to-date, please type:'
+            print
+            print '    $ icms-update.py %s' % self.target
+            print
+            return False
+        return True
+
+
+    def start(self, detach=False, profile=False, loop=True):
+        self.loop = Loop(pid_file='%s/pid' % self.target, profile=profile)
+        # Daemon mode
+        if detach:
+            become_daemon()
+
+        # Update Git tree-cache, to speed things up
+        self.database.worktree.update_tree_cache()
+
+        # Find out the IP to listen to
+        address = self.config.get_value('listen-address').strip()
+        if not address:
+            raise ValueError, 'listen-address is missing from config.conf'
+        if address == '*':
+            address = None
+
+        # Find out the port to listen
+        port = self.config.get_value('listen-port')
+        if port is None:
+            raise ValueError, 'listen-port is missing from config.conf'
+
+        # Listen & set context
+        root = self.root
+        self.listen(address, port)
+        self.set_context('/', root.context_cls)
+
+        # Call method on root at start
+        context = get_context()
+        root.launch_at_start(context)
+
+        # Set cron interval
+        interval = self.config.get_value('cron-interval')
+        if interval:
+            cron(self.cron_manager, 1)
+
+        # Run
+        profile = ('%s/log/profile' % self.target) if profile else None
+        # Init loop
+        if loop:
+            try:
+                self.loop.run()
+            except KeyboardInterrupt:
+                self.close()
+        # Ok
+        return True
+
+
     def get_pid(self):
         return get_pid('%s/pid' % self.target)
+
+
+    def is_running(self):
+        pid = self.get_pid()
+        return pid_exists(pid)
+
+
+    def stop(self, force=False):
+        proxy = super(Server, self)
+        proxy.stop()
+        print 'Stoping server...'
+        self.kill(force)
+
+
+    def kill(self, force=False):
+        pid = get_pid('%s/pid' % self.target)
+        if pid is None:
+            print '[%s] Web Server not running.' % self.target
+        else:
+            signal = SIGTERM if force else SIGINT
+            kill(pid, signal)
+            if force:
+                print '[%s] Web Server shutting down...' % self.target
+            else:
+                print '[%s] Web Server shutting down (gracefully)...' % self.target
 
 
     def set_context(self, path, context):
