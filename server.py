@@ -23,21 +23,24 @@ from datetime import timedelta
 from email.parser import HeaderParser
 import json
 import pickle
-from os import fdopen, getpgid, kill
+from os import fdopen, getpgid, getpid, kill, remove
+from os.path import join
 from psutil import pid_exists
+import sys
+from time import time
+from traceback import format_exc
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from signal import SIGINT, SIGTERM
 from socket import gaierror
-import sys
 from tempfile import mkstemp
-from traceback import format_exc
 
 # Import from pygobject
 from glib import GError
 
 # Import from itools
-from itools.core import become_daemon, get_abspath
+from itools.core import become_daemon, get_abspath, vmsize
 from itools.database import Metadata, RangeQuery
+from itools.database import make_catalog, Resource, get_register_fields
 from itools.database import check_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
@@ -119,6 +122,26 @@ def get_fake_context(database, context_cls=CMSContext):
     return context
 
 
+class ServerLoop(Loop):
+
+    server = None
+
+    def __init__(self, target, server, profile=None):
+        self.server = server
+        # Init
+        pid_file = target + '/pid'
+        proxy = super(ServerLoop, self)
+        proxy.__init__(pid_file, profile)
+
+
+    def run(self):
+        # Save running informations
+        self.server.save_running_informations()
+        # Run
+        proxy = super(ServerLoop, self)
+        proxy.run()
+
+
 
 class Server(WebServer):
 
@@ -126,6 +149,7 @@ class Server(WebServer):
                  profile_space=False):
         target = lfs.get_absolute_path(target)
         self.target = target
+        self.read_only = read_only
 
         # Load the config
         config = get_config(target)
@@ -217,7 +241,10 @@ class Server(WebServer):
 
 
     def start(self, detach=False, profile=False, loop=True):
-        self.loop = Loop(pid_file='%s/pid' % self.target, profile=profile)
+        self.loop = ServerLoop(
+              target=self.target,
+              server=self,
+              profile=profile)
         # Daemon mode
         if detach:
             become_daemon()
@@ -261,6 +288,86 @@ class Server(WebServer):
                 self.close()
         # Ok
         return True
+
+
+    def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        if self.is_running_in_rw_mode():
+            print 'Cannot proceed, the server is running in read-write mode.'
+            return
+        # Check for database consistency
+        if quick is False and check_database(self.target) is False:
+            return False
+        # Create a temporary new catalog
+        catalog_path = '%s/catalog.new' % self.target
+        if lfs.exists(catalog_path):
+            lfs.remove(catalog_path)
+        catalog = make_catalog(catalog_path, get_register_fields())
+
+        # Get the root
+        root = self.root
+
+        # Build a fake context
+        context = self.get_fake_context()
+
+        # Update
+        t0, v0 = time(), vmsize()
+        doc_n = 0
+        error_detected = False
+        if as_test:
+            log = open('%s/log/update-catalog' % self.target, 'w').write
+        for obj in root.traverse_resources():
+            if not isinstance(obj, Resource):
+                continue
+            if not quiet:
+                print doc_n, obj.abspath
+            doc_n += 1
+            context.resource = obj
+
+            # Index the document
+            try:
+                catalog.index_document(obj)
+            except Exception:
+                if as_test:
+                    error_detected = True
+                    log('*** Error detected ***\n')
+                    log('Abspath of the resource: %r\n\n' % str(obj.abspath))
+                    log(format_exc())
+                    log('\n')
+                else:
+                    raise
+
+            # Free Memory
+            del obj
+            self.database.make_room()
+
+        if not error_detected:
+            if as_test:
+                # Delete the empty log file
+                remove('%s/log/update-catalog' % self.target)
+
+            # Update / Report
+            t1, v1 = time(), vmsize()
+            v = (v1 - v0)/1024
+            print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
+            # Commit
+            print '[Commit]',
+            sys.stdout.flush()
+            catalog.save_changes()
+            # Commit / Replace
+            old_catalog_path = '%s/catalog' % self.target
+            if lfs.exists(old_catalog_path):
+                lfs.remove(old_catalog_path)
+            lfs.move(catalog_path, old_catalog_path)
+            # Commit / Report
+            t2, v2 = time(), vmsize()
+            v = (v2 - v1)/1024
+            print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+            return True
+        else:
+            print '[Update] Error(s) detected, the new catalog was NOT saved'
+            print ('[Update] You can find more infos in %r' %
+                   join(self.target, 'log/update-catalog'))
+            return False
 
 
     def get_pid(self):
@@ -309,21 +416,46 @@ class Server(WebServer):
             self.set_context('/ui/%s' % name, context)
 
 
-    def is_running_in_rw_mode(self):
-        address = self.config.get_value('listen-address').strip()
-        if address == '*':
-            address = '127.0.0.1'
-        port = self.config.get_value('listen-port')
+    def save_running_informations(self):
+        # Save server running informations
+        kw = {'pid': getpid(),
+              'target': self.target,
+              'read_only': self.read_only}
+        data = pickle.dumps(kw)
+        with open(self.target + '/running', 'w') as output_file:
+            output_file.write(data)
 
-        url = 'http://%s:%s/;_ctrl' % (address, port)
+
+    def get_running_informations(self):
         try:
-            h = vfs.open(url)
-        except GError:
-            # The server is not running
-            return False
+            with open(self.target + '/running', 'r') as output_file:
+                data = output_file.read()
+                return pickle.loads(data)
+        except IOError:
+            return None
 
-        data = h.read()
-        return json.loads(data)['read-only'] is False
+
+    def is_running_in_rw_mode(self, mode='running'):
+        is_running = self.is_running()
+        if not is_running:
+            return False
+        if mode == 'request':
+            address = self.config.get_value('listen-address').strip()
+            if address == '*':
+                address = '127.0.0.1'
+            port = self.config.get_value('listen-port')
+
+            url = 'http://%s:%s/;_ctrl' % (address, port)
+            try:
+                h = vfs.open(url)
+            except GError:
+                # The server is not running
+                return False
+            data = h.read()
+            return json.loads(data)['read-only'] is False
+        elif mode == 'running':
+            kw = self.get_running_informations()
+            return not kw.get('read_only', False)
 
 
     #######################################################################

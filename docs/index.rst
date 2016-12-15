@@ -10,3 +10,4 @@ Contents:
    security
    admins
    rest
+   server
