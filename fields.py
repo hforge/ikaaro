@@ -81,7 +81,7 @@ class Field(BaseField):
         return True
 
 
-    def get_value_title(self, resource, name, language=None):
+    def get_value_title(self, resource, name, language=None, mode=None):
         return self.get_value(resource, name, language)
 
 
@@ -306,7 +306,7 @@ class Select_Field(Metadata_Field):
     widget_keys = Metadata_Field.widget_keys + ['has_empty_option', 'oneline']
 
 
-    def get_value_title(self, resource, name, language=None):
+    def get_value_title(self, resource, name, language=None, mode=None):
         value = self.get_value(resource, name, language)
         datatype = self.get_datatype()
         if self.multiple:

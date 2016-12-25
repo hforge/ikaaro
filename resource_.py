@@ -363,11 +363,11 @@ class DBResource(Resource):
         return field.set_value(self, name, value, language, **kw)
 
 
-    def get_value_title(self, name, language=None):
+    def get_value_title(self, name, language=None, mode=None):
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value_title(self, name, language)
+        return field.get_value_title(self, name, language, mode)
 
 
     def get_brain_value(self, name):
