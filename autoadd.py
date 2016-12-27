@@ -272,7 +272,8 @@ class AutoAdd(AutoForm):
         if name:
             return name
 
-        lang = get_context().root.get_default_language()
+        context = get_context()
+        lang = self.resource.get_edit_languages(context)[0]
         return form['title'][lang]
 
 

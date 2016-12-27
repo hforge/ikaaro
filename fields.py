@@ -41,8 +41,8 @@ from autoform import ColorPickerWidget, ProgressBarWidget, RTEWidget
 from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
-from utils import get_secure_hash, split_reference
-
+from links import get_abspath_links, update_abspath_links
+from utils import split_reference, get_secure_hash
 
 
 class Field(BaseField):
@@ -53,7 +53,6 @@ class Field(BaseField):
     multilingual = False
     required = False
     title = None
-    hidden_by_default = False
     readonly = False # Means the field should not be editable by the user
     datatype = None
     widget = None
@@ -82,14 +81,13 @@ class Field(BaseField):
         return True
 
 
-    def get_value_title(self, resource, name, language=None):
+    def get_value_title(self, resource, name, language=None, mode=None):
         return self.get_value(resource, name, language)
 
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored',
-        'hidden_by_default', 'is_valid']
+        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'is_valid']
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
@@ -308,7 +306,7 @@ class Select_Field(Metadata_Field):
     widget_keys = Metadata_Field.widget_keys + ['has_empty_option', 'oneline']
 
 
-    def get_value_title(self, resource, name, language=None):
+    def get_value_title(self, resource, name, language=None, mode=None):
         value = self.get_value(resource, name, language)
         datatype = self.get_datatype()
         if self.multiple:
@@ -323,6 +321,38 @@ class Select_Field(Metadata_Field):
         return rest
 
 
+class SelectAbspath_Field(Select_Field):
+    """
+    Select_Field with values linking to resources abspath
+    """
+
+    def get_links(self, links, resource, field_name, languages):
+        return get_abspath_links(self, links, resource, field_name, languages)
+
+
+    def update_links(self, resource, field_name, source, target, languages,
+                     old_base, new_base):
+        update_abspath_links(self, resource, field_name, source, target,
+                         languages, old_base, new_base)
+
+
+    def update_incoming_links(self, resource, field_name, source, languages):
+        pass
+
+
+    def get_value_title(self, resource, name, language=None, mode=None):
+        abspath = self.get_value(resource, name, language=language)
+        if not abspath:
+            return None
+        if self.multiple is False:
+            return resource.get_resource(abspath).get_title()
+        titles = []
+        for x in abspath:
+            r = resource.get_resource(x)
+            titles.append(r.get_title())
+        return ', '.join(titles)
+
+
 
 class Text_Field(Metadata_Field):
     rest_type = 'text'
@@ -334,8 +364,10 @@ class Text_Field(Metadata_Field):
 
 
 class Textarea_Field(Text_Field):
+
     widget = MultilineWidget
     rest_type = 'textarea'
+    widget_keys = Text_Field.widget_keys + ['rows', 'cols']
 
 
 
@@ -474,8 +506,31 @@ class URI_Field(Metadata_Field):
                 self._set_value(resource, field_name, new_value, lang)
 
 
+########################################
+# Abspath_Field
+########################################
 
-class Owner_Field(URI_Field):
+class Abspath_Field(URI_Field):
+    """
+    Same that URI_Field but when we update links we use abspath
+    """
+
+    def get_links(self, links, resource, field_name, languages):
+        return get_abspath_links(self, links, resource, field_name, languages)
+
+
+    def update_links(self, resource, field_name, source, target, languages,
+                     old_base, new_base):
+        update_abspath_links(self, resource, field_name, source, target,
+                         languages, old_base, new_base)
+
+
+    def update_incoming_links(self, resource, field_name, source, languages):
+        pass
+
+
+
+class Owner_Field(Abspath_Field):
 
     readonly = True
     indexed = True

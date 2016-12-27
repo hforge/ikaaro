@@ -104,6 +104,7 @@ class FileWidget(Widget):
     height = 128
     fit = 1
 
+    @proto_property
     def thumb(self):
         return isinstance(self.value, Image)
 
@@ -130,7 +131,7 @@ class ChoosePassword_Widget(Widget):
       });
     </script>""")
 
-    @proto_property
+    @proto_lazy_property
     def scripts(self):
         context = get_context()
         handler = context.get_template('/ui/js/password_strength_plugin.js')
@@ -162,6 +163,7 @@ class ReadOnlyWidget(Widget):
         return value
 
 
+    @proto_property
     def displayed_(self):
         if self.displayed is not None:
             return self.displayed
@@ -185,7 +187,7 @@ class MultilineWidget(Widget):
     rows = 5
     cols = 60
 
-    @proto_lazy_property
+    @proto_property
     def value_(self):
         value = self.value
         if type(value) is str:
@@ -205,7 +207,8 @@ class RadioWidget(Widget):
     </stl:block>""")
 
     oneline = False
-
+    label_true = MSG(u'Yes')
+    label_false = MSG(u'No')
 
     def options(self):
         datatype = self.datatype
@@ -230,7 +233,7 @@ class RadioWidget(Widget):
 
         # Case 2: Boolean
         if issubclass(datatype, Boolean):
-            default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
+            default_labels = {'yes': self.label_true, 'no': self.label_false}
             labels = getattr(self, 'labels', default_labels)
             yes_selected = value in [True, 1, '1']
             return [
@@ -299,6 +302,7 @@ class SelectWidget(Widget):
     size = None
 
 
+    @proto_lazy_property
     def multiple(self):
         return self.datatype.multiple
 
@@ -358,6 +362,7 @@ class DateWidget(Widget):
         return get_dynDateTime_scripts()
 
 
+    @proto_lazy_property
     def show_time_js(self):
         # True -> true for Javascript
         return 'true' if self.show_time else 'false'
@@ -377,6 +382,7 @@ class DateWidget(Widget):
         return value
 
 
+    @proto_lazy_property
     def dates(self):
         return self.value_.splitlines()
 
@@ -501,14 +507,17 @@ class BirthDateWidget(Widget):
                             has_empty_option=False).render()
 
 
+    @proto_lazy_property
     def day(self):
         return self.get_widget('day', Days)
 
 
+    @proto_lazy_property
     def month(self):
         return self.get_widget('month', Months)
 
 
+    @proto_lazy_property
     def year(self):
         return self.get_widget('year', Years)
 
@@ -562,20 +571,24 @@ class RTEWidget(Widget):
     table_styles = None
 
 
+    @proto_lazy_property
     def rte_language(self):
         path = get_abspath('ui/tiny_mce/langs')
         languages = [ x[:-3] for x in lfs.get_names(path) ]
         return get_context().accept_language.select_language(languages)
 
 
+    @proto_lazy_property
     def css(self):
         return ','.join(self.rte_css)
 
 
+    @proto_lazy_property
     def resizing_js(self):
         return 'true' if self.resizing else 'false'
 
 
+    @proto_lazy_property
     def is_readonly(self):
         # True -> true for Javascript
         return 'true' if self.readonly else 'false'

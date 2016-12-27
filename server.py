@@ -23,34 +23,41 @@ from datetime import timedelta
 from email.parser import HeaderParser
 import json
 import pickle
-from os import fdopen, getpgid
-from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
-from socket import gaierror
+from os import fdopen, getpgid, getpid, kill, remove
+from os.path import join
+from psutil import pid_exists
 import sys
-from tempfile import mkstemp
+from time import time
 from traceback import format_exc
+from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
+from signal import SIGINT, SIGTERM
+from socket import gaierror
+from tempfile import mkstemp
 
 # Import from pygobject
 from glib import GError
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import become_daemon, get_abspath, vmsize
 from itools.database import Metadata, RangeQuery
+from itools.database import make_catalog, Resource, get_register_fields
+from itools.database import check_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
-from itools.loop import cron
+from itools.loop import Loop, cron
 from itools.web import WebServer, WebLogger
-from itools.web import StaticContext, set_context
+from itools.web import StaticContext, set_context, get_context
 from itools.web import SoupMessage
 
 # Import from ikaaro
 from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
+from update import is_instance_up_to_date
 from skins import skin_registry
 
 
@@ -106,13 +113,33 @@ def get_root(database):
     return cls(metadata)
 
 
-def get_fake_context(database):
-    context = CMSContext()
+def get_fake_context(database, context_cls=CMSContext):
+    context = context_cls()
     context.soup_message = SoupMessage()
     context.path = '/'
     context.database = database
     set_context(context)
     return context
+
+
+class ServerLoop(Loop):
+
+    server = None
+
+    def __init__(self, target, server, profile=None):
+        self.server = server
+        # Init
+        pid_file = target + '/pid'
+        proxy = super(ServerLoop, self)
+        proxy.__init__(pid_file, profile)
+
+
+    def run(self):
+        # Save running informations
+        self.server.save_running_informations()
+        # Run
+        proxy = super(ServerLoop, self)
+        proxy.run()
 
 
 
@@ -122,6 +149,7 @@ class Server(WebServer):
                  profile_space=False):
         target = lfs.get_absolute_path(target)
         self.target = target
+        self.read_only = read_only
 
         # Load the config
         config = get_config(target)
@@ -153,6 +181,10 @@ class Server(WebServer):
 
         # Find out the root class
         root = get_root(database)
+
+        # Init fake context
+        context = get_fake_context(database, root.context_cls)
+        context.server = self
 
         # Initialize
         access_log = '%s/log/access' % target
@@ -187,13 +219,190 @@ class Server(WebServer):
         self.session_timeout = get_value('session-timeout')
 
 
+    def check_consistency(self, quick):
+        # Check the server is not running
+        pid = get_pid('%s/pid' % self.target)
+        if pid is not None:
+            print '[%s] The Web Server is already running.' % self.target
+            return False
+
+        # Check for database consistency
+        if quick is False and check_database(self.target) is False:
+            return False
+
+        # Check instance is up to date
+        if not is_instance_up_to_date(self.target):
+            print 'The instance is not up-to-date, please type:'
+            print
+            print '    $ icms-update.py %s' % self.target
+            print
+            return False
+        return True
+
+
+    def start(self, detach=False, profile=False, loop=True):
+        self.loop = ServerLoop(
+              target=self.target,
+              server=self,
+              profile=profile)
+        # Daemon mode
+        if detach:
+            become_daemon()
+
+        # Update Git tree-cache, to speed things up
+        self.database.worktree.update_tree_cache()
+
+        # Find out the IP to listen to
+        address = self.config.get_value('listen-address').strip()
+        if not address:
+            raise ValueError, 'listen-address is missing from config.conf'
+        if address == '*':
+            address = None
+
+        # Find out the port to listen
+        port = self.config.get_value('listen-port')
+        if port is None:
+            raise ValueError, 'listen-port is missing from config.conf'
+
+        # Listen & set context
+        root = self.root
+        self.listen(address, port)
+        self.set_context('/', root.context_cls)
+
+        # Call method on root at start
+        context = get_context()
+        root.launch_at_start(context)
+
+        # Set cron interval
+        interval = self.config.get_value('cron-interval')
+        if interval:
+            cron(self.cron_manager, 1)
+
+        # Run
+        profile = ('%s/log/profile' % self.target) if profile else None
+        # Init loop
+        if loop:
+            try:
+                self.loop.run()
+            except KeyboardInterrupt:
+                self.close()
+        # Ok
+        return True
+
+
+    def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        if self.is_running_in_rw_mode():
+            print 'Cannot proceed, the server is running in read-write mode.'
+            return
+        # Check for database consistency
+        if quick is False and check_database(self.target) is False:
+            return False
+        # Create a temporary new catalog
+        catalog_path = '%s/catalog.new' % self.target
+        if lfs.exists(catalog_path):
+            lfs.remove(catalog_path)
+        catalog = make_catalog(catalog_path, get_register_fields())
+
+        # Get the root
+        root = self.root
+
+        # Build a fake context
+        context = self.get_fake_context()
+
+        # Update
+        t0, v0 = time(), vmsize()
+        doc_n = 0
+        error_detected = False
+        if as_test:
+            log = open('%s/log/update-catalog' % self.target, 'w').write
+        for obj in root.traverse_resources():
+            if not isinstance(obj, Resource):
+                continue
+            if not quiet:
+                print doc_n, obj.abspath
+            doc_n += 1
+            context.resource = obj
+
+            # Index the document
+            try:
+                catalog.index_document(obj)
+            except Exception:
+                if as_test:
+                    error_detected = True
+                    log('*** Error detected ***\n')
+                    log('Abspath of the resource: %r\n\n' % str(obj.abspath))
+                    log(format_exc())
+                    log('\n')
+                else:
+                    raise
+
+            # Free Memory
+            del obj
+            self.database.make_room()
+
+        if not error_detected:
+            if as_test:
+                # Delete the empty log file
+                remove('%s/log/update-catalog' % self.target)
+
+            # Update / Report
+            t1, v1 = time(), vmsize()
+            v = (v1 - v0)/1024
+            print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
+            # Commit
+            print '[Commit]',
+            sys.stdout.flush()
+            catalog.save_changes()
+            # Commit / Replace
+            old_catalog_path = '%s/catalog' % self.target
+            if lfs.exists(old_catalog_path):
+                lfs.remove(old_catalog_path)
+            lfs.move(catalog_path, old_catalog_path)
+            # Commit / Report
+            t2, v2 = time(), vmsize()
+            v = (v2 - v1)/1024
+            print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+            return True
+        else:
+            print '[Update] Error(s) detected, the new catalog was NOT saved'
+            print ('[Update] You can find more infos in %r' %
+                   join(self.target, 'log/update-catalog'))
+            return False
+
+
     def get_pid(self):
         return get_pid('%s/pid' % self.target)
+
+
+    def is_running(self):
+        pid = self.get_pid()
+        return pid_exists(pid)
+
+
+    def stop(self, force=False):
+        proxy = super(Server, self)
+        proxy.stop()
+        print 'Stoping server...'
+        self.kill(force)
+
+
+    def kill(self, force=False):
+        pid = get_pid('%s/pid' % self.target)
+        if pid is None:
+            print '[%s] Web Server not running.' % self.target
+        else:
+            signal = SIGTERM if force else SIGINT
+            kill(pid, signal)
+            if force:
+                print '[%s] Web Server shutting down...' % self.target
+            else:
+                print '[%s] Web Server shutting down (gracefully)...' % self.target
 
 
     def set_context(self, path, context):
         context = super(Server, self).set_context(path, context)
         context.database = self.database
+        return context
 
 
     def listen(self, address, port):
@@ -207,21 +416,46 @@ class Server(WebServer):
             self.set_context('/ui/%s' % name, context)
 
 
-    def is_running_in_rw_mode(self):
-        address = self.config.get_value('listen-address').strip()
-        if address == '*':
-            address = '127.0.0.1'
-        port = self.config.get_value('listen-port')
+    def save_running_informations(self):
+        # Save server running informations
+        kw = {'pid': getpid(),
+              'target': self.target,
+              'read_only': self.read_only}
+        data = pickle.dumps(kw)
+        with open(self.target + '/running', 'w') as output_file:
+            output_file.write(data)
 
-        url = 'http://%s:%s/;_ctrl' % (address, port)
+
+    def get_running_informations(self):
         try:
-            h = vfs.open(url)
-        except GError:
-            # The server is not running
-            return False
+            with open(self.target + '/running', 'r') as output_file:
+                data = output_file.read()
+                return pickle.loads(data)
+        except IOError:
+            return None
 
-        data = h.read()
-        return json.loads(data)['read-only'] is False
+
+    def is_running_in_rw_mode(self, mode='running'):
+        is_running = self.is_running()
+        if not is_running:
+            return False
+        if mode == 'request':
+            address = self.config.get_value('listen-address').strip()
+            if address == '*':
+                address = '127.0.0.1'
+            port = self.config.get_value('listen-port')
+
+            url = 'http://%s:%s/;_ctrl' % (address, port)
+            try:
+                h = vfs.open(url)
+            except GError:
+                # The server is not running
+                return False
+            data = h.read()
+            return json.loads(data)['read-only'] is False
+        elif mode == 'running':
+            kw = self.get_running_informations()
+            return not kw.get('read_only', False)
 
 
     #######################################################################
@@ -338,16 +572,22 @@ class Server(WebServer):
         database = self.database
 
         # Build fake context
-        context = get_fake_context(database)
+        context = get_fake_context(database, self.root.context_cls)
         context.server = self
         context.init_context()
+        context.is_cron = True
 
         # Go
         query = RangeQuery('next_time_event', None, context.timestamp)
         for brain in database.search(query).get_documents():
             payload = pickle.loads(brain.next_time_event_payload)
             resource = database.get_resource(brain.abspath)
-            resource.time_event(payload)
+            try:
+                resource.time_event(payload)
+            except Exception:
+                # Log error
+                log_error('Cron error\n' + format_exc())
+                context.root.alert_on_internal_server_error(context)
             # Reindex resource without committing
             catalog = database.catalog
             catalog.unindex_document(str(resource.abspath))

@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# Copyright (C) 2015 Nicolas Deram <nicolas@agicia.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -318,6 +319,7 @@ class BrowseForm(STLView):
 
     # Search configuration
     search_form_id = 'form-search'
+    search_form_css = ''
     search_template = '/ui/auto_form.xml'
     search_template_field = '/ui/auto_form_field.xml'
     search_schema = {}
@@ -325,6 +327,7 @@ class BrowseForm(STLView):
 
     # Content
     table_template = '/ui/generic/browse_table.xml'
+    table_form_id = 'form-table'
     table_css = None
     table_columns = []
     table_actions = []
@@ -378,6 +381,7 @@ class BrowseForm(STLView):
     def get_search_namespace(self, resource, context):
         form = AutoForm(
             form_id=self.search_form_id,
+            form_css=self.search_form_css,
             template=self.search_template,
             template_field=self.search_template_field,
             title=MSG(u'Search'),
@@ -452,7 +456,7 @@ class BrowseForm(STLView):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'css': 'thead-%s' % name,
+                    'css': 'thead-%s' % name.replace('_', '-'),
                     'href': None,
                     'sortable': False})
             else:
@@ -466,7 +470,7 @@ class BrowseForm(STLView):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'css': 'thead-%s' % name,
+                    'css': 'thead-%s' % name.replace('_', '-'),
                     'sortable': True,
                     'href': context.uri.path,
                     'href_up': base_href.replace(reverse=0),
@@ -490,6 +494,10 @@ class BrowseForm(STLView):
                 actions.append(button)
 
         return actions
+
+
+    def get_column_css(self, resource, context, column):
+        return None
 
 
     def get_table_namespace(self, resource, context, items):
@@ -516,6 +524,7 @@ class BrowseForm(STLView):
                     'is_checkbox': False,
                     'is_icon': False,
                     'is_link': False,
+                    'css': self.get_column_css(resource, context, column),
                 }
                 # Type: empty
                 if value is None:
@@ -549,6 +558,7 @@ class BrowseForm(STLView):
         # Ok
         return {
             'css': self.table_css,
+            'form_id': self.table_form_id,
             'columns': table_head,
             'rows': rows,
             'actions': actions,
@@ -585,4 +595,3 @@ class ContextMenu(CMSTemplate):
                 item.setdefault(name, None)
 
         return items
-

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <div stl:if="cls_errors">
+    <h2>Errors</h2>
+    <table cellpadding="0" cellspacing="0"
+      class="table table-bordered table-condensed table-stripped"
+      id="browse-list" stl:if="cls_errors">
+      <thead>
+        <tr>
+          <th>Cls ID</th>
+          <th>Cls title</th>
+          <th>Cls version</th>
+          <th>Resource version</th>
+          <th>Abspath</th>
+        </tr>
+        </thead>
+      <tbody>
+        <tr stl:repeat="error cls_errors">
+          <td>${error/class_id}</td>
+          <td>${error/class_title}</td>
+          <td>${error/cls_version}</td>
+          <td>${error/resource_version}</td>
+          <td>
+            <a href="${error/abspath}">+</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br/>
+  <br/>
+
+  <div>
+    <h2>Update methods</h2>
+
+    <div stl:if="not cls_to_update">
+      No resource to update
+    </div>
+
+    <form method="post" stl:if="cls_to_update">
+      <table cellpadding="0" cellspacing="0" id="browse-list"
+      class="table table-bordered table-condensed table-stripped">
+        <thead>
+          <tr>
+            <th>Cls version</th>
+            <th>Update method title</th>
+            <th>Nb resources to update</th>
+            <th>Cls ID</th>
+            <th>Cls title</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr stl:repeat="cls cls_to_update">
+            <td>${cls/class_version_pretty}</td>
+            <td>${cls/update_title}</td>
+            <td>${cls/nb_resources}</td>
+            <td>${cls/class_id}</td>
+            <td>${cls/class_title}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br/>
+      <div class="autoform-actions">
+        <button type="submit" class="button-ok"
+          name="action" value="do_next_update" stl:if="not cls_errors">Update</button>
+        <button type="submit" class="button-ok"
+          name="action" value="force_next_update" stl:if="cls_errors">Force update</button>
+      </div>
+    </form>
+  </div>
+
+</stl:block>

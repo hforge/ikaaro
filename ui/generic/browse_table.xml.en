@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="" method="post" name="browse_list" id="form-table"
+<form action="" method="post" name="browse_list" id="${form_id}"
   stl:omit-tag="external_form">
 <table id="browse-list" class="${css}">
   <thead stl:if="columns">
@@ -35,7 +35,7 @@
   </thead>
   <tbody>
     <tr stl:repeat="row rows" class="${repeat/row/even} ${row/css}">
-      <td stl:repeat="column row/columns">
+      <td stl:repeat="column row/columns" class="${column/css}">
         <!-- checkbox -->
         <input stl:if="column/is_checkbox" type="checkbox" name="ids"
           value="${column/value}" checked="${column/checked}" class="checkbox"

@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from copy import deepcopy
+
 # Import from itools
 from itools.database import RODatabase, RWDatabase, make_git_database
 from itools.database import OrQuery, PhraseQuery
@@ -28,6 +31,11 @@ class Database(RWDatabase):
     def _before_commit(self):
         context = get_context()
         root = context.root
+
+        # Update resources
+        for path in deepcopy(self.resources_new2old):
+            resource = root.get_resource(path)
+            resource.update_resource(context)
 
         # 1. Update links when resources moved
         # XXX With this code '_on_move_resource' is called for new resources,
@@ -47,13 +55,17 @@ class Database(RWDatabase):
         aux2 = set(self.resources_old2new.keys())
         while len(aux) != len(aux2):
             aux = set(aux2)
-            query = [ PhraseQuery('onchange_reindex', x) for x in aux ]
-            query = OrQuery(*query)
-            search = self.search(query)
-            for brain in search.get_documents():
-                path = brain.abspath
-                aux2.add(path)
-                to_reindex.add(path)
+            # XXX we regroup items by 200 because Xapian is slow
+            # when there's too much items in OrQuery
+            l_aux = list(aux)
+            for sub_aux in [l_aux[n:n+200] for n in range(0, len(l_aux), 200)]:
+                query = [ PhraseQuery('onchange_reindex', x) for x in sub_aux ]
+                query = OrQuery(*query)
+                search = self.search(query)
+                for brain in search.get_documents():
+                    path = brain.abspath
+                    aux2.add(path)
+                    to_reindex.add(path)
 
         # 3. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
@@ -64,8 +76,8 @@ class Database(RWDatabase):
         # 4. Update mtime/last_author
         user = context.user
         userid = user.name if user else None
-        if context.set_mtime:
-            for path in self.resources_new2old:
+        for path in self.resources_new2old:
+            if context.set_mtime:
                 resource = root.get_resource(path)
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
@@ -84,7 +96,8 @@ class Database(RWDatabase):
 
         # 6. Find out commit author & message
         if user:
-            git_author = (userid, user.get_value('email'))
+            user_email = user.get_value('email')
+            git_author = (userid, user_email or 'nobody')
         else:
             git_author = ('nobody', 'nobody')
 

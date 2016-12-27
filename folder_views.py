@@ -206,9 +206,12 @@ class Folder_Rename(STLView):
         # Filter names which the authenticated user is not allowed to move
         root = context.root
         user = context.user
-        paths = [ x for x in ids
-                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
-
+        # Get paths of resources to rename
+        paths = []
+        for x in ids:
+            r_to_rename = resource.get_resource(x, soft=True)
+            if r_to_rename and root.is_allowed_to_move(user, r_to_rename):
+                paths.append(x)
         # Build the namespace
         paths.sort()
         paths.reverse()
@@ -231,12 +234,14 @@ class Folder_Rename(STLView):
     def action(self, resource, context, form):
         paths = form['paths']
         new_names = form['new_names']
-
+        # Check if 2 resources are similary named
+        if len(new_names) > len(set(new_names)):
+            context.message = messages.MSG_NAME_CLASH
+            return
         paths.sort()
         paths.reverse()
         # Clean the copy cookie if needed
         cut, cp_paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-
         renamed = []
         referenced = []
         # Process input data
@@ -550,8 +555,8 @@ class Folder_BrowseContent(BrowseForm):
         ids.sort()
         ids.reverse()
         for name in ids:
-            child = resource.get_resource(name)
-            if root.is_allowed_to_remove(user, child):
+            child = resource.get_resource(name, soft=True)
+            if child and root.is_allowed_to_remove(user, child):
                 # Remove resource
                 try:
                     resource.del_resource(name)
@@ -591,8 +596,12 @@ class Folder_BrowseContent(BrowseForm):
         # Filter names which the authenticated user is not allowed to move
         root = context.root
         user = context.user
-        paths = [ x for x in ids
-                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
+        # Check if file to rename exists & user is allowed to move
+        paths = []
+        for x in ids:
+            r_to_rename = resource.get_resource(x, soft=True)
+            if r_to_rename and root.is_allowed_to_move(user, r_to_rename):
+                paths.append(x)
 
         # Check input data
         if not paths:
@@ -634,9 +643,12 @@ class Folder_BrowseContent(BrowseForm):
         # Filter names which the authenticated user is not allowed to move
         root = context.root
         user = context.user
-        names = [ x for x in ids
-                  if root.is_allowed_to_move(user, resource.get_resource(x)) ]
-
+        # Check if file to cut exists & user is allowed to move
+        names = []
+        for x in ids:
+            r_to_move = resource.get_resource(x, soft=True)
+            if r_to_move and root.is_allowed_to_move(user, r_to_move):
+                names.append(x)
         # Check input data
         if not names:
             context.message = messages.MSG_NONE_SELECTED

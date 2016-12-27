@@ -28,7 +28,8 @@ from itools.core import is_prototype, lazy
 from itools.csv import Property
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
+from itools.datatypes import Boolean, DateTime, Date
+from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
@@ -43,7 +44,7 @@ from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import Select_Field, Text_Field, Textarea_Field
+from fields import SelectAbspath_Field, Text_Field, Textarea_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -54,11 +55,12 @@ from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
+from update import class_version_to_date
 from utils import get_base_path_query
 
 
 
-class Share_Field(Select_Field):
+class Share_Field(SelectAbspath_Field):
 
     title = MSG(u'Share')
     datatype = Groups_Datatype
@@ -251,24 +253,27 @@ class DBResource(Resource):
 
         # Referential action
         if ref_action == 'restrict':
-            # Check referencial-integrity (FIXME Check sub-resources too)
+            # Check referencial-integrity
             path = str(resource.abspath)
-            query_base_path = get_base_path_query(path)
-            query = AndQuery(PhraseQuery('links', path),
-                             NotQuery(query_base_path))
-            results = database.search(query)
-            # A resource may have been updated in the same transaction,
-            # so not yet reindexed: we need to check that the resource
-            # really links.
-            for referrer in results.get_resources():
-                if path in referrer.get_links():
-                    err = 'cannot delete, resource "%s" is referenced'
-                    raise ConsistencyError, err % path
+            query = AndQuery(NotQuery(PhraseQuery('abspath', path)),
+                             NotQuery(get_base_path_query(path)))
+            sub_search = database.search(query)
+            for sub_resource in resource.traverse_resources():
+                path = str(sub_resource.abspath)
+                query = PhraseQuery('links', path)
+                results = sub_search.search(query)
+                # A resource may have been updated in the same transaction,
+                # so not yet reindexed: we need to check that the resource
+                # really links.
+                for referrer in results.get_resources():
+                    if path in referrer.get_links():
+                        err = 'cannot delete, resource "{}" is referenced'
+                        raise ConsistencyError(err.format(path))
         elif ref_action == 'force':
             # Do not check referencial-integrity
             pass
         else:
-            raise ValueError, 'Incorrect ref_action "%s"' % ref_action
+            raise ValueError,('Incorrect ref_action "{}"'.format(ref_action))
 
         # Events, remove
         path = str(resource.abspath)
@@ -351,18 +356,18 @@ class DBResource(Resource):
 
     def set_value(self, name, value, language=None, **kw):
         field = self.get_field(name)
-        if field.multilingual and language is None:
-            raise ValueError, 'Field %s is multilingual' % name
         if field is None:
             raise ValueError, 'Field %s do not exist' % name
+        if field.multilingual and language is None:
+            raise ValueError, 'Field %s is multilingual' % name
         return field.set_value(self, name, value, language, **kw)
 
 
-    def get_value_title(self, name, language=None):
+    def get_value_title(self, name, language=None, mode=None):
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value_title(self, name, language)
+        return field.get_value_title(self, name, language, mode)
 
 
     def get_brain_value(self, name):
@@ -436,6 +441,11 @@ class DBResource(Resource):
                 field._set_value(self, name, value)
 
 
+    def update_resource(self, context):
+        """ Method called every time the resource is changed"""
+        pass
+
+
     def load_handlers(self):
         self.get_handlers()
 
@@ -446,10 +456,8 @@ class DBResource(Resource):
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
-    description = Textarea_Field(indexed=True, title=MSG(u'Description'),
-                                 hidden_by_default=True)
-    subject = Text_Field(indexed=True, title=MSG(u'Keywords'),
-                         hidden_by_default=True)
+    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
+    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
     share = Share_Field
 
     @property
@@ -547,6 +555,7 @@ class DBResource(Resource):
             class_id = getattr(cls, 'class_id', None)
             if class_id:
                 values['base_classes'].append(class_id)
+        values['class_version'] = class_version_to_date(self.metadata.version)
 
         # Links to other resources
         values['owner'] = self.get_owner()
@@ -726,6 +735,10 @@ class DBResource(Resource):
 
 
     def update(self, version):
+        """
+        Update the ressource to a new version.
+        :param version: The target version
+        """
         # Action
         getattr(self, 'update_%s' % version)()
 
@@ -737,6 +750,8 @@ class DBResource(Resource):
         # Update version
         metadata.set_changed()
         metadata.version = version
+        # Set resource as changed (to reindex class_version)
+        self.database.change_resource(self)
 
 
     #######################################################################
@@ -864,6 +879,7 @@ register_field('name', String(stored=True, indexed=True))
 # Class related fields
 register_field('format', String(indexed=True, stored=True))
 register_field('base_classes', String(multiple=True, indexed=True))
+register_field('class_version', Date(indexed=True, stored=True))
 # Referential integrity
 register_field('links', String(multiple=True, indexed=True))
 register_field('onchange_reindex', String(multiple=True, indexed=True))

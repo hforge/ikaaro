@@ -39,6 +39,7 @@ from file_views import File_Edit
 from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 from text_views import CSS_Edit
+from widgets import FileWidget
 
 css_uri_expr = compile(r"url\((.*)\)")
 def css_get_reference(uri):
@@ -83,8 +84,12 @@ class PO(Text):
     class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
+
     # Fields
     data = Text.data(class_handler=POFile)
+
+    def get_po_handler(self):
+        return self.get_value('data')
 
     # Views
     edit = PO_Edit
@@ -266,15 +271,19 @@ class CSV(Text):
     class_id = 'text/comma-separated-values'
     class_title = MSG(u'Comma Separated Values')
     class_views = ['view', 'add_row', 'edit', 'externaledit', 'commit_log']
+
     # Fields
-    data = Text.data(class_handler=CSVFile)
+    data = Text.data(class_handler=CSVFile, widget=FileWidget)
+
+
+    def get_csv_handler(self):
+        return self.get_value('data')
 
 
     def get_columns(self):
         """Returns a list of tuples with the name and title of every column.
         """
-        handler = self.handler
-
+        handler = self.get_csv_handler()
         if handler.columns is None:
             row = None
             for row in handler.lines:
@@ -313,6 +322,12 @@ for js_mime in ['application/x-javascript', 'text/javascript',
     Database.register_resource_class(JS, js_mime)
     add_type(js_mime, '.js')
 
+
+for csv_mime in ['text/x-comma-separated-values',
+                 'text/comma-separated-values',
+                 'application/csv',
+                 'text/csv']:
+    Database.register_resource_class(CSV, csv_mime)
+    add_type(csv_mime, '.csv')
+
 Database.register_resource_class(XML, 'application/xml')
-Database.register_resource_class(CSV, 'text/x-comma-separated-values')
-Database.register_resource_class(CSV, 'text/csv')

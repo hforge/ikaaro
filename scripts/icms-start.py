@@ -23,79 +23,9 @@ from sys import exit
 
 # Import from itools
 from itools import __version__
-from itools.core import become_daemon
-from itools.database import check_database
-from itools.loop import Loop, cron
 
 # Import from ikaaro
-from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, CMSContext, get_pid
-
-
-def start(options, target):
-    # Check the server is not running
-    pid = get_pid('%s/pid' % target)
-    if pid is not None:
-        print '[%s] The Web Server is already running.' % target
-        return 1
-    # XXX Obsolete code, remove by 0.70
-    sub_pid = get_pid('%s/pid-subprocess' % target)
-    if sub_pid is not None:
-        print ('[%s] The Web Server subprocess is running, please use '
-               'icms-stop.py to stop it.') % target
-        return 1
-
-    # Check for database consistency
-    if options.quick is False and check_database(target) is False:
-        return 1
-
-    # Check instance is up to date
-    if not is_instance_up_to_date(target):
-        print 'The instance is not up-to-date, please type:'
-        print
-        print '    $ icms-update.py %s' % target
-        print
-        return 1
-
-    # Daemon mode
-    if options.detach:
-        become_daemon()
-
-    # Set-up the server
-    server = Server(target, read_only=options.read_only,
-                    profile_space=options.profile_space)
-
-    # Update Git tree-cache, to speed things up
-    server.database.worktree.update_tree_cache()
-
-    # Find out the IP to listen to
-    config = server.config
-    address = config.get_value('listen-address').strip()
-    if not address:
-        raise ValueError, 'listen-address is missing from config.conf'
-    if address == '*':
-        address = None
-
-    # Find out the port to listen
-    port = config.get_value('listen-port')
-    if port is None:
-        raise ValueError, 'listen-port is missing from config.conf'
-
-    server.listen(address, port)
-    server.set_context('/', CMSContext)
-    interval = config.get_value('cron-interval')
-    if interval:
-        cron(server.cron_manager, 1)
-
-    # Run
-    profile = options.profile_time
-    profile = ('%s/log/profile' % target) if profile else None
-    loop = Loop(pid_file='%s/pid' % target, profile=profile)
-    loop.run()
-
-    # Ok
-    return 0
-
+from ikaaro.server import Server
 
 if __name__ == '__main__':
     # The command line parser
@@ -126,9 +56,16 @@ if __name__ == '__main__':
     n_args = len(args)
     if n_args != 1:
         parser.error('Wrong number of arguments.')
-
-    # Start server
+    # Get target
     target = args[0]
-    ret = start(options, target)
-    exit(ret)
-
+    # Set-up the server
+    server = Server(target, read_only=options.read_only,
+                    profile_space=options.profile_space)
+    # Check server
+    successfully_init = server.check_consistency(options.quick)
+    if not successfully_init:
+        exit(1)
+    # Start server
+    server.start(detach=options.detach, profile=options.profile_time)
+    # Ok
+    exit(0)

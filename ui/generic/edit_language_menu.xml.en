@@ -19,18 +19,6 @@
         </li>
       </ul>
     </fieldset>
-    <fieldset stl:if="fields">
-      <legend>Fields</legend>
-      <ul>
-        <li class="${field/class}" stl:repeat="field fields">
-          <input type="checkbox" id="field-${field/name}" name="fields"
-            value="${field/name}" checked="${field/selected}" />
-          <label for="field-${field/name}">${field/title}</label>
-        </li>
-      </ul>
-    </fieldset>
-    <input stl:repeat="field hidden_fields" type="hidden"
-           name="${field/name}" value="${field/value}" />
     <p>
       <button type="submit" class="button-ok">Update</button>
     </p>

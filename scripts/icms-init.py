@@ -164,6 +164,10 @@ def init(parser, options, target):
     metadata = Metadata(cls=root_class)
     database.set_handler('.metadata', metadata)
     root = root_class(metadata)
+    # Re-init context with context cls
+    context = get_fake_context(context.database, root.context_cls)
+    context.set_mtime = True
+    # Init root resource
     root.init_resource(email, password)
     # Set mtime
     root.set_property('mtime', context.timestamp)

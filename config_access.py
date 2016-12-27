@@ -374,7 +374,7 @@ class ConfigAccess(Folder):
             PhraseQuery('abspath', str(resource.abspath)))
 
         # Search
-        results = get_context().search(query)
+        results = get_context().search(query, user=user)
         return len(results) > 0
 
 

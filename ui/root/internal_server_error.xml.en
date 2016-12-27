@@ -14,7 +14,7 @@
     <p>
     Apologies for the inconvenience.
     </p>
-    <pre style="color: #BBB;">${traceback}</pre>
+    <pre style="color: #333;">${traceback}</pre>
   </fieldset>
 
 </div>

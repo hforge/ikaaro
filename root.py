@@ -46,6 +46,7 @@ from itools.xml import XMLParser, is_xml_stream
 # Import from ikaaro
 from config import Configuration
 from config_register import RegisterForm, TermsOfService_View
+from context import CMSContext
 from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
@@ -53,6 +54,7 @@ from skins import skin_registry
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView
 from root_views import UploadStatsView, UpdateDocs
+from update import UpdateInstanceView
 
 
 # itools source and target languages
@@ -95,6 +97,9 @@ class Root(Folder):
     class_skin = 'aruni'
 
     abspath = Path('/')
+
+    # Config
+    context_cls = CMSContext
 
     # Fields
     website_languages = Char_Field(multiple=True, default=['en'])
@@ -184,6 +189,11 @@ class Root(Folder):
 
     def get_default_edit_languages(self):
         return [self.get_default_language()]
+
+
+    def launch_at_start(self, context):
+        """Method called at instance start"""
+        pass
 
 
     def before_traverse(self, context, min=Decimal('0.000001'),
@@ -438,6 +448,15 @@ class Root(Folder):
     # Access control
     #######################################################################
     def make_user(self, loginname=None, password=None):
+        """
+        Create a new user into the database.
+        :param loginname: The user login (not mandatory)
+        :param password: The user password (not mandatory)
+        :return: the user or None if a user with the same login already exist
+        """
+        # Check if the user with the same login exist
+        if self.get_user_from_login(loginname) is not None:
+            return
         # Create the user
         users = self.get_resource('/users')
         cls = self.database.get_resource_class('user')
@@ -544,6 +563,7 @@ class Root(Folder):
     unauthorized = LoginView
     not_found = NotFoundView
     upload_stats = UploadStatsView
+    update_instance = UpdateInstanceView
     update_docs = UpdateDocs
     _ctrl = CtrlView
 

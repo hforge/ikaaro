@@ -169,12 +169,12 @@ def update(parser, options, target):
     #######################################################################
     server = Server(target)
     database = server.database
-    # Build a fake context
-    context = get_fake_context(database)
-    context.server = server
-    context.init_context()
     # Local variables
     root = server.root
+    # Build a fake context
+    context = get_fake_context(database, root.context_cls)
+    context.server = server
+    context.init_context()
 
     print 'STAGE 1: Find out the versions to upgrade (may take a while).'
     version, paths = find_versions_to_update(root, options.force)

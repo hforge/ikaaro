@@ -26,10 +26,11 @@ from zipfile import ZipFile
 from itools.core import is_prototype
 from itools.fs import FileName
 from itools.gettext import MSG
+from itools.handlers import checkid
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView, Forbidden, get_context
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
@@ -143,7 +144,10 @@ class Folder(DBResource):
         change_resource = self.database.change_resource
         for path_str in handler.get_contents():
             # 1. Skip folders
-            path = Path(path_str)
+            clean_path = "/".join([
+              checkid(x) or 'file'
+              if x else 'file' for x in path_str.split("/")])
+            path = Path(clean_path)
             if path.endswith_slash:
                 continue
 
@@ -235,7 +239,7 @@ class Folder(DBResource):
         return source_path, target_path
 
 
-    def copy_resource(self, source_path, target_path):
+    def copy_resource(self, source_path, target_path, exclude_patterns=None):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
@@ -248,8 +252,10 @@ class Folder(DBResource):
         # Check compatibility
         if (not target_parent.can_paste(source)
                 or not source.can_paste_into(target_parent)):
-            message = 'resource type "%r" cannot be copied into type "%r"'
-            raise ConsistencyError, message % (source, target_parent)
+            message = 'resource type "{0}" cannot be copied into type "{1}"'
+            message = message.format(source.class_title.gettext(),
+                                     target_parent.class_title.gettext())
+            raise ConsistencyError(message)
 
         # Copy the metadata
         folder = self.handler
@@ -266,7 +272,7 @@ class Folder(DBResource):
             src_key = fs.resolve(source_path, old_name)
             dst_key = fs.resolve(target_path, new_name)
             if folder.has_handler(src_key):
-                folder.copy_handler(src_key, dst_key)
+                folder.copy_handler(src_key, dst_key, exclude_patterns)
 
         # Events, add
         resource = self.get_resource(target_path)
