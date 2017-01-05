@@ -99,6 +99,12 @@ database-readonly = 0
 #
 index-text = 1
 
+# The "accept-cors" variable defines whether the web server accept
+# cross origin requests or not.
+# To accept cross origin requests, set this option to 1 (default is 0)
+#
+accept-cors = 0
+
 # The size of images can be controlled by setting the following values.
 # (ie. max-width = 1280) (by default it is None, keeping original size).
 #

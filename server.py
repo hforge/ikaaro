@@ -162,6 +162,9 @@ class Server(WebServer):
         # Full-text indexing
         self.index_text =  config.get_value('index-text', type=Boolean,
                                             default=True)
+        # Accept cors
+        self.accept_cors = config.get_value(
+            'accept-cors', type=Boolean, default=False)
 
         # Profile Memory
         if profile_space is True:
