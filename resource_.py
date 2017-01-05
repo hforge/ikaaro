@@ -471,7 +471,7 @@ class DBResource(Resource):
 
     def del_property(self, name):
         if self.has_property(name):
-            self.database.change_resource(self)
+            self.reindex()
             self.metadata.del_property(name)
 
 
@@ -687,8 +687,7 @@ class DBResource(Resource):
             if field:
                 field.update_links(self, field_name, source, target,
                                    languages, old_base, new_base)
-
-        self.database.change_resource(self)
+        self.reindex()
 
 
     def update_incoming_links(self, source):
@@ -741,18 +740,28 @@ class DBResource(Resource):
         """
         # Action
         getattr(self, 'update_%s' % version)()
-
         # If the action removes the resource, we are done
         metadata = self.metadata
         if metadata.key is None:
             return
-
         # Update version
         metadata.set_changed()
         metadata.version = version
         # Set resource as changed (to reindex class_version)
-        self.database.change_resource(self)
+        self.reindex()
 
+
+    def change_class_id(self, new_class_id):
+        # Change class_id
+        self.metadata.format = new_class_id
+        self.metadata.set_changed()
+        # Reindex resource
+        self.reindex()
+
+
+    def reindex(self):
+        # Set resource as changed (to reindex resource)
+        self.database.change_resource(self)
 
     #######################################################################
     # Icons
