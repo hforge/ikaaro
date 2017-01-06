@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import datetime
 from pickle import dumps
 from os.path import basename, dirname
 
@@ -422,12 +423,22 @@ class DBResource(Resource):
     def init_resource(self, **kw):
         """Return a Metadata object with sensible default values.
         """
+        context = get_context()
+        user = context.user
+        now = context.fix_tzinfo(datetime.now())
+        # Ctime
+        if 'ctime' not in kw:
+            self.set_value('ctime', now)
+        # Mtime
+        if 'mtime' not in kw:
+            self.set_value('mtime', now)
+        # Last author
+        if 'last_author' not in kw and user:
+            self.set_value('last_author', user.name)
         # Ownership
         owner = self.get_field('owner')
-        if owner:
-            user = get_context().user
-            if user:
-                self.set_value('owner', str(user.abspath))
+        if owner and user:
+            self.set_value('owner', str(user.abspath))
 
         # Keyword parameters
         for name, value in kw.items():
@@ -453,6 +464,7 @@ class DBResource(Resource):
     ########################################################################
     # Fields
     ########################################################################
+    ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
