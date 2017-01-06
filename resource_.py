@@ -23,6 +23,7 @@
 from datetime import datetime
 from pickle import dumps
 from os.path import basename, dirname
+from uuid import uuid4
 
 # Import from itools
 from itools.core import is_prototype, lazy
@@ -426,6 +427,8 @@ class DBResource(Resource):
         context = get_context()
         user = context.user
         now = context.fix_tzinfo(datetime.now())
+        # UUID
+        self.set_uuid()
         # Ctime
         if 'ctime' not in kw:
             self.set_value('ctime', now)
@@ -452,6 +455,10 @@ class DBResource(Resource):
                 field._set_value(self, name, value)
 
 
+    def set_uuid(self):
+        self.set_value('uuid', uuid4().hex)
+
+
     def update_resource(self, context):
         """ Method called every time the resource is changed"""
         pass
@@ -464,6 +471,7 @@ class DBResource(Resource):
     ########################################################################
     # Fields
     ########################################################################
+    uuid = Char_Field(indexed=True, title=MSG(u'UUID'))
     ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)

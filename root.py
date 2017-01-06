@@ -89,8 +89,7 @@ class CtrlView(BaseView):
 class Root(Folder):
 
     class_id = 'iKaaro'
-    class_version = '20100702'
-    #class_version = '20120601'
+    class_version = '20170106'
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
@@ -548,6 +547,19 @@ class Root(Folder):
         # Get the user
         brain = results.get_documents()[0]
         return self.get_user(brain.name)
+
+
+    update_20170106_title = MSG(u'Add uuid to all resources')
+    def update_20170106(self):
+        i = 0
+        context = get_context()
+        context.set_mtime = False
+        for resource in self.traverse_resources():
+            if not resource.get_value('uuid'):
+                resource.set_uuid()
+                i+=1
+            if i and i % 100==0:
+                context.database.save_changes()
 
 
     #######################################################################
