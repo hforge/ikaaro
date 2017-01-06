@@ -279,7 +279,7 @@ class Server(WebServer):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
-            cron(self.cron_manager, 1)
+            cron(self.cron_manager, interval)
 
         # Run
         profile = ('%s/log/profile' % self.target) if profile else None

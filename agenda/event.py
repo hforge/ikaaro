@@ -402,31 +402,11 @@ class Event(Content):
 
 
     def next_time_event(self):
-        reminder = self.get_value('reminder')
-        if not reminder:
-            return None, None
-
-        # Get start time (if no time, start_time is midnight)
-        start = self.get_value('dtstart')
-        start_time = start.time() if type(start) is datetime else time(0)
-
-        # Dates
-        context = get_context()
-        now = context.timestamp
-        delta = timedelta(seconds=reminder)
-        for date in self.get_dates():
-            date = datetime.combine(date, start_time)
-            reminder = context.fix_tzinfo(date - delta)
-            if reminder > now:
-                return reminder, date
-
         return None, None
 
 
     def time_event(self, payload):
-        context = get_context()
-        to_addr = self.get_resource(self.get_owner()).get_value('email')
-        send_email('event-reminder', context, to_addr, event=self, date=payload)
+        pass
 
 
     def get_ns_event(self, current_day, grid=False):
