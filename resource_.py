@@ -46,7 +46,7 @@ from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import SelectAbspath_Field, Text_Field, Textarea_Field
+from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -471,7 +471,7 @@ class DBResource(Resource):
     ########################################################################
     # Fields
     ########################################################################
-    uuid = Char_Field(indexed=True, title=MSG(u'UUID'))
+    uuid = UUID_Field
     ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)

@@ -25,6 +25,7 @@ from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
 from itools.datatypes import Enumerate, Integer, String, Unicode, URI
+from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
 from itools.html import XHTMLFile, xhtml_uri
 from itools.stl import rewrite_uris
@@ -816,3 +817,11 @@ class SelectDays_Field(Select_Field):
     widget = CheckboxWidget
     widget_keys = Select_Field.widget_keys + ['oneline']
     oneline = True
+
+
+
+class UUID_Field(Char_Field):
+
+    title = MSG(u'UUID')
+    indexed = True
+    stored = True
