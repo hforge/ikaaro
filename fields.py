@@ -825,3 +825,4 @@ class UUID_Field(Char_Field):
     title = MSG(u'UUID')
     indexed = True
     stored = True
+    readonly = True
