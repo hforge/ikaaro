@@ -50,8 +50,8 @@ from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
 from itools.web import WebServer, WebLogger
-from itools.web import StaticContext, set_context, get_context
-from itools.web import SoupMessage
+from itools.web import set_context, get_context
+from itools.web import SoupMessage, StaticRouter, DatabaseRouter
 
 # Import from ikaaro
 from context import CMSContext
@@ -270,7 +270,7 @@ class Server(WebServer):
         # Listen & set context
         root = self.root
         self.listen(address, port)
-        self.set_context('/', root.context_cls)
+        self.set_router('/', DatabaseRouter)
 
         # Call method on root at start
         context = get_context()
@@ -402,21 +402,15 @@ class Server(WebServer):
                 print '[%s] Web Server shutting down (gracefully)...' % self.target
 
 
-    def set_context(self, path, context):
-        context = super(Server, self).set_context(path, context)
-        context.database = self.database
-        return context
-
-
     def listen(self, address, port):
         super(Server, self).listen(address, port)
-        # Set ui
-        context = StaticContext(local_path=get_abspath('ui'))
-        self.set_context('/ui', context)
+        # Set ui router
+        router = StaticRouter(local_path=get_abspath('ui'))
+        self.set_router('/ui', router)
         for name in skin_registry:
             skin = skin_registry[name]
-            context = StaticContext(local_path=skin.key)
-            self.set_context('/ui/%s' % name, context)
+            router = StaticRouter(local_path=skin.key)
+            self.set_router('/ui/%s' % name, router)
 
 
     def save_running_informations(self):
