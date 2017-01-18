@@ -3,9 +3,8 @@
 *.swp
 build
 dist
-MANIFEST
 version.txt
-locale/*.mo
+ikaaro/locale/*.mo
 *.xml.es
 *.xml.fr
 *.xml.it
