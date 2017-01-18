@@ -60,7 +60,7 @@ if __name__ == '__main__':
         else:
             package_data['ikaaro'].append(join_path(*path[1:]))
     setup(name="ikaaro",
-          version="1.0",
+          version="0.75",
           # Metadata
           author="J. David Ibáñez",
           author_email="jdavid.ibp@gmail.com" ,
