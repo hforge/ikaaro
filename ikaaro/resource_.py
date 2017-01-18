@@ -86,6 +86,16 @@ class DBResource(Resource):
     class_views = []
     context_menus = []
 
+    # Fields
+    uuid = UUID_Field
+    ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
+    mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
+    last_author = Char_Field(indexed=False, stored=True, readonly=True)
+    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
+    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
+    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
+    share = Share_Field
+
 
     def __init__(self, metadata):
         self.metadata = metadata
@@ -467,18 +477,6 @@ class DBResource(Resource):
     def load_handlers(self):
         self.get_handlers()
 
-
-    ########################################################################
-    # Fields
-    ########################################################################
-    uuid = UUID_Field
-    ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    last_author = Char_Field(indexed=False, stored=True, readonly=True)
-    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
-    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
-    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
-    share = Share_Field
 
     @property
     def is_content(self):
