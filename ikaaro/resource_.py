@@ -449,7 +449,7 @@ class DBResource(Resource):
         if 'last_author' not in kw and user:
             self.set_value('last_author', user.name)
         # Ownership
-        owner = self.get_field('owner')
+        owner = self.get_field('owner', soft=True)
         if owner and user:
             self.set_value('owner', str(user.abspath))
 
