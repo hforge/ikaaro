@@ -23,7 +23,7 @@ from datetime import timedelta
 from email.parser import HeaderParser
 import json
 import pickle
-from os import fdopen, getpgid, getpid, kill, remove
+from os import fdopen, getpgid, getpid, kill, mkdir, remove
 from os.path import join
 from psutil import pid_exists
 import sys
@@ -55,11 +55,96 @@ from itools.web import SoupMessage, StaticRouter, DatabaseRouter
 
 # Import from ikaaro
 from context import CMSContext
-from database import get_database
+from database import get_database, make_database
 from datatypes import ExpireValue
+from root import Root
 from router import StaticCachedRouter
 from update import is_instance_up_to_date
 from skins import skin_registry
+
+
+
+template = (
+"""# The "modules" variable lists the Python modules or packages that will be
+# loaded when the applications starts.
+#
+modules = {modules}
+
+# The "listen-address" and "listen-port" variables define, respectively, the
+# internet address and the port number the web server listens to for HTTP
+# connections.
+#
+# These variables are required (i.e. there are not default values).  To
+# listen from any address write the value '*'.
+#
+listen-address = 127.0.0.1
+listen-port = {listen_port}
+
+# The "smtp-host" variable defines the name or IP address of the SMTP relay.
+# The "smtp-from" variable is the email address used in the From field when
+# sending anonymous emails.  (These options are required for the application
+# to send emails).
+#
+# The "smtp-login" and "smtp-password" variables define the credentials
+# required to access a secured SMTP server.
+#
+smtp-host = {smtp_host}
+smtp-from = {smtp_from}
+smtp-login =
+smtp-password =
+
+# The "log-level" variable may have one of these values (from lower to
+# higher verbosity): 'critical' 'error', 'warning', 'info' and 'debug'.
+# The default is 'warning'.
+#
+# If the "log-email" address is defined error messages will be sent to it.
+#
+log-level = warning
+log-email = {log_email}
+
+# The "cron-interval" variable defines the number of seconds between every
+# call to the cron job manager. If zero (the default) the cron job won't be
+# run at all.
+#
+cron-interval = 0
+
+# If the "session-timeout" variable is different from zero (the default), the
+# user will be automatically logged out after the specified number of minutes.
+#
+session-timeout = 0
+
+# The "database-size" variable defines the number of file handlers to store
+# in the database cache.  It is made of two numbers, the upper limit and the
+# bottom limit: when the cache size hits the upper limit, handlers will be
+# removed from the cache until it hits the bottom limit.
+#
+# The "database-readonly" variable, when set to 1 starts the database in
+# read-only mode, all write operations will fail.
+#
+database-size = 19500:20500
+database-readonly = 0
+
+# The "index-text" variable defines whether the catalog must process full-text
+# indexing. It requires (much) more time and third-party applications.
+# To speed up catalog updates, set this option to 0 (default is 1).
+#
+index-text = 1
+
+# The "accept-cors" variable defines whether the web server accept
+# cross origin requests or not.
+# To accept cross origin requests, set this option to 1 (default is 0)
+#
+accept-cors = 0
+
+# The size of images can be controlled by setting the following values.
+# (ie. max-width = 1280) (by default it is None, keeping original size).
+#
+max-width =
+max-height =
+""")
+
+
+
 
 
 log_levels = {
@@ -121,6 +206,73 @@ def get_fake_context(database, context_cls=CMSContext):
     context.database = database
     set_context(context)
     return context
+
+
+def create_server(target, email, password, root,  modules,
+                  listen_port='8080', smtp_host='localhost', log_email=None):
+    # Get modules
+    for module in modules:
+        modules.append(module)
+        exec('import %s' % module)
+    # Load the root class
+    if root is None:
+        root_class = Root
+    else:
+        modules.insert(0, root)
+        exec('import %s' % root)
+        exec('root_class = %s.Root' % root)
+    # Make folder
+    try:
+        mkdir(target)
+    except OSError:
+        raise ValueError('can not create the instance (check permissions)')
+
+    # The configuration file
+    config = template.format(
+        modules=" ".join(modules),
+        listen_port=listen_port,
+        smtp_host=smtp_host or 'localhost',
+        smtp_from=email,
+        log_email=log_email)
+    open('%s/config.conf' % target, 'w').write(config)
+
+    # Create the folder structure
+    database = make_database(target)
+    mkdir('%s/log' % target)
+    mkdir('%s/spool' % target)
+
+    # Create a fake context
+    context = get_fake_context(database)
+    context.set_mtime = True
+
+    # Make the root
+    metadata = Metadata(cls=root_class)
+    database.set_handler('.metadata', metadata)
+    root = root_class(metadata)
+    # Re-init context with context cls
+    context = get_fake_context(context.database, root.context_cls)
+    context.set_mtime = True
+    # Init root resource
+    root.init_resource(email, password)
+    # Set mtime
+    root.set_property('mtime', context.timestamp)
+    context.root = root
+    # Save changes
+    context.git_message = 'Initial commit'
+    database.save_changes()
+    # Index the root
+    catalog = database.catalog
+    catalog.save_changes()
+    # Bravo!
+    print('*')
+    print('* Welcome to ikaaro')
+    print('* A user with administration rights has been created for you:')
+    print('*   username: %s' % email)
+    print('*   password: %s' % password)
+    print('*')
+    print('* To start the new instance type:')
+    print('*   icms-start.py %s' % target)
+    print('*')
 
 
 class ServerLoop(Loop):
