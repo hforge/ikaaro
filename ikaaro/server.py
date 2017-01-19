@@ -57,6 +57,7 @@ from itools.web import SoupMessage, StaticRouter, DatabaseRouter
 from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
+from router import StaticCachedRouter
 from update import is_instance_up_to_date
 from skins import skin_registry
 
@@ -145,12 +146,15 @@ class ServerLoop(Loop):
 
 class Server(WebServer):
 
+    timestamp = None
+
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
         target = lfs.get_absolute_path(target)
         self.target = target
         self.read_only = read_only
-
+        # Set timestamp
+        self.timestamp = str(int(time() / 2))
         # Load the config
         config = get_config(target)
         self.config = config
@@ -405,12 +409,7 @@ class Server(WebServer):
     def listen(self, address, port):
         super(Server, self).listen(address, port)
         # Set ui router
-        router = StaticRouter(local_path=get_abspath('ui'))
-        self.set_router('/ui', router)
-        for name in skin_registry:
-            skin = skin_registry[name]
-            router = StaticRouter(local_path=skin.key)
-            self.set_router('/ui/%s' % name, router)
+        self.register_ui_router()
 
 
     def save_running_informations(self):
@@ -560,6 +559,25 @@ class Server(WebServer):
         summary = 'Error sending email\n'
         details = format_exc()
         log_error(summary + details)
+
+
+    def register_ui_router(self):
+        # Base router
+        router = StaticRouter(local_path=get_abspath('ui'))
+        self.set_router('/ui', router)
+        for name in skin_registry:
+            skin = skin_registry[name]
+            router = StaticRouter(local_path=skin.key)
+            self.set_router('/ui/%s' % name, router)
+        # Cached router: /ui/cached/TIMESTAMP/
+        ui_prefix = '/ui/cached/{0}'.format(self.timestamp)
+        static_context = StaticCachedRouter(local_path=get_abspath('ui'))
+        self.set_router(ui_prefix, static_context)
+        for name in skin_registry:
+            skin = skin_registry[name]
+            static_context = StaticCachedRouter(local_path=skin.key)
+            path = '{0}/{1}'.format(ui_prefix, name)
+            self.set_router(path, static_context)
 
 
     #######################################################################
