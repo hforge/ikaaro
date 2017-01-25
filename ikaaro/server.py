@@ -230,7 +230,7 @@ def create_server(target, email, password, root,  modules,
     # The configuration file
     config = template.format(
         modules=" ".join(modules),
-        listen_port=listen_port,
+        listen_port=listen_port or '8080',
         smtp_host=smtp_host or 'localhost',
         smtp_from=email,
         log_email=log_email)
