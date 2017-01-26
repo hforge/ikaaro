@@ -51,15 +51,17 @@ from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
-from itools.web import SoupMessage, StaticRouter, DatabaseRouter
+from itools.web import SoupMessage, DatabaseRouter
+from itools.web.static import StaticView
 
 # Import from ikaaro
 from context import CMSContext
 from database import get_database, make_database
 from datatypes import ExpireValue
 from root import Root
-from router import StaticCachedRouter
+from views import CachedStaticView
 from update import is_instance_up_to_date
+from urls import urlpatterns
 from skins import skin_registry
 
 
@@ -560,8 +562,9 @@ class Server(WebServer):
 
     def listen(self, address, port):
         super(Server, self).listen(address, port)
-        # Set ui router
-        self.register_ui_router()
+        # Register routes
+        self.register_dispatch_routes()
+
 
 
     def save_running_informations(self):
@@ -713,23 +716,23 @@ class Server(WebServer):
         log_error(summary + details)
 
 
-    def register_ui_router(self):
-        # Base router
-        router = StaticRouter(local_path=get_abspath('ui'))
-        self.set_router('/ui', router)
+    def register_dispatch_routes(self):
+        # Dispatch routes
+        for urlpattern_object in urlpatterns:
+            for pattern, view in urlpattern_object.get_patterns():
+                self.dispatcher.add(pattern, view)
+        # UI routes for skin
         for name in skin_registry:
             skin = skin_registry[name]
-            router = StaticRouter(local_path=skin.key)
-            self.set_router('/ui/%s' % name, router)
-        # Cached router: /ui/cached/TIMESTAMP/
-        ui_prefix = '/ui/cached/{0}'.format(self.timestamp)
-        static_context = StaticCachedRouter(local_path=get_abspath('ui'))
-        self.set_router(ui_prefix, static_context)
-        for name in skin_registry:
-            skin = skin_registry[name]
-            static_context = StaticCachedRouter(local_path=skin.key)
-            path = '{0}/{1}'.format(ui_prefix, name)
-            self.set_router(path, static_context)
+            mount_path = '/ui/%s' % name
+            view = StaticView(local_path=skin.key, mount_path=mount_path)
+            self.dispatcher.add('/ui/%s/{name:any}' % name, view)
+            mount_path = '/ui/cached/%s' % name
+            view = CachedStaticView(local_path=skin.key, mount_path=mount_path)
+            self.dispatcher.add('/ui/cached/%s/{name:any}' % name, view)
+        # UI routes for /ui/*.js /ui/*.css (should be OBSOLETE)
+        view = StaticView(local_path=get_abspath('ui/'), mount_path='/ui')
+        self.dispatcher.add('/ui/{name:any}', view)
 
 
     #######################################################################

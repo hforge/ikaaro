@@ -21,6 +21,7 @@ from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLView
+from itools.web.static import StaticView
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -595,3 +596,14 @@ class ContextMenu(CMSTemplate):
                 item.setdefault(name, None)
 
         return items
+
+
+
+class CachedStaticView(StaticView):
+
+    def GET(self, query, context):
+        proxy = super(CachedStaticView, self)
+        data = proxy.GET(query, context)
+        if context.status == 200:
+            context.set_header('Cache-Control', 'max-age=315360000')
+        return data
