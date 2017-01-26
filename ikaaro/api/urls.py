@@ -18,9 +18,9 @@
 from ikaaro.urls import urlpattern
 
 # Import from here
-from views import HelloWorld_View
+from views import ApiStatus_View
 
 
 urlpatterns = [
-    urlpattern('/hello-world', HelloWorld_View),
+    urlpattern('/status', ApiStatus_View),
 ]

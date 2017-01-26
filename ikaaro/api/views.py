@@ -15,10 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.web import BaseView
+from itools.datatypes import String
+from itools.web.views import ItoolsView
 
 
-class HelloWorld_View(BaseView):
+class ApiStatus_View(ItoolsView):
+
+    access = True
 
     def GET(self, query, context):
-        return 'hello world'
+        kw = {'ts': context.server.timestamp,
+              'up': True}
+        return self.return_json(kw, context)
