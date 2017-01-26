@@ -51,7 +51,7 @@ from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
-from itools.web import SoupMessage, DatabaseRouter
+from itools.web import SoupMessage
 from itools.web.static import StaticView
 
 # Import from ikaaro
@@ -428,7 +428,6 @@ class Server(WebServer):
         # Listen & set context
         root = self.root
         self.listen(address, port)
-        self.set_router('/', DatabaseRouter)
 
         # Call method on root at start
         context = get_context()
