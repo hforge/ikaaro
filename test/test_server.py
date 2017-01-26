@@ -18,8 +18,9 @@
 from unittest import TestCase, main
 
 # Import from itools
-from itools.datatypes import String
+from itools.datatypes import String, Unicode
 from itools.fs import lfs
+from itools.web import set_context
 from itools.web.views import ItoolsView
 
 # Import from ikaaro
@@ -47,12 +48,32 @@ class TestPlainText_View(ItoolsView):
         return 'hello world'
 
 
+
 class TestJson_View(ItoolsView):
 
     access = True
 
     def GET(self, query, context):
         kw = {'text': 'hello world'}
+        return self.return_json(kw, context)
+
+
+
+class TestJsonAction_View(ItoolsView):
+
+    access = True
+
+    schema = {'name': String}
+    def action_hello(self, resource, context, form):
+        kw = {'text': 'hello '+ form.get('name')}
+        return self.return_json(kw, context)
+
+
+    action_set_root_title_schema = {'title': Unicode}
+    def action_set_root_title(self, resource, context, form):
+        root = context.root
+        root.set_value('title', form.get('title'), language='fr')
+        kw = {'success': True}
         return self.return_json(kw, context)
 
 
@@ -134,6 +155,32 @@ class ServerTestCase(TestCase):
         retour = server.do_request('GET', '/test/json', as_json=True)
         self.assertEqual(retour['status'], 200)
         self.assertEqual(retour['entity'], {'text': 'hello world'})
+
+
+    def test_action(self):
+        server = SERVER
+        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        body = {'action': 'hello', 'name': 'world'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        self.assertEqual(retour['entity'], {'text': 'hello world'})
+        body = {'action': 'hello', 'name': 'sylvain'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        self.assertEqual(retour['entity'], {'text': 'hello sylvain'})
+
+
+    def test_commit(self):
+        server = SERVER
+        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        body = {'action': 'set_root_title', 'title': u'Sylvain'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        self.assertEqual(retour['status'], 200)
+        self.assertEqual(retour['entity']['success'], True)
+        self.assertEqual(server.root.get_value('title', language='fr'), u'Sylvain')
+        body = {'action': 'set_root_title', 'title': u'Zidane'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        self.assertEqual(retour['status'], 200)
+        self.assertEqual(retour['entity']['success'], True)
+        self.assertEqual(server.root.get_value('title', language='fr'), u'Zidane')
 
 
     def test_stop_server(self):
