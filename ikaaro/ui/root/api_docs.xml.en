@@ -8,7 +8,7 @@
 
   <div stl:repeat="endpoint endpoints" class="well">
     <h2>
-      <a href="/api${endpoint/route}" target="_blank">${endpoint/route}</a>
+      <a href="${endpoint/route}" target="_blank">${endpoint/route}</a>
       <div class="pull-right">
         <div class="label label-info" stl:repeat="method endpoint/methods">
           ${method}
