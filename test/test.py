@@ -19,9 +19,10 @@ from unittest import TestLoader, TestSuite, TextTestRunner
 
 # Import tests
 import test_metadata
+import test_server
 
 
-test_modules = [test_metadata]
+test_modules = [test_metadata, test_server]
 
 
 loader = TestLoader()
