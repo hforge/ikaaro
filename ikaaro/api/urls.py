@@ -18,9 +18,17 @@
 from ikaaro.urls import urlpattern
 
 # Import from here
-from views import ApiStatus_View
+from views import Api_View, ApiStatus_View
+from views import Api_LoginView
+from views import ApiDevPanel_ResourceDump
+from views import ApiDevPanel_ClassidViewDetails, ApiDevPanel_ClassidViewList
 
 
 urlpatterns = [
+    urlpattern('', Api_View),
     urlpattern('/status', ApiStatus_View),
+    urlpattern('/login', Api_LoginView),
+    urlpattern('/devpanel/classid', ApiDevPanel_ClassidViewList),
+    urlpattern('/devpanel/classid/{class_id}', ApiDevPanel_ClassidViewDetails),
+    urlpattern('/devpanel/resource/{uuid}/dump', ApiDevPanel_ResourceDump),
 ]
