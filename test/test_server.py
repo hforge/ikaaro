@@ -112,8 +112,15 @@ class ServerTestCase(TestCase):
 
     def test_server_404(self):
         server = SERVER
+        # Error 404 json
         retour = server.do_request('GET', '/api/404', as_json=True)
         self.assertEqual(retour['status'], 404)
+        self.assertEqual(retour['entity']['status'], 404)
+        self.assertEqual(retour['context'].content_type, 'application/json')
+        # Error 404 web
+        retour = server.do_request('GET', '/api/404', as_json=False)
+        self.assertEqual(retour['status'], 404)
+        self.assertEqual(retour['context'].content_type, 'text/html; charset=UTF-8')
 
 
     # FIXME
