@@ -78,6 +78,8 @@ class ApiDevPanel_ResourceDump(ItoolsView):
     """
 
     access = 'is_admin'
+    query_schema = {'format': Char_Field(
+      title=MSG(u'Format du dump'), required=True)}
 
     def GET(self, root, context):
         uuid = context.path_query['uuid']
@@ -98,9 +100,6 @@ class ApiDevPanel_ClassidViewList(ItoolsView):
     """
 
     access = 'is_admin'
-
-    query_schema = {'format': Char_Field(
-      title=MSG(u'Format du dump'), required=True)}
 
     def GET(self, root, context):
         l = []
