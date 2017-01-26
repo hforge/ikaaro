@@ -265,6 +265,7 @@ def create_server(target, email, password, root,  modules,
     # Index the root
     catalog = database.catalog
     catalog.save_changes()
+    catalog.close()
     # Bravo!
     print('*')
     print('* Welcome to ikaaro')
