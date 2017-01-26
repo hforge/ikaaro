@@ -18,10 +18,13 @@
 from itools.database import PhraseQuery
 from itools.gettext import MSG
 from itools.web import STLView
+from itools.web.exceptions import NotFound
 from itools.web.views import ItoolsView
 
 # Import from ikaaro
 from ikaaro.fields import Char_Field, Email_Field, Password_Field
+from ikaaro.fields import Boolean_Field
+from ikaaro.server import get_config
 
 
 class Api_View(STLView):
@@ -73,25 +76,61 @@ class ApiStatus_View(ItoolsView):
 
 
 
-class ApiDevPanel_ResourceDump(ItoolsView):
-    """ Dump resource uuid
-    """
+class UUIDView(ItoolsView):
 
-    access = 'is_admin'
-    query_schema = {'format': Char_Field(
-      title=MSG(u'Format du dump'), required=True)}
-
-    def GET(self, root, context):
+    def get_resource_from_uuid(self, context):
         uuid = context.path_query['uuid']
         query = PhraseQuery('uuid', uuid)
         search = context.search(query)
         if not search:
-            return context.set_default_response(404)
+            raise NotFound
         resource = search.get_resources().next()
+        return resource
+
+
+
+class ApiDevPanel_ResourceJSON(UUIDView):
+    """ Dump resource uuid as json
+    """
+
+    access = 'is_admin'
+    query_schema = {'pretty': Boolean_Field(title=MSG(u'Pretty ?'))}
+
+    def GET(self, root, context):
+        resource = self.get_resource_from_uuid(context)
         schema = {}
         for name, field in resource.get_fields():
-            schema[name] = field.rest()
+            if context.query.get('pretty'):
+                schema[name] = resource.get_value_title(name)
+            else:
+                schema[name] = resource.get_value(name)
         return self.return_json(schema, context)
+
+
+
+class ApiDevPanel_ResourceRaw(UUIDView):
+    """ Dump resource uuid row as to_str()
+    """
+
+    access = 'is_admin'
+
+    def GET(self, root, context):
+        resource = self.get_resource_from_uuid(context)
+        metadata = resource.metadata
+        context.set_content_type('text/plain')
+        return metadata.to_str()
+
+
+class ApiDevPanel_ResourceHistory(UUIDView):
+    """ List history of resource
+    """
+
+    access = 'is_admin'
+
+    def GET(self, root, context):
+        resource = self.get_resource_from_uuid(context)
+        revisions = resource.get_revisions(content=False)
+        return self.return_json(revisions, context)
 
 
 
@@ -125,6 +164,18 @@ class ApiDevPanel_ClassidViewDetails(ItoolsView):
         return self.return_json(kw, context)
 
 
+class ApiDevPanel_Config(ItoolsView):
+    """ Give config.conf file
+    """
+
+    access = 'is_admin'
+
+    def GET(self, root, context):
+        config = get_config(context.server.target)
+        context.set_content_type('text/plain')
+        return config.to_str()
+
+
 
 class Api_LoginView(ItoolsView):
     """ Login user into app
@@ -136,3 +187,23 @@ class Api_LoginView(ItoolsView):
 
     def POST(self, root, context):
         raise NotImplementedError
+
+
+
+class ApiDevPanel_Log(ItoolsView):
+
+    access = 'is_admin'
+    source_name = None
+
+    def GET(self, root, context):
+        context.set_content_type('text/plain')
+        try:
+            source = '{t}/log/{s}'.format(
+                t=context.server.target, s=self.source_name)
+            log_file = open(source, 'r')
+        except IOError:
+            return ''
+        context.set_content_type('text/plain')
+        data = log_file.read()
+        log_file.close()
+        return data
