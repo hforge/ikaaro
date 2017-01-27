@@ -31,6 +31,8 @@ from ikaaro.server import get_config
 
 
 class Api_View(STLView):
+    """Doc of the api
+    """
 
     access = 'is_admin'
     template = '/ui/root/api_docs.xml'
@@ -80,6 +82,8 @@ class ApiStatus_View(ItoolsView):
 
 
 class UUIDView(ItoolsView):
+    """ Base view for all uuid related views
+    """
 
     def get_resource_from_uuid(self, context):
         uuid = context.path_query['uuid']

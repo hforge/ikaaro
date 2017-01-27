@@ -23,6 +23,7 @@ from itools.core import prototype
 
 
 class URLPattern(prototype):
+    """Url pattern composed of the path pattern and the view."""
 
     pattern = None
     view = None
@@ -33,6 +34,7 @@ class URLPattern(prototype):
 
 
 class SubPatterns(prototype):
+    """Register a base path linked to an url file of url patterns."""
 
     base_path = None
     package = None
@@ -52,10 +54,12 @@ class SubPatterns(prototype):
 
 
 def urlpattern(pattern, view):
+    """Helper method to register Urlpatterns as a list in url files."""
     return URLPattern(pattern=pattern, view=view)
 
 
 def subpatterns(base_path, package):
+    """Helper method to register Subpatterns as a list in url files."""
     return SubPatterns(base_path=base_path, package=package)
 
 
