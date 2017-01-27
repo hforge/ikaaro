@@ -24,6 +24,7 @@ from views import ApiDevPanel_ResourceJSON, ApiDevPanel_ResourceRaw, ApiDevPanel
 from views import ApiDevPanel_ClassidViewDetails, ApiDevPanel_ClassidViewList
 from views import ApiDevPanel_Config, ApiDevPanel_Log
 from views import ApiDevPanel_CatalogReindex
+from views import ApiDevPanel_ServerView, ApiDevPanel_ServerStop
 
 
 urlpatterns = [
@@ -44,4 +45,7 @@ urlpatterns = [
     urlpattern('/devpanel/log/update', ApiDevPanel_Log(source_name='update')),
     # Catalog
     urlpattern('/devpanel/catalog/reindex', ApiDevPanel_CatalogReindex),
+    # Server
+    urlpattern('/devpanel/server', ApiDevPanel_ServerView),
+    urlpattern('/devpanel/server/stop', ApiDevPanel_ServerStop),
 ]

@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from os import getpid
+
 # Import from itools
 from itools.database import PhraseQuery
 from itools.gettext import MSG
@@ -217,4 +220,27 @@ class ApiDevPanel_CatalogReindex(ItoolsView):
     def POST(self, root, context):
         n = context.database.reindex_catalog(base_abspath='/')
         kw = {'n': n}
+        return self.return_json(kw, context)
+
+
+
+class ApiDevPanel_ServerView(ItoolsView):
+
+    access = 'is_admin'
+
+    def GET(self, root, context):
+        server = context.server
+        kw = {'timestamp': server.timestamp,
+              'pid': getpid(),
+              'port': server.port}
+        return self.return_json(kw, context)
+
+
+class ApiDevPanel_ServerStop(ItoolsView):
+
+    access = 'is_admin'
+
+    def GET(self, root, context):
+        context.server.stop()
+        kw = {'success': True}
         return self.return_json(kw, context)

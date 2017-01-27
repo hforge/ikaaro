@@ -302,6 +302,7 @@ class ServerLoop(Loop):
 class Server(WebServer):
 
     timestamp = None
+    port = None
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
@@ -562,6 +563,7 @@ class Server(WebServer):
 
     def listen(self, address, port):
         super(Server, self).listen(address, port)
+        self.port = port
         # Register routes
         self.register_dispatch_routes()
 
