@@ -207,3 +207,14 @@ class ApiDevPanel_Log(ItoolsView):
         data = log_file.read()
         log_file.close()
         return data
+
+
+
+class ApiDevPanel_CatalogReindex(ItoolsView):
+
+    access = 'is_admin'
+
+    def POST(self, root, context):
+        n = context.database.reindex_catalog(base_abspath='/')
+        kw = {'n': n}
+        return self.return_json(kw, context)

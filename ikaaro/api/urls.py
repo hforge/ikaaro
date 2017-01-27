@@ -23,19 +23,25 @@ from views import Api_LoginView
 from views import ApiDevPanel_ResourceJSON, ApiDevPanel_ResourceRaw, ApiDevPanel_ResourceHistory
 from views import ApiDevPanel_ClassidViewDetails, ApiDevPanel_ClassidViewList
 from views import ApiDevPanel_Config, ApiDevPanel_Log
+from views import ApiDevPanel_CatalogReindex
 
 
 urlpatterns = [
     urlpattern('', Api_View),
     urlpattern('/status', ApiStatus_View),
     urlpattern('/login', Api_LoginView),
+    # Class id
     urlpattern('/devpanel/config', ApiDevPanel_Config),
     urlpattern('/devpanel/classid', ApiDevPanel_ClassidViewList),
     urlpattern('/devpanel/classid/{class_id}', ApiDevPanel_ClassidViewDetails),
+    # Resource
     urlpattern('/devpanel/resource/{uuid}/json', ApiDevPanel_ResourceJSON),
     urlpattern('/devpanel/resource/{uuid}/raw', ApiDevPanel_ResourceRaw),
     urlpattern('/devpanel/resource/{uuid}/history', ApiDevPanel_ResourceHistory),
+    # Logs
     urlpattern('/devpanel/log/access', ApiDevPanel_Log(source_name='access')),
     urlpattern('/devpanel/log/events', ApiDevPanel_Log(source_name='events')),
     urlpattern('/devpanel/log/update', ApiDevPanel_Log(source_name='update')),
+    # Catalog
+    urlpattern('/devpanel/catalog/reindex', ApiDevPanel_CatalogReindex),
 ]
