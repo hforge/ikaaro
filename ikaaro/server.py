@@ -724,14 +724,15 @@ class Server(WebServer):
             for pattern, view in urlpattern_object.get_patterns():
                 self.dispatcher.add(pattern, view)
         # UI routes for skin
+        ts = self.timestamp
         for name in skin_registry:
             skin = skin_registry[name]
             mount_path = '/ui/%s' % name
             view = StaticView(local_path=skin.key, mount_path=mount_path)
             self.dispatcher.add('/ui/%s/{name:any}' % name, view)
-            mount_path = '/ui/cached/%s' % name
+            mount_path = '/ui/cached/%s/%s' % (ts, name)
             view = CachedStaticView(local_path=skin.key, mount_path=mount_path)
-            self.dispatcher.add('/ui/cached/%s/{name:any}' % name, view)
+            self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
         # UI routes for /ui/*.js /ui/*.css (should be OBSOLETE)
         view = StaticView(local_path=get_abspath('ui/'), mount_path='/ui')
         self.dispatcher.add('/ui/{name:any}', view)
