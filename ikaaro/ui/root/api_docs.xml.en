@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <h1>API documentation</h1>
+
+  <div stl:repeat="endpoint endpoints" class="well">
+    <h2>
+      <a href="${endpoint/route}" target="_blank">${endpoint/route}</a>
+      <div class="pull-right">
+        <div class="label label-info" stl:repeat="method endpoint/methods">
+          ${method}
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <div class="label label-info">${endpoint/access}</div>
+      </div>
+    </h2>
+    <p>${endpoint/description}</p>
+    <div stl:if="endpoint/query_l">
+      <h3>Query</h3>
+      <table class="table table-bordered table-condensed">
+        <tr>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Required ?</th>
+        </tr>
+        <tr stl:repeat="field endpoint/query_l">
+          <td>${field/name}</td>
+          <td>${field/title}</td>
+          <td>${field/required}</td>
+        </tr>
+      </table>
+    </div>
+    <div stl:if="endpoint/form_l">
+      <h3>Form</h3>
+      <table class="table table-bordered table-condensed">
+        <tr>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Required ?</th>
+        </tr>
+        <tr stl:repeat="field endpoint/form_l">
+          <td>${field/name}</td>
+          <td>${field/title}</td>
+          <td>${field/required}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</stl:block>

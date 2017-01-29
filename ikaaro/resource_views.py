@@ -85,7 +85,8 @@ class DBResource_GetFile(BaseView):
         return resource.get_value(name)
 
 
-    def get_mtime(self, resource):
+    def get_mtime(self, context):
+        resource = context.resource
         field_name = self.get_field_name()
         handler = self.get_handler(resource, field_name)
         if handler is None:
@@ -341,39 +342,3 @@ class LogoutView(BaseView):
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
-
-
-
-###########################################################################
-# Views / HTTP, WebDAV
-###########################################################################
-
-class Put_View(BaseView):
-
-    access = 'is_allowed_to_put'
-
-
-    def PUT(self, resource, context):
-        range = context.get_header('content-range')
-        if range:
-            raise NotImplemented
-
-        # Save the data
-        body = context.get_form_value('body')
-        resource.handler.load_state_from_string(body)
-        context.database.change_resource(resource)
-
-
-
-class Delete_View(BaseView):
-
-    access = 'is_allowed_to_remove'
-
-
-    def DELETE(self, resource, context):
-        name = resource.name
-        parent = resource.parent
-        try:
-            parent.del_resource(name)
-        except ConsistencyError:
-            raise Conflict

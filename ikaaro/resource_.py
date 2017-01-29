@@ -52,7 +52,6 @@ from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
 from resource_views import DBResource_Links, DBResource_Backlinks
 from resource_views import LoginView, LogoutView
-from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
@@ -881,9 +880,6 @@ class DBResource(Resource):
     # Links
     backlinks = DBResource_Backlinks
     links = DBResource_Links
-    # External editor
-    http_put = Put_View
-    http_delete = Delete_View
     # Rest (web services)
     rest_login = Rest_Login
     rest_query = Rest_Query
