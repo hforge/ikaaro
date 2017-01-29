@@ -70,8 +70,17 @@ class CMSContext(Context):
             warning = warning.format(web_path)
             web_path = web_path.replace('/ui/', '/ui/ikaaro/')
             skin = skin_registry['ikaaro']
-        skin_key = skin.key
+        # 1) Try with envionment skin
+        skin_key = skin.get_environment_key(self.server)
         web_path = web_path.replace(skin.base_path, '')
+        template = self.get_template_from_skin_key(skin_key, web_path, warning)
+        if template:
+            return template
+        # 2) Try with standard skin
+        return self.get_template_from_skin_key(skin.key, web_path, warning)
+
+
+    def get_template_from_skin_key(self, skin_key, web_path, warning):
         local_path = skin_key + web_path
         # 3. Get the handler
         handler = ro_database.get_handler(local_path, soft=True)

@@ -51,6 +51,20 @@ class Skin(object):
         self.key = key
 
 
+    def get_environment_key(self, server):
+        """ In development environment we can use '/ui_dev/skin/' directory
+        for skin (to avoid build JS/CSS at every changes)
+        """
+        if server.is_development_environment():
+            build_path = str(server.environment['build_path'])
+            base_path = self.key.split('/ui/')[0]
+            new_key = self.key.replace(base_path, build_path)
+            new_key = new_key.replace('/ui/', '/ui_dev/')
+            if vfs.exists(new_key):
+                # Use local skin
+                return new_key
+        return self.key
+
     #######################################################################
     # HTML head
     #######################################################################

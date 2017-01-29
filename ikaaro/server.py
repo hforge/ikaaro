@@ -737,10 +737,11 @@ class Server(WebServer):
         for name in skin_registry:
             skin = skin_registry[name]
             mount_path = '/ui/%s' % name
-            view = StaticView(local_path=skin.key, mount_path=mount_path)
+            skin_key = skin.get_environment_key(self)
+            view = StaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/%s/{name:any}' % name, view)
             mount_path = '/ui/cached/%s/%s' % (ts, name)
-            view = CachedStaticView(local_path=skin.key, mount_path=mount_path)
+            view = CachedStaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
 
 
