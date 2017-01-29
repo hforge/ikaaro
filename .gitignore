@@ -6,6 +6,7 @@ build
 dist
 version.txt
 ikaaro/locale/*.mo
+ikaaro/environment.json
 *.xml.es
 *.xml.fr
 *.xml.it

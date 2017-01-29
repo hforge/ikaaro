@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from datetime import timedelta
 from email.parser import HeaderParser
+import inspect
 import json
 import pickle
 from os import fdopen, getpgid, getpid, kill, mkdir, remove
@@ -49,6 +50,7 @@ from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
+from itools.uri import get_reference
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
 from itools.web import SoupMessage
@@ -303,6 +305,7 @@ class Server(WebServer):
 
     timestamp = None
     port = None
+    environment = {}
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
@@ -345,6 +348,13 @@ class Server(WebServer):
         # Find out the root class
         root = get_root(database)
 
+        # Load environment file
+        root_file_path = inspect.getfile(root.__class__)
+        environement_path = str(get_reference(root_file_path).resolve('environment.json'))
+        with open(environement_path, 'r') as f:
+            data = f.read()
+            self.environment = json.loads(data)
+
         # Init fake context
         context = get_fake_context(database, root.context_cls)
         context.server = self
@@ -377,7 +387,6 @@ class Server(WebServer):
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.web')
-
         # Session timeout
         self.session_timeout = get_value('session-timeout')
 
@@ -737,6 +746,17 @@ class Server(WebServer):
         view = StaticView(local_path=get_abspath('ui/'), mount_path='/ui')
         self.dispatcher.add('/ui/{name:any}', view)
 
+
+    def is_production_environment(self):
+        return self.is_environment('production')
+
+
+    def is_development_environment(self):
+        return self.is_environment('development')
+
+
+    def is_environment(self, name):
+        return self.environment.get('environment', 'production') == name
 
     #######################################################################
     # Time events
