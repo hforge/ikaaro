@@ -162,7 +162,7 @@ class User_Profile(STLView):
     title = MSG(u'Profile')
     description = MSG(u"User's profile page.")
     icon = 'action_home.png'
-    template = '/ui/user/profile.xml'
+    template = '/ui/ikaaro/user/profile.xml'
 
     items = ['edit_account', 'edit_preferences', 'edit_password']
 
@@ -232,7 +232,7 @@ class User_EditPreferences(STLView):
     title = MSG(u'Edit Preferences')
     description = MSG(u'Set your preferred language and timezone.')
     icon = 'preferences.png'
-    template = '/ui/user/edit_preferences.xml'
+    template = '/ui/ikaaro/user/edit_preferences.xml'
     schema = {
         'user_language': String,
         'user_timezone': String}

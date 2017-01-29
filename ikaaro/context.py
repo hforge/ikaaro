@@ -14,16 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from os.path import isdir
-
 # Import from itools
 from itools.core import freeze, proto_lazy_property
 from itools.fs import lfs
 from itools.handlers import ro_database
 from itools.i18n import has_language
-from itools.uri import normalize_path
+from itools.uri import Path, normalize_path
 from itools.web import Context
+
+# Import from ikaaro
+from skins import skin_registry
 
 
 class CMSContext(Context):
@@ -60,24 +60,24 @@ class CMSContext(Context):
 
 
     def get_template(self, web_path):
-        web_path = normalize_path(web_path)
-
-        # 1. Find local root
-        web_roots = ui_registry.keys()
-        web_roots.sort(reverse=True)
-        for web_root in web_roots:
-            if web_path.startswith(web_root):
-                break
-        else:
-            raise ValueError, 'unexpected %s' % repr(web_path)
-
-        # 2. Get the local path
-        local_root = ui_registry[web_root]
-        local_path = local_root + web_path[len(web_root):]
-
+        warning = None
+        web_path_object = Path(normalize_path(web_path))
+        skin_name = web_path_object[1]
+        try:
+            skin = skin_registry[skin_name]
+        except KeyError:
+            warning = 'WARNING: web_path {} is obsolete use /ui/ikaaro/'
+            warning = warning.format(web_path)
+            web_path = web_path.replace('/ui/', '/ui/ikaaro/')
+            skin = skin_registry['ikaaro']
+        skin_key = skin.key
+        web_path = web_path.replace(skin.base_path, '')
+        local_path = skin_key + web_path
         # 3. Get the handler
         handler = ro_database.get_handler(local_path, soft=True)
         if handler:
+            if warning:
+                print warning
             return handler
 
         # 4. Not an exact match: trigger language negotiation
@@ -96,7 +96,9 @@ class CMSContext(Context):
         # 4.1 Get the best variant
         accept = self.accept_language
         language = accept.select_language(languages)
-
+        # Print Warning
+        if warning:
+            print warning
         # 4.2 By default use whatever variant
         # (XXX we need a way to define the default)
         if language is None:
@@ -126,25 +128,3 @@ class CMSContext(Context):
         if user is None:
             return self._context_user_search.search(query, **kw)
         return self._user_search(user).search(query, **kw)
-
-
-###########################################################################
-# Registry
-###########################################################################
-def _fix_path(path):
-    if type(path) is not str:
-        raise TypeError, 'unexpected %s' % repr(path)
-    path = normalize_path(path)
-    if not path or path[0] != '/':
-        raise ValueError, 'unexpected %s' % repr(path)
-
-    return path if path[-1] == '/' else path + '/'
-
-
-ui_registry = {}
-def register_ui(web_root, local_root):
-    web_root = _fix_path(web_root)
-    local_root = _fix_path(local_root)
-    if not isdir(local_root):
-        raise ValueError, 'unexpected %s' % repr(local_root)
-    ui_registry[web_root] = local_root

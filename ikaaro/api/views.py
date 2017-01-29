@@ -35,7 +35,7 @@ class Api_View(STLView):
     """
 
     access = 'is_admin'
-    template = '/ui/root/api_docs.xml'
+    template = '/ui/ikaaro/root/api_docs.xml'
 
     def get_namespace(self, resource, context):
         dispatcher = context.server.dispatcher

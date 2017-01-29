@@ -32,7 +32,7 @@ class Theme(Folder):
     class_id = 'config-theme'
     class_title = MSG(u'Theme')
     class_description = MSG(u'Allow to customize ikaaro skin')
-    class_icon48 = 'icons/48x48/theme.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/theme.png'
 
     # Fields
     logo = File_Field(title=MSG(u'Logo'))

@@ -121,7 +121,7 @@ def indent(text, width=95):
 
 class Comment_View(STLView):
 
-    template = '/ui/comment_view.xml'
+    template = '/ui/ikaaro/comment_view.xml'
     comment_columns = ('user', 'datetime', 'comment', 'workflow', 'index')
     # Configuration
     comment_index = None
@@ -210,7 +210,7 @@ class Comment(DBResource):
 ###########################################################################
 class CommentsView(STLView):
 
-    template = '/ui/comments.xml'
+    template = '/ui/ikaaro/comments.xml'
     schema = {
         'comment_state': String(multiple=True),
         'index': Integer(multiple=True)}

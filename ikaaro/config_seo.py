@@ -33,8 +33,8 @@ class SEO(DBResource):
     class_id = 'config-seo'
     class_title = MSG(u'Search Engine Optimization')
     class_description = seo_description
-    class_icon16 = 'icons/16x16/search.png'
-    class_icon48 = 'icons/48x48/search.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/search.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/search.png'
 
     # Fields
     google_site_verification = Char_Field(

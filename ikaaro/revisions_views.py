@@ -231,7 +231,7 @@ class DBResource_Changes(STLView):
 
     access = 'is_admin'
     title = MSG(u'Changes')
-    template = '/ui/revisions/changes.xml'
+    template = '/ui/ikaaro/revisions/changes.xml'
 
     query_schema = {
         'revision': String(mandatory=True),

@@ -61,7 +61,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     search_schema = {}
     search_widgets =[]
 
-    table_template = '/ui/html/addbase_browse_table.xml'
+    table_template = '/ui/ikaaro/html/addbase_browse_table.xml'
 
     folder_classes = ()
 
@@ -183,7 +183,7 @@ class DBResource_AddBase(STLView):
     """
 
     access = 'is_allowed_to_add'
-    template = '/ui/html/popup.xml'
+    template = '/ui/ikaaro/html/popup.xml'
 
     element_to_add = None
 
@@ -307,9 +307,9 @@ class DBResource_AddBase(STLView):
     def get_scripts(self, context):
         mode = context.get_form_value('mode')
         if mode == 'tiny_mce':
-            return ['/ui/tiny_mce/javascript.js',
-                    '/ui/tiny_mce/tiny_mce_src.js',
-                    '/ui/tiny_mce/tiny_mce_popup.js']
+            return ['/ui/ikaaro/tiny_mce/javascript.js',
+                    '/ui/ikaaro/tiny_mce/tiny_mce_src.js',
+                    '/ui/ikaaro/tiny_mce/tiny_mce_popup.js']
         return []
 
 

@@ -25,12 +25,12 @@ from os.path import isfile
 # Import from itools
 from itools.core import get_abspath
 from itools.datatypes import Unicode
+from itools.fs import vfs
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import get_context, ERROR, INFO
 
 # Import from ikaaro
-from context import register_ui
 from folder import Folder
 from views import get_view_scripts
 from skins_views import LanguagesTemplate, LocationTemplate
@@ -39,8 +39,8 @@ from skins_views import LanguagesTemplate, LocationTemplate
 class Skin(object):
 
     class_title = MSG(u'Skin')
-    class_icon16 = 'icons/16x16/skin.png'
-    class_icon48 = 'icons/48x48/skin.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/skin.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/skin.png'
 
     # User Interface widgets
     languages_template = LanguagesTemplate
@@ -91,7 +91,7 @@ class Skin(object):
 
     def get_styles(self, context):
         # Generic
-        styles = ['/ui/bo.css']
+        styles = ['/ui/ikaaro/bo.css']
 
         # Skin
         if isfile('%s/style.css' % self.key):
@@ -116,8 +116,8 @@ class Skin(object):
 
     def get_scripts(self, context):
         scripts = [
-            '/ui/jquery.js',
-            '/ui/javascript.js']
+            '/ui/ikaaro/jquery.js',
+            '/ui/ikaaro/javascript.js']
 
         # This skin's JavaScript
         if isfile('%s/javascript.js' % self.key):
@@ -200,7 +200,7 @@ class Skin(object):
             return (favicon, 'image/x-icon')
 
         # Case 3: default
-        return ('/ui/favicon.ico', 'image/x-icon')
+        return ('/ui/ikaaro/favicon.ico', 'image/x-icon')
 
 
     #######################################################################
@@ -447,12 +447,11 @@ def register_skin(name, skin):
         skin = Skin(skin)
     skin.base_path = '/ui/%s' % name
     skin_registry[name] = skin
-    register_ui('/ui/%s/' % name, skin.key)
 
 
 # Register the built-in skins
 ui_path = get_abspath('ui')
+register_skin('ikaaro', '%s/ikaaro' % ui_path)
 register_skin('aruni', '%s/aruni' % ui_path)
 register_skin('popup', '%s/popup' % ui_path)
 register_skin('fancybox', FancyboxSkin('%s/fancybox' % ui_path))
-register_ui('/ui/', ui_path)

@@ -9,7 +9,7 @@
 
 #cal-selector #mini-cal-button{
   display:block;
-  background: url('/ui/icons/16x16/calendar.png');
+  background: url('/ui/ikaaro/icons/16x16/calendar.png');
   height: 16px;
   width: 16px;
 }

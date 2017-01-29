@@ -79,23 +79,23 @@ div#page {
 }
 
 #header #links-menu-login {
-  background-image: url("../icons/16x16/signin.png");
+  background-image: url("/ui/ikaaro/icons/16x16/signin.png");
 }
 
 #header #links-menu-profile {
-  background-image: url("../icons/16x16/action_home.png");
+  background-image: url("/ui/ikaaro/icons/16x16/action_home.png");
 }
 
 #header #links-menu-logout {
-  background-image: url("../icons/16x16/action_logout.png");
+  background-image: url("/ui/ikaaro/icons/16x16/action_logout.png");
 }
 
 #header a#links-menu-new {
-  background-image: url(../icons/16x16/new.png);
+  background-image: url(/ui/ikaaro/icons/16x16/new.png);
 }
 
 #header a#links-menu-configuration {
-  background-image: url(../icons/16x16/config.png);
+  background-image: url(/ui/ikaaro/icons/16x16/config.png);
 }
 
 #header #languages a.selected {
@@ -122,7 +122,7 @@ div#page {
 }
 
 #header .header-toolbar .search form input.search_box {
-  background: #fff url(../icons/14x14/search-bw.png) no-repeat 3px center;
+  background: #fff url(/ui/ikaaro/icons/14x14/search-bw.png) no-repeat 3px center;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;

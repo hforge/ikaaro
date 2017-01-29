@@ -48,14 +48,15 @@ from messages import MSG_UNEXPECTED_MIMETYPE
 
 
 class NotFoundView(STLView):
-    template = '/ui/root/not_found.xml'
+
+    template = '/ui/ikaaro/root/not_found.xml'
 
     def get_namespace(self, resource, context):
         return {'uri': str(context.uri)}
 
 
 class ForbiddenView(STLView):
-    template = '/ui/root/forbidden.xml'
+    template = '/ui/ikaaro/root/forbidden.xml'
 
     def POST(self, resource, context):
         return self.GET
@@ -186,7 +187,7 @@ class PoweredBy(STLView):
 
     access = True
     title = MSG(u'Powered by')
-    template = '/ui/root/powered-by.xml'
+    template = '/ui/ikaaro/root/powered-by.xml'
 
 
     def get_namespace(self, resource, context):

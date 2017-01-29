@@ -349,7 +349,7 @@ def split_reference(ref):
 _close_fancybox = """
     <html>
     <head>
-      <script src="/ui/jquery.js" type="text/javascript"></script>
+      <script src="/ui/ikaaro/jquery.js" type="text/javascript"></script>
     </head>
     <body>
       <script type="text/javascript">

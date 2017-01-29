@@ -94,8 +94,8 @@ class Post(WebPage):
     class_id = 'blog-post'
     class_title = MSG(u'Blog Post')
     class_description = MSG(u'Create and publish Post')
-    class_icon16 = 'blog/Blog16.png'
-    class_icon48 = 'blog/Blog48.png'
+    class_icon16 = '/ui/blog/Blog16.png'
+    class_icon48 = '/ui/blog/Blog48.png'
     class_views = ['view', 'edit', 'commit_log']
 
 

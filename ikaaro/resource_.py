@@ -80,8 +80,8 @@ class DBResource(Resource):
 
     class_version = '20071215'
     class_description = None
-    class_icon16 = 'icons/16x16/resource.png'
-    class_icon48 = 'icons/48x48/resource.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/resource.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/resource.png'
     class_views = []
     context_menus = []
 
@@ -785,10 +785,7 @@ class DBResource(Resource):
     #######################################################################
     @classmethod
     def get_class_icon(cls, size=16):
-        icon = getattr(cls, 'class_icon%s' % size, None)
-        if icon is None:
-            return None
-        return '/ui/%s' % icon
+        return getattr(cls, 'class_icon%s' % size, None)
 
 
     @classmethod
@@ -805,7 +802,7 @@ class DBResource(Resource):
             return None
         if callable(icon):
             icon = icon(self, **kw)
-        return '/ui/icons/%s/%s' % (size, icon)
+        return '/ui/ikaaro/icons/%s/%s' % (size, icon)
 
 
     #######################################################################

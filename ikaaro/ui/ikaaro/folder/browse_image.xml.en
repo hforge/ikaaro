@@ -30,7 +30,7 @@
     <div id="browse-image">
       <a stl:if="not root"
         href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
-        title="Back"><img src="/ui/icons/16x16/up.png" /></a>
+        title="Back"><img src="/ui/ikaaro/icons/16x16/up.png" /></a>
       <div class="thumbnail size${size}" stl:repeat="row rows">
         <div class="folder" stl:omit-tag="not row/is_folder">
           <a href="${row/href}" stl:omit-tag="not row/href">

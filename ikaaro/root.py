@@ -91,8 +91,8 @@ class Root(Folder):
     class_id = 'iKaaro'
     class_version = '20170106'
     class_title = MSG(u'iKaaro')
-    class_icon16 = 'icons/16x16/root.png'
-    class_icon48 = 'icons/48x48/root.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/root.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/root.png'
     class_skin = 'aruni'
 
     abspath = Path('/')
@@ -153,7 +153,7 @@ class Root(Folder):
 
         # Ok
         namespace = {'traceback': traceback.format_exc()}
-        handler = context.get_template('/ui/root/internal_server_error.xml')
+        handler = context.get_template('/ui/ikaaro/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
 
 
@@ -560,6 +560,7 @@ class Root(Folder):
                 i+=1
             if i and i % 100==0:
                 context.database.save_changes()
+
 
 
     #######################################################################

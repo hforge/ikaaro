@@ -256,7 +256,7 @@ class Captcha(Folder):
     class_id = 'config-captcha'
     class_title = MSG(u'Captcha')
     class_description = MSG(u'Feature to protect from spammers')
-    class_icon48 = 'icons/48x48/captcha.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/captcha.png'
 
     # Fields
     captcha_type = Select_Field(

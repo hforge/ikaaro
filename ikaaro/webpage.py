@@ -49,8 +49,8 @@ class WebPage(File):
     class_id = 'webpage'
     class_title = MSG(u'Web Page')
     class_description = MSG(u'Create and publish a Web Page.')
-    class_icon16 = 'icons/16x16/html.png'
-    class_icon48 = 'icons/48x48/html.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/html.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/html.png'
 
 
     data = HTMLFile_Field(title=MSG(u'Body'))

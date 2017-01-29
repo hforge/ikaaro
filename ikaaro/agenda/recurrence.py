@@ -123,7 +123,7 @@ class RRuleInterval_Datatype(IntegerRange):
 
 class RRuleInterval_Widget(SelectWidget):
 
-    template = '/ui/agenda/rrule_interval_widget.xml'
+    template = '/ui/ikaaro/agenda/rrule_interval_widget.xml'
 
 
 

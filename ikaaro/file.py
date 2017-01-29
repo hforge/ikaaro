@@ -56,8 +56,8 @@ class File(Content):
     class_title = MSG(u'File')
     class_description = MSG(
         u'Upload office documents, images, media files, etc.')
-    class_icon16 = 'icons/16x16/file.png'
-    class_icon48 = 'icons/48x48/file.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/file.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/file.png'
     class_views = ['view', 'edit', 'externaledit', 'remove', 'subscribe',
                    'links', 'backlinks', 'commit_log']
 
@@ -124,8 +124,8 @@ class Image(File):
 
     class_id = 'image'
     class_title = MSG(u'Image')
-    class_icon16 = 'icons/16x16/image.png'
-    class_icon48 = 'icons/48x48/image.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/image.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/image.png'
     class_views = ['view', 'download', 'edit', 'externaledit', 'remove',
                    'links', 'backlinks', 'commit_log']
     # Fields
@@ -178,8 +178,8 @@ class Video(File):
     class_id = 'video'
     class_title = MSG(u'Video')
     class_description = MSG(u'Video')
-    class_icon16 = 'icons/16x16/flash.png'
-    class_icon48 = 'icons/48x48/flash.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/flash.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/flash.png'
 
     # Views
     view = Video_View
@@ -190,8 +190,8 @@ class Flash(File):
     class_id = 'application/x-shockwave-flash'
     class_title = MSG(u'Flash')
     class_description = MSG(u'Flash Document')
-    class_icon16 = 'icons/16x16/flash.png'
-    class_icon48 = 'icons/48x48/flash.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/flash.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/flash.png'
 
     # Views
     view = Flash_View
@@ -205,8 +205,8 @@ class MSWord(File):
     class_id = 'application/msword'
     class_title = MSG(u'Word')
     class_description = MSG(u'Word Text')
-    class_icon16 = 'icons/16x16/word.png'
-    class_icon48 = 'icons/48x48/word.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/word.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/word.png'
     # Fields
     data = File.data(class_handler=MSWordFile)
 
@@ -216,8 +216,8 @@ class MSExcel(File):
     class_id = 'application/vnd.ms-excel'
     class_title = MSG(u'Excel')
     class_description = MSG(u'Excel Spreadsheet')
-    class_icon16 = 'icons/16x16/excel.png'
-    class_icon48 = 'icons/48x48/excel.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/excel.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/excel.png'
     # Fields
     data = File.data(class_handler=MSExcelFile)
 
@@ -227,8 +227,8 @@ class MSPowerPoint(File):
     class_id = 'application/vnd.ms-powerpoint'
     class_title = MSG(u'PowerPoint')
     class_description = MSG(u'PowerPoint Presentation')
-    class_icon16 = 'icons/16x16/powerpoint.png'
-    class_icon48 = 'icons/48x48/powerpoint.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/powerpoint.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/powerpoint.png'
     # Fields
     data = File.data(class_handler=MSPowerPointFile)
 
@@ -238,8 +238,8 @@ class MSWordX(File):
     class_id = MSWordXFile.class_mimetypes[0]
     class_title = MSG(u'Word')
     class_description = MSG(u'Word Text')
-    class_icon16 = 'icons/16x16/word.png'
-    class_icon48 = 'icons/48x48/word.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/word.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/word.png'
     # Fields
     data = File.data(class_handler=MSWordXFile)
 
@@ -249,8 +249,8 @@ class MSExcelX(File):
     class_id = MSExcelXFile.class_mimetypes[0]
     class_title = MSG(u'Excel')
     class_description = MSG(u'Excel Spreadsheet')
-    class_icon16 = 'icons/16x16/excel.png'
-    class_icon48 = 'icons/48x48/excel.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/excel.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/excel.png'
     # Fields
     data = File.data(class_handler=MSExcelXFile)
 
@@ -260,8 +260,8 @@ class MSPowerPointX(File):
     class_id = MSPowerPointXFile.class_mimetypes[0]
     class_title = MSG(u'PowerPoint')
     class_description = MSG(u'PowerPoint Presentation')
-    class_icon16 = 'icons/16x16/powerpoint.png'
-    class_icon48 = 'icons/48x48/powerpoint.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/powerpoint.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/powerpoint.png'
     # Fields
     data = File.data(class_handler=MSPowerPointXFile)
 
@@ -271,8 +271,8 @@ class OOWriter(File):
     class_id = 'application/vnd.sun.xml.writer'
     class_title = MSG(u'OOo Writer')
     class_description = MSG(u'OpenOffice.org Text')
-    class_icon16 = 'icons/16x16/oowriter.png'
-    class_icon48 = 'icons/48x48/oowriter.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/oowriter.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/oowriter.png'
     # Fields
     data = File.data(class_handler=SXWFile)
 
@@ -282,8 +282,8 @@ class OOCalc(File):
     class_id = 'application/vnd.sun.xml.calc'
     class_title = MSG(u'OOo Calc')
     class_description = MSG(u'OpenOffice.org Spreadsheet')
-    class_icon16 = 'icons/16x16/oocalc.png'
-    class_icon48 = 'icons/48x48/oocalc.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/oocalc.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/oocalc.png'
     # Fields
     data = File.data(class_handler=SXCFile)
 
@@ -293,8 +293,8 @@ class OOImpress(File):
     class_id = 'application/vnd.sun.xml.impress'
     class_title = MSG(u'OOo Impress')
     class_description = MSG(u'OpenOffice.org Presentation')
-    class_icon16 = 'icons/16x16/ooimpress.png'
-    class_icon48 = 'icons/48x48/ooimpress.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/ooimpress.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/ooimpress.png'
     # Fields
     data = File.data(class_handler=SXIFile)
 
@@ -304,8 +304,8 @@ class PDF(File):
     class_id = 'application/pdf'
     class_title = MSG(u'PDF')
     class_description = MSG(u'PDF Document')
-    class_icon16 = 'icons/16x16/pdf.png'
-    class_icon48 = 'icons/48x48/pdf.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/pdf.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/pdf.png'
     # Fields
     data = File.data(class_handler=PDFFile)
 
@@ -315,8 +315,8 @@ class RTF(File):
     class_id = 'text/rtf'
     class_title = MSG(u"RTF")
     class_description = MSG(u'RTF Document')
-    class_icon16 = 'icons/16x16/text.png'
-    class_icon48 = 'icons/48x48/text.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/text.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
     # Fields
     data = File.data(class_handler=RTFFile)
 
@@ -326,8 +326,8 @@ class ODT(File):
     class_id = 'application/vnd.oasis.opendocument.text'
     class_title = MSG(u'ODT')
     class_description = MSG(u'OpenDocument Text')
-    class_icon16 = 'icons/16x16/odt.png'
-    class_icon48 = 'icons/48x48/odt.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/odt.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/odt.png'
     # Fields
     data = File.data(class_handler=ODTFile)
 
@@ -337,8 +337,8 @@ class ODS(File):
     class_id = 'application/vnd.oasis.opendocument.spreadsheet'
     class_title = MSG(u'ODS')
     class_description = MSG(u'OpenDocument Spreadsheet')
-    class_icon16 = 'icons/16x16/ods.png'
-    class_icon48 = 'icons/48x48/ods.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/ods.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/ods.png'
     # Fields
     data = File.data(class_handler=ODSFile)
 
@@ -348,8 +348,8 @@ class ODP(File):
     class_id = 'application/vnd.oasis.opendocument.presentation'
     class_title = MSG(u'ODP')
     class_description = MSG(u'OpenDocument Presentation')
-    class_icon16 = 'icons/16x16/odp.png'
-    class_icon48 = 'icons/48x48/odp.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/odp.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/odp.png'
     # Fields
     data = File.data(class_handler=ODPFile)
 
@@ -368,8 +368,8 @@ class ZipArchive(Archive):
     class_id = 'application/zip'
     class_title = MSG(u"Zip")
     class_description = MSG(u'Zip Archive')
-    class_icon16 = 'icons/16x16/zip.png'
-    class_icon48 = 'icons/48x48/zip.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/zip.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/zip.png'
     # Fields
     data = Archive.data(class_handler=ZIPFile)
 
@@ -379,8 +379,8 @@ class TarArchive(Archive):
     class_id = 'application/x-tar'
     class_title = MSG(u"Tar")
     class_description = MSG(u'Tar Archive')
-    class_icon16 = 'icons/16x16/tar.png'
-    class_icon48 = 'icons/48x48/tar.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/tar.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/tar.png'
     # Fields
     data = Archive.data(class_handler=TARFile)
 
@@ -390,8 +390,8 @@ class Gzip(File):
     class_id = 'application/x-gzip'
     class_title = MSG(u"Gzip")
     class_description = MSG(u'Gzip Compressed')
-    class_icon16 = 'icons/16x16/gzip.png'
-    class_icon48 = 'icons/48x48/gzip.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/gzip.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/gzip.png'
     # Fields
     data = File.data(class_handler=GzipFile)
 
@@ -401,8 +401,8 @@ class Bzip2(File):
     class_id = 'application/x-bzip2'
     class_title = MSG(u"Bzip2")
     class_description = MSG(u'Bzip2 Compressed')
-    class_icon16 = 'icons/16x16/bzip.png'
-    class_icon48 = 'icons/48x48/bzip.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/bzip.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/bzip.png'
     # Fields
     data = File.data(class_handler=Bzip2File)
 

@@ -76,7 +76,7 @@ class File_View(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u'Download')
     icon = 'view.png'
-    template = '/ui/file/download_form.xml'
+    template = '/ui/ikaaro/file/download_form.xml'
 
 
     def get_namespace(self, resource, context):
@@ -122,7 +122,7 @@ class File_Download(DBResource_GetFile):
 
 class File_ExternalEdit_View(STLView):
     access = 'is_allowed_to_edit'
-    template = '/ui/file/externaledit.xml'
+    template = '/ui/ikaaro/file/externaledit.xml'
     title = MSG(u'External Editor')
     icon = 'external.png'
 
@@ -191,8 +191,8 @@ class Image_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    template = '/ui/binary/Image_view.xml'
-    styles = ['/ui/gallery/style.css']
+    template = '/ui/ikaaro/binary/Image_view.xml'
+    styles = ['/ui/ikaaro/gallery/style.css']
 
     # Image default size as a string (empty = full size)
     query_schema = {
@@ -239,8 +239,8 @@ class Video_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    template = '/ui/binary/Video_view.xml'
-    scripts = ['/ui/js/jquery.media.js']
+    template = '/ui/ikaaro/binary/Video_view.xml'
+    scripts = ['/ui/ikaaro/js/jquery.media.js']
 
 
     def get_namespace(self, resource, context):
@@ -252,7 +252,7 @@ class Archive_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    template = '/ui/binary/Archive_view.xml'
+    template = '/ui/ikaaro/binary/Archive_view.xml'
 
     schema = {'target': PathDataType, 'update': Boolean}
 
@@ -311,4 +311,4 @@ class Flash_View(File_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    template = '/ui/binary/Flash_view.xml'
+    template = '/ui/ikaaro/binary/Flash_view.xml'

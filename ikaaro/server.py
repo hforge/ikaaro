@@ -742,9 +742,6 @@ class Server(WebServer):
             mount_path = '/ui/cached/%s/%s' % (ts, name)
             view = CachedStaticView(local_path=skin.key, mount_path=mount_path)
             self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
-        # UI routes for /ui/*.js /ui/*.css (should be OBSOLETE)
-        view = StaticView(local_path=get_abspath('ui/'), mount_path='/ui')
-        self.dispatcher.add('/ui/{name:any}', view)
 
 
     def is_production_environment(self):

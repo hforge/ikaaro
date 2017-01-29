@@ -32,7 +32,7 @@ class ConfigVHosts_Edit(STLView):
     access = 'is_admin'
     title = MSG(u'Virtual Hosts')
     description = MSG(u'Define the domain names for this Web Site.')
-    template = '/ui/website/virtual_hosts.xml'
+    template = '/ui/ikaaro/website/virtual_hosts.xml'
     schema = {'vhosts': String}
 
 
@@ -55,7 +55,7 @@ class ConfigVHosts(DBResource):
     class_id = 'config-vhosts'
     class_title = MSG(u'Virtual Hosts')
     class_description = MSG(u'Define the domain names for this Web Site.')
-    class_icon48 = 'icons/48x48/website.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/website.png'
 
     # Fields
     vhosts = Char_Field(multiple=True, title=MSG(u'Domain names'),

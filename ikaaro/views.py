@@ -50,7 +50,7 @@ def get_view_scripts(view, context):
 
 class CompositeView(STLView):
 
-    template = '/ui/generic/cascade.xml'
+    template = '/ui/ikaaro/generic/cascade.xml'
     subviews = []
 
 
@@ -162,7 +162,7 @@ class CompositeView(STLView):
 
 class MessageView(STLView):
 
-    template = '/ui/generic/message_view.xml'
+    template = '/ui/ikaaro/generic/message_view.xml'
 
     def get_namespace(self, resource, context):
         message = self.message
@@ -179,7 +179,7 @@ class IconsView(STLView):
     icon (48x48 pixels), a title and a description.
     """
 
-    template = '/ui/generic/icons_view.xml'
+    template = '/ui/ikaaro/generic/icons_view.xml'
 
     def get_namespace(self, resource, context):
         """Example:
@@ -200,7 +200,7 @@ class Batch(CMSTemplate):
     - total
     """
 
-    template = '/ui/generic/browse_batch.xml'
+    template = '/ui/ikaaro/generic/browse_batch.xml'
     batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
     batch_msg2 = MSG(u"There are {n} items.")
 
@@ -307,7 +307,7 @@ class Batch(CMSTemplate):
 
 class BrowseForm(STLView):
 
-    template = '/ui/generic/browse.xml'
+    template = '/ui/ikaaro/generic/browse.xml'
 
     query_schema = {
         'batch_start': Integer(default=0),
@@ -321,13 +321,13 @@ class BrowseForm(STLView):
     # Search configuration
     search_form_id = 'form-search'
     search_form_css = ''
-    search_template = '/ui/auto_form.xml'
-    search_template_field = '/ui/auto_form_field.xml'
+    search_template = '/ui/ikaaro/auto_form.xml'
+    search_template_field = '/ui/ikaaro/auto_form_field.xml'
     search_schema = {}
     search_widgets = []
 
     # Content
-    table_template = '/ui/generic/browse_table.xml'
+    table_template = '/ui/ikaaro/generic/browse_table.xml'
     table_form_id = 'form-table'
     table_css = None
     table_columns = []
@@ -572,7 +572,7 @@ class BrowseForm(STLView):
 ###########################################################################
 class ContextMenu(CMSTemplate):
 
-    template = '/ui/generic/menu.xml'
+    template = '/ui/ikaaro/generic/menu.xml'
 
     def get_items(self):
         """The input (options) is a tree:

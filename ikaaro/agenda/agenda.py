@@ -96,8 +96,8 @@ class ConfigAgenda(Folder):
     class_version = '20110606'
     class_title = MSG(u'Agenda')
     class_description = MSG(u'Schedule your time with calendar files.')
-    class_icon16 = 'icons/16x16/calendar.png'
-    class_icon48 = 'icons/48x48/calendar.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/calendar.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/calendar.png'
     class_views = [
         'monthly_view', 'weekly_view', 'daily_view',
         'edit_timetables', 'new_calendar', 'import_', 'export_form']

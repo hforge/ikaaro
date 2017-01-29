@@ -61,8 +61,8 @@ class Text(File):
 
     class_id = 'text'
     class_title = MSG(u'Plain Text')
-    class_icon16 = 'icons/16x16/text.png'
-    class_icon48 = 'icons/48x48/text.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/text.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'commit_log']
     # Fields
     data = File.data(class_handler=TextFile, widget=MultilineWidget)
@@ -82,8 +82,8 @@ class PO(Text):
 
     class_id = 'text/x-gettext-translation'
     class_title = MSG(u'Message Catalog')
-    class_icon16 = 'icons/16x16/po.png'
-    class_icon48 = 'icons/48x48/po.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/po.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/po.png'
 
     # Fields
     data = Text.data(class_handler=POFile)
@@ -100,8 +100,8 @@ class CSS(Text):
 
     class_id = 'text/css'
     class_title = MSG(u'CSS')
-    class_icon16 = 'icons/16x16/css.png'
-    class_icon48 = 'icons/48x48/css.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/css.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/css.png'
 
 
     def get_links(self):
@@ -232,8 +232,8 @@ class Python(Text):
 
     class_id = 'text/x-python'
     class_title = MSG(u'Python')
-    class_icon16 = 'icons/16x16/python.png'
-    class_icon48 = 'icons/48x48/python.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/python.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/python.png'
     # Fields
     data = Text.data(class_handler=PythonFile)
 
@@ -243,8 +243,8 @@ class JS(Text):
 
     class_id = 'application/x-javascript'
     class_title = MSG(u'Javascript')
-    class_icon16 = 'icons/16x16/js.png'
-    class_icon48 = 'icons/48x48/js.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/js.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/js.png'
 
 
 

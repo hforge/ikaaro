@@ -254,7 +254,7 @@ class ConfigMenu(MenuItem):
     class_id = 'config-menu'
     class_title = MSG(u'Configuration Menu')
     class_description = MSG(u'Edit the global menu.')
-    class_icon48 = 'icons/48x48/menu.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/menu.png'
 
     def init_resource(self, **kw):
         super(ConfigMenu, self).init_resource(**kw)

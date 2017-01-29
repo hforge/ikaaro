@@ -87,8 +87,8 @@ class TimetablesForm(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    template = '/ui/agenda/edit_timetables.xml'
-    styles = ['/ui/agenda/style.css']
+    template = '/ui/ikaaro/agenda/edit_timetables.xml'
+    styles = ['/ui/ikaaro/agenda/style.css']
 
 
     def get_namespace(self, resource, context):
@@ -185,7 +185,7 @@ class TimetablesForm(STLView):
 
 class CalendarSelectorTemplate(CMSTemplate):
 
-    template = '/ui/agenda/cal_selector.xml'
+    template = '/ui/ikaaro/agenda/cal_selector.xml'
     c_date = None
     method = None
 
@@ -283,7 +283,7 @@ class CalendarSelectorTemplate(CMSTemplate):
 
 class CalendarCaptionTemplate(CMSTemplate):
 
-    template = '/ui/agenda/calendar_caption.xml'
+    template = '/ui/ikaaro/agenda/calendar_caption.xml'
 
     def calendars(self):
         return Calendars_Enumerate.get_options()
@@ -297,13 +297,13 @@ class CalendarView(STLView):
 
     query_schema = {'start': Date}
 
-    styles = ['/ui/agenda/style.css',
-              '/ui/js/fancybox/jquery.fancybox-1.3.4.css',
-              '/ui/js_calendar/calendar-aruni.css']
-    scripts = ['/ui/js/fancybox/jquery.fancybox-1.3.4.pack.js',
-               '/ui/agenda/javascript.js']
+    styles = ['/ui/ikaaro/agenda/style.css',
+              '/ui/ikaaro/js/fancybox/jquery.fancybox-1.3.4.css',
+              '/ui/ikaaro/js_calendar/calendar-aruni.css']
+    scripts = ['/ui/ikaaro/js/fancybox/jquery.fancybox-1.3.4.pack.js',
+               '/ui/ikaaro/agenda/javascript.js']
 
-    template = '/ui/agenda/calendar_view.xml'
+    template = '/ui/ikaaro/agenda/calendar_view.xml'
     calendar_template = None
     calendar_selector = CalendarSelectorTemplate
     calendar_caption = CalendarCaptionTemplate
@@ -415,7 +415,7 @@ class CalendarView(STLView):
 
 
     def get_calendar_namespace(self, resource, context):
-        return {'add_icon': '/ui/icons/16x16/add.png'}
+        return {'add_icon': '/ui/ikaaro/icons/16x16/add.png'}
 
 
 
@@ -423,7 +423,7 @@ class MultiweekView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    calendar_template = '/ui/agenda/monthly_view.xml'
+    calendar_template = '/ui/ikaaro/agenda/monthly_view.xml'
 
     ndays = 7
     method = 'monthly_view'
@@ -511,7 +511,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    calendar_template = '/ui/agenda/weekly_view.xml'
+    calendar_template = '/ui/ikaaro/agenda/weekly_view.xml'
 
     css_id = 'cal-weekly-view'
     method = 'weekly_view'
@@ -618,7 +618,7 @@ class Calendar_Import(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Import')
-    template = '/ui/agenda/upload.xml'
+    template = '/ui/ikaaro/agenda/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True)}
 
@@ -649,7 +649,7 @@ class Calendar_ExportForm(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Export')
-    template = '/ui/agenda/export_form.xml'
+    template = '/ui/ikaaro/agenda/export_form.xml'
 
     def get_namespace(self, resource, context):
         return {'filename': '%s.ics' % resource.name}

@@ -78,7 +78,7 @@ class Text_View(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'view.png'
-    template = '/ui/text/view.xml'
+    template = '/ui/ikaaro/text/view.xml'
 
 
     def get_namespace(self, resource, context):
@@ -103,7 +103,7 @@ class PO_Edit(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
-    template = '/ui/PO_edit.xml'
+    template = '/ui/ikaaro/PO_edit.xml'
     schema = {
         'msgctxt': Unicode,
         'msgid': Unicode(mandatory=True),

@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div class="helpbox" stl:if="register">
-  <img src="/ui/icons/48x48/help.png" class="helpbox-icon" />
+  <img src="/ui/ikaaro/icons/48x48/help.png" class="helpbox-icon" />
   <div class="helpbox-text">
   Don't have an account?<br/>
   <a href="/;register">Create an account now</a>
