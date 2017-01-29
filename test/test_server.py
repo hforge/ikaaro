@@ -53,8 +53,9 @@ class TestJson_View(ItoolsView):
 
     access = True
 
+    query_schema = {'name': String}
     def GET(self, query, context):
-        kw = {'text': 'hello world'}
+        kw = {'text': 'hello '+ context.query.get('name')}
         return self.return_json(kw, context)
 
 
@@ -159,7 +160,7 @@ class ServerTestCase(TestCase):
     def test_json(self):
         server = SERVER
         server.dispatcher.add('/test/json', TestJson_View)
-        retour = server.do_request('GET', '/test/json', as_json=True)
+        retour = server.do_request('GET', '/test/json?name=world', as_json=True)
         self.assertEqual(retour['status'], 200)
         self.assertEqual(retour['entity'], {'text': 'hello world'})
 
