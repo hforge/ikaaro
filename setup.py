@@ -20,5 +20,5 @@ from itools.pkg import setup
 
 
 if __name__ == '__main__':
-    path = get_abspath('./')
+    path = get_abspath('')
     setup(path)
