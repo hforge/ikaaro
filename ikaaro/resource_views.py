@@ -85,8 +85,7 @@ class DBResource_GetFile(BaseView):
         return resource.get_value(name)
 
 
-    def get_mtime(self, context):
-        resource = context.resource
+    def get_mtime(self, resource):
         field_name = self.get_field_name()
         handler = self.get_handler(resource, field_name)
         if handler is None:
