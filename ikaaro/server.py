@@ -390,6 +390,8 @@ class Server(WebServer):
         register_logger(logger, 'itools.web')
         # Session timeout
         self.session_timeout = get_value('session-timeout')
+        # Register routes
+        self.register_dispatch_routes()
 
 
     def check_consistency(self, quick):
@@ -574,8 +576,6 @@ class Server(WebServer):
     def listen(self, address, port):
         super(Server, self).listen(address, port)
         self.port = port
-        # Register routes
-        self.register_dispatch_routes()
 
 
 
