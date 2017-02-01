@@ -18,14 +18,14 @@
 from os import getpid
 
 # Import from itools
-from itools.database import PhraseQuery
+from itools.database import AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.web import STLView
-from itools.web.exceptions import NotFound
+from itools.web.exceptions import NotFound, Forbidden, Unauthorized
 from itools.web.views import ItoolsView
 
 # Import from ikaaro
-from ikaaro.fields import Char_Field, Email_Field, Password_Field
+from ikaaro.fields import Email_Field, Password_Field
 from ikaaro.fields import Boolean_Field
 from ikaaro.server import get_config
 
@@ -85,14 +85,40 @@ class UUIDView(ItoolsView):
     """ Base view for all uuid related views
     """
 
-    def get_resource_from_uuid(self, context):
+    class_id = None
+    base_class_id = None
+    access = True
+
+    def get_resource_query(self, context):
         uuid = context.path_query['uuid']
-        query = PhraseQuery('uuid', uuid)
-        search = context.search(query)
+        query = AndQuery(PhraseQuery('uuid', uuid))
+        if self.base_class_id:
+            query.append(PhraseQuery('base_classes', self.base_class_id))
+        elif self.class_id:
+            query.append(PhraseQuery('format', self.class_id))
+        return query
+
+
+    def get_resource_from_uuid(self, context):
+        query = self.get_resource_query(context)
+        search = context.database.search(query)
         if not search:
+            if context.database.search(query):
+                # Exist but ...
+                # Unauthorized (401)
+                if context.user is None:
+                    raise Unauthorized
+                # Forbidden (403)
+                raise Forbidden
             raise NotFound
-        resource = search.get_resources().next()
-        return resource
+        return search.get_resources().next()
+
+
+    access_DELETE = 'is_allowed_to_remove'
+    def DELETE(self, resource, context):
+        resource = self.get_resource_from_uuid(context)
+        resource.parent.del_resource(resource.name)
+        return None
 
 
 
