@@ -46,6 +46,15 @@ from ikaaro.folder import Folder
 from messages import MSG_UNEXPECTED_MIMETYPE
 
 
+class NotAllowedView(STLView):
+
+    template = '/ui/ikaaro/root/not_allowed.xml'
+
+    def get_namespace(self, resource, context):
+        return {'uri': str(context.uri),
+                'method': context.method}
+
+
 
 class NotFoundView(STLView):
 
@@ -53,6 +62,7 @@ class NotFoundView(STLView):
 
     def get_namespace(self, resource, context):
         return {'uri': str(context.uri)}
+
 
 
 class ForbiddenView(STLView):

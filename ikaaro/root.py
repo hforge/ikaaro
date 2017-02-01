@@ -52,7 +52,7 @@ from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
 from root_views import PoweredBy, ContactForm
-from root_views import NotFoundView, ForbiddenView
+from root_views import NotFoundView, ForbiddenView, NotAllowedView
 from root_views import UploadStatsView, UpdateDocs
 from update import UpdateInstanceView
 
@@ -571,10 +571,12 @@ class Root(Folder):
     # Public views
     contact = ContactForm
     powered_by = PoweredBy
-    # Special
+    # Web views (401/403/404/405...)
     forbidden = ForbiddenView
     unauthorized = LoginView
     not_found = NotFoundView
+    method_not_allowed = NotAllowedView
+    # Special
     upload_stats = UploadStatsView
     update_instance = UpdateInstanceView
     update_docs = UpdateDocs
