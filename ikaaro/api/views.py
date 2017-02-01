@@ -89,6 +89,12 @@ class UUIDView(ItoolsView):
     base_class_id = None
     access = True
 
+    def is_access_allowed(self, context):
+        # TODO: can be move in itools main view
+        resource = self.get_resource_from_uuid(context)
+        return context.is_access_allowed(resource, self)
+
+
     def get_resource_query(self, context):
         uuid = context.path_query['uuid']
         query = AndQuery(PhraseQuery('uuid', uuid))
