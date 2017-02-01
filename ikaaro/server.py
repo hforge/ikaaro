@@ -748,7 +748,10 @@ class Server(WebServer):
 
     def register_urlpatterns_from_package(self, package):
         urlpatterns = None
-        exec('from {} import urlpatterns'.format(package))
+        try:
+            exec('from {} import urlpatterns'.format(package))
+        except ImportError:
+            return
         # Dispatch base routes from ikaaro
         for urlpattern_object in urlpatterns:
             for pattern, view in urlpattern_object.get_patterns():
