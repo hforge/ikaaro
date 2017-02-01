@@ -63,7 +63,6 @@ from datatypes import ExpireValue
 from root import Root
 from views import CachedStaticView
 from update import is_instance_up_to_date
-from urls import urlpatterns
 from skins import skin_registry
 
 
@@ -306,6 +305,7 @@ class Server(WebServer):
     timestamp = None
     port = None
     environment = {}
+    modules = []
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
@@ -318,6 +318,7 @@ class Server(WebServer):
         config = get_config(target)
         self.config = config
         load_modules(config)
+        self.modules = config.get_value('modules')
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
@@ -728,10 +729,10 @@ class Server(WebServer):
 
 
     def register_dispatch_routes(self):
-        # Dispatch routes
-        for urlpattern_object in urlpatterns:
-            for pattern, view in urlpattern_object.get_patterns():
-                self.dispatcher.add(pattern, view)
+        # Dispatch base routes from ikaaro
+        self.register_urlpatterns_from_package('ikaaro.urls')
+        for module in reversed(self.modules):
+            self.register_urlpatterns_from_package('{}.urls'.format(module))
         # UI routes for skin
         ts = self.timestamp
         for name in skin_registry:
@@ -743,6 +744,15 @@ class Server(WebServer):
             mount_path = '/ui/cached/%s/%s' % (ts, name)
             view = CachedStaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
+
+
+    def register_urlpatterns_from_package(self, package):
+        urlpatterns = None
+        exec('from {} import urlpatterns'.format(package))
+        # Dispatch base routes from ikaaro
+        for urlpattern_object in urlpatterns:
+            for pattern, view in urlpattern_object.get_patterns():
+                self.dispatcher.add(pattern, view)
 
 
     def is_production_environment(self):
