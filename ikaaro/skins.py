@@ -55,7 +55,7 @@ class Skin(object):
         """ In development environment we can use '/ui_dev/skin/' directory
         for skin (to avoid build JS/CSS at every changes)
         """
-        if server.is_development_environment():
+        if server and server.is_development_environment():
             build_path = str(server.environment['build_path'])
             base_path = self.key.split('/ui/')[0]
             new_key = self.key.replace(base_path, build_path)
