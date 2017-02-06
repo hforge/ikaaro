@@ -352,9 +352,10 @@ class Server(WebServer):
         # Load environment file
         root_file_path = inspect.getfile(root.__class__)
         environement_path = str(get_reference(root_file_path).resolve('environment.json'))
-        with open(environement_path, 'r') as f:
-            data = f.read()
-            self.environment = json.loads(data)
+        if vfs.exists(environement_path):
+            with open(environement_path, 'r') as f:
+                data = f.read()
+                self.environment = json.loads(data)
 
         # Init fake context
         context = get_fake_context(database, root.context_cls)
