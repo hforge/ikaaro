@@ -277,6 +277,11 @@ class Folder(DBResource):
         # Events, add
         resource = self.get_resource(target_path)
         database.add_resource(resource)
+        # Set UUID
+        resource.set_uuid()
+        for x in resource.traverse_resources():
+            x.set_uuid()
+        # Ok
         return resource
 
 
