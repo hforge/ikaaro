@@ -24,13 +24,13 @@ from itools.web.exceptions import NotFound, Forbidden, Unauthorized
 from itools.web.views import ItoolsView
 
 # Import from ikaaro
-from ikaaro.fields import Boolean_Field, Char_Field
-from ikaaro.fields import Email_Field, Password_Field
+from ikaaro.fields import Boolean_Field, Char_Field, Integer_Field
+from ikaaro.fields import Email_Field, Password_Field, Datetime_Field
 from ikaaro.server import get_config
 from ikaaro.utils import get_resource_by_uuid_query
 
 
-class Api_View(STLView):
+class Api_DocView(STLView):
     """Doc of the api
     """
 
@@ -48,12 +48,14 @@ class Api_View(STLView):
             path_query_schema = view.get_path_query_schema()
             query_schema = view.get_query_schema()
             form_schema = view.get_schema(resource, context)
+            response_schema = view.response_schema
             kw = {'id': str(i),
                   'route': pattern,
                   'access': view.access,
                   'path_query_l': self.get_view_query_as_list(view, path_query_schema),
                   'query_l': self.get_view_query_as_list(view, query_schema),
                   'form_l': self.get_view_query_as_list(view, form_schema),
+                  'response_l': self.get_view_query_as_list(view, response_schema),
                   'methods': ['GET'],
                   'description': view.__doc__}
             namespace['endpoints'].append(kw)
@@ -65,6 +67,7 @@ class Api_View(STLView):
         l = []
         for key, field in schema.items():
             kw = {'name': key,
+                  'datatype': field.get_datatype(),
                   'required': field.required,
                   'title': field.title}
             l.append(kw)
@@ -73,7 +76,13 @@ class Api_View(STLView):
 
 
 
-class ApiStatus_View(ItoolsView):
+class Api_View(ItoolsView):
+
+    response_schema = {}
+
+
+
+class ApiStatus_View(Api_View):
     """Return server timestamp
     """
 
@@ -86,7 +95,7 @@ class ApiStatus_View(ItoolsView):
 
 
 
-class UUIDView(ItoolsView):
+class UUIDView(Api_View):
     """ Base view for all uuid related views
     """
 
@@ -169,7 +178,12 @@ class ApiDevPanel_ResourceHistory(UUIDView):
     """
 
     access = 'is_admin'
-
+    response_schema = {
+        'sha': Char_Field(title=MSG(u'SHA of the commit')),
+        'author_date': Datetime_Field(title=MSG("Datetime of commit")),
+        'author_name': Char_Field(title=MSG(u"Commit's author name")),
+        'message_short': Char_Field(title=MSG(u"Commit's title"))
+    }
     def GET(self, root, context):
         resource = self.get_resource_from_uuid(context)
         revisions = resource.get_revisions(content=False)
@@ -177,7 +191,7 @@ class ApiDevPanel_ResourceHistory(UUIDView):
 
 
 
-class ApiDevPanel_ClassidViewList(ItoolsView):
+class ApiDevPanel_ClassidViewList(Api_View):
     """ List all class ids of the database
     """
 
@@ -193,14 +207,20 @@ class ApiDevPanel_ClassidViewList(ItoolsView):
 
 
 
-class ApiDevPanel_ClassidViewDetails(ItoolsView):
+class ApiDevPanel_ClassidViewDetails(Api_View):
     """ Give details about a class_id
     """
 
     access = 'is_admin'
 
-    path_query_schema = {'class_id': Char_Field(
-      title=MSG(u'A class_id registered in DB'))}
+    path_query_schema = {
+        'class_id': Char_Field(title=MSG(u'A class_id registered in DB'))
+    }
+    response_schema = {
+        'class_title': Char_Field(title=MSG(u'The class_title of the resource cls')),
+        'class_id': Char_Field(title=MSG(u'The class_id of the resource cls'))
+    }
+
 
     def GET(self, root, context):
         class_id = context.path_query['class_id']
@@ -210,7 +230,7 @@ class ApiDevPanel_ClassidViewDetails(ItoolsView):
         return self.return_json(kw, context)
 
 
-class ApiDevPanel_Config(ItoolsView):
+class ApiDevPanel_Config(Api_View):
     """ Give config.conf file
     """
 
@@ -223,7 +243,7 @@ class ApiDevPanel_Config(ItoolsView):
 
 
 
-class Api_LoginView(ItoolsView):
+class Api_LoginView(Api_View):
     """ Login user into app
     """
 
@@ -236,7 +256,9 @@ class Api_LoginView(ItoolsView):
 
 
 
-class ApiDevPanel_Log(ItoolsView):
+class ApiDevPanel_Log(Api_View):
+    """ Return the dump of a log file
+    """
 
     access = 'is_admin'
     source_name = None
@@ -256,7 +278,9 @@ class ApiDevPanel_Log(ItoolsView):
 
 
 
-class ApiDevPanel_CatalogReindex(ItoolsView):
+class ApiDevPanel_CatalogReindex(Api_View):
+    """ Reindex the catalog
+    """
 
     access = 'is_admin'
 
@@ -267,9 +291,16 @@ class ApiDevPanel_CatalogReindex(ItoolsView):
 
 
 
-class ApiDevPanel_ServerView(ItoolsView):
+class ApiDevPanel_ServerView(Api_View):
+    """ Return informations about server timestamp / pid / port
+    """
 
     access = 'is_admin'
+    response_schema = {
+        'timestamp': Char_Field(title=MSG(u"Server's start timestamp")),
+        'pid': Integer_Field(title=MSG(u"Server's PID")),
+        'port': Integer_Field(title=MSG(u"Server's port"))
+    }
 
     def GET(self, root, context):
         server = context.server
@@ -279,11 +310,14 @@ class ApiDevPanel_ServerView(ItoolsView):
         return self.return_json(kw, context)
 
 
-class ApiDevPanel_ServerStop(ItoolsView):
+
+class ApiDevPanel_ServerStop(Api_View):
+    """ Stop the web server
+    """
 
     access = 'is_admin'
 
-    def GET(self, root, context):
+    def POST(self, root, context):
         context.server.stop()
         kw = {'success': True}
         return self.return_json(kw, context)

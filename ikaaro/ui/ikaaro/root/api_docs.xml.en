@@ -63,6 +63,21 @@
           </tr>
         </table>
       </div>
+      <div stl:if="endpoint/response_l">
+        <h3>Response schema</h3>
+        <table class="table table-bordered table-condensed">
+          <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Type</th>
+          </tr>
+          <tr stl:repeat="field endpoint/response_l">
+            <td>${field/name}</td>
+            <td>${field/title}</td>
+            <td>${field/datatype}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 

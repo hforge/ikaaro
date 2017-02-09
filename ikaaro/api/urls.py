@@ -18,7 +18,7 @@
 from ikaaro.urls import urlpattern
 
 # Import from here
-from views import Api_View, ApiStatus_View
+from views import Api_DocView, ApiStatus_View
 from views import Api_LoginView
 from views import ApiDevPanel_ResourceJSON, ApiDevPanel_ResourceRaw, ApiDevPanel_ResourceHistory
 from views import ApiDevPanel_ClassidViewDetails, ApiDevPanel_ClassidViewList
@@ -28,7 +28,7 @@ from views import ApiDevPanel_ServerView, ApiDevPanel_ServerStop
 
 
 urlpatterns = [
-    urlpattern('', Api_View),
+    urlpattern('', Api_DocView),
     urlpattern('/status', ApiStatus_View),
     urlpattern('/login', Api_LoginView),
     # Class id
