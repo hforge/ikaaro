@@ -18,7 +18,6 @@
 from os import getpid
 
 # Import from itools
-from itools.database import AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.web import STLView
 from itools.web.exceptions import NotFound, Forbidden, Unauthorized
@@ -28,6 +27,7 @@ from itools.web.views import ItoolsView
 from ikaaro.fields import Email_Field, Password_Field
 from ikaaro.fields import Boolean_Field
 from ikaaro.server import get_config
+from ikaaro.utils import get_resource_by_uuid_query
 
 
 class Api_View(STLView):
@@ -95,18 +95,12 @@ class UUIDView(ItoolsView):
         return context.is_access_allowed(resource, self)
 
 
-    def get_resource_query(self, context):
-        uuid = context.path_query['uuid']
-        query = AndQuery(PhraseQuery('uuid', uuid))
-        if self.base_class_id:
-            query.append(PhraseQuery('base_classes', self.base_class_id))
-        elif self.class_id:
-            query.append(PhraseQuery('format', self.class_id))
-        return query
-
-
     def get_resource_from_uuid(self, context):
-        query = self.get_resource_query(context)
+        uuid = context.path_query['uuid']
+        query = get_resource_by_uuid_query(
+            uuid=uuid,
+            base_class_id=self.base_class_id,
+            class_id=self.class_id)
         search = context.database.search(query)
         if not search:
             if context.database.search(query):

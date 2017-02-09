@@ -341,6 +341,20 @@ def split_reference(ref):
         path = path[:-1]
     return ref, path, view
 
+###########################################################################
+# UUID
+###########################################################################
+def get_resource_by_uuid_query(uuid, base_class_id=None, class_id=None):
+    # Base query
+    query = AndQuery(PhraseQuery('uuid', uuid))
+    # Add filtering query elements
+    if base_class_id:
+        query.append(PhraseQuery('base_classes', base_class_id))
+    elif class_id:
+        query.append(PhraseQuery('format', class_id))
+    # Ok
+    return query
+
 
 ###########################################################################
 # Fancy box (javascript)

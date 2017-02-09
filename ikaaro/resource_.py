@@ -57,7 +57,7 @@ from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from update import class_version_to_date
-from utils import get_base_path_query
+from utils import get_base_path_query, get_resource_by_uuid_query
 
 
 
@@ -203,6 +203,17 @@ class DBResource(Resource):
         here = self.get_resource(path)
         for name in here._get_names():
             yield here.get_resource(name)
+
+
+    def get_resource_by_uuid(self, uuid, context,
+            base_class_id=None, class_id=None):
+        # Get query
+        query = get_resource_by_uuid_query(uuid, base_class_id, class_id)
+        search = context.database.search(query)
+        # Return resource
+        if not search:
+            return None
+        return search.get_resources(size=1).next()
 
 
     def make_resource_name(self):
