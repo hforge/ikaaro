@@ -6,47 +6,63 @@
 
   <h1>API documentation</h1>
 
-  <div stl:repeat="endpoint endpoints" class="well">
-    <h2>
+  <div stl:repeat="endpoint endpoints">
+    <h2 style="margin:0">
+      <i class="fa fa-plus" onclick="javascript:$('#api-${endpoint/id}').show()"></i>
       <a href="${endpoint/route}" target="_blank">${endpoint/route}</a>
-      <div class="pull-right">
-        <div class="label label-info" stl:repeat="method endpoint/methods">
-          ${method}
-        </div>
-        &nbsp;&nbsp;&nbsp;
-        <div class="label label-info">${endpoint/access}</div>
-      </div>
     </h2>
-    <p>${endpoint/description}</p>
-    <div stl:if="endpoint/query_l">
-      <h3>Query</h3>
-      <table class="table table-bordered table-condensed">
-        <tr>
-          <th>Name</th>
-          <th>Title</th>
-          <th>Required ?</th>
-        </tr>
-        <tr stl:repeat="field endpoint/query_l">
-          <td>${field/name}</td>
-          <td>${field/title}</td>
-          <td>${field/required}</td>
-        </tr>
-      </table>
-    </div>
-    <div stl:if="endpoint/form_l">
-      <h3>Form</h3>
-      <table class="table table-bordered table-condensed">
-        <tr>
-          <th>Name</th>
-          <th>Title</th>
-          <th>Required ?</th>
-        </tr>
-        <tr stl:repeat="field endpoint/form_l">
-          <td>${field/name}</td>
-          <td>${field/title}</td>
-          <td>${field/required}</td>
-        </tr>
-      </table>
+    <div id="api-${endpoint/id}" class="well well-sm" style="margin-left:50px;display:none">
+      <h3>Description</h3>
+      <p>${endpoint/description}</p>
+      <h3>Authorized methods</h3>
+      <div class="label label-info" stl:repeat="method endpoint/methods">
+        ${method}
+      </div>
+      <h3>Access rules</h3>
+      <div class="label label-info">${endpoint/access}</div>
+      <div stl:if="endpoint/path_query_l">
+        <h3>Path query</h3>
+        <table class="table table-bordered table-condensed">
+          <tr>
+            <th>Name</th>
+            <th>Title</th>
+          </tr>
+          <tr stl:repeat="field endpoint/path_query_l">
+            <td>${field/name}</td>
+            <td>${field/title}</td>
+          </tr>
+        </table>
+      </div>
+      <div stl:if="endpoint/query_l">
+        <h3>URI Query</h3>
+        <table class="table table-bordered table-condensed">
+          <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Required ?</th>
+          </tr>
+          <tr stl:repeat="field endpoint/query_l">
+            <td>${field/name}</td>
+            <td>${field/title}</td>
+            <td>${field/required}</td>
+          </tr>
+        </table>
+      </div>
+      <div stl:if="endpoint/form_l">
+        <h3>Form</h3>
+        <table class="table table-bordered table-condensed">
+          <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Required ?</th>
+          </tr>
+          <tr stl:repeat="field endpoint/form_l">
+            <td>${field/name}</td>
+            <td>${field/title}</td>
+            <td>${field/required}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 

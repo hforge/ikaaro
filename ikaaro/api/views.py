@@ -24,8 +24,8 @@ from itools.web.exceptions import NotFound, Forbidden, Unauthorized
 from itools.web.views import ItoolsView
 
 # Import from ikaaro
+from ikaaro.fields import Boolean_Field, Char_Field
 from ikaaro.fields import Email_Field, Password_Field
-from ikaaro.fields import Boolean_Field
 from ikaaro.server import get_config
 from ikaaro.utils import get_resource_by_uuid_query
 
@@ -38,21 +38,26 @@ class Api_View(STLView):
     template = '/ui/ikaaro/root/api_docs.xml'
 
     def get_namespace(self, resource, context):
+        i = 1
         dispatcher = context.server.dispatcher
         namespace = {'endpoints': []}
         for pattern, data in dispatcher.patterns.items():
             regex, view = data
             if not pattern.startswith('/api/'):
                 continue
+            path_query_schema = view.get_path_query_schema()
             query_schema = view.get_query_schema()
             form_schema = view.get_schema(resource, context)
-            kw = {'route': pattern,
+            kw = {'id': str(i),
+                  'route': pattern,
                   'access': view.access,
+                  'path_query_l': self.get_view_query_as_list(view, path_query_schema),
                   'query_l': self.get_view_query_as_list(view, query_schema),
                   'form_l': self.get_view_query_as_list(view, form_schema),
                   'methods': ['GET'],
                   'description': view.__doc__}
             namespace['endpoints'].append(kw)
+            i +=1
         return namespace
 
 
@@ -89,16 +94,12 @@ class UUIDView(ItoolsView):
     base_class_id = None
     access = True
 
+    path_query_schema = {'uuid': Char_Field(title=MSG(u'The uuid of a resource in DB'))}
+
     def is_access_allowed(self, context):
         # TODO: can be move in itools main view
-        resource = self.get_resource_from_uuid(context)
-        return context.is_access_allowed(resource, self)
-
-
-    def get_resource_from_uuid(self, context):
-        uuid = context.path_query['uuid']
         query = get_resource_by_uuid_query(
-            uuid=uuid,
+            uuid=context.path_query_base['uuid'],
             base_class_id=self.base_class_id,
             class_id=self.class_id)
         search = context.database.search(query)
@@ -111,7 +112,16 @@ class UUIDView(ItoolsView):
                 # Forbidden (403)
                 raise Forbidden
             raise NotFound
-        return search.get_resources().next()
+        resource = search.get_resources().next()
+        return context.is_access_allowed(resource, self)
+
+
+    def get_resource_from_uuid(self, context):
+        uuid = context.path_query['uuid']
+        return context.root.get_resource_by_uuid(
+            uuid=uuid, context=context,
+            base_class_id=self.base_class_id,
+            class_id=self.class_id)
 
 
     access_DELETE = 'is_allowed_to_remove'
@@ -188,6 +198,9 @@ class ApiDevPanel_ClassidViewDetails(ItoolsView):
     """
 
     access = 'is_admin'
+
+    path_query_schema = {'class_id': Char_Field(
+      title=MSG(u'A class_id registered in DB'))}
 
     def GET(self, root, context):
         class_id = context.path_query['class_id']
