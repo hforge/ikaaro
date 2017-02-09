@@ -56,6 +56,15 @@ class NotAllowedView(STLView):
 
 
 
+class UnavailableView(STLView):
+
+    template = '/ui/ikaaro/root/unavailable.xml'
+
+    def get_namespace(self, resource, context):
+        return {'uri': str(context.uri)}
+
+
+
 class NotFoundView(STLView):
 
     template = '/ui/ikaaro/root/not_found.xml'

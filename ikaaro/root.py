@@ -53,7 +53,7 @@ from resource_views import LoginView
 from skins import skin_registry
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView, NotAllowedView
-from root_views import UploadStatsView, UpdateDocs
+from root_views import UploadStatsView, UpdateDocs, UnavailableView
 from update import UpdateInstanceView
 
 
@@ -576,6 +576,7 @@ class Root(Folder):
     unauthorized = LoginView
     not_found = NotFoundView
     method_not_allowed = NotAllowedView
+    unavailable = UnavailableView
     # Special
     upload_stats = UploadStatsView
     update_instance = UpdateInstanceView
