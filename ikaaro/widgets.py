@@ -34,6 +34,7 @@ from itools.datatypes import Date, DateTime
 from itools.fs import lfs
 from itools.gettext import MSG
 from itools.handlers import Image
+
 from itools.stl import stl
 from itools.web import BaseView, get_context
 
@@ -49,6 +50,7 @@ class Widget(CMSTemplate):
     id = None
     name = None
     language = None
+    language_name = None
     maxlength = None
     size = None
     tip = None
@@ -69,9 +71,13 @@ class Widget(CMSTemplate):
     def __init__(self, name=None, **kw):
         if name:
             self.name = name
-        if self.name and not self.id:
-            id = self.name
-            self.id = id.replace('_', '-').replace(':', '-')
+
+
+    @proto_property
+    def id(self):
+        if not self.name:
+            return
+        return self.name.replace('_', '-').replace(':', '-')
 
 
 
@@ -91,22 +97,51 @@ class HiddenWidget(Widget):
 class FileWidget(Widget):
 
     title = MSG(u'File')
+    download_file_title = MSG(u'Download')
 
     template = make_stl_template("""
     <input type="file" id="${id}" name="${name}" maxlength="${maxlength}"
       size="${size}" class="${css}" />
-    <label class="language" for="${id}" stl:if="language" >${language}</label>
     <br/>
-    <img src=";get_image?name=${name}&amp;width=${width}&amp;height=${height}"
-      stl:if="thumb"/>""")
+    <div stl:if="preview">
+      <a href="${preview/link}" target="_blank">
+        <div stl:if="preview/image">
+          <img src="${preview/image}"/>
+        </div>
+        ${download_file_title}
+      </a>
+    </div>
+    <label class="language" for="${id}" stl:if="language" >${language}</label>
+    """)
 
     width = 128
     height = 128
     fit = 1
 
-    @proto_property
-    def thumb(self):
-        return isinstance(self.value, Image)
+    @proto_lazy_property
+    def preview(self):
+        context = get_context()
+        handler = context.resource.get_value(
+            self.field_name, language=self.language_name)
+        if handler is None:
+            return None
+        # Params
+        params = 'name={field_name}'
+        if self.language_name:
+            params += '&language={language_name}'
+        # Download link
+        kw = {'field_name': self.field_name,
+              'width': self.width,
+              'height': self.height,
+              'language_name': self.language_name}
+        link = ';get_file?' + params.format(**kw)
+        # Image link
+        image = None
+        if isinstance(handler, Image):
+            image = ';get_image?width={width}&height={height}&' + params
+            image = image.format(**kw)
+        # Ok
+        return {'link': link, 'image': image}
 
 
 

@@ -69,7 +69,8 @@ class DBResource_GetFile(BaseView):
 
     access = 'is_allowed_to_view'
 
-    query_schema = {'name': String}
+    query_schema = {'name': String,
+                    'language': String}
     field_name = None
 
 
@@ -81,13 +82,14 @@ class DBResource_GetFile(BaseView):
         return context.query['name']
 
 
-    def get_handler(self, resource, name):
-        return resource.get_value(name)
+    def get_handler(self, resource, name, language=None):
+        return resource.get_value(name, language=language)
 
 
     def get_mtime(self, resource):
+        language = self.context.get_query_value('language')
         field_name = self.get_field_name()
-        handler = self.get_handler(resource, field_name)
+        handler = self.get_handler(resource, field_name, language)
         if handler is None:
             raise NotFound
         return handler.get_mtime()
@@ -103,25 +105,23 @@ class DBResource_GetFile(BaseView):
     def get_filename(self, handler, field_name, resource):
         mimetype = self.get_content_type(handler)
         extension = guess_extension(mimetype)
-
-        return '%s.%s%s' % (resource.name, field_name, extension)
+        language = self.context.get_query_value('language') or ''
+        if language:
+            language = '.%s' % language
+        return '%s.%s%s%s' % (resource.name, field_name, language, extension)
 
 
     def GET(self, resource, context):
+        language = context.query['language']
         field_name = self.get_field_name(context)
-        handler = self.get_handler(resource, field_name)
-
+        handler = self.get_handler(resource, field_name, language)
         # Content-Type
         content_type = self.get_content_type(handler)
         context.set_content_type(content_type)
-
         # Content-Disposition
-        disposition = 'inline'
-        if content_type.startswith('application/vnd.oasis.opendocument.'):
-            disposition = 'attachment'
+        disposition = 'attachment'
         filename = self.get_filename(handler, field_name, resource)
         context.set_content_disposition(disposition, filename)
-
         # Ok
         return handler.to_str()
 
@@ -133,13 +133,15 @@ class DBResource_GetImage(DBResource_GetFile):
         'name': String,
         'width': Integer,
         'height': Integer,
+        'language': String,
         'fit': Boolean(default=False),
         'lossy': Boolean(default=False)}
 
 
     def GET(self, resource, context):
         field_name = self.get_field_name(context)
-        handler = self.get_handler(resource, field_name)
+        language = context.query['language']
+        handler = self.get_handler(resource, field_name, language)
 
         image_width, image_height = handler.get_size()
         fit = context.query['fit']
@@ -158,9 +160,6 @@ class DBResource_GetImage(DBResource_GetFile):
 
         # Headers
         context.set_content_type('image/%s' % format)
-#       filename = resource.get_value('filename')
-#       if filename:
-#           context.set_content_disposition('inline', filename)
 
         # Ok
         return data
