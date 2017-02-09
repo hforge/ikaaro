@@ -56,7 +56,7 @@ class Api_DocView(STLView):
                   'query_l': self.get_view_query_as_list(view, query_schema),
                   'form_l': self.get_view_query_as_list(view, form_schema),
                   'response_l': self.get_view_query_as_list(view, response_schema),
-                  'methods': ['GET'],
+                  'methods': view.known_methods,
                   'description': view.__doc__}
             namespace['endpoints'].append(kw)
             i +=1
@@ -87,6 +87,7 @@ class ApiStatus_View(Api_View):
     """
 
     access = True
+    known_methods = ['GET']
 
     def GET(self, root, context):
         kw = {'ts': context.server.timestamp,
@@ -102,6 +103,7 @@ class UUIDView(Api_View):
     class_id = None
     base_class_id = None
     access = True
+    known_methods = ['DELETE']
 
     path_query_schema = {'uuid': Char_Field(title=MSG(u'The uuid of a resource in DB'))}
 
@@ -146,6 +148,7 @@ class ApiDevPanel_ResourceJSON(UUIDView):
     """
 
     access = 'is_admin'
+    known_methods = ['GET', 'DELETE']
     query_schema = {'pretty': Boolean_Field(title=MSG(u'Pretty ?'))}
 
     def GET(self, root, context):
@@ -165,6 +168,7 @@ class ApiDevPanel_ResourceRaw(UUIDView):
     """
 
     access = 'is_admin'
+    known_methods = ['GET', 'DELETE']
 
     def GET(self, root, context):
         resource = self.get_resource_from_uuid(context)
@@ -178,6 +182,7 @@ class ApiDevPanel_ResourceHistory(UUIDView):
     """
 
     access = 'is_admin'
+    known_methods = ['GET', 'DELETE']
     response_schema = {
         'sha': Char_Field(title=MSG(u'SHA of the commit')),
         'author_date': Datetime_Field(title=MSG("Datetime of commit")),
@@ -248,6 +253,7 @@ class Api_LoginView(Api_View):
     """
 
     access = True
+    known_methods = ['POST']
     schema = {'email': Email_Field(title=MSG(u'Username'), required=True),
               'password': Password_Field(title=MSG(u'Password'), required=True)}
 
@@ -262,6 +268,7 @@ class ApiDevPanel_Log(Api_View):
 
     access = 'is_admin'
     source_name = None
+    known_methods = ['GET']
 
     def GET(self, root, context):
         context.set_content_type('text/plain')
@@ -283,6 +290,7 @@ class ApiDevPanel_CatalogReindex(Api_View):
     """
 
     access = 'is_admin'
+    known_methods = ['POST']
 
     def POST(self, root, context):
         n = context.database.reindex_catalog(base_abspath='/')
@@ -296,6 +304,7 @@ class ApiDevPanel_ServerView(Api_View):
     """
 
     access = 'is_admin'
+    known_methods = ['GET']
     response_schema = {
         'timestamp': Char_Field(title=MSG(u"Server's start timestamp")),
         'pid': Integer_Field(title=MSG(u"Server's PID")),
@@ -316,6 +325,7 @@ class ApiDevPanel_ServerStop(Api_View):
     """
 
     access = 'is_admin'
+    known_methods = ['POST']
 
     def POST(self, root, context):
         context.server.stop()
