@@ -215,7 +215,6 @@ def create_server(target, email, password, root,  modules,
                   listen_port='8080', smtp_host='localhost', log_email=None):
     # Get modules
     for module in modules:
-        modules.append(module)
         exec('import %s' % module)
     # Load the root class
     if root is None:
