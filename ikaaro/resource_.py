@@ -165,12 +165,19 @@ class DBResource(Resource):
         metadata.
         """
         handlers = [self.handler]
+        langs = self.get_resource('/').get_value('website_languages')
         # Fields
         for name, field in self.get_fields():
             if issubclass(field, File_Field):
-                value = field.get_value(self, name)
-                if value is not None:
-                    handlers.append(value)
+                if field.multilingual:
+                    for language in langs:
+                        value = field.get_value(self, name, language)
+                        if value is not None:
+                            handlers.append(value)
+                else:
+                    value = field.get_value(self, name)
+                    if value is not None:
+                        handlers.append(value)
 
         # Ok
         return handlers
