@@ -101,10 +101,11 @@ class DBResource(Resource):
 
 
     def __eq__(self, resource):
+        if resource is None:
+            return False
         if not isinstance(resource, DBResource):
             error = "cannot compare DBResource and %s" % type(resource)
-            raise TypeError, error
-
+            raise TypeError(error)
         return self.abspath == resource.abspath
 
 
