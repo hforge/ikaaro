@@ -100,8 +100,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         elif column == 'name':
             target = self.target
             if self.is_folder(item):
-                path_to_item = context.root.get_pathto(item)
-                url_dic = {'target': str(path_to_item),
+                url_dic = {'target': str(item.abspath),
                            # Avoid search conservation
                            'search_text': None,
                            'search_type': None,

@@ -284,11 +284,10 @@ class Event_NewInstance(AutoAdd):
         child.notify_subscribers(context)
 
         # Ok
-        goto = str(resource.get_pathto(child))
         if self.goto_parent_view:
             goto = './;%s' % self.goto_parent_view
         elif self.goto_view:
-            goto = '%s/;%s' % (goto, self.goto_view)
+            goto = '%s/;%s' % (child.abspath, self.goto_view)
         return context.come_back(self.msg_new_resource, goto=goto)
 
 

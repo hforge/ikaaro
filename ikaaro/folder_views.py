@@ -497,9 +497,8 @@ class Folder_BrowseContent(BrowseForm):
                 return None
             if item.name in parent.__fixed_handlers__:
                 return None
-            id = resource.abspath.get_pathto(item.abspath)
-            id = str(id)
-            return id, False
+            resource_id = str(item.abspath)
+            return resource_id, False
         elif column == 'icon':
             # icon
             path_to_icon = item.get_resource_icon(16)
@@ -510,13 +509,11 @@ class Folder_BrowseContent(BrowseForm):
             return path_to_icon
         elif column == 'abspath':
             # Name
-            id = resource.abspath.get_pathto(item.abspath)
-            id = str(id)
+            resource_id = str(item.abspath)
             view = item.get_view(None)
             if view is None:
-                return id
-            href = '%s/' % context.get_link(item)
-            return id, href
+                return resource_id
+            return resource_id, context.get_link(item)
         elif column == 'format':
             # Type
             return item.class_title.gettext()
