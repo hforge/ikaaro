@@ -416,6 +416,7 @@ class Server(WebServer):
 
 
     def start(self, detach=False, profile=False, loop=True):
+        profile = ('%s/log/profile' % self.target) if profile else None
         self.loop = ServerLoop(
               target=self.target,
               server=self,
@@ -452,8 +453,6 @@ class Server(WebServer):
         if interval:
             cron(self.cron_manager, interval)
 
-        # Run
-        profile = ('%s/log/profile' % self.target) if profile else None
         # Init loop
         if loop:
             try:
