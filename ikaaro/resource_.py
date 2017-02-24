@@ -83,6 +83,12 @@ class DBResource(Resource):
     class_icon16 = '/ui/ikaaro/icons/16x16/resource.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/resource.png'
     class_views = []
+
+    # Internal
+    _values = {}
+    _values_title = {}
+
+    # Config
     context_menus = []
 
     # Fields
@@ -98,6 +104,8 @@ class DBResource(Resource):
 
     def __init__(self, metadata):
         self.metadata = metadata
+        self._values = {}
+        self._values_title = {}
 
 
     def __eq__(self, resource):
@@ -378,26 +386,38 @@ class DBResource(Resource):
     # Properties
     ########################################################################
     def get_value(self, name, language=None):
+        if self._values.get(name):
+            return self._values.get(name)
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value(self, name, language)
+        value = field.get_value(self, name, language)
+        self._values[name] = value
+        return value
 
 
     def set_value(self, name, value, language=None, **kw):
         field = self.get_field(name)
         if field is None:
-            raise ValueError, 'Field %s do not exist' % name
+            raise ValueError('Field %s do not exist' % name)
         if field.multilingual and language is None:
-            raise ValueError, 'Field %s is multilingual' % name
+            raise ValueError('Field %s is multilingual' % name)
+        if self._values.get(name):
+            del self._values[name]
+        if self._values_title.get(name):
+            del self._values_title[name]
         return field.set_value(self, name, value, language, **kw)
 
 
     def get_value_title(self, name, language=None, mode=None):
+        if self._values_title.get(name, {}).get(mode):
+            return self._values_title[name][mode]
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value_title(self, name, language, mode)
+        value_title = field.get_value_title(self, name, language, mode)
+        self._values_title.setdefault(name, {})[mode] = value_title
+        return value_title
 
 
     def get_brain_value(self, name):
