@@ -20,7 +20,7 @@ from types import FunctionType
 
 # Import from itools
 from itools.core import freeze
-from itools.csv import Property
+from itools.database import MetadataProperty
 from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
@@ -182,7 +182,7 @@ class Metadata_Field(Field):
         if language:
             kw['lang'] = language
         if kw:
-            value = Property(value, **kw)
+            value = MetadataProperty(value, **kw)
 
         resource.metadata.set_property(name, value)
 

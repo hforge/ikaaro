@@ -22,7 +22,7 @@
 
 # Import from itools
 from itools.core import merge_dicts, proto_property, proto_lazy_property
-from itools.csv import Property
+from itools.database import MetadataProperty
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -361,7 +361,7 @@ class DBResource_AddBase(STLView):
         child = container.make_resource(name, cls, **kw)
         # The title
         language = resource.get_edit_languages(context)[0]
-        title = Property(title, lang=language)
+        title = MetadataProperty(title, lang=language)
         child.metadata.set_property('title', title)
         # Get the path
         path = child.abspath

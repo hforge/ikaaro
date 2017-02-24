@@ -27,7 +27,7 @@ from uuid import uuid4
 
 # Import from itools
 from itools.core import is_prototype, lazy
-from itools.csv import Property
+from itools.database import MetadataProperty
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Boolean, DateTime, Date
@@ -457,8 +457,8 @@ class DBResource(Resource):
 
         default = field.get_default()
         if field.multiple:
-            return [ Property(x) for x in default ]
-        return Property(default)
+            return [ MetadataProperty(x) for x in default ]
+        return MetadataProperty(default)
 
 
     # XXX Backwards compatibility
