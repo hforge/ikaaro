@@ -87,6 +87,8 @@ class DBResource(Resource):
     # Internal
     _values = {}
     _values_title = {}
+    _metadata = None
+    _brain = None
 
     # Config
     context_menus = []
@@ -102,8 +104,11 @@ class DBResource(Resource):
     share = Share_Field
 
 
-    def __init__(self, metadata):
-        self.metadata = metadata
+    def __init__(self, abspath, database, metadata=None, brain=None):
+        self.abspath = abspath
+        self.database = database
+        self._metadata = metadata
+        self._brain = brain
         self._values = {}
         self._values_title = {}
 
@@ -124,9 +129,12 @@ class DBResource(Resource):
     #######################################################################
     # API / Tree
     #######################################################################
-    @property
-    def database(self):
-        return self.metadata.database
+    @lazy
+    def metadata(self):
+        if self._metadata:
+            return self._metadata
+        self._metadata = self.database.get_metadata(self.abspath)
+        return self._metadata
 
 
     @lazy

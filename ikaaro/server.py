@@ -50,7 +50,7 @@ from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
-from itools.uri import get_reference
+from itools.uri import get_reference, Path
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
 from itools.web import SoupMessage
@@ -199,7 +199,7 @@ def get_pid(target):
 def get_root(database):
     metadata = database.get_handler('.metadata', cls=Metadata)
     cls = database.get_resource_class(metadata.format)
-    return cls(metadata)
+    return cls(abspath=Path('/'), database=database, metadata=metadata)
 
 
 def get_fake_context(database, context_cls=CMSContext):
