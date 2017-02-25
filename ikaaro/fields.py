@@ -182,7 +182,7 @@ class Metadata_Field(Field):
         if language:
             kw['lang'] = language
         if kw:
-            value = MetadataProperty(value, **kw)
+            value = MetadataProperty(value, None, **kw)
 
         resource.metadata.set_property(name, value)
 
