@@ -230,9 +230,9 @@ class DBResource(Resource):
 
 
     def get_resource_by_uuid(self, uuid, context,
-            base_class_id=None, class_id=None):
+            bases_class_id=None, class_id=None):
         # Get query
-        query = get_resource_by_uuid_query(uuid, base_class_id, class_id)
+        query = get_resource_by_uuid_query(uuid, bases_class_id, class_id)
         search = context.database.search(query)
         # Return resource
         if not search:

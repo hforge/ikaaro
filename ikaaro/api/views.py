@@ -101,7 +101,7 @@ class UUIDView(Api_View):
     """
 
     class_id = None
-    base_class_id = None
+    bases_class_id = []
     access = True
     known_methods = ['DELETE']
 
@@ -111,7 +111,7 @@ class UUIDView(Api_View):
         # TODO: can be move in itools main view
         query = get_resource_by_uuid_query(
             uuid=context.path_query_base['uuid'],
-            base_class_id=self.base_class_id,
+            bases_class_id=self.bases_class_id,
             class_id=self.class_id)
         search = context.database.search(query)
         if not search:
@@ -131,7 +131,7 @@ class UUIDView(Api_View):
         uuid = context.path_query['uuid']
         return context.root.get_resource_by_uuid(
             uuid=uuid, context=context,
-            base_class_id=self.base_class_id,
+            bases_class_id=self.bases_class_id,
             class_id=self.class_id)
 
 
