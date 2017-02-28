@@ -121,8 +121,9 @@ class FileWidget(Widget):
     @proto_lazy_property
     def preview(self):
         context = get_context()
+        field_name = getattr(self, 'field_name', None) or self.name
         handler = context.resource.get_value(
-            self.field_name, language=self.language_name)
+            field_name, language=self.language_name)
         if handler is None:
             return None
         # Params
@@ -130,7 +131,7 @@ class FileWidget(Widget):
         if self.language_name:
             params += '&language={language_name}'
         # Download link
-        kw = {'field_name': self.field_name,
+        kw = {'field_name': field_name,
               'width': self.width,
               'height': self.height,
               'language_name': self.language_name}
