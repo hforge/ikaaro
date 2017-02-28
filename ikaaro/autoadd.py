@@ -367,6 +367,7 @@ class AutoAdd(AutoForm):
                     goto = '%s/%s' % (resource.name, goto)
             return context.come_back(self.msg_new_resource, goto=goto)
         # goto_parent_view # Deprecated : To replace by action_goto
+        goto = None
         if self.goto_parent_view:
             goto = './;%s' % self.goto_parent_view
         # goto_view (from Child)
