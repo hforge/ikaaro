@@ -30,7 +30,7 @@ from itools.core import is_prototype, lazy
 from itools.database import MetadataProperty
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, DateTime, Date
+from itools.datatypes import Boolean, DateTime, Date, Decimal
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
@@ -399,7 +399,21 @@ class DBResource(Resource):
         field = self.get_field(name)
         if field is None:
             return None
-        value = field.get_value(self, name, language)
+        if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
+            # If brain is loaded & field is stored get value from xapian
+            brain_value = self._brain.get_value(name, language)
+            if type(brain_value) is datetime:
+                # Fix tzinfo for datetime values
+                context = get_context()
+                value = context.fix_tzinfo(brain_value)
+            else:
+                value = brain_value
+            value = value or field.default
+            if value is None:
+                # Xapian do not index default value
+                value = field.get_value(self, name, language)
+        else:
+            value = field.get_value(self, name, language)
         self._values[name] = value
         return value
 
