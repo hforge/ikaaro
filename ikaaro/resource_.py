@@ -479,8 +479,8 @@ class DBResource(Resource):
 
         default = field.get_default()
         if field.multiple:
-            return [ MetadataProperty(x) for x in default ]
-        return MetadataProperty(default)
+            return [ MetadataProperty(x, None) for x in default ]
+        return MetadataProperty(default, None)
 
 
     # XXX Backwards compatibility
