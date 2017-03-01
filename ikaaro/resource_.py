@@ -394,8 +394,8 @@ class DBResource(Resource):
     # Properties
     ########################################################################
     def get_value(self, name, language=None):
-        if self._values.get(name):
-            return self._values.get(name)
+        #if self._values.get(name):
+        #    return self._values.get(name)
         field = self.get_field(name)
         if field is None:
             return None
@@ -432,8 +432,8 @@ class DBResource(Resource):
 
 
     def get_value_title(self, name, language=None, mode=None):
-        if self._values_title.get(name, {}).get(mode):
-            return self._values_title[name][mode]
+        #if self._values_title.get(name, {}).get(mode):
+        #    return self._values_title[name][mode]
         field = self.get_field(name)
         if field is None:
             return None
