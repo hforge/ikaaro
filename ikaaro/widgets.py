@@ -141,7 +141,9 @@ class FileWidget(Widget):
             image = '/;get_image?width={width}&height={height}&' + params
             image = image.format(**kw)
         # Ok
-        return {'link': str(context.resource.abspath) + link, 'image': image}
+        abspath = str(context.resource.abspath)
+        return {'link': abspath + link,
+                'image': abspath + image}
 
 
 
