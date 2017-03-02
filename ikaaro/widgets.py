@@ -125,25 +125,25 @@ class FileWidget(Widget):
             self.field_name, language=self.language_name)
         if handler is None:
             return None
+        abspath = str(context.resource.abspath)
         # Params
         params = 'name={field_name}'
         if self.language_name:
             params += '&language={language_name}'
         # Download link
         kw = {'field_name': self.field_name,
+              'abspath': abspath,
               'width': self.width,
               'height': self.height,
               'language_name': self.language_name}
-        link = '/;get_file?' + params.format(**kw)
+        link = abspath + '/;get_file?' + params.format(**kw)
         # Image link
         image = None
         if isinstance(handler, Image):
-            image = '/;get_image?width={width}&height={height}&' + params
+            image = '{abspath}/;get_image?width={width}&height={height}&' + params
             image = image.format(**kw)
         # Ok
-        abspath = str(context.resource.abspath)
-        return {'link': abspath + link,
-                'image': abspath + image}
+        return {'link': link, 'image': image}
 
 
 
