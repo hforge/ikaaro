@@ -134,14 +134,14 @@ class FileWidget(Widget):
               'width': self.width,
               'height': self.height,
               'language_name': self.language_name}
-        link = ';get_file?' + params.format(**kw)
+        link = '/;get_file?' + params.format(**kw)
         # Image link
         image = None
         if isinstance(handler, Image):
-            image = ';get_image?width={width}&height={height}&' + params
+            image = '/;get_image?width={width}&height={height}&' + params
             image = image.format(**kw)
         # Ok
-        return {'link': link, 'image': image}
+        return {'link': str(context.resource.abspath) + link, 'image': image}
 
 
 
