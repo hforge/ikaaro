@@ -421,7 +421,10 @@ class Folder_BrowseContent(BrowseForm):
 
     def _get_key_sorted_by_unicode(self, field):
         def key(item):
-            return getattr(item, field).lower().translate(transmap)
+            value = getattr(item, field)
+            if not value:
+                return u''
+            return value.lower().translate(transmap)
         return key
 
 
