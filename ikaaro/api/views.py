@@ -79,6 +79,15 @@ class Api_DocView(STLView):
 class Api_View(ItoolsView):
 
     response_schema = {}
+    route = None
+
+
+    @classmethod
+    def get_route(cls):
+        """
+        :return: The route associated to the class
+        """
+        return cls.route
 
 
 

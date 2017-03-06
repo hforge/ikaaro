@@ -755,6 +755,8 @@ class Server(WebServer):
         for urlpattern_object in urlpatterns:
             for pattern, view in urlpattern_object.get_patterns():
                 self.dispatcher.add(pattern, view)
+                # Register the route on the class
+                view.route = pattern
 
 
     def is_production_environment(self):
