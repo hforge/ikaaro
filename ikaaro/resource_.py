@@ -424,11 +424,16 @@ class DBResource(Resource):
             raise ValueError('Field %s do not exist' % name)
         if field.multilingual and language is None:
             raise ValueError('Field %s is multilingual' % name)
+        self.clear_cache(name)
+        return field.set_value(self, name, value, language, **kw)
+
+
+    def clear_cache(self, name):
         if self._values.get(name):
             del self._values[name]
         if self._values_title.get(name):
             del self._values_title[name]
-        return field.set_value(self, name, value, language, **kw)
+        del self._brain
 
 
     def get_value_title(self, name, language=None, mode=None):
