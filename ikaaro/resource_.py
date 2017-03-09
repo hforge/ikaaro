@@ -36,7 +36,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import ItoolsView, get_context
 
 # Import from ikaaro
 from autoadd import AutoAdd
@@ -378,7 +378,7 @@ class DBResource(Resource):
 
         # Explicit view, defined by name
         view = getattr(self, name, None)
-        if is_prototype(view, BaseView):
+        if is_prototype(view, ItoolsView):
             context = get_context()
             view = view(resource=self, context=context) # bind
             return view
