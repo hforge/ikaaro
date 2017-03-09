@@ -433,7 +433,7 @@ class DBResource(Resource):
             del self._values[name]
         if self._values_title.get(name):
             del self._values_title[name]
-        del self._brain
+        self._brain = None
 
 
     def get_value_title(self, name, language=None, mode=None):
