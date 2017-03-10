@@ -10,6 +10,7 @@
 - In development environment the `/ui/` folder take `/ui_dev/` data (so it's easier to build JS app)
 - Root: Add Unavailable view (503)
 - Add cache experiment on `get_value` / `get_value_title`
+- Resource: Load data from brain to avoid loading metadata (for better performances)
 
 ### Changes
 
