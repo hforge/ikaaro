@@ -181,7 +181,8 @@ class DBResource(Resource):
         metadata.
         """
         handlers = [self.handler]
-        langs = self.get_resource('/').get_value('website_languages')
+        root = self.get_root()
+        langs = root.get_value('website_languages')
         # Fields
         for name, field in self.get_fields():
             if issubclass(field, File_Field):
@@ -606,7 +607,8 @@ class DBResource(Resource):
         values = {}
 
         # Step 1. Automatically index fields
-        languages = self.get_root().get_value('website_languages')
+        root = self.get_root()
+        languages = root.get_value('website_languages')
         for name, field in self.get_fields():
             if not field.indexed and not field.stored:
                 continue
