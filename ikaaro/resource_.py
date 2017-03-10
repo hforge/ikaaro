@@ -395,8 +395,10 @@ class DBResource(Resource):
     # Properties
     ########################################################################
     def get_value(self, name, language=None):
-        #if self._values.get(name):
-        #    return self._values.get(name)
+        # TODO: Use decorator for cache
+        cache_key = (name, language)
+        if self._values.has_key(cache_key):
+            return self._values[cache_key]
         field = self.get_field(name)
         if field is None:
             return None
@@ -415,36 +417,41 @@ class DBResource(Resource):
                 value = field.get_value(self, name, language)
         else:
             value = field.get_value(self, name, language)
-        self._values[name] = value
+        self._values[cache_key] = value
         return value
 
 
     def set_value(self, name, value, language=None, **kw):
+        # TODO: Use decorator for cache
         field = self.get_field(name)
         if field is None:
             raise ValueError('Field %s do not exist' % name)
         if field.multilingual and language is None:
             raise ValueError('Field %s is multilingual' % name)
-        self.clear_cache(name)
+        self.clear_cache(name, language)
         return field.set_value(self, name, value, language, **kw)
 
 
-    def clear_cache(self, name):
-        if self._values.get(name):
-            del self._values[name]
-        if self._values_title.get(name):
-            del self._values_title[name]
+    def clear_cache(self, name, language):
+        cache_key = (name, language)
+        if self._values.get(cache_key):
+            del self._values[cache_key]
+        if self._values_title.get(cache_key):
+            del self._values_title[cache_key]
         self._brain = None
 
 
     def get_value_title(self, name, language=None, mode=None):
-        #if self._values_title.get(name, {}).get(mode):
-        #    return self._values_title[name][mode]
+        # TODO: Use decorator for cache
+        cache_key = (name, language)
+        if (self._values_title.has_key(cache_key) and
+            self._values_title[cache_key].has_key(mode)):
+            return self._values_title[cache_key][mode]
         field = self.get_field(name)
         if field is None:
             return None
         value_title = field.get_value_title(self, name, language, mode)
-        self._values_title.setdefault(name, {})[mode] = value_title
+        self._values_title.setdefault(cache_key, {})[mode] = value_title
         return value_title
 
 
