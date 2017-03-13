@@ -195,7 +195,6 @@ class DBResource(Resource):
                     value = field.get_value(self, name)
                     if value is not None:
                         handlers.append(value)
-
         # Ok
         return handlers
 
