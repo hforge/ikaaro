@@ -344,12 +344,21 @@ def split_reference(ref):
 ###########################################################################
 # UUID
 ###########################################################################
-def get_resource_by_uuid_query(uuid, base_class_id=None, class_id=None):
+def get_resource_by_uuid_query(uuid, bases_class_id=None, class_id=None):
+    """
+    Return the query to get the resource corresponding to the uuid
+    :param uuid:
+    :param bases_class_id: Filter on a list of bases classes
+    :param class_id: Filter on the class id of the resource
+    :return: The query to get the resource
+    """
     # Base query
     query = AndQuery(PhraseQuery('uuid', uuid))
     # Add filtering query elements
-    if base_class_id:
-        query.append(PhraseQuery('base_classes', base_class_id))
+    if bases_class_id:
+        query.append(
+            OrQuery(*[PhraseQuery('base_classes', base_class) for base_class in bases_class_id])
+        )
     elif class_id:
         query.append(PhraseQuery('format', class_id))
     # Ok

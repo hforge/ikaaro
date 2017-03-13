@@ -231,9 +231,9 @@ class DBResource(Resource):
 
 
     def get_resource_by_uuid(self, uuid, context,
-            base_class_id=None, class_id=None):
+            bases_class_id=None, class_id=None):
         # Get query
-        query = get_resource_by_uuid_query(uuid, base_class_id, class_id)
+        query = get_resource_by_uuid_query(uuid, bases_class_id, class_id)
         search = context.database.search(query)
         # Return resource
         if not search:
@@ -492,8 +492,8 @@ class DBResource(Resource):
 
         default = field.get_default()
         if field.multiple:
-            return [ MetadataProperty(x) for x in default ]
-        return MetadataProperty(default)
+            return [ MetadataProperty(x, None) for x in default ]
+        return MetadataProperty(default, None)
 
 
     # XXX Backwards compatibility
