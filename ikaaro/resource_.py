@@ -395,9 +395,10 @@ class DBResource(Resource):
     ########################################################################
     def get_value(self, name, language=None):
         # TODO: Use decorator for cache
+        # TODO: Reactivate when ready
         cache_key = (name, language)
-        if self._values.has_key(cache_key):
-            return self._values[cache_key]
+        #if self._values.has_key(cache_key):
+        #    return self._values[cache_key]
         field = self.get_field(name)
         if field is None:
             return None
@@ -442,10 +443,11 @@ class DBResource(Resource):
 
     def get_value_title(self, name, language=None, mode=None):
         # TODO: Use decorator for cache
+        # TODO: Reactivate when ready
         cache_key = (name, language)
-        if (self._values_title.has_key(cache_key) and
-            self._values_title[cache_key].has_key(mode)):
-            return self._values_title[cache_key][mode]
+        #if (self._values_title.has_key(cache_key) and
+        #    self._values_title[cache_key].has_key(mode)):
+        #    return self._values_title[cache_key][mode]
         field = self.get_field(name)
         if field is None:
             return None
