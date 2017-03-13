@@ -1,2 +1,2 @@
-git+ssh://git@github.com/bepatient-fr/itools.git@0.76#egg=itools
+git+ssh://git@github.com/hforge/itools.git@0.77#egg=itools
 guppy
