@@ -3,18 +3,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 15:03+CET\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2017-03-17 15:50+0000\n"
+"Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.9\n"
 
 #: ../messages.py:72
 msgid ""
@@ -675,7 +677,7 @@ msgstr ""
 
 #: ../users_views.py:283
 msgid "Change your password."
-msgstr ""
+msgstr "Ändern Sie Ihr Passwort."
 
 #: ../revisions_views.py:233
 msgid "Changes"
@@ -700,7 +702,7 @@ msgstr ""
 
 #: ../emails.py:137
 msgid "Choose a new password"
-msgstr ""
+msgstr "Wähle ein neues Passwort"
 
 #: ../config_access.py:289
 msgid "Choose the security policy."
@@ -708,7 +710,7 @@ msgstr ""
 
 #: ../users_views.py:48
 msgid "Choose your password"
-msgstr ""
+msgstr "Wähle dein Passwort"
 
 #: ../widgets.py:393
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
@@ -1025,7 +1027,7 @@ msgstr ""
 
 #: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
-msgstr ""
+msgstr "Herunterladen"
 
 #: ../ui/file/externaledit.xml.en:16
 msgctxt "li"
@@ -1346,7 +1348,7 @@ msgstr ""
 #: ../ui/base/login.xml.en:40
 msgctxt "label"
 msgid "I forgot my password."
-msgstr ""
+msgstr "Ich habe mein Passwort vergessen."
 
 #: ../users_views.py:487
 msgid ""
@@ -1711,7 +1713,7 @@ msgstr ""
 
 #: ../users_views.py:293
 msgid "New password"
-msgstr ""
+msgstr "Neues Kennwort"
 
 #: ../text_views.py:281
 msgid "New row added."
@@ -1729,7 +1731,7 @@ msgstr ""
 
 #: ../widgets.py:246 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #: ../config_access.py:80
 msgid "No limit"
@@ -1932,7 +1934,7 @@ msgstr ""
 
 #: ../users_views.py:486 ../widgets.py:158
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: ../ui/base/login.xml.en:32
 msgctxt "label"
@@ -2125,7 +2127,7 @@ msgstr ""
 
 #: ../users_views.py:60 ../users_views.py:489
 msgid "Repeat password"
-msgstr ""
+msgstr "Passwort wiederholen"
 
 #: ../agenda/ui/upload.xml.en:15
 msgctxt "button"
@@ -2688,7 +2690,7 @@ msgstr ""
 
 #: ../users_views.py:306
 msgid "Type your current password"
-msgstr ""
+msgstr "Geben Sie ihr aktuelles Passwort ein"
 
 #: ../ui/html/popup.xml.en:57
 msgctxt "label"
@@ -2970,7 +2972,7 @@ msgstr ""
 #: ../widgets.py:245 ../widgets.py:297 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../agenda/ui/widgets/allday.xml.en:9
 msgctxt "label"
