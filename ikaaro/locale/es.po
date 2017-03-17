@@ -3,15 +3,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
+"Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 15:03+CET\n"
-"PO-Revision-Date: 2006-12-06 16:23+0100\n"
-"Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
+"PO-Revision-Date: 2017-03-17 15:54+0000\n"
+"Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: Spanish\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.9\n"
 
 #: ../messages.py:72
 msgid ""
@@ -729,7 +731,7 @@ msgstr "Modificar"
 
 #: ../users_views.py:283
 msgid "Change your password."
-msgstr "Modificar clave de acceso."
+msgstr "Cambia tu contraseña."
 
 #: ../revisions_views.py:233
 #, fuzzy
@@ -754,9 +756,8 @@ msgid "Choose a language"
 msgstr "Elije un idioma"
 
 #: ../emails.py:137
-#, fuzzy
 msgid "Choose a new password"
-msgstr "Modificar clave de acceso"
+msgstr "Elija una contraseña nueva"
 
 #: ../config_access.py:289
 #, fuzzy
@@ -764,9 +765,8 @@ msgid "Choose the security policy."
 msgstr "Seguridad"
 
 #: ../users_views.py:48
-#, fuzzy
 msgid "Choose your password"
-msgstr "Modificar clave de acceso"
+msgstr "Elige tu contraseña"
 
 #: ../widgets.py:393
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
@@ -1099,7 +1099,7 @@ msgstr ""
 
 #: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
-msgstr ""
+msgstr "Descargar"
 
 #: ../ui/file/externaledit.xml.en:16
 msgctxt "li"
@@ -1432,10 +1432,9 @@ msgid "Hungarian"
 msgstr ""
 
 #: ../ui/base/login.xml.en:40
-#, fuzzy
 msgctxt "label"
 msgid "I forgot my password."
-msgstr "Olvidé mi contraseña"
+msgstr "Olvidé mi contraseña."
 
 #: ../users_views.py:487
 msgid ""
@@ -1827,9 +1826,8 @@ msgid "New page"
 msgstr "Idioma"
 
 #: ../users_views.py:293
-#, fuzzy
 msgid "New password"
-msgstr "Nueca Clave de Acceso"
+msgstr "Nueva contraseña"
 
 #: ../text_views.py:281
 #, fuzzy
@@ -1850,7 +1848,7 @@ msgstr "Texto"
 
 #: ../widgets.py:246 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: ../config_access.py:80
 msgid "No limit"
@@ -2065,7 +2063,6 @@ msgid "PDF Document"
 msgstr "Añadir Documento"
 
 #: ../users_views.py:486 ../widgets.py:158
-#, fuzzy
 msgid "Password"
 msgstr "Contraseña"
 
@@ -2269,9 +2266,8 @@ msgid "Rename resources"
 msgstr "Nuevo Recurso"
 
 #: ../users_views.py:60 ../users_views.py:489
-#, fuzzy
 msgid "Repeat password"
-msgstr "Nueca Clave de Acceso"
+msgstr "Repite la contraseña"
 
 #: ../agenda/ui/upload.xml.en:15
 msgctxt "button"
@@ -2891,9 +2887,8 @@ msgid ""
 msgstr ""
 
 #: ../users_views.py:306
-#, fuzzy
 msgid "Type your current password"
-msgstr "Modificar clave de acceso"
+msgstr "Escriba su contraseña actual"
 
 #: ../ui/html/popup.xml.en:57
 msgctxt "label"
