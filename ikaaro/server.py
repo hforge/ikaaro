@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from datetime import timedelta
 from email.parser import HeaderParser
+import inspect
 import json
 import pickle
 from os import fdopen, getpgid, getpid, kill, mkdir, remove
@@ -49,16 +50,18 @@ from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
+from itools.uri import get_reference, Path
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
-from itools.web import SoupMessage, StaticRouter, DatabaseRouter
+from itools.web import SoupMessage
+from itools.web.static import StaticView
 
 # Import from ikaaro
 from context import CMSContext
 from database import get_database, make_database
 from datatypes import ExpireValue
 from root import Root
-from router import StaticCachedRouter
+from views import CachedStaticView
 from update import is_instance_up_to_date
 from skins import skin_registry
 
@@ -196,7 +199,7 @@ def get_pid(target):
 def get_root(database):
     metadata = database.get_handler('.metadata', cls=Metadata)
     cls = database.get_resource_class(metadata.format)
-    return cls(metadata)
+    return cls(abspath=Path('/'), database=database, metadata=metadata)
 
 
 def get_fake_context(database, context_cls=CMSContext):
@@ -212,7 +215,6 @@ def create_server(target, email, password, root,  modules,
                   listen_port='8080', smtp_host='localhost', log_email=None):
     # Get modules
     for module in modules:
-        modules.append(module)
         exec('import %s' % module)
     # Load the root class
     if root is None:
@@ -248,7 +250,7 @@ def create_server(target, email, password, root,  modules,
     # Make the root
     metadata = Metadata(cls=root_class)
     database.set_handler('.metadata', metadata)
-    root = root_class(metadata)
+    root = root_class(abspath=Path('/'), database=database, metadata=metadata)
     # Re-init context with context cls
     context = get_fake_context(context.database, root.context_cls)
     context.set_mtime = True
@@ -263,6 +265,7 @@ def create_server(target, email, password, root,  modules,
     # Index the root
     catalog = database.catalog
     catalog.save_changes()
+    catalog.close()
     # Bravo!
     print('*')
     print('* Welcome to ikaaro')
@@ -299,6 +302,9 @@ class ServerLoop(Loop):
 class Server(WebServer):
 
     timestamp = None
+    port = None
+    environment = {}
+    modules = []
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
@@ -311,6 +317,7 @@ class Server(WebServer):
         config = get_config(target)
         self.config = config
         load_modules(config)
+        self.modules = config.get_value('modules')
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
@@ -340,6 +347,14 @@ class Server(WebServer):
 
         # Find out the root class
         root = get_root(database)
+
+        # Load environment file
+        root_file_path = inspect.getfile(root.__class__)
+        environement_path = str(get_reference(root_file_path).resolve('environment.json'))
+        if vfs.exists(environement_path):
+            with open(environement_path, 'r') as f:
+                data = f.read()
+                self.environment = json.loads(data)
 
         # Init fake context
         context = get_fake_context(database, root.context_cls)
@@ -373,9 +388,10 @@ class Server(WebServer):
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.web')
-
         # Session timeout
         self.session_timeout = get_value('session-timeout')
+        # Register routes
+        self.register_dispatch_routes()
 
 
     def check_consistency(self, quick):
@@ -400,6 +416,7 @@ class Server(WebServer):
 
 
     def start(self, detach=False, profile=False, loop=True):
+        profile = ('%s/log/profile' % self.target) if profile else None
         self.loop = ServerLoop(
               target=self.target,
               server=self,
@@ -426,7 +443,6 @@ class Server(WebServer):
         # Listen & set context
         root = self.root
         self.listen(address, port)
-        self.set_router('/', DatabaseRouter)
 
         # Call method on root at start
         context = get_context()
@@ -437,8 +453,6 @@ class Server(WebServer):
         if interval:
             cron(self.cron_manager, interval)
 
-        # Run
-        profile = ('%s/log/profile' % self.target) if profile else None
         # Init loop
         if loop:
             try:
@@ -560,8 +574,8 @@ class Server(WebServer):
 
     def listen(self, address, port):
         super(Server, self).listen(address, port)
-        # Set ui router
-        self.register_ui_router()
+        self.port = port
+
 
 
     def save_running_informations(self):
@@ -713,24 +727,48 @@ class Server(WebServer):
         log_error(summary + details)
 
 
-    def register_ui_router(self):
-        # Base router
-        router = StaticRouter(local_path=get_abspath('ui'))
-        self.set_router('/ui', router)
+    def register_dispatch_routes(self):
+        # Dispatch base routes from ikaaro
+        self.register_urlpatterns_from_package('ikaaro.urls')
+        for module in reversed(self.modules):
+            self.register_urlpatterns_from_package('{}.urls'.format(module))
+        # UI routes for skin
+        ts = self.timestamp
         for name in skin_registry:
             skin = skin_registry[name]
-            router = StaticRouter(local_path=skin.key)
-            self.set_router('/ui/%s' % name, router)
-        # Cached router: /ui/cached/TIMESTAMP/
-        ui_prefix = '/ui/cached/{0}'.format(self.timestamp)
-        static_context = StaticCachedRouter(local_path=get_abspath('ui'))
-        self.set_router(ui_prefix, static_context)
-        for name in skin_registry:
-            skin = skin_registry[name]
-            static_context = StaticCachedRouter(local_path=skin.key)
-            path = '{0}/{1}'.format(ui_prefix, name)
-            self.set_router(path, static_context)
+            mount_path = '/ui/%s' % name
+            skin_key = skin.get_environment_key(self)
+            view = StaticView(local_path=skin_key, mount_path=mount_path)
+            self.dispatcher.add('/ui/%s/{name:any}' % name, view)
+            mount_path = '/ui/cached/%s/%s' % (ts, name)
+            view = CachedStaticView(local_path=skin_key, mount_path=mount_path)
+            self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
 
+
+    def register_urlpatterns_from_package(self, package):
+        urlpatterns = None
+        try:
+            exec('from {} import urlpatterns'.format(package))
+        except ImportError:
+            return
+        # Dispatch base routes from ikaaro
+        for urlpattern_object in urlpatterns:
+            for pattern, view in urlpattern_object.get_patterns():
+                self.dispatcher.add(pattern, view)
+                # Register the route on the class
+                view.route = pattern
+
+
+    def is_production_environment(self):
+        return self.is_environment('production')
+
+
+    def is_development_environment(self):
+        return self.is_environment('development')
+
+
+    def is_environment(self, name):
+        return self.environment.get('environment', 'production') == name
 
     #######################################################################
     # Time events

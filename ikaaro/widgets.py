@@ -125,20 +125,22 @@ class FileWidget(Widget):
             self.field_name, language=self.language_name)
         if handler is None:
             return None
+        abspath = str(context.resource.abspath)
         # Params
         params = 'name={field_name}'
         if self.language_name:
             params += '&language={language_name}'
         # Download link
         kw = {'field_name': self.field_name,
+              'abspath': abspath,
               'width': self.width,
               'height': self.height,
               'language_name': self.language_name}
-        link = ';get_file?' + params.format(**kw)
+        link = abspath + '/;get_file?' + params.format(**kw)
         # Image link
         image = None
         if isinstance(handler, Image):
-            image = ';get_image?width={width}&height={height}&' + params
+            image = '{abspath}/;get_image?width={width}&height={height}&' + params
             image = image.format(**kw)
         # Ok
         return {'link': link, 'image': image}
@@ -169,8 +171,8 @@ class ChoosePassword_Widget(Widget):
     @proto_lazy_property
     def scripts(self):
         context = get_context()
-        handler = context.get_template('/ui/js/password_strength_plugin.js')
-        return ['/ui/js/%s' % basename(handler.key)]
+        handler = context.get_template('/ui/ikaaro/js/password_strength_plugin.js')
+        return ['/ui/ikaaro/js/%s' % basename(handler.key)]
 
     # Password meter configuration
     userid = None
@@ -357,7 +359,7 @@ def get_dynDateTime_scripts():
     context = get_context()
     scripts = []
     # Calendar (http://code.google.com/p/dyndatetime/)
-    scripts.append('/ui/js_calendar/jquery.dynDateTime.pack.js')
+    scripts.append('/ui/ikaaro/js_calendar/jquery.dynDateTime.pack.js')
     languages = [
         'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
         'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
@@ -366,7 +368,7 @@ def get_dynDateTime_scripts():
     language = accept.select_language(languages)
     if language is None:
         language = 'en'
-    scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
+    scripts.append('/ui/ikaaro/js_calendar/lang/calendar-%s.js' % language)
     return scripts
 
 
@@ -384,7 +386,7 @@ class DateWidget(Widget):
         button: ".next()" });
     </script>""")
 
-    styles = ['/ui/js_calendar/calendar-aruni.css']
+    styles = ['/ui/ikaaro/js_calendar/calendar-aruni.css']
 
     css = None
     format = '%Y-%m-%d'
@@ -440,11 +442,11 @@ class DatetimeWidget(DateWidget):
         $("input[name=${name}_time]").val("${value_time}");
     </script>""")
 
-    styles = ['/ui/js_calendar/calendar-aruni.css']
+    styles = ['/ui/ikaaro/js_calendar/calendar-aruni.css']
 
     @proto_lazy_property
     def scripts(self):
-        return (['/ui/jquery.maskedinput-1.3.min.js'] +
+        return (['/ui/ikaaro/jquery.maskedinput-1.3.min.js'] +
                 get_dynDateTime_scripts())
 
 
@@ -571,18 +573,18 @@ class ColorPickerWidget(TextWidget):
       });
     </script>""")
 
-    scripts = ['/ui/js/farbtastic/farbtastic.js']
-    styles = ['/ui/js/farbtastic/farbtastic.css']
+    scripts = ['/ui/ikaaro/js/farbtastic/farbtastic.js']
+    styles = ['/ui/ikaaro/js/farbtastic/farbtastic.css']
 
 
 
 class RTEWidget(Widget):
 
-    template = '/ui/tiny_mce/rte.xml'
-    rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
+    template = '/ui/ikaaro/tiny_mce/rte.xml'
+    rte_css = ['/ui/aruni/style.css', '/ui/ikaaro/tiny_mce/content.css']
     scripts = [
-        '/ui/tiny_mce/tiny_mce_src.js',
-        '/ui/tiny_mce/javascript.js']
+        '/ui/ikaaro/tiny_mce/tiny_mce_src.js',
+        '/ui/ikaaro/tiny_mce/javascript.js']
 
     # Configuration
     # See http://wiki.moxiecode.com/index.php/TinyMCE:Configuration
@@ -608,7 +610,7 @@ class RTEWidget(Widget):
 
     @proto_lazy_property
     def rte_language(self):
-        path = get_abspath('ui/tiny_mce/langs')
+        path = get_abspath('ui/ikaaro/tiny_mce/langs')
         languages = [ x[:-3] for x in lfs.get_names(path) ]
         return get_context().accept_language.select_language(languages)
 
@@ -663,8 +665,8 @@ class ProgressBarWidget(Widget):
       });
     </script>
     """)
-    scripts = ['/ui/progressbar/jquery-progressbar.min.js']
-    styles = ['/ui/progressbar/jquery-progressbar.css']
+    scripts = ['/ui/ikaaro/progressbar/jquery-progressbar.min.js']
+    styles = ['/ui/ikaaro/progressbar/jquery-progressbar.css']
 
 
     def __init__(self, name=None, **kw):
@@ -683,8 +685,8 @@ class EditAreaWidget(MultilineWidget):
     """It's an EditArea Widget, for file code edit, used for edit the CSS here,
     see original code here: <http://www.cdolivet.com>"""
 
-    template = '/ui/editarea/ea.xml'
-    scripts = ['/ui/editarea/edit_area_full.js']
+    template = '/ui/ikaaro/editarea/ea.xml'
+    scripts = ['/ui/ikaaro/editarea/edit_area_full.js']
 
     # Configuration
     width = 610
@@ -693,7 +695,7 @@ class EditAreaWidget(MultilineWidget):
 
 
     def ea_language(self):
-        path = get_abspath('ui/editarea/langs')
+        path = get_abspath('ui/ikaaro/editarea/langs')
         languages = [ x[:-3] for x in lfs.get_names(path) ]
         return get_context().accept_language.select_language(languages)
 

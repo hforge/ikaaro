@@ -49,7 +49,7 @@ class Configuration_View(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Configuration')
-    template = '/ui/website/config.xml'
+    template = '/ui/ikaaro/website/config.xml'
 
     def get_namespace(self, resource, context):
         newmodules = []
@@ -105,7 +105,7 @@ class Config_BrokenLinks(STLView):
     title = MSG(u'Broken Links')
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
-    template = '/ui/website/broken_links.xml'
+    template = '/ui/ikaaro/website/broken_links.xml'
 
     config_group = 'webmaster'
 
@@ -190,7 +190,7 @@ class Config_EditLanguages(STLView):
     title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
-    template = '/ui/website/edit_languages.xml'
+    template = '/ui/ikaaro/website/edit_languages.xml'
     schema = {'codes': String(multiple=True, mandatory=True)}
 
     config_group = 'webmaster'

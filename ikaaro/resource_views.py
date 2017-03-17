@@ -154,7 +154,7 @@ class DBResource_GetImage(DBResource_GetFile):
             format = handler.get_mimetype().split('/')[1]
         data, format = handler.get_thumbnail(width, height, format, fit)
         if data is None:
-            default = context.get_template('/ui/icons/48x48/image.png')
+            default = context.get_template('/ui/ikaaro/icons/48x48/image.png')
             data = default.to_str()
             format = 'png'
 
@@ -215,7 +215,7 @@ class LoginView(STLView):
 
     access = True
     title = MSG(u'Login')
-    template = '/ui/base/login.xml'
+    template = '/ui/ikaaro/base/login.xml'
     meta = [('robots', 'noindex, follow', None)]
 
     query_schema = {
@@ -286,7 +286,7 @@ class LoginView(STLView):
 
             # 1.2 Show message (we show the same message even if the user
             # does not exist, because privacy wins over usability)
-            path = '/ui/website/forgotten_password.xml'
+            path = '/ui/ikaaro/website/forgotten_password.xml'
             handler = context.get_template(path)
             return stl(handler)
 
@@ -340,39 +340,3 @@ class LogoutView(BaseView):
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
-
-
-
-###########################################################################
-# Views / HTTP, WebDAV
-###########################################################################
-
-class Put_View(BaseView):
-
-    access = 'is_allowed_to_put'
-
-
-    def PUT(self, resource, context):
-        range = context.get_header('content-range')
-        if range:
-            raise NotImplemented
-
-        # Save the data
-        body = context.get_form_value('body')
-        resource.handler.load_state_from_string(body)
-        context.database.change_resource(resource)
-
-
-
-class Delete_View(BaseView):
-
-    access = 'is_allowed_to_remove'
-
-
-    def DELETE(self, resource, context):
-        name = resource.name
-        parent = resource.parent
-        try:
-            parent.del_resource(name)
-        except ConsistencyError:
-            raise Conflict

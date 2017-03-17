@@ -109,10 +109,10 @@ class ZoomMenu(ContextMenu):
         previous_size = str(previous_size)
         return [
             {'title': MSG(u'Zoom In'),
-             'src': '/ui/icons/16x16/zoom_in.png',
+             'src': '/ui/ikaaro/icons/16x16/zoom_in.png',
              'href': uri.replace(size=next_size)},
             {'title': MSG(u'Zoom Out'),
-             'src': '/ui/icons/16x16/zoom_out.png',
+             'src': '/ui/ikaaro/icons/16x16/zoom_out.png',
              'href': uri.replace(size=previous_size)}
         ]
 
@@ -178,7 +178,7 @@ class Folder_NewResource(IconsView):
 
     def get_namespace(self, resource, context):
         items = [
-            {'icon': '/ui/' + cls.class_icon48,
+            {'icon': cls.class_icon48,
              'title': cls.class_title,
              'description': cls.class_description,
              'url': self.get_url(cls.class_id, context)}
@@ -192,7 +192,7 @@ class Folder_Rename(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Rename resources')
-    template = '/ui/folder/rename.xml'
+    template = '/ui/ikaaro/folder/rename.xml'
     query_schema = {
         'ids': String(multiple=True)}
     schema = {
@@ -421,7 +421,10 @@ class Folder_BrowseContent(BrowseForm):
 
     def _get_key_sorted_by_unicode(self, field):
         def key(item):
-            return getattr(item, field).lower().translate(transmap)
+            value = getattr(item, field)
+            if not value:
+                return u''
+            return value.lower().translate(transmap)
         return key
 
 
@@ -497,9 +500,8 @@ class Folder_BrowseContent(BrowseForm):
                 return None
             if item.name in parent.__fixed_handlers__:
                 return None
-            id = resource.abspath.get_pathto(item.abspath)
-            id = str(id)
-            return id, False
+            resource_id = str(item.abspath)
+            return resource_id, False
         elif column == 'icon':
             # icon
             path_to_icon = item.get_resource_icon(16)
@@ -510,13 +512,11 @@ class Folder_BrowseContent(BrowseForm):
             return path_to_icon
         elif column == 'abspath':
             # Name
-            id = resource.abspath.get_pathto(item.abspath)
-            id = str(id)
+            resource_id = str(item.abspath)
             view = item.get_view(None)
             if view is None:
-                return id
-            href = '%s/' % context.get_link(item)
-            return id, href
+                return resource_id
+            return resource_id, context.get_link(item)
         elif column == 'format':
             # Type
             return item.class_title.gettext()
@@ -737,7 +737,7 @@ class Folder_BrowseContent(BrowseForm):
 class Folder_PreviewContent(Folder_BrowseContent):
 
     title = MSG(u'Preview Content')
-    styles = ['/ui/gallery/style.css']
+    styles = ['/ui/ikaaro/gallery/style.css']
 
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
 
@@ -756,7 +756,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
     # Table
-    table_template = '/ui/folder/browse_image.xml'
+    table_template = '/ui/ikaaro/folder/browse_image.xml'
 
     def get_table_head(self, resource, context, items):
         actions = self.actions_namespace
@@ -864,7 +864,7 @@ class Folder_Thumbnail(BaseView):
 
     access = True
 
-    default_icon = '/ui/gallery/folder.png'
+    default_icon = '/ui/ikaaro/gallery/folder.png'
 
     def GET(self, resource, context):
         default_icon = context.get_template(self.default_icon)

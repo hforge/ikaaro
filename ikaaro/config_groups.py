@@ -122,7 +122,7 @@ class ConfigGroups(OrderedFolder):
     class_id = 'config-groups'
     class_title = MSG(u'User Groups')
     class_description = MSG(u'Manage user groups.')
-    class_icon48 = 'icons/48x48/groups.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/groups.png'
 
     # Configuration
     config_name = 'groups'

@@ -46,7 +46,7 @@ class TermsOfService_View(STLView):
 
 class TermsOfService_Widget(Widget):
 
-    template = '/ui/register_terms_of_service.xml'
+    template = '/ui/ikaaro/register_terms_of_service.xml'
     title = MSG(u'Terms of Service')
     inline = True
 
@@ -173,7 +173,7 @@ class ConfigRegister(DBResource):
     class_id = 'config-register'
     class_title = MSG(u'User registration')
     class_description = MSG(u'Configuration of the user registration process.')
-    class_icon48 = 'icons/48x48/signin.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/signin.png'
 
     # Fields
     is_open = Boolean_Field(default=False,

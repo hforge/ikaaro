@@ -19,8 +19,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import freeze, proto_property
-from itools.csv import Property
-from itools.database import Resource
+from itools.database import Resource, MetadataProperty
 from itools.datatypes import Email, Enumerate, MultiLinesTokens
 from itools.datatypes import String
 from itools.gettext import MSG
@@ -562,7 +561,7 @@ class Observable(Resource):
         # Filter out username
         cc_list = [ cc for cc in cc_list if cc.value != username ]
         # Create new dict to force metadata commit
-        cc_list.append(Property(username, status=status, key=key))
+        cc_list.append(MetadataProperty(username, status=status, key=key))
         self.set_property('cc_list', cc_list)
         return key
 
@@ -572,7 +571,7 @@ class Observable(Resource):
         # Filter out username
         cc_list = [ cc for cc in cc_list if cc.value != username ]
         # Create new dict to force metadata commit
-        cc_list.append(Property(username))
+        cc_list.append(MetadataProperty(username))
         self.set_property('cc_list', cc_list)
 
 

@@ -367,10 +367,10 @@ class AutoAdd(AutoForm):
                     goto = '%s/%s' % (resource.name, goto)
             return context.come_back(self.msg_new_resource, goto=goto)
         # goto_parent_view # Deprecated : To replace by action_goto
-        goto = str(resource.get_pathto(child))
+        goto = str(child.abspath)
         if self.goto_parent_view:
             goto = './;%s' % self.goto_parent_view
         # goto_view (from Child)
         elif self.goto_view:
-            goto = '%s/;%s' % (goto, self.goto_view)
+            goto = '%s/;%s' % (child.abspath, self.goto_view)
         return context.come_back(self.msg_new_resource, goto=goto)

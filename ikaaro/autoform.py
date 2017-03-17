@@ -69,8 +69,8 @@ class AutoForm(STLView):
        TextWidget('lastname', title=MSG(u'Lastname'))]
     """
 
-    template = '/ui/auto_form.xml'
-    template_field = '/ui/auto_form_field.xml'
+    template = '/ui/ikaaro/auto_form.xml'
+    template_field = '/ui/ikaaro/auto_form_field.xml'
 
     form_id = None
     form_css = 'autoform'

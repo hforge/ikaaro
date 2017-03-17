@@ -18,8 +18,7 @@
 from unittest import TestCase, main
 
 # Import from itools
-from itools.csv import Property
-from itools.database import Metadata
+from itools.database import Metadata, MetadataProperty
 from itools.fs import vfs
 
 # Import from ikaaro
@@ -61,7 +60,7 @@ class NewTestCase(TestCase):
 
     def setUp(self):
         metadata = Metadata(cls=WebPage)
-        title = Property(u'Hello World', lang='en')
+        title = MetadataProperty(u'Hello World', lang='en')
         metadata.set_property('title', title)
         self.metadata = metadata
         # Sandbox

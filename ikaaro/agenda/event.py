@@ -60,7 +60,7 @@ class Status(Enumerate):
 
 class AllDayWidget(CheckboxWidget):
 
-    template = '/ui/agenda/widgets/allday.xml'
+    template = '/ui/ikaaro/agenda/widgets/allday.xml'
 
 
     def checked(self):
@@ -77,7 +77,7 @@ class AllDay_Field(Boolean_Field):
 
 class Event_Edit(AutoEdit):
 
-    styles = ['/ui/agenda/style.css']
+    styles = ['/ui/ikaaro/agenda/style.css']
     can_be_open_in_fancybox = True
 
     # Fields
@@ -114,7 +114,7 @@ class Event_Edit(AutoEdit):
 
     def get_scripts(self, context):
         scripts = super(Event_Edit, self).get_scripts(context)
-        scripts.append('/ui/agenda/javascript.js')
+        scripts.append('/ui/ikaaro/agenda/javascript.js')
         return scripts
 
 
@@ -217,7 +217,7 @@ class Event_NewInstance(AutoAdd):
 
     def get_scripts(self, context):
         scripts = super(Event_NewInstance, self).get_scripts(context)
-        scripts.append('/ui/agenda/javascript.js')
+        scripts.append('/ui/ikaaro/agenda/javascript.js')
         return scripts
 
 
@@ -284,11 +284,10 @@ class Event_NewInstance(AutoAdd):
         child.notify_subscribers(context)
 
         # Ok
-        goto = str(resource.get_pathto(child))
         if self.goto_parent_view:
             goto = './;%s' % self.goto_parent_view
         elif self.goto_view:
-            goto = '%s/;%s' % (goto, self.goto_view)
+            goto = '%s/;%s' % (child.abspath, self.goto_view)
         return context.come_back(self.msg_new_resource, goto=goto)
 
 
@@ -313,7 +312,7 @@ class End_Field(Datetime_Field):
 
 class Event_Render(CMSTemplate):
 
-    template = '/ui/agenda/event_render.xml'
+    template = '/ui/ikaaro/agenda/event_render.xml'
 
     event = None
     day = None
@@ -329,8 +328,8 @@ class Event(Content):
     class_id = 'event'
     class_title = MSG(u'Event')
     class_description = MSG(u'Calendar event')
-    class_icon16 = 'icons/16x16/event.png'
-    class_icon48 = 'icons/48x48/event.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/event.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/event.png'
     class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
     # Render

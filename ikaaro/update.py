@@ -173,7 +173,7 @@ class UpdateInstanceView(STLView):
 
     access = 'is_admin'
     title = MSG(u'Update instance')
-    template = '/ui/update_instance.xml'
+    template = '/ui/ikaaro/update_instance.xml'
 
     def get_namespace(self, resource, context):
         return find_versions_to_update(context, force=True)

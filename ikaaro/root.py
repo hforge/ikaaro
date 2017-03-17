@@ -52,8 +52,8 @@ from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
 from root_views import PoweredBy, ContactForm
-from root_views import NotFoundView, ForbiddenView
-from root_views import UploadStatsView, UpdateDocs
+from root_views import NotFoundView, ForbiddenView, NotAllowedView
+from root_views import UploadStatsView, UpdateDocs, UnavailableView
 from update import UpdateInstanceView
 
 
@@ -91,8 +91,8 @@ class Root(Folder):
     class_id = 'iKaaro'
     class_version = '20170106'
     class_title = MSG(u'iKaaro')
-    class_icon16 = 'icons/16x16/root.png'
-    class_icon48 = 'icons/48x48/root.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/root.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/root.png'
     class_skin = 'aruni'
 
     abspath = Path('/')
@@ -153,7 +153,7 @@ class Root(Folder):
 
         # Ok
         namespace = {'traceback': traceback.format_exc()}
-        handler = context.get_template('/ui/root/internal_server_error.xml')
+        handler = context.get_template('/ui/ikaaro/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
 
 
@@ -562,6 +562,7 @@ class Root(Folder):
                 context.database.save_changes()
 
 
+
     #######################################################################
     # Views
     #######################################################################
@@ -570,10 +571,13 @@ class Root(Folder):
     # Public views
     contact = ContactForm
     powered_by = PoweredBy
-    # Special
+    # Web views (401/403/404/405...)
     forbidden = ForbiddenView
     unauthorized = LoginView
     not_found = NotFoundView
+    method_not_allowed = NotAllowedView
+    unavailable = UnavailableView
+    # Special
     upload_stats = UploadStatsView
     update_instance = UpdateInstanceView
     update_docs = UpdateDocs

@@ -22,7 +22,7 @@
 
 # Import from itools
 from itools.core import merge_dicts, proto_property, proto_lazy_property
-from itools.csv import Property
+from itools.database import MetadataProperty
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -61,7 +61,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     search_schema = {}
     search_widgets =[]
 
-    table_template = '/ui/html/addbase_browse_table.xml'
+    table_template = '/ui/ikaaro/html/addbase_browse_table.xml'
 
     folder_classes = ()
 
@@ -100,8 +100,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         elif column == 'name':
             target = self.target
             if self.is_folder(item):
-                path_to_item = context.root.get_pathto(item)
-                url_dic = {'target': str(path_to_item),
+                url_dic = {'target': str(item.abspath),
                            # Avoid search conservation
                            'search_text': None,
                            'search_type': None,
@@ -183,7 +182,7 @@ class DBResource_AddBase(STLView):
     """
 
     access = 'is_allowed_to_add'
-    template = '/ui/html/popup.xml'
+    template = '/ui/ikaaro/html/popup.xml'
 
     element_to_add = None
 
@@ -307,9 +306,9 @@ class DBResource_AddBase(STLView):
     def get_scripts(self, context):
         mode = context.get_form_value('mode')
         if mode == 'tiny_mce':
-            return ['/ui/tiny_mce/javascript.js',
-                    '/ui/tiny_mce/tiny_mce_src.js',
-                    '/ui/tiny_mce/tiny_mce_popup.js']
+            return ['/ui/ikaaro/tiny_mce/javascript.js',
+                    '/ui/ikaaro/tiny_mce/tiny_mce_src.js',
+                    '/ui/ikaaro/tiny_mce/tiny_mce_popup.js']
         return []
 
 
@@ -362,7 +361,7 @@ class DBResource_AddBase(STLView):
         child = container.make_resource(name, cls, **kw)
         # The title
         language = resource.get_edit_languages(context)[0]
-        title = Property(title, lang=language)
+        title = MetadataProperty(title, lang=language)
         child.metadata.set_property('title', title)
         # Get the path
         path = child.abspath

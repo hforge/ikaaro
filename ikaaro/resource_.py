@@ -27,16 +27,16 @@ from uuid import uuid4
 
 # Import from itools
 from itools.core import is_prototype, lazy
-from itools.csv import Property
+from itools.database import MetadataProperty
 from itools.database import Resource, Metadata, register_field
 from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, DateTime, Date
+from itools.datatypes import Boolean, DateTime, Date, Decimal
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.log import log_warning
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import ItoolsView, get_context
 
 # Import from ikaaro
 from autoadd import AutoAdd
@@ -52,13 +52,12 @@ from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
 from resource_views import DBResource_Links, DBResource_Backlinks
 from resource_views import LoginView, LogoutView
-from resource_views import Put_View, Delete_View
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from update import class_version_to_date
-from utils import get_base_path_query
+from utils import get_base_path_query, get_resource_by_uuid_query
 
 
 
@@ -81,9 +80,17 @@ class DBResource(Resource):
 
     class_version = '20071215'
     class_description = None
-    class_icon16 = 'icons/16x16/resource.png'
-    class_icon48 = 'icons/48x48/resource.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/resource.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/resource.png'
     class_views = []
+
+    # Internal
+    _values = {}
+    _values_title = {}
+    _metadata = None
+    _brain = None
+
+    # Config
     context_menus = []
 
     # Fields
@@ -97,15 +104,21 @@ class DBResource(Resource):
     share = Share_Field
 
 
-    def __init__(self, metadata):
-        self.metadata = metadata
+    def __init__(self, abspath, database, metadata=None, brain=None):
+        self.abspath = abspath
+        self.database = database
+        self._metadata = metadata
+        self._brain = brain
+        self._values = {}
+        self._values_title = {}
 
 
     def __eq__(self, resource):
+        if resource is None:
+            return False
         if not isinstance(resource, DBResource):
             error = "cannot compare DBResource and %s" % type(resource)
-            raise TypeError, error
-
+            raise TypeError(error)
         return self.abspath == resource.abspath
 
 
@@ -116,9 +129,12 @@ class DBResource(Resource):
     #######################################################################
     # API / Tree
     #######################################################################
-    @property
-    def database(self):
-        return self.metadata.database
+    @lazy
+    def metadata(self):
+        if self._metadata:
+            return self._metadata
+        self._metadata = self.database.get_metadata(self.abspath)
+        return self._metadata
 
 
     @lazy
@@ -165,7 +181,8 @@ class DBResource(Resource):
         metadata.
         """
         handlers = [self.handler]
-        langs = self.get_resource('/').get_value('website_languages')
+        root = self.get_root()
+        langs = root.get_value('website_languages')
         # Fields
         for name, field in self.get_fields():
             if issubclass(field, File_Field):
@@ -178,7 +195,6 @@ class DBResource(Resource):
                     value = field.get_value(self, name)
                     if value is not None:
                         handlers.append(value)
-
         # Ok
         return handlers
 
@@ -211,6 +227,17 @@ class DBResource(Resource):
         here = self.get_resource(path)
         for name in here._get_names():
             yield here.get_resource(name)
+
+
+    def get_resource_by_uuid(self, uuid, context,
+            bases_class_id=None, class_id=None):
+        # Get query
+        query = get_resource_by_uuid_query(uuid, bases_class_id, class_id)
+        search = context.database.search(query)
+        # Return resource
+        if not search:
+            return None
+        return search.get_resources(size=1).next()
 
 
     def make_resource_name(self):
@@ -351,7 +378,7 @@ class DBResource(Resource):
 
         # Explicit view, defined by name
         view = getattr(self, name, None)
-        if is_prototype(view, BaseView):
+        if is_prototype(view, ItoolsView):
             context = get_context()
             view = view(resource=self, context=context) # bind
             return view
@@ -367,26 +394,66 @@ class DBResource(Resource):
     # Properties
     ########################################################################
     def get_value(self, name, language=None):
+        # TODO: Use decorator for cache
+        # TODO: Reactivate when ready
+        cache_key = (name, language)
+        #if self._values.has_key(cache_key):
+        #    return self._values[cache_key]
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value(self, name, language)
+        if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
+            # If brain is loaded & field is stored get value from xapian
+            brain_value = self._brain.get_value(name, language)
+            if type(brain_value) is datetime:
+                # Fix tzinfo for datetime values
+                context = get_context()
+                value = context.fix_tzinfo(brain_value)
+            else:
+                value = brain_value
+            value = value or field.default
+            if value is None:
+                # Xapian do not index default value
+                value = field.get_value(self, name, language)
+        else:
+            value = field.get_value(self, name, language)
+        self._values[cache_key] = value
+        return value
 
 
     def set_value(self, name, value, language=None, **kw):
+        # TODO: Use decorator for cache
         field = self.get_field(name)
         if field is None:
-            raise ValueError, 'Field %s do not exist' % name
+            raise ValueError('Field %s do not exist' % name)
         if field.multilingual and language is None:
-            raise ValueError, 'Field %s is multilingual' % name
+            raise ValueError('Field %s is multilingual' % name)
+        self.clear_cache(name, language)
         return field.set_value(self, name, value, language, **kw)
 
 
+    def clear_cache(self, name, language):
+        cache_key = (name, language)
+        if self._values.get(cache_key):
+            del self._values[cache_key]
+        if self._values_title.get(cache_key):
+            del self._values_title[cache_key]
+        self._brain = None
+
+
     def get_value_title(self, name, language=None, mode=None):
+        # TODO: Use decorator for cache
+        # TODO: Reactivate when ready
+        cache_key = (name, language)
+        #if (self._values_title.has_key(cache_key) and
+        #    self._values_title[cache_key].has_key(mode)):
+        #    return self._values_title[cache_key][mode]
         field = self.get_field(name)
         if field is None:
             return None
-        return field.get_value_title(self, name, language, mode)
+        value_title = field.get_value_title(self, name, language, mode)
+        self._values_title.setdefault(cache_key, {})[mode] = value_title
+        return value_title
 
 
     def get_brain_value(self, name):
@@ -426,8 +493,8 @@ class DBResource(Resource):
 
         default = field.get_default()
         if field.multiple:
-            return [ Property(x) for x in default ]
-        return Property(default)
+            return [ MetadataProperty(x, None) for x in default ]
+        return MetadataProperty(default, None)
 
 
     # XXX Backwards compatibility
@@ -548,7 +615,8 @@ class DBResource(Resource):
         values = {}
 
         # Step 1. Automatically index fields
-        languages = self.get_root().get_value('website_languages')
+        root = self.get_root()
+        languages = root.get_value('website_languages')
         for name, field in self.get_fields():
             if not field.indexed and not field.stored:
                 continue
@@ -793,10 +861,7 @@ class DBResource(Resource):
     #######################################################################
     @classmethod
     def get_class_icon(cls, size=16):
-        icon = getattr(cls, 'class_icon%s' % size, None)
-        if icon is None:
-            return None
-        return '/ui/%s' % icon
+        return getattr(cls, 'class_icon%s' % size, None)
 
 
     @classmethod
@@ -813,7 +878,7 @@ class DBResource(Resource):
             return None
         if callable(icon):
             icon = icon(self, **kw)
-        return '/ui/icons/%s/%s' % (size, icon)
+        return '/ui/ikaaro/icons/%s/%s' % (size, icon)
 
 
     #######################################################################
@@ -888,9 +953,6 @@ class DBResource(Resource):
     # Links
     backlinks = DBResource_Backlinks
     links = DBResource_Links
-    # External editor
-    http_put = Put_View
-    http_delete = Delete_View
     # Rest (web services)
     rest_login = Rest_Login
     rest_query = Rest_Query

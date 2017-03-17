@@ -41,7 +41,7 @@ from views import ContextMenu
 class EditLanguageMenu(ContextMenu):
 
     title = MSG(u'Configuration')
-    template = '/ui/generic/edit_language_menu.xml'
+    template = '/ui/ikaaro/generic/edit_language_menu.xml'
     view = None
 
     def action(self):

@@ -89,8 +89,8 @@ class User(DBResource):
     class_id = 'user'
     class_version = '20081217'
     class_title = MSG(u'User')
-    class_icon16 = 'icons/16x16/user.png'
-    class_icon48 = 'icons/48x48/user.png'
+    class_icon16 = '/ui/ikaaro/icons/16x16/user.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/user.png'
     class_views = ['profile', 'edit_account', 'edit_preferences',
                    'edit_password', 'edit_groups']
 
@@ -252,7 +252,7 @@ class Users(Folder):
     class_id = 'users'
     class_title = MSG(u'Users')
     class_description = MSG(u'Manage users.')
-    class_icon48 = 'icons/48x48/userfolder.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/userfolder.png'
     is_content = False
 
     def get_document_types(self):

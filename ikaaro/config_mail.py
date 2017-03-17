@@ -68,7 +68,7 @@ class ConfigMail(DBResource):
     class_id = 'config-mail'
     class_title = MSG(u'Email options')
     class_description = mail_description
-    class_icon48 = 'icons/48x48/mail.png'
+    class_icon48 = '/ui/ikaaro/icons/48x48/mail.png'
 
     # Fields
     contacts = Select_Field(multiple=True, datatype=ContactsOptions,

@@ -74,7 +74,7 @@ class Calendars_View(BrowseForm):
     title = MSG(u'Calendars')
     access = 'is_allowed_to_view'
 
-    styles = ['/ui/agenda/style.css']
+    styles = ['/ui/ikaaro/agenda/style.css']
 
     schema = {'ids': String(multiple=True)}
     query_schema = merge_dicts(BrowseForm.query_schema,
