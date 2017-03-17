@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-28 17:11+CET\n"
+"POT-Creation-Date: 2017-03-17 15:03+CET\n"
 "PO-Revision-Date: 2016-11-28 19:05+0100\n"
 "Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: Itaapy\n"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "%d %s"
 msgstr "%d %s"
 
-#: ../root.py:170
+#: ../root.py:169
 msgid ""
 "%s\n"
 "\n"
@@ -101,7 +101,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../root.py:167
+#: ../root.py:166
 msgid "%s => %s"
 msgstr "%s => %s"
 
@@ -441,6 +441,11 @@ msgstr "Ajouter une règle"
 msgid "Add to ordered list"
 msgstr "Ajouter aux éléments ordonnés"
 
+#: ../root.py:552
+#, fuzzy
+msgid "Add uuid to all resources"
+msgstr "Ajouter une ressource"
+
 #: ../autoadd.py:140
 msgid "Add {class_title}"
 msgstr "Ajouter « {class_title} »"
@@ -547,7 +552,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr "Retour"
 
-#: ../resource_views.py:205
+#: ../resource_views.py:204
 msgid "Backlinks"
 msgstr "Rétroliens"
 
@@ -588,7 +593,7 @@ msgstr "Blog"
 msgid "Blog Post"
 msgstr "Billet de blog"
 
-#: ../widgets.py:880 ../webpage.py:56
+#: ../widgets.py:915 ../webpage.py:56
 msgid "Body"
 msgstr "Corps du message"
 
@@ -748,12 +753,12 @@ msgstr "Choisir la politique de sécurité du site web."
 msgid "Choose your password"
 msgstr "Choisissez votre mot de passe"
 
-#: ../widgets.py:358
+#: ../widgets.py:393
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 "Cliquez sur le bouton \"...\" pour choisir une date (Format: \"yyyy-mm-dd\")."
 
-#: ../widgets.py:460 ../widgets.py:478
+#: ../widgets.py:495 ../widgets.py:513
 msgid "Click on button \"...\" to select a file."
 msgstr "Cliquez sur le bouton \"...\" pour sélectionner un fichier"
 
@@ -813,7 +818,7 @@ msgstr "Commentaire"
 msgid "Commit Log"
 msgstr "Commit Log"
 
-#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:113
+#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:112
 #: ../autoedit.py:43
 msgid "Configuration"
 msgstr "Configuration"
@@ -948,7 +953,7 @@ msgstr "Même page"
 msgid "Cut"
 msgstr "Couper"
 
-#: ../agenda/event.py:516
+#: ../agenda/event.py:496
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1035,7 +1040,7 @@ msgstr "Définir le footer du site."
 msgid "Depth"
 msgstr "Profondeur"
 
-#: ../resource_.py:458 ../widgets.py:875 ../blog/blog.py:41
+#: ../resource_.py:95 ../widgets.py:910 ../blog/blog.py:41
 msgid "Description"
 msgstr "Description"
 
@@ -1079,7 +1084,7 @@ msgctxt "div"
 msgid "Don't have an account?"
 msgstr "Pas encore de compte ?"
 
-#: ../file_views.py:77 ../file_views.py:107
+#: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
 msgstr "Télécharger"
 
@@ -1182,7 +1187,7 @@ msgstr "Erreur"
 msgid "Event"
 msgstr "Événement"
 
-#: ../agenda/event.py:547
+#: ../agenda/event.py:527
 msgid "Event model"
 msgstr "Modèle d'événement"
 
@@ -1244,7 +1249,7 @@ msgstr "Février"
 msgid "Field type"
 msgstr "Type de champs"
 
-#: ../file.py:56 ../widgets.py:93
+#: ../file.py:56 ../widgets.py:99
 msgid "File"
 msgstr "Fichier"
 
@@ -1323,7 +1328,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr "Toute la journée"
 
-#: ../root.py:335
+#: ../root.py:334
 msgid "GNU/Linux"
 msgstr "GNU/Linux"
 
@@ -1484,7 +1489,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
-#: ../root.py:169
+#: ../root.py:168
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
@@ -1529,7 +1534,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr "Les principales fonctionnalités d'iKaaro sont :"
 
-#: ../resource_.py:459 ../widgets.py:876
+#: ../resource_.py:96 ../widgets.py:911
 msgid "Keywords"
 msgstr "Mots clefs"
 
@@ -1589,7 +1594,7 @@ msgctxt "table cell"
 msgid "Lines Changed"
 msgstr "Lignes modifiées"
 
-#: ../resource_views.py:174
+#: ../resource_views.py:173
 msgid "Links"
 msgstr "Liens"
 
@@ -1611,7 +1616,7 @@ msgstr "Emplacement :"
 msgid "Log out"
 msgstr "Déconnexion"
 
-#: ../users_views.py:422 ../resource_views.py:218
+#: ../users_views.py:422 ../resource_views.py:217
 msgid "Login"
 msgstr "Connexion"
 
@@ -1619,7 +1624,7 @@ msgstr "Connexion"
 msgid "Logo"
 msgstr "Logo"
 
-#: ../root.py:336
+#: ../root.py:335
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
@@ -1794,7 +1799,7 @@ msgctxt "title attribute"
 msgid "Next »"
 msgstr "Suivant »"
 
-#: ../widgets.py:211 ../agenda/calendars.py:106 ../datatypes.py:231
+#: ../widgets.py:246 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
 msgstr "Non"
 
@@ -1998,7 +2003,7 @@ msgstr "Document PDF"
 msgid "PDF Document"
 msgstr "Document au format PDF"
 
-#: ../users_views.py:486 ../widgets.py:123
+#: ../users_views.py:486 ../widgets.py:158
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -2204,7 +2209,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "Remplacer"
 
-#: ../widgets.py:879
+#: ../widgets.py:914
 msgid "Replace file"
 msgstr "Remplacer le fichier"
 
@@ -2357,7 +2362,7 @@ msgstr "Sélectionner les comptes des contacts"
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../widgets.py:877
+#: ../widgets.py:912
 msgid "Separated by comma"
 msgstr "Séparés par des virgules"
 
@@ -2369,7 +2374,7 @@ msgstr "Septembre"
 msgid "Set your preferred language and timezone."
 msgstr "Choisissez votre langue et votre fuseau horaire préférés."
 
-#: ../config_access.py:89 ../resource_.py:65
+#: ../config_access.py:89 ../resource_.py:67
 msgid "Share"
 msgstr "Partager"
 
@@ -2511,7 +2516,7 @@ msgstr ""
 msgid "The email address provided is invalid."
 msgstr "L'adresse de courriel est incorrecte, veuillez réessayer."
 
-#: ../agenda/event.py:513
+#: ../agenda/event.py:493
 msgid "The event \"{title}\" has been modified"
 msgstr "L'évènement \"{title}\" a été modifié"
 
@@ -2654,9 +2659,9 @@ msgstr "Fuseau horaire"
 msgid "Tip"
 msgstr "Astuce"
 
-#: ../config_groups.py:97 ../resource_.py:457 ../agenda/calendars.py:91
+#: ../config_groups.py:97 ../resource_.py:94 ../agenda/calendars.py:91
 #: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
-#: ../config_models.py:321 ../widgets.py:873 ../folder_views.py:315
+#: ../config_models.py:321 ../widgets.py:908 ../folder_views.py:315
 msgid "Title"
 msgstr "Titre"
 
@@ -2794,6 +2799,10 @@ msgctxt "label"
 msgid "URI"
 msgstr "URI"
 
+#: ../fields.py:825
+msgid "UUID"
+msgstr ""
+
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr "Fichier de type mime « {mimetype} » inattendu."
@@ -2850,7 +2859,7 @@ msgstr "Méthode de mise à jour"
 msgid "Updated method has been launched"
 msgstr "Une méthode de mise à jour a été lancée"
 
-#: ../scripts/icms-update.py:135
+#: ../../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
 msgstr "Mise à jour vers la version %s"
 
@@ -3026,7 +3035,7 @@ msgstr "Hebdomadaire"
 msgid "Weekly View"
 msgstr "Hebdomadaire"
 
-#: ../resource_views.py:328
+#: ../resource_views.py:327
 msgid "Welcome!"
 msgstr "Bienvenue !"
 
@@ -3038,7 +3047,7 @@ msgstr "Où"
 msgid "Widget to use"
 msgstr "Widget à utiliser"
 
-#: ../root.py:337
+#: ../root.py:336
 msgid "Windows"
 msgstr "Windows"
 
@@ -3066,7 +3075,7 @@ msgstr "Clé de vérification de Yahoo"
 msgid "Yearly"
 msgstr "Annuel"
 
-#: ../widgets.py:210 ../widgets.py:262 ../agenda/calendars.py:106
+#: ../widgets.py:245 ../widgets.py:297 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
 msgstr "Oui"
@@ -3081,7 +3090,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr "Oui"
 
-#: ../resource_views.py:342
+#: ../resource_views.py:341
 msgid "You Are Now Logged out."
 msgstr "Vous êtes maintenant déconnecté."
 
@@ -3095,7 +3104,7 @@ msgstr ""
 "\n"
 " {host}/;login?loginname={userid}"
 
-#: ../resource_views.py:232
+#: ../resource_views.py:231
 msgid "You are already connected"
 msgstr "Vous êtes déjà connecté"
 
@@ -3162,7 +3171,7 @@ msgstr ""
 "Vous avez mal saisi votre mot de passe actuel, votre compte n'a pas été "
 "modifié."
 
-#: ../resource_views.py:313
+#: ../resource_views.py:312
 msgid "You must complete your account informations"
 msgstr "Vous devez compléter vos informations de profil"
 
@@ -3249,7 +3258,7 @@ msgstr "[{title}] a été modifié"
 msgid "huge"
 msgstr "énorme"
 
-#: ../root.py:94
+#: ../root.py:93
 msgid "iKaaro"
 msgstr "iKaaro"
 
