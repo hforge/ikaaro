@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
-"POT-Creation-Date: 2016-11-28 17:11+CET\n"
+"POT-Creation-Date: 2017-03-17 15:03+CET\n"
 "PO-Revision-Date: 2016-11-28 18:56+0100\n"
 "Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: ??\n"
@@ -80,7 +80,7 @@ msgstr ""
 msgid "%d %s"
 msgstr "%d %s"
 
-#: ../root.py:170
+#: ../root.py:169
 msgid ""
 "%s\n"
 "\n"
@@ -94,7 +94,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../root.py:167
+#: ../root.py:166
 msgid "%s => %s"
 msgstr "%s => %s"
 
@@ -433,6 +433,11 @@ msgstr "Regel toevoegen"
 msgid "Add to ordered list"
 msgstr "Toevoegen aan gerangschikte lijst"
 
+#: ../root.py:552
+#, fuzzy
+msgid "Add uuid to all resources"
+msgstr "Bron toevoegen"
+
 #: ../autoadd.py:140
 msgid "Add {class_title}"
 msgstr "{class_title} toevoegen"
@@ -539,7 +544,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr "Terug"
 
-#: ../resource_views.py:205
+#: ../resource_views.py:204
 msgid "Backlinks"
 msgstr "Backlinks"
 
@@ -580,7 +585,7 @@ msgstr "Blog"
 msgid "Blog Post"
 msgstr "Blog-post"
 
-#: ../widgets.py:880 ../webpage.py:56
+#: ../widgets.py:915 ../webpage.py:56
 msgid "Body"
 msgstr "Lichaam"
 
@@ -739,11 +744,11 @@ msgstr "Kies het veiligheidsbeleid."
 msgid "Choose your password"
 msgstr "Kies uw wachtwoord"
 
-#: ../widgets.py:358
+#: ../widgets.py:393
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr "Klik op \"...\" om een datum te kiezen (format: \"jjjj-mm-dd\")."
 
-#: ../widgets.py:460 ../widgets.py:478
+#: ../widgets.py:495 ../widgets.py:513
 msgid "Click on button \"...\" to select a file."
 msgstr "Klik op \"...\" om een bestand te selecteren."
 
@@ -803,7 +808,7 @@ msgstr "Opmerking"
 msgid "Commit Log"
 msgstr "Opmerkingenlog"
 
-#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:113
+#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:112
 #: ../autoedit.py:43
 msgid "Configuration"
 msgstr "Configuratie"
@@ -937,7 +942,7 @@ msgstr "Huidige pagina"
 msgid "Cut"
 msgstr "Knippen"
 
-#: ../agenda/event.py:516
+#: ../agenda/event.py:496
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1024,7 +1029,7 @@ msgstr "Definieer de site-footer."
 msgid "Depth"
 msgstr "Diepte"
 
-#: ../resource_.py:458 ../widgets.py:875 ../blog/blog.py:41
+#: ../resource_.py:95 ../widgets.py:910 ../blog/blog.py:41
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -1066,7 +1071,7 @@ msgctxt "div"
 msgid "Don't have an account?"
 msgstr "Geen account?"
 
-#: ../file_views.py:77 ../file_views.py:107
+#: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
 msgstr "Downloaden"
 
@@ -1169,7 +1174,7 @@ msgstr "Fouten"
 msgid "Event"
 msgstr "Afspraak"
 
-#: ../agenda/event.py:547
+#: ../agenda/event.py:527
 msgid "Event model"
 msgstr "Afspraakmodel"
 
@@ -1231,7 +1236,7 @@ msgstr "Februari"
 msgid "Field type"
 msgstr "Veldtype"
 
-#: ../file.py:56 ../widgets.py:93
+#: ../file.py:56 ../widgets.py:99
 msgid "File"
 msgstr "Bestand"
 
@@ -1310,7 +1315,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr "Hele dag"
 
-#: ../root.py:335
+#: ../root.py:334
 msgid "GNU/Linux"
 msgstr "GNU/Linux"
 
@@ -1471,7 +1476,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr "Interne serverfout"
 
-#: ../root.py:169
+#: ../root.py:168
 msgid "Internal server error"
 msgstr "Interne serverfout"
 
@@ -1516,7 +1521,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr "Belangrijke functies van iKaaro zijn onder andere:"
 
-#: ../resource_.py:459 ../widgets.py:876
+#: ../resource_.py:96 ../widgets.py:911
 msgid "Keywords"
 msgstr "Trefwoorden"
 
@@ -1576,7 +1581,7 @@ msgctxt "table cell"
 msgid "Lines Changed"
 msgstr "Lijnen gewijzigd"
 
-#: ../resource_views.py:174
+#: ../resource_views.py:173
 msgid "Links"
 msgstr "Links"
 
@@ -1598,7 +1603,7 @@ msgstr "Locatie:"
 msgid "Log out"
 msgstr "Uitloggen"
 
-#: ../users_views.py:422 ../resource_views.py:218
+#: ../users_views.py:422 ../resource_views.py:217
 msgid "Login"
 msgstr "Inloggen"
 
@@ -1606,7 +1611,7 @@ msgstr "Inloggen"
 msgid "Logo"
 msgstr "Logo"
 
-#: ../root.py:336
+#: ../root.py:335
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
@@ -1779,7 +1784,7 @@ msgctxt "title attribute"
 msgid "Next »"
 msgstr "Volgend »"
 
-#: ../widgets.py:211 ../agenda/calendars.py:106 ../datatypes.py:231
+#: ../widgets.py:246 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
 msgstr "Nee"
 
@@ -1982,7 +1987,7 @@ msgstr "PDF"
 msgid "PDF Document"
 msgstr "PDF-document"
 
-#: ../users_views.py:486 ../widgets.py:123
+#: ../users_views.py:486 ../widgets.py:158
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -2188,7 +2193,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "Verplaatsen"
 
-#: ../widgets.py:879
+#: ../widgets.py:914
 msgid "Replace file"
 msgstr "Verplaats bestand"
 
@@ -2341,7 +2346,7 @@ msgstr "Selecteer de contactaccounts"
 msgid "Send"
 msgstr "Verzenden"
 
-#: ../widgets.py:877
+#: ../widgets.py:912
 msgid "Separated by comma"
 msgstr "Gescheiden door een komma"
 
@@ -2353,7 +2358,7 @@ msgstr "September"
 msgid "Set your preferred language and timezone."
 msgstr "Stel uw voorkeurstaal en tijdzone in."
 
-#: ../config_access.py:89 ../resource_.py:65
+#: ../config_access.py:89 ../resource_.py:67
 msgid "Share"
 msgstr "Delen"
 
@@ -2495,7 +2500,7 @@ msgstr ""
 msgid "The email address provided is invalid."
 msgstr "Het e-mailadres dat werd ingegeven is niet geldig."
 
-#: ../agenda/event.py:513
+#: ../agenda/event.py:493
 msgid "The event \"{title}\" has been modified"
 msgstr "De afspraak \"{title}\" is gewijzigd"
 
@@ -2638,9 +2643,9 @@ msgstr "Tijdzone"
 msgid "Tip"
 msgstr "Tip"
 
-#: ../config_groups.py:97 ../resource_.py:457 ../agenda/calendars.py:91
+#: ../config_groups.py:97 ../resource_.py:94 ../agenda/calendars.py:91
 #: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
-#: ../config_models.py:321 ../widgets.py:873 ../folder_views.py:315
+#: ../config_models.py:321 ../widgets.py:908 ../folder_views.py:315
 msgid "Title"
 msgstr "Titel"
 
@@ -2778,6 +2783,10 @@ msgctxt "label"
 msgid "URI"
 msgstr "URI"
 
+#: ../fields.py:825
+msgid "UUID"
+msgstr ""
+
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr "Onverwacht bestand van mimetype {mimetype}."
@@ -2834,7 +2843,7 @@ msgstr "Update methoden"
 msgid "Updated method has been launched"
 msgstr "Bijgewerkte methode is gelanceerd"
 
-#: ../scripts/icms-update.py:135
+#: ../../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
 msgstr "Upgraden naar versie %s"
 
@@ -3010,7 +3019,7 @@ msgstr "Wekelijks"
 msgid "Weekly View"
 msgstr "Weekoverzicht"
 
-#: ../resource_views.py:328
+#: ../resource_views.py:327
 msgid "Welcome!"
 msgstr "Welkom!"
 
@@ -3022,7 +3031,7 @@ msgstr "Waar"
 msgid "Widget to use"
 msgstr "Te gebruiken widget"
 
-#: ../root.py:337
+#: ../root.py:336
 msgid "Windows"
 msgstr "Windows"
 
@@ -3050,7 +3059,7 @@ msgstr "Verificatiesleutel Yahoo-site"
 msgid "Yearly"
 msgstr "Jaarlijks"
 
-#: ../widgets.py:210 ../widgets.py:262 ../agenda/calendars.py:106
+#: ../widgets.py:245 ../widgets.py:297 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
 msgstr "Ja"
@@ -3065,7 +3074,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr "Ja"
 
-#: ../resource_views.py:342
+#: ../resource_views.py:341
 msgid "You Are Now Logged out."
 msgstr "U bent nu uitgelogd."
 
@@ -3079,7 +3088,7 @@ msgstr ""
 "\n"
 " {host}/;login?loginname={userid}"
 
-#: ../resource_views.py:232
+#: ../resource_views.py:231
 msgid "You are already connected"
 msgstr "U bent al verbonden"
 
@@ -3146,7 +3155,7 @@ msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 "U hebt uw wachtwoord niet goed ingevoerd, uw account is niet gewijzigd."
 
-#: ../resource_views.py:313
+#: ../resource_views.py:312
 msgid "You must complete your account informations"
 msgstr "U moet uw accountinformatie vervolledigen"
 
@@ -3233,7 +3242,7 @@ msgstr "[{title}] is gewijzigd"
 msgid "huge"
 msgstr "enorm"
 
-#: ../root.py:94
+#: ../root.py:93
 msgid "iKaaro"
 msgstr "iKaaro"
 
