@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2016-11-28 17:11+CET\n"
+"POT-Creation-Date: 2017-03-17 15:03+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -75,7 +75,7 @@ msgstr ""
 msgid "%d %s"
 msgstr ""
 
-#: ../root.py:170
+#: ../root.py:169
 msgid ""
 "%s\n"
 "\n"
@@ -84,7 +84,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../root.py:167
+#: ../root.py:166
 msgid "%s => %s"
 msgstr ""
 
@@ -436,6 +436,11 @@ msgstr "用户"
 msgid "Add to ordered list"
 msgstr "目录"
 
+#: ../root.py:552
+#, fuzzy
+msgid "Add uuid to all resources"
+msgstr "新用户"
+
 #: ../autoadd.py:140
 #, fuzzy
 msgid "Add {class_title}"
@@ -540,7 +545,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr "卸下"
 
-#: ../resource_views.py:205
+#: ../resource_views.py:204
 msgid "Backlinks"
 msgstr ""
 
@@ -584,7 +589,7 @@ msgstr "粘贴"
 msgid "Blog Post"
 msgstr "粘贴"
 
-#: ../widgets.py:880 ../webpage.py:56
+#: ../widgets.py:915 ../webpage.py:56
 msgid "Body"
 msgstr "正文"
 
@@ -759,11 +764,11 @@ msgstr "更改安全设置"
 msgid "Choose your password"
 msgstr "改变内设"
 
-#: ../widgets.py:358
+#: ../widgets.py:393
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 
-#: ../widgets.py:460 ../widgets.py:478
+#: ../widgets.py:495 ../widgets.py:513
 msgid "Click on button \"...\" to select a file."
 msgstr ""
 
@@ -828,7 +833,7 @@ msgstr "新文件"
 msgid "Commit Log"
 msgstr ""
 
-#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:113
+#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:112
 #: ../autoedit.py:43
 #, fuzzy
 msgid "Configuration"
@@ -967,7 +972,7 @@ msgstr ""
 msgid "Cut"
 msgstr "剪切"
 
-#: ../agenda/event.py:516
+#: ../agenda/event.py:496
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -1054,7 +1059,7 @@ msgstr ""
 msgid "Depth"
 msgstr ""
 
-#: ../resource_.py:458 ../widgets.py:875 ../blog/blog.py:41
+#: ../resource_.py:95 ../widgets.py:910 ../blog/blog.py:41
 msgid "Description"
 msgstr ""
 
@@ -1102,7 +1107,7 @@ msgctxt "div"
 msgid "Don't have an account?"
 msgstr "改变内设"
 
-#: ../file_views.py:77 ../file_views.py:107
+#: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
 msgstr ""
 
@@ -1216,7 +1221,7 @@ msgstr "信息"
 msgid "Event"
 msgstr "简易文件"
 
-#: ../agenda/event.py:547
+#: ../agenda/event.py:527
 #, fuzzy
 msgid "Event model"
 msgstr "简易文件"
@@ -1285,7 +1290,7 @@ msgstr ""
 msgid "Field type"
 msgstr ""
 
-#: ../file.py:56 ../widgets.py:93
+#: ../file.py:56 ../widgets.py:99
 msgid "File"
 msgstr ""
 
@@ -1370,7 +1375,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr ""
 
-#: ../root.py:335
+#: ../root.py:334
 msgid "GNU/Linux"
 msgstr ""
 
@@ -1539,7 +1544,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../root.py:169
+#: ../root.py:168
 msgid "Internal server error"
 msgstr ""
 
@@ -1586,7 +1591,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../resource_.py:459 ../widgets.py:876
+#: ../resource_.py:96 ../widgets.py:911
 msgid "Keywords"
 msgstr ""
 
@@ -1653,7 +1658,7 @@ msgctxt "table cell"
 msgid "Lines Changed"
 msgstr "改换"
 
-#: ../resource_views.py:174
+#: ../resource_views.py:173
 #, fuzzy
 msgid "Links"
 msgstr "链接"
@@ -1679,7 +1684,7 @@ msgstr "登录"
 msgid "Log out"
 msgstr "登录"
 
-#: ../users_views.py:422 ../resource_views.py:218
+#: ../users_views.py:422 ../resource_views.py:217
 msgid "Login"
 msgstr "登录"
 
@@ -1687,7 +1692,7 @@ msgstr "登录"
 msgid "Logo"
 msgstr ""
 
-#: ../root.py:336
+#: ../root.py:335
 msgid "Mac OS X"
 msgstr ""
 
@@ -1873,7 +1878,7 @@ msgctxt "title attribute"
 msgid "Next »"
 msgstr ""
 
-#: ../widgets.py:211 ../agenda/calendars.py:106 ../datatypes.py:231
+#: ../widgets.py:246 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
 msgstr ""
 
@@ -2096,7 +2101,7 @@ msgstr ""
 msgid "PDF Document"
 msgstr "新文件"
 
-#: ../users_views.py:486 ../widgets.py:123
+#: ../users_views.py:486 ../widgets.py:158
 #, fuzzy
 msgid "Password"
 msgstr "密码"
@@ -2322,7 +2327,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "查阅"
 
-#: ../widgets.py:879
+#: ../widgets.py:914
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -2503,7 +2508,7 @@ msgstr "你必须选择删除成员."
 msgid "Send"
 msgstr "发送"
 
-#: ../widgets.py:877
+#: ../widgets.py:912
 msgid "Separated by comma"
 msgstr ""
 
@@ -2516,7 +2521,7 @@ msgstr ""
 msgid "Set your preferred language and timezone."
 msgstr "选择你的语言"
 
-#: ../config_access.py:89 ../resource_.py:65
+#: ../config_access.py:89 ../resource_.py:67
 msgid "Share"
 msgstr ""
 
@@ -2673,7 +2678,7 @@ msgstr "文件名中含有不符规定的符号,请更名."
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: ../agenda/event.py:513
+#: ../agenda/event.py:493
 #, fuzzy
 msgid "The event \"{title}\" has been modified"
 msgstr "预设语言已被改变."
@@ -2829,9 +2834,9 @@ msgstr ""
 msgid "Tip"
 msgstr ""
 
-#: ../config_groups.py:97 ../resource_.py:457 ../agenda/calendars.py:91
+#: ../config_groups.py:97 ../resource_.py:94 ../agenda/calendars.py:91
 #: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
-#: ../config_models.py:321 ../widgets.py:873 ../folder_views.py:315
+#: ../config_models.py:321 ../widgets.py:908 ../folder_views.py:315
 msgid "Title"
 msgstr "名称"
 
@@ -2954,6 +2959,10 @@ msgctxt "label"
 msgid "URI"
 msgstr ""
 
+#: ../fields.py:825
+msgid "UUID"
+msgstr ""
+
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
@@ -3016,7 +3025,7 @@ msgstr "更新目录"
 msgid "Updated method has been launched"
 msgstr ""
 
-#: ../scripts/icms-update.py:135
+#: ../../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
 msgstr ""
 
@@ -3204,7 +3213,7 @@ msgstr "名称"
 msgid "Weekly View"
 msgstr ""
 
-#: ../resource_views.py:328
+#: ../resource_views.py:327
 msgid "Welcome!"
 msgstr ""
 
@@ -3216,7 +3225,7 @@ msgstr ""
 msgid "Widget to use"
 msgstr ""
 
-#: ../root.py:337
+#: ../root.py:336
 msgid "Windows"
 msgstr ""
 
@@ -3245,7 +3254,7 @@ msgstr ""
 msgid "Yearly"
 msgstr ""
 
-#: ../widgets.py:210 ../widgets.py:262 ../agenda/calendars.py:106
+#: ../widgets.py:245 ../widgets.py:297 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
 msgstr ""
@@ -3260,7 +3269,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:342
+#: ../resource_views.py:341
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -3271,7 +3280,7 @@ msgid ""
 " {host}/;login?loginname={userid}"
 msgstr ""
 
-#: ../resource_views.py:232
+#: ../resource_views.py:231
 msgid "You are already connected"
 msgstr ""
 
@@ -3331,7 +3340,7 @@ msgstr ""
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
-#: ../resource_views.py:313
+#: ../resource_views.py:312
 #, fuzzy
 msgid "You must complete your account informations"
 msgstr "必须选择一或二个修正版."
@@ -3418,7 +3427,7 @@ msgstr "预设语言已被改变."
 msgid "huge"
 msgstr "改换"
 
-#: ../root.py:94
+#: ../root.py:93
 msgid "iKaaro"
 msgstr ""
 
