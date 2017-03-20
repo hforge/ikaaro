@@ -307,7 +307,7 @@ class Server(WebServer):
     modules = []
 
     def __init__(self, target, read_only=False, cache_size=None,
-                 profile_space=False):
+                 profile_space=False, benchmark=False):
         target = lfs.get_absolute_path(target)
         self.target = target
         self.read_only = read_only
@@ -323,8 +323,8 @@ class Server(WebServer):
         self.smtp_from = config.get_value('smtp-from')
 
         # Full-text indexing
-        self.index_text =  config.get_value('index-text', type=Boolean,
-                                            default=True)
+        self.index_text = config.get_value('index-text', type=Boolean,
+                                           default=True)
         # Accept cors
         self.accept_cors = config.get_value(
             'accept-cors', type=Boolean, default=False)
@@ -362,7 +362,7 @@ class Server(WebServer):
 
         # Initialize
         access_log = '%s/log/access' % target
-        super(Server, self).__init__(root, access_log=access_log)
+        super(Server, self).__init__(root, access_log=access_log, benchmark=benchmark)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
