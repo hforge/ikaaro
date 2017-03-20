@@ -362,6 +362,14 @@ class Text_Field(Metadata_Field):
     parameters_schema = {'lang': String} # useful only when multilingual
     widget = TextWidget
 
+    def get_default(self):
+        if self.default is not None:
+            if self.multilingual:
+                # Default value is multilingual too
+                return self.default.gettext()
+            return self.default
+        return self.get_datatype().get_default()
+
 
 
 class Textarea_Field(Text_Field):
