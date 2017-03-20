@@ -11,8 +11,10 @@ ikaaro/locale/*.mo
 *.xml.it
 *.xml.zh
 *.xml.nl
+*.xml.de
 *.xhtml.es
 *.xhtml.fr
 *.xhtml.it
 *.xhtml.zh
 *.xhtml.nl
+*.xhtml.de
