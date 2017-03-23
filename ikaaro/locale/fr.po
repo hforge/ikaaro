@@ -8,17 +8,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 16:03+CET\n"
-"PO-Revision-Date: 2016-11-28 19:05+0100\n"
-"Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
+"PO-Revision-Date: 2017-03-23 11:13+0000\n"
+"Last-Translator: Julien <julien.ravat@bepatient.com>\n"
 "Language-Team: Itaapy\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2.9\n"
 
 #: ../messages.py:72
 msgid ""
@@ -342,10 +342,9 @@ msgid "A new resource has been added."
 msgstr "Nouvelle ressource ajoutée."
 
 #: ../ui/ikaaro/root/api_docs.xml.en:7
-#, fuzzy
 msgctxt "heading"
 msgid "API documentation"
-msgstr "Document au format PDF"
+msgstr "Documentation de l'API"
 
 #: ../ui/ikaaro/update_instance.xml.en:18
 msgctxt "table cell"
@@ -370,10 +369,9 @@ msgid "Access rule"
 msgstr "Règle d'accès"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:21
-#, fuzzy
 msgctxt "heading"
 msgid "Access rules"
-msgstr "Règle d'accès"
+msgstr "Règles d'accès"
 
 #: ../messages.py:64
 msgid "Action impossible (the resources are in use): {resources}."
@@ -462,9 +460,8 @@ msgid "Add to ordered list"
 msgstr "Ajouter aux éléments ordonnés"
 
 #: ../root.py:552
-#, fuzzy
 msgid "Add uuid to all resources"
-msgstr "Ajouter une ressource"
+msgstr "Ajouter un uuid à toutes les ressources"
 
 #: ../autoadd.py:140
 msgid "Add {class_title}"
@@ -564,10 +561,9 @@ msgid "Author's mail"
 msgstr "Email de l'auteur"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:17
-#, fuzzy
 msgctxt "heading"
 msgid "Authorized methods"
-msgstr "Méthode de mise à jour"
+msgstr "Méthodes autorisées"
 
 #: ../users.py:105
 msgid "Avatar"
@@ -850,12 +846,11 @@ msgstr "Commit Log"
 
 #: ../api/views.py:198
 msgid "Commit's author name"
-msgstr ""
+msgstr "Auteur du commit"
 
 #: ../api/views.py:199
-#, fuzzy
 msgid "Commit's title"
-msgstr "Cls title"
+msgstr "Titre du commit"
 
 #: ../config.py:51 ../config.py:287 ../skins.py:263 ../root.py:112
 #: ../autoedit.py:43
@@ -1084,7 +1079,6 @@ msgid "Description"
 msgstr "Description"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:15
-#, fuzzy
 msgctxt "heading"
 msgid "Description"
 msgstr "Description"
@@ -1342,10 +1336,9 @@ msgid "Footer"
 msgstr "Pied de page"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:52
-#, fuzzy
 msgctxt "heading"
 msgid "Form"
-msgstr "Formatage"
+msgstr "Formulaire"
 
 #: ../ui/ikaaro/website/broken_links.xml.en:8
 msgctxt "paragraph"
@@ -1878,10 +1871,9 @@ msgid "No resource to update"
 msgstr "Aucune ressource à mettre à jour"
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:8
-#, fuzzy
 msgctxt "legend"
 msgid "Not Allowed"
-msgstr "Pas ordonné"
+msgstr "Non autorisé"
 
 #: ../ui/ikaaro/root/not_found.xml.en:8
 msgctxt "legend"
@@ -2126,10 +2118,9 @@ msgid "Please enter the words below"
 msgstr "Veuillez saisir les mots ci-dessous"
 
 #: ../ui/ikaaro/root/unavailable.xml.en:9
-#, fuzzy
 msgctxt "paragraph"
 msgid "Please try again later."
-msgstr "Une erreur s'est produite, veuillez réessayer plus tard."
+msgstr "Veuillez réessayer plus tard."
 
 #: ../utils.py:119
 msgid "Portuguese"
@@ -2296,10 +2287,9 @@ msgid "Required"
 msgstr "Obligatoire"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:42 ../ui/ikaaro/root/api_docs.xml.en:57
-#, fuzzy
 msgctxt "table cell"
 msgid "Required ?"
-msgstr "Obligatoire"
+msgstr "Obligatoire ?"
 
 #: ../users_views.py:436
 msgid "Resend Confirmation"
@@ -2462,11 +2452,11 @@ msgstr "Septembre"
 
 #: ../api/views.py:319
 msgid "Server's PID"
-msgstr ""
+msgstr "PID du serveur"
 
 #: ../api/views.py:320
 msgid "Server's port"
-msgstr ""
+msgstr "Port du serveur"
 
 #: ../api/views.py:318
 msgid "Server's start timestamp"
@@ -2684,19 +2674,17 @@ msgid "The requested URL « ${uri} » was not found on this server."
 msgstr "L'URL demandée « ${uri} » est introuvable sur ce serveur."
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:9
-#, fuzzy
 msgctxt "paragraph"
 msgid "The requested «${method}» on « ${uri} » is not allowed."
-msgstr "L'URL demandée « ${uri} » est introuvable sur ce serveur."
+msgstr "«${method}» sur « ${uri} » n'est pas autorisé."
 
 #: ../users_views.py:509
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
 #: ../api/views.py:117
-#, fuzzy
 msgid "The uuid of a resource in DB"
-msgstr "Ajouter une ressource"
+msgstr "UUID de la ressource en base de données"
 
 #: ../config_theme.py:33
 msgid "Theme"
@@ -2762,7 +2750,7 @@ msgstr "This program is free software:"
 #: ../ui/ikaaro/root/unavailable.xml.en:9
 msgctxt "paragraph"
 msgid "This website is under maintenance."
-msgstr ""
+msgstr "Le site est en maintenance."
 
 #: ../datatypes.py:193 ../datatypes.py:205
 msgid "Thursday"
@@ -2940,17 +2928,16 @@ msgstr "URI"
 #: ../ui/ikaaro/root/api_docs.xml.en:37
 msgctxt "heading"
 msgid "URI Query"
-msgstr ""
+msgstr "URI de la requête"
 
 #: ../fields.py:825
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #: ../ui/ikaaro/root/unavailable.xml.en:8
-#, fuzzy
 msgctxt "legend"
 msgid "Unavailable"
-msgstr "Rôles disponibles"
+msgstr "Non disponible"
 
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
