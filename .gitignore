@@ -13,9 +13,13 @@ ikaaro/environment.json
 *.xml.zh
 *.xml.nl
 *.xml.de
+*.xml.ca
+*.xml.nl_BE
 *.xhtml.es
 *.xhtml.fr
 *.xhtml.it
 *.xhtml.zh
 *.xhtml.nl
 *.xhtml.de
+*.xhtml.ca
+*.xhtml.nl_BE
