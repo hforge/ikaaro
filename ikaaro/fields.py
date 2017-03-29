@@ -389,25 +389,21 @@ class URI_Field(Metadata_Field):
             languages = [None]
 
         for lang in languages:
-            prop = resource.metadata.get_property(field_name, lang)
-            if prop is None:
+            value = resource.get_value(field_name, lang)
+            if not value:
                 continue
             if self.multiple:
                 # Multiple
-                for x in prop:
-                    value = x.value
-                    if not value:
+                for x in value:
+                    if not x:
                         continue
                     # Get the reference, path and view
-                    ref, path, view = split_reference(value)
+                    ref, path, view = split_reference(x)
                     if ref.scheme:
                         continue
                     link = base.resolve2(path)
                     links.add(str(link))
             else:
-                value = prop.value
-                if not value:
-                    continue
                 # Get the reference, path and view
                 ref, path, view = split_reference(value)
                 if ref.scheme:
@@ -425,18 +421,17 @@ class URI_Field(Metadata_Field):
             languages = [None]
 
         for lang in languages:
-            prop = resource.metadata.get_property(field_name, lang)
-            if prop is None:
+            value = resource.get_value(field_name, lang)
+            if not value:
                 continue
             if self.multiple:
                 # Multiple
                 new_values = []
-                for p in prop:
-                    value = p.value
-                    if not value:
+                for x in value:
+                    if not x:
                         continue
                     # Get the reference, path and view
-                    ref, path, view = split_reference(value)
+                    ref, path, view = split_reference(x)
                     if ref.scheme:
                         continue
                     path = old_base.resolve2(path)
@@ -450,9 +445,6 @@ class URI_Field(Metadata_Field):
                 self._set_value(resource, field_name, new_values, lang)
             else:
                 # Singleton
-                value = prop.value
-                if not value:
-                    continue
                 # Get the reference, path and view
                 ref, path, view = split_reference(value)
                 if ref.scheme:
@@ -473,18 +465,17 @@ class URI_Field(Metadata_Field):
             languages = [None]
 
         for lang in languages:
-            prop = resource.metadata.get_property(field_name, lang)
-            if prop is None:
+            value = resource.get_value(field_name, lang)
+            if not value:
                 continue
             if self.multiple:
                 # Multiple
                 new_values = []
-                for p in prop:
-                    value = p.value
-                    if not value:
+                for x in value:
+                    if not x:
                         continue
                     # Get the reference, path and view
-                    ref, path, view = split_reference(value)
+                    ref, path, view = split_reference(x)
                     if ref.scheme:
                         continue
                     # Calculate the old absolute path
@@ -497,9 +488,6 @@ class URI_Field(Metadata_Field):
                 self._set_value(resource, field_name, new_values, lang)
             else:
                 # Singleton
-                value = prop.value
-                if not value:
-                    continue
                 # Get the reference, path and view
                 ref, path, view = split_reference(value)
                 if ref.scheme:

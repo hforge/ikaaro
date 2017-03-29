@@ -24,22 +24,21 @@ def update_abspath_links(self, resource, field_name, source, target, languages,
         languages = [None]
 
     for lang in languages:
-        prop = resource.metadata.get_property(field_name, lang)
-        if prop is None:
+        value = resource.get_value(field_name, lang)
+        if not value:
             continue
         if self.multiple:
             # Multiple
             new_values = []
-            for p in prop:
-                value = p.value
-                if not value:
+            for x in value:
+                if not x:
                     continue
-                if not value.startswith('/'):
+                if not x.startswith('/'):
                     # In Share_Field, "everybody" / "authenticated" are not abspaths
-                    new_values.append(value)
+                    new_values.append(x)
                 else:
                     # Get the reference, path and view
-                    ref, path, view = split_reference(value)
+                    ref, path, view = split_reference(x)
                     if ref.scheme:
                         continue
                     path = old_base.resolve2(path)
@@ -49,13 +48,10 @@ def update_abspath_links(self, resource, field_name, source, target, languages,
                         new_value = str(target) + view
                         new_values.append(new_value)
                     else:
-                        new_values.append(p)
+                        new_values.append(x)
             self._set_value(resource, field_name, new_values, lang)
         else:
             # Singleton
-            value = prop.value
-            if not value:
-                continue
             if not value.startswith('/'):
                 # In Share_Field, "everybody" / "authenticated" are not abspaths
                 continue
@@ -77,25 +73,21 @@ def get_abspath_links(self, links, resource, field_name, languages):
         languages = [None]
 
     for lang in languages:
-        prop = resource.metadata.get_property(field_name, lang)
-        if prop is None:
+        value = resource.get_value(field_name, lang)
+        if not value:
             continue
         if self.multiple:
             # Multiple
-            for x in prop:
-                value = x.value
-                if not value:
+            for x in value:
+                if not x:
                     continue
-                if value.startswith('/'):
+                if x.startswith('/'):
                     # Get the reference, path and view
-                    ref, path, view = split_reference(value)
+                    ref, path, view = split_reference(x)
                     if ref.scheme:
                         continue
                     links.add(str(path))
         else:
-            value = prop.value
-            if not value:
-                continue
             if value.startswith('/'):
                 # Get the reference, path and view
                 ref, path, view = split_reference(value)
