@@ -114,6 +114,8 @@ class FileWidget(Widget):
     <label class="language" for="${id}" stl:if="language" >${language}</label>
     """)
 
+    download_view = ';get_file'
+    image_view = ';get_image'
     width = 128
     height = 128
     fit = 1
@@ -125,23 +127,31 @@ class FileWidget(Widget):
             self.field_name, language=self.language_name)
         if handler is None:
             return None
-        # Params
-        params = 'name={field_name}'
-        if self.language_name:
-            params += '&language={language_name}'
         # Download link
-        kw = {'field_name': self.field_name,
-              'width': self.width,
-              'height': self.height,
-              'language_name': self.language_name}
-        link = ';get_file?' + params.format(**kw)
+        params = self._preview_download_params()
+        link = self.download_view + params
         # Image link
         image = None
         if isinstance(handler, Image):
-            image = ';get_image?width={width}&height={height}&' + params
-            image = image.format(**kw)
+            params = self._preview_image_params()
+            image = self.image_view + params
         # Ok
         return {'link': link, 'image': image}
+
+
+    def _preview_download_params(self):
+        params = '?name={field_name}'
+        if self.language_name:
+            params += '&language={language_name}'
+        kw = {'field_name': self.field_name,
+              'language_name': self.language_name}
+        return params.format(**kw)
+
+
+    def _preview_image_params(self):
+        dl_params = self._preview_download_params()
+        kw = {'width': self.width, 'height': self.height}
+        return dl_params + '&{width}&height={height}'.format(**kw)
 
 
 
