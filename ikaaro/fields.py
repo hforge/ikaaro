@@ -441,7 +441,7 @@ class URI_Field(Metadata_Field):
                         new_value = str(new_base.get_pathto(target)) + view
                         new_values.append(new_value)
                     else:
-                        new_values.append(p)
+                        new_values.append(x)
                 self._set_value(resource, field_name, new_values, lang)
             else:
                 # Singleton
