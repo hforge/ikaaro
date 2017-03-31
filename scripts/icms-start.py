@@ -46,10 +46,13 @@ if __name__ == '__main__':
         help="Do not check the database consistency.")
     parser.add_option(
         '--profile-time', action="store_true", default=False,
-        help="Write profile information tot the 'log/profile' file.")
+        help="Write profile information to the 'log/profile' file.")
     parser.add_option(
         '--profile-space', action="store_true", default=False,
         help="Enable remote monitoring by guppy, http://guppy-pe.sf.net/")
+    parser.add_option(
+        '--benchmark', action='store_true', default=False,
+        help="Write benchmark information to the 'log/benchmark file.")
 
     # Parse arguments
     options, args = parser.parse_args()
@@ -60,7 +63,8 @@ if __name__ == '__main__':
     target = args[0]
     # Set-up the server
     server = Server(target, read_only=options.read_only,
-                    profile_space=options.profile_space)
+                    profile_space=options.profile_space,
+                    benchmark=options.benchmark)
     # Check server
     successfully_init = server.check_consistency(options.quick)
     if not successfully_init:
