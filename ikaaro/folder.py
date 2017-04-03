@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from cStringIO import StringIO
+from datetime import datetime
 from zipfile import ZipFile
 
 # Import from itools
@@ -277,10 +278,17 @@ class Folder(DBResource):
         # Events, add
         resource = self.get_resource(target_path)
         database.add_resource(resource)
+        # Set ctime and mtime
+        context = get_context()
+        now = context.fix_tzinfo(datetime.now())
+        resource.set_value('ctime', now)
+        resource.set_value('mtime', now)
         # Set UUID
         resource.set_uuid()
         for x in resource.traverse_resources():
             x.set_uuid()
+            x.set_value('ctime', now)
+            x.set_value('mtime', now)
         # Ok
         return resource
 
