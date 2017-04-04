@@ -783,6 +783,7 @@ class Server(WebServer):
         context.is_cron = True
 
         # Go
+        catalog = database.catalog
         query = RangeQuery('next_time_event', None, context.timestamp)
         for brain in database.search(query).get_documents():
             payload = pickle.loads(brain.next_time_event_payload)
@@ -794,9 +795,7 @@ class Server(WebServer):
                 log_error('Cron error\n' + format_exc())
                 context.root.alert_on_internal_server_error(context)
             # Reindex resource without committing
-            catalog = database.catalog
-            catalog.unindex_document(str(resource.abspath))
-            catalog.index_document(resource.get_catalog_values())
+            catalog.index_document(resource)
             catalog.save_changes()
 
         # Save changes
