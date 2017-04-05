@@ -298,6 +298,12 @@ class ServerLoop(Loop):
         proxy.run()
 
 
+    def stop(self, signum, frame):
+        print 'Shutting down the server...'
+        self.server.close()
+        self.quit()
+
+
 
 class Server(WebServer):
 
@@ -361,8 +367,9 @@ class Server(WebServer):
         context.server = self
 
         # Initialize
+        proxy = super(Server, self)
         access_log = '%s/log/access' % target
-        super(Server, self).__init__(root, access_log=access_log)
+        proxy.__init__(root, access_log=access_log)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -458,7 +465,7 @@ class Server(WebServer):
             try:
                 self.loop.run()
             except KeyboardInterrupt:
-                self.close()
+                pass
         # Ok
         return True
 
@@ -552,10 +559,14 @@ class Server(WebServer):
         return pid_exists(pid)
 
 
+    def close(self):
+        self.database.close()
+
+
     def stop(self, force=False):
+        print 'Stoping server...'
         proxy = super(Server, self)
         proxy.stop()
-        print 'Stoping server...'
         self.kill(force)
 
 
