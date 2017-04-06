@@ -45,5 +45,5 @@ if __name__ == '__main__':
 
     # Action!
     for target in args:
-        server = Server(target)
+        server = Server(target, read_only=True)
         server.stop(force=options.force)
