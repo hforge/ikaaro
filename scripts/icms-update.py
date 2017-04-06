@@ -233,3 +233,5 @@ if __name__ == '__main__':
                options.profile)
     else:
         update(parser, options, target)
+    # Ok
+    exit(0)

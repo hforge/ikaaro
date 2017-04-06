@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from sys import exit
 from optparse import OptionParser
 
 # Import from itools
@@ -45,5 +46,11 @@ if __name__ == '__main__':
 
     # Action!
     for target in args:
-        server = Server(target, read_only=True)
+        try:
+            server = Server(target, read_only=True)
+        except LookupError:
+            print('Error: {} instance do not exists'.format(target))
+            exit(1)
         server.stop(force=options.force)
+    # Ok
+    exit(0)

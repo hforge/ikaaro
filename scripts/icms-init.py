@@ -20,6 +20,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 import sys
+from sys import exit
 
 # Import from itools
 import itools
@@ -89,3 +90,5 @@ if __name__ == '__main__':
                options.profile)
     else:
         init(parser, options, target)
+    # Ok
+    exit(0)
