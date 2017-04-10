@@ -3,15 +3,15 @@ msgstr ""
 "Project-Id-Version: 0.3.0\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 16:03+CET\n"
-"PO-Revision-Date: 2016-11-28 18:56+0100\n"
-"Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
+"PO-Revision-Date: 2017-04-10 11:12+0000\n"
+"Last-Translator: Verba-Translations <translators@bepatient.com>\n"
 "Language-Team: ??\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Weblate 2.9\n"
 
 #: ../messages.py:72
 msgid ""
@@ -318,9 +318,8 @@ msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr "<p id=\"event-owner\">Aangemaakt door <em>{owner}</em></p>"
 
 #: ../api/views.py:231
-#, fuzzy
 msgid "A class_id registered in DB"
-msgstr "Al geregistreerd"
+msgstr "Een klasse_id geregistreerd in DB"
 
 #: ../messages.py:47
 msgid "A given name already exists."
@@ -335,10 +334,9 @@ msgid "A new resource has been added."
 msgstr "Er is een nieuwe bron toegevoegd."
 
 #: ../ui/ikaaro/root/api_docs.xml.en:7
-#, fuzzy
 msgctxt "heading"
 msgid "API documentation"
-msgstr "PDF-document"
+msgstr "API-documentatie"
 
 #: ../ui/ikaaro/update_instance.xml.en:18
 msgctxt "table cell"
@@ -363,10 +361,9 @@ msgid "Access rule"
 msgstr "Toegangsregel"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:21
-#, fuzzy
 msgctxt "heading"
 msgid "Access rules"
-msgstr "Toegangsregel"
+msgstr "Toegangsregels"
 
 #: ../messages.py:64
 msgid "Action impossible (the resources are in use): {resources}."
@@ -454,9 +451,8 @@ msgid "Add to ordered list"
 msgstr "Toevoegen aan gerangschikte lijst"
 
 #: ../root.py:552
-#, fuzzy
 msgid "Add uuid to all resources"
-msgstr "Bron toevoegen"
+msgstr "Een uuid aan alle bronnen toevoegen"
 
 #: ../autoadd.py:140
 msgid "Add {class_title}"
@@ -556,10 +552,9 @@ msgid "Author's mail"
 msgstr "Mail van auteur"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:17
-#, fuzzy
 msgctxt "heading"
 msgid "Authorized methods"
-msgstr "Update methoden"
+msgstr "Toegelaten methoden"
 
 #: ../users.py:105
 msgid "Avatar"
@@ -840,12 +835,11 @@ msgstr "Opmerkingenlog"
 
 #: ../api/views.py:198
 msgid "Commit's author name"
-msgstr ""
+msgstr "Auteur van het commentaar"
 
 #: ../api/views.py:199
-#, fuzzy
 msgid "Commit's title"
-msgstr "Cls title"
+msgstr "Titel van het commentaar"
 
 #: ../config.py:51 ../config.py:287 ../skins.py:263 ../root.py:112
 #: ../autoedit.py:43
@@ -1073,7 +1067,6 @@ msgid "Description"
 msgstr "Beschrijving"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:15
-#, fuzzy
 msgctxt "heading"
 msgid "Description"
 msgstr "Beschrijving"
@@ -1331,7 +1324,7 @@ msgstr "Footer"
 #: ../ui/ikaaro/root/api_docs.xml.en:52
 msgctxt "heading"
 msgid "Form"
-msgstr ""
+msgstr "Formulier"
 
 #: ../ui/ikaaro/website/broken_links.xml.en:8
 msgctxt "paragraph"
@@ -1862,10 +1855,9 @@ msgid "No resource to update"
 msgstr "Geen bron bij te werken"
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:8
-#, fuzzy
 msgctxt "legend"
 msgid "Not Allowed"
-msgstr "Niet gerangschikt"
+msgstr "Niet toegestaan"
 
 #: ../ui/ikaaro/root/not_found.xml.en:8
 msgctxt "legend"
@@ -2075,7 +2067,7 @@ msgstr "Pad"
 #: ../ui/ikaaro/root/api_docs.xml.en:24
 msgctxt "heading"
 msgid "Path query"
-msgstr ""
+msgstr "Path aanvraag"
 
 #: ../cc.py:217 ../users.py:74
 msgid "Pending confirmation"
@@ -2109,10 +2101,9 @@ msgid "Please enter the words below"
 msgstr "Voer de onderstaande woorden in"
 
 #: ../ui/ikaaro/root/unavailable.xml.en:9
-#, fuzzy
 msgctxt "paragraph"
 msgid "Please try again later."
-msgstr "Er is een fout opgetreden, probeer het later nog eens."
+msgstr "Probeer het later nog eens."
 
 #: ../utils.py:119
 msgid "Portuguese"
@@ -2142,7 +2133,7 @@ msgstr "Voorkeurstaal"
 
 #: ../api/views.py:161
 msgid "Pretty ?"
-msgstr ""
+msgstr "Mooi?"
 
 #: ../folder_views.py:739
 msgid "Preview Content"
@@ -2279,10 +2270,9 @@ msgid "Required"
 msgstr "Verplicht"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:42 ../ui/ikaaro/root/api_docs.xml.en:57
-#, fuzzy
 msgctxt "table cell"
 msgid "Required ?"
-msgstr "Verplicht"
+msgstr "Verplicht?"
 
 #: ../users_views.py:436
 msgid "Resend Confirmation"
@@ -2360,7 +2350,7 @@ msgstr "Bronnen niet gerangschikt."
 #: ../ui/ikaaro/root/api_docs.xml.en:67
 msgctxt "heading"
 msgid "Response schema"
-msgstr ""
+msgstr "Antwoordschema"
 
 #: ../ui/ikaaro/website/search.xml.en:11
 msgctxt "heading"
@@ -2377,7 +2367,7 @@ msgstr "Rij verwijderd."
 
 #: ../api/views.py:196
 msgid "SHA of the commit"
-msgstr ""
+msgstr "SHA van de verbintenis"
 
 #: ../datatypes.py:195 ../datatypes.py:207
 msgid "Saturday"
@@ -2445,15 +2435,15 @@ msgstr "September"
 
 #: ../api/views.py:319
 msgid "Server's PID"
-msgstr ""
+msgstr "PID van de server"
 
 #: ../api/views.py:320
 msgid "Server's port"
-msgstr ""
+msgstr "Serverpoort"
 
 #: ../api/views.py:318
 msgid "Server's start timestamp"
-msgstr ""
+msgstr "Starttijdstempel van de server"
 
 #: ../users_views.py:233
 msgid "Set your preferred language and timezone."
@@ -2594,11 +2584,11 @@ msgstr "De wijzigingen zijn opgeslagen."
 
 #: ../api/views.py:235
 msgid "The class_id of the resource cls"
-msgstr ""
+msgstr "De klasse_ id van de cls-bron"
 
 #: ../api/views.py:234
 msgid "The class_title of the resource cls"
-msgstr ""
+msgstr "de klasse_titel van de cls-bron"
 
 #: ../messages.py:29
 msgid "The document name contains illegal characters, choose another one."
@@ -2668,20 +2658,17 @@ msgstr ""
 "De aangevraagde URL « ${uri} » kon niet worden gevonden op deze server."
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:9
-#, fuzzy
 msgctxt "paragraph"
 msgid "The requested «${method}» on « ${uri} » is not allowed."
-msgstr ""
-"De aangevraagde URL « ${uri} » kon niet worden gevonden op deze server."
+msgstr "De aangevraagde «${method}» op « ${uri} » is niet toegestaan."
 
 #: ../users_views.py:509
 msgid "The user is already here."
 msgstr "De gebruiker is hier al."
 
 #: ../api/views.py:117
-#, fuzzy
 msgid "The uuid of a resource in DB"
-msgstr "Bron toevoegen"
+msgstr "De uuid van de bron in de DB"
 
 #: ../config_theme.py:33
 msgid "Theme"
@@ -2746,7 +2733,7 @@ msgstr "Dit programma is gratis software:"
 #: ../ui/ikaaro/root/unavailable.xml.en:9
 msgctxt "paragraph"
 msgid "This website is under maintenance."
-msgstr ""
+msgstr "Er worden onderhoudswerken uitgevoerd aan deze website."
 
 #: ../datatypes.py:193 ../datatypes.py:205
 msgid "Thursday"
@@ -2783,7 +2770,6 @@ msgstr "Titel"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:28 ../ui/ikaaro/root/api_docs.xml.en:41
 #: ../ui/ikaaro/root/api_docs.xml.en:56 ../ui/ikaaro/root/api_docs.xml.en:71
-#, fuzzy
 msgctxt "table cell"
 msgid "Title"
 msgstr "Titel"
@@ -2893,7 +2879,6 @@ msgid "Type"
 msgstr "Type"
 
 #: ../ui/ikaaro/root/api_docs.xml.en:72
-#, fuzzy
 msgctxt "table cell"
 msgid "Type"
 msgstr "Type"
@@ -2926,16 +2911,16 @@ msgstr "URI"
 #: ../ui/ikaaro/root/api_docs.xml.en:37
 msgctxt "heading"
 msgid "URI Query"
-msgstr ""
+msgstr "URI-aanvraag"
 
 #: ../fields.py:825
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #: ../ui/ikaaro/root/unavailable.xml.en:8
 msgctxt "legend"
 msgid "Unavailable"
-msgstr ""
+msgstr "Niet beschikbaar"
 
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
