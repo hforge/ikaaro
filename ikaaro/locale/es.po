@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 16:03+CET\n"
-"PO-Revision-Date: 2017-04-11 13:10+0000\n"
+"PO-Revision-Date: 2017-04-11 13:19+0000\n"
 "Last-Translator: Verba-Translations <translators@bepatient.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -75,8 +75,8 @@ msgid ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Overwrite "
 "files with the same name</g>"
 msgstr ""
-"${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Sobrescribir "
-"los archivos con el mismo nombre</g>"
+"${widget} <g id='2'>Aceptar</g>  <x id='3'/>  <x id='4'/>  <g id='5'>"
+"Sobrescribir los archivos con el mismo nombre</g>"
 
 #: ../agenda/agenda_views.py:474
 msgid "%d %s"
@@ -598,7 +598,7 @@ msgstr "Antes"
 
 #: ../config_seo.py:45
 msgid "Bing site verification key"
-msgstr "Clave de verificación sitio Bing"
+msgstr "Clave de verificación de sitio Bing"
 
 #: ../blog/blog.py:120
 msgid "Blog"
@@ -2622,11 +2622,11 @@ msgstr ""
 
 #: ../cc.py:45
 msgid "The following users are already subscribed: {users}."
-msgstr "Los siguientes usuarios ya están registrados: {users}."
+msgstr "Los siguientes usuarios ya están suscritos: {users}."
 
 #: ../cc.py:55
 msgid "The following users are prevented from subscribing: {users}."
-msgstr "Los siguientes usuarios no pueden ser registrados: {users}."
+msgstr "Los siguientes usuarios no pueden suscribirse: {users}."
 
 #: ../cc.py:53
 msgid "The following users have been invited: {users}."
@@ -2634,7 +2634,7 @@ msgstr "Los siguientes usuarios han sido invitados: {users}."
 
 #: ../cc.py:47
 msgid "The following users were subscribed: {users}."
-msgstr "Los siguientes usuarios se han registrado: {users}."
+msgstr "Los siguientes usuarios se han suscrito: {users}."
 
 #: ../cc.py:49
 msgid "The following users were unsubscribed: {users}."
@@ -3194,7 +3194,7 @@ msgstr "Fichero XML"
 
 #: ../config_seo.py:43
 msgid "Yahoo site verification key"
-msgstr "Clave de verificación sitio Yahoo"
+msgstr "Clave de verificación de sitio Yahoo"
 
 #: ../agenda/recurrence.py:157
 msgid "Yearly"
@@ -3240,7 +3240,7 @@ msgstr "No tiene autorización para acceder a este recurso."
 
 #: ../cc.py:41
 msgid "You are now subscribed."
-msgstr "Ya está registrado."
+msgstr "Ya está suscrito."
 
 #: ../cc.py:43
 msgid "You are now unsubscribed."
@@ -3314,11 +3314,11 @@ msgstr ""
 
 #: ../cc.py:42
 msgid "You were already subscribed."
-msgstr "Ya está registrado."
+msgstr "Ya estaba suscrito."
 
 #: ../cc.py:44
 msgid "You were already unsubscribed."
-msgstr "Ya ha cancelado su suscripción."
+msgstr "Ya había cancelado su suscripción."
 
 #: ../emails.py:154 ../emails.py:155
 msgid "Your account has been canceled"
