@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 16:03+CET\n"
-"PO-Revision-Date: 2017-03-23 11:13+0000\n"
-"Last-Translator: Julien <julien.ravat@bepatient.com>\n"
+"PO-Revision-Date: 2017-04-11 13:58+0000\n"
+"Last-Translator: Verba-Translations <translators@bepatient.com>\n"
 "Language-Team: Itaapy\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -2084,7 +2084,7 @@ msgstr "Chemin"
 #: ../ui/ikaaro/root/api_docs.xml.en:24
 msgctxt "heading"
 msgid "Path query"
-msgstr ""
+msgstr "Requête chemin"
 
 #: ../cc.py:217 ../users.py:74
 msgid "Pending confirmation"
@@ -2149,8 +2149,9 @@ msgid "Preferred Language"
 msgstr "Langue"
 
 #: ../api/views.py:161
+#, fuzzy
 msgid "Pretty ?"
-msgstr ""
+msgstr "Joli ?"
 
 #: ../folder_views.py:739
 msgid "Preview Content"
@@ -2367,7 +2368,7 @@ msgstr "Ressources non ordonnées."
 #: ../ui/ikaaro/root/api_docs.xml.en:67
 msgctxt "heading"
 msgid "Response schema"
-msgstr ""
+msgstr "Schéma de réponse"
 
 #: ../ui/ikaaro/website/search.xml.en:11
 msgctxt "heading"
@@ -2384,7 +2385,7 @@ msgstr "Ligne supprimée."
 
 #: ../api/views.py:196
 msgid "SHA of the commit"
-msgstr ""
+msgstr "SHA du commit"
 
 #: ../datatypes.py:195 ../datatypes.py:207
 msgid "Saturday"
@@ -2460,7 +2461,7 @@ msgstr "Port du serveur"
 
 #: ../api/views.py:318
 msgid "Server's start timestamp"
-msgstr ""
+msgstr "Horodatage de lancement du serveur"
 
 #: ../users_views.py:233
 msgid "Set your preferred language and timezone."
@@ -2601,11 +2602,11 @@ msgstr "Changements sauvegardés."
 
 #: ../api/views.py:235
 msgid "The class_id of the resource cls"
-msgstr ""
+msgstr "Class_id de la ressource cls"
 
 #: ../api/views.py:234
 msgid "The class_title of the resource cls"
-msgstr ""
+msgstr "Class_title de la ressource cls"
 
 #: ../messages.py:29
 msgid "The document name contains illegal characters, choose another one."
