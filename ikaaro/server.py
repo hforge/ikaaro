@@ -377,7 +377,6 @@ class Server(WebServer):
         self.smtp_password = get_value('smtp-password', default='').strip()
         # Email is sent asynchronously
         self.flush_spool()
-
         # Logging
         log_file = '%s/log/events' % target
         log_level = config.get_value('log-level')
@@ -396,19 +395,26 @@ class Server(WebServer):
 
 
     def check_consistency(self, quick):
+        log_info('Check database consistency')
         # Check the server is not running
         pid = get_pid('%s/pid' % self.target)
         if pid is not None:
-            print '[%s] The Web Server is already running.' % self.target
+            msg = '[%s] The Web Server is already running.' % self.target
+            log_warning(msg)
+            print(msg)
             return False
 
         # Check for database consistency
         if quick is False and check_database(self.target) is False:
+            msg = 'The database is not in a consistent state.'
+            log_warning(msg)
             return False
 
         # Check instance is up to date
         if not is_instance_up_to_date(self.target):
-            print 'The instance is not up-to-date, please type:'
+            msg = 'The instance is not up-to-date, please type:'
+            log_warning(msg)
+            print(msg)
             print
             print '    $ icms-update.py %s' % self.target
             print
@@ -417,6 +423,8 @@ class Server(WebServer):
 
 
     def start(self, detach=False, profile=False, loop=True):
+        msg = 'Start database %s %s %s' % (detach, profile, loop)
+        log_info(msg)
         profile = ('%s/log/profile' % self.target) if profile else None
         self.loop = ServerLoop(
               target=self.target,
@@ -465,6 +473,8 @@ class Server(WebServer):
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        msg = 'reindex catalog %s %s %s' % (quiet, quick, as_test)
+        log_info(msg)
         if self.is_running_in_rw_mode():
             print 'Cannot proceed, the server is running in read-write mode.'
             return
@@ -554,17 +564,23 @@ class Server(WebServer):
 
 
     def close(self):
+        log_info('Close server')
         self.database.close()
 
 
     def stop(self, force=False):
-        print 'Stoping server...'
+        msg = 'Stoping server...'
+        log_info(msg)
+        print(msg)
         proxy = super(Server, self)
         proxy.stop()
         self.kill(force)
 
 
     def kill(self, force=False):
+        msg = 'Killing server...'
+        log_info(msg)
+        print(msg)
         pid = get_pid('%s/pid' % self.target)
         if pid is None:
             print '[%s] Web Server not running.' % self.target
@@ -579,6 +595,8 @@ class Server(WebServer):
 
     def listen(self, address, port):
         super(Server, self).listen(address, port)
+        msg = 'Listing at port %s' % port
+        log_info(msg)
         self.port = port
 
 
