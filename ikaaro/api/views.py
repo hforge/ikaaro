@@ -145,17 +145,9 @@ class UUIDView(Api_View):
         return search.get_resources(size=1).next()
 
 
-    def get_resource_from_uuid(self, context):
-        uuid = context.path_query['uuid']
-        return context.root.get_resource_by_uuid(
-            uuid=uuid, context=context,
-            bases_class_id=self.bases_class_id,
-            class_id=self.class_id)
-
-
     access_DELETE = 'is_allowed_to_remove'
     def DELETE(self, resource, context):
-        resource = self.get_resource_from_uuid(context)
+        resource = self.get_resource(context)
         resource.parent.del_resource(resource.name)
         return None
 
@@ -170,7 +162,7 @@ class ApiDevPanel_ResourceJSON(UUIDView):
     query_schema = {'pretty': Boolean_Field(title=MSG(u'Pretty ?'))}
 
     def GET(self, root, context):
-        resource = self.get_resource_from_uuid(context)
+        resource = self.get_resource(context)
         schema = {}
         for name, field in resource.get_fields():
             if context.query.get('pretty'):
@@ -189,7 +181,7 @@ class ApiDevPanel_ResourceRaw(UUIDView):
     known_methods = ['GET', 'DELETE']
 
     def GET(self, root, context):
-        resource = self.get_resource_from_uuid(context)
+        resource = self.get_resource(context)
         metadata = resource.metadata
         context.set_content_type('text/plain')
         return metadata.to_str()
@@ -208,7 +200,7 @@ class ApiDevPanel_ResourceHistory(UUIDView):
         'message_short': Char_Field(title=MSG(u"Commit's title"))
     }
     def GET(self, root, context):
-        resource = self.get_resource_from_uuid(context)
+        resource = self.get_resource(context)
         revisions = resource.get_revisions(content=False)
         return self.return_json(revisions, context)
 
