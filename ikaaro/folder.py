@@ -280,7 +280,7 @@ class Folder(DBResource):
         database.add_resource(resource)
         # Set ctime and mtime
         context = get_context()
-        now = context.fix_tzinfo(datetime.now())
+        now = context.timestamp
         resource.set_value('ctime', now)
         resource.set_value('mtime', now)
         # Set UUID
