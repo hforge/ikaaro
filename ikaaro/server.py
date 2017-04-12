@@ -211,8 +211,10 @@ def get_fake_context(database, context_cls=CMSContext):
     return context
 
 
-def create_server(target, email, password, root,  modules,
-                  listen_port='8080', smtp_host='localhost', log_email=None):
+def create_server(target, email, password, root,  modules=None,
+                  listen_port='8080', smtp_host='localhost',
+                  log_email=None, website_languages=None):
+    modules = modules or []
     # Get modules
     for module in modules:
         exec('import %s' % module)
@@ -251,6 +253,10 @@ def create_server(target, email, password, root,  modules,
     metadata = Metadata(cls=root_class)
     database.set_handler('.metadata', metadata)
     root = root_class(abspath=Path('/'), database=database, metadata=metadata)
+    # Language
+    language_field = root_class.get_field('website_languages')
+    website_languages = website_languages or language_field.default
+    root.set_value('website_languages', website_languages)
     # Re-init context with context cls
     context = get_fake_context(context.database, root.context_cls)
     context.set_mtime = True
@@ -262,20 +268,7 @@ def create_server(target, email, password, root,  modules,
     # Save changes
     context.git_message = 'Initial commit'
     database.save_changes()
-    # Index the root
-    catalog = database.catalog
-    catalog.save_changes()
-    catalog.close()
-    # Bravo!
-    print('*')
-    print('* Welcome to ikaaro')
-    print('* A user with administration rights has been created for you:')
-    print('*   username: %s' % email)
-    print('*   password: %s' % password)
-    print('*')
-    print('* To start the new instance type:')
-    print('*   icms-start.py %s' % target)
-    print('*')
+    database.close()
 
 
 class ServerLoop(Loop):

@@ -16,7 +16,6 @@
 
 # Import from the Standard Library
 from unittest import TestCase, main
-from os import mkdir
 
 # Import from itools
 from itools.core import get_abspath
@@ -27,14 +26,16 @@ from itools.uri import Path
 # Import from ikaaro
 from ikaaro.database import make_database, get_database
 from ikaaro.root import Root
-from ikaaro.server import Server, get_fake_context, template
+from ikaaro.server import Server, get_fake_context, create_server
 from ikaaro.text import Text
 
 
 class FreeTestCase(TestCase):
 
     def setUp(self):
-        self.create_database()
+        self.tearDown()
+        create_server('test_database', 'test@hforge.org',
+            'password', 'ikaaro', website_languages=['en', 'fr'])
 
 
     def tearDown(self):
@@ -180,18 +181,6 @@ class FreeTestCase(TestCase):
 
 
     def test_server(self):
-        # Try to attach a ikaaro server to database
-        target = get_abspath('test_database')
-        config = template.format(
-            modules=" ",
-            listen_port='8080',
-            smtp_host='localhost',
-            smtp_from='test@hforge.org',
-            log_email='test@hforge.org')
-        mkdir('%s/log' % target)
-        mkdir('%s/spool' % target)
-        open('%s/config.conf' % target, 'w').write(config)
-        # Check root class_id
         server = Server('test_database')
         root = server.database.get_resource('/')
         self.assertEqual(root.metadata.format, 'iKaaro')
