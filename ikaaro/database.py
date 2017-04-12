@@ -80,7 +80,8 @@ class Database(RWDatabase):
                 resource = root.get_resource(path)
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
-
+        # Remove from to_reindex if resource has been deleted
+        to_reindex = to_reindex - set(docs_to_unindex)
         # 5. Index
         docs_to_index = self.resources_new2old.keys()
         docs_to_index = set(docs_to_index) | to_reindex
