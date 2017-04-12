@@ -145,6 +145,11 @@ class UUIDView(Api_View):
         return search.get_resources(size=1).next()
 
 
+    def get_resource_from_uuid(self, context):
+        # Deprecated method, use get_resource
+        return self.get_resource(context)
+
+
     access_DELETE = 'is_allowed_to_remove'
     def DELETE(self, resource, context):
         resource = self.get_resource(context)
