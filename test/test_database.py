@@ -45,29 +45,6 @@ class FreeTestCase(TestCase):
                 lfs.remove(path)
 
 
-    def create_database(self):
-        database = make_database('test_database')
-        root_class = Root
-        metadata = Metadata(cls=root_class)
-        database.set_handler('.metadata', metadata)
-        root = root_class(abspath=Path('/'), database=database, metadata=metadata)
-        # Re-init context with context cls
-        context = get_fake_context(database)
-        context.set_mtime = True
-        # Init root resource
-        email = 'test@hforge.org'
-        password = 'password'
-        root.init_resource(email, password)
-        # Set mtime
-        root.set_value('mtime', context.timestamp)
-        root.set_value('website_languages', ['en', 'fr'])
-        context.root = root
-        # Save changes
-        context.git_message = 'Initial commit'
-        database.save_changes()
-        database.close()
-
-
     def get_database(self):
         size_min, size_max = 19500, 20500
         path = get_abspath('test_database')
