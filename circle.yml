@@ -37,8 +37,6 @@ dependencies:
     - pip install --upgrade pip
     # Install dependencies
     - pip install -r requirements.txt
-    # Build
-    - ipkg-build.py
     # Install
     - python setup.py install
 
