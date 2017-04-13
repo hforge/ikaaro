@@ -136,5 +136,4 @@ def make_database(path):
 def get_database(path, size_min, size_max, read_only=False):
     if read_only is True:
         return RODatabase(path, size_min, size_max)
-
     return Database(path, size_min, size_max)
