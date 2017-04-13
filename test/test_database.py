@@ -157,6 +157,23 @@ class FreeTestCase(TestCase):
         database.close()
 
 
+    def test_abort_transaction(self):
+        root, context, database = self.get_database()
+        kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
+               'data': 'this is text'}
+        resource = root.make_resource(None, Text, **kw)
+        self.assertEqual(str(resource.abspath), '/0')
+        self.assertNotEqual(root.get_resource('/0'), None)
+        database.save_changes()
+        resource = root.make_resource(None, Text, **kw)
+        self.assertEqual(str(resource.abspath), '/1')
+        database.catalog.index_document({'abspath': '/2'})
+        database.abort_changes()
+        self.assertNotEqual(root.get_resource('/0'), None)
+        self.assertEqual(root.get_resource('/1', soft=True), None)
+        database.close()
+
+
     def test_server(self):
         server = Server('test_database')
         root = server.database.get_resource('/')
