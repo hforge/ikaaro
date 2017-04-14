@@ -91,6 +91,10 @@ class ServerTestCase(TestCase):
             return
         self.tearDown()
         path = DATABASE_TEST_PATH
+        paths = [DATABASE_TEST_PATH]
+        for path in paths:
+            if lfs.exists(path):
+                lfs.remove(path)
         email = 'test@example.com'
         password = 'password'
         root = None
