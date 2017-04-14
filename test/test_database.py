@@ -174,6 +174,29 @@ class FreeTestCase(TestCase):
         database.close()
 
 
+    def test_close_transaction(self):
+        """
+        Test if flush is done when we close database
+        """
+        root, context, database = self.get_database()
+        kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
+               'data': 'this is text'}
+        resource = root.make_resource(None, Text, **kw)
+        self.assertEqual(str(resource.abspath), '/0')
+        database.save_changes()
+        query = PhraseQuery('format', 'text')
+        search = context.database.search(query)
+        self.assertEqual(len(search), 1)
+        resource = root.make_resource(None, Text)
+        database.close()
+        root, context, database = self.get_database()
+        query = PhraseQuery('format', 'text')
+        search = context.database.search(query)
+        self.assertEqual(len(search), 1)
+        self.assertEqual(root.get_resource('/1', soft=True), None)
+
+
+
     def test_server(self):
         server = Server('test_database')
         root = server.database.get_resource('/')
