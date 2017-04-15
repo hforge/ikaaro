@@ -19,13 +19,11 @@ from unittest import TestCase, main
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import Metadata, AndQuery, PhraseQuery
+from itools.database import AndQuery, PhraseQuery
 from itools.fs import lfs
-from itools.uri import Path
 
 # Import from ikaaro
-from ikaaro.database import make_database, get_database
-from ikaaro.root import Root
+from ikaaro.database import get_database
 from ikaaro.server import Server, get_fake_context, create_server
 from ikaaro.text import Text
 
