@@ -19,7 +19,7 @@ from copy import deepcopy
 from types import FunctionType
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, is_prototype
 from itools.database import MetadataProperty
 from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
@@ -366,7 +366,9 @@ class Text_Field(Metadata_Field):
         if self.default is not None:
             if self.multilingual:
                 # Default value is multilingual too
-                return self.default.gettext()
+                if is_prototype(self.default, MSG):
+                    return self.default.gettext()
+                return self.default
             return self.default
         return self.get_datatype().get_default()
 
