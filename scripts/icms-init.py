@@ -20,6 +20,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 import sys
+from sys import exit
 
 # Import from itools
 import itools
@@ -50,6 +51,16 @@ def init(parser, options, target):
         listen_port=getattr(options, 'port'),
         smtp_host=getattr(options, 'smtp_host'),
         log_email=getattr(options, 'log_email'))
+    # Bravo!
+    print('*')
+    print('* Welcome to ikaaro')
+    print('* A user with administration rights has been created for you:')
+    print('*   username: %s' % email)
+    print('*   password: %s' % password)
+    print('*')
+    print('* To start the new instance type:')
+    print('*   icms-start.py %s' % target)
+    print('*')
 
 
 
@@ -89,3 +100,5 @@ if __name__ == '__main__':
                options.profile)
     else:
         init(parser, options, target)
+    # Ok
+    exit(0)

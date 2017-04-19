@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+from sys import exit
 
 # Import from itools
 import itools
@@ -29,7 +30,11 @@ from ikaaro.server import Server, ask_confirmation
 
 def update_catalog(parser, options, target):
     # Check the server is not started, or started in read-only mode
-    server = Server(target, read_only=True, cache_size=options.cache_size)
+    try:
+        server = Server(target, read_only=True, cache_size=options.cache_size)
+    except LookupError:
+        print('Error: {} instance do not exists'.format(target))
+        exit(1)
     # Ask
     message = 'Update the catalog (y/N)? '
     if ask_confirmation(message, options.confirm) is False:
@@ -79,3 +84,5 @@ if __name__ == '__main__':
                options.profile)
     else:
         update_catalog(parser, options, target)
+    # Ok
+    exit(0)

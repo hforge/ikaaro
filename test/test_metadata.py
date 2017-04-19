@@ -36,7 +36,7 @@ title;lang=fr:bonjour
 class LoadTestCase(TestCase):
 
     def setUp(self):
-        self.metadata = Metadata(string=metadata_str)
+        self.metadata = Metadata(string=metadata_str, cls=WebPage)
 
 
     def test_format(self):
@@ -100,7 +100,7 @@ class NewTestCase(TestCase):
 class OpenWebPage(WebPage):
 
     class_id = 'open-webpage'
-    class_schema_extensible = True
+    fields_soft = True
 
 
 
@@ -109,8 +109,7 @@ format;version=20090122:open-webpage
 title;lang=en:hello
 title;lang=fr:bonjur
 title;lang=fr:bonjour
-free_title;lang=en:bye
-free_title;lang=fr:au revoir
+free_title:bye
 """
 
 bad_metadata = """
@@ -118,8 +117,8 @@ format;version=20090122:webpage
 title;lang=en:hello
 title;lang=fr:bonjur
 title;lang=fr:bonjour
-free_title;lang=en:bye
-free_title;lang=fr:au revoir
+free_title:bye
+free_title:au revoir
 """
 
 
@@ -127,17 +126,13 @@ free_title;lang=fr:au revoir
 class FreeTestCase(TestCase):
 
     def test_good(self):
-        metadata = Metadata(string=good_metadata)
-        value = metadata.get_property('free_title')
-        self.assertEqual(type(value), list)
-        expected = {'en': 'bye', 'fr': 'au revoir'}
-        for property in value:
-            language = property.get_parameter('lang')[0]
-            self.assertEqual(property.value, expected[language])
+        metadata = Metadata(string=good_metadata, cls=OpenWebPage)
+        prop = metadata.get_property('free_title')
+        self.assertEqual(prop[0].value, 'bye')
 
 
     def test_bad(self):
-        self.assertRaises(ValueError, Metadata, string=bad_metadata)
+        self.assertRaises(ValueError, Metadata, string=bad_metadata, cls=WebPage)
 
 
 

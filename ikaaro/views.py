@@ -112,23 +112,22 @@ class CompositeView(STLView):
         return {}
 
 
-    def get_action(self, resource, context):
-        method = super(CompositeView, self).get_action(resource, context)
-        if method:
-            return method
-
-        # Check subviews
-        method_name = context.form_action
-        method = None
+    def get_action_view(self, context, action_name):
+        # Check action on subviews and return view with action
+        action_subview = None
+        # Look for acion defined on Subviews
         for view in self.allowed_subviews:
-            view_method = getattr(view, method_name, None)
-            if method and view_method:
+            view_method = getattr(view, action_name, None)
+            if action_subview and view_method:
                 msg = 'method "%s" should not be defined in several subviews'
                 raise ValueError, msg % context.form_action
             if view_method:
-                method = view_method
+                action_subview = view
 
-        return method
+        # Return appropriate view
+        if action_subview:
+            return action_subview
+        return self
 
 
     @proto_lazy_property

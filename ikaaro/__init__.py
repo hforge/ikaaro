@@ -25,7 +25,7 @@ from itools.gettext import register_domain
 from file import File
 from folder import Folder
 from registry import register_document_type
-import root
+from root import Root
 import text
 from webpage import WebPage
 
@@ -57,3 +57,6 @@ register_domain('ikaaro', path)
 register_document_type(WebPage)
 register_document_type(Folder)
 register_document_type(File)
+
+# Silent pyflakes
+Root

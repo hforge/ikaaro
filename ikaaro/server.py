@@ -211,8 +211,10 @@ def get_fake_context(database, context_cls=CMSContext):
     return context
 
 
-def create_server(target, email, password, root,  modules,
-                  listen_port='8080', smtp_host='localhost', log_email=None):
+def create_server(target, email, password, root,  modules=None,
+                  listen_port='8080', smtp_host='localhost',
+                  log_email=None, website_languages=None):
+    modules = modules or []
     # Get modules
     for module in modules:
         exec('import %s' % module)
@@ -251,6 +253,10 @@ def create_server(target, email, password, root,  modules,
     metadata = Metadata(cls=root_class)
     database.set_handler('.metadata', metadata)
     root = root_class(abspath=Path('/'), database=database, metadata=metadata)
+    # Language
+    language_field = root_class.get_field('website_languages')
+    website_languages = website_languages or language_field.default
+    root.set_value('website_languages', website_languages)
     # Re-init context with context cls
     context = get_fake_context(context.database, root.context_cls)
     context.set_mtime = True
@@ -262,20 +268,7 @@ def create_server(target, email, password, root,  modules,
     # Save changes
     context.git_message = 'Initial commit'
     database.save_changes()
-    # Index the root
-    catalog = database.catalog
-    catalog.save_changes()
-    catalog.close()
-    # Bravo!
-    print('*')
-    print('* Welcome to ikaaro')
-    print('* A user with administration rights has been created for you:')
-    print('*   username: %s' % email)
-    print('*   password: %s' % password)
-    print('*')
-    print('* To start the new instance type:')
-    print('*   icms-start.py %s' % target)
-    print('*')
+    database.close()
 
 
 class ServerLoop(Loop):
@@ -296,6 +289,12 @@ class ServerLoop(Loop):
         # Run
         proxy = super(ServerLoop, self)
         proxy.run()
+
+
+    def stop(self, signum, frame):
+        print 'Shutting down the server...'
+        self.server.close()
+        self.quit()
 
 
 
@@ -359,10 +358,12 @@ class Server(WebServer):
         # Init fake context
         context = get_fake_context(database, root.context_cls)
         context.server = self
-
+        # Check catalog consistency
+        database.check_catalog()
         # Initialize
+        proxy = super(Server, self)
         access_log = '%s/log/access' % target
-        super(Server, self).__init__(root, access_log=access_log)
+        proxy.__init__(root, access_log=access_log)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -376,7 +377,6 @@ class Server(WebServer):
         self.smtp_password = get_value('smtp-password', default='').strip()
         # Email is sent asynchronously
         self.flush_spool()
-
         # Logging
         log_file = '%s/log/events' % target
         log_level = config.get_value('log-level')
@@ -395,19 +395,26 @@ class Server(WebServer):
 
 
     def check_consistency(self, quick):
+        log_info('Check database consistency')
         # Check the server is not running
         pid = get_pid('%s/pid' % self.target)
         if pid is not None:
-            print '[%s] The Web Server is already running.' % self.target
+            msg = '[%s] The Web Server is already running.' % self.target
+            log_warning(msg)
+            print(msg)
             return False
 
         # Check for database consistency
         if quick is False and check_database(self.target) is False:
+            msg = 'The database is not in a consistent state.'
+            log_warning(msg)
             return False
 
         # Check instance is up to date
         if not is_instance_up_to_date(self.target):
-            print 'The instance is not up-to-date, please type:'
+            msg = 'The instance is not up-to-date, please type:'
+            log_warning(msg)
+            print(msg)
             print
             print '    $ icms-update.py %s' % self.target
             print
@@ -416,6 +423,8 @@ class Server(WebServer):
 
 
     def start(self, detach=False, profile=False, loop=True):
+        msg = 'Start database %s %s %s' % (detach, profile, loop)
+        log_info(msg)
         profile = ('%s/log/profile' % self.target) if profile else None
         self.loop = ServerLoop(
               target=self.target,
@@ -458,12 +467,14 @@ class Server(WebServer):
             try:
                 self.loop.run()
             except KeyboardInterrupt:
-                self.close()
+                pass
         # Ok
         return True
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        msg = 'reindex catalog %s %s %s' % (quiet, quick, as_test)
+        log_info(msg)
         if self.is_running_in_rw_mode():
             print 'Cannot proceed, the server is running in read-write mode.'
             return
@@ -552,14 +563,24 @@ class Server(WebServer):
         return pid_exists(pid)
 
 
+    def close(self):
+        log_info('Close server')
+        self.database.close()
+
+
     def stop(self, force=False):
+        msg = 'Stoping server...'
+        log_info(msg)
+        print(msg)
         proxy = super(Server, self)
         proxy.stop()
-        print 'Stoping server...'
         self.kill(force)
 
 
     def kill(self, force=False):
+        msg = 'Killing server...'
+        log_info(msg)
+        print(msg)
         pid = get_pid('%s/pid' % self.target)
         if pid is None:
             print '[%s] Web Server not running.' % self.target
@@ -574,6 +595,8 @@ class Server(WebServer):
 
     def listen(self, address, port):
         super(Server, self).listen(address, port)
+        msg = 'Listing at port %s' % port
+        log_info(msg)
         self.port = port
 
 
@@ -783,6 +806,7 @@ class Server(WebServer):
         context.is_cron = True
 
         # Go
+        catalog = database.catalog
         query = RangeQuery('next_time_event', None, context.timestamp)
         for brain in database.search(query).get_documents():
             payload = pickle.loads(brain.next_time_event_payload)
@@ -794,9 +818,7 @@ class Server(WebServer):
                 log_error('Cron error\n' + format_exc())
                 context.root.alert_on_internal_server_error(context)
             # Reindex resource without committing
-            catalog = database.catalog
-            catalog.unindex_document(str(resource.abspath))
-            catalog.index_document(resource.get_catalog_values())
+            catalog.index_document(resource)
             catalog.save_changes()
 
         # Save changes

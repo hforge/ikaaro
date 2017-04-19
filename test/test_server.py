@@ -21,7 +21,7 @@ from unittest import TestCase, main
 from itools.datatypes import String, Unicode
 from itools.fs import lfs
 from itools.web import set_context
-from itools.web.views import ItoolsView
+from itools.web.views import ItoolsView, BaseView
 
 # Import from ikaaro
 from ikaaro.server import Server, create_server
@@ -34,16 +34,18 @@ DATABASE_TEST_PATH = '/tmp/www.hforge.org'
 class TestHTML_View(ItoolsView):
 
     access = True
+    known_methods = ['GET']
 
-    def GET(self, query, context):
+    def GET(self, resource, context):
         return 'hello world'
 
 
 class TestPlainText_View(ItoolsView):
 
     access = True
+    known_methods = ['GET']
 
-    def GET(self, query, context):
+    def GET(self, resource, context):
         context.set_content_type('text/plain')
         return 'hello world'
 
@@ -52,17 +54,19 @@ class TestPlainText_View(ItoolsView):
 class TestJson_View(ItoolsView):
 
     access = True
+    known_methods = ['GET']
 
     query_schema = {'name': String}
-    def GET(self, query, context):
+    def GET(self, resource, context):
         kw = {'text': 'hello '+ context.query.get('name')}
         return self.return_json(kw, context)
 
 
 
-class TestJsonAction_View(ItoolsView):
+class TestJsonAction_View(BaseView):
 
     access = True
+    known_methods = ['GET', 'POST']
 
     schema = {'name': String}
     def action_hello(self, resource, context, form):
@@ -116,7 +120,7 @@ class ServerTestCase(TestCase):
         # Error 404 json
         retour = server.do_request('GET', '/api/404', as_json=True)
         self.assertEqual(retour['status'], 404)
-        self.assertEqual(retour['entity']['status'], 404)
+        self.assertEqual(retour['entity']['code'], 404)
         self.assertEqual(retour['context'].content_type, 'application/json')
         # Error 404 web
         retour = server.do_request('GET', '/api/404', as_json=False)

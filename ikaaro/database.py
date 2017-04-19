@@ -70,7 +70,6 @@ class Database(RWDatabase):
         # 3. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
         docs_to_unindex = self.resources_old2new.keys()
-        docs_to_unindex = list(set(docs_to_unindex) | to_reindex)
         self.resources_old2new.clear()
 
         # 4. Update mtime/last_author
@@ -81,10 +80,13 @@ class Database(RWDatabase):
                 resource = root.get_resource(path)
                 resource.metadata.set_property('mtime', context.timestamp)
                 resource.metadata.set_property('last_author', userid)
-
+        # Remove from to_reindex if resource has been deleted
+        to_reindex = to_reindex - set(docs_to_unindex)
         # 5. Index
         docs_to_index = self.resources_new2old.keys()
-        docs_to_index = list(set(docs_to_index) | to_reindex)
+        docs_to_index = set(docs_to_index) | to_reindex
+        docs_to_unindex = list(set(docs_to_unindex) - docs_to_index)
+        docs_to_index = list(docs_to_index)
         aux = []
         for path in docs_to_index:
             resource = root.get_resource(path, soft=True)
@@ -126,7 +128,8 @@ class Database(RWDatabase):
 
 def make_database(path):
     size_min, size_max = 19500, 20500
-    make_git_database(path, size_min, size_max)
+    database = make_git_database(path, size_min, size_max)
+    database.close()
     return Database(path, size_min, size_max)
 
 
