@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2016-11-28 17:11+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -23,16 +23,16 @@ msgid ""
 "    </stl:inline>"
 msgstr ""
 
-#: ../root_views.py:236
+#: ../root_views.py:256
 msgid "\"en\", \"fr\", ..."
 msgstr ""
 
-#: ../ui/table/view.xml.en:5
+#: ../ui/ikaaro/table/view.xml.en:5
 #, fuzzy
 msgid "${batch} ${table}"
 msgstr "名称"
 
-#: ../ui/website/search.xml.en:13
+#: ../ui/ikaaro/website/search.xml.en:13
 #, fuzzy
 msgid "${batch} <x id='1'/> ${table}"
 msgstr "名称"
@@ -42,7 +42,7 @@ msgctxt "div"
 msgid "${cal_selector} ${calendar} ${calendar_caption}"
 msgstr ""
 
-#: ../ui/popup/template.xhtml.en:26 ../ui/fancybox/template.xhtml.en:27
+#: ../ui/ikaaro/fancybox/template.xhtml.en:27 ../ui/popup/template.xhtml.en:26
 #, fuzzy
 msgctxt "div"
 msgid "${location} ${message} ${body}"
@@ -54,7 +54,7 @@ msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr "名称"
 
-#: ../ui/generic/browse.xml.en:8
+#: ../ui/ikaaro/generic/browse.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgctxt "heading"
 msgid "${title} (${date})"
 msgstr "用户资料列单"
 
-#: ../ui/binary/Archive_view.xml.en:12
+#: ../ui/ikaaro/binary/Archive_view.xml.en:12
 msgctxt "fieldset"
 msgid ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Overwrite "
@@ -75,7 +75,7 @@ msgstr ""
 msgid "%d %s"
 msgstr ""
 
-#: ../root.py:170
+#: ../root.py:169
 msgid ""
 "%s\n"
 "\n"
@@ -84,40 +84,40 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../root.py:167
+#: ../root.py:166
 msgid "%s => %s"
 msgstr ""
 
-#: ../root_views.py:218
+#: ../root_views.py:238
 msgid "%s@%s:%s"
 msgstr ""
 
-#: ../ui/PO_edit.xml.en:18
+#: ../ui/ikaaro/PO_edit.xml.en:18
 msgctxt "link"
 msgid "&lt;"
 msgstr ""
 
-#: ../ui/website/broken_links.xml.en:11
+#: ../ui/ikaaro/website/broken_links.xml.en:11
 msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
 msgstr ""
 
-#: ../ui/tiny_mce/rte.xml.en:51 ../ui/editarea/ea.xml.en:21
+#: ../ui/ikaaro/editarea/ea.xml.en:21 ../ui/ikaaro/tiny_mce/rte.xml.en:51
 msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
 msgstr ""
 
-#: ../ui/update_instance.xml.en:28
+#: ../ui/ikaaro/update_instance.xml.en:28
 msgctxt "link"
 msgid "+"
 msgstr ""
 
-#: ../ui/user/edit_preferences.xml.en:27
+#: ../ui/ikaaro/user/edit_preferences.xml.en:27
 msgctxt "option"
 msgid "-- not defined (use server's local time) --"
 msgstr ""
 
-#: ../ui/user/edit_preferences.xml.en:16
+#: ../ui/ikaaro/user/edit_preferences.xml.en:16
 msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
@@ -154,13 +154,14 @@ msgstr ""
 msgid "5"
 msgstr ""
 
-#: ../ui/revisions/changes.xml.en:12 ../ui/revisions/changes.xml.en:16
-#: ../ui/revisions/changes.xml.en:20
+#: ../ui/ikaaro/revisions/changes.xml.en:12
+#: ../ui/ikaaro/revisions/changes.xml.en:16
+#: ../ui/ikaaro/revisions/changes.xml.en:20
 msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../cc.py:63
+#: ../cc.py:62
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -176,23 +177,23 @@ msgctxt "link"
 msgid "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
 msgstr "名称"
 
-#: ../ui/tiny_mce/rte.xml.en:57
+#: ../ui/ikaaro/tiny_mce/rte.xml.en:57
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
 msgstr ""
 
-#: ../ui/binary/Image_view.xml.en:7
+#: ../ui/ikaaro/binary/Image_view.xml.en:7
 msgctxt "link"
 msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
 msgstr ""
 
-#: ../ui/auto_form_field.xml.en:9
+#: ../ui/ikaaro/auto_form_field.xml.en:9
 #, fuzzy
 msgctxt "label"
 msgid "<g id='1'>${title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
 msgstr "名称"
 
-#: ../ui/comment_view.xml.en:10
+#: ../ui/ikaaro/comment_view.xml.en:10
 #, fuzzy
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
@@ -218,7 +219,7 @@ msgctxt "link"
 msgid "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
 msgstr ""
 
-#: ../ui/website/search_table.xml.en:10
+#: ../ui/ikaaro/website/search_table.xml.en:10
 msgctxt "link"
 msgid ""
 "<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
@@ -230,19 +231,19 @@ msgctxt "link"
 msgid "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
 msgstr ""
 
-#: ../ui/generic/browse_batch.xml.en:14
+#: ../ui/ikaaro/generic/browse_batch.xml.en:14
 msgctxt "link"
 msgid "<g id='2'>${page/number}</g>  <g id='3'>…</g>"
 msgstr ""
 
-#: ../ui/html/popup.xml.en:24
+#: ../ui/ikaaro/html/popup.xml.en:24
 msgctxt "link"
 msgid ""
 "<g id='2'>Browse</g>  <g id='3'>External Link</g>  <g id='4'>Insert</g>  <g "
 "id='5'>Upload</g>"
 msgstr ""
 
-#: ../ui/website/edit_languages.xml.en:33
+#: ../ui/ikaaro/website/edit_languages.xml.en:33
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr ""
@@ -254,36 +255,37 @@ msgid ""
 "id='5'/> ${reminders} before the start of the event. </g>"
 msgstr ""
 
-#: ../ui/user/profile.xml.en:19 ../ui/generic/icons_view.xml.en:16
+#: ../ui/ikaaro/generic/icons_view.xml.en:16
+#: ../ui/ikaaro/user/profile.xml.en:19
 msgctxt "link"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
-#: ../ui/base/login.xml.en:20
+#: ../ui/ikaaro/base/login.xml.en:20
 #, fuzzy
 msgctxt "label"
 msgid "<g id='4'>${login_name_title}</g>  <g id='5'>*</g>"
 msgstr "名称"
 
-#: ../ui/comment_view.xml.en:14
+#: ../ui/ikaaro/comment_view.xml.en:14
 msgctxt "link"
 msgid ""
 "<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
 "g>]</g> ${workflow} ${index}"
 msgstr ""
 
-#: ../ui/update_instance.xml.en:69
+#: ../ui/ikaaro/update_instance.xml.en:69
 #, fuzzy
 msgctxt "button"
 msgid "<g id='5'>Update</g>  <g id='6'>Force update</g>"
 msgstr "名称"
 
-#: ../ui/PO_edit.xml.en:19
+#: ../ui/ikaaro/PO_edit.xml.en:19
 msgctxt "link"
 msgid "<g id='6'>></g>  <g id='7'>>></g>"
 msgstr ""
 
-#: ../ui/html/popup.xml.en:41
+#: ../ui/ikaaro/html/popup.xml.en:41
 #, fuzzy
 msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
@@ -298,11 +300,15 @@ msgstr ""
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
+#: ../api/views.py:232
+msgid "A class_id registered in DB"
+msgstr ""
+
 #: ../messages.py:47
 msgid "A given name already exists."
 msgstr ""
 
-#: ../cc.py:40
+#: ../cc.py:39
 msgid "A message has been sent to confirm your identity."
 msgstr ""
 
@@ -311,12 +317,18 @@ msgstr ""
 msgid "A new resource has been added."
 msgstr "新资料被加入."
 
-#: ../ui/update_instance.xml.en:18
+#: ../ui/ikaaro/root/api_docs.xml.en:7
+#, fuzzy
+msgctxt "heading"
+msgid "API documentation"
+msgstr "新文件"
+
+#: ../ui/ikaaro/update_instance.xml.en:18
 msgctxt "table cell"
 msgid "Abspath"
 msgstr ""
 
-#: ../cc.py:446
+#: ../cc.py:445
 msgid "Accept invitation"
 msgstr ""
 
@@ -324,7 +336,7 @@ msgstr ""
 msgid "Access Control"
 msgstr ""
 
-#: ../ui/root/forbidden.xml.en:8
+#: ../ui/ikaaro/root/forbidden.xml.en:8
 msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
@@ -332,6 +344,12 @@ msgstr ""
 #: ../config_access.py:139
 msgid "Access rule"
 msgstr ""
+
+#: ../ui/ikaaro/root/api_docs.xml.en:21
+#, fuzzy
+msgctxt "heading"
+msgid "Access rules"
+msgstr "用户"
 
 #: ../messages.py:64
 #, fuzzy
@@ -348,7 +366,8 @@ msgstr "名称"
 msgid "Add"
 msgstr "加入"
 
-#: ../ui/html/popup.xml.en:65 ../ui/website/edit_languages.xml.en:53
+#: ../ui/ikaaro/website/edit_languages.xml.en:53
+#: ../ui/ikaaro/html/popup.xml.en:65
 #, fuzzy
 msgctxt "button"
 msgid "Add"
@@ -380,7 +399,7 @@ msgstr "新用户"
 msgid "Add and view"
 msgstr "新用户"
 
-#: ../ui/website/edit_languages.xml.en:45
+#: ../ui/ikaaro/website/edit_languages.xml.en:45
 #, fuzzy
 msgctxt "legend"
 msgid "Add another language"
@@ -396,7 +415,7 @@ msgstr "新用户"
 msgid "Add choice"
 msgstr "新用户"
 
-#: ../skins.py:241
+#: ../skins.py:255
 #, fuzzy
 msgid "Add content"
 msgstr "简易文件"
@@ -436,6 +455,11 @@ msgstr "用户"
 msgid "Add to ordered list"
 msgstr "目录"
 
+#: ../root.py:552
+#, fuzzy
+msgid "Add uuid to all resources"
+msgstr "新用户"
+
 #: ../autoadd.py:140
 #, fuzzy
 msgid "Add {class_title}"
@@ -449,7 +473,7 @@ msgstr ""
 msgid "Admins"
 msgstr ""
 
-#: ../ui/revisions/changes.xml.en:34
+#: ../ui/ikaaro/revisions/changes.xml.en:34
 msgctxt "table cell"
 msgid "After"
 msgstr ""
@@ -470,13 +494,13 @@ msgstr ""
 msgid "Already registered"
 msgstr ""
 
-#: ../ui/website/forgotten_password.xml.en:8
+#: ../ui/ikaaro/website/forgotten_password.xml.en:8
 msgctxt "paragraph"
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../cc.py:271
+#: ../cc.py:270
 msgid "An invitation will be sent to every address typen below, one by line."
 msgstr ""
 
@@ -484,7 +508,7 @@ msgstr ""
 msgid "Answer"
 msgstr ""
 
-#: ../ui/root/internal_server_error.xml.en:15
+#: ../ui/ikaaro/root/internal_server_error.xml.en:15
 msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
@@ -521,7 +545,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: ../ui/revisions/changes.xml.en:11
+#: ../ui/ikaaro/revisions/changes.xml.en:11
 msgctxt "b"
 msgid "Author"
 msgstr ""
@@ -530,21 +554,27 @@ msgstr ""
 msgid "Author's mail"
 msgstr ""
 
+#: ../ui/ikaaro/root/api_docs.xml.en:17
+#, fuzzy
+msgctxt "heading"
+msgid "Authorized methods"
+msgstr "更新目录"
+
 #: ../users.py:105
 msgid "Avatar"
 msgstr ""
 
-#: ../ui/folder/browse_image.xml.en:31
+#: ../ui/ikaaro/folder/browse_image.xml.en:31
 #, fuzzy
 msgctxt "title attribute"
 msgid "Back"
 msgstr "卸下"
 
-#: ../resource_views.py:205
+#: ../resource_views.py:204
 msgid "Backlinks"
 msgstr ""
 
-#: ../cc.py:374
+#: ../cc.py:373
 msgid "Bad email"
 msgstr ""
 
@@ -565,7 +595,7 @@ msgstr ""
 msgid "Basque"
 msgstr "巴斯克语"
 
-#: ../ui/revisions/changes.xml.en:33
+#: ../ui/ikaaro/revisions/changes.xml.en:33
 msgctxt "table cell"
 msgid "Before"
 msgstr ""
@@ -584,7 +614,7 @@ msgstr "粘贴"
 msgid "Blog Post"
 msgstr "粘贴"
 
-#: ../widgets.py:880 ../webpage.py:56
+#: ../widgets.py:917 ../webpage.py:56
 msgid "Body"
 msgstr "正文"
 
@@ -606,17 +636,17 @@ msgstr "浏览"
 msgid "Browse Members"
 msgstr "浏览"
 
-#: ../popup.py:487
+#: ../popup.py:486
 #, fuzzy
 msgid "Browse and insert a Media from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: ../popup.py:457
+#: ../popup.py:456
 #, fuzzy
 msgid "Browse and insert an Image from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: ../popup.py:403
+#: ../popup.py:402
 #, fuzzy
 msgid "Browse and link to a File from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
@@ -626,13 +656,13 @@ msgstr "禄 Browse and link an image from the workspace:"
 msgid "Browse groups"
 msgstr "浏览"
 
-#: ../cc.py:443
+#: ../cc.py:442
 msgid ""
 "By accepting the invitation you will receive an email every time this "
 "resource is modified."
 msgstr ""
 
-#: ../cc.py:346
+#: ../cc.py:345
 msgid ""
 "By confirming your subscription to this resource you will receive an email "
 "every time this resource is modified."
@@ -654,11 +684,11 @@ msgstr ""
 msgid "CSS Style"
 msgstr ""
 
-#: ../agenda/event.py:342 ../agenda/calendars.py:203
+#: ../agenda/event.py:341 ../agenda/calendars.py:203
 msgid "Calendar"
 msgstr ""
 
-#: ../agenda/event.py:331
+#: ../agenda/event.py:330
 msgid "Calendar event"
 msgstr ""
 
@@ -699,13 +729,13 @@ msgstr "登录"
 msgid "Catalan"
 msgstr "加泰隆尼语"
 
-#: ../ui/PO_edit.xml.en:38
+#: ../ui/ikaaro/PO_edit.xml.en:38
 #, fuzzy
 msgctxt "button"
 msgid "Change"
 msgstr "改换"
 
-#: ../ui/revisions/changes.xml.en:8
+#: ../ui/ikaaro/revisions/changes.xml.en:8
 #, fuzzy
 msgctxt "legend"
 msgid "Change metadata"
@@ -738,7 +768,7 @@ msgstr ""
 msgid "Choices field"
 msgstr ""
 
-#: ../ui/website/edit_languages.xml.en:48
+#: ../ui/ikaaro/website/edit_languages.xml.en:48
 #, fuzzy
 msgctxt "option"
 msgid "Choose a language"
@@ -759,49 +789,53 @@ msgstr "更改安全设置"
 msgid "Choose your password"
 msgstr "改变内设"
 
-#: ../widgets.py:358
+#: ../widgets.py:395
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
 
-#: ../widgets.py:460 ../widgets.py:478
+#: ../widgets.py:497 ../widgets.py:515
 msgid "Click on button \"...\" to select a file."
 msgstr ""
 
-#: ../ui/folder/browse_image.xml.en:14 ../ui/generic/browse_table.xml.en:15
+#: ../ui/ikaaro/folder/browse_image.xml.en:14
+#: ../ui/ikaaro/generic/browse_table.xml.en:15
 msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
-#: ../ui/update_instance.xml.en:14 ../ui/update_instance.xml.en:53
+#: ../ui/ikaaro/update_instance.xml.en:14
+#: ../ui/ikaaro/update_instance.xml.en:53
 msgctxt "table cell"
 msgid "Cls ID"
 msgstr ""
 
-#: ../ui/update_instance.xml.en:15 ../ui/update_instance.xml.en:54
+#: ../ui/ikaaro/update_instance.xml.en:15
+#: ../ui/ikaaro/update_instance.xml.en:54
 #, fuzzy
 msgctxt "table cell"
 msgid "Cls title"
 msgstr "名称"
 
-#: ../ui/update_instance.xml.en:16 ../ui/update_instance.xml.en:50
+#: ../ui/ikaaro/update_instance.xml.en:16
+#: ../ui/ikaaro/update_instance.xml.en:50
 #, fuzzy
 msgctxt "table cell"
 msgid "Cls version"
 msgstr "个人"
 
-#: ../ui/website/edit_languages.xml.en:16
+#: ../ui/ikaaro/website/edit_languages.xml.en:16
 #, fuzzy
 msgctxt "table cell"
 msgid "Code"
 msgstr "编码"
 
-#: ../ui/root/powered-by.xml.en:81
+#: ../ui/ikaaro/root/powered-by.xml.en:81
 #, fuzzy
 msgctxt "table cell"
 msgid "Coders"
 msgstr "编码"
 
-#: ../ui/root/powered-by.xml.en:43
+#: ../ui/ikaaro/root/powered-by.xml.en:43
 msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr ""
@@ -828,7 +862,16 @@ msgstr "新文件"
 msgid "Commit Log"
 msgstr ""
 
-#: ../config.py:51 ../config.py:287 ../skins.py:249 ../root.py:113
+#: ../api/views.py:199
+msgid "Commit's author name"
+msgstr ""
+
+#: ../api/views.py:200
+#, fuzzy
+msgid "Commit's title"
+msgstr "名称"
+
+#: ../config.py:51 ../config.py:287 ../skins.py:263 ../root.py:112
 #: ../autoedit.py:43
 #, fuzzy
 msgid "Configuration"
@@ -847,14 +890,14 @@ msgstr ""
 msgid "Configure the website email options"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:26
+#: ../ui/ikaaro/file/externaledit.xml.en:26
 msgctxt "li"
 msgid ""
 "Configure your browser so it uses the <g id='5'>restedit.py</g> script to "
 "open web pages with the <g id='6'>application/x-restedit</g> mimetype"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:45
+#: ../ui/ikaaro/file/externaledit.xml.en:45
 msgctxt "li"
 msgid ""
 "Configure your browser so it uses the <g id='9'>restedit.py</g> script to "
@@ -865,21 +908,21 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../cc.py:356
+#: ../cc.py:355
 #, fuzzy
 msgid "Confirm subscription"
 msgstr "名称"
 
-#: ../cc.py:416
+#: ../cc.py:415
 msgid "Confirm to stop receiving emails every time this resource is modified."
 msgstr ""
 
-#: ../cc.py:420
+#: ../cc.py:419
 #, fuzzy
 msgid "Confirm unsubscription"
 msgstr "名称"
 
-#: ../cc.py:477 ../cc.py:481
+#: ../cc.py:476 ../cc.py:480
 msgid "Confirmation required"
 msgstr ""
 
@@ -892,7 +935,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../config_menu.py:263 ../root_views.py:112
+#: ../config_menu.py:263 ../root_views.py:132
 msgid "Contact"
 msgstr "联系我们"
 
@@ -901,7 +944,7 @@ msgstr "联系我们"
 msgid "Content"
 msgstr "浏览"
 
-#: ../ui/root/powered-by.xml.en:42
+#: ../ui/ikaaro/root/powered-by.xml.en:42
 #, fuzzy
 msgctxt "li"
 msgid "Content &amp;"
@@ -916,7 +959,7 @@ msgstr "浏览"
 msgid "Copy"
 msgstr "复制"
 
-#: ../ui/file/externaledit.xml.en:23
+#: ../ui/ikaaro/file/externaledit.xml.en:23
 msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr ""
@@ -929,7 +972,7 @@ msgstr ""
 msgid "Create a new event"
 msgstr ""
 
-#: ../popup.py:405
+#: ../popup.py:404
 msgid "Create a new page and link to it:"
 msgstr ""
 
@@ -938,7 +981,7 @@ msgstr ""
 msgid "Create an account"
 msgstr "改变内设"
 
-#: ../ui/base/login.xml.en:11
+#: ../ui/ikaaro/base/login.xml.en:11
 #, fuzzy
 msgctxt "link"
 msgid "Create an account now"
@@ -954,7 +997,7 @@ msgstr "列出文档"
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../ui/root/powered-by.xml.en:78
+#: ../ui/ikaaro/root/powered-by.xml.en:78
 msgctxt "heading"
 msgid "Credits"
 msgstr ""
@@ -967,7 +1010,7 @@ msgstr ""
 msgid "Cut"
 msgstr "剪切"
 
-#: ../agenda/event.py:516
+#: ../agenda/event.py:495
 msgid ""
 "DO NOT REPLY TO THIS EMAIL.\n"
 "\n"
@@ -977,7 +1020,7 @@ msgid ""
 "{resource_uri}\n"
 msgstr ""
 
-#: ../cc.py:497
+#: ../cc.py:496
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -998,7 +1041,7 @@ msgstr "名称"
 msgid "Date"
 msgstr "日期"
 
-#: ../ui/revisions/changes.xml.en:15
+#: ../ui/ikaaro/revisions/changes.xml.en:15
 #, fuzzy
 msgctxt "b"
 msgid "Date"
@@ -1010,7 +1053,7 @@ msgctxt "label"
 msgid "Date"
 msgstr "日期"
 
-#: ../ui/file/history.xml.en:12
+#: ../ui/ikaaro/file/history.xml.en:12
 #, fuzzy
 msgctxt "table cell"
 msgid "Date"
@@ -1028,7 +1071,7 @@ msgstr ""
 msgid "December"
 msgstr ""
 
-#: ../ui/website/edit_languages.xml.en:14
+#: ../ui/ikaaro/website/edit_languages.xml.en:14
 #, fuzzy
 msgctxt "table cell"
 msgid "Default"
@@ -1054,9 +1097,15 @@ msgstr ""
 msgid "Depth"
 msgstr ""
 
-#: ../resource_.py:458 ../widgets.py:875 ../blog/blog.py:41
+#: ../resource_.py:102 ../widgets.py:912 ../blog/blog.py:41
 msgid "Description"
 msgstr ""
+
+#: ../ui/ikaaro/root/api_docs.xml.en:15
+#, fuzzy
+msgctxt "heading"
+msgid "Description"
+msgstr "名称"
 
 #: ../blog/ui/Post_edit.xml.en:21
 #, fuzzy
@@ -1064,7 +1113,7 @@ msgctxt "label"
 msgid "Description"
 msgstr "名称"
 
-#: ../ui/revisions/changes.xml.en:49
+#: ../ui/ikaaro/revisions/changes.xml.en:49
 msgctxt "heading"
 msgid "Details"
 msgstr ""
@@ -1074,19 +1123,19 @@ msgstr ""
 msgid "Diff between selected revisions"
 msgstr "必须选择一或二个修正版."
 
-#: ../ui/comments.xml.en:9
+#: ../ui/ikaaro/comments.xml.en:9
 msgctxt "div"
 msgid ""
 "Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:42
+#: ../ui/ikaaro/root/powered-by.xml.en:42
 #, fuzzy
 msgctxt "li"
 msgid "Document Management."
 msgstr "编辑文档"
 
-#: ../root_views.py:326
+#: ../root_views.py:346
 #, fuzzy
 msgid "Documentation updated."
 msgstr "编辑文档"
@@ -1096,27 +1145,27 @@ msgstr "编辑文档"
 msgid "Domain names"
 msgstr "新文件"
 
-#: ../ui/base/login.xml.en:10
+#: ../ui/ikaaro/base/login.xml.en:10
 #, fuzzy
 msgctxt "div"
 msgid "Don't have an account?"
 msgstr "改变内设"
 
-#: ../file_views.py:77 ../file_views.py:107
+#: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:16
+#: ../ui/ikaaro/file/externaledit.xml.en:16
 msgctxt "li"
 msgid "Download <g id='2'>restedit</g>"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:35
+#: ../ui/ikaaro/file/externaledit.xml.en:35
 msgctxt "li"
 msgid "Download <g id='7'>restedit</g>"
 msgstr ""
 
-#: ../cc.py:105 ../users.py:80
+#: ../cc.py:104 ../users.py:80
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
@@ -1140,13 +1189,13 @@ msgstr "密码"
 msgid "Edit Preferences"
 msgstr "优先"
 
-#: ../ui/user/edit_preferences.xml.en:9
+#: ../ui/ikaaro/user/edit_preferences.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Edit Preferences"
 msgstr "优先"
 
-#: ../ui/website/virtual_hosts.xml.en:9
+#: ../ui/ikaaro/website/virtual_hosts.xml.en:9
 msgctxt "legend"
 msgid "Edit Virtual Hosts"
 msgstr ""
@@ -1164,7 +1213,7 @@ msgstr "用户"
 msgid "Edit row #{id}"
 msgstr ""
 
-#: ../ui/website/edit_languages.xml.en:9
+#: ../ui/ikaaro/website/edit_languages.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Edit the active languages"
@@ -1193,7 +1242,7 @@ msgstr ""
 msgid "Email options"
 msgstr "登录"
 
-#: ../agenda/event.py:309
+#: ../agenda/event.py:308
 msgid "End"
 msgstr ""
 
@@ -1201,22 +1250,22 @@ msgstr ""
 msgid "English"
 msgstr "英语"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr ""
 
-#: ../ui/update_instance.xml.en:8
+#: ../ui/ikaaro/update_instance.xml.en:8
 #, fuzzy
 msgctxt "heading"
 msgid "Errors"
 msgstr "信息"
 
-#: ../agenda/event.py:330
+#: ../agenda/event.py:329
 #, fuzzy
 msgid "Event"
 msgstr "简易文件"
 
-#: ../agenda/event.py:547
+#: ../agenda/event.py:526
 #, fuzzy
 msgid "Event model"
 msgstr "简易文件"
@@ -1253,13 +1302,13 @@ msgstr "简易文件"
 msgid "External Editor"
 msgstr "外部"
 
-#: ../ui/file/externaledit.xml.en:56
+#: ../ui/ikaaro/file/externaledit.xml.en:56
 #, fuzzy
 msgctxt "button"
 msgid "External Editor..."
 msgstr "外部"
 
-#: ../ui/binary/Archive_view.xml.en:11
+#: ../ui/ikaaro/binary/Archive_view.xml.en:11
 #, fuzzy
 msgctxt "legend"
 msgid "Extract contents"
@@ -1285,17 +1334,17 @@ msgstr ""
 msgid "Field type"
 msgstr ""
 
-#: ../file.py:56 ../widgets.py:93
+#: ../file.py:56 ../widgets.py:99
 msgid "File"
 msgstr ""
 
-#: ../ui/html/popup.xml.en:111
+#: ../ui/ikaaro/html/popup.xml.en:111
 #, fuzzy
 msgctxt "label"
 msgid "File"
 msgstr "名称"
 
-#: ../ui/revisions/changes.xml.en:31
+#: ../ui/ikaaro/revisions/changes.xml.en:31
 #, fuzzy
 msgctxt "table cell"
 msgid "Filename"
@@ -1319,16 +1368,16 @@ msgstr ""
 msgid "Flash Document"
 msgstr "新文件"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "文件夹"
 
-#: ../ui/file/externaledit.xml.en:39
+#: ../ui/ikaaro/file/externaledit.xml.en:39
 msgctxt "li"
 msgid "Follow this <g id='8'> documentation </g>"
 msgstr ""
 
-#: ../cc.py:475
+#: ../cc.py:474
 msgid "Followers"
 msgstr ""
 
@@ -1336,7 +1385,13 @@ msgstr ""
 msgid "Footer"
 msgstr ""
 
-#: ../ui/website/broken_links.xml.en:8
+#: ../ui/ikaaro/root/api_docs.xml.en:52
+#, fuzzy
+msgctxt "heading"
+msgid "Form"
+msgstr "格式"
+
+#: ../ui/ikaaro/website/broken_links.xml.en:8
 msgctxt "paragraph"
 msgid "Found <g id='1'>${total}</g> broken links."
 msgstr ""
@@ -1370,7 +1425,7 @@ msgctxt "table cell"
 msgid "Full day"
 msgstr ""
 
-#: ../root.py:335
+#: ../root.py:334
 msgid "GNU/Linux"
 msgstr ""
 
@@ -1383,25 +1438,25 @@ msgstr "概略"
 msgid "Git failed: {error}"
 msgstr ""
 
-#: ../ui/PO_edit.xml.en:15
+#: ../ui/ikaaro/PO_edit.xml.en:15
 #, fuzzy
 msgctxt "title attribute"
 msgid "Go to first message"
 msgstr "此处无内容."
 
-#: ../ui/PO_edit.xml.en:20
+#: ../ui/ikaaro/PO_edit.xml.en:20
 #, fuzzy
 msgctxt "title attribute"
 msgid "Go to last message"
 msgstr "此处无内容."
 
-#: ../ui/PO_edit.xml.en:19
+#: ../ui/ikaaro/PO_edit.xml.en:19
 #, fuzzy
 msgctxt "title attribute"
 msgid "Go to next message"
 msgstr "此处无内容."
 
-#: ../ui/PO_edit.xml.en:17
+#: ../ui/ikaaro/PO_edit.xml.en:17
 #, fuzzy
 msgctxt "title attribute"
 msgid "Go to previous message"
@@ -1432,7 +1487,7 @@ msgstr ""
 msgid "HTML File"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:91
+#: ../ui/ikaaro/root/powered-by.xml.en:91
 msgctxt "table cell"
 msgid ""
 "Hervé Cauwelier (French)<x id='7'/> Nicolas Deram (French)<x id='8'/> Paolo "
@@ -1452,7 +1507,7 @@ msgstr ""
 msgid "Hungarian"
 msgstr "匈牙利语"
 
-#: ../ui/base/login.xml.en:40
+#: ../ui/ikaaro/base/login.xml.en:40
 #, fuzzy
 msgctxt "label"
 msgid "I forgot my password."
@@ -1464,12 +1519,12 @@ msgid ""
 "choose his password."
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:72
+#: ../ui/ikaaro/root/powered-by.xml.en:72
 msgctxt "paragraph"
 msgid "If not, see <g id='5'>http://www.gnu.org/licenses/</g>."
 msgstr ""
 
-#: ../ui/root/internal_server_error.xml.en:11
+#: ../ui/ikaaro/root/internal_server_error.xml.en:11
 msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
 msgstr ""
@@ -1492,7 +1547,7 @@ msgstr "简易文件"
 msgid "Inactive"
 msgstr "名称"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr ""
 
@@ -1500,27 +1555,27 @@ msgstr ""
 msgid "Inherited field"
 msgstr ""
 
-#: ../ui/website/config.xml.en:17
+#: ../ui/ikaaro/website/config.xml.en:17
 msgctxt "button"
 msgid "Initialize new modules"
 msgstr ""
 
-#: ../popup.py:456
+#: ../popup.py:455
 #, fuzzy
 msgid "Insert image"
 msgstr "新链接"
 
-#: ../popup.py:402
+#: ../popup.py:401
 #, fuzzy
 msgid "Insert link"
 msgstr "新链接"
 
-#: ../popup.py:486
+#: ../popup.py:485
 #, fuzzy
 msgid "Insert media"
 msgstr "新链接"
 
-#: ../ui/root/powered-by.xml.en:11
+#: ../ui/ikaaro/root/powered-by.xml.en:11
 msgctxt "legend"
 msgid "Installed software"
 msgstr ""
@@ -1534,12 +1589,12 @@ msgstr "用户被删除."
 msgid "Integer"
 msgstr ""
 
-#: ../ui/root/internal_server_error.xml.en:8
+#: ../ui/ikaaro/root/internal_server_error.xml.en:8
 msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../root.py:169
+#: ../root.py:168
 msgid "Internal server error"
 msgstr ""
 
@@ -1547,11 +1602,11 @@ msgstr ""
 msgid "Invalid dates."
 msgstr ""
 
-#: ../popup.py:423
+#: ../popup.py:422
 msgid "Invalid title."
 msgstr ""
 
-#: ../cc.py:441 ../cc.py:485
+#: ../cc.py:440 ../cc.py:484
 #, fuzzy
 msgid "Invitation"
 msgstr "查阅"
@@ -1581,16 +1636,16 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:39
+#: ../ui/ikaaro/root/powered-by.xml.en:39
 msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../resource_.py:459 ../widgets.py:876
+#: ../resource_.py:103 ../widgets.py:913
 msgid "Keywords"
 msgstr ""
 
-#: ../root_views.py:235
+#: ../root_views.py:255
 #, fuzzy
 msgid "Language"
 msgstr "语言"
@@ -1599,7 +1654,7 @@ msgstr "语言"
 msgid "Language added."
 msgstr "语言被加入."
 
-#: ../ui/website/edit_languages.xml.en:11
+#: ../ui/ikaaro/website/edit_languages.xml.en:11
 #, fuzzy
 msgctxt "table[summary]"
 msgid "Language settings"
@@ -1609,7 +1664,7 @@ msgstr "语言"
 msgid "Languages"
 msgstr "语言"
 
-#: ../ui/generic/edit_language_menu.xml.en:12
+#: ../ui/ikaaro/generic/edit_language_menu.xml.en:12
 #, fuzzy
 msgctxt "legend"
 msgid "Languages"
@@ -1641,24 +1696,24 @@ msgstr ""
 msgid "Last Name"
 msgstr "姓名"
 
-#: ../ui/root/powered-by.xml.en:54
+#: ../ui/ikaaro/root/powered-by.xml.en:54
 #, fuzzy
 msgctxt "heading"
 msgid "License"
 msgstr "许可证"
 
-#: ../ui/revisions/changes.xml.en:32
+#: ../ui/ikaaro/revisions/changes.xml.en:32
 #, fuzzy
 msgctxt "table cell"
 msgid "Lines Changed"
 msgstr "改换"
 
-#: ../resource_views.py:174
+#: ../resource_views.py:173
 #, fuzzy
 msgid "Links"
 msgstr "链接"
 
-#: ../ui/file/externaledit.xml.en:13
+#: ../ui/ikaaro/file/externaledit.xml.en:13
 msgctxt "legend"
 msgid "Linux/Unix"
 msgstr ""
@@ -1668,18 +1723,18 @@ msgstr ""
 msgid "Location"
 msgstr "登录"
 
-#: ../ui/html/popup.xml.en:39
+#: ../ui/ikaaro/html/popup.xml.en:39
 #, fuzzy
 msgctxt "label"
 msgid "Location:"
 msgstr "登录"
 
-#: ../skins.py:230
+#: ../skins.py:244
 #, fuzzy
 msgid "Log out"
 msgstr "登录"
 
-#: ../users_views.py:422 ../resource_views.py:218
+#: ../users_views.py:422 ../resource_views.py:217
 msgid "Login"
 msgstr "登录"
 
@@ -1687,7 +1742,7 @@ msgstr "登录"
 msgid "Logo"
 msgstr ""
 
-#: ../root.py:336
+#: ../root.py:335
 msgid "Mac OS X"
 msgstr ""
 
@@ -1697,7 +1752,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "新文件"
 
-#: ../cc.py:198
+#: ../cc.py:197
 #, fuzzy
 msgid "Manage Subscriptions"
 msgstr "名称"
@@ -1722,7 +1777,7 @@ msgstr "名称"
 msgid "March"
 msgstr "搜索"
 
-#: ../cc.py:269
+#: ../cc.py:268
 #, fuzzy
 msgid "Mass Subscription"
 msgstr "名称"
@@ -1740,13 +1795,13 @@ msgstr "浏览"
 msgid "Menu"
 msgstr ""
 
-#: ../ui/revisions/changes.xml.en:19
+#: ../ui/ikaaro/revisions/changes.xml.en:19
 #, fuzzy
 msgctxt "b"
 msgid "Message"
 msgstr "信息"
 
-#: ../ui/PO_edit.xml.en:13
+#: ../ui/ikaaro/PO_edit.xml.en:13
 msgctxt "table cell"
 msgid ""
 "Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
@@ -1758,21 +1813,21 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../root_views.py:141
+#: ../root_views.py:161
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
 
-#: ../root_views.py:182
+#: ../root_views.py:202
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../root_views.py:140
+#: ../root_views.py:160
 msgid "Message subject"
 msgstr "信息目的"
 
-#: ../ui/file/externaledit.xml.en:32
+#: ../ui/ikaaro/file/externaledit.xml.en:32
 msgctxt "legend"
 msgid "Microsoft Windows (32-bit)"
 msgstr ""
@@ -1797,7 +1852,7 @@ msgstr ""
 msgid "Monthly View"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:45
+#: ../ui/ikaaro/root/powered-by.xml.en:45
 msgctxt "li"
 msgid "Mulitilingual interfaces and content."
 msgstr ""
@@ -1806,7 +1861,7 @@ msgstr ""
 msgid "Multiple"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:44
+#: ../ui/ikaaro/root/powered-by.xml.en:44
 msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
@@ -1819,25 +1874,27 @@ msgstr ""
 msgid "Name"
 msgstr "姓名"
 
-#: ../ui/website/edit_languages.xml.en:15
+#: ../ui/ikaaro/website/edit_languages.xml.en:15
+#: ../ui/ikaaro/root/api_docs.xml.en:27 ../ui/ikaaro/root/api_docs.xml.en:40
+#: ../ui/ikaaro/root/api_docs.xml.en:55 ../ui/ikaaro/root/api_docs.xml.en:70
 #, fuzzy
 msgctxt "table cell"
 msgid "Name"
 msgstr "姓名"
 
-#: ../ui/update_instance.xml.en:52
+#: ../ui/ikaaro/update_instance.xml.en:52
 #, fuzzy
 msgctxt "table cell"
 msgid "Nb resources to update"
 msgstr "新文件夹"
 
-#: ../ui/website/config.xml.en:9
+#: ../ui/ikaaro/website/config.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "New modules"
 msgstr "编码"
 
-#: ../ui/website/config.xml.en:11
+#: ../ui/ikaaro/website/config.xml.en:11
 msgctxt "paragraph"
 msgid ""
 "New modules have been detected, pleae click the button below to initialize "
@@ -1863,17 +1920,17 @@ msgstr "密码"
 msgid "New row added."
 msgstr "新资料被加入."
 
-#: ../ui/generic/browse_batch.xml.en:19
+#: ../ui/ikaaro/generic/browse_batch.xml.en:19
 msgctxt "link"
 msgid "Next »"
 msgstr ""
 
-#: ../ui/generic/browse_batch.xml.en:19
+#: ../ui/ikaaro/generic/browse_batch.xml.en:19
 msgctxt "title attribute"
 msgid "Next »"
 msgstr ""
 
-#: ../widgets.py:211 ../agenda/calendars.py:106 ../datatypes.py:231
+#: ../widgets.py:248 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
 msgstr ""
 
@@ -1896,13 +1953,19 @@ msgstr "物件被更名"
 msgid "No resource selected."
 msgstr "没有物件被选中"
 
-#: ../ui/update_instance.xml.en:42
+#: ../ui/ikaaro/update_instance.xml.en:42
 #, fuzzy
 msgctxt "div"
 msgid "No resource to update"
 msgstr "名称"
 
-#: ../ui/root/not_found.xml.en:8
+#: ../ui/ikaaro/root/not_allowed.xml.en:8
+#, fuzzy
+msgctxt "legend"
+msgid "Not Allowed"
+msgstr "文件夹"
+
+#: ../ui/ikaaro/root/not_found.xml.en:8
 #, fuzzy
 msgctxt "legend"
 msgid "Not Found"
@@ -1913,7 +1976,7 @@ msgstr "未发现物件."
 msgid "Not ordered"
 msgstr "文件夹"
 
-#: ../cc.py:221
+#: ../cc.py:220
 #, fuzzy
 msgid "Not subscribed"
 msgstr "名称"
@@ -1957,11 +2020,11 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../buttons.py:36 ../cc.py:262
+#: ../buttons.py:36 ../cc.py:261
 msgid "OK"
 msgstr ""
 
-#: ../ui/html/popup.xml.en:89
+#: ../ui/ikaaro/html/popup.xml.en:89
 msgctxt "button"
 msgid "OK"
 msgstr ""
@@ -1984,7 +2047,7 @@ msgstr "写入"
 msgid "October"
 msgstr ""
 
-#: ../ui/base/login.xml.en:46 ../blog/ui/Post_view.xml.en:13
+#: ../blog/ui/Post_view.xml.en:13 ../ui/ikaaro/base/login.xml.en:46
 msgctxt "button"
 msgid "Ok"
 msgstr ""
@@ -1993,7 +2056,7 @@ msgstr ""
 msgid "On"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:52
+#: ../ui/ikaaro/file/externaledit.xml.en:52
 #, fuzzy
 msgctxt "paragraph"
 msgid "Once <g id='11'>restedit</g> is installed, just click the button below:"
@@ -2030,7 +2093,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../root_views.py:210
+#: ../root_views.py:230
 msgid "Operating System"
 msgstr ""
 
@@ -2075,7 +2138,7 @@ msgstr "重命名物件"
 msgid "Ordered Table"
 msgstr "重命名物件"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr ""
 
@@ -2096,12 +2159,12 @@ msgstr ""
 msgid "PDF Document"
 msgstr "新文件"
 
-#: ../users_views.py:486 ../widgets.py:123
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 #, fuzzy
 msgid "Password"
 msgstr "密码"
 
-#: ../ui/base/login.xml.en:32
+#: ../ui/ikaaro/base/login.xml.en:32
 #, fuzzy
 msgctxt "label"
 msgid "Password"
@@ -2127,7 +2190,12 @@ msgstr "粘贴"
 msgid "Path"
 msgstr "粘贴"
 
-#: ../cc.py:218 ../users.py:74
+#: ../ui/ikaaro/root/api_docs.xml.en:24
+msgctxt "heading"
+msgid "Path query"
+msgstr ""
+
+#: ../cc.py:217 ../users.py:74
 #, fuzzy
 msgid "Pending confirmation"
 msgstr "查阅"
@@ -2146,7 +2214,7 @@ msgstr "简易文件"
 msgid "Please answer the question below:"
 msgstr "你必须选择删除成员."
 
-#: ../ui/register_terms_of_service.xml.en:12
+#: ../ui/ikaaro/register_terms_of_service.xml.en:12
 msgctxt "label"
 msgid "Please check this box to accept the <g id='3'>Terms of Service</g>."
 msgstr ""
@@ -2160,6 +2228,12 @@ msgstr ""
 msgid "Please enter the words below"
 msgstr "你必须选择删除成员."
 
+#: ../ui/ikaaro/root/unavailable.xml.en:9
+#, fuzzy
+msgctxt "paragraph"
+msgid "Please try again later."
+msgstr "用户名错误,请再输入."
+
 #: ../utils.py:119
 msgid "Portuguese"
 msgstr "葡萄牙语"
@@ -2172,20 +2246,24 @@ msgstr ""
 msgid "PowerPoint Presentation"
 msgstr ""
 
-#: ../root_views.py:188
+#: ../root_views.py:208
 msgid "Powered by"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:8
+#: ../ui/ikaaro/root/powered-by.xml.en:8
 msgctxt "heading"
 msgid "Powered by Ikaaro"
 msgstr ""
 
-#: ../ui/user/edit_preferences.xml.en:13
+#: ../ui/ikaaro/user/edit_preferences.xml.en:13
 #, fuzzy
 msgctxt "label"
 msgid "Preferred Language"
 msgstr "选择你的语言"
+
+#: ../api/views.py:162
+msgid "Pretty ?"
+msgstr ""
 
 #: ../folder_views.py:739
 #, fuzzy
@@ -2196,7 +2274,7 @@ msgstr "浏览"
 msgid "Profile"
 msgstr ""
 
-#: ../text.py:234 ../root_views.py:209
+#: ../text.py:234 ../root_views.py:229
 msgid "Python"
 msgstr ""
 
@@ -2234,11 +2312,11 @@ msgstr ""
 msgid "Recaptcha public key"
 msgstr ""
 
-#: ../root_views.py:135
+#: ../root_views.py:155
 msgid "Recipient"
 msgstr "收件人"
 
-#: ../agenda/event.py:347
+#: ../agenda/event.py:346
 #, fuzzy
 msgid "Recurrence"
 msgstr "优先"
@@ -2264,7 +2342,7 @@ msgstr "查阅"
 msgid "Registration notification"
 msgstr "查阅"
 
-#: ../agenda/event.py:349
+#: ../agenda/event.py:348
 #, fuzzy
 msgid "Reminder"
 msgstr "发件人"
@@ -2300,7 +2378,7 @@ msgstr "查阅"
 msgid "Rename"
 msgstr "重命名"
 
-#: ../ui/folder/rename.xml.en:20
+#: ../ui/ikaaro/folder/rename.xml.en:20
 #, fuzzy
 msgctxt "button"
 msgid "Rename"
@@ -2322,7 +2400,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "查阅"
 
-#: ../widgets.py:879
+#: ../widgets.py:916
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -2334,6 +2412,11 @@ msgstr "查阅"
 
 #: ../config_models.py:58
 msgid "Required"
+msgstr ""
+
+#: ../ui/ikaaro/root/api_docs.xml.en:42 ../ui/ikaaro/root/api_docs.xml.en:57
+msgctxt "table cell"
+msgid "Required ?"
 msgstr ""
 
 #: ../users_views.py:436
@@ -2351,7 +2434,7 @@ msgstr "物件被更名"
 msgid "Resource type"
 msgstr "新文件夹"
 
-#: ../ui/update_instance.xml.en:17
+#: ../ui/ikaaro/update_instance.xml.en:17
 #, fuzzy
 msgctxt "table cell"
 msgid "Resource version"
@@ -2427,7 +2510,12 @@ msgstr "物件被更名"
 msgid "Resources unordered."
 msgstr "物件被更名"
 
-#: ../ui/website/search.xml.en:11
+#: ../ui/ikaaro/root/api_docs.xml.en:67
+msgctxt "heading"
+msgid "Response schema"
+msgstr ""
+
+#: ../ui/ikaaro/website/search.xml.en:11
 #, fuzzy
 msgctxt "heading"
 msgid "Results"
@@ -2443,6 +2531,11 @@ msgstr "查阅"
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
+#: ../api/views.py:197
+#, fuzzy
+msgid "SHA of the commit"
+msgstr "加入社区"
+
 #: ../datatypes.py:195 ../datatypes.py:207
 msgid "Saturday"
 msgstr ""
@@ -2452,7 +2545,8 @@ msgstr ""
 msgid "Save"
 msgstr "保存"
 
-#: ../ui/website/virtual_hosts.xml.en:14 ../ui/user/edit_preferences.xml.en:35
+#: ../ui/ikaaro/website/virtual_hosts.xml.en:14
+#: ../ui/ikaaro/user/edit_preferences.xml.en:35
 #, fuzzy
 msgctxt "button"
 msgid "Save"
@@ -2474,7 +2568,7 @@ msgstr ""
 msgid "Search engine optimization"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:66
+#: ../ui/ikaaro/root/powered-by.xml.en:66
 msgctxt "paragraph"
 msgid "See the GNU General Public License for more details."
 msgstr ""
@@ -2489,7 +2583,7 @@ msgstr "用户被加入."
 msgid "Select"
 msgstr "新链接"
 
-#: ../ui/folder/browse_image.xml.en:13
+#: ../ui/ikaaro/folder/browse_image.xml.en:13
 msgctxt "label"
 msgid "Select All"
 msgstr ""
@@ -2499,11 +2593,11 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "你必须选择删除成员."
 
-#: ../root_views.py:113
+#: ../root_views.py:133
 msgid "Send"
 msgstr "发送"
 
-#: ../widgets.py:877
+#: ../widgets.py:914
 msgid "Separated by comma"
 msgstr ""
 
@@ -2511,12 +2605,24 @@ msgstr ""
 msgid "September"
 msgstr ""
 
+#: ../api/views.py:320
+msgid "Server's PID"
+msgstr ""
+
+#: ../api/views.py:321
+msgid "Server's port"
+msgstr ""
+
+#: ../api/views.py:319
+msgid "Server's start timestamp"
+msgstr ""
+
 #: ../users_views.py:233
 #, fuzzy
 msgid "Set your preferred language and timezone."
 msgstr "选择你的语言"
 
-#: ../config_access.py:89 ../resource_.py:65
+#: ../config_access.py:89 ../resource_.py:66
 msgid "Share"
 msgstr ""
 
@@ -2524,12 +2630,12 @@ msgstr ""
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
-#: ../skins.py:219
+#: ../skins.py:233
 #, fuzzy
 msgid "Sign in"
 msgstr "登录"
 
-#: ../ui/base/login.xml.en:17
+#: ../ui/ikaaro/base/login.xml.en:17
 #, fuzzy
 msgctxt "legend"
 msgid "Sign in"
@@ -2543,7 +2649,7 @@ msgstr ""
 msgid "Skin"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:18
+#: ../ui/ikaaro/root/powered-by.xml.en:18
 #, fuzzy
 msgctxt "table cell"
 msgid "Software"
@@ -2562,7 +2668,7 @@ msgstr "西班牙语"
 msgid "Standard field"
 msgstr ""
 
-#: ../agenda/event.py:300
+#: ../agenda/event.py:299
 #, fuzzy
 msgid "Start"
 msgstr "状态"
@@ -2571,32 +2677,32 @@ msgstr "状态"
 msgid "Start time must be earlier than end time."
 msgstr ""
 
-#: ../ui/revisions/changes.xml.en:26
+#: ../ui/ikaaro/revisions/changes.xml.en:26
 #, fuzzy
 msgctxt "heading"
 msgid "Stat"
 msgstr "状态"
 
-#: ../cc.py:204 ../users_views.py:425 ../agenda/event.py:346
+#: ../cc.py:203 ../users_views.py:425 ../agenda/event.py:345
 msgid "State"
 msgstr "状态"
 
-#: ../cc.py:75 ../cc.py:186 ../cc.py:344
+#: ../cc.py:74 ../cc.py:185 ../cc.py:343
 #, fuzzy
 msgid "Subscribe"
 msgstr "名称"
 
-#: ../cc.py:219
+#: ../cc.py:218
 #, fuzzy
 msgid "Subscribed"
 msgstr "名称"
 
-#: ../cc.py:103
+#: ../cc.py:102
 #, fuzzy
 msgid "Subscription"
 msgstr "名称"
 
-#: ../cc.py:335
+#: ../cc.py:334
 #, fuzzy
 msgid "Subscriptions"
 msgstr "名称"
@@ -2664,6 +2770,16 @@ msgstr "预设语言已被改变."
 msgid "The changes have been saved."
 msgstr "预设语言已被改变."
 
+#: ../api/views.py:236
+#, fuzzy
+msgid "The class_id of the resource cls"
+msgstr "文件夹用于文件分类."
+
+#: ../api/views.py:235
+#, fuzzy
+msgid "The class_title of the resource cls"
+msgstr "文件夹用于文件分类."
+
 #: ../messages.py:29
 msgid "The document name contains illegal characters, choose another one."
 msgstr "文件名中含有不符规定的符号,请更名."
@@ -2673,7 +2789,7 @@ msgstr "文件名中含有不符规定的符号,请更名."
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: ../agenda/event.py:513
+#: ../agenda/event.py:492
 #, fuzzy
 msgid "The event \"{title}\" has been modified"
 msgstr "预设语言已被改变."
@@ -2683,33 +2799,33 @@ msgstr "预设语言已被改变."
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ../cc.py:52
+#: ../cc.py:51
 #, fuzzy
 msgid "The following addresses are invalid: {users}."
 msgstr "用户名错误,请再输入."
 
-#: ../cc.py:46
+#: ../cc.py:45
 msgid "The following users are already subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:56
+#: ../cc.py:55
 msgid "The following users are prevented from subscribing: {users}."
 msgstr ""
 
-#: ../cc.py:54
+#: ../cc.py:53
 #, fuzzy
 msgid "The following users have been invited: {users}."
 msgstr "预设语言已被改变."
 
-#: ../cc.py:48
+#: ../cc.py:47
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:50
+#: ../cc.py:49
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
-#: ../popup.py:355
+#: ../popup.py:354
 msgid "The given file is not of the expected type."
 msgstr ""
 
@@ -2732,15 +2848,25 @@ msgstr ""
 msgid "The provided passwords do not match."
 msgstr "密码错误,请再输入."
 
-#: ../ui/root/not_found.xml.en:9
+#: ../ui/ikaaro/root/not_found.xml.en:9
 msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
+msgstr ""
+
+#: ../ui/ikaaro/root/not_allowed.xml.en:9
+msgctxt "paragraph"
+msgid "The requested «${method}» on « ${uri} » is not allowed."
 msgstr ""
 
 #: ../users_views.py:509
 #, fuzzy
 msgid "The user is already here."
 msgstr "用户被加入."
+
+#: ../api/views.py:128
+#, fuzzy
+msgid "The uuid of a resource in DB"
+msgstr "新用户"
 
 #: ../config_theme.py:33
 #, fuzzy
@@ -2752,13 +2878,13 @@ msgstr "查阅"
 msgid "There are {n} items."
 msgstr "此处无图片."
 
-#: ../ui/PO_edit.xml.en:45
+#: ../ui/ikaaro/PO_edit.xml.en:45
 #, fuzzy
 msgctxt "paragraph"
 msgid "There aren't messages."
 msgstr "此处无内容."
 
-#: ../ui/root/internal_server_error.xml.en:11
+#: ../ui/ikaaro/root/internal_server_error.xml.en:11
 #, fuzzy
 msgctxt "paragraph"
 msgid "There has been an error, please try again later."
@@ -2779,7 +2905,7 @@ msgid ""
 "There is another user with the \"{value}\" {name}, please choose another one."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ../ui/user/profile.xml.en:8
+#: ../ui/ikaaro/user/profile.xml.en:8
 msgctxt "paragraph"
 msgid "This account is not active."
 msgstr ""
@@ -2789,22 +2915,27 @@ msgstr ""
 msgid "This calendar has been removed"
 msgstr "预设语言已被改变."
 
-#: ../ui/base/login.xml.en:21 ../ui/auto_form_field.xml.en:10
+#: ../ui/ikaaro/auto_form_field.xml.en:10 ../ui/ikaaro/base/login.xml.en:21
 #, fuzzy
 msgctxt "title attribute"
 msgid "This field is required"
 msgstr "空文件夹."
 
-#: ../ui/root/powered-by.xml.en:64
+#: ../ui/ikaaro/root/powered-by.xml.en:64
 msgctxt "paragraph"
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:57
+#: ../ui/ikaaro/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid "This program is free software:"
+msgstr ""
+
+#: ../ui/ikaaro/root/unavailable.xml.en:9
+msgctxt "paragraph"
+msgid "This website is under maintenance."
 msgstr ""
 
 #: ../datatypes.py:193 ../datatypes.py:205
@@ -2820,7 +2951,7 @@ msgstr ""
 msgid "Timetables"
 msgstr "名称"
 
-#: ../ui/user/edit_preferences.xml.en:24
+#: ../ui/ikaaro/user/edit_preferences.xml.en:24
 msgctxt "label"
 msgid "Timezone"
 msgstr ""
@@ -2829,20 +2960,27 @@ msgstr ""
 msgid "Tip"
 msgstr ""
 
-#: ../config_groups.py:97 ../resource_.py:457 ../agenda/calendars.py:91
+#: ../config_groups.py:97 ../resource_.py:101 ../agenda/calendars.py:91
 #: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
-#: ../config_models.py:321 ../widgets.py:873 ../folder_views.py:315
+#: ../config_models.py:321 ../widgets.py:910 ../folder_views.py:315
 msgid "Title"
 msgstr "名称"
 
-#: ../blog/ui/Post_edit.xml.en:11 ../ui/html/popup.xml.en:83
-#: ../ui/html/popup.xml.en:105
+#: ../blog/ui/Post_edit.xml.en:11 ../ui/ikaaro/html/popup.xml.en:83
+#: ../ui/ikaaro/html/popup.xml.en:105
 #, fuzzy
 msgctxt "label"
 msgid "Title"
 msgstr "名称"
 
-#: ../cc.py:487
+#: ../ui/ikaaro/root/api_docs.xml.en:28 ../ui/ikaaro/root/api_docs.xml.en:41
+#: ../ui/ikaaro/root/api_docs.xml.en:56 ../ui/ikaaro/root/api_docs.xml.en:71
+#, fuzzy
+msgctxt "table cell"
+msgid "Title"
+msgstr "名称"
+
+#: ../cc.py:486
 msgid ""
 "To accept the invitation, click the link\n"
 "\n"
@@ -2860,14 +2998,14 @@ msgid ""
 " {user}/;change_password_forgotten?username={userid}&key={userkey}"
 msgstr ""
 
-#: ../cc.py:479
+#: ../cc.py:478
 msgid ""
 "To confirm subscription, click the link:\n"
 "\n"
 " {uri}\n"
 msgstr ""
 
-#: ../cc.py:483
+#: ../cc.py:482
 msgid ""
 "To confirm unsubscription, click the link:\n"
 "\n"
@@ -2886,20 +3024,21 @@ msgctxt "paragraph"
 msgid "To download the ICS file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
-#: ../ui/binary/Archive_view.xml.en:7 ../ui/file/download_form.xml.en:8
-#: ../ui/binary/Flash_view.xml.en:7
+#: ../ui/ikaaro/file/download_form.xml.en:8
+#: ../ui/ikaaro/binary/Flash_view.xml.en:7
+#: ../ui/ikaaro/binary/Archive_view.xml.en:7
 msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:9
+#: ../ui/ikaaro/file/externaledit.xml.en:9
 msgctxt "paragraph"
 msgid ""
 "To edit this file with your preferred desktop application, first you need to "
 "install <g id='1'>restedit</g>:"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:49
+#: ../ui/ikaaro/root/powered-by.xml.en:49
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='4'>Web Site</g>."
 msgstr ""
@@ -2908,13 +3047,13 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: ../ui/PO_edit.xml.en:29
+#: ../ui/ikaaro/PO_edit.xml.en:29
 #, fuzzy
 msgctxt "table cell"
 msgid "Translation"
 msgstr "保存翻译件"
 
-#: ../ui/root/powered-by.xml.en:89
+#: ../ui/ikaaro/root/powered-by.xml.en:89
 #, fuzzy
 msgctxt "table cell"
 msgid "Translators"
@@ -2930,15 +3069,21 @@ msgstr ""
 msgid "Type"
 msgstr "种类"
 
-#: ../popup.py:488
+#: ../ui/ikaaro/root/api_docs.xml.en:72
+#, fuzzy
+msgctxt "table cell"
+msgid "Type"
+msgstr "种类"
+
+#: ../popup.py:487
 msgid "Type the URL of an external media"
 msgstr ""
 
-#: ../popup.py:404
+#: ../popup.py:403
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/ikaaro/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
@@ -2949,9 +3094,23 @@ msgstr ""
 msgid "Type your current password"
 msgstr "改变内设"
 
-#: ../ui/html/popup.xml.en:57
+#: ../ui/ikaaro/html/popup.xml.en:57
 msgctxt "label"
 msgid "URI"
+msgstr ""
+
+#: ../ui/ikaaro/root/api_docs.xml.en:37
+msgctxt "heading"
+msgid "URI Query"
+msgstr ""
+
+#: ../fields.py:821
+msgid "UUID"
+msgstr ""
+
+#: ../ui/ikaaro/root/unavailable.xml.en:8
+msgctxt "legend"
+msgid "Unavailable"
 msgstr ""
 
 #: ../messages.py:104
@@ -2962,12 +3121,12 @@ msgstr ""
 msgid "Unknow"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:20
+#: ../ui/ikaaro/file/externaledit.xml.en:20
 msgctxt "li"
 msgid "Unpack the tarball <g id='3'>restedit-last.tar.gz</g>"
 msgstr ""
 
-#: ../cc.py:89 ../cc.py:192 ../cc.py:414
+#: ../cc.py:88 ../cc.py:191 ../cc.py:413
 #, fuzzy
 msgid "Unsubscribe"
 msgstr "名称"
@@ -2981,7 +3140,7 @@ msgstr ""
 msgid "Update"
 msgstr "更新目录"
 
-#: ../ui/generic/edit_language_menu.xml.en:23
+#: ../ui/ikaaro/generic/edit_language_menu.xml.en:23
 #, fuzzy
 msgctxt "button"
 msgid "Update"
@@ -2991,45 +3150,45 @@ msgstr "更新目录"
 msgid "Update calendar visibility"
 msgstr ""
 
-#: ../root_views.py:228
+#: ../root_views.py:248
 #, fuzzy
 msgid "Update docs"
 msgstr "更新目录"
 
-#: ../update.py:175
+#: ../update.py:173
 #, fuzzy
 msgid "Update instance"
 msgstr "更新目录"
 
-#: ../ui/update_instance.xml.en:51
+#: ../ui/ikaaro/update_instance.xml.en:51
 msgctxt "table cell"
 msgid "Update method title"
 msgstr ""
 
-#: ../ui/update_instance.xml.en:39
+#: ../ui/ikaaro/update_instance.xml.en:39
 #, fuzzy
 msgctxt "heading"
 msgid "Update methods"
 msgstr "更新目录"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr ""
 
-#: ../scripts/icms-update.py:135
+#: ../../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr ""
 
-#: ../root_views.py:239
+#: ../root_views.py:259
 #, fuzzy
 msgid "Upload"
 msgstr "上载"
 
-#: ../ui/html/popup.xml.en:117
+#: ../ui/ikaaro/html/popup.xml.en:117
 #, fuzzy
 msgctxt "button"
 msgid "Upload"
@@ -3045,15 +3204,15 @@ msgstr "上载"
 msgid "Upload File"
 msgstr "上载文件"
 
-#: ../popup.py:406
+#: ../popup.py:405
 msgid "Upload a file to the current folder and link to it:"
 msgstr ""
 
-#: ../popup.py:490
+#: ../popup.py:489
 msgid "Upload a media to the current folder and insert it:"
 msgstr ""
 
-#: ../popup.py:460
+#: ../popup.py:459
 msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
@@ -3065,7 +3224,7 @@ msgstr ""
 msgid "User"
 msgstr "用户"
 
-#: ../ui/file/history.xml.en:11
+#: ../ui/ikaaro/file/history.xml.en:11
 #, fuzzy
 msgctxt "table cell"
 msgid "User"
@@ -3116,7 +3275,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr ""
 
-#: ../users_views.py:58
+#: ../users_views.py:58 ../api/views.py:267
 #, fuzzy
 msgid "Username"
 msgstr "用户姓名"
@@ -3133,7 +3292,7 @@ msgstr ""
 msgid "Users, Access Control & Security"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:19
+#: ../ui/ikaaro/root/powered-by.xml.en:19
 #, fuzzy
 msgctxt "table cell"
 msgid "Version"
@@ -3149,7 +3308,7 @@ msgstr "版本上载."
 msgid "Video"
 msgstr "浏览"
 
-#: ../ui/binary/Video_view.xml.en:7
+#: ../ui/ikaaro/binary/Video_view.xml.en:7
 #, fuzzy
 msgctxt "link"
 msgid "Video"
@@ -3204,11 +3363,11 @@ msgstr "名称"
 msgid "Weekly View"
 msgstr ""
 
-#: ../resource_views.py:328
+#: ../resource_views.py:327
 msgid "Welcome!"
 msgstr ""
 
-#: ../agenda/event.py:345
+#: ../agenda/event.py:344
 msgid "Where"
 msgstr ""
 
@@ -3216,7 +3375,7 @@ msgstr ""
 msgid "Widget to use"
 msgstr ""
 
-#: ../root.py:337
+#: ../root.py:336
 msgid "Windows"
 msgstr ""
 
@@ -3245,7 +3404,7 @@ msgstr ""
 msgid "Yearly"
 msgstr ""
 
-#: ../widgets.py:210 ../widgets.py:262 ../agenda/calendars.py:106
+#: ../widgets.py:247 ../widgets.py:299 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
 msgstr ""
@@ -3255,12 +3414,12 @@ msgctxt "label"
 msgid "Yes"
 msgstr ""
 
-#: ../ui/website/edit_languages.xml.en:22
+#: ../ui/ikaaro/website/edit_languages.xml.en:22
 msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:342
+#: ../resource_views.py:341
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -3271,21 +3430,21 @@ msgid ""
 " {host}/;login?loginname={userid}"
 msgstr ""
 
-#: ../resource_views.py:232
+#: ../resource_views.py:231
 msgid "You are already connected"
 msgstr ""
 
-#: ../ui/root/forbidden.xml.en:9
+#: ../ui/ikaaro/root/forbidden.xml.en:9
 msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
-#: ../cc.py:42
+#: ../cc.py:41
 #, fuzzy
 msgid "You are now subscribed."
 msgstr "用户"
 
-#: ../cc.py:44
+#: ../cc.py:43
 msgid "You are now unsubscribed."
 msgstr ""
 
@@ -3331,7 +3490,7 @@ msgstr ""
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
-#: ../resource_views.py:313
+#: ../resource_views.py:312
 #, fuzzy
 msgid "You must complete your account informations"
 msgstr "必须选择一或二个修正版."
@@ -3340,18 +3499,18 @@ msgstr "必须选择一或二个修正版."
 msgid "You must select one and only one language."
 msgstr "你只能选择一种语言."
 
-#: ../ui/root/powered-by.xml.en:71
+#: ../ui/ikaaro/root/powered-by.xml.en:71
 msgctxt "paragraph"
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program."
 msgstr ""
 
-#: ../cc.py:43
+#: ../cc.py:42
 msgid "You were already subscribed."
 msgstr ""
 
-#: ../cc.py:45
+#: ../cc.py:44
 msgid "You were already unsubscribed."
 msgstr ""
 
@@ -3369,7 +3528,7 @@ msgstr ""
 msgid "Your account has been re-activated"
 msgstr ""
 
-#: ../ui/register_terms_of_service.xml.en:8
+#: ../ui/ikaaro/register_terms_of_service.xml.en:8
 msgctxt "paragraph"
 msgid "Your browser does not support iframes."
 msgstr ""
@@ -3378,7 +3537,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../root_views.py:139
+#: ../root_views.py:159
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -3408,7 +3567,7 @@ msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
 msgstr ""
 
-#: ../cc.py:494
+#: ../cc.py:493
 #, fuzzy
 msgid "[{title}] has been modified"
 msgstr "预设语言已被改变."
@@ -3418,11 +3577,11 @@ msgstr "预设语言已被改变."
 msgid "huge"
 msgstr "改换"
 
-#: ../root.py:94
+#: ../root.py:93
 msgid "iKaaro"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:32
+#: ../ui/ikaaro/root/powered-by.xml.en:32
 msgctxt "paragraph"
 msgid ""
 "iKaaro is a Content Management System, written in the <g id='2'>Python</g> "
@@ -3434,7 +3593,7 @@ msgstr ""
 msgid "large"
 msgstr "对照"
 
-#: ../root_views.py:208
+#: ../root_views.py:228
 msgid "lpOD"
 msgstr ""
 
@@ -3447,7 +3606,7 @@ msgstr ""
 msgid "original"
 msgstr "登录"
 
-#: ../root_views.py:207
+#: ../root_views.py:227
 msgid "pygobject"
 msgstr ""
 
@@ -3459,12 +3618,12 @@ msgstr ""
 msgid "small"
 msgstr ""
 
-#: ../ui/editarea/ea.xml.en:21
+#: ../ui/ikaaro/editarea/ea.xml.en:21
 msgctxt "noscript"
 msgid "the EditArea Editor is unavailable.)"
 msgstr ""
 
-#: ../ui/tiny_mce/rte.xml.en:51
+#: ../ui/ikaaro/tiny_mce/rte.xml.en:51
 msgctxt "noscript"
 msgid "the Rich Text Editor is unavailable.)"
 msgstr ""
@@ -3479,14 +3638,14 @@ msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:65
+#: ../ui/ikaaro/root/powered-by.xml.en:65
 msgctxt "paragraph"
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 msgstr ""
 
-#: ../ui/root/powered-by.xml.en:57
+#: ../ui/ikaaro/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid ""
 "you can redistribute it and/or modify it under the terms of the GNU General "
@@ -3494,7 +3653,7 @@ msgid ""
 "3 of the License, or (at your option) any later version."
 msgstr ""
 
-#: ../skins.py:71
+#: ../skins.py:85
 msgid "{here_title} - {view_title} - {root_title}"
 msgstr ""
 
@@ -3514,7 +3673,7 @@ msgstr ""
 msgid "{month} {year}"
 msgstr ""
 
-#: ../skins.py:68
+#: ../skins.py:82
 msgid "{view_title} - {root_title}"
 msgstr ""
 
@@ -3536,19 +3695,19 @@ msgctxt "link"
 msgid "«"
 msgstr ""
 
-#: ../ui/generic/browse_batch.xml.en:11
+#: ../ui/ikaaro/generic/browse_batch.xml.en:11
 #, fuzzy
 msgctxt "link"
 msgid "« Previous"
 msgstr "查阅"
 
-#: ../ui/generic/browse_batch.xml.en:10
+#: ../ui/ikaaro/generic/browse_batch.xml.en:10
 #, fuzzy
 msgctxt "title attribute"
 msgid "« Previous"
 msgstr "查阅"
 
-#: ../root_views.py:309
+#: ../root_views.py:329
 msgid "¶"
 msgstr ""
 
@@ -3565,7 +3724,7 @@ msgstr ""
 msgid "…"
 msgstr ""
 
-#: ../ui/folder/rename.xml.en:15
+#: ../ui/ikaaro/folder/rename.xml.en:15
 #, fuzzy
 msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
@@ -4899,9 +5058,6 @@ msgstr "名称"
 #~ msgid "Folders are used to classify documents."
 #~ msgstr "文件夹用于文件分类."
 
-#~ msgid "Folders let to classify other resources."
-#~ msgstr "文件夹用于文件分类."
-
 #, fuzzy
 #~ msgctxt "button"
 #~ msgid "Forget this Search"
@@ -4910,11 +5066,6 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Forgotten password"
 #~ msgstr "改变内设"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Format"
-#~ msgstr "格式"
 
 #, fuzzy
 #~ msgctxt "span"
@@ -5009,10 +5160,6 @@ msgstr "名称"
 
 #~ msgid "Join"
 #~ msgstr "汇合"
-
-#, fuzzy
-#~ msgid "Join the Community"
-#~ msgstr "加入社区"
 
 #, fuzzy
 #~ msgctxt "title attribute"
@@ -5896,11 +6043,6 @@ msgstr "名称"
 #~ msgstr "此处无内容."
 
 #, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Title"
-#~ msgstr "名称"
-
-#, fuzzy
 #~ msgctxt "label"
 #~ msgid "Title (mandatory):"
 #~ msgstr "密码错误,请再输入."
@@ -5960,11 +6102,6 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Tracker"
 #~ msgstr "对照"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Type"
-#~ msgstr "种类"
 
 #, fuzzy
 #~ msgctxt "label"
