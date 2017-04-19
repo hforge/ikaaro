@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
 "POT-Creation-Date: 2017-03-17 16:03+CET\n"
-"PO-Revision-Date: 2017-04-19 12:21+0000\n"
+"PO-Revision-Date: 2017-04-19 12:23+0000\n"
 "Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: Itaapy\n"
 "Language: fr\n"
@@ -1111,7 +1111,7 @@ msgstr "Gestion de documents."
 
 #: ../root_views.py:346
 msgid "Documentation updated."
-msgstr "Documentation mise à jour"
+msgstr "Documentation mise à jour."
 
 #: ../config_vhosts.py:61
 msgid "Domain names"
@@ -1181,11 +1181,11 @@ msgstr "Modifier la ligne #{id}"
 #: ../ui/ikaaro/website/edit_languages.xml.en:9
 msgctxt "legend"
 msgid "Edit the active languages"
-msgstr "Définir les langues du site web."
+msgstr "Définir les langues du site web"
 
 #: ../config_menu.py:256
 msgid "Edit the global menu."
-msgstr "Modifier le menu global"
+msgstr "Modifier le menu global."
 
 #: ../agenda/ui/edit_timetables.xml.en:9
 msgctxt "legend"
@@ -1771,7 +1771,7 @@ msgstr "Mensuel"
 #: ../ui/ikaaro/root/powered-by.xml.en:45
 msgctxt "li"
 msgid "Mulitilingual interfaces and content."
-msgstr "Interface et contenu multilingues"
+msgstr "Interface et contenu multilingues."
 
 #: ../config_models.py:59
 msgid "Multiple"
@@ -1782,7 +1782,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 "Plusieurs sites web dans une seule instance, avec des droits d'accès "
-"cloisonnés"
+"cloisonnés."
 
 #: ../agenda/agenda.py:132
 msgid "My events"
@@ -2422,7 +2422,7 @@ msgstr "Voir la « GNU General Public License » pour plus de détails."
 
 #: ../users_views.py:368
 msgid "See the users."
-msgstr "Voir les utilisateurs"
+msgstr "Voir les utilisateurs."
 
 #: ../config_models.py:153
 msgid "Select"
@@ -2725,7 +2725,7 @@ msgstr "Ce compte n'est pas actif."
 
 #: ../agenda/calendars.py:176
 msgid "This calendar has been removed"
-msgstr "Ce calendrier a été supprimé."
+msgstr "Ce calendrier a été supprimé"
 
 #: ../ui/ikaaro/auto_form_field.xml.en:10 ../ui/ikaaro/base/login.xml.en:21
 msgctxt "title attribute"
@@ -2744,7 +2744,7 @@ msgstr ""
 #: ../ui/ikaaro/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid "This program is free software:"
-msgstr "This program is free software:"
+msgstr "Ce programme est un logiciel gratuit :"
 
 #: ../ui/ikaaro/root/unavailable.xml.en:9
 msgctxt "paragraph"
@@ -3086,7 +3086,7 @@ msgstr ""
 
 #: ../users_views.py:163
 msgid "User's profile page."
-msgstr "Page de profil d'un utilisateur"
+msgstr "Page de profil d'un utilisateur."
 
 #: ../users_views.py:58 ../api/views.py:266
 msgid "Username"
@@ -3144,7 +3144,7 @@ msgstr "Visible ?"
 #: ../agenda/emails.py:29
 msgid "We remind you the event \"{title}\" is scheduled at {date}, {time}."
 msgstr ""
-"Nous vous rappelons que l'événement \"{title}\" est prévu le {date} à {time}"
+"Nous vous rappelons que l'événement \"{title}\" est prévu le {date} à {time}."
 
 #: ../webpage.py:50
 msgid "Web Page"
