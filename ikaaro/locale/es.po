@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2017-04-11 13:19+0000\n"
 "Last-Translator: Verba-Translations <translators@bepatient.com>\n"
 "Language-Team: Spanish\n"
@@ -75,8 +75,8 @@ msgid ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Overwrite "
 "files with the same name</g>"
 msgstr ""
-"${widget} <g id='2'>Aceptar</g>  <x id='3'/>  <x id='4'/>  <g id='5'>"
-"Sobrescribir los archivos con el mismo nombre</g>"
+"${widget} <g id='2'>Aceptar</g>  <x id='3'/>  <x id='4'/>  <g "
+"id='5'>Sobrescribir los archivos con el mismo nombre</g>"
 
 #: ../agenda/agenda_views.py:474
 msgid "%d %s"
@@ -226,8 +226,8 @@ msgid ""
 "<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
 "></g>"
 msgstr ""
-"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x "
-"id='5'/></g>"
+"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
+"></g>"
 
 #: ../ui/aruni/location.xml.en:11
 msgctxt "link"
@@ -320,7 +320,7 @@ msgstr "<g id='8'>Eliminar</g>  <g id='9'>Actualizar</g>"
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr "<p id=\"event-owner\">Creado por <em>{owner}</em></p>"
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr "Un class_id registrado en BD"
 
@@ -770,8 +770,8 @@ msgstr "Elige tu contraseña"
 #: ../widgets.py:395
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
-"Haga clic en el botón \"...\" para elegir una fecha (Formato: \"aaaa-mm-dd\""
-")."
+"Haga clic en el botón \"...\" para elegir una fecha (Formato: \"aaaa-mm-dd"
+"\")."
 
 #: ../widgets.py:497 ../widgets.py:515
 msgid "Click on button \"...\" to select a file."
@@ -837,11 +837,11 @@ msgstr "Comentario"
 msgid "Commit Log"
 msgstr "Commit Log"
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr "Autor de Commit"
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 msgid "Commit's title"
 msgstr "Título de Commit"
 
@@ -1204,7 +1204,7 @@ msgstr "Fin"
 msgid "English"
 msgstr "Inglés"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr "Error durante método de actualización. Ver logs."
 
@@ -1309,7 +1309,7 @@ msgstr "Flash"
 msgid "Flash Document"
 msgstr "Documento Flash"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "Carpeta"
 
@@ -1481,7 +1481,7 @@ msgstr "Importar"
 msgid "Inactive"
 msgstr "Inactivo"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr "Índice"
 
@@ -1716,8 +1716,8 @@ msgid ""
 "Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
 "</g>"
 msgstr ""
-"Mensaje ${messages_index} / ${messages_total} <x id='3'/>  <g "
-"id='4'>&lt;&lt;</g>"
+"Mensaje ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
+"</g>"
 
 #: ../text.py:84
 msgid "Message Catalog"
@@ -2026,7 +2026,7 @@ msgstr "Carpeta ordenada"
 msgid "Ordered Table"
 msgstr "Tabla ordenada"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr "Organice sus archivos y documentos con carpetas."
 
@@ -2046,7 +2046,7 @@ msgstr "PDF"
 msgid "PDF Document"
 msgstr "Documento PDF"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 msgid "Password"
 msgstr "Contraseña"
 
@@ -2139,7 +2139,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Idioma preferido"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr "¿Bonito?"
 
@@ -2373,7 +2373,7 @@ msgstr "Revisores"
 msgid "Row deleted."
 msgstr "Línea eliminada."
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 msgid "SHA of the commit"
 msgstr "SHA del commit"
 
@@ -2395,7 +2395,7 @@ msgstr "Guardar"
 msgid "Schedule your time with calendar files."
 msgstr "Planifique su tiempo con los calendarios."
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Buscar"
 
@@ -2441,15 +2441,15 @@ msgstr "Separados por coma"
 msgid "September"
 msgstr "Septiembre"
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr "PID del servidor"
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr "Puerto del servidor"
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr "Marca temporal de inicio del servidor"
 
@@ -2590,11 +2590,11 @@ msgstr "Los cambios se han guardado ({time})."
 msgid "The changes have been saved."
 msgstr "Los cambios se han guardado."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 msgid "The class_id of the resource cls"
 msgstr "El class_id del recurso cls"
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 msgid "The class_title of the resource cls"
 msgstr "El class_title del recurso cls"
 
@@ -2674,7 +2674,7 @@ msgstr "«${method}» solicitado en « ${uri} » no está autorizado."
 msgid "The user is already here."
 msgstr "El usuario ya existe."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 msgid "The uuid of a resource in DB"
 msgstr "El uuid de un recurso en BD"
 
@@ -2682,7 +2682,7 @@ msgstr "El uuid de un recurso en BD"
 msgid "Theme"
 msgstr "Tema"
 
-#: ../views.py:205
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr "Hay {n} elementos."
 
@@ -2696,7 +2696,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "Ha habido un error, inténtelo de nuevo más tarde."
 
-#: ../views.py:204
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr "Hay 1 elemento."
 
@@ -2919,7 +2919,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr "Consulta URI"
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr "UUID"
 
@@ -2966,7 +2966,7 @@ msgstr "Actualizar la visibilidad de calendarios"
 msgid "Update docs"
 msgstr "Actualizar documentos"
 
-#: ../update.py:175
+#: ../update.py:173
 msgid "Update instance"
 msgstr "Actualizar instancia"
 
@@ -2980,7 +2980,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "Métodos de actualización"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr "Se ha lanzado un método de actualización"
 
@@ -2988,7 +2988,7 @@ msgstr "Se ha lanzado un método de actualización"
 msgid "Upgrade to version %s"
 msgstr "Actualizar a versión %s"
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr "Actualizar a versión {0}"
 
@@ -3077,7 +3077,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr "Página de perfil del usuario."
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 msgid "Username"
 msgstr "Nombre de usuario"
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2017-04-19 12:23+0000\n"
 "Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: Itaapy\n"
@@ -324,7 +324,7 @@ msgstr "<g id='8'>Supprimer</g>  <g id='9'>Mettre à jour</g>"
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr "<p id=\"event-owner\">Créé par <em>{owner}</em></p>"
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr "Une class_id enregistrée dans la DB"
 
@@ -843,11 +843,11 @@ msgstr "Commentaire"
 msgid "Commit Log"
 msgstr "Commit Log"
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr "Auteur du commit"
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 msgid "Commit's title"
 msgstr "Titre du commit"
 
@@ -1212,7 +1212,7 @@ msgstr "Fin"
 msgid "English"
 msgstr "Anglais"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr "Erreur lors d'une méthode de mise à jour. Vérifiez les logs."
 
@@ -1317,7 +1317,7 @@ msgstr "Animation Flash"
 msgid "Flash Document"
 msgstr "Animation au format Flash"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "Dossier"
 
@@ -1489,7 +1489,7 @@ msgstr "Importer"
 msgid "Inactive"
 msgstr "Inactif"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr "Index"
 
@@ -2033,7 +2033,7 @@ msgstr "Dossier ordonné"
 msgid "Ordered Table"
 msgstr "Table de sélection ordonnée"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr "Organisez vos fichiers et documents dans des dossiers."
 
@@ -2053,7 +2053,7 @@ msgstr "Document PDF"
 msgid "PDF Document"
 msgstr "Document au format PDF"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -2147,7 +2147,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Langue"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr "Joli ?"
 
@@ -2381,7 +2381,7 @@ msgstr "Modérateurs"
 msgid "Row deleted."
 msgstr "Ligne supprimée."
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 msgid "SHA of the commit"
 msgstr "SHA du commit"
 
@@ -2403,7 +2403,7 @@ msgstr "Sauvegarder"
 msgid "Schedule your time with calendar files."
 msgstr "Organisez votre temps à l'aide d'agendas."
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Rechercher"
 
@@ -2449,15 +2449,15 @@ msgstr "Séparés par des virgules"
 msgid "September"
 msgstr "Septembre"
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr "PID du serveur"
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr "Port du serveur"
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr "Horodatage de lancement du serveur"
 
@@ -2598,11 +2598,11 @@ msgstr "Changements sauvegardés ({time})."
 msgid "The changes have been saved."
 msgstr "Changements sauvegardés."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 msgid "The class_id of the resource cls"
 msgstr "Class_id de la ressource cls"
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 msgid "The class_title of the resource cls"
 msgstr "Class_title de la ressource cls"
 
@@ -2681,7 +2681,7 @@ msgstr "«${method}» sur « ${uri} » n'est pas autorisé."
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 msgid "The uuid of a resource in DB"
 msgstr "UUID de la ressource en base de données"
 
@@ -2689,7 +2689,7 @@ msgstr "UUID de la ressource en base de données"
 msgid "Theme"
 msgstr "Thème"
 
-#: ../views.py:205
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr "Il y a {n} éléments."
 
@@ -2703,7 +2703,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "Une erreur s'est produite, veuillez réessayer plus tard."
 
-#: ../views.py:204
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr "Il y a 1 élément."
 
@@ -2929,7 +2929,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr "URI de la requête"
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr "UUID"
 
@@ -2976,7 +2976,7 @@ msgstr "Mettre à jour la visibilité des calendriers"
 msgid "Update docs"
 msgstr "Mettre à jour la documentation"
 
-#: ../update.py:175
+#: ../update.py:173
 msgid "Update instance"
 msgstr "Mettre à jour l'instance"
 
@@ -2990,7 +2990,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "Méthode de mise à jour"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr "Une méthode de mise à jour a été lancée"
 
@@ -2998,7 +2998,7 @@ msgstr "Une méthode de mise à jour a été lancée"
 msgid "Upgrade to version %s"
 msgstr "Mise à jour vers la version %s"
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr "Mise à jour vers la version {0}"
 
@@ -3088,7 +3088,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr "Page de profil d'un utilisateur."
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 msgid "Username"
 msgstr "Nom d'utilisateur"
 

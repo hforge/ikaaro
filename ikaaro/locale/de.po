@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2017-04-19 13:13+0000\n"
 "Last-Translator: Florent Chenebault <florent.chenebault@bepatient.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -229,8 +229,8 @@ msgid ""
 "<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
 "></g>"
 msgstr ""
-"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x "
-"id='5'/></g>"
+"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
+"></g>"
 
 #: ../ui/aruni/location.xml.en:11
 msgctxt "link"
@@ -262,8 +262,8 @@ msgid ""
 "<g id='2'>Browse</g>  <g id='3'>External Link</g>  <g id='4'>Insert</g>  <g "
 "id='5'>Upload</g>"
 msgstr ""
-"<g id='2'>Navigieren</g>  <g id='3'>Externer Link</g>  <g id='4'>Einfügen</g>"
-"  <g id='5'>Hochladen</g>"
+"<g id='2'>Navigieren</g>  <g id='3'>Externer Link</g>  <g id='4'>Einfügen</"
+"g>  <g id='5'>Hochladen</g>"
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:33
 msgctxt "button"
@@ -276,8 +276,8 @@ msgid ""
 "<g id='2'>I want to get a reminder e-mail</g>  <g id='3'>  <x id='4'/>  <x "
 "id='5'/> ${reminders} before the start of the event. </g>"
 msgstr ""
-"<g id='2'>Ich möchte vor Beginn des Ereignisses</g>  <g id='3'>  <x id='4'/>"
-"  <x id='5'/> ${reminders} eine Erinnerungs-E-Mail erhalten. </g>"
+"<g id='2'>Ich möchte vor Beginn des Ereignisses</g>  <g id='3'>  <x id='4'/"
+">  <x id='5'/> ${reminders} eine Erinnerungs-E-Mail erhalten. </g>"
 
 #: ../ui/ikaaro/generic/icons_view.xml.en:16
 #: ../ui/ikaaro/user/profile.xml.en:19
@@ -323,7 +323,7 @@ msgstr "<g id='8'>Löschen</g>  <g id='9'>Aktualisieren</g>"
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr "<p id=\"Ereignis-Besitzer\">Angelegt von <em>{owner}</em></p>"
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr "Eine Klassen_id registriert in DB"
 
@@ -842,11 +842,11 @@ msgstr "Kommentar"
 msgid "Commit Log"
 msgstr "Commit Log"
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr "Name des Verfassers des Kommentars"
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 msgid "Commit's title"
 msgstr "Kommentarüberschrift"
 
@@ -874,8 +874,8 @@ msgid ""
 "open web pages with the <g id='6'>application/x-restedit</g> mimetype"
 msgstr ""
 "Konfigurieren Sie Ihren Browser so, dass er das <g id='5'>restedit.py</g> "
-"Script verwendet, um Websites zu öffnen mit <g "
-"id='6'>Anwendung/x-restedit</g> mimetype"
+"Script verwendet, um Websites zu öffnen mit <g id='6'>Anwendung/x-restedit</"
+"g> mimetype"
 
 #: ../ui/ikaaro/file/externaledit.xml.en:45
 msgctxt "li"
@@ -884,8 +884,8 @@ msgid ""
 "open web pages with the <g id='10'>application/x-restedit</g> mimetype"
 msgstr ""
 "Konfigurieren Sie Ihren Browser so, dass er das <g id='9'>restedit.py</g> "
-"Script verwendet, um die Websites zu öffen mit <g "
-"id='10'>Anwendung/x-restedit</g> mimetype"
+"Script verwendet, um die Websites zu öffen mit <g id='10'>Anwendung/x-"
+"restedit</g> mimetype"
 
 #: ../users_views.py:294
 msgid "Confirm"
@@ -1101,8 +1101,8 @@ msgctxt "div"
 msgid ""
 "Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
-"Vom Status gefilterte Anzeige-Kommentare ${filter} <g id='1'>Update "
-"Anzeige</g>"
+"Vom Status gefilterte Anzeige-Kommentare ${filter} <g id='1'>Update Anzeige</"
+"g>"
 
 #: ../ui/ikaaro/root/powered-by.xml.en:42
 msgctxt "li"
@@ -1212,7 +1212,7 @@ msgstr "Ende"
 msgid "English"
 msgstr "Englisch"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr "Update-Fehler. Siehe lLogs."
 
@@ -1317,7 +1317,7 @@ msgstr "Flash"
 msgid "Flash Document"
 msgstr "Flash-Dokument"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "Ordner"
 
@@ -1490,7 +1490,7 @@ msgstr "Importieren"
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr "index"
 
@@ -1725,8 +1725,8 @@ msgid ""
 "Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
 "</g>"
 msgstr ""
-"Nachricht ${messages_index} / ${messages_total} <x id='3'/>  <g "
-"id='4'>&lt;&lt;</g>"
+"Nachricht ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;"
+"&lt;</g>"
 
 #: ../text.py:84
 msgid "Message Catalog"
@@ -2034,7 +2034,7 @@ msgstr "Sortierter Ordner"
 msgid "Ordered Table"
 msgstr "Sortierte Tabelle"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr "Organisieren Sie Ihre Dateien und Dokumente in Ordnern."
 
@@ -2054,7 +2054,7 @@ msgstr "PDF"
 msgid "PDF Document"
 msgstr "PDF-Dokument"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 msgid "Password"
 msgstr "Passwort"
 
@@ -2148,7 +2148,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Bevorzugte Sprache"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr "Schön?"
 
@@ -2382,7 +2382,7 @@ msgstr "Moderatoren"
 msgid "Row deleted."
 msgstr "Zeile gelöscht."
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 msgid "SHA of the commit"
 msgstr "SHA der Verpflichtung"
 
@@ -2404,7 +2404,7 @@ msgstr "Speichern"
 msgid "Schedule your time with calendar files."
 msgstr "Planen Sie Ihre Zeit mit Kalenderdateien."
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Suchen"
 
@@ -2450,15 +2450,15 @@ msgstr "Durch Komma getrennt"
 msgid "September"
 msgstr "September"
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr "PID des Servers"
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr "Port des Servers"
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr "Start-Zeitstempel des Servers"
 
@@ -2499,8 +2499,8 @@ msgstr "Software"
 #: ../messages.py:40
 msgid "Someone already saved this document, click \"Save\" again to force."
 msgstr ""
-"Jemand hat dieses Dokument bereits gespeichert, klicken Sie erneut auf \""
-"Speichern\", um es zu überschreiben."
+"Jemand hat dieses Dokument bereits gespeichert, klicken Sie erneut auf "
+"\"Speichern\", um es zu überschreiben."
 
 #: ../utils.py:120
 msgid "Spanish"
@@ -2599,11 +2599,11 @@ msgstr "Die Änderungen wurden gespeichert ({time})."
 msgid "The changes have been saved."
 msgstr "Die Änderungen wurden gespeichert."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 msgid "The class_id of the resource cls"
 msgstr "Die class_id der Ressource cls"
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 msgid "The class_title of the resource cls"
 msgstr "Die class_title der Ressource cls"
 
@@ -2682,7 +2682,7 @@ msgstr "Die angeforderte «${method}» auf « ${uri} » ist nicht gestattet."
 msgid "The user is already here."
 msgstr "Der User ist bereits Mitglied."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 msgid "The uuid of a resource in DB"
 msgstr "Die uuid einer Ressource in DB"
 
@@ -2690,7 +2690,7 @@ msgstr "Die uuid einer Ressource in DB"
 msgid "Theme"
 msgstr "Thema"
 
-#: ../views.py:205
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr "Es gibt {n} Elemente."
 
@@ -2705,7 +2705,7 @@ msgid "There has been an error, please try again later."
 msgstr ""
 "Es ist ein Fehler aufgetreten, bitte versuchen Sie es später noch einmal."
 
-#: ../views.py:204
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr "Es gibt 1 Element."
 
@@ -2932,7 +2932,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr "URI-Anfrage"
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr "UUID"
 
@@ -2979,7 +2979,7 @@ msgstr "Ansicht des Kalenders aktualisieren"
 msgid "Update docs"
 msgstr "Dokumentation aktualisieren"
 
-#: ../update.py:175
+#: ../update.py:173
 msgid "Update instance"
 msgstr "Instanz aktualisieren"
 
@@ -2993,7 +2993,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "Methoden aktualiseren"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr "Aktualisierte Methode wurde gestartet"
 
@@ -3001,7 +3001,7 @@ msgstr "Aktualisierte Methode wurde gestartet"
 msgid "Upgrade to version %s"
 msgstr "Upgrade auf Version %s"
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr "Upgrade auf Version {0}"
 
@@ -3091,7 +3091,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr "Seite mit dem User-Profil."
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 msgid "Username"
 msgstr "User-Name"
 
@@ -3409,8 +3409,8 @@ msgid ""
 "programming language, and based on the <g id='3'>itools</g> library."
 msgstr ""
 "iKaaro ist ein Inhaltsverwaltungs-System, geschrieben in der "
-"Programmiersprache <g id='2'>Python</g>, basierend auf dem <g "
-"id='3'>itools</g> -Library."
+"Programmiersprache <g id='2'>Python</g>, basierend auf dem <g id='3'>itools</"
+"g> -Library."
 
 #: ../file_views.py:204
 msgid "large"
@@ -3477,8 +3477,8 @@ msgid ""
 "3 of the License, or (at your option) any later version."
 msgstr ""
 "Sie können sie nach der GNU General Public License, wie von der Free "
-"Software Foundation veröffentlicht, entweder Version 3 oder der Lizenz oder ("
-"nach Ihrem Wunsch) jeder späteren Version wieder vertreiben und/oder ändern."
+"Software Foundation veröffentlicht, entweder Version 3 oder der Lizenz oder "
+"(nach Ihrem Wunsch) jeder späteren Version wieder vertreiben und/oder ändern."
 
 #: ../skins.py:85
 msgid "{here_title} - {view_title} - {root_title}"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -309,7 +309,7 @@ msgstr ""
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr ""
 
@@ -880,11 +880,11 @@ msgstr "Commenti:"
 msgid "Commit Log"
 msgstr ""
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr ""
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 #, fuzzy
 msgid "Commit's title"
 msgstr "Il titolo"
@@ -1272,7 +1272,7 @@ msgstr ""
 msgid "English"
 msgstr "Inglese"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr ""
 
@@ -1391,7 +1391,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr "Nuovo documento"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "Cartella"
 
@@ -1573,7 +1573,7 @@ msgstr "o, "
 msgid "Inactive"
 msgstr "Il titolo"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr ""
 
@@ -2172,7 +2172,7 @@ msgstr "Rinomina oggetti.."
 msgid "Ordered Table"
 msgstr "Rinomina oggetti.."
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr ""
 
@@ -2193,7 +2193,7 @@ msgstr ""
 msgid "PDF Document"
 msgstr "Nuovo documento"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 #, fuzzy
 msgid "Password"
 msgstr "Parola d'accesso"
@@ -2295,7 +2295,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Scegli il tuo linguaggio:"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr ""
 
@@ -2566,7 +2566,7 @@ msgstr "Anteprima"
 msgid "Row deleted."
 msgstr "Nessun oggetto selezionato."
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 #, fuzzy
 msgid "SHA of the commit"
 msgstr "Diventa collaboratore"
@@ -2591,7 +2591,7 @@ msgstr "Salva"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Cerca"
 
@@ -2643,15 +2643,15 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr ""
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr ""
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr ""
 
@@ -2809,12 +2809,12 @@ msgstr "Il linguaggio predefinito è stato modificato."
 msgid "The changes have been saved."
 msgstr "Il linguaggio predefinito è stato modificato."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 #, fuzzy
 msgid "The class_id of the resource cls"
 msgstr "Le cartelle consentono di classificare altre risorse."
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 #, fuzzy
 msgid "The class_title of the resource cls"
 msgstr "Le cartelle consentono di classificare altre risorse."
@@ -2902,7 +2902,7 @@ msgstr ""
 msgid "The user is already here."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 #, fuzzy
 msgid "The uuid of a resource in DB"
 msgstr "Nuovo utente"
@@ -2912,7 +2912,7 @@ msgstr "Nuovo utente"
 msgid "Theme"
 msgstr "Anteprima"
 
-#: ../views.py:205
+#: ../views.py:204
 #, fuzzy
 msgid "There are {n} items."
 msgstr "Non sono presenti immagini."
@@ -2929,7 +2929,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "Il nome utente è errato, tenta di nuovo"
 
-#: ../views.py:204
+#: ../views.py:203
 #, fuzzy
 msgid "There is 1 item."
 msgstr "Il titolo"
@@ -3149,7 +3149,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr ""
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr ""
 
@@ -3200,7 +3200,7 @@ msgstr ""
 msgid "Update docs"
 msgstr "Aggiorna il catalogo"
 
-#: ../update.py:175
+#: ../update.py:173
 #, fuzzy
 msgid "Update instance"
 msgstr "Aggiorna il catalogo"
@@ -3216,7 +3216,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "Aggiorna il catalogo"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr ""
 
@@ -3224,7 +3224,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr ""
 
@@ -3320,7 +3320,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr ""
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 #, fuzzy
 msgid "Username"
 msgstr "Nome utente"

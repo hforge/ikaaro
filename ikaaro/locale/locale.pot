@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-03-24 09:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,7 +97,7 @@ msgstr ""
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr ""
 
@@ -481,11 +481,11 @@ msgstr ""
 msgid "Commit Log"
 msgstr ""
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr ""
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 msgid "Commit's title"
 msgstr ""
 
@@ -726,7 +726,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr ""
 
@@ -811,7 +811,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr ""
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr ""
 
@@ -908,7 +908,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr ""
 
@@ -1320,7 +1320,7 @@ msgstr ""
 msgid "Ordered Table"
 msgstr ""
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr ""
 
@@ -1341,7 +1341,7 @@ msgid "PDF Document"
 msgstr ""
 
 #: ../users_views.py:486
-#: ../api/views.py:267
+#: ../api/views.py:268
 #: ../widgets.py:160
 msgid "Password"
 msgstr ""
@@ -1411,7 +1411,7 @@ msgstr ""
 msgid "Powered by"
 msgstr ""
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr ""
 
@@ -1617,7 +1617,7 @@ msgstr ""
 msgid "Row deleted."
 msgstr ""
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 msgid "SHA of the commit"
 msgstr ""
 
@@ -1636,8 +1636,8 @@ msgid "Schedule your time with calendar files."
 msgstr ""
 
 #: ../users_views.py:378
-#: ../views.py:378
-#: ../views.py:388
+#: ../views.py:377
+#: ../views.py:387
 msgid "Search"
 msgstr ""
 
@@ -1674,15 +1674,15 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr ""
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr ""
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr ""
 
@@ -1815,11 +1815,11 @@ msgstr ""
 msgid "The changes have been saved."
 msgstr ""
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 msgid "The class_id of the resource cls"
 msgstr ""
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 msgid "The class_title of the resource cls"
 msgstr ""
 
@@ -1887,7 +1887,7 @@ msgstr ""
 msgid "The user is already here."
 msgstr ""
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 msgid "The uuid of a resource in DB"
 msgstr ""
 
@@ -1895,11 +1895,11 @@ msgstr ""
 msgid "Theme"
 msgstr ""
 
-#: ../views.py:205
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr ""
 
-#: ../views.py:204
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr ""
 
@@ -1997,7 +1997,7 @@ msgstr ""
 msgid "Type your current password"
 msgstr ""
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr ""
 
@@ -2031,11 +2031,11 @@ msgstr ""
 msgid "Update docs"
 msgstr ""
 
-#: ../update.py:175
+#: ../update.py:173
 msgid "Update instance"
 msgstr ""
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr ""
 
@@ -2043,7 +2043,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr ""
 
@@ -2116,7 +2116,7 @@ msgid "User's profile page."
 msgstr ""
 
 #: ../users_views.py:58
-#: ../api/views.py:266
+#: ../api/views.py:267
 msgid "Username"
 msgstr ""
 

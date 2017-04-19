@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -300,7 +300,7 @@ msgstr ""
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr ""
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr ""
 
@@ -862,11 +862,11 @@ msgstr "新文件"
 msgid "Commit Log"
 msgstr ""
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr ""
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 #, fuzzy
 msgid "Commit's title"
 msgstr "名称"
@@ -1250,7 +1250,7 @@ msgstr ""
 msgid "English"
 msgstr "英语"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr ""
 
@@ -1368,7 +1368,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr "新文件"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "文件夹"
 
@@ -1547,7 +1547,7 @@ msgstr "简易文件"
 msgid "Inactive"
 msgstr "名称"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr ""
 
@@ -2138,7 +2138,7 @@ msgstr "重命名物件"
 msgid "Ordered Table"
 msgstr "重命名物件"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr ""
 
@@ -2159,7 +2159,7 @@ msgstr ""
 msgid "PDF Document"
 msgstr "新文件"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 #, fuzzy
 msgid "Password"
 msgstr "密码"
@@ -2261,7 +2261,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "选择你的语言"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr ""
 
@@ -2531,7 +2531,7 @@ msgstr "查阅"
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 #, fuzzy
 msgid "SHA of the commit"
 msgstr "加入社区"
@@ -2556,7 +2556,7 @@ msgstr "保存"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "搜索"
 
@@ -2605,15 +2605,15 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr ""
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr ""
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr ""
 
@@ -2770,12 +2770,12 @@ msgstr "预设语言已被改变."
 msgid "The changes have been saved."
 msgstr "预设语言已被改变."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 #, fuzzy
 msgid "The class_id of the resource cls"
 msgstr "文件夹用于文件分类."
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 #, fuzzy
 msgid "The class_title of the resource cls"
 msgstr "文件夹用于文件分类."
@@ -2863,7 +2863,7 @@ msgstr ""
 msgid "The user is already here."
 msgstr "用户被加入."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 #, fuzzy
 msgid "The uuid of a resource in DB"
 msgstr "新用户"
@@ -2873,7 +2873,7 @@ msgstr "新用户"
 msgid "Theme"
 msgstr "查阅"
 
-#: ../views.py:205
+#: ../views.py:204
 #, fuzzy
 msgid "There are {n} items."
 msgstr "此处无图片."
@@ -2890,7 +2890,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "用户名错误,请再输入."
 
-#: ../views.py:204
+#: ../views.py:203
 #, fuzzy
 msgid "There is 1 item."
 msgstr "名称"
@@ -3104,7 +3104,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr ""
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr ""
 
@@ -3155,7 +3155,7 @@ msgstr ""
 msgid "Update docs"
 msgstr "更新目录"
 
-#: ../update.py:175
+#: ../update.py:173
 #, fuzzy
 msgid "Update instance"
 msgstr "更新目录"
@@ -3171,7 +3171,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "更新目录"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr ""
 
@@ -3179,7 +3179,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr ""
 
@@ -3275,7 +3275,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr ""
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 #, fuzzy
 msgid "Username"
 msgstr "用户姓名"

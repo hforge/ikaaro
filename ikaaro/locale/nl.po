@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
 "Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
-"POT-Creation-Date: 2017-03-17 16:03+CET\n"
+"POT-Creation-Date: 2017-04-19 13:04+CET\n"
 "PO-Revision-Date: 2017-04-10 11:12+0000\n"
 "Last-Translator: Verba-Translations <translators@bepatient.com>\n"
 "Language-Team: ??\n"
@@ -317,7 +317,7 @@ msgstr "<g id='8'>Verwijderen</g>  <g id='9'>Bijwerken</g>"
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
 msgstr "<p id=\"event-owner\">Aangemaakt door <em>{owner}</em></p>"
 
-#: ../api/views.py:231
+#: ../api/views.py:232
 msgid "A class_id registered in DB"
 msgstr "Een klasse_id geregistreerd in DB"
 
@@ -833,11 +833,11 @@ msgstr "Opmerking"
 msgid "Commit Log"
 msgstr "Opmerkingenlog"
 
-#: ../api/views.py:198
+#: ../api/views.py:199
 msgid "Commit's author name"
 msgstr "Auteur van het commentaar"
 
-#: ../api/views.py:199
+#: ../api/views.py:200
 msgid "Commit's title"
 msgstr "Titel van het commentaar"
 
@@ -1199,7 +1199,7 @@ msgstr "Einde"
 msgid "English"
 msgstr "Engels"
 
-#: ../update.py:187
+#: ../update.py:185
 msgid "Error during update method. See logs."
 msgstr "Fout tijdens het updaten methode. Zie logs."
 
@@ -1304,7 +1304,7 @@ msgstr "Flash"
 msgid "Flash Document"
 msgstr "Flash-document"
 
-#: ../folder.py:54
+#: ../folder.py:55
 msgid "Folder"
 msgstr "Map"
 
@@ -1476,7 +1476,7 @@ msgstr "Importeren"
 msgid "Inactive"
 msgstr "Inactief"
 
-#: ../folder.py:62
+#: ../folder.py:63
 msgid "Index"
 msgstr "Inhoud"
 
@@ -2017,7 +2017,7 @@ msgstr "Bestelde map"
 msgid "Ordered Table"
 msgstr "Bestelde tabel"
 
-#: ../folder.py:55
+#: ../folder.py:56
 msgid "Organize your files and documents with folders."
 msgstr "Organiseer uw bestanden en documenten met mappen."
 
@@ -2037,7 +2037,7 @@ msgstr "PDF"
 msgid "PDF Document"
 msgstr "PDF-document"
 
-#: ../users_views.py:486 ../api/views.py:267 ../widgets.py:160
+#: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -2131,7 +2131,7 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr "Voorkeurstaal"
 
-#: ../api/views.py:161
+#: ../api/views.py:162
 msgid "Pretty ?"
 msgstr "Mooi?"
 
@@ -2365,7 +2365,7 @@ msgstr "Beoordelaars"
 msgid "Row deleted."
 msgstr "Rij verwijderd."
 
-#: ../api/views.py:196
+#: ../api/views.py:197
 msgid "SHA of the commit"
 msgstr "SHA van de verbintenis"
 
@@ -2387,7 +2387,7 @@ msgstr "Opslaan"
 msgid "Schedule your time with calendar files."
 msgstr "Plan uw tijd met kalenderbestanden."
 
-#: ../users_views.py:378 ../views.py:378 ../views.py:388
+#: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
 msgstr "Zoeken"
 
@@ -2433,15 +2433,15 @@ msgstr "Gescheiden door een komma"
 msgid "September"
 msgstr "September"
 
-#: ../api/views.py:319
+#: ../api/views.py:320
 msgid "Server's PID"
 msgstr "PID van de server"
 
-#: ../api/views.py:320
+#: ../api/views.py:321
 msgid "Server's port"
 msgstr "Serverpoort"
 
-#: ../api/views.py:318
+#: ../api/views.py:319
 msgid "Server's start timestamp"
 msgstr "Starttijdstempel van de server"
 
@@ -2582,11 +2582,11 @@ msgstr "De wijzigingen zijn opgeslagen ({time})"
 msgid "The changes have been saved."
 msgstr "De wijzigingen zijn opgeslagen."
 
-#: ../api/views.py:235
+#: ../api/views.py:236
 msgid "The class_id of the resource cls"
 msgstr "De klasse_ id van de cls-bron"
 
-#: ../api/views.py:234
+#: ../api/views.py:235
 msgid "The class_title of the resource cls"
 msgstr "de klasse_titel van de cls-bron"
 
@@ -2666,7 +2666,7 @@ msgstr "De aangevraagde «${method}» op « ${uri} » is niet toegestaan."
 msgid "The user is already here."
 msgstr "De gebruiker is hier al."
 
-#: ../api/views.py:117
+#: ../api/views.py:128
 msgid "The uuid of a resource in DB"
 msgstr "De uuid van de bron in de DB"
 
@@ -2674,7 +2674,7 @@ msgstr "De uuid van de bron in de DB"
 msgid "Theme"
 msgstr "Thema"
 
-#: ../views.py:205
+#: ../views.py:204
 msgid "There are {n} items."
 msgstr "Er zijn {n} artikelen."
 
@@ -2688,7 +2688,7 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "Er is een fout opgetreden, probeer het later nog eens."
 
-#: ../views.py:204
+#: ../views.py:203
 msgid "There is 1 item."
 msgstr "Er is 1 item."
 
@@ -2913,7 +2913,7 @@ msgctxt "heading"
 msgid "URI Query"
 msgstr "URI-aanvraag"
 
-#: ../fields.py:825
+#: ../fields.py:821
 msgid "UUID"
 msgstr "UUID"
 
@@ -2960,7 +2960,7 @@ msgstr "Kalenderzichtbaarheid bijwerken"
 msgid "Update docs"
 msgstr "Docs bijwerken"
 
-#: ../update.py:175
+#: ../update.py:173
 msgid "Update instance"
 msgstr "Docs bijwerken"
 
@@ -2974,7 +2974,7 @@ msgctxt "heading"
 msgid "Update methods"
 msgstr "Update methoden"
 
-#: ../update.py:193
+#: ../update.py:191
 msgid "Updated method has been launched"
 msgstr "Bijgewerkte methode is gelanceerd"
 
@@ -2982,7 +2982,7 @@ msgstr "Bijgewerkte methode is gelanceerd"
 msgid "Upgrade to version %s"
 msgstr "Upgraden naar versie %s"
 
-#: ../update.py:163
+#: ../update.py:161
 msgid "Upgrade to version {0}"
 msgstr "Upgraden naar versie {0}"
 
@@ -3071,7 +3071,7 @@ msgstr ""
 msgid "User's profile page."
 msgstr "Gebruikersprofielpagina."
 
-#: ../users_views.py:58 ../api/views.py:266
+#: ../users_views.py:58 ../api/views.py:267
 msgid "Username"
 msgstr "Gebruikersnaam"
 
