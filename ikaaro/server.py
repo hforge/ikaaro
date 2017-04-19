@@ -54,7 +54,6 @@ from itools.uri import get_reference, Path
 from itools.web import WebServer, WebLogger
 from itools.web import set_context, get_context
 from itools.web import SoupMessage
-from itools.web.static import StaticView
 
 # Import from ikaaro
 from context import CMSContext
@@ -64,6 +63,7 @@ from root import Root
 from views import CachedStaticView
 from update import is_instance_up_to_date
 from skins import skin_registry
+from views import IkaaroStaticView
 
 
 
@@ -761,7 +761,7 @@ class Server(WebServer):
             skin = skin_registry[name]
             mount_path = '/ui/%s' % name
             skin_key = skin.get_environment_key(self)
-            view = StaticView(local_path=skin_key, mount_path=mount_path)
+            view = IkaaroStaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/%s/{name:any}' % name, view)
             mount_path = '/ui/cached/%s/%s' % (ts, name)
             view = CachedStaticView(local_path=skin_key, mount_path=mount_path)

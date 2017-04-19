@@ -16,11 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import fixed_offset
+
+# Import from itools
 from itools.core import merge_dicts, proto_property, proto_lazy_property
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
+from itools.uri import Path
 from itools.stl import stl
-from itools.web import STLView
+from itools.web import STLView, NotModified
 from itools.web.static import StaticView
 from itools.xml import XMLParser
 
@@ -598,7 +602,35 @@ class ContextMenu(CMSTemplate):
 
 
 
-class CachedStaticView(StaticView):
+class IkaaroStaticView(StaticView):
+
+    def GET(self, resource, context):
+        # FIXME Check we set the encoding for text files
+        path = str(context.path)
+        ts = context.server.timestamp
+        path = path.replace('/cached/%s' % ts, '')
+        template = context.get_template(path)
+        # 404 Not Found
+        if not template:
+            return context.set_default_response(404)
+        # 304 Not Modified
+        mtime = template.get_mtime()
+        mtime = fixed_offset(0).localize(mtime)
+        since = context.get_header('If-Modified-Since')
+        if since and since >= mtime:
+            raise NotModified
+        mimetype = template.get_mimetype()
+        # Get data
+        data = template.to_str()
+        # Response
+        context.status = 200
+        context.set_content_type(mimetype)
+        context.set_header('Last-Modified', mtime)
+        return data
+
+
+
+class CachedStaticView(IkaaroStaticView):
 
     def GET(self, query, context):
         proxy = super(CachedStaticView, self)
