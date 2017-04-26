@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from itools
-from itools.core import get_abspath
 
 # Import from the Standard Library
 from optparse import OptionParser
+from sys import exit
 from unittest import TestLoader, TestSuite, TextTestRunner
+
+# Import from itools
+from itools.core import get_abspath
 
 # Import tests
 import test_metadata
@@ -42,12 +44,14 @@ if __name__ == '__main__':
     for module in test_modules:
         suite.addTest(loader.loadTestsFromModule(module))
     if options.mode == 'standard':
-        TextTestRunner(verbosity=1).run(suite)
+        ret = TextTestRunner(verbosity=1).run(suite)
     elif options.mode == 'junitxml':
         path = get_abspath('./junit.xml')
         print('Result is here: %s' % path)
         f = file(path, 'wb')
         result = JUnitXmlResult(f)
         result.startTestRun()
-        suite.run(result)
+        ret = suite.run(result)
         result.stopTestRun()
+    exit_code = not ret.wasSuccessful()
+    exit(exit_code)
