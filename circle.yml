@@ -8,4 +8,4 @@ dependencies:
 
 test:
   override:
-      - docker run -v /home/ubuntu/ikaaro/:/home/ikaaro/ikaaro hforge/ikaaro: python /home/ikaaro/ikaaro/test/test.py
+      - docker run -v /home/ubuntu/ikaaro/:/home/ikaaro/ikaaro hforge/ikaaro python /home/ikaaro/ikaaro/test/test.py
