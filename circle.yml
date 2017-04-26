@@ -8,7 +8,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v /home/ubuntu/ikaaro/:/home/ikaaro/ikaaro/ hforge/ikaaro sh -c "pip install junitxml && python /home/ikaaro/test/test.py --mode junitxml"
+    - docker run -v /home/ubuntu/ikaaro/test/:/home/ikaaro/test/ hforge/ikaaro sh -c "pip install junitxml && python /home/ikaaro/test/test.py --mode junitxml"
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit
     - mv /home/ubuntu/junit.xml  $CIRCLE_TEST_REPORTS/junit/junit.xml
