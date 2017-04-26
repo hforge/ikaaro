@@ -45,7 +45,7 @@ if __name__ == '__main__':
         TextTestRunner(verbosity=1).run(suite)
     elif options.mode == 'junitxml':
         path = get_abspath('./junit.xml')
-        print('Result is here: ' % path)
+        print('Result is here: %s' % path)
         f = file(path, 'wb')
         result = JUnitXmlResult(f)
         result.startTestRun()
