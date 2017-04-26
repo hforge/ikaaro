@@ -75,11 +75,11 @@ RUN ln -s /usr/local/lib/libgit2.so.24 /usr/lib/libgit2.so.24
 
 ## Install itools
 WORKDIR /076/
-RUN bin/pip install git+https://github.com/hforge/itools.git@0.77
+RUN pip install git+https://github.com/hforge/itools.git@0.77
 
 # Install ikaaro
 WORKDIR /076/
-RUN bin/pip install git+https://github.com/hforge/ikaaro.git@0.77
+RUN pip install git+https://github.com/hforge/ikaaro.git@0.77
 
 # Install PIL (because it's not part of ikaaro requirements)
 # TODO  : Add it into ikaaro requirements
