@@ -73,14 +73,18 @@ RUN pip install pygit2==0.24.2
 # Declare libgit2 (XXX We have to export lib direcory)
 RUN ln -s /usr/local/lib/libgit2.so.24 /usr/lib/libgit2.so.24
 
-## Install itools
-WORKDIR /076/
-RUN pip install git+https://github.com/hforge/itools.git
+# Install ikaaro dependencies
+RUN mkdir -p /tmp/ikaaro
+ADD ./ /tmp/ikaaro/
+RUN pip install -r /tmp/ikaaro/requirements.txt
 
 # Install ikaaro
-WORKDIR /076/
-RUN pip install git+https://github.com/hforge/ikaaro.git
+WORKDIR /tmp/ikaaro
+RUN python setup.py install
 
 # Install PIL (because it's not part of ikaaro requirements)
 # TODO  : Add it into ikaaro requirements
 RUN pip install pillow==3.0.0
+
+# Workdir is /home/ikaaro
+WORKDIR /home/ikaaro
