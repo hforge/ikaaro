@@ -22,6 +22,3 @@ Create a Dockerfile base on ikaaro image::
   # Install your packages & dependencies
   RUN git clone git@github.com:xxx/xxx.git
   RUN pip install -r requirements.txt
-  RUN pip install -r requirements-dev.txt
-  RUN pip install -r requirements-test.txt
-
