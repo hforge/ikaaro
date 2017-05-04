@@ -1,19 +1,20 @@
-# translation of es.po to Spanish
-# J. David Ibáñez <jdavid@itaapy.com>, 2003, 2004, 2006.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: es\n"
-"Report-Msgid-Bugs-To: florent.chenebault@bepatient.com\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2017-04-19 13:04+CET\n"
-"PO-Revision-Date: 2017-04-11 13:19+0000\n"
-"Last-Translator: Verba-Translations <translators@bepatient.com>\n"
-"Language-Team: Spanish\n"
-"Language: es\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.9\n"
 
 #: ../messages.py:72
 msgid ""
@@ -25,49 +26,42 @@ msgid ""
 "        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n"
 "    </stl:inline>"
 msgstr ""
-"\n"
-"    Acción imposible (los recursos están en uso):\n"
-"    <stl:inline stl:repeat=\"resource resources\">\n"
-"        <a href=\"${resource/href}\"\n"
-"           title=\"${resource/title}\">${resource/title}</a>\n"
-"        <stl:inline stl:if=\"not repeat/resource/end\">,</stl:inline>\n"
-"    </stl:inline>"
 
 #: ../root_views.py:256
 msgid "\"en\", \"fr\", ..."
-msgstr "\"en\", \"fr\", ..."
+msgstr ""
 
 #: ../ui/ikaaro/table/view.xml.en:5
 msgid "${batch} ${table}"
-msgstr "${batch} ${table}"
+msgstr ""
 
 #: ../ui/ikaaro/website/search.xml.en:13
 msgid "${batch} <x id='1'/> ${table}"
-msgstr "${batch} <x id='1'/> ${table}"
+msgstr ""
 
 #: ../agenda/ui/calendar_view.xml.en:8
 msgctxt "div"
 msgid "${cal_selector} ${calendar} ${calendar_caption}"
-msgstr "${cal_selector} ${calendar} ${calendar_caption}"
+msgstr ""
 
 #: ../ui/ikaaro/fancybox/template.xhtml.en:27 ../ui/popup/template.xhtml.en:26
 msgctxt "div"
 msgid "${location} ${message} ${body}"
-msgstr "${location} ${message} ${body}"
+msgstr ""
 
 #: ../agenda/ui/weekly_view.xml.en:19
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
-msgstr "${row/start}-${row/end}"
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
-msgstr "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
+msgstr ""
 
 #: ../blog/ui/Post_view.xml.en:6
 msgctxt "heading"
 msgid "${title} (${date})"
-msgstr "${title} (${date})"
+msgstr ""
 
 #: ../ui/ikaaro/binary/Archive_view.xml.en:12
 msgctxt "fieldset"
@@ -75,12 +69,10 @@ msgid ""
 "${widget} <g id='2'>Ok</g>  <x id='3'/>  <x id='4'/>  <g id='5'>Overwrite "
 "files with the same name</g>"
 msgstr ""
-"${widget} <g id='2'>Aceptar</g>  <x id='3'/>  <x id='4'/>  <g "
-"id='5'>Sobrescribir los archivos con el mismo nombre</g>"
 
 #: ../agenda/agenda_views.py:474
 msgid "%d %s"
-msgstr "%d %s"
+msgstr ""
 
 #: ../root.py:169
 msgid ""
@@ -90,126 +82,118 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s\n"
-"\n"
-"%s\n"
-"\n"
-"%s"
 
 #: ../root.py:166
 msgid "%s => %s"
-msgstr "%s => %s"
+msgstr ""
 
 #: ../root_views.py:238
 msgid "%s@%s:%s"
-msgstr "%s@%s:%s"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:18
 msgctxt "link"
 msgid "&lt;"
-msgstr "&lt;"
+msgstr ""
 
 #: ../ui/ikaaro/website/broken_links.xml.en:11
 msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
-msgstr "(${item/n}) <g id='2'>${item/path}</g>"
+msgstr ""
 
 #: ../ui/ikaaro/editarea/ea.xml.en:21 ../ui/ikaaro/tiny_mce/rte.xml.en:51
 msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
-msgstr "(Javascript está desactivado o falta:"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:28
 msgctxt "link"
 msgid "+"
-msgstr "+"
+msgstr ""
 
 #: ../ui/ikaaro/user/edit_preferences.xml.en:27
 msgctxt "option"
 msgid "-- not defined (use server's local time) --"
-msgstr "-- no definido (usar hora local del servidor) --"
+msgstr ""
 
 #: ../ui/ikaaro/user/edit_preferences.xml.en:16
 msgctxt "option"
 msgid "-- not defined --"
-msgstr "-- no definido --"
+msgstr ""
 
 #: ../config_groups.py:77 ../config_models.py:240
 msgid "..."
-msgstr "..."
+msgstr ""
 
 #: ../config_access.py:74
 msgid "0"
-msgstr "0"
+msgstr ""
 
 #: ../config_access.py:75
 msgid "1"
-msgstr "1"
+msgstr ""
 
 #: ../config_access.py:76
 msgid "2"
-msgstr "2"
+msgstr ""
 
 #: ../config_captcha.py:164
 msgid "2 + 3"
-msgstr "2 + 3"
+msgstr ""
 
 #: ../config_access.py:77
 msgid "3"
-msgstr "3"
+msgstr ""
 
 #: ../config_access.py:78
 msgid "4"
-msgstr "4"
+msgstr ""
 
 #: ../config_access.py:79 ../config_captcha.py:165
 msgid "5"
-msgstr "5"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:12
 #: ../ui/ikaaro/revisions/changes.xml.en:16
 #: ../ui/ikaaro/revisions/changes.xml.en:20
 msgctxt "table cell"
 msgid ":"
-msgstr ":"
+msgstr ""
 
 #: ../cc.py:62
 msgid "<a href=\"{0}\">{1}</a>"
-msgstr "<a href=\"{0}\">{1}</a>"
+msgstr ""
 
 #: ../config_register.py:164
 msgid ""
 "<div id=\"registration-end-msg\">An email has been sent to you, to finish "
 "the registration process follow the instructions detailed in it.</div>"
 msgstr ""
-"<div id=\"registration-end-msg\">Se le ha enviado un correo electrónico. "
-"Para finalizar el proceso de registro, siga las instrucciones que aparecen "
-"en el correo.</div>"
 
 #: ../agenda/ui/event_render.xml.en:7
 msgctxt "link"
 msgid "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
-msgstr "<g id='1'> ${ns/title} </g>  <g id='2'>${ns/TIME}</g>"
+msgstr ""
 
 #: ../ui/ikaaro/tiny_mce/rte.xml.en:57
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
-msgstr "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
+msgstr ""
 
 #: ../ui/ikaaro/binary/Image_view.xml.en:7
 msgctxt "link"
 msgid "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
-msgstr "<g id='1'>${option/title}</g> (${image_width}x${image_height})"
+msgstr ""
 
 #: ../ui/ikaaro/auto_form_field.xml.en:9
 msgctxt "label"
 msgid "<g id='1'>${title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
-msgstr "<g id='1'>${title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
+msgstr ""
 
 #: ../ui/ikaaro/comment_view.xml.en:10
 msgctxt "span"
 msgid "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
-msgstr "<g id='1'>${user}</g>  <g id='2'>${datetime}</g>"
+msgstr ""
 
 #: ../agenda/ui/rrule_interval_widget.xml.en:13
 msgctxt "span"
@@ -217,8 +201,6 @@ msgid ""
 "<g id='1'>day(s)</g>  <g id='2'>week(s)</g>  <g id='3'>month(s)</g>  <g "
 "id='4'>year(s)</g>"
 msgstr ""
-"<g id='1'>día(s)</g>  <g id='2'>semana(s)</g>  <g id='3'>mes(es)</g>  <g "
-"id='4'>año(s)</g>"
 
 #: ../agenda/ui/monthly_view.xml.en:18
 msgctxt "span"
@@ -226,13 +208,11 @@ msgid ""
 "<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
 "></g>"
 msgstr ""
-"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
-"></g>"
 
 #: ../ui/aruni/location.xml.en:11
 msgctxt "link"
 msgid "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
-msgstr "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
+msgstr ""
 
 #: ../ui/ikaaro/website/search_table.xml.en:10
 msgctxt "link"
@@ -240,18 +220,16 @@ msgid ""
 "<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
 "id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 msgstr ""
-"<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
-"id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 
 #: ../ui/aruni/languages.xml.en:9
 msgctxt "link"
 msgid "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
-msgstr "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse_batch.xml.en:14
 msgctxt "link"
 msgid "<g id='2'>${page/number}</g>  <g id='3'>…</g>"
-msgstr "<g id='2'>${page/number}</g>  <g id='3'>…</g>"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:24
 msgctxt "link"
@@ -259,13 +237,11 @@ msgid ""
 "<g id='2'>Browse</g>  <g id='3'>External Link</g>  <g id='4'>Insert</g>  <g "
 "id='5'>Upload</g>"
 msgstr ""
-"<g id='2'>Navegar</g>  <g id='3'>Enlace externo</g>  <g id='4'>Insertar</g>  "
-"<g id='5'>Subir</g>"
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:33
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
-msgstr "<g id='2'>Cambiar valor por defecto</g>  <g id='3'>Eliminar</g>"
+msgstr ""
 
 #: ../agenda/ui/widgets/reminder.xml.en:9
 msgctxt "label"
@@ -273,19 +249,17 @@ msgid ""
 "<g id='2'>I want to get a reminder e-mail</g>  <g id='3'>  <x id='4'/>  <x "
 "id='5'/> ${reminders} before the start of the event. </g>"
 msgstr ""
-"<g id='2'>Quiero recibir un recordatorio por correo electrónico</g>  <g "
-"id='3'>  <x id='4'/>  <x id='5'/> ${reminders} antes del evento. </g>"
 
 #: ../ui/ikaaro/generic/icons_view.xml.en:16
 #: ../ui/ikaaro/user/profile.xml.en:19
 msgctxt "link"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
-msgstr "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:20
 msgctxt "label"
 msgid "<g id='4'>${login_name_title}</g>  <g id='5'>*</g>"
-msgstr "<g id='4'>${login_name_title}</g>  <g id='5'>*</g>"
+msgstr ""
 
 #: ../ui/ikaaro/comment_view.xml.en:14
 msgctxt "link"
@@ -293,574 +267,563 @@ msgid ""
 "<g id='4'><g id='5'>Comment ${number}</g></g>  <g id='6'>[<g id='7'>Reply</"
 "g>]</g> ${workflow} ${index}"
 msgstr ""
-"<g id='4'><g id='5'>Comentario ${number}</g></g>  <g id='6'>[<g "
-"id='7'>Respuesta</g>]</g> ${workflow} ${index}"
 
 #: ../ui/ikaaro/update_instance.xml.en:69
 msgctxt "button"
 msgid "<g id='5'>Update</g>  <g id='6'>Force update</g>"
-msgstr "<g id='5'>Actualizar</g>  <g id='6'>Forzar actualización</g>"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:19
 msgctxt "link"
 msgid "<g id='6'>></g>  <g id='7'>>></g>"
-msgstr "<g id='6'>></g>  <g id='7'>>></g>"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:41
 msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
-msgstr "<g id='8'>${x/short_title}</g> /"
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:44
 msgctxt "button"
 msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
-msgstr "<g id='8'>Eliminar</g>  <g id='9'>Actualizar</g>"
+msgstr ""
 
 #: ../agenda/event.py:125
 msgid "<p id=\"event-owner\">Created by <em>{owner}</em></p>"
-msgstr "<p id=\"event-owner\">Creado por <em>{owner}</em></p>"
+msgstr ""
 
 #: ../api/views.py:232
 msgid "A class_id registered in DB"
-msgstr "Un class_id registrado en BD"
+msgstr ""
 
 #: ../messages.py:47
 msgid "A given name already exists."
-msgstr "El nombre otorgado ya existe."
+msgstr ""
 
 #: ../cc.py:39
 msgid "A message has been sent to confirm your identity."
-msgstr "Se ha enviado un mensaje para confirmar su identidad."
+msgstr ""
 
 #: ../messages.py:55
 msgid "A new resource has been added."
-msgstr "Un nuevo recurso a sido agregado."
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:7
 msgctxt "heading"
 msgid "API documentation"
-msgstr "Documentación de API"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:18
 msgctxt "table cell"
 msgid "Abspath"
-msgstr "Abspath"
+msgstr ""
 
 #: ../cc.py:445
 msgid "Accept invitation"
-msgstr "Aceptar invitación"
+msgstr ""
 
 #: ../config_access.py:288
 msgid "Access Control"
-msgstr "Control de acceso"
+msgstr ""
 
 #: ../ui/ikaaro/root/forbidden.xml.en:8
 msgctxt "legend"
 msgid "Access Forbidden"
-msgstr "Acceso prohibido"
+msgstr ""
 
 #: ../config_access.py:139
 msgid "Access rule"
-msgstr "Regla de acceso"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:21
 msgctxt "heading"
 msgid "Access rules"
-msgstr "Reglas de acceso"
+msgstr ""
 
 #: ../messages.py:64
 msgid "Action impossible (the resources are in use): {resources}."
-msgstr "Acción imposible (los recursos están en uso): {resources}."
+msgstr ""
 
 #: ../users.py:73
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #: ../buttons.py:144 ../config_access.py:90 ../autoadd.py:85
 #: ../text_views.py:273
 msgid "Add"
-msgstr "Agregar"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:53
 #: ../ui/ikaaro/html/popup.xml.en:65
 msgctxt "button"
 msgid "Add"
-msgstr "Agregar"
+msgstr ""
 
 #: ../users_views.py:480
 msgid "Add New Member"
-msgstr "Agregar Usuario"
+msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:7
 msgctxt "heading"
 msgid "Add Resource of Type \"${class_title}\""
-msgstr "Añadir Recurso de Tipo \"${class_title}\""
+msgstr ""
 
 #: ../text_views.py:270
 msgid "Add Row"
-msgstr "Agregar fila"
+msgstr ""
 
 #: ../users_views.py:524
 msgid "Add and return"
-msgstr "Añadir y volver"
+msgstr ""
 
 #: ../users_views.py:522
 msgid "Add and view"
-msgstr "Añadir y ver"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:45
 msgctxt "legend"
 msgid "Add another language"
-msgstr "Agregar otro idioma"
+msgstr ""
 
 #: ../agenda/agenda.py:245
 msgid "Add calendar"
-msgstr "Añadir calendario"
+msgstr ""
 
 #: ../config_models.py:187
 msgid "Add choice"
-msgstr "Añadir opción"
+msgstr ""
 
 #: ../skins.py:255
 msgid "Add content"
-msgstr "Añadir contenido"
+msgstr ""
 
 #: ../config_models.py:249
 msgid "Add field"
-msgstr "Añadir campo"
+msgstr ""
 
 #: ../config_groups.py:135
 msgid "Add group"
-msgstr "Añadir grupo"
+msgstr ""
 
 #: ../config_menu.py:74
 msgid "Add item"
-msgstr "Añadir elemento"
+msgstr ""
 
 #: ../config_models.py:342
 msgid "Add model"
-msgstr "Añadir modelo"
+msgstr ""
 
 #: ../autoadd.py:143 ../folder_views.py:137
 msgid "Add resource"
-msgstr "Agregar recurso"
+msgstr ""
 
 #: ../config_access.py:388
 msgid "Add rule"
-msgstr "Añadir regla"
+msgstr ""
 
 #: ../order.py:65
 msgid "Add to ordered list"
-msgstr "Añadir a lista ordenada"
+msgstr ""
 
 #: ../root.py:552
 msgid "Add uuid to all resources"
-msgstr "Añadir uuid a todos los recursos"
+msgstr ""
 
 #: ../autoadd.py:140
 msgid "Add {class_title}"
-msgstr "Añadir {class_title}"
+msgstr ""
 
 #: ../autoadd.py:258
 msgid "Adding resources to {path} is not allowed."
-msgstr "Añadir recursos a {path} no está permitido."
+msgstr ""
 
 #: ../config_groups.py:138
 msgid "Admins"
-msgstr "Administradores"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:34
 msgctxt "table cell"
 msgid "After"
-msgstr "Después"
+msgstr ""
 
 #: ../agenda/agenda.py:97
 msgid "Agenda"
-msgstr "Agenda"
+msgstr ""
 
 #: ../agenda/event.py:74
 msgid "All day"
-msgstr "Todo el día"
+msgstr ""
 
 #: ../config_theme.py:34
 msgid "Allow to customize ikaaro skin"
-msgstr "Permitir personalización fondo ikaaro"
+msgstr ""
 
 #: ../emails.py:115
 msgid "Already registered"
-msgstr "Ya registrado"
+msgstr ""
 
 #: ../ui/ikaaro/website/forgotten_password.xml.en:8
 msgctxt "paragraph"
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
-"Se ha enviado un correo electrónico con instrucciones para cambiar la "
-"contraseña."
 
 #: ../cc.py:270
 msgid "An invitation will be sent to every address typen below, one by line."
 msgstr ""
-"Se ha enviado una invitación a las direcciones siguientes, una por línea."
 
 #: ../config_captcha.py:165
 msgid "Answer"
-msgstr "Respuesta"
+msgstr ""
 
 #: ../ui/ikaaro/root/internal_server_error.xml.en:15
 msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
-msgstr "Disculpe las molestias."
+msgstr ""
 
 #: ../agenda/agenda_views.py:52 ../datatypes.py:282
 msgid "April"
-msgstr "Abril"
+msgstr ""
 
 #: ../comments.py:177
 msgid "Archived"
-msgstr "Archivado"
+msgstr ""
 
 #: ../buttons.py:92
 msgid "Are you sure you want to delete the selection?"
-msgstr "¿Está seguro de que quiere borrar la selección?"
+msgstr ""
 
 #: ../messages.py:37
 msgid "Are you sure you want to delete this resource?"
-msgstr "¿Está seguro de que quiere borrar este recurso?"
+msgstr ""
 
 #: ../buttons.py:69
 msgid "Are you sure you want to delete this?"
-msgstr "¿Está seguro de que quiere borrar esto?"
+msgstr ""
 
 #: ../agenda/agenda_views.py:56 ../datatypes.py:286
 msgid "August"
-msgstr "Agosto"
+msgstr ""
 
 #: ../enumerates.py:74
 msgid "Authenticated"
-msgstr "Autenticado"
+msgstr ""
 
 #: ../revisions_views.py:165
 msgid "Author"
-msgstr "Autor"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:11
 msgctxt "b"
 msgid "Author"
-msgstr "Autor"
+msgstr ""
 
 #: ../revisions_views.py:157
 msgid "Author's mail"
-msgstr "Correo electrónico del autor"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:17
 msgctxt "heading"
 msgid "Authorized methods"
-msgstr "Métodos autorizados"
+msgstr ""
 
 #: ../users.py:105
 msgid "Avatar"
-msgstr "Avatar"
+msgstr ""
 
 #: ../ui/ikaaro/folder/browse_image.xml.en:31
 msgctxt "title attribute"
 msgid "Back"
-msgstr "Atrás"
+msgstr ""
 
 #: ../resource_views.py:204
 msgid "Backlinks"
-msgstr "Backlinks"
+msgstr ""
 
 #: ../cc.py:373
 msgid "Bad email"
-msgstr "Correo electrónico incorrecto"
+msgstr ""
 
 #: ../config_theme.py:40
 msgid "Banner"
-msgstr "Banner"
+msgstr ""
 
 #: ../config_models.py:322
 msgid "Base class"
-msgstr "Clase base"
+msgstr ""
 
 #: ../config_models.py:239
 msgid "Base model"
-msgstr "Modelo base"
+msgstr ""
 
 #: ../utils.py:111
 msgid "Basque"
-msgstr "Euskara"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:33
 msgctxt "table cell"
 msgid "Before"
-msgstr "Antes"
+msgstr ""
 
 #: ../config_seo.py:45
 msgid "Bing site verification key"
-msgstr "Clave de verificación de sitio Bing"
+msgstr ""
 
 #: ../blog/blog.py:120
 msgid "Blog"
-msgstr "Blog"
+msgstr ""
 
 #: ../blog/blog.py:95
 msgid "Blog Post"
-msgstr "Entrada de Blog"
+msgstr ""
 
 #: ../widgets.py:917 ../webpage.py:56
 msgid "Body"
-msgstr "Cuerpo"
+msgstr ""
 
 #: ../config_models.py:38
 msgid "Boolean"
-msgstr "Booleano"
+msgstr ""
 
 #: ../config.py:105
 msgid "Broken Links"
-msgstr "Enlaces rotos"
+msgstr ""
 
 #: ../folder_views.py:294
 msgid "Browse Content"
-msgstr "Inspeccionar el Contenido"
+msgstr ""
 
 #: ../users_views.py:366
 msgid "Browse Members"
-msgstr "Navegar por los miembros"
+msgstr ""
 
 #: ../popup.py:486
 msgid "Browse and insert a Media from the workspace"
-msgstr "Navegar e insertar contenido multimedia desde el espacio de trabajo"
+msgstr ""
 
 #: ../popup.py:456
 msgid "Browse and insert an Image from the workspace"
-msgstr "Navegar e insertar una imagen desde el espacio de trabajo"
+msgstr ""
 
 #: ../popup.py:402
 msgid "Browse and link to a File from the workspace"
-msgstr "Navegar y vincular a un Archivo desde el espacio de trabajo"
+msgstr ""
 
 #: ../config_groups.py:89
 msgid "Browse groups"
-msgstr "Navegar entre los grupos"
+msgstr ""
 
 #: ../cc.py:442
 msgid ""
 "By accepting the invitation you will receive an email every time this "
 "resource is modified."
 msgstr ""
-"Si acepta la invitación, recibirá un correo electrónico cada vez que se "
-"modifique este recurso."
 
 #: ../cc.py:345
 msgid ""
 "By confirming your subscription to this resource you will receive an email "
 "every time this resource is modified."
 msgstr ""
-"Si confirma su suscripción a este recurso, recibirá un correo electrónico "
-"cada vez que se modifique."
 
 #: ../file.py:402
 msgid "Bzip2"
-msgstr "Bzip2"
+msgstr ""
 
 #: ../file.py:403
 msgid "Bzip2 Compressed"
-msgstr "Comprimido en Bzip2"
+msgstr ""
 
 #: ../text.py:102
 msgid "CSS"
-msgstr "CSS"
+msgstr ""
 
 #: ../config_theme.py:41
 msgid "CSS Style"
-msgstr "Estilo CSS"
+msgstr ""
 
 #: ../agenda/event.py:341 ../agenda/calendars.py:203
 msgid "Calendar"
-msgstr "Calendario"
+msgstr ""
 
 #: ../agenda/event.py:330
 msgid "Calendar event"
-msgstr "Evento del calendario"
+msgstr ""
 
 #: ../agenda/calendars.py:74
 msgid "Calendars"
-msgstr "Calendarios"
+msgstr ""
 
 #: ../agenda/calendars.py:174
 msgid "Can't remove this calendar"
-msgstr "No es posible eliminar este calendario"
+msgstr ""
 
 #: ../agenda/event.py:57
 msgid "Cancelled"
-msgstr "Cancelado"
+msgstr ""
 
 #: ../config_captcha.py:257
 msgid "Captcha"
-msgstr "Captcha"
+msgstr ""
 
 #: ../config_captcha.py:160
 msgid "Captcha question"
-msgstr "Pregunta captcha"
+msgstr ""
 
 #: ../config_captcha.py:263
 msgid "Captcha type"
-msgstr "Tipo de captcha"
+msgstr ""
 
 #: ../messages.py:31
 msgid "Caption"
-msgstr "Leyenda"
+msgstr ""
 
 #: ../utils.py:112
 msgid "Catalan"
-msgstr "Catalán"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:38
 msgctxt "button"
 msgid "Change"
-msgstr "Modificar"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:8
 msgctxt "legend"
 msgid "Change metadata"
-msgstr "Modificar metadatos"
+msgstr ""
 
 #: ../comments.py:246
 msgid "Change state"
-msgstr "Modificar estado"
+msgstr ""
 
 #: ../users_views.py:283
 msgid "Change your password."
-msgstr "Cambia tu contraseña."
+msgstr ""
 
 #: ../revisions_views.py:233
 msgid "Changes"
-msgstr "Modificaciones"
+msgstr ""
 
 #: ../config.py:107
 msgid "Check the referential integrity."
-msgstr "Comprobar integridad de referencias."
+msgstr ""
 
 #: ../config_models.py:125
 msgid "Choice"
-msgstr "Opción"
+msgstr ""
 
 #: ../config_models.py:159
 msgid "Choices field"
-msgstr "Campo de opción"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:48
 msgctxt "option"
 msgid "Choose a language"
-msgstr "Elije un idioma"
+msgstr ""
 
 #: ../emails.py:137
 msgid "Choose a new password"
-msgstr "Elija una contraseña nueva"
+msgstr ""
 
 #: ../config_access.py:289
 msgid "Choose the security policy."
-msgstr "Elegir la política de seguridad."
+msgstr ""
 
 #: ../users_views.py:48
 msgid "Choose your password"
-msgstr "Elige tu contraseña"
+msgstr ""
 
 #: ../widgets.py:395
 msgid "Click on button \"...\" to choose a date (Format: \"yyyy-mm-dd\")."
 msgstr ""
-"Haga clic en el botón \"...\" para elegir una fecha (Formato: \"aaaa-mm-dd"
-"\")."
 
 #: ../widgets.py:497 ../widgets.py:515
 msgid "Click on button \"...\" to select a file."
-msgstr "Haga clic en el botón \"...\" para elegir un archivo."
+msgstr ""
 
 #: ../ui/ikaaro/folder/browse_image.xml.en:14
 #: ../ui/ikaaro/generic/browse_table.xml.en:15
 msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
-msgstr "Haga clic para seleccionar/deseleccionar todas las líneas"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:14
 #: ../ui/ikaaro/update_instance.xml.en:53
 msgctxt "table cell"
 msgid "Cls ID"
-msgstr "Cls ID"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:15
 #: ../ui/ikaaro/update_instance.xml.en:54
 msgctxt "table cell"
 msgid "Cls title"
-msgstr "Cls título"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:16
 #: ../ui/ikaaro/update_instance.xml.en:50
 msgctxt "table cell"
 msgid "Cls version"
-msgstr "Cls versión"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:16
 msgctxt "table cell"
 msgid "Code"
-msgstr "Código"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:81
 msgctxt "table cell"
 msgid "Coders"
-msgstr "Codificadores"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:43
 msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
-msgstr "Colaboración con el módulo Wiki, seguimiento de incidencias, etc."
+msgstr ""
 
 #: ../agenda/calendars.py:90 ../agenda/calendars.py:209
 msgid "Color"
-msgstr "Color"
+msgstr ""
 
 #: ../agenda/ui/cal_selector.xml.en:30
 msgctxt "title attribute"
 msgid "Come back to today"
-msgstr "Volver a hoy"
+msgstr ""
 
 #: ../text.py:272
 msgid "Comma Separated Values"
-msgstr "Valores separados por coma"
+msgstr ""
 
 #: ../comments.py:186 ../revisions_views.py:158 ../revisions_views.py:166
 msgid "Comment"
-msgstr "Comentario"
+msgstr ""
 
 #: ../revisions_views.py:153
 msgid "Commit Log"
-msgstr "Commit Log"
+msgstr ""
 
 #: ../api/views.py:199
 msgid "Commit's author name"
-msgstr "Autor de Commit"
+msgstr ""
 
 #: ../api/views.py:200
 msgid "Commit's title"
-msgstr "Título de Commit"
+msgstr ""
 
 #: ../config.py:51 ../config.py:287 ../skins.py:263 ../root.py:112
 #: ../autoedit.py:43
 msgid "Configuration"
-msgstr "Configuración"
+msgstr ""
 
 #: ../config_menu.py:255
 msgid "Configuration Menu"
-msgstr "Menú de configuración"
+msgstr ""
 
 #: ../config_register.py:175
 msgid "Configuration of the user registration process."
-msgstr "Configuración del proceso de registro de usuario."
+msgstr ""
 
 #: ../config_mail.py:54
 msgid "Configure the website email options"
-msgstr "Configurar las opciones de correo electrónico del sitio web"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:26
 msgctxt "li"
@@ -868,8 +831,6 @@ msgid ""
 "Configure your browser so it uses the <g id='5'>restedit.py</g> script to "
 "open web pages with the <g id='6'>application/x-restedit</g> mimetype"
 msgstr ""
-"Configure su navegador para que use el script <g id='5'>restedit.py</g> para "
-"abrir páginas web con el tipo mime <g id='6'>application/x-restedit</g>"
 
 #: ../ui/ikaaro/file/externaledit.xml.en:45
 msgctxt "li"
@@ -877,106 +838,102 @@ msgid ""
 "Configure your browser so it uses the <g id='9'>restedit.py</g> script to "
 "open web pages with the <g id='10'>application/x-restedit</g> mimetype"
 msgstr ""
-"Configure su navegador para que use el script <g id='9'>restedit.py</g> para "
-"abrir páginas web con el tipo mime <g id='10'>application/x-restedit</g>"
 
 #: ../users_views.py:294
 msgid "Confirm"
-msgstr "Confirmar"
+msgstr ""
 
 #: ../cc.py:355
 msgid "Confirm subscription"
-msgstr "Confirmar suscripción"
+msgstr ""
 
 #: ../cc.py:415
 msgid "Confirm to stop receiving emails every time this resource is modified."
 msgstr ""
-"Confirmar para dejar de recibir correos electrónicos cada vez que se "
-"modifique este recurso."
 
 #: ../cc.py:419
 msgid "Confirm unsubscription"
-msgstr "Confirmar baja"
+msgstr ""
 
 #: ../cc.py:476 ../cc.py:480
 msgid "Confirmation required"
-msgstr "Confirmación necesaria"
+msgstr ""
 
 #: ../users_views.py:154
 msgid "Confirmation sent!"
-msgstr "¡Confirmación enviada!"
+msgstr ""
 
 #: ../agenda/event.py:56
 msgid "Confirmed"
-msgstr "Confirmado"
+msgstr ""
 
 #: ../config_menu.py:263 ../root_views.py:132
 msgid "Contact"
-msgstr "Contacto"
+msgstr ""
 
 #: ../config.py:43
 msgid "Content"
-msgstr "Contenido"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:42
 msgctxt "li"
 msgid "Content &amp;"
-msgstr "Contenido &amp;"
+msgstr ""
 
 #: ../config_models.py:332
 msgid "Content models"
-msgstr "Modelos de contenido"
+msgstr ""
 
 #: ../buttons.py:110
 msgid "Copy"
-msgstr "Copiar"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:23
 msgctxt "li"
 msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
-msgstr "Copie el script <g id='4'>restedit.py</g> donde quiera"
+msgstr ""
 
 #: ../agenda/calendars.py:58
 msgid "Create a new calendar..."
-msgstr "Crear un nuevo calendario..."
+msgstr ""
 
 #: ../agenda/agenda_views.py:673
 msgid "Create a new event"
-msgstr "Crear un nuevo evento"
+msgstr ""
 
 #: ../popup.py:404
 msgid "Create a new page and link to it:"
-msgstr "Crear una nueva página y enlace a la misma:"
+msgstr ""
 
 #: ../config_register.py:58
 msgid "Create an account"
-msgstr "Crear una cuenta"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:11
 msgctxt "link"
 msgid "Create an account now"
-msgstr "Crear una cuenta ahora"
+msgstr ""
 
 #: ../blog/blog.py:96
 msgid "Create and publish Post"
-msgstr "Crear y publicar entrada"
+msgstr ""
 
 #: ../webpage.py:51
 msgid "Create and publish a Web Page."
-msgstr "Crear y publicar una página web."
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:78
 msgctxt "heading"
 msgid "Credits"
-msgstr "Créditos"
+msgstr ""
 
 #: ../config_menu.py:42
 msgid "Current page"
-msgstr "Página actual"
+msgstr ""
 
 #: ../buttons.py:119
 msgid "Cut"
-msgstr "Cortar"
+msgstr ""
 
 #: ../agenda/event.py:495
 msgid ""
@@ -987,437 +944,428 @@ msgid ""
 "To view these modifications please visit:\n"
 "{resource_uri}\n"
 msgstr ""
-"NO CONTESTE A ESTE CORREO ELECTRÓNICO.\n"
-"\n"
-"El usuario \"{last_author}\" ha modificado el evento \"{title}\".\n"
-"Para ver las modificaciones, visite:\n"
-"{resource_uri}\n"
 
 #: ../cc.py:496
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
 msgstr ""
-"NO CONTESTE A ESTE CORREO ELECTRÓNICO. Para ver las modificaciones, visite:\n"
-"{resource_uri}"
 
 #: ../agenda/recurrence.py:154
 msgid "Daily"
-msgstr "Diariamente"
+msgstr ""
 
 #: ../agenda/agenda_views.py:603
 msgid "Daily View"
-msgstr "Vista diaria"
+msgstr ""
 
 #: ../config_models.py:39 ../blog/blog.py:103
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:15
 msgctxt "b"
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:16
 msgctxt "label"
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #: ../ui/ikaaro/file/history.xml.en:12
 msgctxt "table cell"
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #: ../agenda/agenda_views.py:278
 msgid "Day"
-msgstr "Día"
+msgstr ""
 
 #: ../agenda/reminders.py:31
 msgid "Day(s)"
-msgstr "Día(s)"
+msgstr ""
 
 #: ../agenda/agenda_views.py:60 ../datatypes.py:290
 msgid "December"
-msgstr "Diciembre"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:14
 msgctxt "table cell"
 msgid "Default"
-msgstr "Por defecto"
+msgstr ""
 
 #: ../config_models.py:333
 msgid "Define new types of content resources."
-msgstr "Definir los nuevos tipos de recursos de contenido."
+msgstr ""
 
 #: ../config.py:191
 msgid "Define the Web Site languages."
-msgstr "Definir los idiomas del sitio web."
+msgstr ""
 
 #: ../config_vhosts.py:34 ../config_vhosts.py:57
 msgid "Define the domain names for this Web Site."
-msgstr "Definir los nombres de dominio para este sitio web."
+msgstr ""
 
 #: ../config_footer.py:30
 msgid "Define the site footer."
-msgstr "Definir el pie del sitio."
+msgstr ""
 
 #: ../config_access.py:67
 msgid "Depth"
-msgstr "Profundidad"
+msgstr ""
 
 #: ../resource_.py:102 ../widgets.py:912 ../blog/blog.py:41
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:15
 msgctxt "heading"
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:21
 msgctxt "label"
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:49
 msgctxt "heading"
 msgid "Details"
-msgstr "Detalle"
+msgstr ""
 
 #: ../revisions_views.py:145
 msgid "Diff between selected revisions"
-msgstr "Diferencia entre revisiones seleccionadas"
+msgstr ""
 
 #: ../ui/ikaaro/comments.xml.en:9
 msgctxt "div"
 msgid ""
 "Display comments filtered by state ${filter} <g id='1'>Update display</g>"
 msgstr ""
-"Mostrar comentarios filtrados por estado ${filter} <g id='1'>Actualizar "
-"visualización</g>"
 
 #: ../ui/ikaaro/root/powered-by.xml.en:42
 msgctxt "li"
 msgid "Document Management."
-msgstr "Gestión de documentos."
+msgstr ""
 
 #: ../root_views.py:346
 msgid "Documentation updated."
-msgstr "Documentación actualizada."
+msgstr ""
 
 #: ../config_vhosts.py:61
 msgid "Domain names"
-msgstr "Nombres de dominio"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:10
 msgctxt "div"
 msgid "Don't have an account?"
-msgstr "¿No tiene una cuenta?"
+msgstr ""
 
 #: ../file_views.py:77 ../file_views.py:107 ../widgets.py:100
 msgid "Download"
-msgstr "Descargar"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:16
 msgctxt "li"
 msgid "Download <g id='2'>restedit</g>"
-msgstr "Descargar <g id='2'>restedit</g>"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:35
 msgctxt "li"
 msgid "Download <g id='7'>restedit</g>"
-msgstr "Descargar <g id='7'>restedit</g>"
+msgstr ""
 
 #: ../cc.py:104 ../users.py:80
 msgid "E-mail Address"
-msgstr "Dirección de correo electrónico"
+msgstr ""
 
 #: ../text_views.py:40 ../text_views.py:105 ../autoedit.py:90
 msgid "Edit"
-msgstr "Editar"
+msgstr ""
 
 #: ../users_views.py:199
 msgid "Edit Account"
-msgstr "Editar cuenta"
+msgstr ""
 
 #: ../users_views.py:282
 msgid "Edit Password"
-msgstr "Cambiar la contraseña"
+msgstr ""
 
 #: ../users_views.py:232
 msgid "Edit Preferences"
-msgstr "Editar preferencias"
+msgstr ""
 
 #: ../ui/ikaaro/user/edit_preferences.xml.en:9
 msgctxt "legend"
 msgid "Edit Preferences"
-msgstr "Editar preferencias"
+msgstr ""
 
 #: ../ui/ikaaro/website/virtual_hosts.xml.en:9
 msgctxt "legend"
 msgid "Edit Virtual Hosts"
-msgstr "Editar hosts virtuales"
+msgstr ""
 
 #: ../config_captcha.py:268
 msgid "Edit captcha"
-msgstr "Editar captcha"
+msgstr ""
 
 #: ../users.py:243
 msgid "Edit groups"
-msgstr "Editar grupos"
+msgstr ""
 
 #: ../text_views.py:289
 msgid "Edit row #{id}"
-msgstr "Editar fila #{id}"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:9
 msgctxt "legend"
 msgid "Edit the active languages"
-msgstr "Editar los idiomas activos"
+msgstr ""
 
 #: ../config_menu.py:256
 msgid "Edit the global menu."
-msgstr "Editar el menú global."
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:9
 msgctxt "legend"
 msgid "Edit the timetable grid"
-msgstr "Editar las franjas horarias"
+msgstr ""
 
 #: ../users_views.py:200
 msgid "Edit your name and email address."
-msgstr "Editar su nombre y dirección de correo electrónico."
+msgstr ""
 
 #: ../config_models.py:40
 msgid "Email"
-msgstr "Correo electrónico"
+msgstr ""
 
 #: ../config_mail.py:59 ../config_mail.py:69
 msgid "Email options"
-msgstr "Opciones de correo electrónico"
+msgstr ""
 
 #: ../agenda/event.py:308
 msgid "End"
-msgstr "Fin"
+msgstr ""
 
 #: ../utils.py:113
 msgid "English"
-msgstr "Inglés"
+msgstr ""
 
 #: ../update.py:185
 msgid "Error during update method. See logs."
-msgstr "Error durante método de actualización. Ver logs."
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:8
 msgctxt "heading"
 msgid "Errors"
-msgstr "Errores"
+msgstr ""
 
 #: ../agenda/event.py:329
 msgid "Event"
-msgstr "Evento"
+msgstr ""
 
 #: ../agenda/event.py:526
 msgid "Event model"
-msgstr "Modelo de evento"
+msgstr ""
 
 #: ../agenda/emails.py:27
 msgid "Event reminder"
-msgstr "Recordatorio de evento"
+msgstr ""
 
 #: ../agenda/recurrence.py:132
 msgid "Every"
-msgstr "Cada"
+msgstr ""
 
 #: ../enumerates.py:73
 msgid "Everybody"
-msgstr "Todos"
+msgstr ""
 
 #: ../file.py:217 ../file.py:250
 msgid "Excel"
-msgstr "Excel"
+msgstr ""
 
 #: ../file.py:218 ../file.py:251
 msgid "Excel Spreadsheet"
-msgstr "Hoja de cálculo de Excel"
+msgstr ""
 
 #: ../agenda/agenda_views.py:651
 msgid "Export"
-msgstr "Exportar"
+msgstr ""
 
 #: ../file_views.py:126
 msgid "External Editor"
-msgstr "Editor Externo"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:56
 msgctxt "button"
 msgid "External Editor..."
-msgstr "Editor externo..."
+msgstr ""
 
 #: ../ui/ikaaro/binary/Archive_view.xml.en:11
 msgctxt "legend"
 msgid "Extract contents"
-msgstr "Extraer contenido"
+msgstr ""
 
 #: ../agenda/agenda_views.py:640
 msgid "Failed to load the file, may contain errors."
-msgstr "Fallo en carga de archivo, puede contener errores."
+msgstr ""
 
 #: ../config_theme.py:39
 msgid "Favicon"
-msgstr "Favicon"
+msgstr ""
 
 #: ../config_captcha.py:258
 msgid "Feature to protect from spammers"
-msgstr "Función de protección contra spammers"
+msgstr ""
 
 #: ../agenda/agenda_views.py:50 ../datatypes.py:280
 msgid "February"
-msgstr "Febrero"
+msgstr ""
 
 #: ../config_models.py:105
 msgid "Field type"
-msgstr "Tipo de campo"
+msgstr ""
 
 #: ../file.py:56 ../widgets.py:99
 msgid "File"
-msgstr "Fichero"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:111
 msgctxt "label"
 msgid "File"
-msgstr "Fichero"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:31
 msgctxt "table cell"
 msgid "Filename"
-msgstr "Nombre de archivo"
+msgstr ""
 
 #: ../file_views.py:304
 msgid "Files extracted"
-msgstr "Archivos extraídos"
+msgstr ""
 
 #: ../users_views.py:423 ../users.py:100
 msgid "First Name"
-msgstr "Nombre"
+msgstr ""
 
 #: ../file.py:191
 msgid "Flash"
-msgstr "Flash"
+msgstr ""
 
 #: ../file.py:192
 msgid "Flash Document"
-msgstr "Documento Flash"
+msgstr ""
 
 #: ../folder.py:55
 msgid "Folder"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:39
 msgctxt "li"
 msgid "Follow this <g id='8'> documentation </g>"
-msgstr "Siga esta <g id='8'> documentación </g>"
+msgstr ""
 
 #: ../cc.py:474
 msgid "Followers"
-msgstr "Seguidores"
+msgstr ""
 
 #: ../config_footer.py:29
 msgid "Footer"
-msgstr "Pie de página"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:52
 msgctxt "heading"
 msgid "Form"
-msgstr "Formulario"
+msgstr ""
 
 #: ../ui/ikaaro/website/broken_links.xml.en:8
 msgctxt "paragraph"
 msgid "Found <g id='1'>${total}</g> broken links."
-msgstr "Se han encontrado <g id='1'>${total}</g> enlaces rotos."
+msgstr ""
 
 #: ../utils.py:114
 msgid "French"
-msgstr "Francés"
+msgstr ""
 
 #: ../datatypes.py:194 ../datatypes.py:206
 msgid "Friday"
-msgstr "Viernes"
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:20
 #: ../agenda/ui/edit_timetables.xml.en:31
 msgctxt "table cell"
 msgid "From"
-msgstr "Desde"
+msgstr ""
 
 #: ../config_mail.py:77
 msgid "From header"
-msgstr "Desde encabezado"
+msgstr ""
 
 #: ../folder_views.py:894
 msgid "Front Page"
-msgstr "Página de inicio"
+msgstr ""
 
 #: ../agenda/ui/weekly_view.xml.en:39
 msgctxt "table cell"
 msgid "Full day"
-msgstr "Todo el día"
+msgstr ""
 
 #: ../root.py:334
 msgid "GNU/Linux"
-msgstr "GNU/Linux"
+msgstr ""
 
 #: ../utils.py:115
 msgid "German"
-msgstr "Alemán"
+msgstr ""
 
 #: ../revisions_views.py:252
 msgid "Git failed: {error}"
-msgstr "Fallo de git: {error}"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:15
 msgctxt "title attribute"
 msgid "Go to first message"
-msgstr "Ir al primer mensaje"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:20
 msgctxt "title attribute"
 msgid "Go to last message"
-msgstr "Ir al último mensaje"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:19
 msgctxt "title attribute"
 msgid "Go to next message"
-msgstr "Ir al siguiente mensaje"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:17
 msgctxt "title attribute"
 msgid "Go to previous message"
-msgstr "Ir al mensaje anterior"
+msgstr ""
 
 #: ../config_seo.py:41
 msgid "Google site verification key"
-msgstr "Clave de verificación de sitio Google"
+msgstr ""
 
 #: ../users_views.py:482
 msgid "Grant access to a new user."
-msgstr "Otorgar acceso a un nuevo usuario."
+msgstr ""
 
 #: ../users.py:55
 msgid "Groups"
-msgstr "Grupos"
+msgstr ""
 
 #: ../file.py:391
 msgid "Gzip"
-msgstr "Gzip"
+msgstr ""
 
 #: ../file.py:392
 msgid "Gzip Compressed"
-msgstr "Comprimido en Gzip"
+msgstr ""
 
 #: ../text.py:263
 msgid "HTML File"
-msgstr "Fichero HTML"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:91
 msgctxt "table cell"
@@ -1426,289 +1374,284 @@ msgid ""
 "Dina (Italian)<x id='9'/> Juan David Ibáñez Palomar (Spanish)<x id='10'/> "
 "Zhou Li (Chinese)<x id='11'/> Sylvain Taverne (French)"
 msgstr ""
-"Hervé Cauwelier (francés)<x id='7'/> Nicolas Deram (francés)<x id='8'/> "
-"Paolo Dina (italiano)<x id='9'/> Juan David Ibáñez Palomar (español)<x "
-"id='10'/> Zhou Li (chino)<x id='11'/> Sylvain Taverne (francés)"
 
 #: ../config_menu.py:263
 msgid "Home"
-msgstr "Inicio"
+msgstr ""
 
 #: ../agenda/reminders.py:30
 msgid "Hour(s)"
-msgstr "Hora(s)"
+msgstr ""
 
 #: ../utils.py:116
 msgid "Hungarian"
-msgstr "Húngaro"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:40
 msgctxt "label"
 msgid "I forgot my password."
-msgstr "Olvidé mi contraseña."
+msgstr ""
 
 #: ../users_views.py:487
 msgid ""
 "If no password is given an email will be sent to the user, asking him to "
 "choose his password."
 msgstr ""
-"Si no se facilita una contraseña, se enviará un correo electrónico al "
-"usuario en el que se le solicita que cree una contraseña."
 
 #: ../ui/ikaaro/root/powered-by.xml.en:72
 msgctxt "paragraph"
 msgid "If not, see <g id='5'>http://www.gnu.org/licenses/</g>."
-msgstr "Si no, ver <g id='5'>http://www.gnu.org/licenses/</g>."
+msgstr ""
 
 #: ../ui/ikaaro/root/internal_server_error.xml.en:11
 msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
-msgstr "Si el error persiste, contacte con el administrador del sistema."
+msgstr ""
 
 #: ../file.py:126
 msgid "Image"
-msgstr "Imagen"
+msgstr ""
 
 #: ../file.py:171
 msgid "Image SVG"
-msgstr "Imagen SVG"
+msgstr ""
 
 #: ../agenda/agenda_views.py:620
 msgid "Import"
-msgstr "Importar"
+msgstr ""
 
 #: ../users.py:75
 msgid "Inactive"
-msgstr "Inactivo"
+msgstr ""
 
 #: ../folder.py:63
 msgid "Index"
-msgstr "Índice"
+msgstr ""
 
 #: ../config_models.py:94
 msgid "Inherited field"
-msgstr "Campo heredado"
+msgstr ""
 
 #: ../ui/ikaaro/website/config.xml.en:17
 msgctxt "button"
 msgid "Initialize new modules"
-msgstr "Inicializar nuevos módulos"
+msgstr ""
 
 #: ../popup.py:455
 msgid "Insert image"
-msgstr "Insertar imagen"
+msgstr ""
 
 #: ../popup.py:401
 msgid "Insert link"
-msgstr "Insertar enlace"
+msgstr ""
 
 #: ../popup.py:485
 msgid "Insert media"
-msgstr "Insertar multimedia"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:11
 msgctxt "legend"
 msgid "Installed software"
-msgstr "Software instalado"
+msgstr ""
 
 #: ../agenda/event.py:197
 msgid "Instance removed"
-msgstr "Instancia eliminada"
+msgstr ""
 
 #: ../config_models.py:41
 msgid "Integer"
-msgstr "Entero"
+msgstr ""
 
 #: ../ui/ikaaro/root/internal_server_error.xml.en:8
 msgctxt "legend"
 msgid "Internal Server Error"
-msgstr "Error interno del servidor"
+msgstr ""
 
 #: ../root.py:168
 msgid "Internal server error"
-msgstr "Error interno del servidor"
+msgstr ""
 
 #: ../agenda/event.py:141 ../agenda/event.py:243
 msgid "Invalid dates."
-msgstr "Fechas inválidas."
+msgstr ""
 
 #: ../popup.py:422
 msgid "Invalid title."
-msgstr "Título inválido."
+msgstr ""
 
 #: ../cc.py:440 ../cc.py:484
 msgid "Invitation"
-msgstr "Invitación"
+msgstr ""
 
 #: ../utils.py:117
 msgid "Italian"
-msgstr "Italiano"
+msgstr ""
 
 #: ../agenda/agenda_views.py:49 ../datatypes.py:279
 msgid "January"
-msgstr "Enero"
+msgstr ""
 
 #: ../utils.py:118
 msgid "Japanese"
-msgstr "Japonés"
+msgstr ""
 
 #: ../text.py:245
 msgid "Javascript"
-msgstr "Javascript"
+msgstr ""
 
 #: ../agenda/agenda_views.py:55 ../datatypes.py:285
 msgid "July"
-msgstr "Julio"
+msgstr ""
 
 #: ../agenda/agenda_views.py:54 ../datatypes.py:284
 msgid "June"
-msgstr "Junio"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:39
 msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
-msgstr "Las principales características de iKaaro son:"
+msgstr ""
 
 #: ../resource_.py:103 ../widgets.py:913
 msgid "Keywords"
-msgstr "Palabras clave"
+msgstr ""
 
 #: ../root_views.py:255
 msgid "Language"
-msgstr "Idioma"
+msgstr ""
 
 #: ../config.py:277
 msgid "Language added."
-msgstr "Idioma añadido."
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:11
 msgctxt "table[summary]"
 msgid "Language settings"
-msgstr "Configuración de idiomas"
+msgstr ""
 
 #: ../config.py:190
 msgid "Languages"
-msgstr "Idiomas"
+msgstr ""
 
 #: ../ui/ikaaro/generic/edit_language_menu.xml.en:12
 msgctxt "legend"
 msgid "Languages"
-msgstr "Idiomas"
+msgstr ""
 
 #: ../config.py:261
 msgid "Languages removed."
-msgstr "Idiomas suprimidos."
+msgstr ""
 
 #: ../config_groups.py:100 ../config_models.py:145 ../config_models.py:230
 #: ../config_models.py:324 ../popup.py:78 ../config_menu.py:60
 #: ../folder_views.py:318
 msgid "Last Author"
-msgstr "Último Autor"
+msgstr ""
 
 #: ../revisions_views.py:164
 msgid "Last Change"
-msgstr "Última modificación"
+msgstr ""
 
 #: ../config_groups.py:99 ../config_models.py:144 ../config_models.py:229
 #: ../config_models.py:323 ../popup.py:77 ../config_menu.py:59
 #: ../folder_views.py:317
 msgid "Last Modified"
-msgstr "Última Modificación"
+msgstr ""
 
 #: ../users_views.py:424 ../users.py:102
 msgid "Last Name"
-msgstr "Apellidos"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:54
 msgctxt "heading"
 msgid "License"
-msgstr "Licencia"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:32
 msgctxt "table cell"
 msgid "Lines Changed"
-msgstr "Líneas modificadas"
+msgstr ""
 
 #: ../resource_views.py:173
 msgid "Links"
-msgstr "Enlaces"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:13
 msgctxt "legend"
 msgid "Linux/Unix"
-msgstr "Linux/Unix"
+msgstr ""
 
 #: ../autoadd.py:58
 msgid "Location"
-msgstr "Localización"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:39
 msgctxt "label"
 msgid "Location:"
-msgstr "Localización:"
+msgstr ""
 
 #: ../skins.py:244
 msgid "Log out"
-msgstr "Desconectarse"
+msgstr ""
 
 #: ../users_views.py:422 ../resource_views.py:217
 msgid "Login"
-msgstr "Conectarse"
+msgstr ""
 
 #: ../config_theme.py:38
 msgid "Logo"
-msgstr "Logotipo"
+msgstr ""
 
 #: ../root.py:335
 msgid "Mac OS X"
-msgstr "Mac OS X"
+msgstr ""
 
 #: ../blog/ui/Post_view.xml.en:10
 msgctxt "legend"
 msgid "Make a comment"
-msgstr "Hacer un comentario"
+msgstr ""
 
 #: ../cc.py:197
 msgid "Manage Subscriptions"
-msgstr "Gestionar suscripciones"
+msgstr ""
 
 #: ../agenda/ui/calendar_caption.xml.en:16
 msgctxt "link"
 msgid "Manage my calendars"
-msgstr "Gestionar mis calendarios"
+msgstr ""
 
 #: ../config_groups.py:124
 msgid "Manage user groups."
-msgstr "Gestionar los grupos de usuario."
+msgstr ""
 
 #: ../users.py:254
 msgid "Manage users."
-msgstr "Gestionar usuarios."
+msgstr ""
 
 #: ../agenda/agenda_views.py:51 ../datatypes.py:281
 msgid "March"
-msgstr "Marzo"
+msgstr ""
 
 #: ../cc.py:268
 msgid "Mass Subscription"
-msgstr "Suscripción en masa"
+msgstr ""
 
 #: ../agenda/agenda_views.py:53 ../datatypes.py:283
 msgid "May"
-msgstr "Mayo"
+msgstr ""
 
 #: ../config_groups.py:98 ../config_groups.py:140
 msgid "Members"
-msgstr "Miembros"
+msgstr ""
 
 #: ../config_menu.py:84
 msgid "Menu"
-msgstr "Menú"
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:19
 msgctxt "b"
 msgid "Message"
-msgstr "Mensaje"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:13
 msgctxt "table cell"
@@ -1716,89 +1659,86 @@ msgid ""
 "Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
 "</g>"
 msgstr ""
-"Mensaje ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
-"</g>"
 
 #: ../text.py:84
 msgid "Message Catalog"
-msgstr "Catalogo de Mensajes"
+msgstr ""
 
 #: ../root_views.py:161
 msgid "Message body"
-msgstr "Cuerpo del mensaje"
+msgstr ""
 
 #: ../root_views.py:202
 msgid "Message sent."
-msgstr "Mensaje enviado."
+msgstr ""
 
 #: ../root_views.py:160
 msgid "Message subject"
-msgstr "Tema del mensaje"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:32
 msgctxt "legend"
 msgid "Microsoft Windows (32-bit)"
-msgstr "Microsoft Windows (32-bit)"
+msgstr ""
 
 #: ../agenda/reminders.py:29
 msgid "Minute(s)"
-msgstr "Minuto(s)"
+msgstr ""
 
 #: ../datatypes.py:190 ../datatypes.py:202
 msgid "Monday"
-msgstr "Lunes"
+msgstr ""
 
 #: ../agenda/agenda_views.py:280
 msgid "Month"
-msgstr "Mes"
+msgstr ""
 
 #: ../agenda/recurrence.py:156
 msgid "Monthly"
-msgstr "Mensual"
+msgstr ""
 
 #: ../agenda/agenda_views.py:425
 msgid "Monthly View"
-msgstr "Vista Mensual"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:45
 msgctxt "li"
 msgid "Mulitilingual interfaces and content."
-msgstr "Interfaces y contenido multilingüe."
+msgstr ""
 
 #: ../config_models.py:59
 msgid "Multiple"
-msgstr "Múltiple"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:44
 msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
-"Múltiples sitios web en una instancia, con distintos derechos de acceso."
 
 #: ../agenda/agenda.py:132
 msgid "My events"
-msgstr "Mis eventos"
+msgstr ""
 
 #: ../config_groups.py:96 ../popup.py:76
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:15
 #: ../ui/ikaaro/root/api_docs.xml.en:27 ../ui/ikaaro/root/api_docs.xml.en:40
 #: ../ui/ikaaro/root/api_docs.xml.en:55 ../ui/ikaaro/root/api_docs.xml.en:70
 msgctxt "table cell"
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:52
 msgctxt "table cell"
 msgid "Nb resources to update"
-msgstr "Número de recursos a actualizar"
+msgstr ""
 
 #: ../ui/ikaaro/website/config.xml.en:9
 msgctxt "legend"
 msgid "New modules"
-msgstr "Nuevos módulos"
+msgstr ""
 
 #: ../ui/ikaaro/website/config.xml.en:11
 msgctxt "paragraph"
@@ -1806,922 +1746,910 @@ msgid ""
 "New modules have been detected, pleae click the button below to initialize "
 "them:"
 msgstr ""
-"Se han detectado nuevos módulos, haga clic en el siguiente botón para "
-"inicializarlos:"
 
 #: ../config.py:98
 msgid "New modules initialized."
-msgstr "Nuevos módulos inicializados."
+msgstr ""
 
 #: ../config_menu.py:43
 msgid "New page"
-msgstr "Nueva página"
+msgstr ""
 
 #: ../users_views.py:293
 msgid "New password"
-msgstr "Nueva contraseña"
+msgstr ""
 
 #: ../text_views.py:281
 msgid "New row added."
-msgstr "Nueva línea añadida."
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse_batch.xml.en:19
 msgctxt "link"
 msgid "Next »"
-msgstr "Siguiente »"
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse_batch.xml.en:19
 msgctxt "title attribute"
 msgid "Next »"
-msgstr "Siguiente »"
+msgstr ""
 
 #: ../widgets.py:248 ../agenda/calendars.py:106 ../datatypes.py:231
 msgid "No"
-msgstr "No"
+msgstr ""
 
 #: ../config_access.py:80
 msgid "No limit"
-msgstr "Sin límite"
+msgstr ""
 
 #: ../messages.py:90
 msgid "No resource allowed."
-msgstr "No se permite ningún recurso."
+msgstr ""
 
 #: ../messages.py:57
 msgid "No resource removed."
-msgstr "No se ha eliminado ningún recurso."
+msgstr ""
 
 #: ../messages.py:88
 msgid "No resource selected."
-msgstr "No se ha seleccionado ningún recurso."
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:42
 msgctxt "div"
 msgid "No resource to update"
-msgstr "No hay ningún recurso para actualizar"
+msgstr ""
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:8
 msgctxt "legend"
 msgid "Not Allowed"
-msgstr "No permitido"
+msgstr ""
 
 #: ../ui/ikaaro/root/not_found.xml.en:8
 msgctxt "legend"
 msgid "Not Found"
-msgstr "No encontrado"
+msgstr ""
 
 #: ../order.py:125
 msgid "Not ordered"
-msgstr "No ordenado"
+msgstr ""
 
 #: ../cc.py:220
 msgid "Not subscribed"
-msgstr "No suscrito"
+msgstr ""
 
 #: ../agenda/ui/upload.xml.en:10
 msgctxt "paragraph"
 msgid "Note the name and title won't change."
-msgstr "Tenga en cuenta que no cambiará el nombre ni el título."
+msgstr ""
 
 #: ../agenda/agenda_views.py:156
 msgid "Nothing to change."
-msgstr "Nada para cambiar."
+msgstr ""
 
 #: ../messages.py:92
 msgid "Nothing to paste."
-msgstr "Nada para copiar."
+msgstr ""
 
 #: ../agenda/agenda_views.py:140
 msgid "Nothing to remove."
-msgstr "Nada para eliminar."
+msgstr ""
 
 #: ../agenda/agenda_views.py:59 ../datatypes.py:289
 msgid "November"
-msgstr "Noviembre"
+msgstr ""
 
 #: ../config_access.py:234
 msgid "Num."
-msgstr "Núm."
+msgstr ""
 
 #: ../file.py:349
 msgid "ODP"
-msgstr "ODP"
+msgstr ""
 
 #: ../file.py:338
 msgid "ODS"
-msgstr "ODS"
+msgstr ""
 
 #: ../file.py:327
 msgid "ODT"
-msgstr "ODT"
+msgstr ""
 
 #: ../buttons.py:36 ../cc.py:261
 msgid "OK"
-msgstr "Aceptar"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:89
 msgctxt "button"
 msgid "OK"
-msgstr "Aceptar"
+msgstr ""
 
 #: ../file.py:283
 msgid "OOo Calc"
-msgstr "OOo Calc"
+msgstr ""
 
 #: ../file.py:294
 msgid "OOo Impress"
-msgstr "OOo Impress"
+msgstr ""
 
 #: ../file.py:272
 msgid "OOo Writer"
-msgstr "OOo Writer"
+msgstr ""
 
 #: ../agenda/agenda_views.py:58 ../datatypes.py:288
 msgid "October"
-msgstr "Octubre"
+msgstr ""
 
 #: ../blog/ui/Post_view.xml.en:13 ../ui/ikaaro/base/login.xml.en:46
 msgctxt "button"
 msgid "Ok"
-msgstr "Aceptar"
+msgstr ""
 
 #: ../agenda/event.py:92 ../agenda/event.py:214
 msgid "On"
-msgstr "El"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:52
 msgctxt "paragraph"
 msgid "Once <g id='11'>restedit</g> is installed, just click the button below:"
 msgstr ""
-"Una vez instalado <g id='11'>restedit</g>, haga clic en el siguiente botón:"
 
 #: ../comments.py:176
 msgid "Open"
-msgstr "Abierto"
+msgstr ""
 
 #: ../file.py:350
 msgid "OpenDocument Presentation"
-msgstr "Presentación de OpenDocument"
+msgstr ""
 
 #: ../file.py:339
 msgid "OpenDocument Spreadsheet"
-msgstr "Hoja de cálculo de OpenDocument"
+msgstr ""
 
 #: ../file.py:328
 msgid "OpenDocument Text"
-msgstr "Texto de OpenDocument"
+msgstr ""
 
 #: ../file.py:295
 msgid "OpenOffice.org Presentation"
-msgstr "Presentación de OpenOffice.org"
+msgstr ""
 
 #: ../file.py:284
 msgid "OpenOffice.org Spreadsheet"
-msgstr "Hoja de cálculo de OpenOffice.org"
+msgstr ""
 
 #: ../file.py:273
 msgid "OpenOffice.org Text"
-msgstr "Texto de OpenOffice.org"
+msgstr ""
 
 #: ../root_views.py:230
 msgid "Operating System"
-msgstr "Sistema operativo"
+msgstr ""
 
 #: ../users_views.py:127
 msgid "Operation successful! Welcome."
-msgstr "¡Operación realizada con éxito! Bienvenido."
+msgstr ""
 
 #: ../config_seo.py:28
 msgid "Optimize your website for better ranking in search engine results."
 msgstr ""
-"Optimice su sitio web para conseguir un mejor posicionamiento en los "
-"resultados de los motores de búsqueda."
 
 #: ../config_groups.py:101 ../config_models.py:146 ../config_models.py:231
 #: ../config_menu.py:61 ../order.py:84 ../order.py:189
 msgid "Order"
-msgstr "Orden"
+msgstr ""
 
 #: ../order.py:58
 msgid "Order bottom"
-msgstr "Ordenar abajo"
+msgstr ""
 
 #: ../order.py:42
 msgid "Order down"
-msgstr "Ordenar en orden descendente"
+msgstr ""
 
 #: ../order.py:50
 msgid "Order top"
-msgstr "Ordenar arriba"
+msgstr ""
 
 #: ../order.py:34
 msgid "Order up"
-msgstr "Ordenar hacia arriba"
+msgstr ""
 
 #: ../order.py:185
 msgid "Ordered Folder"
-msgstr "Carpeta ordenada"
+msgstr ""
 
 #: ../obsolete/table.py:107
 msgid "Ordered Table"
-msgstr "Tabla ordenada"
+msgstr ""
 
 #: ../folder.py:56
 msgid "Organize your files and documents with folders."
-msgstr "Organice sus archivos y documentos con carpetas."
+msgstr ""
 
 #: ../config.py:158
 msgid "Orphans"
-msgstr "Huérfanos"
+msgstr ""
 
 #: ../config.py:44
 msgid "Other"
-msgstr "Otros"
+msgstr ""
 
 #: ../file.py:305
 msgid "PDF"
-msgstr "PDF"
+msgstr ""
 
 #: ../file.py:306
 msgid "PDF Document"
-msgstr "Documento PDF"
+msgstr ""
 
 #: ../users_views.py:486 ../api/views.py:268 ../widgets.py:160
 msgid "Password"
-msgstr "Contraseña"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:32
 msgctxt "label"
 msgid "Password"
-msgstr "Contraseña"
+msgstr ""
 
 #: ../messages.py:86
 msgid "Password cannot match the username."
-msgstr "La contraseña no puede coincidir con el nombre de usuario."
+msgstr ""
 
 #: ../users_views.py:331
 msgid "Passwords mismatch, please try again."
-msgstr "Las contraseñas son diferentes, inténtelo de nuevo."
+msgstr ""
 
 #: ../buttons.py:128
 msgid "Paste"
-msgstr "Pegar"
+msgstr ""
 
 #: ../config_access.py:61 ../folder_views.py:314 ../config_menu.py:56
 #: ../config_menu.py:87 ../config_models.py:141 ../config_models.py:226
 #: ../config_models.py:320
 msgid "Path"
-msgstr "Ruta"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:24
 msgctxt "heading"
 msgid "Path query"
-msgstr "Consulta de ruta"
+msgstr ""
 
 #: ../cc.py:217 ../users.py:74
 msgid "Pending confirmation"
-msgstr "Pendiente de confirmación"
+msgstr ""
 
 #: ../config_access.py:95
 msgid "Permission"
-msgstr "Permiso"
+msgstr ""
 
 #: ../text.py:63
 msgid "Plain Text"
-msgstr "Texto sin formato"
+msgstr ""
 
 #: ../config_captcha.py:146
 msgid "Please answer the question below:"
-msgstr "Conteste a la siguiente pregunta:"
+msgstr ""
 
 #: ../ui/ikaaro/register_terms_of_service.xml.en:12
 msgctxt "label"
 msgid "Please check this box to accept the <g id='3'>Terms of Service</g>."
 msgstr ""
-"Marque esta casilla para aceptar las <g id='3'>Condiciones del servicio</g>."
 
 #: ../users_views.py:134
 msgid "Please choose a new password for your account"
-msgstr "Elija una nueva contraseña para su cuenta"
+msgstr ""
 
 #: ../config_captcha.py:44
 msgid "Please enter the words below"
-msgstr "Introduzca las palabras siguientes"
+msgstr ""
 
 #: ../ui/ikaaro/root/unavailable.xml.en:9
 msgctxt "paragraph"
 msgid "Please try again later."
-msgstr "Inténtelo de nuevo más tarde."
+msgstr ""
 
 #: ../utils.py:119
 msgid "Portuguese"
-msgstr "Portugués"
+msgstr ""
 
 #: ../file.py:228 ../file.py:261
 msgid "PowerPoint"
-msgstr "PowerPoint"
+msgstr ""
 
 #: ../file.py:229 ../file.py:262
 msgid "PowerPoint Presentation"
-msgstr "Presentación de PowerPoint"
+msgstr ""
 
 #: ../root_views.py:208
 msgid "Powered by"
-msgstr "Con tecnología de"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:8
 msgctxt "heading"
 msgid "Powered by Ikaaro"
-msgstr "Con tecnología de Ikaaro"
+msgstr ""
 
 #: ../ui/ikaaro/user/edit_preferences.xml.en:13
 msgctxt "label"
 msgid "Preferred Language"
-msgstr "Idioma preferido"
+msgstr ""
 
 #: ../api/views.py:162
 msgid "Pretty ?"
-msgstr "¿Bonito?"
+msgstr ""
 
 #: ../folder_views.py:739
 msgid "Preview Content"
-msgstr "Previsualizar el Contenido"
+msgstr ""
 
 #: ../users_views.py:162
 msgid "Profile"
-msgstr "Perfil"
+msgstr ""
 
 #: ../text.py:234 ../root_views.py:229
 msgid "Python"
-msgstr "Python"
+msgstr ""
 
 #: ../config_captcha.py:164
 msgid "Question"
-msgstr "Pregunta"
+msgstr ""
 
 #: ../config_captcha.py:249
 msgid "Question captcha"
-msgstr "Pregunta de captcha"
+msgstr ""
 
 #: ../file.py:316
 msgid "RTF"
-msgstr "RTF"
+msgstr ""
 
 #: ../file.py:317
 msgid "RTF Document"
-msgstr "Documento de RTF"
+msgstr ""
 
 #: ../config_models.py:152
 msgid "Radio/Checkbox"
-msgstr "Radio/Checkbox"
+msgstr ""
 
 #: ../config_captcha.py:111 ../config_captcha.py:250
 msgid "Recaptcha"
-msgstr "Recaptcha"
+msgstr ""
 
 #: ../config_captcha.py:116
 msgid "Recaptcha private key"
-msgstr "Clave privada Recaptcha"
+msgstr ""
 
 #: ../config_captcha.py:115
 msgid "Recaptcha public key"
-msgstr "Clave pública Recaptcha"
+msgstr ""
 
 #: ../root_views.py:155
 msgid "Recipient"
-msgstr "Destinatario"
+msgstr ""
 
 #: ../agenda/event.py:346
 msgid "Recurrence"
-msgstr "Repetición"
+msgstr ""
 
 #: ../resource_views.py:57
 msgid ""
 "Referenced resource cannot be removed, check the <a href=\";backlinks"
 "\">backlinks</a>."
 msgstr ""
-"El recurso referenciado no puede ser eliminado, compruebe los <a href=\";"
-"backlinks\">backlinks</a>."
 
 #: ../emails.py:93
 msgid "Registration confirmation"
-msgstr "Confirmación de registro"
+msgstr ""
 
 #: ../emails.py:126
 msgid "Registration confirmed"
-msgstr "Registro confirmado"
+msgstr ""
 
 #: ../emails.py:104
 msgid "Registration notification"
-msgstr "Notificación de registro"
+msgstr ""
 
 #: ../agenda/event.py:348
 msgid "Reminder"
-msgstr "Recordatorio"
+msgstr ""
 
 #: ../buttons.py:72 ../resource_views.py:46
 msgid "Remove"
-msgstr "Suprimir"
+msgstr ""
 
 #: ../agenda/event.py:112
 msgid "Remove all events in the series"
-msgstr "Eliminar todos los eventos de la serie"
+msgstr ""
 
 #: ../config_access.py:88
 msgid "Remove and modify"
-msgstr "Eliminar y modificar"
+msgstr ""
 
 #: ../agenda/event.py:110
 msgid "Remove event at {date}"
-msgstr "Eliminar evento del {date}"
+msgstr ""
 
 #: ../order.py:72
 msgid "Remove from ordered list"
-msgstr "Eliminar de la lista ordenada"
+msgstr ""
 
 #: ../agenda/calendars.py:158
 msgid "Remove this calendar"
-msgstr "Eliminar este calendario"
+msgstr ""
 
 #: ../buttons.py:101
 msgid "Rename"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/ikaaro/folder/rename.xml.en:20
 msgctxt "button"
 msgid "Rename"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../folder_views.py:194
 msgid "Rename resources"
-msgstr "Renombrar los recursos"
+msgstr ""
 
 #: ../users_views.py:60 ../users_views.py:489
 msgid "Repeat password"
-msgstr "Repite la contraseña"
+msgstr ""
 
 #: ../agenda/ui/upload.xml.en:15
 msgctxt "button"
 msgid "Replace"
-msgstr "Reemplazar"
+msgstr ""
 
 #: ../widgets.py:916
 msgid "Replace file"
-msgstr "Reemplazar archivo"
+msgstr ""
 
 #: ../config_mail.py:78
 msgid "Reply to"
-msgstr "Responder a"
+msgstr ""
 
 #: ../config_models.py:58
 msgid "Required"
-msgstr "Obligatorio"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:42 ../ui/ikaaro/root/api_docs.xml.en:57
 msgctxt "table cell"
 msgid "Required ?"
-msgstr "¿Obligatorio?"
+msgstr ""
 
 #: ../users_views.py:436
 msgid "Resend Confirmation"
-msgstr "Reenviar confirmación"
+msgstr ""
 
 #: ../agenda/event.py:189 ../resource_views.py:63
 msgid "Resource removed"
-msgstr "Recurso eliminado"
+msgstr ""
 
 #: ../config_access.py:118
 msgid "Resource type"
-msgstr "Tipo de recurso"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:17
 msgctxt "table cell"
 msgid "Resource version"
-msgstr "Versión de recurso"
+msgstr ""
 
 #: ../messages.py:96
 msgid "Resources copied."
-msgstr "Recursos copiados."
+msgstr ""
 
 #: ../messages.py:98
 msgid "Resources cut."
-msgstr "Recursos cortados."
+msgstr ""
 
 #: ../messages.py:74
 msgid "Resources not allowed to paste here: {resources}."
-msgstr "No está permitido copiar los recursos aquí: {resources}."
+msgstr ""
 
 #: ../messages.py:77
 msgid "Resources not allowed to remove: {resources}."
-msgstr "No está permitido eliminar los recursos: {resources}."
+msgstr ""
 
 #: ../order.py:151
 msgid "Resources ordered down."
-msgstr "Recursos ordenados de forma descendente."
+msgstr ""
 
 #: ../order.py:163 ../order.py:169
 msgid "Resources ordered on bottom."
-msgstr "Recursos ordenados abajo."
+msgstr ""
 
 #: ../order.py:157
 msgid "Resources ordered on top."
-msgstr "Recursos ordenados arriba."
+msgstr ""
 
 #: ../order.py:145
 msgid "Resources ordered up."
-msgstr "Recursos ordenados de forma ascendente."
+msgstr ""
 
 #: ../messages.py:59
 msgid "Resources pasted: {resources}."
-msgstr "Recursos pegados: {resources}."
+msgstr ""
 
 #: ../messages.py:100
 msgid "Resources published."
-msgstr "Recursos publicados."
+msgstr ""
 
 #: ../messages.py:61
 msgid "Resources removed: {resources}."
-msgstr "Recursos eliminados: {resources}."
+msgstr ""
 
 #: ../messages.py:94
 msgid "Resources renamed."
-msgstr "Recursos renombrados."
+msgstr ""
 
 #: ../messages.py:102
 msgid "Resources retired."
-msgstr "Recursos retirados."
+msgstr ""
 
 #: ../order.py:175
 msgid "Resources unordered."
-msgstr "Recursos sin ordenar."
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:67
 msgctxt "heading"
 msgid "Response schema"
-msgstr "Esquema de respuesta"
+msgstr ""
 
 #: ../ui/ikaaro/website/search.xml.en:11
 msgctxt "heading"
 msgid "Results"
-msgstr "Resultados"
+msgstr ""
 
 #: ../config_groups.py:139
 msgid "Reviewers"
-msgstr "Revisores"
+msgstr ""
 
 #: ../text_views.py:240
 msgid "Row deleted."
-msgstr "Línea eliminada."
+msgstr ""
 
 #: ../api/views.py:197
 msgid "SHA of the commit"
-msgstr "SHA del commit"
+msgstr ""
 
 #: ../datatypes.py:195 ../datatypes.py:207
 msgid "Saturday"
-msgstr "Sábado"
+msgstr ""
 
 #: ../agenda/calendars.py:155 ../autoform.py:80
 msgid "Save"
-msgstr "Guardar"
+msgstr ""
 
 #: ../ui/ikaaro/website/virtual_hosts.xml.en:14
 #: ../ui/ikaaro/user/edit_preferences.xml.en:35
 msgctxt "button"
 msgid "Save"
-msgstr "Guardar"
+msgstr ""
 
 #: ../agenda/agenda.py:98
 msgid "Schedule your time with calendar files."
-msgstr "Planifique su tiempo con los calendarios."
+msgstr ""
 
 #: ../users_views.py:378 ../views.py:377 ../views.py:387
 msgid "Search"
-msgstr "Buscar"
+msgstr ""
 
 #: ../config_seo.py:34
 msgid "Search Engine Optimization"
-msgstr "Optimización de motores de búsqueda (SEO)"
+msgstr ""
 
 #: ../config_seo.py:50
 msgid "Search engine optimization"
-msgstr "Optimización de motores de búsqueda (SEO)"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:66
 msgctxt "paragraph"
 msgid "See the GNU General Public License for more details."
-msgstr "Para más información, ver la Licencia General Pública de GNU."
+msgstr ""
 
 #: ../users_views.py:368
 msgid "See the users."
-msgstr "Ver los usuarios."
+msgstr ""
 
 #: ../config_models.py:153
 msgid "Select"
-msgstr "Seleccionar"
+msgstr ""
 
 #: ../ui/ikaaro/folder/browse_image.xml.en:13
 msgctxt "label"
 msgid "Select All"
-msgstr "Seleccionar todo"
+msgstr ""
 
 #: ../config_mail.py:75
 msgid "Select the contact accounts"
-msgstr "Seleccionar las cuentas de contactos"
+msgstr ""
 
 #: ../root_views.py:133
 msgid "Send"
-msgstr "Enviar"
+msgstr ""
 
 #: ../widgets.py:914
 msgid "Separated by comma"
-msgstr "Separados por coma"
+msgstr ""
 
 #: ../agenda/agenda_views.py:57 ../datatypes.py:287
 msgid "September"
-msgstr "Septiembre"
+msgstr ""
 
 #: ../api/views.py:320
 msgid "Server's PID"
-msgstr "PID del servidor"
+msgstr ""
 
 #: ../api/views.py:321
 msgid "Server's port"
-msgstr "Puerto del servidor"
+msgstr ""
 
 #: ../api/views.py:319
 msgid "Server's start timestamp"
-msgstr "Marca temporal de inicio del servidor"
+msgstr ""
 
 #: ../users_views.py:233
 msgid "Set your preferred language and timezone."
-msgstr "Elija su idioma y franja horaria."
+msgstr ""
 
 #: ../config_access.py:89 ../resource_.py:66
 msgid "Share"
-msgstr "Compartir"
+msgstr ""
 
 #: ../config.py:160
 msgid "Show resources not linked from anywhere."
-msgstr "Mostrar recursos no vinculados."
+msgstr ""
 
 #: ../skins.py:233
 msgid "Sign in"
-msgstr "Iniciar sesión"
+msgstr ""
 
 #: ../ui/ikaaro/base/login.xml.en:17
 msgctxt "legend"
 msgid "Sign in"
-msgstr "Iniciar sesión"
+msgstr ""
 
 #: ../config_mail.py:79
 msgid "Signature"
-msgstr "Firma"
+msgstr ""
 
 #: ../skins.py:41
 msgid "Skin"
-msgstr "Piel"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:18
 msgctxt "table cell"
 msgid "Software"
-msgstr "Software"
+msgstr ""
 
 #: ../messages.py:40
 msgid "Someone already saved this document, click \"Save\" again to force."
 msgstr ""
-"Este documento ya ha sido guardado, haga clic en \"Guardar\" para "
-"sobrescribir."
 
 #: ../utils.py:120
 msgid "Spanish"
-msgstr "Español"
+msgstr ""
 
 #: ../config_models.py:102
 msgid "Standard field"
-msgstr "Campo estándar"
+msgstr ""
 
 #: ../agenda/event.py:299
 msgid "Start"
-msgstr "Comenzar"
+msgstr ""
 
 #: ../agenda/agenda_views.py:118 ../agenda/agenda_views.py:170
 msgid "Start time must be earlier than end time."
-msgstr "La hora de inicio debe ser anterior a la hora de finalización."
+msgstr ""
 
 #: ../ui/ikaaro/revisions/changes.xml.en:26
 msgctxt "heading"
 msgid "Stat"
-msgstr "Estadísticas"
+msgstr ""
 
 #: ../cc.py:203 ../users_views.py:425 ../agenda/event.py:345
 msgid "State"
-msgstr "Estado"
+msgstr ""
 
 #: ../cc.py:74 ../cc.py:185 ../cc.py:343
 msgid "Subscribe"
-msgstr "Suscribirse"
+msgstr ""
 
 #: ../cc.py:218
 msgid "Subscribed"
-msgstr "Suscrito"
+msgstr ""
 
 #: ../cc.py:102
 msgid "Subscription"
-msgstr "Suscripción"
+msgstr ""
 
 #: ../cc.py:334
 msgid "Subscriptions"
-msgstr "Suscripciones"
+msgstr ""
 
 #: ../datatypes.py:196 ../datatypes.py:208
 msgid "Sunday"
-msgstr "Domingo"
+msgstr ""
 
 #: ../users_views.py:448
 msgid "Switch state"
-msgstr "Cambiar estado"
+msgstr ""
 
 #: ../file.py:380
 msgid "Tar"
-msgstr "Tar"
+msgstr ""
 
 #: ../file.py:381
 msgid "Tar Archive"
-msgstr "Archivo Tar"
+msgstr ""
 
 #: ../config_menu.py:46 ../config_menu.py:58
 msgid "Target"
-msgstr "Destino"
+msgstr ""
 
 #: ../file_views.py:282
 msgid "Target does not exist."
-msgstr "El destino no existe."
+msgstr ""
 
 #: ../file_views.py:284
 msgid "Target must be a folder."
-msgstr "El destino debe ser una carpeta."
+msgstr ""
 
 #: ../agenda/event.py:55
 msgid "Tentative"
-msgstr "Provisional"
+msgstr ""
 
 #: ../config_register.py:50
 msgid "Terms of Service"
-msgstr "Condiciones del servicio"
+msgstr ""
 
 #: ../config_register.py:181
 msgid "Terms of service"
-msgstr "Condiciones del servicio"
+msgstr ""
 
 #: ../config_models.py:42 ../folder_views.py:304
 msgid "Text"
-msgstr "Texto"
+msgstr ""
 
 #: ../config_models.py:43
 msgid "Textarea"
-msgstr "Textarea"
+msgstr ""
 
 #: ../messages.py:35
 msgid "The changes have been saved ({time})."
-msgstr "Los cambios se han guardado ({time})."
+msgstr ""
 
 #: ../messages.py:33
 msgid "The changes have been saved."
-msgstr "Los cambios se han guardado."
+msgstr ""
 
 #: ../api/views.py:236
 msgid "The class_id of the resource cls"
-msgstr "El class_id del recurso cls"
+msgstr ""
 
 #: ../api/views.py:235
 msgid "The class_title of the resource cls"
-msgstr "El class_title del recurso cls"
+msgstr ""
 
 #: ../messages.py:29
 msgid "The document name contains illegal characters, choose another one."
 msgstr ""
-"El nombre del documento contiene caracteres no permitidos, elija otro nombre."
 
 #: ../messages.py:49
 msgid "The email address provided is invalid."
-msgstr "La dirección de correo electrónico proporcionada no es válida."
+msgstr ""
 
 #: ../agenda/event.py:492
 msgid "The event \"{title}\" has been modified"
-msgstr "El evento \"{title}\" ha sido modificado"
+msgstr ""
 
 #: ../messages.py:45
 msgid "The file must be entered."
-msgstr "Debe introducirse el archivo."
+msgstr ""
 
 #: ../cc.py:51
 msgid "The following addresses are invalid: {users}."
 msgstr ""
-"Las siguientes direcciones de correo electrónico no son válidas: {users}."
 
 #: ../cc.py:45
 msgid "The following users are already subscribed: {users}."
-msgstr "Los siguientes usuarios ya están suscritos: {users}."
+msgstr ""
 
 #: ../cc.py:55
 msgid "The following users are prevented from subscribing: {users}."
-msgstr "Los siguientes usuarios no pueden suscribirse: {users}."
+msgstr ""
 
 #: ../cc.py:53
 msgid "The following users have been invited: {users}."
-msgstr "Los siguientes usuarios han sido invitados: {users}."
+msgstr ""
 
 #: ../cc.py:47
 msgid "The following users were subscribed: {users}."
-msgstr "Los siguientes usuarios se han suscrito: {users}."
+msgstr ""
 
 #: ../cc.py:49
 msgid "The following users were unsubscribed: {users}."
-msgstr "Los siguientes usuarios han cancelado la suscripción: {users}."
+msgstr ""
 
 #: ../popup.py:354
 msgid "The given file is not of the expected type."
-msgstr "El archivo no es del tipo esperado."
+msgstr ""
 
 #: ../agenda/agenda_views.py:125
 msgid "The given range is already defined."
-msgstr "El intervalo ya está definido."
+msgstr ""
 
 #: ../messages.py:107
 msgid "The login name or the password is incorrect."
-msgstr "El nombre de usuario o la contraseña son incorrectos."
+msgstr ""
 
 #: ../messages.py:53
 msgid "The name is missing."
-msgstr "Debe introducirse el nombre."
+msgstr ""
 
 #: ../messages.py:80
 msgid "The provided passwords do not match."
-msgstr "Las contraseñas proporcionadas no coinciden."
+msgstr ""
 
 #: ../ui/ikaaro/root/not_found.xml.en:9
 msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
-msgstr "La URL « ${uri} » solicitada no se encuentra en este servidor."
+msgstr ""
 
 #: ../ui/ikaaro/root/not_allowed.xml.en:9
 msgctxt "paragraph"
 msgid "The requested «${method}» on « ${uri} » is not allowed."
-msgstr "«${method}» solicitado en « ${uri} » no está autorizado."
+msgstr ""
 
 #: ../users_views.py:509
 msgid "The user is already here."
-msgstr "El usuario ya existe."
+msgstr ""
 
 #: ../api/views.py:128
 msgid "The uuid of a resource in DB"
-msgstr "El uuid de un recurso en BD"
+msgstr ""
 
 #: ../config_theme.py:33
 msgid "Theme"
-msgstr "Tema"
+msgstr ""
 
 #: ../views.py:204
 msgid "There are {n} items."
-msgstr "Hay {n} elementos."
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:45
 msgctxt "paragraph"
 msgid "There aren't messages."
-msgstr "No hay mensajes."
+msgstr ""
 
 #: ../ui/ikaaro/root/internal_server_error.xml.en:11
 msgctxt "paragraph"
 msgid "There has been an error, please try again later."
-msgstr "Ha habido un error, inténtelo de nuevo más tarde."
+msgstr ""
 
 #: ../views.py:203
 msgid "There is 1 item."
-msgstr "Hay 1 elemento."
+msgstr ""
 
 #: ../messages.py:51
 msgid "There is already another resource with this name."
-msgstr "Existe un recurso con este nombre."
+msgstr ""
 
 #: ../users_views.py:219
 msgid ""
 "There is another user with the \"{value}\" {name}, please choose another one."
-msgstr "Existe un usuario con \"{value}\" {name}, elija otro distinto."
+msgstr ""
 
 #: ../ui/ikaaro/user/profile.xml.en:8
 msgctxt "paragraph"
 msgid "This account is not active."
-msgstr "Esta cuenta no está activa."
+msgstr ""
 
 #: ../agenda/calendars.py:176
 msgid "This calendar has been removed"
-msgstr "Este calendario ha sido eliminado"
+msgstr ""
 
 #: ../ui/ikaaro/auto_form_field.xml.en:10 ../ui/ikaaro/base/login.xml.en:21
 msgctxt "title attribute"
 msgid "This field is required"
-msgstr "Este campo es obligatorio"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:64
 msgctxt "paragraph"
@@ -2729,57 +2657,55 @@ msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
 msgstr ""
-"Este programa se distribuye con la esperanza de que sea útil, pero SIN "
-"GARANTÍA ALGUNA;"
 
 #: ../ui/ikaaro/root/powered-by.xml.en:57
 msgctxt "paragraph"
 msgid "This program is free software:"
-msgstr "Este programa es software libre:"
+msgstr ""
 
 #: ../ui/ikaaro/root/unavailable.xml.en:9
 msgctxt "paragraph"
 msgid "This website is under maintenance."
-msgstr "Este sitio web está en mantenimiento."
+msgstr ""
 
 #: ../datatypes.py:193 ../datatypes.py:205
 msgid "Thursday"
-msgstr "Jueves"
+msgstr ""
 
 #: ../agenda/agenda_views.py:150
 msgid "Timetable(s) removed successfully."
-msgstr "Horario(s) eliminado(s) con éxito."
+msgstr ""
 
 #: ../agenda/agenda_views.py:89 ../agenda/agenda.py:111
 msgid "Timetables"
-msgstr "Horarios"
+msgstr ""
 
 #: ../ui/ikaaro/user/edit_preferences.xml.en:24
 msgctxt "label"
 msgid "Timezone"
-msgstr "Franja horaria"
+msgstr ""
 
 #: ../config_models.py:60
 msgid "Tip"
-msgstr "Consejo"
+msgstr ""
 
 #: ../config_groups.py:97 ../resource_.py:101 ../agenda/calendars.py:91
 #: ../config_menu.py:57 ../config_models.py:142 ../config_models.py:227
 #: ../config_models.py:321 ../widgets.py:910 ../folder_views.py:315
 msgid "Title"
-msgstr "Título"
+msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:11 ../ui/ikaaro/html/popup.xml.en:83
 #: ../ui/ikaaro/html/popup.xml.en:105
 msgctxt "label"
 msgid "Title"
-msgstr "Título"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:28 ../ui/ikaaro/root/api_docs.xml.en:41
 #: ../ui/ikaaro/root/api_docs.xml.en:56 ../ui/ikaaro/root/api_docs.xml.en:71
 msgctxt "table cell"
 msgid "Title"
-msgstr "Título"
+msgstr ""
 
 #: ../cc.py:486
 msgid ""
@@ -2787,13 +2713,10 @@ msgid ""
 "\n"
 " {uri}\n"
 msgstr ""
-"Haga clic en el enlace para aceptar la invitación\n"
-"\n"
-" {uri}\n"
 
 #: ../users_views.py:49
 msgid "To activate your account, please type a password."
-msgstr "Introduzca una contraseña para activar su cuenta."
+msgstr ""
 
 #: ../emails.py:139
 msgid ""
@@ -2801,9 +2724,6 @@ msgid ""
 "\n"
 " {user}/;change_password_forgotten?username={userid}&key={userkey}"
 msgstr ""
-"Haga clic en el enlace para crear una nueva contraseña:\n"
-"\n"
-" {user}/;change_password_forgotten?username={userid}&key={userkey}"
 
 #: ../cc.py:478
 msgid ""
@@ -2811,9 +2731,6 @@ msgid ""
 "\n"
 " {uri}\n"
 msgstr ""
-"Haga clic en el enlace para confirmar la suscripción:\n"
-"\n"
-" {uri}\n"
 
 #: ../cc.py:482
 msgid ""
@@ -2821,9 +2738,6 @@ msgid ""
 "\n"
 " {uri}\n"
 msgstr ""
-"Haga clic en el enlace para confirmar la cancelación de la suscripción:\n"
-"\n"
-" {uri}\n"
 
 #: ../emails.py:95
 msgid ""
@@ -2831,21 +2745,18 @@ msgid ""
 "\n"
 " {user}/;confirm_registration?username={userid}&key={userkey}"
 msgstr ""
-"Haga clic en el siguiente enlace para confirmar su identidad:\n"
-"\n"
-" {user}/;confirm_registration?username={userid}&key={userkey}"
 
 #: ../agenda/ui/export_form.xml.en:8
 msgctxt "paragraph"
 msgid "To download the ICS file, click on <g id='1'>${filename}</g>"
-msgstr "Haga clic en <g id='1'>${filename}</g> para descargar el archivo ICS"
+msgstr ""
 
 #: ../ui/ikaaro/file/download_form.xml.en:8
 #: ../ui/ikaaro/binary/Flash_view.xml.en:7
 #: ../ui/ikaaro/binary/Archive_view.xml.en:7
 msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
-msgstr "Haga clic en <g id='1'>${filename}</g> para descargar el archivo"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:9
 msgctxt "paragraph"
@@ -2853,371 +2764,363 @@ msgid ""
 "To edit this file with your preferred desktop application, first you need to "
 "install <g id='1'>restedit</g>:"
 msgstr ""
-"Para editar este archivo con su aplicación de escritorio de preferencia, "
-"instale <g id='1'>restedit</g>:"
 
 #: ../ui/ikaaro/root/powered-by.xml.en:49
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='4'>Web Site</g>."
-msgstr "Para saber más, visite el <g id='4'>sitio web</g> del proyecto."
+msgstr ""
 
 #: ../agenda/agenda_views.py:207
 msgid "Today"
-msgstr "Hoy"
+msgstr ""
 
 #: ../ui/ikaaro/PO_edit.xml.en:29
 msgctxt "table cell"
 msgid "Translation"
-msgstr "Traducción"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:89
 msgctxt "table cell"
 msgid "Translators"
-msgstr "Traductores"
+msgstr ""
 
 #: ../datatypes.py:191 ../datatypes.py:203
 msgid "Tuesday"
-msgstr "Martes"
+msgstr ""
 
 #: ../config_models.py:143 ../config_models.py:228 ../folder_views.py:305
 #: ../folder_views.py:316
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:72
 msgctxt "table cell"
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../popup.py:487
 msgid "Type the URL of an external media"
-msgstr "Tipo de URL de contenido multimedia externo"
+msgstr ""
 
 #: ../popup.py:403
 msgid "Type the URL of an external resource"
-msgstr "Tipo de URL de recurso externo"
+msgstr ""
 
 #: ../ui/ikaaro/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
-"Introduzca los nombres de host a los que responde este sitio web, cada uno "
-"en una línea diferente."
 
 #: ../users_views.py:306
 msgid "Type your current password"
-msgstr "Escriba su contraseña actual"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:57
 msgctxt "label"
 msgid "URI"
-msgstr "URI"
+msgstr ""
 
 #: ../ui/ikaaro/root/api_docs.xml.en:37
 msgctxt "heading"
 msgid "URI Query"
-msgstr "Consulta URI"
+msgstr ""
 
 #: ../fields.py:821
 msgid "UUID"
-msgstr "UUID"
+msgstr ""
 
 #: ../ui/ikaaro/root/unavailable.xml.en:8
 msgctxt "legend"
 msgid "Unavailable"
-msgstr "No disponible"
+msgstr ""
 
 #: ../messages.py:104
 msgid "Unexpected file of mimetype {mimetype}."
-msgstr "Archivo de tipo mime {mimetype} inesperado."
+msgstr ""
 
 #: ../update.py:90
 msgid "Unknow"
-msgstr "Desconocido"
+msgstr ""
 
 #: ../ui/ikaaro/file/externaledit.xml.en:20
 msgctxt "li"
 msgid "Unpack the tarball <g id='3'>restedit-last.tar.gz</g>"
-msgstr "Descomprimir tarball <g id='3'>restedit-last.tar.gz</g>"
+msgstr ""
 
 #: ../cc.py:88 ../cc.py:191 ../cc.py:413
 msgid "Unsubscribe"
-msgstr "Cancelar suscripción"
+msgstr ""
 
 #: ../agenda/recurrence.py:146
 msgid "Until"
-msgstr "Hasta"
+msgstr ""
 
 #: ../config_groups.py:39
 msgid "Update"
-msgstr "Actualizar"
+msgstr ""
 
 #: ../ui/ikaaro/generic/edit_language_menu.xml.en:23
 msgctxt "button"
 msgid "Update"
-msgstr "Actualizar"
+msgstr ""
 
 #: ../agenda/calendars.py:68
 msgid "Update calendar visibility"
-msgstr "Actualizar la visibilidad de calendarios"
+msgstr ""
 
 #: ../root_views.py:248
 msgid "Update docs"
-msgstr "Actualizar documentos"
+msgstr ""
 
 #: ../update.py:173
 msgid "Update instance"
-msgstr "Actualizar instancia"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:51
 msgctxt "table cell"
 msgid "Update method title"
-msgstr "Título de método de actualización"
+msgstr ""
 
 #: ../ui/ikaaro/update_instance.xml.en:39
 msgctxt "heading"
 msgid "Update methods"
-msgstr "Métodos de actualización"
+msgstr ""
 
 #: ../update.py:191
 msgid "Updated method has been launched"
-msgstr "Se ha lanzado un método de actualización"
+msgstr ""
 
 #: ../../scripts/icms-update.py:135
 msgid "Upgrade to version %s"
-msgstr "Actualizar a versión %s"
+msgstr ""
 
 #: ../update.py:161
 msgid "Upgrade to version {0}"
-msgstr "Actualizar a versión {0}"
+msgstr ""
 
 #: ../root_views.py:259
 msgid "Upload"
-msgstr "Subir"
+msgstr ""
 
 #: ../ui/ikaaro/html/popup.xml.en:117
 msgctxt "button"
 msgid "Upload"
-msgstr "Subir"
+msgstr ""
 
 #: ../agenda/ui/upload.xml.en:8
 msgctxt "legend"
 msgid "Upload"
-msgstr "Subir"
+msgstr ""
 
 #: ../file_views.py:42
 msgid "Upload File"
-msgstr "Archivo de carga"
+msgstr ""
 
 #: ../popup.py:405
 msgid "Upload a file to the current folder and link to it:"
-msgstr "Subir un archivo a la carpeta actual y vincularlo:"
+msgstr ""
 
 #: ../popup.py:489
 msgid "Upload a media to the current folder and insert it:"
-msgstr "Subir contenido multimedia a la carpeta actual e insertarlo:"
+msgstr ""
 
 #: ../popup.py:459
 msgid "Upload an image to the current folder and insert it:"
-msgstr "Subir una imagen a la carpeta actual e insertarla:"
+msgstr ""
 
 #: ../file.py:58
 msgid "Upload office documents, images, media files, etc."
-msgstr "Subir documentos, imágenes, archivos multimedia, etc."
+msgstr ""
 
 #: ../users.py:91
 msgid "User"
-msgstr "Usuario"
+msgstr ""
 
 #: ../ui/ikaaro/file/history.xml.en:11
 msgctxt "table cell"
 msgid "User"
-msgstr "Usuario"
+msgstr ""
 
 #: ../config_groups.py:76
 msgid "User Group"
-msgstr "Grupo de usuarios"
+msgstr ""
 
 #: ../config_groups.py:123
 msgid "User Groups"
-msgstr "Grupos de usuarios"
+msgstr ""
 
 #: ../users_views.py:421
 msgid "User ID"
-msgstr "ID de usuario"
+msgstr ""
 
 #: ../users_views.py:557
 msgid "User added."
-msgstr "Usuario añadido."
+msgstr ""
 
 #: ../config_access.py:142
 msgid "User group"
-msgstr "Grupo de usuarios"
+msgstr ""
 
 #: ../users_views.py:146
 msgid "User has already confirmed his registration!"
-msgstr "¡El usuario ya ha confirmado su registro!"
+msgstr ""
 
 #: ../users_views.py:101
 msgid "User is not pending"
-msgstr "El usuario no está pendiente"
+msgstr ""
 
 #: ../config_register.py:174
 msgid "User registration"
-msgstr "Registro de usuario"
+msgstr ""
 
 #: ../messages.py:43
 msgid "User {user} already saved this document, click \"Save\" again to force."
 msgstr ""
-"El usuario {user} ya ha guardado este documento, haga clic en \"Guardar\" "
-"para sobrescribir."
 
 #: ../users_views.py:163
 msgid "User's profile page."
-msgstr "Página de perfil del usuario."
+msgstr ""
 
 #: ../users_views.py:58 ../api/views.py:267
 msgid "Username"
-msgstr "Nombre de usuario"
+msgstr ""
 
 #: ../users.py:253
 msgid "Users"
-msgstr "Usuarios"
+msgstr ""
 
 #: ../config_register.py:180
 msgid "Users can register by themselves"
-msgstr "Los usuarios pueden registrarse ellos mismos"
+msgstr ""
 
 #: ../config.py:41
 msgid "Users, Access Control & Security"
-msgstr "Usuarios, control de acceso y seguridad"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:19
 msgctxt "table cell"
 msgid "Version"
-msgstr "Versión"
+msgstr ""
 
 #: ../agenda/agenda_views.py:644
 msgid "Version uploaded"
-msgstr "Versión cargada"
+msgstr ""
 
 #: ../file.py:179 ../file.py:180
 msgid "Video"
-msgstr "Vídeo"
+msgstr ""
 
 #: ../ui/ikaaro/binary/Video_view.xml.en:7
 msgctxt "link"
 msgid "Video"
-msgstr "Vídeo"
+msgstr ""
 
 #: ../file_views.py:193 ../file_views.py:241 ../file_views.py:254
 #: ../file_views.py:313 ../config_access.py:87 ../webpage.py:35
 #: ../blog/blog.py:69 ../text_views.py:79 ../text_views.py:171
 #: ../folder_views.py:124
 msgid "View"
-msgstr "Ver"
+msgstr ""
 
 #: ../config_access.py:128
 msgid "View results"
-msgstr "Ver resultados"
+msgstr ""
 
 #: ../config_vhosts.py:33 ../config_vhosts.py:56
 msgid "Virtual Hosts"
-msgstr "Hosts virtuales"
+msgstr ""
 
 #: ../agenda/calendars.py:92
 msgid "Visible ?"
-msgstr "¿Visible?"
+msgstr ""
 
 #: ../agenda/emails.py:29
 msgid "We remind you the event \"{title}\" is scheduled at {date}, {time}."
 msgstr ""
-"Le recordamos que el evento \"{title}\" está programado para el {date}, "
-"{time}."
 
 #: ../webpage.py:50
 msgid "Web Page"
-msgstr "Página Web"
+msgstr ""
 
 #: ../config.py:42
 msgid "Webmaster tools"
-msgstr "Herramientas webmaster"
+msgstr ""
 
 #: ../datatypes.py:192 ../datatypes.py:204
 msgid "Wednesday"
-msgstr "Miércoles"
+msgstr ""
 
 #: ../agenda/agenda_views.py:279
 msgid "Week"
-msgstr "Semana"
+msgstr ""
 
 #: ../agenda/recurrence.py:155
 msgid "Weekly"
-msgstr "Semanal"
+msgstr ""
 
 #: ../agenda/agenda_views.py:513
 msgid "Weekly View"
-msgstr "Vista semanal"
+msgstr ""
 
 #: ../resource_views.py:327
 msgid "Welcome!"
-msgstr "Bienvenido/a!"
+msgstr ""
 
 #: ../agenda/event.py:344
 msgid "Where"
-msgstr "Donde"
+msgstr ""
 
 #: ../config_models.py:162
 msgid "Widget to use"
-msgstr "Widget a utilizar"
+msgstr ""
 
 #: ../root.py:336
 msgid "Windows"
-msgstr "Windows"
+msgstr ""
 
 #: ../file.py:206 ../file.py:239
 msgid "Word"
-msgstr "Word"
+msgstr ""
 
 #: ../file.py:207 ../file.py:240
 msgid "Word Text"
-msgstr "Texto de Word"
+msgstr ""
 
 #: ../agenda/agenda_views.py:166
 msgid "Wrong time selection (HH:MM)."
-msgstr "Hora errónea (HH:MM)."
+msgstr ""
 
 #: ../text.py:254
 msgid "XML File"
-msgstr "Fichero XML"
+msgstr ""
 
 #: ../config_seo.py:43
 msgid "Yahoo site verification key"
-msgstr "Clave de verificación de sitio Yahoo"
+msgstr ""
 
 #: ../agenda/recurrence.py:157
 msgid "Yearly"
-msgstr "Anual"
+msgstr ""
 
 #: ../widgets.py:247 ../widgets.py:299 ../agenda/calendars.py:106
 #: ../datatypes.py:230
 msgid "Yes"
-msgstr "Sí"
+msgstr ""
 
 #: ../agenda/ui/widgets/allday.xml.en:9
 msgctxt "label"
 msgid "Yes"
-msgstr "Sí"
+msgstr ""
 
 #: ../ui/ikaaro/website/edit_languages.xml.en:22
 msgctxt "table cell"
 msgid "Yes"
-msgstr "Sí"
+msgstr ""
 
 #: ../resource_views.py:341
 msgid "You Are Now Logged out."
-msgstr "Ya está desconectado."
+msgstr ""
 
 #: ../emails.py:117
 msgid ""
@@ -3225,55 +3128,48 @@ msgid ""
 "\n"
 " {host}/;login?loginname={userid}"
 msgstr ""
-"Ya tiene una cuenta:\n"
-"\n"
-" {host}/;login?loginname={userid}"
 
 #: ../resource_views.py:231
 msgid "You are already connected"
-msgstr "Ya está conectado"
+msgstr ""
 
 #: ../ui/ikaaro/root/forbidden.xml.en:9
 msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
-msgstr "No tiene autorización para acceder a este recurso."
+msgstr ""
 
 #: ../cc.py:41
 msgid "You are now subscribed."
-msgstr "Ya está suscrito."
+msgstr ""
 
 #: ../cc.py:43
 msgid "You are now unsubscribed."
-msgstr "Su suscripción ha sido cancelada."
+msgstr ""
 
 #: ../config.py:253
 msgid "You can not remove the default language."
-msgstr "No puede eliminar el idioma por defecto."
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:11
 msgctxt "paragraph"
 msgid "You can specify timetables to limit the range when an event can be set."
 msgstr ""
-"Puede especificar horarios para limitar el intervalo donde fijar un evento."
 
 #: ../agenda/ui/upload.xml.en:9
 msgctxt "paragraph"
 msgid ""
 "You can upload a new ical file (.ics extension) to replace the current one."
 msgstr ""
-"Puede subir un nuevo archivo ical (extensión .ics) para sustituir el actual."
 
 #: ../users_views.py:455
 msgid "You cannot change your state yourself."
-msgstr "No puede modificar su estado."
+msgstr ""
 
 #: ../messages.py:83
 msgid ""
 "You have already confirmed your registration. Try to log in or ask for a new "
 "password."
 msgstr ""
-"Ya ha confirmado su registro. Intente iniciar sesión o solicite una "
-"contraseña nueva."
 
 #: ../emails.py:106 ../emails.py:128
 msgid ""
@@ -3281,27 +3177,22 @@ msgid ""
 "\n"
 " {host}/"
 msgstr ""
-"Se ha registrado en el sitio \"{host_title}\":\n"
-"\n"
-" {host}/"
 
 #: ../agenda/event.py:137 ../agenda/event.py:239
 msgid "You have to fill start and end time"
-msgstr "Debe completar la hora de inicio y finalización"
+msgstr ""
 
 #: ../users_views.py:338
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
-"Ha introducido incorrectamente su contraseña, su cuenta no ha sido "
-"modificada."
 
 #: ../resource_views.py:312
 msgid "You must complete your account informations"
-msgstr "Debe completar los datos de su cuenta"
+msgstr ""
 
 #: ../config.py:231
 msgid "You must select one and only one language."
-msgstr "Debe seleccionar solo un idioma."
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:71
 msgctxt "paragraph"
@@ -3309,82 +3200,78 @@ msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program."
 msgstr ""
-"Debería haber recibido una copia de la Licencia Pública General de GNU junto "
-"con este programa."
 
 #: ../cc.py:42
 msgid "You were already subscribed."
-msgstr "Ya estaba suscrito."
+msgstr ""
 
 #: ../cc.py:44
 msgid "You were already unsubscribed."
-msgstr "Ya había cancelado su suscripción."
+msgstr ""
 
 #: ../emails.py:154 ../emails.py:155
 msgid "Your account has been canceled"
-msgstr "Su cuenta ha sido cancelada"
+msgstr ""
 
 #: ../users.py:177
 msgid ""
 "Your account has been canceled, contact the administrator  if you want to "
 "get access again."
 msgstr ""
-"Su cuenta ha sido cancelada, contacte con el administrador si quiere volver "
-"a activarla."
 
 #: ../emails.py:147 ../emails.py:148
 msgid "Your account has been re-activated"
-msgstr "Su cuenta se ha activado de nuevo"
+msgstr ""
 
 #: ../ui/ikaaro/register_terms_of_service.xml.en:8
 msgctxt "paragraph"
 msgid "Your browser does not support iframes."
-msgstr "Su navegador no soporta iframes."
+msgstr ""
 
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
-msgstr "Su clave de confirmación no es válida."
+msgstr ""
 
 #: ../root_views.py:159
 msgid "Your email address"
-msgstr "Tu dirección de correo electrónico"
+msgstr ""
 
 #: ../buttons.py:153 ../file.py:369
 msgid "Zip"
-msgstr "Zip"
+msgstr ""
 
 #: ../file.py:370
 msgid "Zip Archive"
-msgstr "Archivo zip"
+msgstr ""
 
 #: ../folder_views.py:89
 msgid "Zoom"
-msgstr "Zoom"
+msgstr ""
 
 #: ../folder_views.py:111
 msgid "Zoom In"
-msgstr "Acercar"
+msgstr ""
 
 #: ../folder_views.py:114
 msgid "Zoom Out"
-msgstr "Alejar"
+msgstr ""
 
 #: ../ui/aruni/location.xml.en:16
 msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
-msgstr "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
+msgstr ""
 
 #: ../cc.py:493
 msgid "[{title}] has been modified"
-msgstr "[{title}] ha sido modificado"
+msgstr ""
 
 #: ../file_views.py:205
 msgid "huge"
-msgstr "enorme"
+msgstr ""
 
 #: ../root.py:93
 msgid "iKaaro"
-msgstr "iKaaro"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:32
 msgctxt "paragraph"
@@ -3392,57 +3279,54 @@ msgid ""
 "iKaaro is a Content Management System, written in the <g id='2'>Python</g> "
 "programming language, and based on the <g id='3'>itools</g> library."
 msgstr ""
-"iKaaro es un sistema de gestión de contenidos, escrito en el lenguaje de "
-"programación <g id='2'>Python</g> y basado en la biblioteca <g "
-"id='3'>itools</g>."
 
 #: ../file_views.py:204
 msgid "large"
-msgstr "grande"
+msgstr ""
 
 #: ../root_views.py:228
 msgid "lpOD"
-msgstr "lpOD"
+msgstr ""
 
 #: ../file_views.py:203
 msgid "medium"
-msgstr "mediano"
+msgstr ""
 
 #: ../file_views.py:206
 msgid "original"
-msgstr "original"
+msgstr ""
 
 #: ../root_views.py:227
 msgid "pygobject"
-msgstr "pygobject"
+msgstr ""
 
 #: ../buttons.py:54
 msgid "return confirm(\"%s\");"
-msgstr "return confirm(\"%s\");"
+msgstr ""
 
 #: ../file_views.py:202
 msgid "small"
-msgstr "pequeño"
+msgstr ""
 
 #: ../ui/ikaaro/editarea/ea.xml.en:21
 msgctxt "noscript"
 msgid "the EditArea Editor is unavailable.)"
-msgstr "el editor EditArea no está disponible)"
+msgstr ""
 
 #: ../ui/ikaaro/tiny_mce/rte.xml.en:51
 msgctxt "noscript"
 msgid "the Rich Text Editor is unavailable.)"
-msgstr "el editor de texto enriquecido no está disponible)"
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:24
 msgctxt "table cell"
 msgid "to"
-msgstr "a"
+msgstr ""
 
 #: ../agenda/ui/edit_timetables.xml.en:35
 msgctxt "table cell"
 msgid "to <x id='5'/>  <g id='6'>Add</g>"
-msgstr "a <x id='5'/>  <g id='6'>Añadir</g>"
+msgstr ""
 
 #: ../ui/ikaaro/root/powered-by.xml.en:65
 msgctxt "paragraph"
@@ -3450,8 +3334,6 @@ msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 msgstr ""
-"incluso sin la garantía MERCANTIL implícita o sin garantizar la CONVENIENCIA "
-"PARA UN PROPÓSITO PARTICULAR."
 
 #: ../ui/ikaaro/root/powered-by.xml.en:57
 msgctxt "paragraph"
@@ -3460,1253 +3342,77 @@ msgid ""
 "Public License as published by the Free Software Foundation, either version "
 "3 of the License, or (at your option) any later version."
 msgstr ""
-"puede redistribuirlo y/o modificarlo bajo los términos de la Licencia "
-"Pública General de GNU según es publicada por la Free Software Foundation, "
-"bien de la versión 3 de dicha Licencia o bien (según su elección) de "
-"cualquier versión posterior."
 
 #: ../skins.py:85
 msgid "{here_title} - {view_title} - {root_title}"
-msgstr "{here_title} - {view_title} - {root_title}"
+msgstr ""
 
 #: ../agenda/agenda_views.py:220
 msgid "{m_start} {w_start} - {m_end} {w_end}, {y_start}"
-msgstr "{m_start} {w_start} - {m_end} {w_end}, {y_start}"
+msgstr ""
 
 #: ../agenda/agenda_views.py:221
 msgid "{m_start} {w_start} - {w_end}, {y_start}"
-msgstr "{m_start} {w_start} - {w_end}, {y_start}"
+msgstr ""
 
 #: ../agenda/agenda_views.py:219
 msgid "{m_start} {w_start}, {y_start} - {m_end} {w_end}, {y_end}"
-msgstr "{m_start} {w_start}, {y_start} - {m_end} {w_end}, {y_end}"
+msgstr ""
 
 #: ../agenda/agenda_views.py:222
 msgid "{month} {year}"
-msgstr "{month} {year}"
+msgstr ""
 
 #: ../skins.py:82
 msgid "{view_title} - {root_title}"
-msgstr "{view_title} - {root_title}"
+msgstr ""
 
 #: ../agenda/agenda_views.py:223
 msgid "{weekday}, {month} {day}, {year}"
-msgstr "{weekday}, {month} {day}, {year}"
+msgstr ""
 
 #: ../ui/aruni/languages.xml.en:7
 msgctxt "div"
 msgid " "
-msgstr " "
+msgstr ""
 
 #: ../agenda/agenda_views.py:272
 msgid "«"
-msgstr "«"
+msgstr ""
 
 #: ../agenda/ui/cal_selector.xml.en:37
 msgctxt "link"
 msgid "«"
-msgstr "«"
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse_batch.xml.en:11
 msgctxt "link"
 msgid "« Previous"
-msgstr "« Anterior"
+msgstr ""
 
 #: ../ui/ikaaro/generic/browse_batch.xml.en:10
 msgctxt "title attribute"
 msgid "« Previous"
-msgstr "« Anterior"
+msgstr ""
 
 #: ../root_views.py:329
 msgid "¶"
-msgstr "¶"
+msgstr ""
 
 #: ../agenda/agenda_views.py:273
 msgid "»"
-msgstr "»"
+msgstr ""
 
 #: ../agenda/ui/cal_selector.xml.en:40
 msgctxt "link"
 msgid "»"
-msgstr "»"
+msgstr ""
 
 #: ../utils.py:130
 msgid "…"
-msgstr "…"
+msgstr ""
 
 #: ../ui/ikaaro/folder/rename.xml.en:15
 msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
-msgstr "⇒ ${item/parent_path}"
-
-#~ msgid "\"%s\" is incorrect"
-#~ msgstr "\"%s\" es incorrecto"
-
-#, fuzzy
-#~ msgid "$filename is not an OpenDocument Text."
-#~ msgstr "Documento editado."
-
-#, fuzzy
-#~ msgctxt "paragraph"
-#~ msgid "${confirmation_msg}"
-#~ msgstr "¡Confirmación enviada!"
-
-#, fuzzy
-#~ msgctxt "fieldset"
-#~ msgid ""
-#~ "${search_fields_widget} <x id='1'/>  <x id='2'/>  <x id='3'/>  <x id='4'/"
-#~ ">  <x id='5'/>  <g id='6'>OK</g>"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "pre"
-#~ msgid ":comments:"
-#~ msgstr "Comentario:"
-
-#, fuzzy
-#~ msgctxt "pre"
-#~ msgid ":language:"
-#~ msgstr "Idiomas"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='1'>${widget/title} </g>  <g id='2'>(mandatory) </g>  <g "
-#~ "id='3'>(multiple) </g>  <g id='4'>${widget/tip}</g>  <x id='5'/> ${widget/"
-#~ "widget} ${widget/suffix}"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='1'>Title</g>  <g id='2'>* </g>  <x id='3'/>  <g id='4'>${title/"
-#~ "error} <x id='5'/></g>"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid ""
-#~ "<g id='10'>${user/title}</g>  <g id='11'>Log out</g>  <g id='12'>Add "
-#~ "content</g>  <g id='13'>Configuration</g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='10'>«</g> ${current_month} <g id='11'>»</g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='11'>Product</g>  <g id='12'>* </g>  <x id='13'/>  <g id='14'>"
-#~ "${product/error} <x id='15'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='12'>Product</g>  <g id='13'>* </g>  <x id='14'/>  <g id='15'>"
-#~ "${product/error} <x id='16'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='12'>«</g> ${current_year} <g id='13'>»</g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='13'>Search</g>  <g id='14'>Contact</g>"
-#~ msgstr "<g id='10'>Buscar</g>  <g id='11'>Contacto</g>"
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid ""
-#~ "<g id='14'>OK</g>  <g id='15'>Definitely remove</g>  <g id='16'>Cancel</g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='16'>Type</g>  <g id='17'>* </g>  <x id='18'/>  <g id='19'>${type/"
-#~ "error} <x id='20'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='17'>Type</g>  <g id='18'>* </g>  <x id='19'/>  <g id='20'>${type/"
-#~ "error} <x id='21'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='19'>About</g>  <g id='20'>Credits</g>  <g id='21'>License</g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "span"
-#~ msgid ""
-#~ "<g id='2'>${x_email/error}<x id='3'/></g>  <x id='4'/>  <x id='5'/>  <x "
-#~ "id='6'/>  <g id='7'>Subscribe</g>  <x id='8'/>  <g id='9'>Unsubscribe</g>"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='2'>E-mail Address</g>  <g id='3'>*</g>  <x id='4'/>  <g id='5'>"
-#~ "${username/error} <x id='6'/></g>"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "<g id='21'>State</g><x id='22'/> ${state_widget}"
-#~ msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
-
-#, fuzzy
-#~ msgctxt "span"
-#~ msgid ""
-#~ "<g id='23'>${new_users/error}<x id='24'/></g>  <g id='25'>${new_users/"
-#~ "value}</g>"
-#~ msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='24'>Module</g><x id='25'/>  <g id='26'>${module/error} <x id='27'/"
-#~ "></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='28'>Status</g>  <g id='29'>* </g>  <x id='30'/>  <g id='31'>"
-#~ "${state/error} <x id='32'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='29'>Status</g>  <g id='30'>* </g>  <x id='31'/>  <g id='32'>"
-#~ "${state/error} <x id='33'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='33'>Version</g><x id='34'/>  <g id='35'>${version/error} <x "
-#~ "id='36'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "<g id='34'>State</g><x id='35'/> ${state_widget}"
-#~ msgstr "<g id='10'>Buscar</g>  <g id='11'>Contacto</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='34'>Version</g><x id='35'/>  <g id='36'>${version/error} <x "
-#~ "id='37'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid ""
-#~ "<g id='4'>${col/title}</g>  <g id='5'>${col/DTSTART}</g>  <g id='6'>${col/"
-#~ "DTEND}</g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "<g id='4'>${column/title}</g>  "
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "<g id='4'>Add and view</g>  <g id='5'>Add and return</g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "<g id='4'>Comment</g><x id='5'/>  <x id='6'/>  <g id='7'>Search</g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "<g id='4'>Type</g><x id='5'/> ${search_types_widget}"
-#~ msgstr "<g id='10'>Buscar</g>  <g id='11'>Contacto</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='42'>Description</g>  <g id='43'>* </g>  <x id='44'/>  <g id='45'>"
-#~ "${comment/error} <x id='46'/></g>  <g id='47'>${comment/value}</g>"
-#~ msgstr ""
-#~ "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g "
-#~ "id='3'>(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='8'>Assign To</g><x id='9'/>  <g id='10'>${assigned_to/error} <x "
-#~ "id='11'/></g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid ""
-#~ "<g id='8'>Password</g>  <x id='9'/>  <g id='10'>${password/error} <x "
-#~ "id='11'/></g>"
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='8'>«</g> ${current_week} <g id='9'>»</g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "<g id='9'>Log in</g>  <g id='10'>Register</g>"
-#~ msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#~ msgid ""
-#~ "A pending document awaits review from authorized users to be published."
-#~ msgstr ""
-#~ "Un documento privado está en espera a ser revisado, por usuarios "
-#~ "autorizados, para su publicación."
-
-#~ msgid "ANONYMOUS"
-#~ msgstr "ANÓNIMO"
-
-#~ msgid "About"
-#~ msgstr "Acerca de"
-
-#~ msgid "Accept the document."
-#~ msgstr "Aceptar el documento."
-
-#~ msgctxt "table cell"
-#~ msgid "Action"
-#~ msgstr "Acción"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Add ${class_title}"
-#~ msgstr "Agregar un nuevo ${class_title}"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Add CC:"
-#~ msgstr "Agregar"
-
-#~ msgctxt "legend"
-#~ msgid "Add New Member"
-#~ msgstr "Agregar un nuevo usuario"
-
-#~ msgid "Add Resource"
-#~ msgstr "Agregar Recurso"
-
-#, fuzzy
-#~ msgid "Add a new issue"
-#~ msgstr "Agregar nuevo %s"
-
-#~ msgid "Add a thread"
-#~ msgstr "Agregar un hilo"
-
-#~ msgid "Add new %s"
-#~ msgstr "Agregar nuevo %s"
-
-#, fuzzy
-#~ msgid "Add record"
-#~ msgstr "Agregar Registro"
-
-#~ msgid "Advanced"
-#~ msgstr "Avanzado"
-
-#~ msgctxt "emphasis"
-#~ msgid "Assign To:"
-#~ msgstr "Asignar a:"
-
-#~ msgctxt "label"
-#~ msgid "Assign To:"
-#~ msgstr "Asignar a:"
-
-#~ msgctxt "legend"
-#~ msgid "Assign a resource"
-#~ msgstr "Asignar un recurso"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Assigned To:<g id='26'> (<g id='27'>edit</g>)</g>"
-#~ msgstr "Prioridad:<g id='29'> (<g id='30'>Editar</g>)</g>"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Attachment"
-#~ msgstr "Comentario"
-
-#, fuzzy
-#~ msgctxt "emphasis"
-#~ msgid "Attachment:"
-#~ msgstr "Comentario"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Attachments"
-#~ msgstr "Comentario"
-
-#~ msgctxt "title attribute"
-#~ msgid "Bold"
-#~ msgstr "Negrita"
-
-#~ msgctxt "table cell"
-#~ msgid "Browse Content"
-#~ msgstr "Inspeccionar el Contenido"
-
-#~ msgid "Bug"
-#~ msgstr "Error"
-
-#~ msgctxt "table cell"
-#~ msgid "By"
-#~ msgstr "Por"
-
-#~ msgctxt "button"
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#, fuzzy
-#~ msgid "Change Several Issues"
-#~ msgstr "Modificar"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Change Several Issues"
-#~ msgstr "Modificar"
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "Change default"
-#~ msgstr "Modificar"
-
-#, fuzzy
-#~ msgid "Children Ordered Table"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Choose a template:"
-#~ msgstr "Elije un idioma"
-
-#, fuzzy
-#~ msgctxt "dt"
-#~ msgid "Choose the ${class_title} type"
-#~ msgstr "Seguridad"
-
-#~ msgid "Closed"
-#~ msgstr "Cerrado"
-
-#~ msgctxt "emphasis"
-#~ msgid "Comment:"
-#~ msgstr "Comentario:"
-
-#~ msgctxt "label"
-#~ msgid "Comment:"
-#~ msgstr "Comentario:"
-
-#~ msgctxt "table cell"
-#~ msgid "Comments"
-#~ msgstr "Comentarios"
-
-#, fuzzy
-#~ msgctxt "pre"
-#~ msgid "Comments..."
-#~ msgstr "Comentarios"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Configuration"
-#~ msgstr "¡Confirmación enviada!"
-
-#~ msgid "Control Panel"
-#~ msgstr "Panel de Control"
-
-#, fuzzy
-#~ msgid "Convert"
-#~ msgstr "Contenido"
-
-#~ msgctxt "paragraph"
-#~ msgid "Current state:"
-#~ msgstr "Estado actual:"
-
-#~ msgctxt "form"
-#~ msgid "Date:"
-#~ msgstr "Fecha:"
-
-#, fuzzy
-#~ msgid "Default language"
-#~ msgstr "Elije un idioma"
-
-#~ msgctxt "table cell"
-#~ msgid "Description"
-#~ msgstr "Descripción"
-
-#~ msgctxt "label"
-#~ msgid "Description:"
-#~ msgstr "Descripción:"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Description<x id='11'/>  <g id='12'>${description}</g>"
-#~ msgstr "Módulo:<g id='13'> (<g id='14'>Editar</g>)</g>"
-
-#, fuzzy
-#~ msgctxt "option"
-#~ msgid "Do not change"
-#~ msgstr "Documento modificado."
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Download all attachments"
-#~ msgstr "Comentario"
-
-#~ msgctxt "label"
-#~ msgid "E-mail Address"
-#~ msgstr "Dirección de correo electrónico"
-
-#, fuzzy
-#~ msgid "E-mail addresses to subscribe"
-#~ msgstr "Dirección de correo electrónico"
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "Edit"
-#~ msgstr "Editar"
-
-#~ msgctxt "link"
-#~ msgid "Edit"
-#~ msgstr "Editar"
-
-#, fuzzy
-#~ msgid "Edit CSS"
-#~ msgstr "Editar"
-
-#~ msgid "Edit Event"
-#~ msgstr "Editar evento"
-
-#, fuzzy
-#~ msgid "Edit Issue"
-#~ msgstr "Seguridad"
-
-#, fuzzy
-#~ msgid "Edit Language"
-#~ msgstr "Idioma"
-
-#, fuzzy
-#~ msgid "Edit Page"
-#~ msgstr "Editar Texto"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Edit Password"
-#~ msgstr "Clave de acceso"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Edit Security Policy"
-#~ msgstr "Seguridad"
-
-#, fuzzy
-#~ msgid "Edit Wiki"
-#~ msgstr "Editar Texto"
-
-#, fuzzy
-#~ msgid "Edit and return"
-#~ msgstr "Agregar y regresar"
-
-#~ msgid "Edit this search"
-#~ msgstr "Editar esta búsqueda"
-
-#, fuzzy
-#~ msgid "Emails from addr"
-#~ msgstr "Dirección de correo electrónico"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "End<x id='7'/>  <x id='8'/>  <x id='9'/>  "
-#~ msgstr ""
-#~ "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
-
-#~ msgid "Export to CSV"
-#~ msgstr "Exportar a CSV"
-
-#~ msgctxt "legend"
-#~ msgid "Export to CSV"
-#~ msgstr "Exportar a CSV"
-
-#~ msgid "Export to Text"
-#~ msgstr "Exportar a texto"
-
-#~ msgctxt "legend"
-#~ msgid "Export to Text:"
-#~ msgstr "Exportar a texto:"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Fields"
-#~ msgstr "Fijo"
-
-#~ msgid "Fixed"
-#~ msgstr "Fijo"
-
-#~ msgctxt "button"
-#~ msgid "Forget this Search"
-#~ msgstr "Olvidar esta Búsqueda"
-
-#~ msgid "Forgotten password"
-#~ msgstr "Clave de acceso olvidada"
-
-#~ msgctxt "span"
-#~ msgid "Format"
-#~ msgstr "Formato"
-
-#~ msgctxt "title attribute"
-#~ msgid "Format"
-#~ msgstr "Formato"
-
-#~ msgid "Forum"
-#~ msgstr "Foro"
-
-#~ msgid "Give the title of one Product"
-#~ msgstr "Introduce el título de un producto"
-
-#~ msgid "High Priority"
-#~ msgstr "Alta Prioridad"
-
-#~ msgctxt "legend"
-#~ msgid "If you have forgotten your password"
-#~ msgstr "Si olvidaste tu contraseña"
-
-#~ msgctxt "title"
-#~ msgid "Insert Image"
-#~ msgstr "Insertar Imagen"
-
-#~ msgctxt "title"
-#~ msgid "Insert Link"
-#~ msgstr "Insertar Enlace"
-
-#~ msgctxt "title attribute"
-#~ msgid "Insert image"
-#~ msgstr "Insertar imagen"
-
-#~ msgctxt "title attribute"
-#~ msgid "Insert link"
-#~ msgstr "Insertar enlace"
-
-#~ msgctxt "title attribute"
-#~ msgid "Insert table"
-#~ msgstr "Insertar tabla"
-
-#, fuzzy
-#~ msgid "Invitation to register"
-#~ msgstr "¡Confirmación enviada!"
-
-#~ msgctxt "title attribute"
-#~ msgid "Italic"
-#~ msgstr "Cursiva"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Large Edit Text"
-#~ msgstr "Editar Texto"
-
-#~ msgid "Last Changes"
-#~ msgstr "Últimas Modificaciones"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Links"
-#~ msgstr "Licencia"
-
-#~ msgctxt "table cell"
-#~ msgid "Location"
-#~ msgstr "Localización"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Medium Edit Text"
-#~ msgstr "Editar Texto"
-
-#, fuzzy
-#~ msgid "Menu item"
-#~ msgstr "Menú"
-
-#~ msgid "Message"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgctxt "div"
-#~ msgid "Message :${message}"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgid "Message in a thread"
-#~ msgstr "Catalogo de Mensajes"
-
-#, fuzzy
-#~ msgid "Message(s) deleted !"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgctxt "div"
-#~ msgid "Message:"
-#~ msgstr "Mensaje"
-
-#~ msgid "Module"
-#~ msgstr "Módulo"
-
-#~ msgctxt "emphasis"
-#~ msgid "Module:"
-#~ msgstr "Módulo:"
-
-#~ msgctxt "label"
-#~ msgid "Module:"
-#~ msgstr "Módulo:"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Module:<g id='12'> (<g id='13'>Edit</g>)</g>"
-#~ msgstr "Módulo:<g id='13'> (<g id='14'>Editar</g>)</g>"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Monthly view"
-#~ msgstr "Vista Mensual"
-
-#~ msgctxt "label"
-#~ msgid "Name"
-#~ msgstr "Nombre"
-
-#, fuzzy
-#~ msgid "New Attachment: {filename}"
-#~ msgstr "Comentario"
-
-#, fuzzy
-#~ msgid "New Feature"
-#~ msgstr "Nuevo Recurso"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "New attachment"
-#~ msgstr "Comentario"
-
-#, fuzzy
-#~ msgid "New issue added."
-#~ msgstr "Nuevo recurso agregado."
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "New plugins"
-#~ msgstr "Idioma"
-
-#, fuzzy
-#~ msgid "New record added."
-#~ msgstr "Nuevo recurso agregado."
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "Next"
-#~ msgstr "Texto"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Next"
-#~ msgstr "Texto"
-
-#, fuzzy
-#~ msgid "No issue selected."
-#~ msgstr "No se ha seleccionado ningún objeto."
-
-#, fuzzy
-#~ msgid "No page found to export."
-#~ msgstr "selecciona las columnas a exportar"
-
-#, fuzzy
-#~ msgid "Objects ordered down."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Objects ordered on bottom."
-#~ msgstr "Objetos suprimidos: $objects"
-
-#, fuzzy
-#~ msgid "Objects ordered on top."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Objects ordered up."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Order resources"
-#~ msgstr "Agregar recurso"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Ordered list"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Page \"{uri}\" not found."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Please select the objects to order on bottom."
-#~ msgstr "Objetos suprimidos: $objects"
-
-#, fuzzy
-#~ msgid "Please select the objects to order on top."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgctxt "span"
-#~ msgid "Preformatted"
-#~ msgstr "Formato:"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Preformatted"
-#~ msgstr "Formato:"
-
-#, fuzzy
-#~ msgid "Preview"
-#~ msgstr "Revisor"
-
-#~ msgid "Priority"
-#~ msgstr "Prioridad"
-
-#~ msgctxt "emphasis"
-#~ msgid "Priority:"
-#~ msgstr "Prioridad:"
-
-#~ msgctxt "label"
-#~ msgid "Priority:"
-#~ msgstr "Prioridad:"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Priority:<g id='28'> (<g id='29'>Edit</g>)</g>"
-#~ msgstr "Prioridad:<g id='29'> (<g id='30'>Editar</g>)</g>"
-
-#~ msgid "Private"
-#~ msgstr "Privado"
-
-#~ msgid "Product"
-#~ msgstr "Producto"
-
-#~ msgctxt "label"
-#~ msgid "Product (mandatory):"
-#~ msgstr "Producto (obligatorio)"
-
-#, fuzzy
-#~ msgctxt "emphasis"
-#~ msgid "Product:"
-#~ msgstr "Producto:"
-
-#~ msgctxt "label"
-#~ msgid "Product:"
-#~ msgstr "Producto:"
-
-#~ msgid "Public"
-#~ msgstr "Público"
-
-#, fuzzy
-#~ msgid "Publication"
-#~ msgstr "Público"
-
-#~ msgid "Publish"
-#~ msgstr "Publicar"
-
-#, fuzzy
-#~ msgid "Record deleted."
-#~ msgstr "Roles actualizados."
-
-#~ msgid "Register"
-#~ msgstr "Registrarse"
-
-#~ msgid "Reject the document."
-#~ msgstr "Rechazar el documento."
-
-#, fuzzy
-#~ msgid "Released"
-#~ msgstr "Revisores"
-
-#~ msgctxt "button"
-#~ msgid "Remove"
-#~ msgstr "Suprimir"
-
-#, fuzzy
-#~ msgid "Repeat Password"
-#~ msgstr "Nueca Clave de Acceso"
-
-#~ msgctxt "label"
-#~ msgid "Repeat Password"
-#~ msgstr "Repetir contraseña"
-
-#~ msgid "Replace"
-#~ msgstr "Reemplazar"
-
-#, fuzzy
-#~ msgid "Replace logo file"
-#~ msgstr "Revisores"
-
-#, fuzzy
-#~ msgid "Reply posted"
-#~ msgstr "Revisores"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Resource"
-#~ msgstr "Nuevo Recurso"
-
-#, fuzzy
-#~ msgid "Resource \"{name}\" not found."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Resource:"
-#~ msgstr "Nuevo Recurso"
-
-#, fuzzy
-#~ msgid "Resources Ordered Table"
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Resources added to ordered list: {resources}."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Resources already in the ordered list: {resources}."
-#~ msgstr "Objetos suprimidos: $objects"
-
-#~ msgid "Retire the document."
-#~ msgstr "Retirar el documento."
-
-#~ msgid "Role"
-#~ msgstr "Rol"
-
-#, fuzzy
-#~ msgid "Role updated."
-#~ msgstr "Roles actualizados."
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "Save Changes"
-#~ msgstr "Guardar Cambios"
-
-#, fuzzy
-#~ msgctxt "button"
-#~ msgid "Search"
-#~ msgstr "Buscar"
-
-#~ msgctxt "legend"
-#~ msgid "Search"
-#~ msgstr "Buscar"
-
-#, fuzzy
-#~ msgid "Search for issues"
-#~ msgstr "Buscar subcarpetas"
-
-#~ msgctxt "label"
-#~ msgid "Search subfolders"
-#~ msgstr "Buscar subcarpetas"
-
-#, fuzzy
-#~ msgid "Security Issue"
-#~ msgstr "Seguridad"
-
-#~ msgid "Security Policy"
-#~ msgstr "Política de Seguridad"
-
-#, fuzzy
-#~ msgid "See your pending tasks."
-#~ msgstr "Tareas pendientes."
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Select Image"
-#~ msgstr "Insertar Tabla"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Select Media"
-#~ msgstr "Insertar Tabla"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Select Resource"
-#~ msgstr "Nuevo Recurso"
-
-#, fuzzy
-#~ msgid "Select Table"
-#~ msgstr "Insertar Tabla"
-
-#, fuzzy
-#~ msgid "Select the default language"
-#~ msgstr "Debes elijir un idioma"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Sign in"
-#~ msgstr "Identificarse"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Sign in"
-#~ msgstr "Identificarse"
-
-#~ msgid "Size"
-#~ msgstr "Tamaño"
-
-#~ msgctxt "table cell"
-#~ msgid "Size (bytes)"
-#~ msgstr "Tamaño (octetos)"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Small Edit Text"
-#~ msgstr "Editar Texto"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Start:"
-#~ msgstr "Empezar"
-
-#, fuzzy
-#~ msgctxt "heading"
-#~ msgid "State History"
-#~ msgstr "Historia del Documento"
-
-#, fuzzy
-#~ msgctxt "emphasis"
-#~ msgid "State:"
-#~ msgstr "Estado"
-
-#~ msgctxt "table cell"
-#~ msgid "Status"
-#~ msgstr "Estado"
-
-#~ msgctxt "label"
-#~ msgid "Status (mandatory):"
-#~ msgstr "Estado (obligatorio):"
-
-#~ msgctxt "label"
-#~ msgid "Status:"
-#~ msgstr "Estado:"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Status:<g id='24'> (<g id='25'>Edit</g>)</g>"
-#~ msgstr "Estado:<g id='25'> (<g id='26'>Editar</g>)</g>"
-
-#, fuzzy
-#~ msgid "Stored Search"
-#~ msgstr "Búsqueda Avanzada"
-
-#, fuzzy
-#~ msgid "Stored Searches"
-#~ msgstr "Búsqueda Avanzada"
-
-#, fuzzy
-#~ msgid "Subscribers"
-#~ msgstr "Descripción"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Subscriptions"
-#~ msgstr "Descripción"
-
-#~ msgid "Tasks"
-#~ msgstr "Tareas"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Template"
-#~ msgstr "Reemplazar"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Text"
-#~ msgstr "Texto"
-
-#, fuzzy
-#~ msgctxt "table cell"
-#~ msgid "Text"
-#~ msgstr "Texto"
-
-#, fuzzy
-#~ msgid ""
-#~ "The <span class=\"field-is-required\">emphasized</span> fields are "
-#~ "required."
-#~ msgstr ""
-#~ "Los campos <span class=\"field_is_required\">enfatizados</span> son "
-#~ "obligatorios."
-
-#, fuzzy
-#~ msgid "The search has been modified."
-#~ msgstr "Modificaciones guardadas"
-
-#, fuzzy
-#~ msgid "The search has been stored."
-#~ msgstr "Modificaciones guardadas"
-
-#, fuzzy
-#~ msgid "The search title has been changed."
-#~ msgstr "Las claves de acceso no concuerdan."
-
-#, fuzzy
-#~ msgid "The user {title} did some changes."
-#~ msgstr "Las claves de acceso no concuerdan."
-
-#, fuzzy
-#~ msgid "There are {n} assignments."
-#~ msgstr "Hay ${n} elementos."
-
-#, fuzzy
-#~ msgid "There is 1 assignment."
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "Thread can't be None."
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgctxt "pre"
-#~ msgid "Title..."
-#~ msgstr "Título"
-
-#, fuzzy
-#~ msgctxt "emphasis"
-#~ msgid "Title:"
-#~ msgstr "Título"
-
-#, fuzzy
-#~ msgid "To ODT"
-#~ msgstr "PDF"
-
-#, fuzzy
-#~ msgid "To PDF"
-#~ msgstr "PDF"
-
-#~ msgid "Transition done."
-#~ msgstr "Transición realizada."
-
-#~ msgctxt "label"
-#~ msgid "Type (mandatory):"
-#~ msgstr "Tipo (obligatorio)"
-
-#, fuzzy
-#~ msgid "Type your email address"
-#~ msgstr "Escribe tu dirección de correo electrónico"
-
-#~ msgctxt "emphasis"
-#~ msgid "Type:"
-#~ msgstr "Tipo:"
-
-#~ msgctxt "label"
-#~ msgid "Type:"
-#~ msgstr "Tipo:"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Type:<g id='20'> (<g id='21'>Edit</g>)</g>"
-#~ msgstr "Tipo:<g id='21'> (<g id='22'>Editar</g>)</g>"
-
-#, fuzzy
-#~ msgid "Unordered items"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Unordered list"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Unpublish"
-#~ msgstr "Publicar"
-
-#, fuzzy
-#~ msgctxt "heading"
-#~ msgid "Usage"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgctxt "link"
-#~ msgid "Usage"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgid "User Folder"
-#~ msgstr "Carpeta"
-
-#, fuzzy
-#~ msgctxt "emphasis"
-#~ msgid "Version:"
-#~ msgstr "Permisos"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Version:"
-#~ msgstr "Permisos"
-
-#, fuzzy
-#~ msgid "Versions"
-#~ msgstr "Permisos"
-
-#~ msgid "Web Site"
-#~ msgstr "Sitio Web"
-
-#, fuzzy
-#~ msgctxt "title attribute"
-#~ msgid "Weekly view"
-#~ msgstr "Vista semanal"
-
-#~ msgid "Wiki Page"
-#~ msgstr "Página Wiki"
-
-#, fuzzy
-#~ msgctxt "dt"
-#~ msgid "You can do the following actions:"
-#~ msgstr "Usted puede realizar las siguientes acciones:"
-
-#, fuzzy
-#~ msgid "iKaaro Menu"
-#~ msgstr "Mantenimiento"
-
-#~ msgctxt "legend"
-#~ msgid "select the columns to export"
-#~ msgstr "selecciona las columnas a exportar"
+msgstr ""
