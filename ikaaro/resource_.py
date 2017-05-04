@@ -845,11 +845,9 @@ class DBResource(Resource):
 
 
     def change_class_id(self, new_class_id):
-        # Change class_id
-        self.metadata.format = new_class_id
-        self.metadata.set_changed()
-        # Reindex resource
-        self.reindex()
+        self.metadata.change_class_id(new_class_id)
+        # Return the changed resource
+        return self.get_resource(self.abspath)
 
 
     def reindex(self):
