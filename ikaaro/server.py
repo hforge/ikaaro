@@ -377,17 +377,22 @@ class Server(WebServer):
         self.smtp_password = get_value('smtp-password', default='').strip()
         # Email is sent asynchronously
         self.flush_spool()
-        # Logging
+        # Logging events
         log_file = '%s/log/events' % target
         log_level = config.get_value('log-level')
         if log_level not in log_levels:
             msg = 'configuraion error, unexpected "%s" value for log-level'
-            raise ValueError, msg % log_level
+            raise ValueError(msg % log_level)
         log_level = log_levels[log_level]
         logger = Logger(log_file, log_level, rotate=timedelta(weeks=3))
         register_logger(logger, None)
+        # Logging access
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.web')
+        # Logging cron
+        log_file = '%s/log/cron' % target
+        logger = Logger(log_file, rotate=timedelta(weeks=3))
+        register_logger(logger, 'itools.cron')
         # Session timeout
         self.session_timeout = get_value('session-timeout')
         # Register routes
@@ -806,9 +811,13 @@ class Server(WebServer):
         context.is_cron = True
 
         # Go
+        t0 = time()
+        log_info('Cron launched', domain='itools.cron')
         catalog = database.catalog
         query = RangeQuery('next_time_event', None, context.timestamp)
-        for brain in database.search(query).get_documents():
+        search = database.search(query)
+        for brain in search.get_documents():
+            tcron0 = time()
             payload = pickle.loads(brain.next_time_event_payload)
             resource = database.get_resource(brain.abspath)
             try:
@@ -820,10 +829,16 @@ class Server(WebServer):
             # Reindex resource without committing
             catalog.index_document(resource)
             catalog.save_changes()
-
+            # Log
+            tcron1 = time()
+            msg = 'Done for %s in %s seconds' % (brain.abspath, tcron1-tcron0)
+            log_info(msg, domain='itools.cron')
         # Save changes
         database.save_changes()
-
+        t1 = time()
+        msg = 'Cron finished for %s resources in %s seconds' % (
+              len(search), t1-t0)
+        log_info(msg, domain='itools.cron')
         # Again, and again
         return self.config.get_value('cron-interval')
 
