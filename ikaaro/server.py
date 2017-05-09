@@ -293,6 +293,9 @@ class ServerLoop(Loop):
 
     def stop(self, signum, frame):
         print 'Shutting down the server...'
+        context = get_context()
+        if context and context.root:
+            context.root.launch_at_stop(context)
         self.server.close()
         self.quit()
 
