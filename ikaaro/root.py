@@ -180,6 +180,18 @@ class Root(Folder):
 
 
     ########################################################################
+    # Start / Stop API
+    ########################################################################
+    def launch_at_start(self, context):
+        """Method called at instance start"""
+        pass
+
+
+    def launch_at_stop(self, context):
+        """Method called at instance stop"""
+        pass
+
+    ########################################################################
     # API
     ########################################################################
     def get_default_language(self):
@@ -188,11 +200,6 @@ class Root(Folder):
 
     def get_default_edit_languages(self):
         return [self.get_default_language()]
-
-
-    def launch_at_start(self, context):
-        """Method called at instance start"""
-        pass
 
 
     def before_traverse(self, context, min=Decimal('0.000001'),
