@@ -36,25 +36,6 @@ from datatypes import Days, Months, Years
 
 
 ###########################################################################
-# Import widgets for backwards compatibility.
-# TODO Remove sometime after 0.75
-###########################################################################
-from widgets import Widget, TextWidget, HiddenWidget, FileWidget
-from widgets import PasswordWidget, ChoosePassword_Widget
-from widgets import ReadOnlyWidget, MultilineWidget, RadioWidget
-from widgets import CheckboxWidget, SelectWidget, DateWidget, DatetimeWidget
-from widgets import PathSelectorWidget, ImageSelectorWidget
-from widgets import BirthDateWidget, ColorPickerWidget, RTEWidget
-from widgets import ProgressBarWidget, EditAreaWidget
-from widgets import get_dynDateTime_scripts
-
-from widgets import title_widget, description_widget, subject_widget
-from widgets import timestamp_widget, file_widget, editarea_widget
-from widgets import widgets_registry, get_default_widget
-
-
-
-###########################################################################
 # Generate Form
 ###########################################################################
 class AutoForm(STLView):
