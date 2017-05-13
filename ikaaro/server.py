@@ -35,9 +35,6 @@ from signal import SIGINT, SIGTERM
 from socket import gaierror
 from tempfile import mkstemp
 
-# Import from pygobject
-from glib import GError
-
 # Import from itools
 from itools.core import become_daemon, get_abspath, vmsize
 from itools.database import Metadata, RangeQuery
@@ -628,7 +625,7 @@ class Server(WebServer):
             url = 'http://%s:%s/;_ctrl' % (address, port)
             try:
                 h = vfs.open(url)
-            except GError:
+            except Exception:
                 # The server is not running
                 return False
             data = h.read()
