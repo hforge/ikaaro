@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from sys import stderr
+
 # Import from itools
 from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
@@ -38,8 +41,8 @@ for name, import_path, reason in [
     try:
         __import__(import_path)
     except ImportError:
-        print '%s: You need to install "%s" and reinstall itools.' % (reason,
-                name)
+        stderr.write('%s: You need to install "%s" and reinstall itools.\n' % (
+            reason, name))
 
 
 # The version
