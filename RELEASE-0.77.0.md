@@ -22,6 +22,9 @@
 - 'Fields`: Fix handlers deletion on multilingual fields
 - `Folder_view`: Fix sorting by unicode if value is None
 
+##  ikaaro 0.77.X - 2017/05/XX
+- A Dockerfile has been hadded
+
 Thanks to:
 
 - Florent Chenebault
