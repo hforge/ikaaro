@@ -396,7 +396,7 @@ class DBResource(Resource):
     def get_value(self, name, language=None):
         # TODO: Use decorator for cache
         # TODO: Reactivate when ready
-        cache_key = (name, language)
+        #cache_key = (name, language)
         #if self._values.has_key(cache_key):
         #    return self._values[cache_key]
         field = self.get_field(name)
@@ -417,7 +417,7 @@ class DBResource(Resource):
                 value = field.get_value(self, name, language)
         else:
             value = field.get_value(self, name, language)
-        self._values[cache_key] = value
+        #self._values[cache_key] = value
         return value
 
 
@@ -444,7 +444,7 @@ class DBResource(Resource):
     def get_value_title(self, name, language=None, mode=None):
         # TODO: Use decorator for cache
         # TODO: Reactivate when ready
-        cache_key = (name, language)
+        #cache_key = (name, language)
         #if (self._values_title.has_key(cache_key) and
         #    self._values_title[cache_key].has_key(mode)):
         #    return self._values_title[cache_key][mode]
@@ -452,7 +452,7 @@ class DBResource(Resource):
         if field is None:
             return None
         value_title = field.get_value_title(self, name, language, mode)
-        self._values_title.setdefault(cache_key, {})[mode] = value_title
+        #self._values_title.setdefault(cache_key, {})[mode] = value_title
         return value_title
 
 
