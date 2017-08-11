@@ -643,11 +643,7 @@ class DBResource(Resource):
 
         # Class related fields
         values['format'] = self.metadata.format
-        values['base_classes'] = []
-        for cls in self.__class__.__mro__:
-            class_id = getattr(cls, 'class_id', None)
-            if class_id:
-                values['base_classes'].append(class_id)
+        values['base_classes'] = self.get_base_classes()
         values['class_version'] = class_version_to_date(self.metadata.version)
 
         # Links to other resources
@@ -683,6 +679,14 @@ class DBResource(Resource):
     def get_onchange_reindex(self):
         return None
 
+
+    def get_base_classes(self):
+        l = []
+        for cls in self.__class__.__mro__:
+            class_id = getattr(cls, 'class_id', None)
+            if class_id:
+                l.append(class_id)
+        return l
 
     #######################################################################
     # Time events
