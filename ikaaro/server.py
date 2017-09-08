@@ -61,7 +61,6 @@ from database import get_database, make_database
 from datatypes import ExpireValue
 from root import Root
 from views import CachedStaticView
-from update import is_instance_up_to_date
 from skins import skin_registry
 from views import IkaaroStaticView
 
@@ -421,15 +420,7 @@ class Server(WebServer):
             log_warning(msg)
             return False
 
-        # Check instance is up to date
-        if not is_instance_up_to_date(self.target):
-            msg = 'The instance is not up-to-date, please type:'
-            log_warning(msg)
-            print(msg)
-            print
-            print '    $ icms-update.py %s' % self.target
-            print
-            return False
+        # Ok
         return True
 
 

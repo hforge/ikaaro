@@ -25,12 +25,6 @@ from itools.gettext import MSG
 from itools.web import STLView, ERROR
 
 
-def is_instance_up_to_date(target):
-    # 0.62 Check for the new metadata
-    metadata = open('%s/database/.metadata' % target).read()
-    return not metadata.startswith('<?xml')
-
-
 def class_version_to_date(version):
     return datetime.strptime(version[:8], '%Y%m%d').date()
 
