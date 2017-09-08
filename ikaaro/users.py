@@ -32,7 +32,6 @@ from fields import Char_Field, Datetime_Field, Email_Field, File_Field
 from fields import Password_Field, SelectAbspath_Field, Select_Field, Text_Field
 from folder import Folder
 from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
-from resource_ import DBResource
 from users_views import User_ConfirmRegistration, User_EditAccount
 from users_views import User_EditPassword, User_EditPreferences, User_Profile
 from users_views import User_ResendConfirmation, User_ChangePasswordForgotten
@@ -84,7 +83,7 @@ class UserEmail_Field(Email_Field):
     unique = True
 
 
-class User(DBResource):
+class User(Folder):
 
     class_id = 'user'
     class_version = '20081217'
