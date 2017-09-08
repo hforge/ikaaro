@@ -199,17 +199,6 @@ class DBResource(Resource):
         return handlers
 
 
-    def _get_names(self):
-        folder = self.handler
-        return [ x[:-9] for x in folder.get_handler_names()
-                 if x[-9:] == '.metadata' ]
-
-
-    def get_names(self, path='.'):
-        resource = self.get_resource(path)
-        return resource._get_names()
-
-
     def get_resource(self, path, soft=False):
         if type(path) is not Path:
             path = Path(path)
@@ -222,6 +211,10 @@ class DBResource(Resource):
 
         return self.database.get_resource(abspath, soft=soft)
 
+
+    #######################################################################
+    # Resource API
+    #######################################################################
 
     def get_resources(self, path='.'):
         here = self.get_resource(path)
@@ -241,101 +234,15 @@ class DBResource(Resource):
 
 
     def make_resource_name(self):
-        max_id = -1
-        for name in self.get_names():
-            # Mixing explicit and automatically generated names is allowed
-            try:
-                id = int(name)
-            except ValueError:
-                continue
-            if id > max_id:
-                max_id = id
-
-        return str(max_id + 1)
+        raise NotImplementedError
 
 
     def make_resource(self, name, cls, soft=False, **kw):
-        # Automatic name
-        if name is None:
-            name = self.make_resource_name()
-
-        # Make a resource somewhere else
-        if '/' in name:
-            path = dirname(name)
-            name = basename(name)
-            resource = self.get_resource(path)
-            resource.make_resource(name, cls, soft=soft, **kw)
-            return
-
-        # Soft
-        if soft is True:
-            resource = self.get_resource(name, soft=True)
-            if resource:
-                return resource
-
-        # Make the metadata
-        metadata = Metadata(cls=cls)
-        self.handler.set_handler('%s.metadata' % name, metadata)
-        metadata.set_property('mtime', get_context().timestamp)
-        # Initialize
-        resource = self.get_resource(name)
-        self.database.add_resource(resource)
-        resource.init_resource(**kw)
-        # Ok
-        return resource
+        raise NotImplementedError
 
 
     def del_resource(self, name, soft=False, ref_action='restrict'):
-        """ref_action allows to specify which action is done before deleting
-        the resource.
-        ref_action can take 2 values:
-        - 'restrict' (default value): do an integrity check
-        - 'force': do nothing
-        """
-        database = self.database
-        resource = self.get_resource(name, soft=soft)
-        if soft and resource is None:
-            return
-
-        # Referential action
-        if ref_action == 'restrict':
-            # Check referencial-integrity
-            path = str(resource.abspath)
-            query = AndQuery(NotQuery(PhraseQuery('abspath', path)),
-                             NotQuery(get_base_path_query(path)))
-            sub_search = database.search(query)
-            for sub_resource in resource.traverse_resources():
-                path = str(sub_resource.abspath)
-                query = PhraseQuery('links', path)
-                results = sub_search.search(query)
-                # A resource may have been updated in the same transaction,
-                # so not yet reindexed: we need to check that the resource
-                # really links.
-                for referrer in results.get_resources():
-                    if path in referrer.get_links():
-                        err = 'cannot delete, resource "{}" is referenced'
-                        raise ConsistencyError(err.format(path))
-        elif ref_action == 'force':
-            # Do not check referencial-integrity
-            pass
-        else:
-            raise ValueError,('Incorrect ref_action "{}"'.format(ref_action))
-
-        # Events, remove
-        path = str(resource.abspath)
-        database.remove_resource(resource)
-        # Remove
-        fs = database.fs
-        for handler in resource.get_handlers():
-            # Skip empty folders and phantoms
-            if fs.exists(handler.key):
-                database.del_handler(handler.key)
-        self.handler.del_handler('%s.metadata' % name)
-        # Clear cookie
-        context = get_context()
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-        if path in paths:
-            context.del_cookie('ikaaro_cp')
+        raise NotImplementedError
 
 
     def copy_resource(self, source, target):
@@ -348,10 +255,14 @@ class DBResource(Resource):
 
     def traverse_resources(self):
         yield self
-        for name in self._get_names():
-            resource = self.get_resource(name)
-            for x in resource.traverse_resources():
-                yield x
+
+    def _get_names(self):
+        return []
+
+
+    def get_names(self, path='.'):
+        resource = self.get_resource(path)
+        return resource._get_names()
 
 
     #######################################################################
