@@ -38,7 +38,6 @@ from autoedit import AutoEdit
 from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
-from fields import HTMLFile_Field
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from folder_views import Folder_View
@@ -58,9 +57,6 @@ class Folder(DBResource):
     class_icon48 = '/ui/ikaaro/icons/48x48/folder.png'
     class_views = ['view', 'browse_content', 'preview_content', 'edit',
                    'links', 'backlinks', 'commit_log']
-
-    # Fields
-    index = HTMLFile_Field(title=MSG(u'Index'))
 
 
     #########################################################################
