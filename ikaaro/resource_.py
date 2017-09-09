@@ -171,8 +171,7 @@ class DBResource(Resource):
         handler = self.database.get_handler(key, cls=cls, soft=True)
         if handler is None:
             handler = cls()
-            self.database.push_phantom(key, handler)
-
+            self.database.push_handler(key, handler)
         return handler
 
 
@@ -181,6 +180,11 @@ class DBResource(Resource):
         metadata.
         """
         handlers = [self.handler]
+        return handlers + self.get_fields_handlers()
+
+
+    def get_fields_handlers(self):
+        handlers = []
         root = self.get_root()
         langs = root.get_value('website_languages')
         # Fields

@@ -42,7 +42,7 @@ from glib import GError
 from itools.core import become_daemon, get_abspath, vmsize
 from itools.database import Metadata, RangeQuery
 from itools.database import make_catalog, Resource, get_register_fields
-from itools.database import check_database, make_git_database
+from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
@@ -241,7 +241,7 @@ def create_server(target, email, password, root,  modules=None,
 
     # Create database
     size_min, size_max = 19500, 20500
-    database = make_git_database(target, size_min, size_max)
+    database = make_database(target, size_min, size_max)
     database.close()
     database = get_database(target, size_min, size_max)
 
@@ -419,13 +419,6 @@ class Server(WebServer):
             log_warning(msg)
             print(msg)
             return False
-
-        # Check for database consistency
-        if quick is False and check_database(self.target) is False:
-            msg = 'The database is not in a consistent state.'
-            log_warning(msg)
-            return False
-
         # Ok
         return True
 
@@ -441,9 +434,6 @@ class Server(WebServer):
         # Daemon mode
         if detach:
             become_daemon()
-
-        # Update Git tree-cache, to speed things up
-        self.database.worktree.update_tree_cache()
 
         # Find out the IP to listen to
         address = self.config.get_value('listen-address').strip()
@@ -486,9 +476,6 @@ class Server(WebServer):
         if self.is_running_in_rw_mode():
             print 'Cannot proceed, the server is running in read-write mode.'
             return
-        # Check for database consistency
-        if quick is False and check_database(self.target) is False:
-            return False
         # Create a temporary new catalog
         catalog_path = '%s/catalog.new' % self.target
         if lfs.exists(catalog_path):

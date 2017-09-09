@@ -177,14 +177,10 @@ class Folder(DBResource):
         # Events, remove
         path = str(resource.abspath)
         database.remove_resource(resource)
-        fs = database.fs
         # Remove handlers
         for r in list(resource.traverse_resources()):
-            for handler in r.get_handlers():
-                # Skip empty folders and phantoms
-                if fs.exists(handler.key):
-                    database.del_handler(handler.key)
-            database.del_handler(r.metadata.key)
+            for handler in [r.metadata] + r.get_fields_handlers():
+                database.del_handler(handler.key)
 
 
     def _get_names(self):
@@ -378,13 +374,12 @@ class Folder(DBResource):
 
         # Copy the content
         database = self.database
-        fs = database.fs
         new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_key = fs.resolve(source_path, old_name)
-            dst_key = fs.resolve(target_path, new_name)
+            src_key = Path(source_path).resolve(old_name)
+            dst_key = Path(target_path).resolve(new_name)
             if folder.has_handler(src_key):
                 folder.copy_handler(src_key, dst_key, exclude_patterns)
 
@@ -438,13 +433,12 @@ class Folder(DBResource):
         folder.move_handler('%s.metadata' % source_path,
                             '%s.metadata' % target_path)
         # Move the content
-        fs = database.fs
         new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_key = fs.resolve(source_path, old_name)
-            dst_key = fs.resolve(target_path, new_name)
+            src_key = Path(source_path).resolve(old_name)
+            dst_key = Path(target_path).resolve(new_name)
             if folder.has_handler(src_key):
                 folder.move_handler(src_key, dst_key)
 
