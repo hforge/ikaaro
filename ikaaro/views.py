@@ -15,8 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import datetime
+from os.path import basename, getmtime, isfile
+
 # Import from itools
 from itools.core import fixed_offset
+from itools.fs.common import get_mimetype
 
 # Import from itools
 from itools.core import merge_dicts, proto_property, proto_lazy_property
@@ -604,7 +609,17 @@ class ContextMenu(CMSTemplate):
 
 class IkaaroStaticView(StaticView):
 
+
     def GET(self, resource, context):
+        try:
+            return self.get_from_template(resource, context)
+        except Exception:
+            # Fallback if the handler cannot be loaded
+            print 'WARNING: The file {0} contains errors'.format(context.path)
+            return self.get_fallback(resource, context)
+
+
+    def get_from_template(self, resource, context):
         # FIXME Check we set the encoding for text files
         path = str(context.path)
         ts = context.server.timestamp
@@ -622,6 +637,34 @@ class IkaaroStaticView(StaticView):
         mimetype = template.get_mimetype()
         # Get data
         data = template.to_str()
+        # Response
+        context.status = 200
+        context.set_content_type(mimetype)
+        context.set_header('Last-Modified', mtime)
+        return data
+
+
+    def get_fallback(self, resource, context):
+        n = len(Path(self.mount_path))
+        path = Path(context.path)[n:]
+        path = '%s%s' % (self.local_path, path)
+        # 404 Not Found
+        if not isfile(path):
+            return context.set_default_response(404)
+        # 304 Not Modified
+        mtime = getmtime(path)
+        mtime = datetime.utcfromtimestamp(mtime)
+        mtime = mtime.replace(microsecond=0)
+        mtime = fixed_offset(0).localize(mtime)
+        since = context.get_header('If-Modified-Since')
+        if since and since >= mtime:
+            raise NotModified
+        # 200 Ok
+        # FIXME Check we set the encoding for text files
+        mimetype = get_mimetype(basename(path))
+        # Get data
+        with open(path, 'r') as f:
+            data = f.read()
         # Response
         context.status = 200
         context.set_content_type(mimetype)
