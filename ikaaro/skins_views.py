@@ -135,7 +135,9 @@ class LocationTemplate(CMSTemplate):
 
         here = context.resource
         here_link = context.get_link(here)
-
+        # Fix link at root
+        if here_link == '/':
+            here_link = ''
         # Tabs
         tabs = []
         for link, view in here.get_views():
