@@ -177,13 +177,15 @@ class Folder(DBResource):
         # Events, remove
         path = str(resource.abspath)
         database.remove_resource(resource)
-        # Remove
         fs = database.fs
-        for handler in resource.get_handlers():
-            # Skip empty folders and phantoms
-            if fs.exists(handler.key):
-                database.del_handler(handler.key)
-        self.handler.del_handler('%s.metadata' % name)
+        # Remove handlers
+        for r in list(resource.traverse_resources()):
+            for handler in r.get_handlers():
+                # Skip empty folders and phantoms
+                if fs.exists(handler.key):
+                    database.del_handler(handler.key)
+            database.del_handler(r.metadata.key)
+        # Revove child
         # Clear cookie
         context = get_context()
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
