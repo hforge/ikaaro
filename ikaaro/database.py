@@ -18,7 +18,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.database import RODatabase, RWDatabase, make_git_database
+from itools.database import RWDatabase, RODatabase
 from itools.database import OrQuery, PhraseQuery
 from itools.uri import Path
 from itools.web import get_context
@@ -124,13 +124,6 @@ class Database(RWDatabase):
             class_id = brain.abspath
             yield self.get_resource_class(class_id)
 
-
-
-def make_database(path):
-    size_min, size_max = 19500, 20500
-    database = make_git_database(path, size_min, size_max)
-    database.close()
-    return Database(path, size_min, size_max)
 
 
 def get_database(path, size_min, size_max, read_only=False):

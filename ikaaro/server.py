@@ -42,7 +42,7 @@ from glib import GError
 from itools.core import become_daemon, get_abspath, vmsize
 from itools.database import Metadata, RangeQuery
 from itools.database import make_catalog, Resource, get_register_fields
-from itools.database import check_database
+from itools.database import check_database, make_git_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
@@ -57,7 +57,7 @@ from itools.web import SoupMessage
 
 # Import from ikaaro
 from context import CMSContext
-from database import get_database, make_database
+from database import get_database
 from datatypes import ExpireValue
 from root import Root
 from views import CachedStaticView
@@ -239,8 +239,13 @@ def create_server(target, email, password, root,  modules=None,
         log_email=log_email)
     open('%s/config.conf' % target, 'w').write(config)
 
+    # Create database
+    size_min, size_max = 19500, 20500
+    database = make_git_database(target, size_min, size_max)
+    database.close()
+    database = get_database(target, size_min, size_max)
+
     # Create the folder structure
-    database = make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
 
@@ -346,6 +351,7 @@ class Server(WebServer):
             size_min = size_max = cache_size
         size_min, size_max = int(size_min), int(size_max)
         read_only = read_only or config.get_value('database-readonly')
+        # Get database
         database = get_database(target, size_min, size_max, read_only)
         self.database = database
 
