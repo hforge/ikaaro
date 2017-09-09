@@ -24,6 +24,7 @@ from itools.fs import lfs
 
 # Import from ikaaro
 from ikaaro.database import get_database
+from ikaaro.folder import Folder
 from ikaaro.server import Server, get_fake_context, create_server
 from ikaaro.text import Text
 
@@ -155,6 +156,21 @@ class FreeTestCase(TestCase):
         database.close()
 
 
+    def test_move_folder(self):
+        root, context, database = self.get_database()
+        kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'}}
+        container = root.make_resource('folder1', Folder, **kw)
+        container.make_resource('hello.txt', Text)
+        self.assertEqual(
+            context.database.added,
+            set(['folder1.metadata', 'folder1/hello.txt.metadata',]))
+        root.move_resource('folder1', 'folder2')
+        self.assertEqual(root.get_resource('folder1', soft=True), None)
+        self.assertEqual(root.get_resource('folder2').name, 'folder2')
+        self.assertEqual(root.get_resource('folder2/hello.txt').abspath, '/folder2/hello.txt')
+        database.close()
+
+
     def test_abort_transaction(self):
         root, context, database = self.get_database()
         kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
@@ -199,6 +215,49 @@ class FreeTestCase(TestCase):
         server = Server('test_database')
         root = server.database.get_resource('/')
         self.assertEqual(root.metadata.format, 'iKaaro')
+
+
+    def test_create_folders(self):
+        root, context, database = self.get_database()
+        container = root.make_resource('folder', Folder)
+        container.make_resource('1', Text)
+        container.make_resource('2', Text)
+        container.make_resource('3', Text)
+        names = container.get_names()
+        names.sort()
+        self.assertEqual(names, ['1', '2', '3'])
+
+
+    def test_remove_folder(self):
+        root, context, database = self.get_database()
+        container = root.make_resource('folder', Folder)
+        container.make_resource('1', Text)
+        container.make_resource('2', Text)
+        container.make_resource('3', Text)
+        root.del_resource('folder')
+        self.assertEqual(
+            context.database.removed,
+            set(['folder.metadata', 'folder/1.metadata',
+                 'folder/2.metadata', 'folder/3.metadata']))
+        self.assertEqual(root.get_resource('folder', soft=True), None)
+        self.assertEqual(root.get_resource('folder/1', soft=True), None)
+        self.assertEqual(root.get_resource('folder/2', soft=True), None)
+        self.assertEqual(root.get_resource('folder/3', soft=True), None)
+
+
+    def test_copy_folder(self):
+        root, context, database = self.get_database()
+        container = root.make_resource('folder1', Folder)
+        container.make_resource('1', Text)
+        container.make_resource('2', Text)
+        container.copy('folder1', 'folder2')
+        self.assertEqual(
+            context.database.added,
+            set([
+              'folder1.metadata', 'folder1/1.metadata', 'folder1/2.metadata',
+              'folder2.metadata', 'folder2/1.metadata', 'folder2/2.metadata',
+              ]))
+
 
 
 if __name__ == '__main__':
