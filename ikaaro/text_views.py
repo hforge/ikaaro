@@ -27,12 +27,13 @@ from itools.handlers import TextFile
 from itools.web import STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, EditAreaWidget, get_default_widget
+from autoform import AutoForm
 from buttons import Button, Remove_BrowseButton
 from fields import File_Field
 from file_views import File_Edit
 import messages
 from views import BrowseForm
+from widgets import EditAreaWidget, get_default_widget
 
 
 class Text_Edit(File_Edit):
