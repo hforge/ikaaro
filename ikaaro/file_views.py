@@ -30,11 +30,11 @@ from itools.web import BaseView, STLView, ERROR, FormError
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import PathSelectorWidget
 from fields import ProgressBar_Field
 from folder import Folder
 from resource_views import DBResource_GetFile
 from utils import process_name
+from widgets import PathSelectorWidget
 
 
 class File_NewInstance(AutoAdd):

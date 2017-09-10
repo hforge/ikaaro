@@ -32,14 +32,13 @@ from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
-from autoform import MultilineWidget
 from database import Database
 from file import File
 from file_views import File_Edit
 from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 from text_views import CSS_Edit
-from widgets import FileWidget
+from widgets import FileWidget, MultilineWidget
 
 css_uri_expr = compile(r"url\((.*)\)")
 def css_get_reference(uri):

@@ -41,7 +41,6 @@ from itools.web import ItoolsView, get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import CheckboxWidget
 from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
@@ -58,6 +57,7 @@ from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from update import class_version_to_date
 from utils import get_base_path_query, get_resource_by_uuid_query
+from widgets import CheckboxWidget
 
 
 

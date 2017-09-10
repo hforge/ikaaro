@@ -25,9 +25,9 @@ from itools.uri import encode_query, get_reference
 from itools.web import STLView, ERROR
 
 # Import from ikaaro
-from autoform import TextWidget
 from buttons import Button
 from views import BrowseForm
+from widgets import TextWidget
 
 
 

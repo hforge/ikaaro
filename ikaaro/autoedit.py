@@ -29,8 +29,8 @@ from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import AutoForm, HiddenWidget
-from autoform import timestamp_widget
+from autoform import AutoForm
+from widgets import HiddenWidget, timestamp_widget
 from datatypes import BirthDate
 from datatypes import Days, Months, Years
 from fields import Field

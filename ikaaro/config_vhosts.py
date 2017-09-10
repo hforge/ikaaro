@@ -20,11 +20,11 @@ from itools.gettext import MSG
 from itools.web import STLView
 
 # Import from ikaaro
-from autoform import MultilineWidget
 from config import Configuration
 from fields import Char_Field
 from messages import MSG_CHANGES_SAVED
 from resource_ import DBResource
+from widgets import MultilineWidget
 
 
 class ConfigVHosts_Edit(STLView):

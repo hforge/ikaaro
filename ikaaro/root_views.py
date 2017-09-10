@@ -37,13 +37,14 @@ from itools.web import BaseView, FormError, STLView, INFO
 from itools.xml import get_element, TEXT
 
 # Import from ikaaro
-from autoform import AutoForm, FileWidget
-from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
+from autoform import AutoForm
 from buttons import Button
 from config_captcha import CaptchaDatatype, CaptchaWidget
 from datatypes import FileDataType
-from ikaaro.folder import Folder
+from folder import Folder
 from messages import MSG_UNEXPECTED_MIMETYPE
+from widgets import FileWidget
+from widgets import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 
 
 class NotAllowedView(STLView):

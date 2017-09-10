@@ -25,7 +25,6 @@ from itools.web import ERROR, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from autoform import CheckboxWidget
 from config import Configuration
 from enumerates import UserGroups_Datatype
 from fields import Char_Field, Datetime_Field, Email_Field, File_Field
@@ -37,6 +36,7 @@ from users_views import User_EditPassword, User_EditPreferences, User_Profile
 from users_views import User_ResendConfirmation, User_ChangePasswordForgotten
 from users_views import Users_Browse, Users_AddUser
 from utils import get_secure_hash, generate_password
+from widgets import CheckboxWidget
 
 
 class Lastlog_Field(Datetime_Field):

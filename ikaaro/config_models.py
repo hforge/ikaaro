@@ -20,7 +20,6 @@ from itools.gettext import MSG
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import CheckboxWidget, RadioWidget, SelectWidget
 from buttons import Remove_BrowseButton
 from config import Configuration
 from config_common import NewResource_Local
@@ -30,6 +29,7 @@ from folder import Folder
 from folder_views import Folder_BrowseContent
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
+from widgets import CheckboxWidget, RadioWidget, SelectWidget
 
 
 class FieldType_Field(Select_Field):

@@ -22,13 +22,14 @@ from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
-from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, SelectWidget
+from autoform import AutoForm
 from datatypes import BirthDate
 from datatypes import Days, Months, Years
 from buttons import Button
 from fields import Field
 import messages
 from utils import get_content_containers, make_stl_template
+from widgets import HiddenWidget, ReadOnlyWidget, SelectWidget
 
 
 

@@ -32,7 +32,6 @@ from itools.uri import get_reference, Path
 from itools.web import BaseView, STLView, get_context
 
 # Import from ikaaro
-from autoform import SelectWidget, TextWidget
 from buttons import PasteButton
 from buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
@@ -40,6 +39,7 @@ from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, BrowseForm, ContextMenu
+from widgets import SelectWidget, TextWidget
 import messages
 
 

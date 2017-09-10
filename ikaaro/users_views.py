@@ -32,14 +32,15 @@ from pytz import common_timezones
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from autoform import AutoForm, HiddenWidget, ReadOnlyWidget, TextWidget
-from autoform import PasswordWidget, ChoosePassword_Widget
+from autoform import AutoForm
 from buttons import Button, BrowseButton
 from datatypes import ChoosePassword_Datatype
 from emails import send_email
 from fields import Password_Field, ChoosePassword_Field
 import messages
 from views import BrowseForm
+from widgets import HiddenWidget, ReadOnlyWidget, TextWidget
+from widgets import PasswordWidget, ChoosePassword_Widget
 
 
 class User_ConfirmRegistration(AutoForm):

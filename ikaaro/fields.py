@@ -34,16 +34,16 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from autoform import Widget, FileWidget, MultilineWidget, TextWidget
-from autoform import CheckboxWidget, RadioWidget, SelectWidget
-from autoform import BirthDateWidget, DateWidget, DatetimeWidget
-from autoform import PasswordWidget, ChoosePassword_Widget
-from autoform import ColorPickerWidget, ProgressBarWidget, RTEWidget
 from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
 from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
 from links import get_abspath_links, update_abspath_links
 from utils import split_reference, get_secure_hash
+from widgets import Widget, FileWidget, MultilineWidget, TextWidget
+from widgets import CheckboxWidget, RadioWidget, SelectWidget
+from widgets import BirthDateWidget, DateWidget, DatetimeWidget
+from widgets import PasswordWidget, ChoosePassword_Widget
+from widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
 
 
 class Field(BaseField):
