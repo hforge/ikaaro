@@ -24,12 +24,13 @@ from unittest import TestLoader, TestSuite, TextTestRunner
 from itools.core import get_abspath
 
 # Import tests
+import test_database
 import test_metadata
 import test_server
 from junitxml import JUnitXmlResult
 
 
-test_modules = [test_metadata, test_server]
+test_modules = [test_metadata, test_server, test_database]
 
 
 loader = TestLoader()

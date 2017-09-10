@@ -185,8 +185,9 @@ class Folder(DBResource):
 
     def _get_names(self):
         folder = self.handler
-        return [ x[:-9] for x in folder.get_handler_names()
-                 if x[-9:] == '.metadata' ]
+        for x in folder.get_handler_names():
+            if x and x[-9:] == '.metadata':
+                yield x[:-9]
 
 
 
@@ -353,9 +354,9 @@ class Folder(DBResource):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
-
         # Get the source and target resources
         source = self.get_resource(source_path)
+        childs = list(source.get_resources())
         parent_path = target_path.resolve2('..')
         target_parent = self.get_resource(parent_path)
 
@@ -382,7 +383,6 @@ class Folder(DBResource):
             dst_key = Path(target_path).resolve(new_name)
             if folder.has_handler(src_key):
                 folder.copy_handler(src_key, dst_key, exclude_patterns)
-
         # Events, add
         resource = self.get_resource(target_path)
         database.add_resource(resource)
@@ -391,14 +391,14 @@ class Folder(DBResource):
         now = context.timestamp
         resource.set_value('ctime', now)
         resource.set_value('mtime', now)
-        # Set UUID
-        resource.set_uuid()
-        for x in resource.traverse_resources():
-            x.set_uuid()
-            x.set_value('ctime', now)
-            x.set_value('mtime', now)
+        # Childs
+        for child in childs:
+            source_path_child = source_path.resolve2(child.name)
+            target_path_child = target_path.resolve2(child.name)
+            self.copy_resource(source_path_child, target_path_child)
         # Ok
         return resource
+
 
     def move_resource(self, source_path, target_path):
         # Find out the source and target absolute URIs
@@ -428,6 +428,9 @@ class Folder(DBResource):
         new_path = self.abspath.resolve2(target_path)
         database.move_resource(source, new_path)
 
+        # Get childs
+        childs = list(source.get_resources())
+
         # Move the metadata
         folder = self.handler
         folder.move_handler('%s.metadata' % source_path,
@@ -441,6 +444,11 @@ class Folder(DBResource):
             dst_key = Path(target_path).resolve(new_name)
             if folder.has_handler(src_key):
                 folder.move_handler(src_key, dst_key)
+        # Childs
+        for child in childs:
+            source_path_child = source_path.resolve2(child.name)
+            target_path_child = target_path.resolve2(child.name)
+            self.move_resource(source_path_child, target_path_child)
 
 
     def search_resources(self, cls=None, format=None):

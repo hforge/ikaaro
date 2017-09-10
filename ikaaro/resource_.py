@@ -626,7 +626,7 @@ class DBResource(Resource):
         """
         langs = self.get_resource('/').get_value('website_languages')
 
-        aux = [(self.name, new_name)]
+        aux = []
         for field_name in self.fields:
             field = self.get_field(field_name)
             if field and issubclass(field, File_Field):
