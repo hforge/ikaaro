@@ -42,6 +42,7 @@ from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import File_Download
 from file_views import Image_View, Video_View, Archive_View
 from file_views import Flash_View
+from resource_ import DBResource
 from resource_views import DBResource_GetImage
 
 
@@ -49,7 +50,7 @@ from resource_views import DBResource_GetImage
 ###########################################################################
 # Base File
 ###########################################################################
-class File(Content):
+class File(DBResource):
 
     class_id = 'file'
     class_version = '20090122'
