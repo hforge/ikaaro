@@ -18,6 +18,7 @@
 # Import from the Standard Library
 from datetime import datetime
 from os.path import basename, getmtime, isfile
+import traceback
 
 # Import from itools
 from itools.core import fixed_offset
@@ -615,7 +616,11 @@ class IkaaroStaticView(StaticView):
             return self.get_from_template(resource, context)
         except Exception:
             # Fallback if the handler cannot be loaded
-            print 'WARNING: The file {0} contains errors'.format(context.path)
+            msg = 'WARNING: The file {0} contains errors'.format(context.path)
+            print('=='*10)
+            print(msg)
+            print(traceback.format_exc())
+            print('=='*10)
             return self.get_fallback(resource, context)
 
 
