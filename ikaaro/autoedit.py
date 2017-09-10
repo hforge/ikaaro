@@ -339,11 +339,6 @@ class AutoEdit(AutoForm):
             if self.set_value(resource, context, key, form):
                 return
 
-        # Notify
-        from cc import Observable
-        if isinstance(resource, Observable):
-            resource.notify_subscribers(context)
-
         # Ok
         if self.action_goto:
             # Get same redirection from x/y/z/;edit and x/y/z and x/y/z/
