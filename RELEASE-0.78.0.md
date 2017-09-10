@@ -13,6 +13,8 @@
 - Add Dockerfile to simplify tests: https://hub.docker.com/r/hforge/
 - Continous Integration: Connect to CircleCI https://circleci.com/gh/hforge
 - `Resource.get_names()` return an iterator
+- Add method `Server.launch_at_stop()`
+- Log cron informations into `example.com/log/cron`
 
 ### Migration guide
 - `notify_subscribers` method has been removed
