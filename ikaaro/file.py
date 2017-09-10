@@ -34,7 +34,6 @@ from itools.office import MSPowerPointX as MSPowerPointXFile
 from itools.web import get_context
 
 # Import from ikaaro
-from content import Content
 from database import Database
 from fields import Char_Field, File_Field, Owner_Field
 from file_views import File_NewInstance, File_View
