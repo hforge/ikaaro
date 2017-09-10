@@ -30,7 +30,7 @@ from fields import Field, Select_Field, Text_Field
 from folder import Folder
 from resource_ import DBResource
 from utils import make_stl_template
-from widget import TextWidget, RadioWidget, Widget
+from widgets import TextWidget, RadioWidget, Widget
 
 
 captcha_field = Text_Field(multilingual=False)
