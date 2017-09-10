@@ -529,6 +529,7 @@ class Server(WebServer):
             print '[Commit]',
             sys.stdout.flush()
             catalog.save_changes()
+            catalog.close()
             # Commit / Replace
             old_catalog_path = '%s/catalog' % self.target
             if lfs.exists(old_catalog_path):
@@ -554,6 +555,13 @@ class Server(WebServer):
         pid = self.get_pid()
         return pid_exists(pid)
 
+    def __enter__(self):
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
+
 
     def close(self):
         log_info('Close server')
@@ -564,6 +572,7 @@ class Server(WebServer):
         msg = 'Stoping server...'
         log_info(msg)
         print(msg)
+        self.close()
         proxy = super(Server, self)
         proxy.stop()
         self.kill(force)
