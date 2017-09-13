@@ -119,19 +119,17 @@ class User(Folder):
     # Indexing
     ########################################################################
     def get_catalog_values(self):
-        values = super(User, self).get_catalog_values()
-
+        proxy = super(User, self)
+        values = proxy.get_catalog_values()
         # email domain
         email = self.get_value('email')
         if email and '@' in email:
             values['email_domain'] = email.split('@', 1)[1]
-
         # username (overrides default)
         values['username'] = self.get_login_name()
-
         # groups
         values['groups'] = self.get_value('groups')
-
+        # Ok
         return values
 
 

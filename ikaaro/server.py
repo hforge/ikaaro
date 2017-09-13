@@ -486,13 +486,10 @@ class Server(WebServer):
         if as_test:
             log = open('%s/log/update-catalog' % self.target, 'w').write
         for obj in root.traverse_resources():
-            if not isinstance(obj, Resource):
-                continue
             if not quiet:
-                print doc_n, obj.abspath
+                print('{0} {1}'.format(doc_n, obj.abspath))
             doc_n += 1
             context.resource = obj
-
             # Index the document
             try:
                 catalog.index_document(obj)
@@ -505,7 +502,6 @@ class Server(WebServer):
                     log('\n')
                 else:
                     raise
-
             # Free Memory
             del obj
             self.database.make_room()

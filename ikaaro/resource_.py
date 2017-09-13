@@ -22,15 +22,14 @@
 # Import from the Standard Library
 from datetime import datetime
 from pickle import dumps
-from os.path import basename, dirname
 from uuid import uuid4
 
 # Import from itools
 from itools.core import is_prototype, lazy
 from itools.database import MetadataProperty
-from itools.database import Resource, Metadata, register_field
-from itools.database import AndQuery, NotQuery, PhraseQuery
-from itools.datatypes import Boolean, DateTime, Date, Decimal
+from itools.database import Resource, register_field
+from itools.database import PhraseQuery
+from itools.datatypes import DateTime, Date, Decimal
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
@@ -41,9 +40,7 @@ from itools.web import ItoolsView, get_context
 # Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
-from datatypes import CopyCookie
 from enumerates import Groups_Datatype
-from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
 from popup import DBResource_AddImage, DBResource_AddLink
@@ -56,7 +53,7 @@ from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from update import class_version_to_date
-from utils import get_base_path_query, get_resource_by_uuid_query
+from utils import get_resource_by_uuid_query
 from widgets import CheckboxWidget
 
 
@@ -519,19 +516,17 @@ class DBResource(Resource):
               {'fr': u'....',
                'en': u'....' ....}
         """
-        raise NotImplementedError
+        return None
 
 
     def get_catalog_values(self):
         values = {}
-
         # Step 1. Automatically index fields
         root = self.get_root()
         languages = root.get_value('website_languages')
         for name, field in self.get_fields():
             if not field.indexed and not field.stored:
                 continue
-
             if field.multilingual:
                 value = {}
                 for language in languages:
@@ -539,7 +534,6 @@ class DBResource(Resource):
                 values[name] = value
             else:
                 values[name] = field.get_value(self, name)
-
         # Step 2. Index non-metadata properties
         # Path related fields
         abspath = self.abspath
@@ -548,40 +542,32 @@ class DBResource(Resource):
         values['abspath_depth'] = n
         if n:
             values['parent_paths'] = [ str(abspath[:i]) for i in range(n) ]
-
         values['name'] = self.name
-
         # Class related fields
         values['format'] = self.metadata.format
         values['base_classes'] = self.get_base_classes()
         values['class_version'] = class_version_to_date(self.metadata.version)
-
         # Links to other resources
         values['owner'] = self.get_owner()
         values['share'] = self.get_share()
         values['links'] = list(self.get_links())
         values['onchange_reindex'] = self.get_onchange_reindex()
-
-        # Full text
+        # Full text indexation
         context = get_context()
-        try:
-            server = context.server
-        except AttributeError:
-            server = None
-        if server is not None and server.index_text:
+        server = context.server
+        if server.index_text:
             try:
                 values['text'] = self.to_text()
-            except NotImplementedError:
-                pass
             except Exception:
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
-
-        # Time events
+        # Time events for the CRON
         reminder, payload = self.next_time_event()
         values['next_time_event'] = reminder
-        values['next_time_event_payload'] = dumps(payload)
-
+        if payload:
+            values['next_time_event_payload'] = dumps(payload)
+        else:
+            values['next_time_event_payload'] = None
         # Ok
         return values
 

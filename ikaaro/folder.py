@@ -39,7 +39,7 @@ from itools.web import BaseView, get_context
 # Import from ikaaro
 from autoedit import AutoEdit
 from database import Database
-from datatypes import CopyCookie, guess_mimetype
+from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
