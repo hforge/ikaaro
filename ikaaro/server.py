@@ -806,7 +806,9 @@ class Server(WebServer):
         search = database.search(query)
         for brain in search.get_documents():
             tcron0 = time()
-            payload = pickle.loads(brain.next_time_event_payload)
+            payload = brain.next_time_event_payload
+            if payload:
+                payload = pickle.loads(payload)
             resource = database.get_resource(brain.abspath)
             try:
                 resource.time_event(payload)
