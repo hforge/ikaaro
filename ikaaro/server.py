@@ -246,10 +246,6 @@ def create_server(target, email, password, root,  modules=None,
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
 
-    # Create a fake context
-    context = get_fake_context(database)
-    context.set_mtime = True
-
     # Make the root
     metadata = Metadata(cls=root_class)
     database.set_handler('.metadata', metadata)
@@ -259,7 +255,8 @@ def create_server(target, email, password, root,  modules=None,
     website_languages = website_languages or language_field.default
     root.set_value('website_languages', website_languages)
     # Re-init context with context cls
-    context = get_fake_context(context.database, root.context_cls)
+    set_context(None)
+    context = get_fake_context(database, root.context_cls)
     context.set_mtime = True
     # Init root resource
     root.init_resource(email, password)
@@ -270,6 +267,8 @@ def create_server(target, email, password, root,  modules=None,
     context.git_message = 'Initial commit'
     database.save_changes()
     database.close()
+    # Empty context
+    set_context(None)
 
 
 class ServerLoop(Loop):
@@ -294,11 +293,11 @@ class ServerLoop(Loop):
 
     def stop(self, signum, frame):
         print 'Shutting down the server...'
-        server = self.server
         # TODO: Add API get_fake_context in server ?
-        context = get_fake_context(
-            server.database, server.root.context_cls)
-        context.server = server
+        context = get_context()
+        #context = get_fake_context(
+        #    server.database, server.root.context_cls)
+        #context.server = server
         self.server.root.launch_at_stop(context)
         self.server.close()
         self.quit()
@@ -362,9 +361,8 @@ class Server(WebServer):
             with open(environement_path, 'r') as f:
                 data = f.read()
                 self.environment = json.loads(data)
-
-        # Init fake context
-        context = get_fake_context(database, root.context_cls)
+        # Get context
+        context = get_context()
         context.server = self
         # Check catalog consistency
         database.check_catalog()
@@ -555,22 +553,25 @@ class Server(WebServer):
         pid = self.get_pid()
         return pid_exists(pid)
 
+
     def __enter__(self):
         return self
 
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
 
 
     def close(self):
         log_info('Close server')
+        set_context(None)
         self.database.close()
 
 
     def stop(self, force=False):
         msg = 'Stoping server...'
         log_info(msg)
+        set_context(None)
         print(msg)
         self.close()
         proxy = super(Server, self)

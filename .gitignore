@@ -7,6 +7,7 @@ dist
 version.txt
 ikaaro/locale/*.mo
 ikaaro/environment.json
+test/demo.hforge.org/
 *.xml.es
 *.xml.fr
 *.xml.it

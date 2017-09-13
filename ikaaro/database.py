@@ -18,19 +18,68 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.database import RWDatabase, RODatabase
+from itools.database import RWDatabase, RODatabase as BaseRODatabase
 from itools.database import OrQuery, PhraseQuery
 from itools.uri import Path
-from itools.web import get_context
+from itools.web import get_context, set_context
+
+
+class RODatabase(BaseRODatabase):
+
+    def __init__(self, path, size_min, size_max, catalog=None):
+        proxy = super(RODatabase, self)
+        proxy.__init__(path, size_min, size_max, catalog)
+        # Init context if not initialized from server & not icms-init
+        from server import get_fake_context
+        root = self.get_resource('/', soft=True)
+        cls = root.context_cls if root else None
+        if cls:
+            context = get_fake_context(self, cls)
+        else:
+            context = get_fake_context(self)
+        context.set_mtime = True
+
+
+    def close(self):
+        # Empty context
+        set_context(None)
+        # Close
+        proxy = super(RODatabase, self)
+        return proxy.close()
+
 
 
 class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
+    def __init__(self, path, size_min, size_max, catalog=None):
+        proxy = super(Database, self)
+        proxy.__init__(path, size_min, size_max, catalog)
+        # Init context if not initialized from server & not icms-init
+        from server import get_fake_context
+        root = self.get_resource('/', soft=True)
+        cls = root.context_cls if root else None
+        if cls:
+            context = get_fake_context(self, cls)
+        else:
+            context = get_fake_context(self)
+        context.set_mtime = True
+
+
+    def close(self):
+        # Empty context
+        set_context(None)
+        # Close
+        proxy = super(Database, self)
+        return proxy.close()
+
+
     def _before_commit(self):
+        root = self.get_resource('/')
         context = get_context()
-        root = context.root
+        if context.database != self:
+            raise ValueError('The contextual database is not coherent')
 
         # Update resources
         for path in deepcopy(self.resources_new2old):
