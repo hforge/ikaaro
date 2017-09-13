@@ -22,6 +22,10 @@ from unittest import TestLoader, TestSuite, TextTestRunner
 
 # Import from itools
 from itools.core import get_abspath
+from itools.fs import lfs
+
+# Import from ikaaro
+from ikaaro.server import create_server
 
 # Import tests
 import test_database
@@ -41,6 +45,14 @@ if __name__ == '__main__':
     parser = OptionParser(usage, description=description)
     parser.add_option('-m', '--mode', default='standard', help='tests mode')
     options, args = parser.parse_args()
+    # Remove old test database if exists
+    path = 'demo.hforge.org'
+    if lfs.exists(path):
+        lfs.remove(path)
+    # Create test server
+    create_server(path, 'test@hforge.org',
+        'password', 'ikaaro', website_languages=['en', 'fr'])
+    # Launch test
     suite = TestSuite()
     for module in test_modules:
         suite.addTest(loader.loadTestsFromModule(module))

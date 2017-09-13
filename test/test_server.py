@@ -19,16 +19,11 @@ from unittest import TestCase, main
 
 # Import from itools
 from itools.datatypes import String, Unicode
-from itools.fs import lfs
-from itools.web import set_context
 from itools.web.views import ItoolsView, BaseView
 
 # Import from ikaaro
-from ikaaro.server import Server, create_server
+from ikaaro.server import Server
 
-
-SERVER = None
-DATABASE_TEST_PATH = '/tmp/www.hforge.org'
 
 
 class TestHTML_View(ItoolsView):
@@ -86,38 +81,21 @@ class TestJsonAction_View(BaseView):
 class ServerTestCase(TestCase):
 
 
-    def setUp(self):
-        self.tearDown()
-        create_server('test_server', 'test@hforge.org',
-            'password', 'ikaaro', website_languages=['en', 'fr'])
-
-
-    def tearDown(self):
-        paths = ['test_server']
-        for path in paths:
-            if lfs.exists(path):
-                lfs.remove(path)
-
-
-    def get_server(self):
-        return Server('test_server')
-
-
     def test_server_ctrl(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             # Test /;ctrl view
             retour = server.do_request('GET', '/;_ctrl')
             self.assertEqual(retour['status'], 200)
 
 
     def test_server_up(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             retour = server.do_request('GET', '/api/status', as_json=True)
             self.assertEqual(retour['entity']['up'], True)
 
 
     def test_server_404(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             # Error 404 json
             retour = server.do_request('GET', '/api/404', as_json=True)
             self.assertEqual(retour['status'], 404)
@@ -130,7 +108,7 @@ class ServerTestCase(TestCase):
 
     # FIXME
     #def test_server_forbidden(self):
-    #    server = self.get_server()
+    #    server = Server('demo.hforge.org')
     #    server.dispatcher.add('/test/forbidden', TestPlainText_View(access=False))
     #    user = server.root.get_resource('/users/0')
     #    retour = server.do_request('GET', '/test/forbidden',
@@ -139,14 +117,14 @@ class ServerTestCase(TestCase):
 
 
     def test_server_unauthorized(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/unauthorized', TestPlainText_View(access=False))
             retour = server.do_request('GET', '/test/unauthorized')
             self.assertEqual(retour['status'], 401)
 
 
     def test_html(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/html', TestHTML_View)
             retour = server.do_request('GET', '/test/html')
             self.assertEqual(retour['status'], 200)
@@ -154,7 +132,7 @@ class ServerTestCase(TestCase):
 
 
     def test_plain_text(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/text', TestPlainText_View)
             retour = server.do_request('GET', '/test/text')
             self.assertEqual(retour['status'], 200)
@@ -162,7 +140,7 @@ class ServerTestCase(TestCase):
 
 
     def test_json(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/json', TestJson_View)
             retour = server.do_request('GET', '/test/json?name=world', as_json=True)
             self.assertEqual(retour['status'], 200)
@@ -170,7 +148,7 @@ class ServerTestCase(TestCase):
 
 
     def test_action(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/json-action', TestJsonAction_View)
             body = {'action': 'hello', 'name': 'world'}
             retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
@@ -181,7 +159,7 @@ class ServerTestCase(TestCase):
 
 
     def test_commit(self):
-        with self.get_server() as server:
+        with Server('demo.hforge.org') as server:
             server.dispatcher.add('/test/json-action', TestJsonAction_View)
             body = {'action': 'set_root_title', 'title': u'Sylvain'}
             retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
@@ -193,13 +171,6 @@ class ServerTestCase(TestCase):
             self.assertEqual(retour['status'], 200)
             self.assertEqual(retour['entity']['success'], True)
             self.assertEqual(server.root.get_value('title', language='fr'), u'Zidane')
-
-
-    def test_stop_server(self):
-        # Remove database
-        path = DATABASE_TEST_PATH
-        if lfs.exists(path):
-            lfs.remove(path)
 
 
 
