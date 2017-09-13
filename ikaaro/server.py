@@ -564,7 +564,6 @@ class Server(WebServer):
         msg = 'Stoping server...'
         log_info(msg)
         set_context(None)
-        print(msg)
         self.close()
         proxy = super(Server, self)
         proxy.stop()
@@ -574,17 +573,17 @@ class Server(WebServer):
     def kill(self, force=False):
         msg = 'Killing server...'
         log_info(msg)
-        print(msg)
         pid = get_pid('%s/pid' % self.target)
         if pid is None:
-            print '[%s] Web Server not running.' % self.target
+            msg = '[{0}] Web Server not running.'.format(self.target)
         else:
             signal = SIGTERM if force else SIGINT
             kill(pid, signal)
             if force:
-                print '[%s] Web Server shutting down...' % self.target
+                msg = '[{0}] Web Server shutting down...'.format(self.target)
             else:
-                print '[%s] Web Server shutting down (gracefully)...' % self.target
+                msg = '[{0}] Web Server shutting down (gracefully)...'.format(self.target)
+        log_info(msg)
 
 
     def listen(self, address, port):
