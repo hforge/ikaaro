@@ -18,12 +18,13 @@
 from unittest import TestCase, main
 
 # Import from itools
+from itools.database import PhraseQuery
 from itools.datatypes import String, Unicode
 from itools.web.views import ItoolsView, BaseView
+from itools.web import get_context
 
 # Import from ikaaro
-from ikaaro.server import Server
-
+from ikaaro.server import Server, TestServer
 
 
 class TestHTML_View(ItoolsView):
@@ -106,15 +107,6 @@ class ServerTestCase(TestCase):
             self.assertEqual(retour['status'], 404)
             self.assertEqual(retour['context'].content_type, 'text/html; charset=UTF-8')
 
-    # FIXME
-    #def test_server_forbidden(self):
-    #    server = Server('demo.hforge.org')
-    #    server.dispatcher.add('/test/forbidden', TestPlainText_View(access=False))
-    #    user = server.root.get_resource('/users/0')
-    #    retour = server.do_request('GET', '/test/forbidden',
-    #          as_json=True, user=user)
-    #    self.assertEqual(retour['status'], 403)
-
 
     def test_server_unauthorized(self):
         with Server('demo.hforge.org') as server:
@@ -171,6 +163,34 @@ class ServerTestCase(TestCase):
             self.assertEqual(retour['status'], 200)
             self.assertEqual(retour['entity']['success'], True)
             self.assertEqual(server.root.get_value('title', language='fr'), u'Zidane')
+
+
+    def test_catalog_access(self):
+        query = PhraseQuery('format', 'user')
+        with TestServer('demo.hforge.org') as server:
+            context = get_context()
+            search = context.search(query)
+            self.assertEqual(len(search), 0)
+        with TestServer('demo.hforge.org', username='0') as server:
+            context = get_context()
+            search = context.search(query)
+            self.assertNotEqual(len(search), 0)
+
+
+    def test_server_login_test_server(self):
+        with TestServer('demo.hforge.org') as server:
+            server.dispatcher.add('/test/401', TestPlainText_View(access='is_admin'))
+            retour = server.do_request('GET', '/test/401')
+            self.assertEqual(retour['status'], 401)
+        with TestServer('demo.hforge.org', username='0') as server:
+            context = get_context()
+            self.assertEqual(context.user.name, '0')
+            is_admin = context.root.is_admin(context.user, context.root)
+            self.assertEqual(is_admin, True)
+            server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
+            retour = server.do_request('GET', '/test/unauthorized')
+            print retour
+            self.assertEqual(retour['status'], 200)
 
 
 

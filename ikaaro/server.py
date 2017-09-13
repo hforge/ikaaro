@@ -37,7 +37,7 @@ from tempfile import mkstemp
 
 # Import from itools
 from itools.core import become_daemon, get_abspath, vmsize
-from itools.database import Metadata, RangeQuery
+from itools.database import AndQuery, PhraseQuery, Metadata, RangeQuery
 from itools.database import make_catalog, Resource, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
@@ -838,6 +838,44 @@ class Server(WebServer):
         log_info(msg, domain='itools.cron')
         # Again, and again
         return self.config.get_value('cron-interval')
+
+
+
+class TestServer(Server):
+    """ Helper to simplify unitests.
+    Load server, log user & commit at the exit
+    """
+
+    def __init__(self, target, read_only=False, cache_size=None, profile_space=False,
+                 user=None, email=None, username=None):
+        proxy = super(TestServer, self)
+        proxy.__init__(target, read_only, cache_size, profile_space)
+        # Get context
+        context = get_context()
+        # Get user by user
+        if email:
+            query = AndQuery(
+                PhraseQuery('format', 'user'),
+                PhraseQuery('email', email),
+            )
+            search = context.database.search(query)
+            if search:
+                user = search.get_resources(size=1).next()
+        # Get user by username
+        if username:
+            user = context.root.get_user(username)
+        # Log user
+        if user:
+            context.login(user)
+
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # Commits
+        if self.database:
+            self.database.save_changes()
+        # OK
+        proxy = super(TestServer, self)
+        return proxy.__exit__(exc_type, exc_val, exc_tb)
 
 
 
