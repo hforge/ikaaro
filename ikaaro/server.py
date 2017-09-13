@@ -475,13 +475,10 @@ class Server(WebServer):
         if lfs.exists(catalog_path):
             lfs.remove(catalog_path)
         catalog = make_catalog(catalog_path, get_register_fields())
-
         # Get the root
         root = self.root
-
-        # Build a fake context
-        context = self.get_fake_context()
-
+        # Get context
+        context = get_context()
         # Update
         t0, v0 = time(), vmsize()
         doc_n = 0
