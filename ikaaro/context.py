@@ -34,9 +34,9 @@ class CMSContext(Context):
     is_cron = False
 
 
-    def init_context(self):
+    def init_context(self, user=None):
         # Init context
-        super(CMSContext, self).init_context()
+        super(CMSContext, self).init_context(user)
         # Set CRON flag
         self.is_cron = False
 
