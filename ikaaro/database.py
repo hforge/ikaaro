@@ -154,11 +154,12 @@ class Database(RWDatabase):
 
         git_msg = getattr(context, 'git_message', None)
         if not git_msg:
-            git_msg = "%s %s" % (context.method, context.uri)
+            if context.method and context.uri:
+                git_msg = "%s %s" % (context.method, context.uri)
 
-            action = getattr(context, 'form_action', None)
-            if action:
-                git_msg += " action: %s" % action
+                action = getattr(context, 'form_action', None)
+                if action:
+                    git_msg += " action: %s" % action
         else:
             git_msg = git_msg.encode('utf-8')
 
