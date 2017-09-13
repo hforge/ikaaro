@@ -552,10 +552,10 @@ class DBResource(Resource):
         values['share'] = self.get_share()
         values['links'] = list(self.get_links())
         values['onchange_reindex'] = self.get_onchange_reindex()
-        # Full text indexation
+        # Full text indexation (not available in icms-init.py FIXME)
         context = get_context()
         server = context.server
-        if server.index_text:
+        if server and server.index_text:
             try:
                 values['text'] = self.to_text()
             except Exception:
