@@ -48,13 +48,8 @@ class SearchTypes_Enumerate(Enumerate):
     def get_options(self):
         context = get_context()
         resource = context.resource
-        view = context.view
         # 1. Build the query of all objects to search
         query = get_base_path_query(resource.abspath)
-        if view.search_content_only(resource, context) is True:
-            content_query = PhraseQuery('is_content', True)
-            query = AndQuery(query, content_query)
-
         # 2. Compute children_formats
         children_formats = set()
         for child in context.search(query).get_documents():
@@ -322,10 +317,6 @@ class Folder_BrowseContent(BrowseForm):
         ZipButton]
 
 
-    def search_content_only(self, resource, context):
-        return resource.is_content
-
-
     def get_scripts(self, context):
         scripts = []
         if self.search_widgets:
@@ -359,11 +350,7 @@ class Folder_BrowseContent(BrowseForm):
             base_classes_query = OrQuery(*
                 [ PhraseQuery('base_classes', x) for x in base_classes ])
             query = AndQuery(query, base_classes_query)
-
-        # Exclude non-content
-        if self.search_content_only(resource, context) is True:
-            query = AndQuery(query, PhraseQuery('is_content', True))
-
+        # Ok
         return query
 
 

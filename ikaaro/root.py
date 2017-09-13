@@ -103,8 +103,6 @@ class Root(Folder):
     # Fields
     website_languages = Char_Field(multiple=True, default=['en'])
 
-    is_content = True
-
 
     def init_resource(self, email, password):
         super(Root, self).init_resource()

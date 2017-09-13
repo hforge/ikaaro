@@ -295,9 +295,7 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
 # Used by the add-form
 ###########################################################################
 def get_content_containers(context, class_id=None):
-    query = AndQuery(
-        PhraseQuery('base_classes', 'folder'),
-        PhraseQuery('is_content', True))
+    query = PhraseQuery('base_classes', 'folder')
 
     root = context.root
     for container in context.search(query).get_resources():

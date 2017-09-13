@@ -467,10 +467,6 @@ class DBResource(Resource):
         self.get_handlers()
 
 
-    @property
-    def is_content(self):
-        return self.parent.is_content
-
 
     def has_property(self, name, language=None):
         return self.metadata.has_property(name, language=language)
@@ -554,7 +550,6 @@ class DBResource(Resource):
             values['parent_paths'] = [ str(abspath[:i]) for i in range(n) ]
 
         values['name'] = self.name
-        values['is_content'] = self.is_content
 
         # Class related fields
         values['format'] = self.metadata.format
@@ -898,8 +893,6 @@ register_field('links', String(multiple=True, indexed=True))
 register_field('onchange_reindex', String(multiple=True, indexed=True))
 # Full text search
 register_field('text', Unicode(indexed=True))
-# Various classifications
-register_field('is_content', Boolean(indexed=True))
 # Time events
 register_field('next_time_event', DateTime(stored=True))
 register_field('next_time_event_payload', String(stored=True))

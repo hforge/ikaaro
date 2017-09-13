@@ -285,7 +285,6 @@ class Configuration(Folder):
 
     class_id = 'configuration'
     class_title = MSG(u'Configuration')
-    is_content = False
 
     class_core_views = ['edit_languages', 'broken_links', 'orphans']
 

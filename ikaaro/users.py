@@ -252,7 +252,6 @@ class Users(Folder):
     class_title = MSG(u'Users')
     class_description = MSG(u'Manage users.')
     class_icon48 = '/ui/ikaaro/icons/48x48/userfolder.png'
-    is_content = False
 
     def get_document_types(self):
         return [self.database.get_resource_class('user')]
