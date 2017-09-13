@@ -264,8 +264,7 @@ def create_server(target, email, password, root,  modules=None,
     root.set_property('mtime', context.timestamp)
     context.root = root
     # Save changes
-    context.git_message = 'Initial commit'
-    database.save_changes()
+    database.save_changes('Initial commit')
     database.close()
     # Empty context
     set_context(None)
@@ -847,9 +846,12 @@ class TestServer(Server):
     """
 
     def __init__(self, target, read_only=False, cache_size=None, profile_space=False,
-                 user=None, email=None, username=None):
+                 user=None, email=None, username=None, commit_msg=None):
+        # Init server
         proxy = super(TestServer, self)
         proxy.__init__(target, read_only, cache_size, profile_space)
+        # Save commit_msg
+        self.commit_msg = commit_msg
         # Get context
         context = get_context()
         # Get user by user
@@ -871,8 +873,7 @@ class TestServer(Server):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         # Commits
-        if self.database:
-            self.database.save_changes()
+        self.database.save_changes(self.commit_msg)
         # OK
         proxy = super(TestServer, self)
         return proxy.__exit__(exc_type, exc_val, exc_tb)
