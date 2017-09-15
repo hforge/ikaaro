@@ -614,6 +614,8 @@ class IkaaroStaticView(StaticView):
     def GET(self, resource, context):
         try:
             return self.get_from_template(resource, context)
+        except NotModified:
+            raise
         except Exception:
             # Fallback if the handler cannot be loaded
             msg = 'WARNING: The file {0} contains errors'.format(context.path)
