@@ -37,8 +37,6 @@ work or not with older versions:
   ----------  -------  ----------------------------------------
   Git             1.7  http://git-scm.com/
   ----------  -------  ----------------------------------------
-  libsoup        2.28  http://live.gnome.org/LibSoup
-  ----------  -------  ----------------------------------------
   libmagic        5.0  http://www.darwinsys.com/file/
   ----------  -------  ----------------------------------------
   xapian        1.0.8  http://www.xapian.org/

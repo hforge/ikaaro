@@ -19,8 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import timedelta
 from email.parser import HeaderParser
+from json import dumps, loads
+from datetime import timedelta
+from time import strftime
 import inspect
 import json
 import pickle
@@ -36,24 +38,26 @@ from socket import gaierror
 from tempfile import mkstemp
 
 # Import from itools
-from itools.core import become_daemon, get_abspath, vmsize
+from itools.core import become_daemon, vmsize
 from itools.database import AndQuery, PhraseQuery, Metadata, RangeQuery
-from itools.database import make_catalog, Resource, get_register_fields
+from itools.database import make_catalog, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
 from itools.handlers import ConfigFile, ro_database
+from itools.i18n import init_language_selector
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import Loop, cron
 from itools.uri import get_reference, Path
-from itools.web import WebServer, WebLogger
+from itools.web import WebLogger
+from itools.web.context import select_language
 from itools.web import set_context, get_context
-from itools.web import SoupMessage
+from itools.web.dispatcher import URIDispatcher
+from itools.web.server import AccessLogger
 
 # Import from ikaaro
-from context import CMSContext
 from database import get_database
 from datatypes import ExpireValue
 from root import Root
@@ -61,6 +65,9 @@ from views import CachedStaticView
 from skins import skin_registry
 from views import IkaaroStaticView
 
+from gevent.wsgi import WSGIServer
+from ikaaro.web.wsgi import application
+from requests_toolbelt import MultipartEncoder
 
 
 template = (
@@ -198,14 +205,6 @@ def get_root(database):
     return cls(abspath=Path('/'), database=database, metadata=metadata)
 
 
-def get_fake_context(database, context_cls=CMSContext):
-    context = context_cls()
-    context.soup_message = SoupMessage()
-    context.path = '/'
-    context.database = database
-    set_context(context)
-    return context
-
 
 def create_server(target, email, password, root,  modules=None,
                   listen_port='8080', smtp_host='localhost',
@@ -247,25 +246,23 @@ def create_server(target, email, password, root,  modules=None,
     mkdir('%s/spool' % target)
 
     # Make the root
-    metadata = Metadata(cls=root_class)
-    database.set_handler('.metadata', metadata)
-    root = root_class(abspath=Path('/'), database=database, metadata=metadata)
-    # Language
-    language_field = root_class.get_field('website_languages')
-    website_languages = website_languages or language_field.default
-    root.set_value('website_languages', website_languages)
+    with database.init_context():
+        metadata = Metadata(cls=root_class)
+        database.set_handler('.metadata', metadata)
+        root = root_class(abspath=Path('/'), database=database, metadata=metadata)
+        # Language
+        language_field = root_class.get_field('website_languages')
+        website_languages = website_languages or language_field.default
+        root.set_value('website_languages', website_languages)
     # Re-init context with context cls
-    set_context(None)
-    context = get_fake_context(database, root.context_cls)
-    context.set_mtime = True
-    # Init root resource
-    root.init_resource(email, password)
-    # Set mtime
-    root.set_property('mtime', context.timestamp)
-    context.root = root
-    # Save changes
-    database.save_changes('Initial commit')
-    database.close()
+    with database.init_context() as context:
+        # Init root resource
+        root.init_resource(email, password)
+        # Set mtime
+        root.set_property('mtime', context.timestamp)
+        # Save changes
+        database.save_changes('Initial commit')
+        database.close()
     # Empty context
     set_context(None)
 
@@ -292,26 +289,38 @@ class ServerLoop(Loop):
 
     def stop(self, signum, frame):
         print 'Shutting down the server...'
-        # TODO: Add API get_fake_context in server ?
-        context = get_context()
-        #context = get_fake_context(
-        #    server.database, server.root.context_cls)
-        #context.server = server
-        self.server.root.launch_at_stop(context)
-        self.server.close()
-        self.quit()
+        with self.server.database.init_context() as context:
+            self.server.root.launch_at_stop(context)
+            self.server.close()
+            self.quit()
+
+server = None
+def get_server():
+    return server
+
+def set_server(the_server):
+    global server
+    server = the_server
 
 
-
-class Server(WebServer):
+class Server(object):
 
     timestamp = None
     port = None
     environment = {}
     modules = []
+    access_log = None
+    event_log = None
+    database = None
+    session_timeout = timedelta(0)
+    accept_cors = False
+    dispatcher = URIDispatcher()
+    request_time = 0  # Initialized after each request (in handle_request)
+
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False):
+        set_server(self)
         target = lfs.get_absolute_path(target)
         self.target = target
         self.read_only = read_only
@@ -352,7 +361,7 @@ class Server(WebServer):
 
         # Find out the root class
         root = get_root(database)
-
+        self.root = root
         # Load environment file
         root_file_path = inspect.getfile(root.__class__)
         environement_path = str(get_reference(root_file_path).resolve('environment.json'))
@@ -360,15 +369,20 @@ class Server(WebServer):
             with open(environement_path, 'r') as f:
                 data = f.read()
                 self.environment = json.loads(data)
-        # Get context
-        context = get_context()
-        context.server = self
         # Check catalog consistency
-        database.check_catalog()
+        with database.init_context():
+            database.check_catalog()
         # Initialize
-        proxy = super(Server, self)
         access_log = '%s/log/access' % target
-        proxy.__init__(root, access_log=access_log)
+        # Access log
+        logger = AccessLogger(access_log, rotate=timedelta(weeks=3))
+        register_logger(logger, 'itools.web_access')
+        # Events log
+        event_log = '%s/log/events' % target
+        logger = WebLogger(event_log)
+        register_logger(logger, 'itools.web')
+        # Useful the current uploads stats
+        self.upload_stats = {}
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -402,6 +416,18 @@ class Server(WebServer):
         self.session_timeout = get_value('session-timeout')
         # Register routes
         self.register_dispatch_routes()
+
+
+
+    def log_access(self, host, request_line, status_code, body_length):
+        if host:
+            host = host.split(',', 1)[0].strip()
+        now = strftime('%d/%b/%Y:%H:%M:%S %z')
+        message = '%s - - [%s] "%s" %d %d %.3f\n' % (host, now, request_line,
+                                                     status_code, body_length,
+                                                     self.request_time)
+        log_info(message, domain='itools.web_access')
+
 
 
     def check_consistency(self, quick):
@@ -477,34 +503,33 @@ class Server(WebServer):
         catalog = make_catalog(catalog_path, get_register_fields())
         # Get the root
         root = self.root
-        # Get context
-        context = get_context()
         # Update
         t0, v0 = time(), vmsize()
         doc_n = 0
         error_detected = False
         if as_test:
             log = open('%s/log/update-catalog' % self.target, 'w').write
-        for obj in root.traverse_resources():
-            if not quiet:
-                print('{0} {1}'.format(doc_n, obj.abspath))
-            doc_n += 1
-            context.resource = obj
-            # Index the document
-            try:
-                catalog.index_document(obj)
-            except Exception:
-                if as_test:
-                    error_detected = True
-                    log('*** Error detected ***\n')
-                    log('Abspath of the resource: %r\n\n' % str(obj.abspath))
-                    log(format_exc())
-                    log('\n')
-                else:
-                    raise
-            # Free Memory
-            del obj
-            self.database.make_room()
+        with self.database.init_context() as context:
+            for obj in root.traverse_resources():
+                if not quiet:
+                    print('{0} {1}'.format(doc_n, obj.abspath))
+                doc_n += 1
+                context.resource = obj
+                # Index the document
+                try:
+                    catalog.index_document(obj)
+                except Exception:
+                    if as_test:
+                        error_detected = True
+                        log('*** Error detected ***\n')
+                        log('Abspath of the resource: %r\n\n' % str(obj.abspath))
+                        log(format_exc())
+                        log('\n')
+                    else:
+                        raise
+                # Free Memory
+                del obj
+                self.database.make_room()
 
         if not error_detected:
             if as_test:
@@ -556,17 +581,15 @@ class Server(WebServer):
 
     def close(self):
         log_info('Close server')
-        set_context(None)
         self.database.close()
 
 
     def stop(self, force=False):
         msg = 'Stoping server...'
         log_info(msg)
-        set_context(None)
         self.close()
-        proxy = super(Server, self)
-        proxy.stop()
+        if self.access_log:
+            self.access_log_file.close()
         self.kill(force)
 
 
@@ -587,10 +610,21 @@ class Server(WebServer):
 
 
     def listen(self, address, port):
-        super(Server, self).listen(address, port)
+        # Language negotiation
+        init_language_selector(select_language)
+        # Say hello
+        address = address if address is not None else '*'
+        print 'Listen %s:%d' % (address, port)
         msg = 'Listing at port %s' % port
         log_info(msg)
         self.port = port
+        # Say hello
+        address = address if address is not None else '*'
+        msg = 'Listen %s:%d' % (address, port)
+        log_info(msg)
+        self.port = port
+        server = WSGIServer(('', port), application)
+        server.serve_forever()
 
 
 
@@ -793,84 +827,114 @@ class Server(WebServer):
         database = self.database
 
         # Build fake context
-        context = get_fake_context(database, self.root.context_cls)
-        context.server = self
-        context.init_context()
-        context.is_cron = True
-
-        # Go
-        t0 = time()
-        log_info('Cron launched', domain='itools.cron')
-        catalog = database.catalog
-        query = RangeQuery('next_time_event', None, context.timestamp)
-        search = database.search(query)
-        for brain in search.get_documents():
-            tcron0 = time()
-            payload = brain.next_time_event_payload
-            if payload:
-                payload = pickle.loads(payload)
-            resource = database.get_resource(brain.abspath)
-            try:
-                resource.time_event(payload)
-            except Exception:
-                # Log error
-                log_error('Cron error\n' + format_exc())
-                context.root.alert_on_internal_server_error(context)
-            # Reindex resource without committing
-            catalog.index_document(resource)
-            catalog.save_changes()
-            # Log
-            tcron1 = time()
-            msg = 'Done for %s in %s seconds' % (brain.abspath, tcron1-tcron0)
+        with database.init_context() as context:
+            context.is_cron = True
+            # Go
+            t0 = time()
+            log_info('Cron launched', domain='itools.cron')
+            catalog = database.catalog
+            query = RangeQuery('next_time_event', None, context.timestamp)
+            search = database.search(query)
+            for brain in search.get_documents():
+                tcron0 = time()
+                payload = brain.next_time_event_payload
+                if payload:
+                    payload = pickle.loads(payload)
+                resource = database.get_resource(brain.abspath)
+                try:
+                    resource.time_event(payload)
+                except Exception:
+                    # Log error
+                    log_error('Cron error\n' + format_exc())
+                    context.root.alert_on_internal_server_error(context)
+                # Reindex resource without committing
+                catalog.index_document(resource)
+                catalog.save_changes()
+                # Log
+                tcron1 = time()
+                msg = 'Done for %s in %s seconds' % (brain.abspath, tcron1-tcron0)
+                log_info(msg, domain='itools.cron')
+            # Save changes
+            database.save_changes()
+            t1 = time()
+            msg = 'Cron finished for %s resources in %s seconds' % (
+                  len(search), t1-t0)
             log_info(msg, domain='itools.cron')
-        # Save changes
-        database.save_changes()
-        t1 = time()
-        msg = 'Cron finished for %s resources in %s seconds' % (
-              len(search), t1-t0)
-        log_info(msg, domain='itools.cron')
         # Again, and again
         return self.config.get_value('cron-interval')
 
 
+    def do_request(self, method='GET', path='/', headers=None, body='',
+            context=None, as_json=False, as_multipart=False, user=None):
+        """Experimental method to do a request on the server"""
+        from itools.web.router import RequestMethod
+        from wsgiref.headers import Headers
+        from itools.uri import get_uri_path
+        from wsgiref.util import setup_testing_defaults
+        # XXX uri query didn't works ?
+        headers = []
+        path_info = get_uri_path(path)
+        q_string = path.split('?')[-1]
+        environ = {'PATH_INFO': path_info,
+                   'REQUEST_METHOD': method,
+                   'QUERY_STRING': q_string}
+        setup_testing_defaults(environ)
+        h = Headers(headers)
+        # I'm not a robot
+        h.add_header('User-Agent', 'Firefox')
+        # Build headers
+        from io import BytesIO
+        if body and as_multipart:
+            m = MultipartEncoder(body)
+            body = m.to_string()
+            #h.add_header('content-type', 'application/x-www-form-urlencoded')
+            #environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+            #import urllib
+            #body = urllib.urlencode(body)
+            environ['wsgi.input'] = BytesIO(body)
+            environ['CONTENT_LENGTH'] = len(body)
+            environ['CONTENT_TYPE'] = m.content_type
+            from pprint import pprint
+            pprint(environ)
+        elif as_json is True:
+            if body:
+                body = dumps(body)
+                environ['wsgi.input'] = BytesIO(body)
+                environ['CONTENT_LENGTH'] = len(body)
+            h.add_header('content-type', 'application/json')
+            environ['CONTENT_TYPE'] = 'application/json'
+            environ['ACCEPT'] = 'application/json'
+            h.add_header('Accept', 'application/json')
+        # Build soup message
+        # Init
+        for key, value in headers:
+            environ['HTTP_%s' % key.upper().replace('-', '_')] = value
 
-class TestServer(Server):
-    """ Helper to simplify unitests.
-    Load server, log user & commit at the exit
-    """
-
-    def __init__(self, target, read_only=False, cache_size=None, profile_space=False,
-                 user=None, email=None, username=None, commit_msg=None):
-        # Init server
-        proxy = super(TestServer, self)
-        proxy.__init__(target, read_only, cache_size, profile_space)
-        # Save commit_msg
-        self.commit_msg = commit_msg
         # Get context
+        # Do request
         context = get_context()
-        # Get user by user
-        if email:
-            query = AndQuery(
-                PhraseQuery('format', 'user'),
-                PhraseQuery('email', email),
-            )
-            search = context.database.search(query)
-            if search:
-                user = search.get_resources(size=1).next()
-        # Get user by username
-        if username:
-            user = context.root.get_user(username)
-        # Log user
+        user = context.user or user
         if user:
             context.login(user)
-
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        # Commits
-        self.database.save_changes(self.commit_msg)
+            context.user = user
+        context.server = self
+        context.init_from_environ(environ, user)
+        RequestMethod.handle_request(context)
         # OK
-        proxy = super(TestServer, self)
-        return proxy.__exit__(exc_type, exc_val, exc_tb)
+        # Transform result
+        if context.entity is None:
+            response = None
+        elif as_json:
+            print context.entity
+            response = loads(context.entity)
+        else:
+            response = context.entity
+        # Return result
+        return {'status': context.status,
+                'method': context.method,
+                'entity': response,
+                'context': context}
+
 
 
 

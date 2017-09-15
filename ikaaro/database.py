@@ -26,26 +26,28 @@ from itools.web import get_context, set_context
 
 class RODatabase(BaseRODatabase):
 
-    def __init__(self, path, size_min, size_max, catalog=None):
-        proxy = super(RODatabase, self)
-        proxy.__init__(path, size_min, size_max, catalog)
-        # Init context if not initialized from server & not icms-init
-        from server import get_fake_context
+    def init_context(self):
+        from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
-        cls = root.context_cls if root else None
-        if cls:
-            context = get_fake_context(self, cls)
-        else:
-            context = get_fake_context(self)
-        context.set_mtime = True
+        cls = root.context_cls if root else CMSContext
+        return ContextManager(cls, self)
 
 
-    def close(self):
-        # Empty context
+
+class ContextManager(object):
+
+    def __init__(self, cls, database):
+        self.context = cls()
+        self.context.database = database
+        set_context(self.context)
+
+
+    def __enter__(self):
+        return self.context
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
         set_context(None)
-        # Close
-        proxy = super(RODatabase, self)
-        return proxy.close()
 
 
 
@@ -56,20 +58,16 @@ class Database(RWDatabase):
     def __init__(self, path, size_min, size_max, catalog=None):
         proxy = super(Database, self)
         proxy.__init__(path, size_min, size_max, catalog)
-        # Init context if not initialized from server & not icms-init
-        from server import get_fake_context
+
+
+    def init_context(self):
+        from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
-        cls = root.context_cls if root else None
-        if cls:
-            context = get_fake_context(self, cls)
-        else:
-            context = get_fake_context(self)
-        context.set_mtime = True
+        cls = root.context_cls if root else CMSContext
+        return ContextManager(cls, self)
 
 
     def close(self):
-        # Empty context
-        set_context(None)
         # Close
         proxy = super(Database, self)
         return proxy.close()
@@ -79,6 +77,7 @@ class Database(RWDatabase):
         root = self.get_resource('/')
         context = get_context()
         if context.database != self:
+            print context.database, self
             raise ValueError('The contextual database is not coherent')
 
         # Update resources
