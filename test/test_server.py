@@ -189,7 +189,6 @@ class ServerTestCase(TestCase):
             self.assertEqual(is_admin, True)
             server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
             retour = server.do_request('GET', '/test/unauthorized')
-            print retour
             self.assertEqual(retour['status'], 200)
 
 
