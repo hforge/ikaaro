@@ -24,7 +24,6 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.database import check_database
 from itools.web import get_context
 
 # Import from ikaaro
@@ -155,10 +154,6 @@ def update(parser, options, target):
     if pid is not None:
         print 'Cannot proceed, the server is running in read-write mode.'
         return
-
-    # Check for database consistency
-    if options.quick is False and check_database(target) is False:
-        return 1
 
     # Load the modules
     config = get_config(target)
