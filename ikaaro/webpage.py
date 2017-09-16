@@ -82,7 +82,7 @@ class WebPage(File):
     #######################################################################
     # Views
     #######################################################################
-    new_instance = AutoAdd(fields=['title', 'location', 'data'])
+    new_instance = AutoAdd(fields=['title', 'data'])
     view = WebPage_View
 
 

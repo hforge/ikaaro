@@ -292,27 +292,6 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
 
 
 ###########################################################################
-# Used by the add-form
-###########################################################################
-def get_content_containers(context, class_id=None):
-    query = PhraseQuery('base_classes', 'folder')
-
-    root = context.root
-    for container in context.search(query).get_resources():
-        if not root.has_permission(context.user, 'add', container, class_id):
-            continue
-
-        if class_id is None:
-            yield container
-            continue
-
-        for cls in container.get_document_types():
-            if class_id == cls.class_id:
-                yield container
-                break
-
-
-###########################################################################
 # Used by *_links and menu
 ###########################################################################
 def split_reference(ref):

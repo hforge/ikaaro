@@ -37,7 +37,7 @@ from buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from buttons import ZipButton
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
-from utils import generate_name, get_base_path_query, get_content_containers
+from utils import generate_name, get_base_path_query
 from views import IconsView, BrowseForm, ContextMenu
 from widgets import SelectWidget, TextWidget
 import messages
@@ -153,15 +153,10 @@ class Folder_NewResource(IconsView):
 
     def get_items(self, resource, context):
         # 1. Static classes
-        aux = set()
         document_types = []
-        for container in get_content_containers(context):
-            if container.class_id in aux:
-                continue
-            aux.add(container.class_id)
-            for cls in container.get_document_types():
-                if cls not in document_types:
-                    document_types.append(cls)
+        for cls in resource.get_document_types():
+            if cls not in document_types:
+                document_types.append(cls)
 
         # 2. Add dynamic models
         for cls in context.database.get_dynamic_classes():

@@ -40,7 +40,7 @@ from widgets import PathSelectorWidget
 class File_NewInstance(AutoAdd):
 
     title = MSG(u'Upload File')
-    fields = ['data', 'title', 'location', 'progressbar']
+    fields = ['data', 'title', 'progressbar']
 
     progressbar = ProgressBar_Field
 

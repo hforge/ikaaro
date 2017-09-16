@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.core import proto_lazy_property, is_prototype
-from itools.datatypes import DateTime, Enumerate, String, Time, Unicode, URI
+from itools.datatypes import DateTime, String, Time, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
@@ -28,54 +28,8 @@ from datatypes import Days, Months, Years
 from buttons import Button
 from fields import Field
 import messages
-from utils import get_content_containers, make_stl_template
-from widgets import HiddenWidget, ReadOnlyWidget, SelectWidget
+from widgets import HiddenWidget, ReadOnlyWidget
 
-
-
-class Location_Datatype(Enumerate):
-
-    def get_options(cls):
-        context = get_context()
-        class_id = context.query['type']
-
-        items = []
-        for resource in get_content_containers(context, class_id):
-            path = resource.abspath
-            title = '/' if not path else ('%s/' % path)
-            items.append({'name': path, 'value': title, 'selected': False})
-
-        # Sort
-        items.sort(key=lambda x: x['name'])
-        return items
-
-
-
-class Location_Widget(SelectWidget):
-    """This widget is only used in add forms. It is a hack because it is a
-    composite widget and ikaaro does not allow to do this easily.
-    """
-
-    title = MSG(u'Location')
-
-    template = make_stl_template("""
-    <select id="${id}" name="${name}" class="${css}">
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
-    </select>
-    <input type="text" id="name" name="name" value="${name_value}"
-      maxlength="80" size="40" style="width: 50%" />
-    """)
-
-    def name_value(self):
-        return get_context().query['name']
-
-
-
-class Location_Field(Field):
-
-    datatype = Location_Datatype
-    widget = Location_Widget
 
 
 
@@ -114,8 +68,6 @@ class AutoAdd(AutoForm):
             field = cls.get_field(name)
         return field
 
-
-    location = Location_Field
 
 
     #######################################################################
@@ -174,10 +126,6 @@ class AutoAdd(AutoForm):
             datatype = self._get_datatype(resource, context, name)
             if datatype is None:
                 continue
-
-            # Special case: location
-            if name == 'location':
-                schema['name'] = String(default='') # XXX Should be location_name
             # Special case: datetime
             elif issubclass(datatype, DateTime):
                 schema['%s_time' % name] = Time
@@ -222,9 +170,6 @@ class AutoAdd(AutoForm):
         elif name == 'referrer':
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()
-        elif name == 'location':
-            return str(resource.abspath)
-
         value = context.query.get(name)
         if value is None:
             proxy = super(AutoAdd, self)
@@ -244,12 +189,7 @@ class AutoAdd(AutoForm):
     def get_container(self, resource, context, form):
         # Container
         container = resource
-        if 'location' in self.get_fields():
-            path = form['location']
-            if path is not None:
-                container = resource.get_resource(path)
-        else:
-            path = str(container.abspath)
+        path = str(container.abspath)
 
         # Access control
         class_id = context.query['type']
