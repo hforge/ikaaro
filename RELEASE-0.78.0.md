@@ -2,6 +2,7 @@
 
 ### Changes
 - The `GIT` database now use a bare repository
+- We replaced `libsoup` server by `gevent.WSGIServer`
 - Unused packages have been removed to simplify migration to python 3 (`itools.blog`, `itools.cc`, `itools.agenda`, `itools.comments`)
 - Static view `/ui/xxx` now use `context.get_template` so there's a cache (Now served files should be loadable via handlers - so with no errors)
 - `Catalog` don't flush data on disk at each transaction to increase commits speed
@@ -25,3 +26,10 @@
 - Import of widgets from `itools.autoform` is now obsolete, use `itools.widgets` instead
 - Calls to `database.fs.*` should be removed
 - `len(resource.get_names())` should be replace by `len(list(resource.get_names()))`
+
+### Futur
+
+- We replaced the `libsoup` server by `gevent.WSGIServer` to simplify Python 3 migration.
+- The goal is to migrate itools/ikaaro to Python 3 and to use a simple WSGI server with asyncio.
+- In next version we'll move some packages from itools to ikaaro.
+- We'll remove many unused packages to simplify migration to Python 3
