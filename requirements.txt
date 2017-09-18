@@ -1,3 +1,4 @@
 git+http://git@github.com/hforge/itools.git@master#egg=itools
 guppy
 junitxml
+requests-toolbelt
