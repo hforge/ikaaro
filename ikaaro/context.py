@@ -80,6 +80,8 @@ class CMSContext(prototype):
     #######################################################################
 
     def init_from_environ(self, environ, user=None):
+        from server import get_server
+        # Set environ
         self.environ = environ
         path = environ.get('PATH_INFO')
         self.path = path
@@ -87,12 +89,9 @@ class CMSContext(prototype):
         self.content_type = None
         self.status = None
         # Get database
-        from server import get_server
         server = get_server()
         self.server = server
         self.database = server.database
-        # TS
-        self.timestamp = datetime.utcnow().replace(tzinfo=fixed_offset(0))
         # Root
         self.root = self.database.get_resource('/')
         # The request method

@@ -146,7 +146,6 @@ class Root(Folder):
     # Publish
     ########################################################################
     def internal_server_error(self, context):
-        return
         # Send email (TODO Move this to the itools.log system)
         self.alert_on_internal_server_error(context)
 
