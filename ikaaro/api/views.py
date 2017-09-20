@@ -95,7 +95,7 @@ class Api_View(ItoolsView):
 
 
     def is_access_allowed(self, context):
-        with_acls = False if context.METHOD == 'OPTIONS' else True
+        with_acls = False if context.method == 'OPTIONS' else True
         resource = self.get_resource(context, with_acls=with_acls)
         if not resource:
             raise NotFound
