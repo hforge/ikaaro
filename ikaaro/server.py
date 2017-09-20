@@ -488,7 +488,7 @@ class Server(WebServer):
         root = self.root
 
         # Build a fake context
-        context = self.get_fake_context(self.database, root.context_cls)
+        context = get_fake_context(self.database, root.context_cls)
 
         # Update
         t0, v0 = time(), vmsize()
