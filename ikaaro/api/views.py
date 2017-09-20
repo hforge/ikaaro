@@ -90,12 +90,13 @@ class Api_View(ItoolsView):
         return cls.route
 
 
-    def get_resource(self, context):
+    def get_resource(self, context, with_acls=True):
         return context.resource
 
 
     def is_access_allowed(self, context):
-        resource = self.get_resource(context)
+        with_acls = False if context.METHOD == 'OPTIONS' else True
+        resource = self.get_resource(context, with_acls=with_acls)
         if not resource:
             raise NotFound
         return context.is_access_allowed(resource, self)
@@ -127,12 +128,15 @@ class UUIDView(Api_View):
 
     path_query_schema = {'uuid': Char_Field(title=MSG(u'The uuid of a resource in DB'))}
 
-    def get_resource(self, context):
+    def get_resource(self, context, with_acls=True):
         query = get_resource_by_uuid_query(
             uuid=context.path_query_base['uuid'],
             bases_class_id=self.bases_class_id,
             class_id=self.class_id)
-        search = context.search(query)
+        if with_acls is True:
+            search = context.search(query)
+        else:
+            search = context.database.search(query)
         if not search:
             if context.database.search(query):
                 # Exist but ...
