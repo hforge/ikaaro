@@ -22,8 +22,8 @@
 - 'Fields`: Fix handlers deletion on multilingual fields
 - `Folder_view`: Fix sorting by unicode if value is None
 
-##  ikaaro 0.77.X - 2017/05/XX
-- A Dockerfile has been hadded
+##  ikaaro 0.77.4 - 2017/09/20
+- Fix a bug with STATUS requests on API views
 
 Thanks to:
 
