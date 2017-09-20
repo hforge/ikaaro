@@ -127,6 +127,14 @@ class UUIDView(Api_View):
 
     path_query_schema = {'uuid': Char_Field(title=MSG(u'The uuid of a resource in DB'))}
 
+
+    def is_access_allowed(self, context):
+        # Allow access to the view on OPTION request
+        if context.method == "OPTIONS":
+            return context.is_access_allowed(None, self)
+        return super(UUIDView, self).is_access_allowed(context)
+
+
     def get_resource(self, context):
         query = get_resource_by_uuid_query(
             uuid=context.path_query_base['uuid'],
