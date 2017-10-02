@@ -37,8 +37,10 @@ class RODatabase(BaseRODatabase):
 class ContextManager(object):
 
     def __init__(self, cls, database):
+        from server import get_server
         self.context = cls()
         self.context.database = database
+        self.context.server = get_server()
         set_context(self.context)
 
 
