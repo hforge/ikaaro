@@ -19,7 +19,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.database import RWDatabase, RODatabase as BaseRODatabase
-from itools.database import OrQuery, PhraseQuery
+from itools.database import OrQuery, PhraseQuery, AndQuery
 from itools.uri import Path
 from itools.web import get_context, set_context
 
@@ -36,11 +36,27 @@ class RODatabase(BaseRODatabase):
 
 class ContextManager(object):
 
-    def __init__(self, cls, database):
+    def __init__(self, cls, database, user=None, username=None, email=None):
         from server import get_server
         self.context = cls()
         self.context.database = database
         self.context.server = get_server()
+        # Get user by user
+        if email:
+            query = AndQuery(
+                PhraseQuery('format', 'user'),
+                PhraseQuery('email', email),
+            )
+            search = database.search(query)
+            if search:
+                user = search.get_resources(size=1).next()
+        # Get user by username
+        if username:
+            user = self.context.root.get_user(username)
+        # Log user
+        if user:
+            self.context.login(user)
+        # Set context
         set_context(self.context)
 
 
@@ -62,11 +78,12 @@ class Database(RWDatabase):
         proxy.__init__(path, size_min, size_max, catalog)
 
 
-    def init_context(self):
+    def init_context(self, user=None, username=None, email=None):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
         cls = root.context_cls if root else CMSContext
-        return ContextManager(cls, self)
+        return ContextManager(cls,
+            database=self, user=user, username=username, email=email)
 
 
     def close(self):
