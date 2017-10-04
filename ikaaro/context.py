@@ -557,6 +557,11 @@ class CMSContext(prototype):
         self.user = user
 
 
+    def logout(self):
+        self.del_cookie('iauth')
+        self.user = None
+
+
     def _set_auth_cookie(self, cookie):
         # Compute expires datetime (FIXME Use the request date)
         session_timeout = self.server.session_timeout
