@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+import urllib
 from email.parser import HeaderParser
 from json import dumps, loads
 from datetime import timedelta
@@ -894,8 +895,6 @@ class Server(object):
             environ['wsgi.input'] = BytesIO(body)
             environ['CONTENT_LENGTH'] = len(body)
             environ['CONTENT_TYPE'] = m.content_type
-            from pprint import pprint
-            pprint(environ)
         elif as_json is True:
             if body:
                 body = dumps(body)
@@ -905,6 +904,12 @@ class Server(object):
             environ['CONTENT_TYPE'] = 'application/json'
             environ['ACCEPT'] = 'application/json'
             h.add_header('Accept', 'application/json')
+        else:
+            body = urllib.urlencode(body)
+            environ['wsgi.input'] = BytesIO(body)
+            environ['CONTENT_LENGTH'] = len(body)
+            environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+            h.add_header('content-type', 'application/x-www-form-urlencoded')
         # Build soup message
         # Init
         for key, value in headers:
