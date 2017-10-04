@@ -930,7 +930,6 @@ class Server(object):
         if context.entity is None:
             response = None
         elif as_json:
-            print context.entity
             response = loads(context.entity)
         else:
             response = context.entity
