@@ -47,6 +47,7 @@ from skins import skin_registry
 
 class CMSContext(prototype):
 
+    accept_language = AcceptLanguageType.decode('')
     body = {}
     commit = True
     content_type = None
