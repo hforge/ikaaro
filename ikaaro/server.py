@@ -933,6 +933,9 @@ class Server(object):
             response = loads(context.entity)
         else:
             response = context.entity
+        # Commit
+        if method == 'POST':
+            context.database.save_changes()
         # Return result
         return {'status': context.status,
                 'method': context.method,
