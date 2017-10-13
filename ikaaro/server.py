@@ -40,7 +40,7 @@ from tempfile import mkstemp
 
 # Import from itools
 from itools.core import become_daemon, vmsize
-from itools.database import AndQuery, PhraseQuery, Metadata, RangeQuery
+from itools.database import Metadata, RangeQuery
 from itools.database import make_catalog, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
@@ -50,7 +50,6 @@ from itools.i18n import init_language_selector
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
-from itools.loop import Loop, cron
 from itools.uri import get_reference, Path
 from itools.web import WebLogger
 from itools.web.context import select_language
@@ -268,32 +267,6 @@ def create_server(target, email, password, root,  modules=None,
     set_context(None)
 
 
-class ServerLoop(Loop):
-
-    server = None
-
-    def __init__(self, target, server, profile=None):
-        self.server = server
-        # Init
-        pid_file = target + '/pid'
-        proxy = super(ServerLoop, self)
-        proxy.__init__(pid_file, profile)
-
-
-    def run(self):
-        # Save running informations
-        self.server.save_running_informations()
-        # Run
-        proxy = super(ServerLoop, self)
-        proxy.run()
-
-
-    def stop(self, signum, frame):
-        print 'Shutting down the server...'
-        with self.server.database.init_context() as context:
-            self.server.root.launch_at_stop(context)
-            self.server.close()
-            self.quit()
 
 server = None
 def get_server():
@@ -448,10 +421,10 @@ class Server(object):
         msg = 'Start database %s %s %s' % (detach, profile, loop)
         log_info(msg)
         profile = ('%s/log/profile' % self.target) if profile else None
-        self.loop = ServerLoop(
-              target=self.target,
-              server=self,
-              profile=profile)
+        #self.loop = ServerLoop(
+        #      target=self.target,
+        #      server=self,
+        #      profile=profile)
         # Daemon mode
         if detach:
             become_daemon()
@@ -474,26 +447,24 @@ class Server(object):
             f.write(str(pid))
 
         # Listen & set context
-        root = self.root
         self.listen(address, port)
 
         # XXX The interpreter do not go here
         # Call method on root at start
-        context = get_context()
-        root.launch_at_start(context)
-
-        # Set cron interval
-        interval = self.config.get_value('cron-interval')
-        if interval:
-            cron(self.cron_manager, interval)
-
-        # Init loop
-        if loop:
-            try:
-                self.loop.run()
-            except KeyboardInterrupt:
-                pass
-        # Ok
+        #context = get_context()
+        #root.launch_at_start(context)
+        #self.server.root.launch_at_stop(context)
+        ## Set cron interval
+        #interval = self.config.get_value('cron-interval')
+        #if interval:
+        #    cron(self.cron_manager, interval)
+        ## Init loop
+        #if loop:
+        #    try:
+        #        self.loop.run()
+        #    except KeyboardInterrupt:
+        #        pass
+        ## Ok
         return True
 
 
@@ -635,23 +606,23 @@ class Server(object):
 
 
 
-    def save_running_informations(self):
-        # Save server running informations
-        kw = {'pid': getpid(),
-              'target': self.target,
-              'read_only': self.read_only}
-        data = pickle.dumps(kw)
-        with open(self.target + '/running', 'w') as output_file:
-            output_file.write(data)
+    #def save_running_informations(self):
+    #    # Save server running informations
+    #    kw = {'pid': getpid(),
+    #          'target': self.target,
+    #          'read_only': self.read_only}
+    #    data = pickle.dumps(kw)
+    #    with open(self.target + '/running', 'w') as output_file:
+    #        output_file.write(data)
 
 
-    def get_running_informations(self):
-        try:
-            with open(self.target + '/running', 'r') as output_file:
-                data = output_file.read()
-                return pickle.loads(data)
-        except IOError:
-            return None
+    #def get_running_informations(self):
+    #    try:
+    #        with open(self.target + '/running', 'r') as output_file:
+    #            data = output_file.read()
+    #            return pickle.loads(data)
+    #    except IOError:
+    #        return None
 
 
     def is_running_in_rw_mode(self, mode='running'):
@@ -701,7 +672,9 @@ class Server(object):
 
 
     def flush_spool(self):
-        cron(self._smtp_send, timedelta(seconds=1))
+        # XXX FIXME
+        #cron(self._smtp_send, timedelta(seconds=1))
+        pass
 
 
     def send_email(self, message):
