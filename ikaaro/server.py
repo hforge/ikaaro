@@ -468,10 +468,16 @@ class Server(object):
         if port is None:
             raise ValueError, 'listen-port is missing from config.conf'
 
+        # Save PID
+        pid = getpid()
+        with open(self.target + '/pid', 'w') as f:
+            f.write(str(pid))
+
         # Listen & set context
         root = self.root
         self.listen(address, port)
 
+        # XXX The interpreter do not go here
         # Call method on root at start
         context = get_context()
         root.launch_at_start(context)
