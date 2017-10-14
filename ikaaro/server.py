@@ -246,7 +246,7 @@ def create_server(target, email, password, root,  modules=None,
     mkdir('%s/spool' % target)
 
     # Make the root
-    with database.init_context():
+    with database.init_context() as context:
         metadata = Metadata(cls=root_class)
         database.set_handler('.metadata', metadata)
         root = root_class(abspath=Path('/'), database=database, metadata=metadata)
@@ -254,6 +254,7 @@ def create_server(target, email, password, root,  modules=None,
         language_field = root_class.get_field('website_languages')
         website_languages = website_languages or language_field.default
         root.set_value('website_languages', website_languages)
+        context.database.save_changes()
     # Re-init context with context cls
     with database.init_context() as context:
         # Init root resource
