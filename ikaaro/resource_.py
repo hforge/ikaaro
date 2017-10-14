@@ -315,21 +315,35 @@ class DBResource(Resource):
         if field is None:
             return None
         if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
-            # If brain is loaded & field is stored get value from xapian
-            brain_value = self._brain.get_value(name, language)
-            if type(brain_value) is datetime:
-                # Fix tzinfo for datetime values
-                context = get_context()
-                value = context.fix_tzinfo(brain_value)
-            else:
-                value = brain_value
-            value = value or field.default
-            if value is None:
-                # Xapian do not index default value
+            try:
+                value = self.get_value_from_brain(name, language)
+            except Exception:
+                # FIXME Sometimes we cannot get value from brain
+                # We're tying to debug this problem
+                msg = 'Warning: cannot get value from brain {0} {1}'
+                msg = msg.format(self.abspath, name)
+                print(msg)
                 value = field.get_value(self, name, language)
         else:
             value = field.get_value(self, name, language)
         #self._values[cache_key] = value
+        return value
+
+
+    def get_value_from_brain(self, name, language=None):
+        # If brain is loaded & field is stored get value from xapian
+        field = self.get_field(name)
+        brain_value = self._brain.get_value(name, language)
+        if type(brain_value) is datetime:
+            # Fix tzinfo for datetime values
+            context = get_context()
+            value = context.fix_tzinfo(brain_value)
+        else:
+            value = brain_value
+        value = value or field.default
+        if value is None:
+            # Xapian do not index default value
+            value = field.get_value(self, name, language)
         return value
 
 
