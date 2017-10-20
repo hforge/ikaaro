@@ -25,7 +25,7 @@ from optparse import OptionParser
 import itools
 
 # Import from ikaaro
-from ikaaro.server import Server
+from ikaaro.server import stop_server
 
 
 if __name__ == '__main__':
@@ -47,10 +47,9 @@ if __name__ == '__main__':
     # Action!
     for target in args:
         try:
-            server = Server(target, read_only=True)
+            stop_server(target)
         except LookupError:
             print('Error: {} instance do not exists'.format(target))
             exit(1)
-        server.stop(force=options.force)
     # Ok
     exit(0)

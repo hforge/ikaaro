@@ -38,6 +38,11 @@ from signal import SIGINT, SIGTERM
 from socket import gaierror
 from tempfile import mkstemp
 
+# Import from gevent
+from gevent.wsgi import WSGIServer
+from gevent import signal as gevent_signal
+from requests_toolbelt import MultipartEncoder
+
 # Import from itools
 from itools.core import become_daemon, vmsize
 from itools.database import Metadata, RangeQuery
@@ -58,6 +63,9 @@ from itools.web.dispatcher import URIDispatcher
 from itools.web.server import AccessLogger
 
 # Import from ikaaro
+from ikaaro.web.wsgi import application
+
+# Import from ikaaro.web
 from database import get_database
 from datatypes import ExpireValue
 from root import Root
@@ -65,9 +73,6 @@ from views import CachedStaticView
 from skins import skin_registry
 from views import IkaaroStaticView
 
-from gevent.wsgi import WSGIServer
-from ikaaro.web.wsgi import application
-from requests_toolbelt import MultipartEncoder
 
 
 template = (
@@ -198,6 +203,12 @@ def get_pid(target):
     return pid
 
 
+def stop_server(target):
+    msg = 'Stoping server...'
+    log_info(msg)
+    pid = get_pid('%s/pid' % target)
+    kill(pid, SIGTERM)
+
 
 def get_root(database):
     metadata = database.get_handler('.metadata', cls=Metadata)
@@ -291,6 +302,7 @@ class Server(object):
     accept_cors = False
     dispatcher = URIDispatcher()
     request_time = 0  # Initialized after each request (in handle_request)
+    wsgi_server = None
 
 
     def __init__(self, target, read_only=False, cache_size=None,
@@ -566,26 +578,15 @@ class Server(object):
     def stop(self, force=False):
         msg = 'Stoping server...'
         log_info(msg)
+        print(msg)
+        # Stop wsgi server
+        if self.wsgi_server:
+            self.wsgi_server.stop()
+        # Close database
         self.close()
+        # Close access log file
         if self.access_log:
             self.access_log_file.close()
-        self.kill(force)
-
-
-    def kill(self, force=False):
-        msg = 'Killing server...'
-        log_info(msg)
-        pid = get_pid('%s/pid' % self.target)
-        if pid is None:
-            msg = '[{0}] Web Server not running.'.format(self.target)
-        else:
-            signal = SIGTERM if force else SIGINT
-            kill(pid, signal)
-            if force:
-                msg = '[{0}] Web Server shutting down...'.format(self.target)
-            else:
-                msg = '[{0}] Web Server shutting down (gracefully)...'.format(self.target)
-        log_info(msg)
 
 
     def listen(self, address, port):
@@ -602,9 +603,10 @@ class Server(object):
         msg = 'Listen %s:%d' % (address, port)
         log_info(msg)
         self.port = port
-        server = WSGIServer(('', port), application)
-        server.serve_forever()
-
+        self.wsgi_server = WSGIServer(('', port), application)
+        gevent_signal(SIGTERM, self.stop)
+        gevent_signal(SIGINT, self.stop)
+        self.wsgi_server.serve_forever()
 
 
     #def save_running_informations(self):
