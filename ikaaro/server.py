@@ -207,7 +207,8 @@ def stop_server(target):
     msg = 'Stoping server...'
     log_info(msg)
     pid = get_pid('%s/pid' % target)
-    kill(pid, SIGTERM)
+    if pid:
+        kill(pid, SIGTERM)
 
 
 def get_root(database):
