@@ -291,11 +291,12 @@ class Root(Folder):
         # Try packages we frequently use
         packages.extend([
             'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
-            'xlrd', 'lpod'])
+            'xlrd', 'lpod', 'pygit2'])
         # Mapping from package to version attribute
         package2version = {
             'gio': 'pygio_version',
             'xapian': 'version_string',
+            'pygit2': '__version__',
             'PIL.Image': 'VERSION',
             'reportlab': 'Version',
             'sys': 'version_info',
