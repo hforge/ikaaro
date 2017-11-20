@@ -144,10 +144,10 @@ class CMSContext(prototype):
         # Log user if user is given
         if user:
             self.login(user)
-        # Search
-        self._context_user_search = self._user_search(self.user)
         # The authenticated user
         self.authenticate()
+        # Search
+        self._context_user_search = self._user_search(self.user)
         # The Site Root
         self.find_site_root()
         self.site_root.before_traverse(self)  # Hook
