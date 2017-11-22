@@ -241,32 +241,32 @@ class DBResource_Changes(STLView):
         revision = context.query['revision']
         to = context.query['to']
         root = context.root
-        worktree = context.database.worktree
+        backend = context.database.backend
 
         if to is None:
             # Case 1: show one commit
             try:
-                diff = worktree.git_diff(revision)
+                diff = backend.git_diff(revision)
             except EnvironmentError, e:
                 error = unicode(str(e), 'utf_8')
                 context.message = ERROR(u"Git failed: {error}", error=error)
                 return {'metadata': None, 'stat': None, 'changes': None}
 
-            metadata = worktree.get_metadata()
+            metadata = backend.get_metadata()
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            stat = worktree.git_stats(revision)
+            stat = backend.git_stats(revision)
         else:
             # Case 2: show a set of commits
             metadata = None
             # Get the list of files affected in this series
-            files = worktree.get_files_changed(revision, to)
+            files = backend.get_files_changed(revision, to)
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
-            stat = worktree.git_stats(revision, to, paths=files)
+            stat = backend.git_stats(revision, to, paths=files)
             # Reuse the list of files to limit diff produced
-            diff = worktree.git_diff(revision, to, paths=files)
+            diff = backend.git_diff(revision, to, paths=files)
 
         # Ok
         return {

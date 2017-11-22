@@ -507,8 +507,8 @@ class DBResource(Resource):
         else:
             files = self.get_files_to_archive(content)
 
-        worktree = self.database.worktree
-        return worktree.git_log(files, n, author_pattern, grep_pattern)
+        backend = self.database.backend
+        return backend.git_log(files, n, author_pattern, grep_pattern)
 
 
     def get_owner(self):
