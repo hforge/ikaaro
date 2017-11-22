@@ -16,6 +16,11 @@
 - `Resource.get_names()` return an iterator
 - Add method `Server.launch_at_stop()`
 - Log cron informations into `example.com/log/cron`
+- Cron actions are called via HTTP requests
+- Improve unitests workflows
+- Folders: Resources can be added in current folder only (List with childs didn't scale)
+- Remove 'is_content' index (never that simple)
+- We've removed `obsolete package`
 
 ### Migration guide
 - `notify_subscribers` method has been removed
@@ -26,6 +31,8 @@
 - Import of widgets from `itools.autoform` is now obsolete, use `itools.widgets` instead
 - Calls to `database.fs.*` should be removed
 - `len(resource.get_names())` should be replace by `len(list(resource.get_names()))`
+- `Folder_View` view has been removed
+- `database.worktree` has been removed
 
 ### Futur
 
