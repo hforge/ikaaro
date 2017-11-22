@@ -43,7 +43,6 @@ from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
-from folder_views import Folder_View
 from messages import MSG_NAME_CLASH
 from resource_ import DBResource
 from utils import process_name, tidy_html, get_base_path_query
@@ -494,7 +493,7 @@ class Folder(DBResource):
 
 
     # Views
-    view = Folder_View
+    view = Folder_BrowseContent
     edit = AutoEdit(fields=['title', 'index', 'description', 'subject',
                             'share'])
     new_resource = Folder_NewResource

@@ -113,19 +113,6 @@ class ZoomMenu(ContextMenu):
 
 
 
-class Folder_View(BaseView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u'View')
-
-
-    def GET(self, resource, context):
-        stream = resource.get_html_field_body_stream('index')
-        stream = list(stream)
-        return stream if not stream_is_empty(stream) else ''
-
-
-
 class Folder_NewResource(IconsView):
 
     access = 'is_allowed_to_add'
