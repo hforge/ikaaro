@@ -370,20 +370,19 @@ class CMSContext(prototype):
 
 
     def set_cookie(self, name, value, **kw):
-        self.cookies[name] = value
-        # libsoup
-        cookie = Cookie(value, **kw)
-        cookie = SetCookieDataType.encode({name: cookie})
-        self._set_header('Set-Cookie', cookie)
+        # Build cookie
+        self.cookies[name] = Cookie(value, **kw)
+        # Set in headers
+        cookies = SetCookieDataType.encode(self.cookies)
+        self._set_header('Set-Cookie', cookies)
 
 
     def del_cookie(self, name):
-        self.cookies[name] = None
-        # libsoup
-        expires = 'Thu, 01-Jan-1970 00:00:01 GMT'
-        cookie = Cookie('', expires=expires)
-        cookie = SetCookieDataType.encode({name: cookie})
-        self._set_header('Set-Cookie', cookie)
+        # Del cookie
+        self.cookies[name] = Cookie('', max_age=0)
+        # Set in headers
+        cookies = SetCookieDataType.encode(self.cookies)
+        self._set_header('Set-Cookie', cookies)
 
     #######################################################################
     # API / Forms
