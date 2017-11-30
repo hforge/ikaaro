@@ -348,7 +348,7 @@ class CMSContext(prototype):
         value = None
         if name in self.cookies:
             # Case 1: the cookie was set in this request
-            value = self.cookies[name]
+            value = self.cookies[name].value
         else:
             # Case 2: read the cookie from the request
             cookies = self.get_header('cookie')
