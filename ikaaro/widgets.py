@@ -58,12 +58,14 @@ class Widget(CMSTemplate):
     focus = True # Focus on it if the first one displayed
     onsubmit = None
     css = None
+    readonly = None
     scripts = freeze([])
     styles = freeze([])
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" class="${css}"/>
+      maxlength="${maxlength}" size="${size}"
+      readonly="${readonly}" class="${css}"/>
       <label class="language" for="${id}" stl:if="language"
       >${language}</label>""")
 
