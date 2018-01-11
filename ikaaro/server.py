@@ -912,7 +912,8 @@ class Server(object):
         # Transform result
         if context.entity is None:
             response = None
-        elif as_json:
+        elif as_json and not str(context.status).startswith('3'):
+            # Do not load json if 302 (url redirection)
             response = loads(context.entity)
         else:
             response = context.entity
