@@ -195,21 +195,21 @@ class Metadata_Field(Field):
 
 
 class Birthdate_Field(Metadata_Field):
-    datatype = BirthDate
-    widget = BirthDateWidget
+    datatype = BirthDate()
+    widget = BirthDateWidget()
 
 
 
 class Boolean_Field(Metadata_Field):
-    datatype = Boolean
-    widget = RadioWidget
+    datatype = Boolean()
+    widget = RadioWidget()
     widget_keys = Metadata_Field.widget_keys + ['label', 'oneline']
 
 
 
 class Boolean3_Field(Metadata_Field):
-    datatype = Boolean3
-    widget = SelectWidget
+    datatype = Boolean3()
+    widget = SelectWidget()
     widget_keys = Metadata_Field.widget_keys + ['label']
 
     def get_value(self, resource, name, language=None):
@@ -223,48 +223,48 @@ class Boolean3_Field(Metadata_Field):
 
 
 class Char_Field(Metadata_Field):
-    datatype = String
-    widget = TextWidget
+    datatype = String()
+    widget = TextWidget()
     rest_type = 'bytes'
 
 
 class Color_Field(Metadata_Field):
-    datatype = HexadecimalColor
-    widget = ColorPickerWidget
+    datatype = HexadecimalColor()
+    widget = ColorPickerWidget()
 
 
 class Date_Field(Metadata_Field):
-    datatype = Date
-    widget = DateWidget
+    datatype = Date()
+    widget = DateWidget()
 
 
 
 class Datetime_Field(Metadata_Field):
-    datatype = DateTime
+    datatype = DateTime()
     widget = DatetimeWidget
     rest_type = 'datetime'
 
 
 
 class Email_Field(Metadata_Field):
-    datatype = Email
+    datatype = Email()
     size = 40
 
 
 
 class Integer_Field(Metadata_Field):
-    datatype = Integer
+    datatype = Integer()
 
 
 class Decimal_Field(Metadata_Field):
-    datatype = Decimal
+    datatype = Decimal()
 
 
 
 class Password_Field(Metadata_Field):
 
-    datatype = Password_Datatype
-    parameters_schema = {'algo': String, 'salt': String, 'date': DateTime}
+    datatype = Password_Datatype()
+    parameters_schema = {'algo': String(), 'salt': String(), 'date': DateTime()}
     widget = PasswordWidget
 
 
@@ -286,8 +286,8 @@ class Password_Field(Metadata_Field):
 
 
 class ChoosePassword_Field(Password_Field):
-    datatype = ChoosePassword_Datatype
-    widget = ChoosePassword_Widget
+    datatype = ChoosePassword_Datatype()
+    widget = ChoosePassword_Widget()
     widget_keys = Password_Field.widget_keys + ['userid']
 
 
@@ -299,8 +299,8 @@ class ProgressBar_Field(Metadata_Field):
 
 class Select_Field(Metadata_Field):
     rest_type = 'select'
-    datatype = Enumerate
-    widget = SelectWidget
+    datatype = Enumerate()
+    widget = SelectWidget()
     options = None # Must be overriden by subclasses: [{}, ...]
 
     datatype_keys = Metadata_Field.datatype_keys + ['options']
@@ -357,10 +357,10 @@ class SelectAbspath_Field(Select_Field):
 
 class Text_Field(Metadata_Field):
     rest_type = 'text'
-    datatype = Unicode
+    datatype = Unicode()
     multilingual = True
     parameters_schema = {'lang': String} # useful only when multilingual
-    widget = TextWidget
+    widget = TextWidget()
 
     def get_default(self):
         if self.default is not None:
@@ -376,14 +376,14 @@ class Text_Field(Metadata_Field):
 
 class Textarea_Field(Text_Field):
 
-    widget = MultilineWidget
+    widget = MultilineWidget()
     rest_type = 'textarea'
     widget_keys = Text_Field.widget_keys + ['rows', 'cols']
 
 
 
 class URI_Field(Metadata_Field):
-    datatype = URI
+    datatype = URI()
 
     def get_links(self, links, resource, field_name, languages):
         base = resource.abspath
@@ -544,8 +544,8 @@ class File_Field(Field):
 
     rest_type = 'file'
     class_handler = None
-    datatype = String
-    widget = FileWidget
+    datatype = String()
+    widget = FileWidget()
 
 
     def _get_key(self, resource, name, language):
@@ -643,9 +643,9 @@ class HTMLFile_Field(File_Field):
 
     rest_type = 'file-html'
     class_handler = XHTMLFile
-    datatype = HTMLBody
+    datatype = HTMLBody()
     multilingual = True
-    widget = RTEWidget
+    widget = RTEWidget()
 
 
     def _get_handler_from_value(self, value):
@@ -811,8 +811,8 @@ class HTMLFile_Field(File_Field):
 
 
 class SelectDays_Field(Select_Field):
-    datatype = DaysOfWeek
-    widget = CheckboxWidget
+    datatype = DaysOfWeek()
+    widget = CheckboxWidget()
     widget_keys = Select_Field.widget_keys + ['oneline']
     oneline = True
 

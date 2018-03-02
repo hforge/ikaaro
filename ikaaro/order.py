@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.database import PhraseQuery
+from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.web import INFO, get_context
 
@@ -76,9 +78,10 @@ class UnOrderButton(BrowseButton):
 
 class OrderedFolder_BrowseContent(Folder_BrowseContent):
 
-    query_schema = Folder_BrowseContent.query_schema.copy()
-    query_schema['sort_by'] = query_schema['sort_by'](default='order')
-    query_schema['reverse'] = query_schema['reverse'](default=False)
+    query_schema = merge_dicts(
+        Folder_BrowseContent.query_schema,
+        sort_by=String(default='order'),
+        default=Boolean(default=False))
 
     table_columns = (Folder_BrowseContent.table_columns +
                      [('order', MSG(u'Order'))])
@@ -282,4 +285,4 @@ class OrderedFolder(Folder):
 
 
     # Views
-    browse_content = OrderedFolder_BrowseContent
+    browse_content = OrderedFolder_BrowseContent()

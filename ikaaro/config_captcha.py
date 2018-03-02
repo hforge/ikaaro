@@ -33,7 +33,9 @@ from utils import make_stl_template
 from widgets import TextWidget, RadioWidget, Widget
 
 
-captcha_field = Text_Field(multilingual=False)
+class CaptchaFieldML(Text_Field):
+
+    multilingual = False
 
 ###########################################################################
 # ReCaptcha
@@ -112,8 +114,8 @@ class Captcha_Recaptcha(DBResource):
     class_views = ['edit']
 
     # Fields
-    public_key = captcha_field(title=MSG(u"Recaptcha public key"))
-    private_key = captcha_field(title=MSG(u"Recaptcha private key"))
+    public_key = CaptchaFieldML(title=MSG(u"Recaptcha public key"))
+    private_key = CaptchaFieldML(title=MSG(u"Recaptcha private key"))
 
     # Views
     edit = AutoEdit(fields=['public_key', 'private_key'])
@@ -161,8 +163,8 @@ class Captcha_Question(DBResource):
     class_views = ['edit']
 
     # Fields
-    question = captcha_field(default=u'2 + 3', title=MSG(u"Question"))
-    answer = captcha_field(default=u'5', title=MSG(u"Answer"))
+    question = CaptchaFieldML(default=u'2 + 3', title=MSG(u"Question"))
+    answer = CaptchaFieldML(default=u'5', title=MSG(u"Answer"))
 
     # Views
     edit = AutoEdit(fields=['question', 'answer'])

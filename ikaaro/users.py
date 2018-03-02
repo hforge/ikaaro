@@ -48,7 +48,7 @@ class Lastlog_Field(Datetime_Field):
 
 class UserGroups_Field(SelectAbspath_Field):
 
-    datatype = UserGroups_Datatype
+    datatype = UserGroups_Datatype()
     indexed = True
     multiple = True
     title = MSG(u'Groups')
@@ -66,7 +66,7 @@ class UserGroups_Field(SelectAbspath_Field):
 
 class UserState_Field(Select_Field):
 
-    parameters_schema = {'key': String}
+    parameters_schema = {'key': String()}
     default = 'active'
     options = [
         {'name': 'active', 'value': MSG(u'Active')},
@@ -99,13 +99,13 @@ class User(Folder):
                            title=MSG(u'First Name'))
     lastname = Text_Field(multilingual=False, indexed=True, stored=True,
                           title=MSG(u'Last Name'))
-    email = UserEmail_Field
+    email = UserEmail_Field()
     password = Password_Field(multiple=True)
     avatar = File_Field(title=MSG(u'Avatar'))
-    user_language = Char_Field
-    user_timezone = Char_Field
-    user_state = UserState_Field
-    groups = UserGroups_Field
+    user_language = Char_Field()
+    user_timezone = Char_Field()
+    user_state = UserState_Field()
+    groups = UserGroups_Field()
     username = Char_Field(indexed=True, stored=True) # Backwards compatibility
 
     # Remove some fields
@@ -229,13 +229,13 @@ class User(Folder):
     #######################################################################
     # Views
     #######################################################################
-    resend_confirmation = User_ResendConfirmation
-    confirm_registration = User_ConfirmRegistration
-    change_password_forgotten = User_ChangePasswordForgotten
-    profile = User_Profile
-    edit_account = User_EditAccount
-    edit_preferences = User_EditPreferences
-    edit_password = User_EditPassword
+    resend_confirmation = User_ResendConfirmation()
+    confirm_registration = User_ConfirmRegistration()
+    change_password_forgotten = User_ChangePasswordForgotten()
+    profile = User_Profile()
+    edit_account = User_EditAccount()
+    edit_preferences = User_EditPreferences()
+    edit_password = User_EditPassword()
     edit_groups = AutoEdit(access='is_admin', fields=['groups'],
                            title=MSG(u'Edit groups'))
 
@@ -257,8 +257,8 @@ class Users(Folder):
 
     # Views
     class_views = ['browse_users', 'add_user', 'edit']
-    browse_users = Users_Browse
-    add_user = Users_AddUser
+    browse_users = Users_Browse()
+    add_user = Users_AddUser()
 
     # Configuration
     config_name = '/users'

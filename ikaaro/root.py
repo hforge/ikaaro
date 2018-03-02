@@ -33,7 +33,7 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath, is_prototype
-from itools.database import RWDatabase
+from itools.database import RWDatabase, AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -51,6 +51,7 @@ from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
+from utils import get_base_path_query
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView, NotAllowedView
 from root_views import UploadStatsView, UpdateDocs, UnavailableView
@@ -571,22 +572,22 @@ class Root(Folder):
     #######################################################################
     # Views
     #######################################################################
-    register = RegisterForm
-    terms_of_service = TermsOfService_View
+    register = RegisterForm()
+    terms_of_service = TermsOfService_View()
     # Public views
-    contact = ContactForm
-    powered_by = PoweredBy
+    contact = ContactForm()
+    powered_by = PoweredBy()
     # Web views (401/403/404/405...)
-    forbidden = ForbiddenView
-    unauthorized = LoginView
-    not_found = NotFoundView
-    method_not_allowed = NotAllowedView
-    unavailable = UnavailableView
+    forbidden = ForbiddenView()
+    unauthorized = LoginView()
+    not_found = NotFoundView()
+    method_not_allowed = NotAllowedView()
+    unavailable = UnavailableView()
     # Special
-    upload_stats = UploadStatsView
-    update_instance = UpdateInstanceView
-    update_docs = UpdateDocs
-    _ctrl = CtrlView
+    upload_stats = UploadStatsView()
+    update_instance = UpdateInstanceView()
+    update_docs = UpdateDocs()
+    _ctrl = CtrlView()
 
 
     #######################################################################

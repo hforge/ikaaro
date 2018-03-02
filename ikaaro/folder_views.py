@@ -843,8 +843,8 @@ class Folder_Thumbnail(BaseView):
             format = 'png'
         else:
             # Default icon for empty or inaccessible folders
-            width = context.get_form_value('width', type=Integer, default=48)
-            height = context.get_form_value('height', type=Integer, default=48)
+            width = context.get_form_value('width', type=Integer(), default=48)
+            height = context.get_form_value('height', type=Integer(), default=48)
             data, format = default_icon.get_thumbnail(width, height)
 
         # XXX Don't cache nothing here

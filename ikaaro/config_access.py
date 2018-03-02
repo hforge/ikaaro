@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, is_prototype, proto_property
+from itools.core import freeze, is_prototype, proto_property, merge_dicts
 from itools.database import AllQuery, AndQuery, OrQuery, PhraseQuery
-from itools.datatypes import Enumerate
+from itools.datatypes import Boolean, Enumerate, String
 from itools.gettext import MSG
 from itools.uri import Path
 from itools.web import get_context
@@ -56,7 +56,7 @@ class Path_Datatype(Enumerate):
 
 class Path_Field(Select_Field):
 
-    datatype = Path_Datatype
+    datatype = Path_Datatype()
     has_empty_option = False
     title = MSG(u'Path')
 
@@ -93,7 +93,7 @@ class Permission_Datatype(Enumerate):
 class Permissions_Field(Select_Field):
 
     title = MSG(u'Permission')
-    datatype = Permission_Datatype
+    datatype = Permission_Datatype()
 
 
 class SearchFormat_Datatype(Enumerate):
@@ -116,7 +116,7 @@ class SearchFormat_Datatype(Enumerate):
 class SearchFormat_Field(Select_Field):
 
     title = MSG(u'Resource type')
-    datatype = SearchFormat_Datatype
+    datatype = SearchFormat_Datatype()
 
 
 
@@ -140,7 +140,7 @@ class AccessRule(DBResource):
 
     # Fields
     group = Select_Field(required=True, title=MSG(u'User group'),
-                         datatype=Groups_Datatype, indexed=True, stored=True)
+                         datatype=Groups_Datatype(), indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
     search_path = Path_Field(indexed=True, stored=True)
     search_path_depth = PathDepth_Field()
@@ -152,7 +152,7 @@ class AccessRule(DBResource):
                'search_format']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
-    results = AccessRule_Results
+    results = AccessRule_Results()
 
     # API
     def get_search_query(self):
@@ -193,9 +193,10 @@ class AccessRule(DBResource):
 ###########################################################################
 class ConfigAccess_Browse(Folder_BrowseContent):
 
-    query_schema = Folder_BrowseContent.query_schema.copy()
-    query_schema['sort_by'] = query_schema['sort_by'](default='abspath')
-    query_schema['reverse'] = query_schema['reverse'](default=False)
+    query_schema = merge_dicts(
+          Folder_BrowseContent.query_schema,
+          sort_by=String(default='abspath'),
+          reverse=Boolean(default=False))
 
     # Search form
     _columns = ['group', 'permission', 'search_path', 'search_format']
@@ -384,7 +385,7 @@ class ConfigAccess(Folder):
 
     # Views
     class_views = ['browse_content', 'add_rule', 'edit', 'commit_log']
-    browse_content = ConfigAccess_Browse
+    browse_content = ConfigAccess_Browse()
     add_rule = NewResource_Local(title=MSG(u'Add rule'))
 
 

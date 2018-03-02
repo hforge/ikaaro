@@ -83,7 +83,7 @@ class WebPage(File):
     # Views
     #######################################################################
     new_instance = AutoAdd(fields=['title', 'data'])
-    view = WebPage_View
+    view = WebPage_View()
 
 
 

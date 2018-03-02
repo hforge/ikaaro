@@ -80,7 +80,7 @@ class ConfigMail(DBResource):
 
     # Views
     class_views = ['edit']
-    edit = ConfigMail_Edit
+    edit = ConfigMail_Edit()
 
     # Configuration
     config_name = 'mail'

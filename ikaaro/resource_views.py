@@ -69,8 +69,8 @@ class DBResource_GetFile(BaseView):
 
     access = 'is_allowed_to_view'
 
-    query_schema = {'name': String,
-                    'language': String}
+    query_schema = {'name': String(),
+                    'language': String()}
     field_name = None
 
 
@@ -130,10 +130,10 @@ class DBResource_GetFile(BaseView):
 class DBResource_GetImage(DBResource_GetFile):
 
     query_schema = {
-        'name': String,
-        'width': Integer,
-        'height': Integer,
-        'language': String,
+        'name': String(),
+        'width': Integer(),
+        'height': Integer(),
+        'language': String(),
         'fit': Boolean(default=False),
         'lossy': Boolean(default=False)}
 
@@ -219,12 +219,12 @@ class LoginView(STLView):
     meta = [('robots', 'noindex, follow', None)]
 
     query_schema = {
-        'loginname': String,
-        'no_password': Boolean}
+        'loginname': String(),
+        'no_password': Boolean()}
     schema = {
         'loginname': String(mandatory=True),
-        'password': String,
-        'no_password': Boolean}
+        'password': String(),
+        'no_password': Boolean()}
 
     def GET(self, resource, context):
         if context.user:

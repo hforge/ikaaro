@@ -33,6 +33,7 @@ from itools.xmlfile import XMLFile
 
 # Import from ikaaro
 from database import Database
+from fields import File_Field
 from file import File
 from file_views import File_Edit
 from text_views import Text_Edit, Text_View, PO_Edit
@@ -64,7 +65,7 @@ class Text(File):
     class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'commit_log']
     # Fields
-    data = File.data(class_handler=TextFile, widget=MultilineWidget)
+    data = File_Field(required=True, class_handler=TextFile, widget=MultilineWidget)
 
 
     def get_content_type(self):
@@ -72,8 +73,8 @@ class Text(File):
 
 
     # Views
-    view = Text_View
-    edit = Text_Edit
+    view = Text_View()
+    edit = Text_Edit()
 
 
 
@@ -85,13 +86,13 @@ class PO(Text):
     class_icon48 = '/ui/ikaaro/icons/48x48/po.png'
 
     # Fields
-    data = Text.data(class_handler=POFile)
+    data = File_Field(required=True, class_handler=POFile)
 
     def get_po_handler(self):
         return self.get_value('data')
 
     # Views
-    edit = PO_Edit
+    edit = PO_Edit()
 
 
 
@@ -223,7 +224,7 @@ class CSS(Text):
 
 
     # Views
-    edit = CSS_Edit
+    edit = CSS_Edit()
 
 
 
@@ -234,7 +235,7 @@ class Python(Text):
     class_icon16 = '/ui/ikaaro/icons/16x16/python.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/python.png'
     # Fields
-    data = Text.data(class_handler=PythonFile)
+    data = File_Field(required=True, class_handler=PythonFile)
 
 
 
@@ -252,7 +253,7 @@ class XML(Text):
     class_id = 'text/xml'
     class_title = MSG(u'XML File')
     # Fields
-    data = Text.data(class_handler=XMLFile)
+    data = File_Field(required=True, class_handler=XMLFile)
 
 
 
@@ -261,7 +262,7 @@ class HTML(Text):
     class_id = 'text/html'
     class_title = MSG(u'HTML File')
     # Fields
-    data = Text.data(class_handler=HTMLFile)
+    data = File_Field(required=True, class_handler=HTMLFile)
 
 
 
@@ -272,7 +273,7 @@ class CSV(Text):
     class_views = ['view', 'add_row', 'edit', 'externaledit', 'commit_log']
 
     # Fields
-    data = Text.data(class_handler=CSVFile, widget=FileWidget)
+    data = File_Field(required=True, class_handler=CSVFile, widget=FileWidget)
 
 
     def get_csv_handler(self):
@@ -306,10 +307,10 @@ class CSV(Text):
 
 
     # Views
-    edit = File_Edit
-    view = CSV_View
-    add_row = CSV_AddRow
-    edit_row = CSV_EditRow
+    edit = File_Edit()
+    view = CSV_View()
+    add_row = CSV_AddRow()
+    edit_row = CSV_EditRow()
 
 
 

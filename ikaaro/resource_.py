@@ -61,7 +61,7 @@ from widgets import CheckboxWidget
 class Share_Field(SelectAbspath_Field):
 
     title = MSG(u'Share')
-    datatype = Groups_Datatype
+    datatype = Groups_Datatype()
     widget = CheckboxWidget
     multiple = True
     indexed = True
@@ -91,14 +91,14 @@ class DBResource(Resource):
     context_menus = []
 
     # Fields
-    uuid = UUID_Field
+    uuid = UUID_Field()
     ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
     mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
     last_author = Char_Field(indexed=False, stored=True, readonly=True)
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
     description = Textarea_Field(indexed=True, title=MSG(u'Description'))
     subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
-    share = Share_Field
+    share = Share_Field()
 
 
     def __init__(self, abspath, database, metadata=None, brain=None):
@@ -849,30 +849,30 @@ class DBResource(Resource):
     # Views
     new_instance = AutoAdd(fields=['title', 'location'])
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
-    remove = DBResource_Remove
-    get_file = DBResource_GetFile
-    get_image = DBResource_GetImage
+    remove = DBResource_Remove()
+    get_file = DBResource_GetFile()
+    get_image = DBResource_GetImage()
     # Login/Logout
-    login = LoginView
-    logout = LogoutView
+    login = LoginView()
+    logout = LogoutView()
     # Popups
-    add_image = DBResource_AddImage
-    add_link = DBResource_AddLink
-    add_media = DBResource_AddMedia
+    add_image = DBResource_AddImage()
+    add_link = DBResource_AddLink()
+    add_media = DBResource_AddMedia()
     # Commit log
-    commit_log = DBResource_CommitLog
-    changes = DBResource_Changes
+    commit_log = DBResource_CommitLog()
+    changes = DBResource_Changes()
     # Links
-    backlinks = DBResource_Backlinks
-    links = DBResource_Links
+    backlinks = DBResource_Backlinks()
+    links = DBResource_Links()
     # Rest (web services)
-    rest_login = Rest_Login
-    rest_query = Rest_Query
-    rest_create = Rest_Create
-    rest_read = Rest_Read
-    rest_update = Rest_Update
-    rest_delete = Rest_Delete
-    rest_schema = Rest_Schema
+    rest_login = Rest_Login()
+    rest_query = Rest_Query()
+    rest_create = Rest_Create()
+    rest_read = Rest_Read()
+    rest_update = Rest_Update()
+    rest_delete = Rest_Delete()
+    rest_schema = Rest_Schema()
 
 
 ###########################################################################

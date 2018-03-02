@@ -86,7 +86,7 @@ class MenuItem(OrderedFolder):
     # Fields
     path = URI_Field(required=True, title=MSG(u'Path'),
                      widget=PathSelectorWidget)
-    target = Target_Field
+    target = Target_Field()
 
     def get_document_types(self):
         return [MenuItem]
@@ -96,8 +96,8 @@ class MenuItem(OrderedFolder):
     _fields = ['title', 'path', 'target']
     new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
-    browse_content = MenuItem_Browse
-    add_menu = AddMenu
+    browse_content = MenuItem_Browse()
+    add_menu = AddMenu()
 
 
     # API

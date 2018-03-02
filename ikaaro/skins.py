@@ -295,12 +295,12 @@ class Skin(object):
         if context.message is not None:
             messages = context.message
         elif 'error' in context.uri.query:
-            messages = ERROR(context.get_query_value('error', type=Unicode))
+            messages = ERROR(context.get_query_value('error', type=Unicode()))
         elif 'info' in context.uri.query:
-            messages = INFO(context.get_query_value('info', type=Unicode))
+            messages = INFO(context.get_query_value('info', type=Unicode()))
         # XXX For backwards compatibility
         elif 'message' in context.uri.query:
-            messages = INFO(context.get_query_value('message', type=Unicode))
+            messages = INFO(context.get_query_value('message', type=Unicode()))
         else:
             return None
 

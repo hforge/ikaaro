@@ -78,7 +78,7 @@ class Group(DBResource):
 
     # Views
     class_views = ['browse_users', 'edit']
-    browse_users = Group_BrowseUsers
+    browse_users = Group_BrowseUsers()
     new_instance = AutoAdd(fields=['title'])
 
 
@@ -131,7 +131,7 @@ class ConfigGroups(OrderedFolder):
 
     # Views
     class_views = ['browse_content', 'add_group', 'edit', 'commit_log']
-    browse_content = BrowseGroups
+    browse_content = BrowseGroups()
     add_group = NewResource_Local(title=MSG(u'Add group'))
 
     default_groups = [

@@ -493,14 +493,14 @@ class Folder(DBResource):
 
 
     # Views
-    view = Folder_BrowseContent
+    view = Folder_BrowseContent()
     edit = AutoEdit(fields=['title', 'index', 'description', 'subject',
                             'share'])
-    new_resource = Folder_NewResource
-    browse_content = Folder_BrowseContent
-    rename = Folder_Rename
-    preview_content = Folder_PreviewContent
-    thumb = Folder_Thumbnail
+    new_resource = Folder_NewResource()
+    browse_content = Folder_BrowseContent()
+    rename = Folder_Rename()
+    preview_content = Folder_PreviewContent()
+    thumb = Folder_Thumbnail()
 
 
 ###########################################################################
