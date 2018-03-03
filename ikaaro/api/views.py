@@ -26,7 +26,6 @@ from itools.web.views import ItoolsView
 # Import from ikaaro
 from ikaaro.fields import Boolean_Field, Char_Field, Integer_Field
 from ikaaro.fields import Email_Field, Password_Field, Datetime_Field
-from ikaaro.server import get_config
 from ikaaro.utils import get_resource_by_uuid_query
 
 
@@ -256,7 +255,7 @@ class ApiDevPanel_Config(Api_View):
     access = 'is_admin'
 
     def GET(self, root, context):
-        config = get_config(context.server.target)
+        config = context.server.config
         context.set_content_type('text/plain')
         return config.to_str()
 
