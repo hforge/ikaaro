@@ -793,17 +793,16 @@ class Server(WebServer):
     #######################################################################
     def cron_manager(self):
         database = self.database
-
         # Build fake context
         context = get_fake_context(database, self.root.context_cls)
         context.server = self
         context.init_context()
-        context.is_cron = True
-
         # Go
+        context.is_cron = True
         catalog = database.catalog
         query = RangeQuery('next_time_event', None, context.timestamp)
-        for brain in database.search(query).get_documents():
+        search = database.search(query)
+        for brain in search.get_documents():
             payload = pickle.loads(brain.next_time_event_payload)
             resource = database.get_resource(brain.abspath)
             try:
@@ -811,14 +810,22 @@ class Server(WebServer):
             except Exception:
                 # Log error
                 log_error('Cron error\n' + format_exc())
-                context.root.alert_on_internal_server_error(context)
-            # Reindex resource without committing
-            catalog.index_document(resource)
-            catalog.save_changes()
-
-        # Save changes
-        database.save_changes()
-
+                # Abort changes
+                context.database.abort_changes()
+                # Reindex resource without committing database
+                catalog.index_document(resource)
+                catalog.save_changes()
+                # Alert on errors
+                try:
+                    context.root.alert_on_internal_server_error(context)
+                except Exception:
+                    # Ignore if cannot alert on errors
+                    pass
+            else:
+                # Reindex resource
+                catalog.index_document(resource)
+                # Save changes
+                database.save_changes()
         # Again, and again
         return self.config.get_value('cron-interval')
 
