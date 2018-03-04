@@ -824,6 +824,8 @@ class Server(WebServer):
             else:
                 # Reindex resource
                 catalog.index_document(resource)
+                # Git message
+                context.git_message = '[Cron] {0}'.format(resource.abspath)
                 # Save changes
                 database.save_changes()
         # Again, and again
