@@ -363,8 +363,6 @@ class Server(WebServer):
         # Init fake context
         context = get_fake_context(database, root.context_cls)
         context.server = self
-        # Check catalog consistency
-        database.check_catalog()
         # Initialize
         proxy = super(Server, self)
         access_log = '%s/log/access' % target
