@@ -805,6 +805,8 @@ class Server(WebServer):
         for brain in search.get_documents():
             payload = pickle.loads(brain.next_time_event_payload)
             resource = database.get_resource(brain.abspath)
+            # Git message
+            context.git_message = '[Cron] {0}'.format(resource.abspath)
             try:
                 resource.time_event(payload)
             except Exception:
@@ -824,8 +826,6 @@ class Server(WebServer):
             else:
                 # Reindex resource
                 catalog.index_document(resource)
-                # Git message
-                context.git_message = '[Cron] {0}'.format(resource.abspath)
                 # Save changes
                 database.save_changes()
         # Again, and again
