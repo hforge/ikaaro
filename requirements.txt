@@ -1,2 +1,1 @@
-git+http://git@github.com/hforge/itools.git@0.77#egg=itools
 guppy
