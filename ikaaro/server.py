@@ -50,7 +50,7 @@ from itools.database import make_catalog, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import vfs, lfs
-from itools.handlers import ConfigFile, ro_database
+from itools.handlers import ConfigFile
 from itools.i18n import init_language_selector
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
@@ -955,4 +955,4 @@ class ServerConfig(ConfigFile):
 
 
 def get_config(target):
-    return ro_database.get_handler('%s/config.conf' % target, ServerConfig)
+    return ServerConfig('%s/config.conf')

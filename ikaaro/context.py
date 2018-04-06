@@ -29,7 +29,6 @@ from itools.core import fixed_offset, is_prototype, local_tz
 from itools.core import prototype
 from itools.datatypes import String, HTTPDate
 from itools.fs import lfs
-from itools.handlers import ro_database
 from itools.i18n import has_language
 from itools.i18n import format_datetime, format_date, format_time
 from itools.i18n import AcceptLanguageType, format_number
@@ -200,7 +199,8 @@ class CMSContext(prototype):
     def get_template_from_skin_key(self, skin_key, web_path, warning):
         local_path = skin_key + web_path
         # 3. Get the handler
-        handler = ro_database.get_handler(local_path, soft=True)
+        # TODO use ro_database here
+        handler = File(local_path, soft=True)
         if handler:
             if warning:
                 print warning
@@ -230,7 +230,7 @@ class CMSContext(prototype):
         if language is None:
             language = languages[0]
         local_path = '%s.%s' % (local_path, language)
-        return ro_database.get_handler(local_path)
+        return File(local_path)
 
 
     #######################################################################

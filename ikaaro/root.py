@@ -35,7 +35,7 @@ import traceback
 from itools.core import get_abspath, is_prototype
 from itools.database import RWDatabase, AndQuery, PhraseQuery
 from itools.gettext import MSG
-from itools.handlers import ConfigFile, ro_database
+from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.log import log_warning
 from itools.stl import stl
@@ -60,7 +60,7 @@ from update import UpdateInstanceView
 
 # itools source and target languages
 config = get_abspath('setup.conf')
-config = ro_database.get_handler(config,  ConfigFile)
+config = ConfigFile(config)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')
 
@@ -270,7 +270,7 @@ class Root(Folder):
         if cls is not Root:
             exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
             config = Path(pkg.__path__[0]).resolve_name('setup.conf')
-            config = ro_database.get_handler(str(config), ConfigFile)
+            config = ConfigFile(str(config))
             source = config.get_value('source_language', default=source)
             target = config.get_value('target_languages', default=target)
 
