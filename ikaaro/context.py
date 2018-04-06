@@ -27,6 +27,7 @@ from urllib import quote, unquote
 from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, is_prototype, local_tz
 from itools.core import prototype
+from itools.database.ro import ro_database
 from itools.datatypes import String, HTTPDate
 from itools.fs import lfs
 from itools.i18n import has_language
@@ -199,8 +200,7 @@ class CMSContext(prototype):
     def get_template_from_skin_key(self, skin_key, web_path, warning):
         local_path = skin_key + web_path
         # 3. Get the handler
-        # TODO use ro_database here
-        handler = File(local_path, soft=True)
+        handler = ro_database.get_handler(local_path, soft=True)
         if handler:
             if warning:
                 print warning
@@ -230,7 +230,7 @@ class CMSContext(prototype):
         if language is None:
             language = languages[0]
         local_path = '%s.%s' % (local_path, language)
-        return File(local_path)
+        return ro_database.get_handler(local_path, soft=True)
 
 
     #######################################################################
