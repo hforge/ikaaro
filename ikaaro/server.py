@@ -360,11 +360,10 @@ class Server(object):
         # Check catalog consistency
         with database.init_context():
             database.check_catalog()
-        # Initialize
-        access_log = '%s/log/access' % target
         # Access log
-        logger = AccessLogger(access_log, rotate=timedelta(weeks=3))
-        register_logger(logger, 'itools.web_access')
+        path = '%s/log/access' % target
+        self.access_log = AccessLogger(path, rotate=timedelta(weeks=3))
+        register_logger(self.access_log, 'itools.web_access')
         # Events log
         event_log = '%s/log/events' % target
         logger = WebLogger(event_log)
@@ -585,9 +584,6 @@ class Server(object):
             self.wsgi_server.stop()
         # Close database
         self.close()
-        # Close access log file
-        if self.access_log:
-            self.access_log_file.close()
 
 
     def listen(self, address, port):
@@ -604,7 +600,9 @@ class Server(object):
         msg = 'Listen %s:%d' % (address, port)
         log_info(msg)
         self.port = port
-        self.wsgi_server = WSGIServer(('', port), application)
+        self.wsgi_server = WSGIServer(
+            ('', port), application,
+            log=self.access_log)
         gevent_signal(SIGTERM, self.stop)
         gevent_signal(SIGINT, self.stop)
         self.wsgi_server.serve_forever()
