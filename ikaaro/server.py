@@ -955,4 +955,4 @@ class ServerConfig(ConfigFile):
 
 
 def get_config(target):
-    return ServerConfig('%s/config.conf')
+    return ServerConfig('{0}/config.conf'.format(target))
