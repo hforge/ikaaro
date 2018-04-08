@@ -43,6 +43,8 @@ from autoedit import AutoEdit
 from enumerates import Groups_Datatype
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
+from fields import CTime_Field, MTime_Field, LastAuthor_Field
+from fields import Title_Field, Description_Field, Subject_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -92,12 +94,12 @@ class DBResource(Resource):
 
     # Fields
     uuid = UUID_Field()
-    ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    last_author = Char_Field(indexed=False, stored=True, readonly=True)
-    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
-    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
-    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
+    ctime = CTime_Field()
+    mtime = MTime_Field()
+    last_author = LastAuthor_Field()
+    title = Title_Field()
+    description = Description_Field()
+    subject = Subject_Field()
     share = Share_Field()
 
 
@@ -186,7 +188,7 @@ class DBResource(Resource):
         langs = root.get_value('website_languages')
         # Fields
         for name, field in self.get_fields():
-            if issubclass(field, File_Field):
+            if is_prototype(field, File_Field):
                 if field.multilingual:
                     for language in langs:
                         value = field.get_value(self, name, language)
@@ -624,7 +626,7 @@ class DBResource(Resource):
         aux = []
         for field_name in self.fields:
             field = self.get_field(field_name)
-            if field and issubclass(field, File_Field):
+            if field and is_prototype(field, File_Field):
                 old = '%s.%s' % (self.name, field_name)
                 new = '%s.%s' % (new_name, field_name)
                 if field.multilingual:

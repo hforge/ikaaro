@@ -63,6 +63,22 @@ class UserGroups_Field(SelectAbspath_Field):
         return context.root.is_admin(context.user, resource)
 
 
+class Firstname_Field(Text_Field):
+
+    title = MSG(u'First Name')
+    multilingual = False
+    indexed = True
+    stored = True
+
+
+class Lastname_Field(Text_Field):
+
+    title = MSG(u'Last Name')
+    multilingual = False
+    indexed = True
+    stored = True
+
+
 
 class UserState_Field(Select_Field):
 
@@ -83,6 +99,12 @@ class UserEmail_Field(Email_Field):
     unique = True
 
 
+class UserPassword_Field(Password_Field):
+
+    multiple = True
+
+
+
 class User(Folder):
 
     class_id = 'user'
@@ -95,12 +117,10 @@ class User(Folder):
 
 
     # Fields
-    firstname = Text_Field(multilingual=False, indexed=True, stored=True,
-                           title=MSG(u'First Name'))
-    lastname = Text_Field(multilingual=False, indexed=True, stored=True,
-                          title=MSG(u'Last Name'))
+    firstname = Firstname_Field()
+    lastname = Lastname_Field()
     email = UserEmail_Field()
-    password = Password_Field(multiple=True)
+    password = UserPassword_Field()
     avatar = File_Field(title=MSG(u'Avatar'))
     user_language = Char_Field()
     user_timezone = Char_Field()
