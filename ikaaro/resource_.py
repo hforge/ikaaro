@@ -42,11 +42,12 @@ from itools.web import ItoolsView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from autoform import CheckboxWidget
-from datatypes import CopyCookie
 from enumerates import Groups_Datatype
 from exceptions import ConsistencyError
 from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
 from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
+from fields import CTime_Field, MTime_Field, LastAuthor_Field
+from fields import Title_Field, Description_Field, Subject_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import DBResource_Remove
@@ -94,14 +95,14 @@ class DBResource(Resource):
     context_menus = []
 
     # Fields
-    uuid = UUID_Field
-    ctime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    mtime = Datetime_Field(indexed=True, stored=True, readonly=True)
-    last_author = Char_Field(indexed=False, stored=True, readonly=True)
-    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'))
-    description = Textarea_Field(indexed=True, title=MSG(u'Description'))
-    subject = Text_Field(indexed=True, title=MSG(u'Keywords'))
-    share = Share_Field
+    uuid = UUID_Field()
+    ctime = CTime_Field()
+    mtime = MTime_Field()
+    last_author = LastAuthor_Field()
+    title = Title_Field()
+    description = Description_Field()
+    subject = Subject_Field()
+    share = Share_Field()
 
 
     def __init__(self, abspath, database, metadata=None, brain=None):

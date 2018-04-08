@@ -822,3 +822,49 @@ class UUID_Field(Char_Field):
     indexed = True
     stored = True
     readonly = True
+
+
+
+class CTime_Field(Datetime_Field):
+
+    indexed = True
+    stored = True
+    readonly = True
+
+
+
+class MTime_Field(Datetime_Field):
+
+    indexed = True
+    stored = True
+    readonly = True
+
+
+
+class LastAuthor_Field(Char_Field):
+
+    indexed = False
+    stored = True
+    readonly = True
+
+
+
+class Title_Field(Text_Field):
+
+    title = MSG(u'Title')
+    indexed = True
+    stored = True
+
+
+
+class Description_Field(Textarea_Field):
+
+    title = MSG(u'Description')
+    indexed = True
+
+
+
+class Subject_Field(Text_Field):
+
+    title = MSG(u'Keywords')
+    indexde = True
