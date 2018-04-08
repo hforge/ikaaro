@@ -357,9 +357,6 @@ class Server(object):
             with open(environement_path, 'r') as f:
                 data = f.read()
                 self.environment = json.loads(data)
-        # Check catalog consistency
-        with database.init_context():
-            database.check_catalog()
         # Access log
         path = '%s/log/access' % target
         self.access_log = AccessLogger(path, rotate=timedelta(weeks=3))
