@@ -153,6 +153,8 @@ class CMSContext(prototype):
         self.site_root.before_traverse(self)  # Hook
         # Not a cron
         self.is_cron = False
+        # Set header
+        self.set_header('Server', 'ikaaro.web')
 
 
     @proto_lazy_property
