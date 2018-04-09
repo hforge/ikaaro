@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard library
+from time import time
+
 # Import from itools
 from itools.log import log_error
 from itools.web.router import RequestMethod
@@ -25,7 +28,11 @@ def application(environ, start_response):
     with server.database.init_context() as context:
         context.init_from_environ(environ)
         try:
+            t0 = time()
             RequestMethod.handle_request(context)
+            t1 = time()
+            context.request_time = t1-t0
+            context.on_request_end()
         except StandardError:
             log_error('Internal error', domain='itools.web')
             context.set_default_response(500)

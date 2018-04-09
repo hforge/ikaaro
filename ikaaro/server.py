@@ -322,7 +322,6 @@ class Server(object):
     session_timeout = timedelta(0)
     accept_cors = False
     dispatcher = URIDispatcher()
-    request_time = 0  # Initialized after each request (in handle_request)
     wsgi_server = None
 
 
@@ -423,14 +422,14 @@ class Server(object):
 
 
 
-    def log_access(self, host, request_line, status_code, body_length):
-        if host:
-            host = host.split(',', 1)[0].strip()
-        now = strftime('%d/%b/%Y:%H:%M:%S %z')
-        message = '%s - - [%s] "%s" %d %d %.3f\n' % (host, now, request_line,
-                                                     status_code, body_length,
-                                                     self.request_time)
-        log_info(message, domain='itools.web_access')
+    #def log_access(self, host, request_line, status_code, body_length):
+    #    if host:
+    #        host = host.split(',', 1)[0].strip()
+    #    now = strftime('%d/%b/%Y:%H:%M:%S %z')
+    #    message = '%s - - [%s] "%s" %d %d %.3f\n' % (host, now, request_line,
+    #                                                 status_code, body_length,
+    #                                                 self.request_time)
+    #    log_info(message, domain='itools.web_access')
 
 
 

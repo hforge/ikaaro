@@ -64,6 +64,7 @@ class CMSContext(prototype):
     mtime = None # Last-Modified
     path_query_base = None
     query = {}
+    request_time = 0
     resource = None
     root = None
     scripts = []
@@ -155,6 +156,11 @@ class CMSContext(prototype):
         self.is_cron = False
         # Set header
         self.set_header('Server', 'ikaaro.web')
+
+
+
+    def on_request_end(self):
+        pass
 
 
     @proto_lazy_property
