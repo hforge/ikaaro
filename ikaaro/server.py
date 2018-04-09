@@ -294,7 +294,7 @@ def set_server(the_server):
 class ServerHandler(WSGIHandler):
 
     def format_request(self):
-        now = datetime.now().replace(microsecond=0)
+        now = strftime('%d/%b/%Y:%H:%M:%S %z')
         length = self.response_length or '-'
         if self.time_finish:
             delta = '%.6f' % (self.time_finish - self.time_start)
