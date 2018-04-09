@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 import urllib
+from datetime import datetime
 from email.parser import HeaderParser
 from json import dumps, loads
 from datetime import timedelta
@@ -39,7 +40,7 @@ from socket import gaierror
 from tempfile import mkstemp
 
 # Import from gevent
-from gevent.wsgi import WSGIServer
+from gevent.wsgi import WSGIServer, WSGIHandler
 from gevent import signal as gevent_signal
 from requests_toolbelt import MultipartEncoder
 
@@ -288,6 +289,25 @@ def get_server():
 def set_server(the_server):
     global server
     server = the_server
+
+
+class ServerHandler(WSGIHandler):
+
+    def format_request(self):
+        now = datetime.now().replace(microsecond=0)
+        length = self.response_length or '-'
+        if self.time_finish:
+            delta = '%.6f' % (self.time_finish - self.time_start)
+        else:
+            delta = '-'
+        client_address = self.environ.get('HTTP_X_Forwarded_For')
+        return '%s - - [%s] "%s" %s %s %s' % (
+            client_address or '127.0.0.1',
+            now,
+            self.requestline or '',
+            (self._orig_status or self.status or '000').split()[0],
+            length,
+            delta)
 
 
 class Server(object):
@@ -598,6 +618,7 @@ class Server(object):
         self.port = port
         self.wsgi_server = WSGIServer(
             ('', port), application,
+            handler_class=ServerHandler,
             log=self.access_log)
         gevent_signal(SIGTERM, self.stop)
         gevent_signal(SIGINT, self.stop)
