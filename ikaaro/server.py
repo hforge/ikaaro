@@ -300,7 +300,7 @@ class ServerHandler(WSGIHandler):
             delta = '%.6f' % (self.time_finish - self.time_start)
         else:
             delta = '-'
-        client_address = self.environ.get('HTTP_X_Forwarded_For')
+        client_address = self.environ.get('HTTP_X_REAL_IP')
         return '%s - - [%s] "%s" %s %s %s' % (
             client_address or '127.0.0.1',
             now,
