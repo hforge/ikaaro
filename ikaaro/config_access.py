@@ -250,7 +250,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     def get_key_sorted_by_group(self):
         def key(item, cache={}):
             title = Groups_Datatype.get_value(item.group)
-            if is_prototype(title, MSG):
+            if isinstance(title, MSG):
                 title = title.gettext()
             return title.lower()
         return key

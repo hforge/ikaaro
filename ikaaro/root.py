@@ -32,7 +32,7 @@ import sys
 import traceback
 
 # Import from itools
-from itools.core import get_abspath, is_prototype
+from itools.core import get_abspath
 from itools.database import RWDatabase, AndQuery, PhraseQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
@@ -351,7 +351,7 @@ class Root(Folder):
         # 1. Check input data
         if type(subject) is unicode:
             subject = subject.encode(encoding)
-        elif is_prototype(subject, MSG):
+        elif isinstance(subject, MSG):
             subject = subject.gettext()
         else:
             raise TypeError, 'unexpected subject of type %s' % type(subject)
