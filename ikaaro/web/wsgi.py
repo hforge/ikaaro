@@ -36,9 +36,9 @@ def application(environ, start_response):
             headers = [
                 ('Content-Type', context.content_type),
             ]
-            if context.entity:
-                headers.append(('Content-length', str(len(context.entity))))
             for key, value in context.header_response.items():
                 headers.append((key, value))
+            if context.entity:
+                headers.append(('Content-Length', str(len(context.entity))))
             start_response(str(context.status), headers)
             yield context.entity
