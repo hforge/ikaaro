@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from itools
+from itools.log import log_error
 from itools.web.router import RequestMethod
 
 
@@ -25,13 +27,8 @@ def application(environ, start_response):
         try:
             RequestMethod.handle_request(context)
         except StandardError:
-            #log_error('Internal error', domain='itools.web') return
+            log_error('Internal error', domain='itools.web')
             context.set_default_response(500)
-            headers = [
-                ('Content-Type', 'text/html'),
-            ]
-            start_response(context.status, headers)
-            yield context.entity
         finally:
             headers = [
                 ('Content-Type', context.content_type),
