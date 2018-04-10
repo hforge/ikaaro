@@ -26,12 +26,16 @@ def application(environ, start_response):
     from ikaaro.server import get_server
     server = get_server()
     with server.database.init_context() as context:
-        context.init_from_environ(environ)
         try:
             t0 = time()
+            # Init context from wsgi envrion
+            context.init_from_environ(environ)
+            # Handle the request
             RequestMethod.handle_request(context)
             t1 = time()
+            # Compute request time
             context.request_time = t1-t0
+            # Callback at end of request
             context.on_request_end()
         except StandardError:
             log_error('Internal error', domain='itools.web')
