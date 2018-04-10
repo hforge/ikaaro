@@ -107,7 +107,11 @@ class CMSContext(prototype):
         accept_language = self.environ.get('HTTP_ACCEPT_LANGUAGE', '')
         if accept_language is None:
             accept_language = ''
-        self.accept_language = AcceptLanguageType.decode(accept_language)
+        try:
+            self.accept_language = AcceptLanguageType.decode(accept_language)
+        except:
+            # Cannot decode accept language
+            pass
         # The URI as it was typed by the client
         xfp = environ.get('HTTP_X_FORWARDED_PROTO')
         src_scheme = xfp or 'http'
