@@ -76,9 +76,10 @@ class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def __init__(self, path, size_min, size_max, catalog=None):
+    def __init__(self, path, size_min, size_max, catalog=None, backend='git'):
         proxy = super(Database, self)
-        proxy.__init__(path, size_min, size_max, catalog)
+        proxy.__init__(path, size_min, size_max,
+            catalog=catalog, backend=backend)
 
 
     def init_context(self, user=None, username=None, email=None):
@@ -197,7 +198,7 @@ class Database(RWDatabase):
 
 
 
-def get_database(path, size_min, size_max, read_only=False):
+def get_database(path, size_min, size_max, read_only=False, backend='git'):
     if read_only is True:
-        return RODatabase(path, size_min, size_max)
-    return Database(path, size_min, size_max)
+        return RODatabase(path, size_min, size_max, backend=backend)
+    return Database(path, size_min, size_max, backend=backend)
