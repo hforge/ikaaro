@@ -265,7 +265,7 @@ class UpdateDocs(AutoForm):
         # Check the mimetype
         filename, mimetype, body = form['file']
         if mimetype not in ('application/x-tar', 'application/zip'):
-            raise FormError, MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
+            raise FormError, MSG_UNEXPECTED_MIMETYPE.gettext(mimetype=mimetype)
 
         return form
 

@@ -258,7 +258,7 @@ class Folder_Rename(STLView):
 
         if referenced and not renamed:
             resources = ', '.join(referenced)
-            message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+            message = messages.MSG_RESOURCES_REFERENCED.gettext(resources=resources)
         else:
             message = messages.MSG_RENAMED
         return context.come_back(message, goto=self.goto_after)
@@ -539,7 +539,7 @@ class Folder_BrowseContent(BrowseForm):
         message = []
         if removed:
             resources = ', '.join(removed)
-            msg = messages.MSG_RESOURCES_REMOVED(resources=resources)
+            msg = messages.MSG_RESOURCES_REMOVED.gettext(resources=resources)
             message.append(msg)
         if referenced:
             items = []
@@ -549,11 +549,11 @@ class Folder_BrowseContent(BrowseForm):
                 if context.is_access_allowed(item, view):
                     items.append({'title': item.get_title(),
                                   'href': '%s/;backlinks' % item.abspath})
-            msg = messages.MSG_RESOURCES_REFERENCED_HTML(resources=items)
+            msg = messages.MSG_RESOURCES_REFERENCED_HTML.gettext(resources=items)
             message.append(msg)
         if not_removed:
             resources = ', '.join(not_removed)
-            msg = messages.MSG_RESOURCES_NOT_REMOVED(resources=resources)
+            msg = messages.MSG_RESOURCES_NOT_REMOVED.gettext(resources=resources)
             message.append(msg)
         if not removed and not referenced and not not_removed:
             message.append(messages.MSG_NONE_REMOVED)
@@ -682,10 +682,10 @@ class Folder_BrowseContent(BrowseForm):
         message = []
         if pasted:
             resources = ', '.join(pasted)
-            message.append(messages.MSG_RESOURCES_PASTED(resources=resources))
+            message.append(messages.MSG_RESOURCES_PASTED.gettext(resources=resources))
         if not_allowed:
             resources = ', '.join(not_allowed)
-            msg = messages.MSG_RESOURCES_NOT_PASTED(resources=resources)
+            msg = messages.MSG_RESOURCES_NOT_PASTED.gettext(resources=resources)
             message.append(msg)
 
         context.message = message

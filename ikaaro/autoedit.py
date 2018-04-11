@@ -300,7 +300,7 @@ class AutoEdit(AutoForm):
             last_author = resource.get_value('last_author')
             if last_author != context.user.name:
                 user = context.root.get_user_title(last_author)
-                context.message = messages.MSG_EDIT_CONFLICT2(user=user)
+                context.message = messages.MSG_EDIT_CONFLICT2.gettext(user=user)
                 context.edit_conflict = True
 
 
