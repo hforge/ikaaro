@@ -219,7 +219,8 @@ def get_root(database):
 
 
 
-def create_server(target, email, password, root,  modules=None,
+def create_server(target, email, password, root,
+                  backend='git', modules=None,
                   listen_port='8080', smtp_host='localhost',
                   log_email=None, website_languages=None):
     modules = modules or []
@@ -250,9 +251,9 @@ def create_server(target, email, password, root,  modules=None,
 
     # Create database
     size_min, size_max = 19500, 20500
-    database = make_database(target, size_min, size_max)
+    database = make_database(target, size_min, size_max, backend=backend)
     database.close()
-    database = get_database(target, size_min, size_max)
+    database = get_database(target, size_min, size_max, backend=backend)
 
     # Create the folder structure
     mkdir('%s/log' % target)
@@ -474,14 +475,13 @@ class Server(object):
         pid = getpid()
         with open(self.target + '/pid', 'w') as f:
             f.write(str(pid))
-
+        # Call method on root at start
+        with self.database.init_context() as context:
+            context.root.launch_at_start(context)
         # Listen & set context
         self.listen(address, port)
 
         # XXX The interpreter do not go here
-        # Call method on root at start
-        #context = get_context()
-        #root.launch_at_start(context)
         #self.server.root.launch_at_stop(context)
         ## Set cron interval
         #interval = self.config.get_value('cron-interval')
