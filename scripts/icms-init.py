@@ -47,7 +47,8 @@ def init(parser, options, target):
     root = options.root
     modules = options.modules.split()
     # Create server
-    create_server(target, email, password, root, modules,
+    create_server(target, email, password, root,
+        modules=modules,
         listen_port=getattr(options, 'port'),
         smtp_host=getattr(options, 'smtp_host'),
         log_email=getattr(options, 'log_email'))
