@@ -928,7 +928,11 @@ class Server(object):
             response = None
         elif as_json and not str(context.status).startswith('3'):
             # Do not load json if 302 (url redirection)
-            response = loads(context.entity)
+            try:
+                response = loads(context.entity)
+            except ValueError:
+                msg = 'Cannot load json {0}'.format(context.entity)
+                raise ValueError(msg)
         else:
             response = context.entity
         # Commit
