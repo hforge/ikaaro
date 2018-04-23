@@ -839,10 +839,14 @@ class Server(object):
             context.is_cron = True
             # Go
             t0 = time()
-            log_info('Cron launched', domain='itools.cron')
             catalog = database.catalog
             query = RangeQuery('next_time_event', None, context.timestamp)
             search = database.search(query)
+            if not search:
+                return
+            nb = len(search)
+            msg = 'Cron launched for {nb} resources'.format(nb=nb)
+            log_info(msg, domain='itools.cron')
             for brain in search.get_documents():
                 tcron0 = time()
                 payload = brain.next_time_event_payload
@@ -865,11 +869,9 @@ class Server(object):
             # Save changes
             database.save_changes()
             t1 = time()
-            msg = 'Cron finished for %s resources in %s seconds' % (
-                  len(search), t1-t0)
+            msg = 'Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
             log_info(msg, domain='itools.cron')
-        # Again, and again
-        return self.config.get_value('cron-interval')
+
 
 
     def do_request(self, method='GET', path='/', headers=None, body='',
