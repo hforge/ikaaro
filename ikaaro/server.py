@@ -837,6 +837,7 @@ class Server(object):
         # Build fake context
         with database.init_context() as context:
             context.is_cron = True
+            context.git_message = u'[CRON]'
             # Go
             t0 = time()
             catalog = database.catalog
