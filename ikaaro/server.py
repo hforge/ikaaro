@@ -40,8 +40,9 @@ from socket import gaierror
 from tempfile import mkstemp
 
 # Import from gevent
+import gevent
 from gevent.wsgi import WSGIServer, WSGIHandler
-from gevent import signal as gevent_signal
+from gevent import signal as gevent_signal, Greenlet
 from requests_toolbelt import MultipartEncoder
 
 # Import from itools
@@ -217,6 +218,11 @@ def get_root(database):
     cls = database.get_resource_class(metadata.format)
     return cls(abspath=Path('/'), database=database, metadata=metadata)
 
+
+def cron(function, interval):
+    while True:
+        gevent.sleep(interval)
+        function()
 
 
 def create_server(target, email, password, root,
@@ -479,14 +485,11 @@ class Server(object):
         with self.database.init_context() as context:
             context.root.launch_at_start(context)
         # Listen & set context
+        self.launch_cron()
         self.listen(address, port)
 
         # XXX The interpreter do not go here
         #self.server.root.launch_at_stop(context)
-        ## Set cron interval
-        #interval = self.config.get_value('cron-interval')
-        #if interval:
-        #    cron(self.cron_manager, interval)
         ## Init loop
         #if loop:
         #    try:
@@ -495,6 +498,13 @@ class Server(object):
         #        pass
         ## Ok
         return True
+
+
+    def launch_cron(self):
+        # Set cron interval
+        interval = self.config.get_value('cron-interval')
+        if interval:
+            Greenlet.spawn(cron, self.cron_manager, interval)
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):

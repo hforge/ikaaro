@@ -17,11 +17,17 @@
 # Import from standard library
 from copy import deepcopy
 
+# Import from gevent
+from gevent.lock import BoundedSemaphore
+
 # Import from itools
 from itools.database import RWDatabase, RODatabase as BaseRODatabase
 from itools.database import OrQuery, PhraseQuery, AndQuery
 from itools.uri import Path
 from itools.web import get_context, set_context
+
+
+DBSEM = BoundedSemaphore(1)
 
 
 class RODatabase(BaseRODatabase):
@@ -37,6 +43,7 @@ class RODatabase(BaseRODatabase):
 class ContextManager(object):
 
     def __init__(self, cls, database, user=None, username=None, email=None):
+        DBSEM.acquire()
         from server import get_server
         self.context = cls()
         self.context.database = database
@@ -69,6 +76,7 @@ class ContextManager(object):
             msg = 'Warning: Some changes have not been commited'
             print(msg)
         set_context(None)
+        DBSEM.release()
 
 
 
@@ -100,7 +108,6 @@ class Database(RWDatabase):
         root = self.get_resource('/')
         context = get_context()
         if context.database != self:
-            print context.database, self
             raise ValueError('The contextual database is not coherent')
 
         # Update resources
