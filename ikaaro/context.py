@@ -454,6 +454,8 @@ class CMSContext(prototype):
         elif content_type.startswith('multipart/'):
             # Case 3: multipart
             return self.get_multipart_body(body)
+        elif content_type.startswith('application/'):
+            return {'body': body}
         # Case 4: Not managed content type
         raise ValueError('Invalid content type "{0}"'.format(content_type))
 
