@@ -661,7 +661,7 @@ class CMSContext(prototype):
 
 
     def get_remote_ip(self):
-        remote_ip = self.get_header('X-Forwarded-For')
+        remote_ip = self.get_header('X_FORWARDED_FOR')
         return remote_ip.split(',', 1)[0].strip() if remote_ip else None
 
 
