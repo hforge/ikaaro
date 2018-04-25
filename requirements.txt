@@ -1,3 +1,4 @@
+gevent
 guppy
 junitxml
 requests-toolbelt
