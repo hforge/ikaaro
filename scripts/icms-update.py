@@ -29,7 +29,7 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_config
-from ikaaro.server import get_fake_context, get_pid, load_modules
+from ikaaro.server import get_pid, load_modules
 
 
 # Monkey patch, so all resources are soft and we don't fail loading
@@ -167,23 +167,20 @@ def update(parser, options, target):
     # Local variables
     root = server.root
     # Build a fake context
-    context = get_fake_context(database, root.context_cls)
-    context.server = server
-    context.init_context()
-
-    print 'STAGE 1: Find out the versions to upgrade (may take a while).'
-    version, paths = find_versions_to_update(root, options.force)
-    while version:
-        message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
-        message = message % (len(paths), version)
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        update_versions(target, database, version, paths, root, options.force)
-        # Reset the state
-        database.cache.clear()
-        database.cache[root.metadata.key] = root.metadata
-        print 'STAGE 1: Finish upgrading to version %s' % version
+    with server.database.init_context() as context:
+        print 'STAGE 1: Find out the versions to upgrade (may take a while).'
         version, paths = find_versions_to_update(root, options.force)
+        while version:
+            message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
+            message = message % (len(paths), version)
+            if ask_confirmation(message, confirm) is False:
+                abort()
+            update_versions(target, database, version, paths, root, options.force)
+            # Reset the state
+            database.cache.clear()
+            database.cache[root.metadata.key] = root.metadata
+            print 'STAGE 1: Finish upgrading to version %s' % version
+            version, paths = find_versions_to_update(root, options.force)
 
     print 'STAGE 1: Done.'
 
