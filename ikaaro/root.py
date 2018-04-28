@@ -90,7 +90,7 @@ class CtrlView(BaseView):
 class Root(Folder):
 
     class_id = 'iKaaro'
-    class_version = '20170106'
+    class_version = '20180428'
     class_title = MSG(u'iKaaro')
     class_icon16 = '/ui/ikaaro/icons/16x16/root.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/root.png'
@@ -567,6 +567,28 @@ class Root(Folder):
             if i and i % 100==0:
                 context.database.save_changes()
 
+
+
+    update_20180428_title = MSG(u'Update static database')
+    def update_20180428(self):
+        """Move static file into database_static directory
+        """
+        from itools.fs.lfs import lfs, LocalFolder
+        from itools.fs import lfs
+        context = get_context()
+        database_path = context.database.path + '/database'
+        database_static_path = context.database.path + '/database_static'
+        if not lfs.exists(database_static_path):
+            lfs.make_folder(database_static_path)
+        f = LocalFolder(database_path)
+        for p in f.traverse():
+            db_path = p.replace(database_path, '')
+            if db_path.startswith('/.git'):
+                continue
+            if f.is_file(p) and not p.endswith('.metadata'):
+                new_path = p.replace(database_path, database_static_path)
+                print('Move {0} {1}'.format(p, new_path))
+                lfs.move(p, new_path)
 
 
     #######################################################################
