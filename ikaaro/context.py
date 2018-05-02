@@ -255,7 +255,7 @@ class CMSContext(prototype):
 
     def get_headers(self):
         headers = {}
-        for name, value in os.environ.iteritems():
+        for name, value in self.environ.iteritems():
             if name.startswith('HTTP_'):
                 name = name.lower().replace('HTTP_', '')
                 name = '-'.join([x.capitalize() for x in name.split('-')])
