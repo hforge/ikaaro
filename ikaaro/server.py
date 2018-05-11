@@ -41,7 +41,7 @@ from tempfile import mkstemp
 
 # Import from gevent
 import gevent
-from gevent.wsgi import WSGIServer, WSGIHandler
+from gevent.pywsgi import WSGIServer, WSGIHandler
 from gevent import signal as gevent_signal, Greenlet
 from requests_toolbelt import MultipartEncoder
 
