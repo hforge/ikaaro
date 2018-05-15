@@ -592,10 +592,11 @@ class File_Field(Field):
         - something else
         """
         if self.multilingual and not language:
-            raise ValueError, 'expected "language" param not found'
-
+            raise ValueError('expected "language" param not found')
+        elif not self.multilingual and language:
+            raise ValueError('"language" param should be empty')
         if kw:
-            raise NotImplementedError, 'keyword arguments not supported'
+            raise NotImplementedError('keyword arguments not supported')
 
         # FIXME This should remove the handler, the FileWidget should include
         # a checkbox to remove the handler
