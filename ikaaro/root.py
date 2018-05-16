@@ -575,6 +575,7 @@ class Root(Folder):
         """
         from itools.fs.lfs import lfs, LocalFolder
         from itools.fs import lfs
+        import shutil
         context = get_context()
         database_path = context.database.path + '/database'
         database_static_path = context.database.path + '/database_static'
@@ -588,7 +589,10 @@ class Root(Folder):
             if f.is_file(p) and not p.endswith('.metadata'):
                 new_path = p.replace(database_path, database_static_path)
                 print('Move {0} {1}'.format(p, new_path))
-                lfs.move(p, new_path)
+                source = lfs._resolve_path(p)
+                target = lfs._resolve_path(new_path)
+                # Use shutil to be compatible with symbolic links
+                shutil.move(source, target)
         worktree = context.database.backend.worktree
         worktree._call(['git', 'add', '-u'])
         worktree._call(['git', 'commit', '-m', 'Move static files in database_static'])
