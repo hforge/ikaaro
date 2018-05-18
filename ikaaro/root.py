@@ -575,7 +575,7 @@ class Root(Folder):
         """
         from itools.fs.lfs import lfs, LocalFolder
         from itools.fs import lfs
-        from os.path import dirname
+        import os
         import shutil
         context = get_context()
         database_path = context.database.path + '/database'
@@ -593,9 +593,9 @@ class Root(Folder):
                 source = lfs._resolve_path(p)
                 target = lfs._resolve_path(new_path)
                 # Create folder
-                parent_path = dirname(source)
-                if not lfs.exists(parent_path):
-                    lfs.make_folder(parent_path)
+                parent_path = os.path.dirname(target)
+                if not os.path.exists(parent_path):
+                    os.makedirs(parent_path)
                 # Use shutil to be compatible with symbolic links
                 shutil.move(source, target)
         worktree = context.database.backend.worktree
