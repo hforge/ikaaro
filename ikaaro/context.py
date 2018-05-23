@@ -589,8 +589,6 @@ class CMSContext(prototype):
             expires = HTTPDate.encode(expires)
         else:
             expires = None
-        expires = None
-
         # Set cookie
         self.set_cookie('iauth', cookie, path='/', expires=expires)
 
