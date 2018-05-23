@@ -57,7 +57,7 @@ class CMSContext(prototype):
     environ = {}
     form = {}
     form_error = None
-    header_response = {}
+    header_response = []
     is_cron = False
     message = None
     method = None
@@ -87,7 +87,7 @@ class CMSContext(prototype):
         self.environ = environ
         path = environ.get('PATH_INFO')
         self.path = path
-        self.header_response = {}
+        self.header_response = []
         self.content_type = None
         self.status = None
         # Get database
@@ -283,12 +283,22 @@ class CMSContext(prototype):
     def set_header(self, name, value):
         datatype = get_type(name)
         value = datatype.encode(value)
-        self.header_response[name] = value
+        self._set_header(name, value)
 
 
     def _set_header(self, name, value):
         """ Set header without encoding """
-        self.header_response[name] = value
+        l = []
+        added = False
+        for key, old_value in self.header_response:
+            if key == name and key != 'Set-Cookie':
+                l.append((name, value))
+                added = True
+            else:
+                l.append((key, old_value))
+        if not added:
+            l.append((name, value))
+        self.header_response = l
 
 
     def get_referrer(self):
@@ -388,18 +398,30 @@ class CMSContext(prototype):
 
     def set_cookie(self, name, value, **kw):
         # Build cookie
-        self.cookies[name] = Cookie(value, **kw)
+        self.cookies[name] = Cookie(name, value, **kw)
         # Set in headers
-        cookies = SetCookieDataType.encode(self.cookies)
-        self._set_header('Set-Cookie', cookies)
+        self._clear_cookie()
+        for cookie in self.cookies.values():
+            cookie = SetCookieDataType.encode(cookie)
+            self._set_header('Set-Cookie', cookie)
 
 
     def del_cookie(self, name):
         # Del cookie
-        self.cookies[name] = Cookie('', max_age=0)
-        # Set in headers
-        cookies = SetCookieDataType.encode(self.cookies)
-        self._set_header('Set-Cookie', cookies)
+        self.cookies[name] = Cookie(name, '', max_age=0)
+        # Write all cookies
+        self._clear_cookie()
+        for cookie in self.cookies.values():
+            cookie = SetCookieDataType.encode(cookie)
+            self._set_header('Set-Cookie', cookie)
+
+
+    def _clear_cookie(self):
+        l = []
+        for name, value in self.header_response:
+            if name != 'Set-Cookie':
+                l.append((name, value))
+        self.header_response = l
 
     #######################################################################
     # API / Forms

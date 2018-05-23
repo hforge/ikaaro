@@ -41,11 +41,9 @@ def application(environ, start_response):
             log_error('Internal error', domain='itools.web')
             context.set_default_response(500)
         finally:
-            headers = [
+            headers =  context.header_response + [
                 ('Content-Type', context.content_type),
             ]
-            for key, value in context.header_response.items():
-                headers.append((key, value))
             if context.entity:
                 headers.append(('Content-Length', str(len(context.entity))))
             start_response(str(context.status), headers)
