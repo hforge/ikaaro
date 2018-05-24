@@ -266,7 +266,8 @@ class CMSContext(prototype):
     def get_header(self, name):
         name = name.lower()
         datatype = get_type(name)
-        if name == 'content-type':
+        name = name.replace('-', '_')
+        if name == 'content_type':
             value = self.environ.get('CONTENT_TYPE')
         else:
             value = self.environ.get('HTTP_'+ name.upper())
@@ -329,6 +330,11 @@ class CMSContext(prototype):
         if filename:
             disposition = '%s; filename="%s"' % (disposition, filename)
         self._set_header('Content-Disposition', disposition)
+
+
+    def http_not_modified(self):
+        self.status = 304
+        self.set_response_from_context()
 
 
     def set_default_response(self, status):
