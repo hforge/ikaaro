@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 import urllib
+from cProfile import runctx
 from datetime import datetime
 from email.parser import HeaderParser
 from json import dumps, loads
@@ -456,7 +457,7 @@ class Server(object):
     def start(self, detach=False, profile=False, loop=True):
         msg = 'Start database %s %s %s' % (detach, profile, loop)
         log_info(msg)
-        profile = ('%s/log/profile' % self.target) if profile else None
+        self.profile = '{0}/log/profile'.format(self.target) if profile else None
         #self.loop = ServerLoop(
         #      target=self.target,
         #      server=self,
@@ -631,7 +632,10 @@ class Server(object):
             log=self.access_log)
         gevent_signal(SIGTERM, self.stop)
         gevent_signal(SIGINT, self.stop)
-        self.wsgi_server.serve_forever()
+        if self.profile:
+            runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
+        else:
+            self.wsgi_server.serve_forever()
 
 
     #def save_running_informations(self):
