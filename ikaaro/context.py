@@ -699,9 +699,7 @@ class CMSContext(prototype):
     def get_link(self, resource):
         """Return a link to the given resource, from the given context.
         """
-        abspath = deepcopy(resource.abspath)
-        abspath.endswith_slash = False
-        return str(abspath)
+        return str(resource.abspath)
 
 
     def return_json(self, data, status=None):

@@ -219,10 +219,9 @@ class DBResource(Resource):
     # Resource API
     #######################################################################
 
-    def get_resources(self, path='.'):
-        here = self.get_resource(path)
-        for name in here._get_names():
-            yield here.get_resource(name)
+    def get_resources(self):
+        for name in self._get_names():
+            yield self.get_resource(name)
 
 
     def get_resource_by_uuid(self, uuid, context,
