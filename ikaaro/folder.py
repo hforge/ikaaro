@@ -179,7 +179,8 @@ class Folder(DBResource):
         # Remove handlers
         for r in list(resource.traverse_resources()):
             for handler in [r.metadata] + r.get_fields_handlers():
-                database.del_handler(handler.key)
+                if database.has_handler(handler.key):
+                    database.del_handler(handler.key)
 
 
     def _get_names(self):
