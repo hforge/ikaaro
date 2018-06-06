@@ -389,6 +389,7 @@ class Folder(DBResource):
         # Set ctime and mtime
         context = get_context()
         now = context.timestamp
+        resource.set_uuid()
         resource.set_value('ctime', now)
         resource.set_value('mtime', now)
         # Childs
@@ -449,6 +450,7 @@ class Folder(DBResource):
             source_path_child = source_path.resolve2(child.name)
             target_path_child = target_path.resolve2(child.name)
             self.move_resource(source_path_child, target_path_child)
+
 
 
     def search_resources(self, cls=None, format=None):
