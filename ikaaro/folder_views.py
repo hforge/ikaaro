@@ -655,7 +655,7 @@ class Folder_BrowseContent(BrowseForm):
                     pasted.append(source.name)
                     continue
 
-            name = generate_name(source.name, target.get_names(), '_copy_')
+            name = generate_name(source.name, list(target.get_names()), '_copy_')
             if cut is True:
                 # Cut&Paste
                 try:
