@@ -313,6 +313,12 @@ class CMSContext(prototype):
         return self.body
 
 
+    def accept_cors(self):
+        origin = self.get_header('Origin')
+        self.set_header('Access-Control-Allow-Credentials', 'true')
+        self.set_header('Access-Control-Allow-Origin', origin)
+        self.set_header('Access-Control-Allow-Headers', 'Authorization')
+
     #######################################################################
     # Web response API
     #######################################################################
