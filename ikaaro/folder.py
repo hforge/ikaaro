@@ -20,6 +20,7 @@
 
 
 # Import from the Standard Library
+import fnmatch
 from cStringIO import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
@@ -354,6 +355,12 @@ class Folder(DBResource):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
+        # Exclude patterns
+        if exclude_patterns is None:
+            exclude_patterns = []
+        for exclude_pattern in exclude_patterns:
+            if fnmatch.fnmatch(str(source_path), exclude_pattern):
+                return
         # Get the source and target resources
         source = self.get_resource(source_path)
         childs = list(source.get_resources())
@@ -396,7 +403,7 @@ class Folder(DBResource):
         for child in childs:
             source_path_child = source_path.resolve2(child.name)
             target_path_child = target_path.resolve2(child.name)
-            self.copy_resource(source_path_child, target_path_child)
+            self.copy_resource(source_path_child, target_path_child, exclude_patterns)
         # Ok
         return resource
 
