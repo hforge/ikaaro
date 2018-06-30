@@ -52,7 +52,7 @@ from itools.database import Metadata, RangeQuery
 from itools.database import make_catalog, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
-from itools.fs import vfs, lfs
+from itools.fs import lfs
 from itools.handlers import ConfigFile
 from itools.i18n import init_language_selector
 from itools.log import Logger, register_logger
@@ -380,7 +380,7 @@ class Server(object):
         # Load environment file
         root_file_path = inspect.getfile(root.__class__)
         environement_path = str(get_reference(root_file_path).resolve('environment.json'))
-        if vfs.exists(environement_path):
+        if lfs.exists(environement_path):
             with open(environement_path, 'r') as f:
                 data = f.read()
                 self.environment = json.loads(data)
@@ -661,23 +661,12 @@ class Server(object):
 
 
     def is_running_in_rw_mode(self, mode='running'):
+        # FIXME
         is_running = self.is_running()
         if not is_running:
             return False
         if mode == 'request':
-            address = self.config.get_value('listen-address').strip()
-            if address == '*':
-                address = '127.0.0.1'
-            port = self.config.get_value('listen-port')
-
-            url = 'http://%s:%s/;_ctrl' % (address, port)
-            try:
-                h = vfs.open(url)
-            except Exception:
-                # The server is not running
-                return False
-            data = h.read()
-            return json.loads(data)['read-only'] is False
+            raise NotImplementedError
         elif mode == 'running':
             kw = self.get_running_informations()
             return not kw.get('read_only', False)

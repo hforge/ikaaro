@@ -25,7 +25,7 @@ from os.path import isfile
 # Import from itools
 from itools.core import get_abspath
 from itools.datatypes import Unicode
-from itools.fs import vfs
+from itools.fs import lfs
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import get_context, ERROR, INFO
@@ -60,7 +60,7 @@ class Skin(object):
             base_path = self.key.split('/ui/')[0]
             new_key = self.key.replace(base_path, build_path)
             new_key = new_key.replace('/ui/', '/ui_dev/')
-            if vfs.exists(new_key):
+            if lfs.exists(new_key):
                 # Use local skin
                 return new_key
         return self.key
