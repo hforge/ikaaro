@@ -246,12 +246,13 @@ class FreeTestCase(TestCase):
 
     def test_remove_folder(self):
         with Database('demo.hforge.org', 19500, 20500) as database:
-            with database.init_context():
+            with database.init_context() as context:
                 root = database.get_resource('/')
                 container = root.make_resource('folder-to-remove', Folder)
                 container.make_resource('1', Text)
                 container.make_resource('2', Text)
                 container.make_resource('3', Text)
+                context.database.save_changes()
                 root.del_resource('folder-to-remove')
                 self.assertEqual(
                     database.removed,
