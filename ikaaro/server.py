@@ -58,6 +58,7 @@ from itools.i18n import init_language_selector
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
+from itools.loop import cron
 from itools.uri import get_reference, Path
 from itools.web import WebLogger
 from itools.web.context import select_language
@@ -219,11 +220,6 @@ def get_root(database):
     cls = database.get_resource_class(metadata.format)
     return cls(abspath=Path('/'), database=database, metadata=metadata)
 
-
-def cron(function, interval):
-    while True:
-        gevent.sleep(interval)
-        function()
 
 
 def create_server(target, email, password, root,
@@ -461,10 +457,6 @@ class Server(object):
         msg = 'Start database %s %s %s' % (detach, profile, loop)
         log_info(msg)
         self.profile = '{0}/log/profile'.format(self.target) if profile else None
-        #self.loop = ServerLoop(
-        #      target=self.target,
-        #      server=self,
-        #      profile=profile)
         # Daemon mode
         if detach:
             become_daemon()
@@ -494,12 +486,6 @@ class Server(object):
 
         # XXX The interpreter do not go here
         #self.server.root.launch_at_stop(context)
-        ## Init loop
-        #if loop:
-        #    try:
-        #        self.loop.run()
-        #    except KeyboardInterrupt:
-        #        pass
         ## Ok
         return True
 
@@ -508,7 +494,7 @@ class Server(object):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
-            Greenlet.spawn(cron, self.cron_manager, interval)
+            cron(self.cron_manager, interval)
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
@@ -696,9 +682,7 @@ class Server(object):
 
 
     def flush_spool(self):
-        # XXX FIXME
-        #cron(self._smtp_send, timedelta(seconds=1))
-        pass
+        cron(self._smtp_send, timedelta(seconds=1))
 
 
     def send_email(self, message):
