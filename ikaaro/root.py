@@ -387,7 +387,7 @@ class Root(Folder):
         message['To'] = to_addr
 
         # 6. Subject
-        if subject_with_host is True:
+        if subject_with_host is True and context.uri:
             subject = '[%s] %s' % (context.uri.authority, subject)
         message['Subject'] = Header(subject, encoding)
 
