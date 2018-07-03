@@ -813,7 +813,6 @@ class Server(object):
     #######################################################################
     def cron_manager(self):
         database = self.database
-
         # Build fake context
         with database.init_context() as context:
             context.is_cron = True
@@ -852,6 +851,8 @@ class Server(object):
             t1 = time()
             msg = 'Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
             log_info(msg, domain='itools.cron')
+        # Again, and again
+        return self.config.get_value('cron-interval')
 
 
 
