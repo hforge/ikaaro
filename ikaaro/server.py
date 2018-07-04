@@ -292,6 +292,8 @@ def get_server():
 
 def set_server(the_server):
     global server
+    if the_server and get_server() != None:
+        raise ValueError('Server is already defined')
     server = the_server
 
 
@@ -583,6 +585,7 @@ class Server(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
+        set_server(None)
 
 
     def close(self):
