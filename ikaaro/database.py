@@ -43,6 +43,10 @@ class RODatabase(BaseRODatabase):
 class ContextManager(object):
 
     def __init__(self, cls, database, user=None, username=None, email=None):
+        # Check if context is not already locked
+        if get_context() != None:
+            raise ValueError('Cannot acquire context. Already locked.')
+        # Acquire lock on database
         DBSEM.acquire()
         from server import get_server
         self.context = cls()
