@@ -21,7 +21,7 @@ from unittest import TestCase, main
 from itools.database import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from ikaaro.database import Database, RODatabase
+from ikaaro.database import Database
 from ikaaro.folder import Folder
 from ikaaro.utils import get_base_path_query
 from ikaaro.text import Text
@@ -76,6 +76,31 @@ class FreeTestCase(TestCase):
                 # Cannot create 2 users with the same email address
                 user = root.make_user(email, password)
                 self.assertEqual(user, None)
+
+
+    def test_create_two_resources_at_root(self):
+        with Database('demo.hforge.org', 19500, 20500) as database:
+            with database.init_context():
+                root = database.get_resource('/')
+                f1 = root.make_resource(None,  Folder)
+                self.assertEqual(f1.name, '1')
+                self.assertEqual(database.added, set(['1.metadata']))
+                f2 = root.make_resource(None,  Folder)
+                self.assertEqual(f2.name, '2')
+
+
+    def test_create_two_resources_in_folder(self):
+        with Database('demo.hforge.org', 19500, 20500) as database:
+            with database.init_context():
+                root = database.get_resource('/')
+                container = root.make_resource('test-two-resources', Folder)
+                self.assertEqual(root.get_resource('test-two-resources').name, 'test-two-resources')
+                f1 = container.make_resource(None,  Folder)
+                self.assertEqual(f1.name, '0')
+                self.assertEqual(database.added, set(['test-two-resources.metadata', 'test-two-resources/0.metadata']))
+                f2 = container.make_resource(None,  Folder)
+                self.assertEqual(f2.name, '1')
+                self.assertEqual(database.added, set(['test-two-resources.metadata' , 'test-two-resources/0.metadata', 'test-two-resources/1.metadata']))
 
 
     def test_multilingual_search(self):
