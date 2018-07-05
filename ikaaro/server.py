@@ -826,7 +826,7 @@ class Server(object):
             query = RangeQuery('next_time_event', None, context.timestamp)
             search = database.search(query)
             if not search:
-                return
+                return self.config.get_value('cron-interval')
             nb = len(search)
             msg = 'Cron launched for {nb} resources'.format(nb=nb)
             log_info(msg, domain='itools.cron')
