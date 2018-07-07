@@ -25,7 +25,7 @@ from itools.web.router import RequestMethod
 def application(environ, start_response):
     from ikaaro.server import get_server
     server = get_server()
-    with server.database.init_context() as context:
+    with server.database.init_context(commit_at_exit=False) as context:
         try:
             t0 = time()
             # Init context from wsgi envrion

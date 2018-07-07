@@ -42,7 +42,7 @@ class RODatabase(BaseRODatabase):
 
 class ContextManager(object):
 
-    def __init__(self, cls, database, user=None, username=None, email=None):
+    def __init__(self, cls, database, user=None, username=None, email=None, commit_at_exit=True):
         # Check if context is not already locked
         if get_context() != None:
             raise ValueError('Cannot acquire context. Already locked.')
@@ -52,6 +52,7 @@ class ContextManager(object):
         self.context = cls()
         self.context.database = database
         self.context.server = get_server()
+        self.commit_at_exit = commit_at_exit
         # Get user by user
         if email:
             query = AndQuery(
@@ -76,9 +77,12 @@ class ContextManager(object):
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.context.database.has_changed:
-            msg = 'Warning: Some changes have not been commited'
-            print(msg)
+        if self.commit_at_exit:
+            self.context.database.save_changes()
+        else:
+            if self.context.database.has_changed:
+                msg = 'Warning: Some changes have not been commited'
+                print(msg)
         set_context(None)
         DBSEM.release()
 
@@ -94,12 +98,14 @@ class Database(RWDatabase):
             catalog=catalog, backend=backend)
 
 
-    def init_context(self, user=None, username=None, email=None):
+    def init_context(self, user=None, username=None, email=None, commit_at_exit=True):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
         cls = root.context_cls if root else CMSContext
         return ContextManager(cls,
-            database=self, user=user, username=username, email=email)
+            database=self, user=user,
+            username=username, email=email,
+            commit_at_exit=commit_at_exit)
 
 
     def close(self):
