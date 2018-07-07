@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from unittest import TestCase, main
+from datetime import time
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery
@@ -198,6 +199,19 @@ class FreeTestCase(TestCase):
                     set(['folder2.metadata', 'folder2/hello.txt.metadata',
                          'folder2/child.metadata', 'folder2/child/hello_child.txt.metadata']))
                 database.close()
+
+
+    def test_set_bad_value(self):
+        with Database('demo.hforge.org', 19500, 20500) as database:
+            with database.init_context():
+                root = database.get_resource('/')
+                e = None
+                try:
+                    root.set_value('mtime', time(10, 0))
+                except Exception, e:
+                    pass
+                self.assertNotEqual(e, None)
+
 
 
     def test_abort_transaction(self):
