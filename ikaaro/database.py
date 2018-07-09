@@ -77,14 +77,24 @@ class ContextManager(object):
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.commit_at_exit:
-            self.context.database.save_changes()
+        try:
+            if self.commit_at_exit:
+                self.context.database.save_changes()
+            else:
+                if self.context.database.has_changed:
+                    msg = 'Warning: Some changes have not been commited'
+                    print(msg)
+        except Exception:
+            set_context(None)
+            DBSEM.release()
+            raise
         else:
-            if self.context.database.has_changed:
-                msg = 'Warning: Some changes have not been commited'
-                print(msg)
-        set_context(None)
-        DBSEM.release()
+            set_context(None)
+            DBSEM.release()
+
+
+
+
 
 
 
