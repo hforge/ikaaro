@@ -163,7 +163,7 @@ class Root(Folder):
         # We send an email with the traceback
         if email:
             headers = u'\n'.join([u'%s => %s' % (x, y)
-                                    for x, y in context.get_headers().items()])
+                                    for x, y in context.get_headers()])
             subject = MSG(u'Internal server error').gettext()
             text = u'%s\n\n%s\n\n%s' % (context.uri,
                                         traceback.format_exc(),
