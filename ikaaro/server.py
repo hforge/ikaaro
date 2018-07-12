@@ -19,11 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-import urllib
 from cProfile import runctx
-from datetime import datetime
 from email.parser import HeaderParser
-from json import dumps, loads
+from json import loads
+from io import BytesIO
 from datetime import timedelta
 from time import strftime
 import inspect
@@ -37,14 +36,14 @@ from time import time
 from traceback import format_exc
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from signal import SIGINT, SIGTERM
+from requests import Request
 from socket import gaierror
 from tempfile import mkstemp
+from wsgiref.util import setup_testing_defaults
 
 # Import from gevent
-import gevent
 from gevent.pywsgi import WSGIServer, WSGIHandler
-from gevent import signal as gevent_signal, Greenlet
-from requests_toolbelt import MultipartEncoder
+from gevent import signal as gevent_signal
 
 # Import from itools
 from itools.core import become_daemon, vmsize
@@ -59,7 +58,7 @@ from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import cron
-from itools.uri import get_reference, Path
+from itools.uri import get_reference, get_uri_path, Path
 from itools.web import WebLogger
 from itools.web.context import select_language
 from itools.web import set_context, get_context
@@ -371,7 +370,6 @@ class Server(object):
         # Get database
         database = get_database(target, size_min, size_max, read_only)
         self.database = database
-
         # Find out the root class
         root = get_root(database)
         self.root = root
@@ -428,7 +426,6 @@ class Server(object):
         self.session_timeout = get_value('session-timeout')
         # Register routes
         self.register_dispatch_routes()
-
 
 
     #def log_access(self, host, request_line, status_code, body_length):
@@ -860,66 +857,78 @@ class Server(object):
 
 
     def do_request(self, method='GET', path='/', headers=None, body='',
-            context=None, as_json=False, as_multipart=False, user=None):
+            context=None, as_json=False, as_multipart=False, files=None, user=None, cookies=None):
         """Experimental method to do a request on the server"""
         from itools.web.router import RequestMethod
-        from wsgiref.headers import Headers
-        from itools.uri import get_uri_path
-        from wsgiref.util import setup_testing_defaults
-        # XXX uri query didn't works ?
         headers = []
         path_info = get_uri_path(path)
         q_string = path.split('?')[-1]
+        # Build base environ
         environ = {'PATH_INFO': path_info,
                    'REQUEST_METHOD': method,
+                   'HTTP_X-Forwarded-Host': 'localhost/',
+                   'HTTP_X_FORWARDED_PROTO': 'http',
                    'QUERY_STRING': q_string}
         setup_testing_defaults(environ)
-        h = Headers(headers)
-        # I'm not a robot
-        h.add_header('User-Agent', 'Firefox')
-        # Build headers
-        from io import BytesIO
-        if body and as_multipart:
-            m = MultipartEncoder(body)
-            body = m.to_string()
-            #h.add_header('content-type', 'application/x-www-form-urlencoded')
-            #environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-            #import urllib
-            #body = urllib.urlencode(body)
-            environ['wsgi.input'] = BytesIO(body)
-            environ['CONTENT_LENGTH'] = len(body)
-            environ['CONTENT_TYPE'] = m.content_type
-        elif as_json is True:
-            if body:
-                body = dumps(body)
-                environ['wsgi.input'] = BytesIO(body)
-                environ['CONTENT_LENGTH'] = len(body)
-            h.add_header('content-type', 'application/json')
-            environ['CONTENT_TYPE'] = 'application/json'
-            environ['ACCEPT'] = 'application/json'
-            h.add_header('Accept', 'application/json')
+        if files:
+            as_multipart = True
+        # Get request header / body
+        if as_json:
+            req = Request(
+                method,
+                'http://localhost:8080{0}'.format(path),
+                json=body,
+            )
+            prepped = req.prepare()
+        elif as_multipart:
+            req = Request(
+                method,
+                'http://localhost:8080{0}'.format(path),
+                data=body,
+                files=files
+            )
+            prepped = req.prepare()
         else:
-            body = urllib.urlencode(body)
-            environ['wsgi.input'] = BytesIO(body)
-            environ['CONTENT_LENGTH'] = len(body)
-            environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-            h.add_header('content-type', 'application/x-www-form-urlencoded')
-        # Build soup message
-        # Init
+            req = Request(
+                method,
+                'http://localhost:8080{0}'.format(path),
+                data=body,
+            )
+            prepped = req.prepare()
+        # Build headers
+        headers = [(key.lower(), value) for key, value in prepped.headers.items()]
+        headers.append(('User-Agent', 'Firefox'))
         for key, value in headers:
             environ['HTTP_%s' % key.upper().replace('-', '_')] = value
-
+        # Set wsgi input body
+        environ['wsgi.input'] = BytesIO(prepped.body)
+        # Set content length
+        if prepped.body:
+            environ['CONTENT_LENGTH'] = len(prepped.body)
+        # Set accept
+        if as_json:
+            environ['CONTENT_TYPE'] = 'application/json'
+            environ['HTTP_ACCEPT'] = 'application/json'
+        elif as_multipart:
+            environ['CONTENT_TYPE'] = prepped.headers['Content-Type']
+        else:
+            environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
         # Get context
-        # Do request
         context = get_context()
+        # Log user
         user = context.user or user
         if user:
             context.login(user)
             context.user = user
         context.server = self
+        # Init context from environ
         context.init_from_environ(environ, user)
+        # Cookies
+        if cookies:
+            for key, value in cookies.items():
+                context.set_cookie(key, value)
+        # Do request
         RequestMethod.handle_request(context)
-        # OK
         # Transform result
         if context.entity is None:
             response = None
