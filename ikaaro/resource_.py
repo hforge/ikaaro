@@ -306,7 +306,19 @@ class DBResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
+    def check_if_context_exists(self):
+        """ We cannot do:
+          - resource.get_value(xxx)
+          - resource.set_value('name', xxx)
+        if there's no context.
+        """
+        context = get_context()
+        if context is None:
+            raise ValueError('Error: No context was defined')
+
+
     def get_value(self, name, language=None):
+        self.check_if_context_exists()
         # TODO: Use decorator for cache
         # TODO: Reactivate when ready
         #cache_key = (name, language)
@@ -349,6 +361,7 @@ class DBResource(Resource):
 
 
     def set_value(self, name, value, language=None, **kw):
+        self.check_if_context_exists()
         # TODO: Use decorator for cache
         field = self.get_field(name)
         if field is None:
