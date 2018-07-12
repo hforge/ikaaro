@@ -46,5 +46,6 @@ def application(environ, start_response):
                 headers.append(('Content-Type', context.content_type))
             if context.entity:
                 headers.append(('Content-Length', str(len(context.entity))))
-            start_response(str(context.status), headers)
+            status = context.status or 500
+            start_response(str(status), headers)
             yield context.entity
