@@ -1,3 +1,15 @@
+## ikaaro 0.77.5
+
+-  Add base fields to simplify overriding
+-  Remove itools from requirements.txt
+-  Cron: Set `git_message` before committing
+-  Cron: Use specific git message
+-  Cron: Abort database changes on errors
+-  Server: Remove useless `check_catalog`
+-  Do not call `get_config` if already loaded
+-  Widget: Add readonly attribute
+-  Root: Add pygit2 to `get_version_of_packages`
+
 ##  ikaaro 0.77.0 - 2017/03/10
 
 ### Added
