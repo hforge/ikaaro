@@ -66,7 +66,6 @@ class Field(BaseField):
         """If value == old value then return False
            else make the change and return True
         """
-        self.value_is_valid(resource, name, value, language)
         # Check the new value is different from the old value
         old_value = self.get_value(resource, name, language)
         if value == old_value:
@@ -81,16 +80,6 @@ class Field(BaseField):
         self._set_value(resource, name, value, language, **kw)
         get_context().database.change_resource(resource)
         return True
-
-
-    def value_is_valid(self, resource, name, value, language):
-        datatype = self.get_datatype()
-        try:
-            datatype.encode(value)
-        except:
-            msg = "Value '{0}' is not a valid value for datatype '{1}'"
-            raise ValueError(msg.format(value, datatype))
-
 
 
     def get_value_title(self, resource, name, language=None, mode=None):
