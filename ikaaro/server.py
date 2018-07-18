@@ -716,12 +716,10 @@ class Server(object):
             # 1. Open connection
             try:
                 smtp = SMTP(smtp_host)
-            except gaierror, excp:
-                log_warning('%s: "%s"' % (excp[1], smtp_host))
-                return 60 # 1 minute
             except Exception:
                 self.smtp_log_error()
-                return 60 # 1 minute
+                spool.move(name, 'failed/%s' % name)
+                return 60 if get_names() else False
             log_info('CONNECTED to %s' % smtp_host)
 
             # 2. Login
