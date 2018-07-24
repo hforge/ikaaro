@@ -370,9 +370,10 @@ class Folder(DBResource):
         # Check compatibility
         if (not target_parent.can_paste(source)
                 or not source.can_paste_into(target_parent)):
+            source_title = source.class_title.gettext().encode('utf8')
+            parent_title = target_parent.class_title.gettext().encode('utf8')
             message = 'resource type "{0}" cannot be copied into type "{1}"'
-            message = message.format(source.class_title.gettext(),
-                                     target_parent.class_title.gettext())
+            message = message.format(source_title, parent_title)
             raise ConsistencyError(message)
 
         # Copy the metadata
