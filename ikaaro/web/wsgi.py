@@ -17,6 +17,9 @@
 # Import from standard library
 from time import time
 
+# Import from gevent
+from gevent import sleep
+
 # Import from itools
 from itools.log import log_error
 from itools.web.router import RequestMethod
@@ -24,6 +27,10 @@ from itools.web.router import RequestMethod
 
 def application(environ, start_response):
     from ikaaro.server import get_server
+    tstart = time()
+    # Make the request non blocking so we can measure
+    # request wait time
+    sleep(0)
     server = get_server()
     with server.database.init_context(commit_at_exit=False) as context:
         try:
@@ -35,6 +42,7 @@ def application(environ, start_response):
             t1 = time()
             # Compute request time
             context.request_time = t1-t0
+            context.request_wait_time = t0 - tstart
             # Callback at end of request
             context.on_request_end()
         except StandardError:
