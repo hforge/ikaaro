@@ -57,6 +57,7 @@ class Field(BaseField):
     readonly = False # Means the field should not be editable by the user
     datatype = None
     widget = None
+    obsolete = False
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError

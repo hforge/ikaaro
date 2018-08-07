@@ -318,15 +318,22 @@ class DBResource(Resource):
 
 
     def get_value(self, name, language=None):
+        field = self.get_field(name)
+        if field is None:
+            msg = 'field {name} is not defined on {class_id}'
+            log_warning(msg.format(name=name, class_id=self.class_id))
+            return None
+        # Check context
         self.check_if_context_exists()
+        # Check if field is obsolete
+        if field.obsolete:
+            msg = 'field {name} is obsolete on {class_id}'
+            log_warning(msg.format(name=name, class_id=self.class_id))
         # TODO: Use decorator for cache
         # TODO: Reactivate when ready
         #cache_key = (name, language)
         #if self._values.has_key(cache_key):
         #    return self._values[cache_key]
-        field = self.get_field(name)
-        if field is None:
-            return None
         if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
             try:
                 value = self.get_value_from_brain(name, language)
