@@ -533,7 +533,9 @@ class DBResource(Resource):
 
 
     def get_owner(self):
-        return self.get_value('owner')
+        if self.get_field('owner'):
+            return self.get_value('owner')
+        return None
 
 
     def get_share(self):
