@@ -16,7 +16,6 @@
 
 # Import from standard library
 from base64 import decodestring, encodestring
-from copy import deepcopy
 from datetime import datetime, timedelta
 import json
 from hashlib import sha224
@@ -618,11 +617,15 @@ class CMSContext(prototype):
     def _set_auth_cookie(self, cookie):
         # Compute expires datetime (FIXME Use the request date)
         session_timeout = self.server.session_timeout
-        if session_timeout != timedelta(0):
-            expires = self.timestamp + session_timeout
-            expires = HTTPDate.encode(expires)
-        else:
-            expires = None
+        expires = self.timestamp + session_timeout
+        # If never expires, set cookie's expire date in 365 days
+        # By default, if we don't give expires date,
+        # the cookie will expires at the end of the browser session
+        # (so when restarting the browser)
+        if session_timeout == timedelta(0):
+            expires += timedelta(days=365)
+        # Encore expires
+        expires = HTTPDate.encode(expires)
         # Set cookie
         self.set_cookie('iauth', cookie, path='/', expires=expires)
 
