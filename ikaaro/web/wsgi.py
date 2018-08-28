@@ -25,10 +25,10 @@ from itools.web.utils import reason_phrases
 
 def application(environ, start_response):
     from ikaaro.server import get_server
+    t0 = time()
     server = get_server()
     with server.database.init_context(commit_at_exit=False) as context:
         try:
-            t0 = time()
             # Init context from wsgi envrion
             context.init_from_environ(environ)
             # Handle the request
