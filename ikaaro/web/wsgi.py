@@ -20,6 +20,7 @@ from time import time
 # Import from itools
 from itools.log import log_error
 from itools.web.router import RequestMethod
+from itools.web.utils import reason_phrases
 
 
 def application(environ, start_response):
@@ -47,5 +48,6 @@ def application(environ, start_response):
             if context.entity:
                 headers.append(('Content-Length', str(len(context.entity))))
             status = context.status or 500
+            status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
             yield context.entity

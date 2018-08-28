@@ -478,7 +478,7 @@ class CMSContext(prototype):
         except:
             content_type = response
         # Case 1: nothing
-        length = int(self.environ.get('CONTENT_LENGTH', '0'))
+        length = int(self.environ.get('CONTENT_LENGTH', '0') or 0)
         body = self.environ['wsgi.input'].read(length)
         if not body:
             return {}
