@@ -247,11 +247,11 @@ class DBResource(Resource):
         raise NotImplementedError
 
 
-    def copy_resource(self, source, target):
+    def copy_resource(self, source, target, check_if_authorized=True):
         raise NotImplementedError
 
 
-    def move_resource(self, source, target):
+    def move_resource(self, source, target, check_if_authorized=True):
         raise NotImplementedError
 
 

@@ -351,7 +351,7 @@ class Folder(DBResource):
         return source_path, target_path
 
 
-    def copy_resource(self, source_path, target_path, exclude_patterns=None):
+    def copy_resource(self, source_path, target_path, exclude_patterns=None, check_if_authorized=True):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
@@ -368,8 +368,9 @@ class Folder(DBResource):
         target_parent = self.get_resource(parent_path)
 
         # Check compatibility
-        if (not target_parent.can_paste(source)
-                or not source.can_paste_into(target_parent)):
+        if (check_if_authorized and
+                (not target_parent.can_paste(source)
+                 or not source.can_paste_into(target_parent))):
             message = 'resource type "{0}" cannot be copied into type "{1}"'
             message = message.format(source.class_title.gettext(),
                                      target_parent.class_title.gettext())
@@ -403,12 +404,13 @@ class Folder(DBResource):
         for child in childs:
             source_path_child = source_path.resolve2(child.name)
             target_path_child = target_path.resolve2(child.name)
-            self.copy_resource(source_path_child, target_path_child, exclude_patterns)
+            self.copy_resource(source_path_child, target_path_child, exclude_patterns,
+                check_if_authorized=False)
         # Ok
         return resource
 
 
-    def move_resource(self, source_path, target_path):
+    def move_resource(self, source_path, target_path, check_if_authorized=True):
         # Find out the source and target absolute URIs
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
@@ -426,8 +428,8 @@ class Folder(DBResource):
             raise ConsistencyError, message
 
         # Check compatibility
-        if (not target_parent.can_paste(source)
-                or not source.can_paste_into(target_parent)):
+        if (check_if_authorized and (not target_parent.can_paste(source)
+                or not source.can_paste_into(target_parent))):
             message = 'resource type "%r" cannot be moved into type "%r"'
             raise ConsistencyError, message % (source, target_parent)
 
@@ -456,7 +458,8 @@ class Folder(DBResource):
         for child in childs:
             source_path_child = source_path.resolve2(child.name)
             target_path_child = target_path.resolve2(child.name)
-            self.move_resource(source_path_child, target_path_child)
+            self.move_resource(source_path_child, target_path_child,
+                check_if_authorized=False)
 
 
 
