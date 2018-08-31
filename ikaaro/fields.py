@@ -803,7 +803,7 @@ class HTMLFile_Field(File_Field):
 
         for language in languages:
             handler = self.get_value(resource, field_name, language)
-            if not handler or handler.database.is_phantom(handler):
+            if not handler:
                 continue
             events = rewrite_uris(handler.events, my_func)
             events = list(events)
