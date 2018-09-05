@@ -183,7 +183,7 @@ class Root(Folder):
     ########################################################################
     def launch_at_start(self, context):
         """Method called at instance start"""
-        pass
+        self.update_to_078()
 
 
     def launch_at_stop(self, context):
@@ -569,9 +569,10 @@ class Root(Folder):
 
 
 
-    update_20180428_title = MSG(u'Update static database')
-    def update_20180428(self):
-        """Move static file into database_static directory
+    def update_to_078(self):
+        """
+        Migrate database from 077 to 078
+        It's move static files into database static
         """
         from itools.fs.lfs import lfs, LocalFolder
         from itools.fs import lfs
@@ -579,9 +580,16 @@ class Root(Folder):
         import shutil
         context = get_context()
         database_path = context.database.path + '/database'
+        # Create database static
         database_static_path = context.database.path + '/database_static'
         if not lfs.exists(database_static_path):
             lfs.make_folder(database_static_path)
+        # Check if migration has already be done
+        f = LocalFolder(database_static_path)
+        items = list(f.traverse())
+        if len(items) > 2:
+            return
+        # Move static files into database static
         f = LocalFolder(database_path)
         for p in f.traverse():
             db_path = p.replace(database_path, '')
