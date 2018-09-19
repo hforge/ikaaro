@@ -835,7 +835,8 @@ class Server(object):
                     log_error('Cron error\n' + format_exc())
                     context.root.alert_on_internal_server_error(context)
                 # Reindex resource without committing
-                catalog.index_document(resource)
+                values = resource.get_catalog_values()
+                catalog.index_document(values)
                 catalog.save_changes()
                 # Log
                 tcron1 = time()
