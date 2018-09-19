@@ -560,6 +560,7 @@ class File_Field(Field):
     def get_value(self, resource, name, language=None):
         cls = self.class_handler
         get_handler = resource.metadata.database.get_handler
+        has_handler = resource.metadata.database.has_handler
 
         # Language negotiation
         if self.multilingual and language is None:
@@ -567,8 +568,7 @@ class File_Field(Field):
             languages = []
             for lang in root.get_value('website_languages'):
                 key = self._get_key(resource, name, lang)
-                handler = get_handler(key, cls, soft=True)
-                if handler:
+                if has_handler(key):
                     languages.append(lang)
 
             language = select_language(languages)
