@@ -102,12 +102,6 @@ class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def __init__(self, path, size_min, size_max, catalog=None, backend='git'):
-        proxy = super(Database, self)
-        proxy.__init__(path, size_min, size_max,
-            catalog=catalog, backend=backend)
-
-
     def init_context(self, user=None, username=None, email=None, commit_at_exit=True):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
