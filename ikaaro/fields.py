@@ -608,7 +608,7 @@ class File_Field(Field):
         handler = self._get_handler_from_value(value)
         key = self._get_key(resource, name, language)
         database = resource.metadata.database
-        if database.get_handler(key, soft=True):
+        if database.has_handler(key):
             database.del_handler(key)
         database.set_handler(key, handler)
 
