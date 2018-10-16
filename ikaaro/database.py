@@ -32,7 +32,7 @@ DBSEM = BoundedSemaphore(1)
 
 class RODatabase(BaseRODatabase):
 
-    def init_context(self):
+    def init_context(self, user=None, username=None, email=None, commit_at_exit=True):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
         cls = root.context_cls if root else CMSContext

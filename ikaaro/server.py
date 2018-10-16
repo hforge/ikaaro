@@ -331,7 +331,7 @@ class Server(object):
 
 
     def __init__(self, target, read_only=False, cache_size=None,
-                 profile_space=False):
+                 profile_space=False, port=None):
         set_server(self)
         target = lfs.get_absolute_path(target)
         self.target = target
@@ -343,7 +343,11 @@ class Server(object):
         self.config = config
         load_modules(config)
         self.modules = config.get_value('modules')
-
+        # Find out the port to listen
+        if port:
+            self.port = int(port)
+        else:
+            self.port = self.config.get_value('listen-port')
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
 
@@ -439,7 +443,10 @@ class Server(object):
     def check_consistency(self, quick):
         log_info('Check database consistency')
         # Check the server is not running
-        pid = get_pid('%s/pid' % self.target)
+        if self.read_only:
+            pid = get_pid('%s/pid_ro' % self.target)
+        else:
+            pid = get_pid('%s/pid' % self.target)
         if pid is not None:
             msg = '[%s] The Web Server is already running.' % self.target
             log_warning(msg)
@@ -464,10 +471,9 @@ class Server(object):
         if address == '*':
             address = None
 
-        # Find out the port to listen
-        port = self.config.get_value('listen-port')
-        if port is None:
-            raise ValueError, 'listen-port is missing from config.conf'
+        # Check port
+        if self.port is None:
+            raise ValueError('listen-port is missing from config.conf')
 
         # Save PID
         pid = getpid()
@@ -477,8 +483,9 @@ class Server(object):
         with self.database.init_context() as context:
             context.root.launch_at_start(context)
         # Listen & set context
-        self.launch_cron()
-        self.listen(address, port)
+        if not self.read_only:
+            self.launch_cron()
+        self.listen(address, self.port)
 
         # XXX The interpreter do not go here
         #self.server.root.launch_at_stop(context)

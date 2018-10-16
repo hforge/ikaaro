@@ -43,6 +43,9 @@ if __name__ == '__main__':
         '-r', '--read-only', action="store_true", default=False,
         help="Start the server in read-only mode.")
     parser.add_option(
+        '-p', '--port', default=None,
+        help="Start the server on this port")
+    parser.add_option(
         '--quick', action="store_true", default=False,
         help="Do not check the database consistency.")
     parser.add_option(
@@ -55,14 +58,15 @@ if __name__ == '__main__':
     # Parse arguments
     options, args = parser.parse_args()
     n_args = len(args)
-    if n_args != 1:
+    if n_args != 1 and n_args != 2:
         parser.error('Wrong number of arguments.')
     # Get target
     target = args[0]
     # Set-up the server
     try:
         server = Server(target, read_only=options.read_only,
-                        profile_space=options.profile_space)
+                        profile_space=options.profile_space,
+                        port=options.port)
     except LookupError:
         print('Error: {} instance do not exists'.format(target))
         exit(1)
