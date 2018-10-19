@@ -48,7 +48,6 @@ from gevent import signal as gevent_signal
 # Import from itools
 from itools.core import become_daemon, vmsize
 from itools.database import Metadata, RangeQuery
-from itools.database import make_catalog, get_register_fields
 from itools.database import make_database
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import lfs
@@ -501,6 +500,8 @@ class Server(object):
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        # FIXME: should be moved into backend
+        from itools.database.backends.catalog import make_catalog, get_register_fields
         msg = 'reindex catalog %s %s %s' % (quiet, quick, as_test)
         log_info(msg)
         if self.is_running_in_rw_mode():
