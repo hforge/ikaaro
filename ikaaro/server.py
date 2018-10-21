@@ -540,6 +540,7 @@ class Server(object):
                         raise
                 # Free Memory
                 del obj
+                self.database.make_room()
 
         if not error_detected:
             if as_test:
