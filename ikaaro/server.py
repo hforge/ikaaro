@@ -522,7 +522,7 @@ class Server(object):
             log = open('%s/log/update-catalog' % self.target, 'w').write
         with self.database.init_context() as context:
             for obj in root.traverse_resources():
-                if not quiet:
+                if not quiet or doc_n % 10000==0:
                     print('{0} {1}'.format(doc_n, obj.abspath))
                 doc_n += 1
                 context.resource = obj
