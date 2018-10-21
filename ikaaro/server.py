@@ -526,9 +526,10 @@ class Server(object):
                     print('{0} {1}'.format(doc_n, obj.abspath))
                 doc_n += 1
                 context.resource = obj
+                values = obj.get_catalog_values()
                 # Index the document
                 try:
-                    catalog.index_document(obj)
+                    catalog.index_document(values)
                 except Exception:
                     if as_test:
                         error_detected = True
