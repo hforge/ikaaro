@@ -818,6 +818,7 @@ class Server(object):
     #######################################################################
     def cron_manager(self):
         database = self.database
+        error = False
         # Build fake context
         with database.init_context() as context:
             context.is_cron = True
@@ -844,6 +845,11 @@ class Server(object):
                     # Log error
                     log_error('Cron error\n' + format_exc())
                     context.root.alert_on_internal_server_error(context)
+                    # Abort changes
+                    database.abort_changes()
+                    # With error
+                    error = True
+                    break
                 # Reindex resource without committing
                 values = resource.get_catalog_values()
                 catalog.index_document(values)
@@ -853,9 +859,14 @@ class Server(object):
                 msg = 'Done for %s in %s seconds' % (brain.abspath, tcron1-tcron0)
                 log_info(msg, domain='itools.cron')
             # Save changes
-            database.save_changes()
+            if not error:
+                database.save_changes()
+            # Message
             t1 = time()
-            msg = 'Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
+            if not error:
+                msg = '[OK] Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
+            else:
+                msg = '[ERROR] Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
             log_info(msg, domain='itools.cron')
         # Again, and again
         return self.config.get_value('cron-interval')
