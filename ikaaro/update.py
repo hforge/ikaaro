@@ -129,7 +129,8 @@ def run_next_update_method(context, force=False):
         next_versions = resource.get_next_versions()
         if (obj_version == cls_version or not next_versions or
             next_versions[0] != version['class_version']):
-            database.catalog.index_document(resource)
+            values = resource.get_catalog_values()
+            database.catalog.index_document(values)
             continue
 
         try:
