@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2007 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# Copyright (C) 2018 Sylvain Taverne <taverne.sylvain@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -82,12 +82,14 @@ def find_versions_to_update(context, force=False):
                 classes_and_versions.append(class_and_version)
                 update_title_name = 'update_{0}_title'.format(version)
                 update_title = getattr(cls, update_title_name, MSG(u'Unknow'))
+                if isinstance(update_title, MSG):
+                    update_title = update_title.gettext()
                 kw = {'class_id': cls.class_id,
                       'class_title': cls.class_title,
                       'class_version': version,
                       'class_version_date': class_version,
                       'class_version_pretty': context.format_date(class_version),
-                      'update_title': update_title.gettext(),
+                      'update_title': update_title,
                       'nb_resources': len(search)}
                 cls_to_update.append(kw)
     # Sort
@@ -101,7 +103,7 @@ def run_next_update_method(context, force=False):
     """Update the database to the given versions.
     """
     database = context.database
-    log = open('%s/log/update' % database.path, 'w')
+    log = open('{0}/log/update'.format(database.path), 'w')
     messages = []
 
     versions = find_versions_to_update(context, force)
@@ -115,27 +117,37 @@ def run_next_update_method(context, force=False):
         PhraseQuery('format', version['class_id']),
         RangeQuery('class_version', None, class_version_yesterday))
     search = context.database.search(query)
+    # Commit message (Do not override the mtime/author)
+    git_message = u'Upgrade {0} to version {1}'.format(
+        version['class_id'], version['class_version'])
+    print(git_message)
+    context.git_message = git_message
+    context.set_mtime = False
     # Update
+    i = 0
     resources_old2new = database.resources_old2new
     for resource in search.get_resources():
+        i += 1
         path = str(resource.abspath)
         abspath = resources_old2new.get(path, path)
         if abspath is None:
             # resource deleted
             continue
-        # Reindex on errors
+
+        # Inconsistency on resource: we reindex it
         obj_version = resource.metadata.version
         cls_version = resource.class_version
         next_versions = resource.get_next_versions()
         if (obj_version == cls_version or not next_versions or
             next_versions[0] != version['class_version']):
+            database.catalog.unindex_document(str(resource.abspath))
             values = resource.get_catalog_values()
             database.catalog.index_document(values)
             continue
 
         try:
             if resource is not None:
-                # If resource has not been removed
+                # If resource has not been deleted by update method, we update class_version
                 resource.update(version['class_version'])
         except Exception:
             line = 'ERROR: "{0}" - class_id: "{1}"\n'.format(
@@ -147,18 +159,37 @@ def run_next_update_method(context, force=False):
             messages.append(line)
             if force is False:
                 return messages
+        # Commit every 200 resources for better performances
+        if i % 200 == 0:
+            database.save_changes()
     # Commit
     if not database.has_changed:
         # We reindex so the class_version is reindexed
         database.catalog.save_changes()
     else:
-        # Commit (Do not override the mtime/author)
-        git_message = u'Upgrade to version {0}'.format(version['class_version'])
-        context.git_message = git_message
-        context.set_mtime = False
         database.save_changes()
     # Ok
     return messages
+
+
+
+def do_run_next_update_method(context, force=False):
+    if context.server.read_only:
+        return
+    versions = find_versions_to_update(context, force)
+    if not versions['cls_to_update']:
+        return [MSG(u'Nothing to update')]
+    while versions['cls_to_update']:
+        messages = run_next_update_method(context, force)
+        if messages:
+            # Abort changes
+            context.database.abort_changes()
+            error = ERROR(u'Error during update method. See logs.')
+            messages.insert(0, error)
+            return messages
+        versions = find_versions_to_update(context, force)
+    return [MSG(u'Updated method has been launched')]
+
 
 
 
@@ -173,17 +204,10 @@ class UpdateInstanceView(STLView):
 
 
     def run_next_update_method(self, context, force=False):
-        versions = find_versions_to_update(context, force)
-        while versions['cls_to_update']:
-            messages = run_next_update_method(context, force)
-            if messages:
-                error = ERROR(u'Error during update method. See logs.')
-                messages.insert(0, error)
-                context.message = messages
-                return
-            versions = find_versions_to_update(context, force)
+        # Run update method
+        msgs = do_run_next_update_method(context, force)
         # Ok
-        context.message = MSG(u'Updated method has been launched')
+        context.message = msgs
 
 
     def action_do_next_update(self, resource, context, form):
