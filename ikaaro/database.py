@@ -53,6 +53,8 @@ class ContextManager(object):
         self.context.database = database
         self.context.server = get_server()
         self.commit_at_exit = commit_at_exit
+        # Set context
+        set_context(self.context)
         # Get user by user
         if email:
             query = AndQuery(
@@ -68,8 +70,6 @@ class ContextManager(object):
         # Log user
         if user:
             self.context.login(user)
-        # Set context
-        set_context(self.context)
 
 
     def __enter__(self):
