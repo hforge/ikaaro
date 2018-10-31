@@ -66,7 +66,9 @@ def find_versions_to_update(context, force=False):
                     continue
                 class_version = class_version_to_date(version)
                 if class_version > class_version_to_date(cls.class_version):
-                    raise ValueError('{0} class_version is bad'.format(sub_cls.class_id))
+                    msg = "'{0}' class_version is bad ({1} > {2})"
+                    msg = msg.format(sub_cls.class_id, version, cls.class_version)
+                    raise ValueError(msg)
                 class_version_yesterday = class_version - timedelta(days=1)
                 query = AndQuery(
                     PhraseQuery('format', cls.class_id),
