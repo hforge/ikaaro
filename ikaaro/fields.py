@@ -357,11 +357,27 @@ class SelectAbspath_Field(Select_Field):
 
 
 class Text_Field(Metadata_Field):
+
     rest_type = 'text'
     datatype = Unicode()
     multilingual = True
     parameters_schema = {'lang': String} # useful only when multilingual
     widget = TextWidget()
+
+
+    def set_value(self, resource, name, value, language=None, **kw):
+        # If value is a MSG, save value in all languages
+        if isinstance(value, MSG):
+            root = resource.get_resource('/')
+            languages = root.get_available_languages()
+            for lang in languages:
+                lang_value = value.gettext(language=lang)
+                self.set_value(resource, name, lang_value, language=lang, **kw)
+            return True
+        # Ok
+        proxy = super(Text_Field, self)
+        return proxy.set_value(resource, name, value, language, **kw)
+
 
     def get_default(self):
         if self.default is not None:

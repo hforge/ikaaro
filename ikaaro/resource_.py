@@ -369,13 +369,14 @@ class DBResource(Resource):
 
     def set_value(self, name, value, language=None, **kw):
         self.check_if_context_exists()
-        # TODO: Use decorator for cache
         field = self.get_field(name)
         if field is None:
             raise ValueError('Field %s do not exist' % name)
-        if field.multilingual and language is None:
+        if field.multilingual and language is None and not isinstance(value, MSG):
             raise ValueError('Field %s is multilingual' % name)
+        # TODO: Use decorator for cache
         self.clear_cache(name, language)
+        # Set value
         return field.set_value(self, name, value, language, **kw)
 
 
