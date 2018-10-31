@@ -25,6 +25,9 @@ from itools.gettext import MSG
 from itools.web import STLView, ERROR
 
 
+ERROR_MSG = MSG(u'Inconsistent class_id "{class_id}", resource version is {resource_version} but cls_version is {cls_version} ({abspath})')
+
+
 def class_version_to_date(version):
     return datetime.strptime(version[:8], '%Y%m%d').date()
 
@@ -179,6 +182,9 @@ def do_run_next_update_method(context, force=False):
     if context.server.read_only:
         return
     versions = find_versions_to_update(context, force)
+    if versions['cls_errors']:
+        msgs = [MSG(ERROR_MSG.gettext(**error)) for error in versions['cls_errors']]
+        return msgs
     if not versions['cls_to_update']:
         return [MSG(u'Nothing to update')]
     while versions['cls_to_update']:
