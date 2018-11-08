@@ -615,19 +615,23 @@ class CMSContext(prototype):
 
 
     def _set_auth_cookie(self, cookie):
-        # Compute expires datetime (FIXME Use the request date)
-        session_timeout = self.server.session_timeout
-        expires = self.timestamp + session_timeout
+        session_timeout = self.get_session_timeout()
+        expires = self.timestamp + timedelta(seconds=session_timeout*60)
         # If never expires, set cookie's expire date in 365 days
         # By default, if we don't give expires date,
         # the cookie will expires at the end of the browser session
         # (so when restarting the browser)
-        if session_timeout == timedelta(0):
+        if not session_timeout:
             expires += timedelta(days=365)
-        # Encore expires
+        # Encode expires
         expires = HTTPDate.encode(expires)
         # Set cookie
         self.set_cookie('iauth', cookie, path='/', expires=expires)
+
+
+
+    def get_session_timeout(self):
+        return self.server.session_timeout
 
 
     def _get_auth_token(self, user_token):
@@ -665,6 +669,7 @@ class CMSContext(prototype):
         user_token = user.get_auth_token()
         if token == self._get_auth_token(user_token):
             self.user = user
+
 
 
     def get_authentication_credentials(self):
