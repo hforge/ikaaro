@@ -616,7 +616,7 @@ class CMSContext(prototype):
 
     def _set_auth_cookie(self, cookie):
         session_timeout = self.get_session_timeout()
-        expires = self.timestamp + timedelta(seconds=session_timeout*60)
+        expires = self.timestamp + timedelta(seconds=session_timeout.seconds*60)
         # If never expires, set cookie's expire date in 365 days
         # By default, if we don't give expires date,
         # the cookie will expires at the end of the browser session
