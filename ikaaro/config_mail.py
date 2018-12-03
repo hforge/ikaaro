@@ -35,9 +35,9 @@ class ContactsOptions(Enumerate):
     @classmethod
     def get_options(cls):
         root = get_context().root
-
+        users = root.get_resource('users')
         options = []
-        for user in root.get_resources('/users'):
+        for user in users.get_resources():
             user_title = user.get_title()
             user_email = user.get_value('email')
             if user_title != user_email:

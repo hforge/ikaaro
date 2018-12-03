@@ -56,9 +56,8 @@ class Group_BrowseUsers(BrowseUsers):
 
     def action(self, resource, context, form):
         group_id = str(resource.abspath)
-
-        root = resource.get_resource('/')
-        for user in root.get_resources('users'):
+        users = resource.get_resource('/users')
+        for user in users.get_resources():
             groups = set(user.get_value(self._property_name))
             if user.name in form['ids']:
                 groups.add(group_id)
