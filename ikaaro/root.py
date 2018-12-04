@@ -183,7 +183,7 @@ class Root(Folder):
     ########################################################################
     def launch_at_start(self, context):
         """Method called at instance start"""
-        self.update_to_078()
+        pass
 
 
     def launch_at_stop(self, context):
