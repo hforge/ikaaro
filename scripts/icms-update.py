@@ -23,6 +23,8 @@ from sys import exit
 
 # Import from itools
 import itools
+from itools.core import is_prototype
+from itools.gettext import MSG
 
 # Import from ikaaro
 from ikaaro.update import do_run_next_update_method
@@ -42,7 +44,7 @@ def update(parser, options, target):
     with server.database.init_context() as context:
         print('STAGE 1: Find out the versions to upgrade (may take a while).')
         msgs = do_run_next_update_method(context, force=options.force)
-        print(u'\n'.join([x.gettext() for x in msgs]))
+        print(u'\n'.join([x.gettext() if is_prototype(x, MSG) else x for x in msgs]))
 
 
 
