@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2018 Sylvain Taverne <taverne.sylvain@gmail.com>
+# Copyright (C) 2017 Sylvain Taverne <taverne.sylvain@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from views.folder_views import Folder_BrowseContent, GoToSpecificDocument
-from views.folder_views import Folder_PreviewContent, SearchTypes_Enumerate
 
-
-print('[OBSOLETE] Imports from ikaaro.folder_views is obsolete. Use ikaaro.views instead')
+# Import from here
+from autotable import AutoTable
+from base import CompositeView, MessageView, IconsView
+from base import Batch, BrowseForm, ContextMenu
+from base import IkaaroStaticView, CachedStaticView, get_view_scripts, get_view_styles
+from folder_views import SearchTypes_Enumerate, ZoomMenu, Folder_NewResource
+from folder_views import Folder_Rename, Folder_BrowseContent, Folder_PreviewContent
+from folder_views import Folder_Thumbnail, GoToSpecificDocument

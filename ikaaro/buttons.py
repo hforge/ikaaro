@@ -152,3 +152,10 @@ class ZipButton(BrowseButton):
     name = 'zip'
     title = MSG(u'Zip')
     css = 'button-zip'
+
+
+class SearchButton(BrowseButton):
+
+    access = 'is_allowed_to_view'
+    name = 'search'
+    title = MSG(u'Search')

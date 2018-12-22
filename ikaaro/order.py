@@ -22,10 +22,12 @@ from itools.gettext import MSG
 from itools.web import INFO, get_context
 
 # Import from ikaaro
+from views.folder_views import Folder_BrowseContent
+
+# Import from ikaaro
 from buttons import BrowseButton
 from fields import URI_Field
 from folder import Folder
-from folder_views import Folder_BrowseContent
 
 
 

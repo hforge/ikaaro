@@ -38,12 +38,14 @@ from itools.uri import Path
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
+from views.folder_views import Folder_BrowseContent, Folder_PreviewContent
+from views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
+
+# Import from ikaaro
 from autoedit import AutoEdit
 from database import Database
 from datatypes import guess_mimetype
 from exceptions import ConsistencyError
-from folder_views import Folder_BrowseContent, Folder_PreviewContent
-from folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 from messages import MSG_NAME_CLASH
 from resource_ import DBResource
 from utils import process_name, tidy_html, get_base_path_query

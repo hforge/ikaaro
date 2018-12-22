@@ -31,9 +31,11 @@ from itools.uri import Path
 from itools.web import STLView, ERROR
 
 # Import from ikaaro
+from ikaaro.views.folder_views import Folder_BrowseContent
+
+# Import from ikaaro
 from buttons import AddButton
 from datatypes import FileDataType
-from folder_views import Folder_BrowseContent
 import messages
 from utils import reduce_string, make_stl_template
 

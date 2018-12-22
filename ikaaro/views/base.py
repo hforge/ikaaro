@@ -35,9 +35,9 @@ from itools.web.static import StaticView
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from autoform import AutoForm
-from buttons import Button
-from utils import CMSTemplate
+from ikaaro.autoform import AutoForm
+from ikaaro.buttons import Button
+from ikaaro.utils import CMSTemplate
 
 
 """This module contains some generic views used by different resources.

@@ -31,11 +31,13 @@ from itools.web import BaseView, STLView, INFO, ERROR
 from itools.web import Conflict, NotFound, NotImplemented
 
 # Import from ikaaro
+from ikaaro.views.folder_views import Folder_BrowseContent
+
+# Import from ikaaro
 from autoform import AutoForm
 from buttons import Remove_Button
 from emails import send_email
 from exceptions import ConsistencyError
-from folder_views import Folder_BrowseContent
 from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
 
 

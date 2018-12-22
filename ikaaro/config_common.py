@@ -23,7 +23,7 @@ configuration modules.
 from itools.core import proto_property
 
 # Import from ikaaro
-from folder_views import Folder_NewResource
+from views.folder_views import Folder_NewResource
 
 
 

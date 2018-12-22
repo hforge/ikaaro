@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr class="table-no-row">
+        <th colspan="2">
+          <div style="text-align:center">
+            ${msg}
+          </div>
+        </th>
+      </tr>
+    </thead>
+  </table>
+
+
+</stl:block>

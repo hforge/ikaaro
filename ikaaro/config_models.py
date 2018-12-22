@@ -18,6 +18,9 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
+from views.folder_views import Folder_BrowseContent
+
+# Import from ikaaro
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from buttons import Remove_BrowseButton
@@ -26,7 +29,6 @@ from config_common import NewResource_Local
 from fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
 from fields import Select_Field, Text_Field, Textarea_Field
 from folder import Folder
-from folder_views import Folder_BrowseContent
 from order import OrderedFolder, OrderedFolder_BrowseContent
 from resource_ import DBResource
 from widgets import CheckboxWidget, RadioWidget, SelectWidget
