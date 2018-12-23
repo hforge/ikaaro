@@ -101,91 +101,6 @@ class Configuration_View(STLView):
 
 
 
-class Config_BrokenLinks(STLView):
-
-    access = 'is_admin'
-    title = MSG(u'Broken Links')
-    icon = 'clear.png'
-    description = MSG(u'Check the referential integrity.')
-    template = '/ui/ikaaro/website/broken_links.xml'
-
-    config_group = 'webmaster'
-
-
-    def get_namespace(self, resource, context):
-        # Find out broken links
-        base = resource.abspath
-
-        # Search only within the given resource
-        query = get_base_path_query(base, min_depth=0)
-        results = context.search(query)
-
-        # Find out the broken links
-        root = context.root
-        broken = {}
-        for link in context.database.catalog.get_unique_values('links'):
-            if root.get_resource(link, soft=True) is not None:
-                continue
-            sub_results = results.search(PhraseQuery('links', link))
-            link = str(base.get_pathto(Path(link)))
-            for brain in sub_results.get_documents():
-                broken.setdefault(brain.abspath, []).append(link)
-
-        # Build the namespace
-        items = []
-        total = 0
-        keys = broken.keys()
-        keys.sort()
-        for path in keys:
-            links = broken[path]
-            path = str(base.get_pathto(Path(path)))
-            n = len(links)
-            items.append({'path': path, 'links': links, 'n': n})
-            total += n
-
-        return {
-            'items': items,
-            'total': total}
-
-
-
-class Config_Orphans(Folder_BrowseContent):
-    """Orphans are files not referenced in another resource of the database.
-
-    Orphans folders generally don't make sense because they serve as
-    containers. TODO or list empty folders?
-    """
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Orphans")
-    icon = 'orphans.png'
-    description = MSG(u"Show resources not linked from anywhere.")
-
-
-    def search_content_only(self, resource, context):
-        return True
-
-
-    def get_items(self, resource, context):
-        # Make the base search
-        items = super(Config_Orphans, self).get_items(context.root, context)
-
-        # Show only the orphan resources
-        items = [ x for x in items.get_documents()
-                  if len(context.database.search(links=x.abspath)) == 0 ]
-
-        # Transform back the items found in a SearchResults object.
-        # FIXME This is required by 'get_item_value', we should change that,
-        # for better performance.
-        args = [ PhraseQuery('abspath', x.abspath) for x in items ]
-        query = OrQuery(*args)
-        items = context.search(query)
-
-        # Ok
-        return items
-
-
-
 class Config_EditLanguages(STLView):
 
     access = 'is_admin'
@@ -288,7 +203,7 @@ class Configuration(Folder):
     class_id = 'configuration'
     class_title = MSG(u'Configuration')
     class_views = ['view']
-    class_core_views = ['edit_languages', 'broken_links', 'orphans']
+    class_core_views = ['edit_languages']
     class_icon_css = 'fa-cogs'
 
 
@@ -314,8 +229,6 @@ class Configuration(Folder):
     # Views
     view = Configuration_View()
     edit_languages = Config_EditLanguages()
-    broken_links = Config_BrokenLinks()
-    orphans = Config_Orphans(config_group='webmaster')
 
 
 # Import core config modules
