@@ -160,12 +160,6 @@ class AutoTable(Folder_BrowseContent):
         class_id = self.base_classes[0]
         context = get_context()
         cls = context.database.get_resource_class(class_id)
-        # Get field from another cls
-        if '.' in name:
-            field_name, link_field_name = name.split('.')
-            field = cls.get_field(field_name)
-            link_cls = context.database.get_resource_class(field.link_class_id)
-            return link_cls.get_field(link_field_name)
         return cls.get_field(name)
 
 
