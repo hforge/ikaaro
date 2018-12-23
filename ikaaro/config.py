@@ -289,6 +289,7 @@ class Configuration(Folder):
     class_title = MSG(u'Configuration')
     class_views = ['view']
     class_core_views = ['edit_languages', 'broken_links', 'orphans']
+    class_icon_css = 'fa-cogs'
 
 
     def init_resource(self, **kw):
