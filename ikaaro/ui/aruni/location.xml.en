@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<stl:block xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:stl="http://www.hforge.org/xml-namespaces/stl"
-  stl:if="location">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns:stl="http://www.hforge.org/xml-namespaces/stl" xmlns="http://www.w3.org/1999/xhtml">
 
-  <!-- Location & Views-->
-  <div id="location">
-    <div id="breadcrumbs" stl:if="breadcrumb">
-      <span stl:repeat="item breadcrumb"><a stl:omit-tag="not item/url"
-        href="${item/url}" title="${item/name}">${item/short_name}</a
-        ><stl:inline stl:if="not repeat/item/end">/</stl:inline></span>
-    </div>
-    <div id="tabs" stl:if="tabs">
-      [
-      <span class="menu ${menu/class}" stl:repeat="menu tabs">
-        <a href="${menu/name}">${menu/label}</a>
-        <stl:inline stl:if="not repeat/menu/end">|</stl:inline>
-      </span>
-      ]
-    </div>
-  </div>
-  <div class="clear"></div>
+  <ul class="breadcrumb" stl:if="breadcrumb">
+    <stl:block stl:repeat="item breadcrumb">
+      <li id="breadcrumb-home" stl:if="repeat/item/start">
+        <a href="${item/url}">
+          <i class="fa fa-home"></i> Home
+        </a>
+      </li>
+      <stl:block stl:if="not repeat/item/start">
+        <li stl:if="not repeat/item/end">
+          <a stl:omit-tag="not item/url" title="${item/name}" href="${item/url}">${item/short_name}</a>
+        </li>
+      </stl:block>
+      <li class="active" stl:if="repeat/item/end">
+        <a href="${item/url}">${item/short_name}</a>
+      </li>
+    </stl:block>
+  </ul>
 
 </stl:block>
+

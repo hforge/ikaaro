@@ -33,7 +33,7 @@ from itools.web import get_context, ERROR, INFO
 # Import from ikaaro
 from folder import Folder
 from views import get_view_scripts
-from skins_views import LanguagesTemplate, LocationTemplate
+from skins_views import LanguagesTemplate, LocationTemplate, TabsTemplate
 
 
 class Skin(object):
@@ -44,7 +44,8 @@ class Skin(object):
 
     # User Interface widgets
     languages_template = LanguagesTemplate
-    location_template = LocationTemplate
+    breadcrumb_template = LocationTemplate
+    tabs_template = TabsTemplate
 
 
     def __init__(self, key):
@@ -372,12 +373,14 @@ class Skin(object):
         if uri.path and not context.view_name and not uri.path.endswith_slash:
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
-
-        # Location template
-        location_template = self.location_template
-        if location_template:
-            location_template = location_template(context=context)
-
+        # Breadcrumb
+        breadcrumb_template = None
+        if self.breadcrumb_template:
+            breadcrumb_template = self.breadcrumb_template(context=context)
+        # Tabs
+        tabs_template = None
+        if self.tabs_template:
+            tabs_template = self.tabs_template(context=context)
         # Ok
         return {
             # HTML head
@@ -397,7 +400,8 @@ class Skin(object):
             # menu
             'menu': self.get_menu_namespace(context),
             # Location & Views
-            'location': location_template,
+            'breadcrumb': breadcrumb_template,
+            'tabs': tabs_template,
             'languages': self.languages_template(context=context),
             # Body
             'page_title': self._get_page_title(context),
@@ -447,7 +451,7 @@ class Skin(object):
 ###########################################################################
 class FancyboxSkin(Skin):
 
-    location_template = None
+    pass
 
 
 

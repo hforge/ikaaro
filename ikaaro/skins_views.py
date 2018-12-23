@@ -124,6 +124,17 @@ class LocationTemplate(CMSTemplate):
 
 
     @proto_lazy_property
+    def location(self):
+        return bool(self.breadcrumb) or bool(self.tabs)
+
+
+
+class TabsTemplate(CMSTemplate):
+
+    template = '/ui/aruni/tabs.xml'
+
+
+    @proto_lazy_property
     def tabs(self):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
@@ -160,10 +171,4 @@ class LocationTemplate(CMSTemplate):
                 'label': view.get_title(context),
                 'active': active,
                 'class': 'active' if active else None})
-
         return tabs
-
-
-    @proto_lazy_property
-    def location(self):
-        return bool(self.breadcrumb) or bool(self.tabs)
