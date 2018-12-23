@@ -25,7 +25,6 @@ from itools.web import ERROR, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
-from config import Configuration
 from enumerates import UserGroups_Datatype
 from fields import Char_Field, Datetime_Field, Email_Field, File_Field
 from fields import Password_Field, SelectAbspath_Field, Select_Field, Text_Field
@@ -110,8 +109,7 @@ class User(Folder):
     class_id = 'user'
     class_version = '20081217'
     class_title = MSG(u'User')
-    class_icon16 = '/ui/ikaaro/icons/16x16/user.png'
-    class_icon48 = '/ui/ikaaro/icons/48x48/user.png'
+    class_icon_css = 'fa-user'
     class_views = ['profile', 'edit_account', 'edit_preferences',
                    'edit_password', 'edit_groups']
 
@@ -269,25 +267,20 @@ class Users(Folder):
     class_id = 'users'
     class_title = MSG(u'Users')
     class_description = MSG(u'Manage users.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/userfolder.png'
+    class_icon_css = 'fa-user'
+    class_views = ['browse_users', 'add_user', 'edit']
 
     def get_document_types(self):
         return [self.database.get_resource_class('user')]
 
 
     # Views
-    class_views = ['browse_users', 'add_user', 'edit']
     browse_users = Users_Browse()
     add_user = Users_AddUser()
-
-    # Configuration
-    config_name = '/users'
-    config_group = 'access'
 
 
 
 ###########################################################################
 # Register
 ###########################################################################
-Configuration.register_module(Users)
 register_field('email_domain', String(indexed=True, stored=True))
