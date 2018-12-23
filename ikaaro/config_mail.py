@@ -68,7 +68,8 @@ class ConfigMail(DBResource):
     class_id = 'config-mail'
     class_title = MSG(u'Email options')
     class_description = mail_description
-    class_icon48 = '/ui/ikaaro/icons/48x48/mail.png'
+    class_icon_css = 'fa-envelope'
+    class_views = ['edit']
 
     # Fields
     contacts = Select_Field(multiple=True, datatype=ContactsOptions,
@@ -79,7 +80,6 @@ class ConfigMail(DBResource):
     emails_signature = Textarea_Field(title=MSG(u'Signature'))
 
     # Views
-    class_views = ['edit']
     edit = ConfigMail_Edit()
 
     # Configuration

@@ -254,7 +254,12 @@ class ConfigMenu(MenuItem):
     class_id = 'config-menu'
     class_title = MSG(u'Configuration Menu')
     class_description = MSG(u'Edit the global menu.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/menu.png'
+    class_icon_css = 'fa-sitemap'
+    class_views = ['browse_content', 'add_menu', 'edit']
+
+    # Configuration
+    config_name = 'menu'
+    config_group = 'webmaster'
 
     def init_resource(self, **kw):
         super(ConfigMenu, self).init_resource(**kw)
@@ -268,12 +273,6 @@ class ConfigMenu(MenuItem):
                                title={'en': title})
         self.set_property('order', order)
 
-    # Configuration
-    config_name = 'menu'
-    config_group = 'webmaster'
-
-    # Views
-    class_views = ['browse_content', 'add_menu', 'edit']
 
 
     def get_menu_namespace(self, context, show_first_child=False, src=None):

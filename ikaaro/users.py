@@ -25,6 +25,7 @@ from itools.web import ERROR, get_context
 
 # Import from ikaaro
 from autoedit import AutoEdit
+from config import Configuration
 from enumerates import UserGroups_Datatype
 from fields import Char_Field, Datetime_Field, Email_Field, File_Field
 from fields import Password_Field, SelectAbspath_Field, Select_Field, Text_Field
@@ -270,6 +271,11 @@ class Users(Folder):
     class_icon_css = 'fa-user'
     class_views = ['browse_users', 'add_user', 'edit']
 
+    # Configuration
+    config_name = '/users'
+    config_group = 'access'
+
+
     def get_document_types(self):
         return [self.database.get_resource_class('user')]
 
@@ -284,3 +290,4 @@ class Users(Folder):
 # Register
 ###########################################################################
 register_field('email_domain', String(indexed=True, stored=True))
+Configuration.register_module(Users)

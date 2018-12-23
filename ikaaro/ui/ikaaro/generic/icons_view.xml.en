@@ -10,7 +10,9 @@
   <table stl:repeat="item items" class="new-resource-thumb">
     <tr>
       <td valign="top" style="width: 48px">
-        <a href="${item/url}"><img alt="" src="${item/icon}" /></a>
+        <a href="${item/url}">
+          <i class="fa ${item/icon}"/>
+        </a>
       </td>
       <td valign="top">
         <a href="${item/url}">${item/title}</a>

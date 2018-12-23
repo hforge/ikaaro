@@ -78,8 +78,7 @@ class DBResource(Resource):
 
     class_version = '20071215'
     class_description = None
-    class_icon16 = '/ui/ikaaro/icons/16x16/resource.png'
-    class_icon48 = '/ui/ikaaro/icons/48x48/resource.png'
+    class_icon_css = 'fa-pencil-alt'
     class_views = []
 
     # Internal

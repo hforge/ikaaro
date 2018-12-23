@@ -190,6 +190,7 @@ class IconsView(STLView):
 
     access = 'is_allowed_to_view'
     template = '/ui/ikaaro/generic/icons_view.xml'
+    title = MSG(u'View')
 
     def get_namespace(self, resource, context):
         """Example:
@@ -197,7 +198,15 @@ class IconsView(STLView):
                 'items': [{'icon': '/ui/..', 'title': ...,
                            'description': ..., 'url': ...'}, ...]}
         """
-        raise NotImplementedError
+        items = []
+        for x in resource.get_resources():
+            kw = {'icon': x.class_icon_css,
+                  'url': x.abspath,
+                  'description': x.class_description,
+                  'title': x.class_title}
+            items.append(kw)
+        return {'batch': None,
+                'items': items}
 
 
 

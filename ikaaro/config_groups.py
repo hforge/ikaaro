@@ -121,17 +121,13 @@ class ConfigGroups(OrderedFolder):
     class_id = 'config-groups'
     class_title = MSG(u'User Groups')
     class_description = MSG(u'Manage user groups.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/groups.png'
+    class_icon_css = 'fa-users'
+    class_views = ['browse_content', 'add_group', 'edit']
 
     # Configuration
     config_name = 'groups'
     config_group = 'access'
     property_name = 'groups'
-
-    # Views
-    class_views = ['browse_content', 'add_group', 'edit']
-    browse_content = BrowseGroups()
-    add_group = NewResource_Local(title=MSG(u'Add group'))
 
     default_groups = [
         ('admins', {'en': u'Admins'}),
@@ -148,6 +144,11 @@ class ConfigGroups(OrderedFolder):
 
     def get_document_types(self):
         return [Group]
+
+
+    # Views
+    browse_content = BrowseGroups()
+    add_group = NewResource_Local(title=MSG(u'Add group'))
 
 
 Configuration.register_module(ConfigGroups)

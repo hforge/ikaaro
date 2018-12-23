@@ -34,6 +34,7 @@ from ikaaro.views.folder_views import Folder_BrowseContent
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from utils import get_base_path_query
+from views import IconsView
 
 
 ###########################################################################
@@ -202,8 +203,7 @@ class Configuration(Folder):
 
     class_id = 'configuration'
     class_title = MSG(u'Configuration')
-    class_views = ['view']
-    class_core_views = ['edit_languages']
+    class_views = ['view', 'edit_languages']
     class_icon_css = 'fa-cogs'
 
 
@@ -227,7 +227,7 @@ class Configuration(Folder):
 
 
     # Views
-    view = Configuration_View()
+    view = IconsView()
     edit_languages = Config_EditLanguages()
 
 
@@ -242,4 +242,3 @@ import config_models
 import config_register
 import config_seo
 import config_theme
-#import config_vhosts

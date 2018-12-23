@@ -28,15 +28,12 @@ class Footer(WebPage):
     class_id = 'config-footer'
     class_title = MSG(u'Footer')
     class_description = MSG(u'Define the site footer.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/footer.png'
+    class_icon_css = 'fa-sort-down'
+    class_views = ['edit', 'externaledit']
 
     # Configuration
     config_name = 'footer'
     config_group = 'webmaster'
-
-    # Views
-    class_views = ['edit', 'externaledit']
-    edit = File_Edit(fields=['data'])
 
 
     def init_resource(self, **kw):
@@ -49,6 +46,9 @@ class Footer(WebPage):
         """
         super(Footer, self).init_resource(data={'en': body}, **kw)
 
+
+    # Views
+    edit = File_Edit(fields=['data'])
 
 
 # Register

@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div class="block-widget block-widget-${name}">
+<div class="form-group form-group-${name} block-widget block-widget-${name}">
   <div stl:if="title">
     <label class="title" for="${name}">${title}</label>
     <span stl:if="mandatory" class="field-is-missing"

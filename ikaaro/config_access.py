@@ -290,7 +290,7 @@ class ConfigAccess(Folder):
     class_version = '20110606'
     class_title = MSG(u'Access Control')
     class_description = MSG(u'Choose the security policy.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/lock.png'
+    class_icon_css = 'fa-user-plus'
 
     # Configuration
     config_name = 'access'

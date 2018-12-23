@@ -174,7 +174,12 @@ class ConfigRegister(DBResource):
     class_id = 'config-register'
     class_title = MSG(u'User registration')
     class_description = MSG(u'Configuration of the user registration process.')
-    class_icon48 = '/ui/ikaaro/icons/48x48/signin.png'
+    class_icon_css = 'fa-user-plus'
+    class_views = ['edit']
+
+    # Configuration
+    config_name = 'register'
+    config_group = 'access'
 
     # Fields
     is_open = Boolean_Field(default=False,
@@ -182,12 +187,7 @@ class ConfigRegister(DBResource):
     tos = HTMLFile_Field(title=MSG(u"Terms of service"))
 
     # Views
-    class_views = ['edit']
     edit = AutoEdit(title=class_title, fields=['is_open', 'tos'])
-
-    # Configuration
-    config_name = 'register'
-    config_group = 'access'
 
 
 Configuration.register_module(ConfigRegister)
