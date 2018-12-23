@@ -7,7 +7,7 @@
 <form name="autoform" action="${action}" method="get"
     enctype="multipart/form-data" stl:if="edit_mode">
   <div>Display comments filtered by state ${filter}
-    <button type="submit" class="button-ok">Update display</button>
+    <button type="submit" class="btn btn-primary">Update display</button>
   </div>
 </form>
 

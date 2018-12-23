@@ -519,9 +519,9 @@ class Users_AddUser(AutoAdd):
 
 
     actions = [
-        Button(access='is_admin', css='button-ok',
+        Button(access='is_admin', css='btn btn-primary',
                title=MSG(u'Add and view')),
-        Button(access='is_admin', css='button-ok', name='add_and_return',
+        Button(access='is_admin', css='btn btn-primary', name='add_and_return',
                title=MSG(u'Add and return'))]
 
 

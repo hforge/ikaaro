@@ -188,6 +188,7 @@ class IconsView(STLView):
     icon (48x48 pixels), a title and a description.
     """
 
+    access = 'is_allowed_to_view'
     template = '/ui/ikaaro/generic/icons_view.xml'
 
     def get_namespace(self, resource, context):
@@ -298,7 +299,7 @@ class Batch(CMSTemplate):
         uri = self.context.uri
         pages = [
             {'number': i,
-             'css': 'current' if i == current_page else None,
+             'css': 'active' if i == current_page else None,
              'uri': uri.replace(batch_start=((i-1) * self.size))}
              for i in pages ]
 
@@ -338,7 +339,7 @@ class BrowseForm(STLView):
     # Content
     table_template = '/ui/ikaaro/generic/browse_table.xml'
     table_form_id = 'form-table'
-    table_css = None
+    table_css = 'table table-striped table-bordered'
     table_columns = []
     table_actions = []
     # Actions are external to current form
@@ -384,7 +385,7 @@ class BrowseForm(STLView):
     def get_search_actions(self, resource, context):
         search_button = Button(access=True,
             resource=resource, context=context,
-            css='button-search', title=MSG(u'Search'))
+            css='btn btn-primary', title=MSG(u'Search'))
         return [search_button]
 
 

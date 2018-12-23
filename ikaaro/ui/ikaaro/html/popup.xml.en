@@ -60,7 +60,7 @@
               </tr>
             </table>
             <br/>
-            <button value="" type="button" class="button-ok"
+            <button value="" type="button" class="btn btn-primary"
               onclick="select_element('${element_to_add}', $('#uri').val(), '');">
               Add
             </button>
@@ -86,7 +86,7 @@
               </tr>
             </table>
             <br/>
-            <button value="add_resource" name="action" class="button-ok" type="submit">OK</button>
+            <button value="add_resource" name="action" class="btn btn-primary" type="submit">OK</button>
           </form>
         </fieldset>
       </div>

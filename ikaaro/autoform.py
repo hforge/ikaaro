@@ -58,7 +58,7 @@ class AutoForm(STLView):
     widgets = []
     description = None
     method = 'post'
-    actions = [Button(access=True, css='button-ok', title=MSG(u'Save'))]
+    actions = [Button(access=True, css='btn btn-success', title=MSG(u'Save'))]
 
     def get_widgets(self, resource, context):
         return self.widgets

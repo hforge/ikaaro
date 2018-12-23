@@ -14,7 +14,7 @@
       <ul>
         <li stl:repeat="module newmodules">${module}</li>
       </ul>
-      <button type="submit" class="button-ok">Initialize new modules</button>
+      <button type="submit" class="btn btn-primary">Initialize new modules</button>
     </fieldset>
     <br/>
   </form>

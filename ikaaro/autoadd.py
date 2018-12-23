@@ -37,7 +37,7 @@ class AutoAdd(AutoForm):
 
     access = 'is_allowed_to_add'
 
-    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
+    actions = [Button(access=True, css='btn btn-primary', title=MSG(u'Add'))]
     action_goto = None
     goto_view = None
     goto_parent_view = None # DEPRECATED -> use action_goto

@@ -217,6 +217,8 @@ class AutoEdit(AutoForm):
                    HiddenWidget('referrer')]
         for name in self.get_fields():
             widget = self._get_widget(resource, context, name)
+            widget_css = widget.css or ''
+            widget.css = widget_css + ' form-control'
             widgets.append(widget)
 
         return widgets

@@ -106,7 +106,7 @@ class Skin(object):
 
     def get_styles(self, context):
         # Generic
-        styles = ['/ui/ikaaro/bo.css']
+        styles = ['/ui/aruni/dist/style.css']
 
         # Skin
         if isfile('%s/style.css' % self.key):

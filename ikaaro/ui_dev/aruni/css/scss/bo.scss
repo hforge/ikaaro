@@ -1,0 +1,682 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  background-color: #fff;
+  /* 1em = 10px */
+  font-size: 62.5%;
+  font-family: "Arial", "DejaVu Sans", sans-serif;
+}
+
+a img { border: 0; }
+
+button, input, select, textarea {
+  background-color: #fff;
+  border: 1px solid #999;
+  color: #000;
+  font-size: 1.0em;
+}
+
+input[disabled] {
+  background-color: #eee;
+  color: #eee;
+}
+
+/* IE7 fix */
+input[type=radio],
+input[type=checkbox] {
+  border: none;
+}
+
+button:focus, input:focus, select:focus, textarea:focus {
+  border-color: black;
+}
+
+textarea {
+  font-size: 1.2em;
+}
+
+button {
+  background-position: 3px center;
+  background-repeat: no-repeat;
+  margin: 2px;
+  padding: 0px 3px;
+}
+
+.clear {
+  clear: both;
+}
+
+
+/**************************************************************************
+ * itools.web.BaseForm
+ *************************************************************************/
+
+.field-is-required {
+  font-style: italic;
+}
+
+.field-is-missing {
+  color: #ff0000;
+}
+
+.field-error {
+  color: #f22;
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * Buttons
+ *************************************************************************/
+.button-ok {
+  background-image: url(icons/16x16/ok.png);
+  padding-left: 19px;
+}
+
+.button-cancel {
+  background-image: url(icons/16x16/cancel.png);
+  padding-left: 19px;
+}
+
+.button-search {
+  background-image: url(icons/16x16/search.png);
+  padding-left: 19px;
+}
+
+.button-calendar {
+  background-image: url(icons/16x16/calendar.png);
+  padding-left: 19px;
+}
+
+.button-upload {
+  background-image: url(icons/16x16/upload.png);
+  padding-left: 19px;
+}
+
+.button-external {
+  background-image: url(icons/16x16/external.png);
+  padding-left: 19px;
+}
+
+.button-rename {
+  background-image: url(icons/16x16/rename.png);
+  padding-left: 19px;
+}
+
+.button-delete {
+  background-image: url(icons/16x16/delete.png);
+  padding-left: 19px;
+}
+
+.button-copy {
+  background-image: url(icons/16x16/copy.png);
+  padding-left: 19px;
+}
+
+.button-cut {
+  background-image: url(icons/16x16/cut.png);
+  padding-left: 19px;
+}
+
+.button-paste {
+  background-image: url(icons/16x16/paste.png);
+  padding-left: 19px;
+}
+
+.button-translate {
+  background-image: url(icons/16x16/languages.png);
+  padding-left: 19px;
+}
+
+.button-compare {
+  background-image: url(icons/16x16/compare.png);
+  padding-left: 19px;
+}
+
+.button-add {
+  background-image: url(icons/16x16/add.png);
+  padding-left: 19px;
+}
+
+.button-select-all {
+  background-image: url(icons/16x16/select_all.png);
+  padding-left: 19px;
+}
+
+.button-select-none {
+  background-image: url(icons/16x16/select_none.png);
+  padding-left: 19px;
+}
+
+.button-publish {
+  background-image: url(icons/16x16/public.png);
+  padding-left: 19px;
+}
+
+.button-retire {
+  background-image: url(icons/16x16/private.png);
+  padding-left: 19px;
+}
+
+.button-zip {
+  background-image: url(icons/16x16/zip.png);
+  padding-left: 19px;
+}
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ *************************************************************************/
+
+div#location {
+  margin: 0px 10px 0px 0px;
+  padding: 0px 0px 4px 8px;
+  width: 99%;
+}
+
+#tabs {
+  padding: 2px 4px 2px 0px;
+  float: right;
+  font-size: 1.1em;
+}
+
+#tabs a {
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#tabs .menu a {
+  padding: 2px 4px 2px 4px;
+}
+
+#tabs .menu a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+#tabs .active a {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#breadcrumbs {
+  float: left;
+  font-size: 1.1em;
+  margin: 2px 0px 2px 0px;
+}
+
+#breadcrumbs span {
+  color: #888a85;
+}
+
+#breadcrumbs a {
+  text-decoration: none;
+  padding: 2px 4px 2px 4px;
+}
+
+#breadcrumbs a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+
+/**************************************************************************
+ * ui/aruni/message.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#message * {
+  margin: 3px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 3px 0 3px 20px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+#message a {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+#message .info {
+  border-color: #e7db52;
+  background-color: #ffffe7;
+  background-image: url(icons/16x16/message.png);
+}
+
+#message .error {
+  border-color: #e75252;
+  background-color: #ffe7e7;
+  background-image: url(icons/16x16/error.png);
+}
+
+
+/**************************************************************************
+ * ui/generic/menu.xml.en
+ * ui/generic/select_fields_menu.xml.en
+ *************************************************************************/
+
+.context-menu {
+  font-size: 0.8em;
+  padding-left: 8px;
+  margin-bottom: 2em;
+}
+
+.context-menu form {
+  margin: 0; /* IEx */
+}
+
+.context-menu a,
+.context-menu a:link,
+.context-menu a:visited,
+.context-menu a:hover,
+.context-menu a:active {
+  text-decoration: none;
+  color: #3465a4;
+}
+
+.context-menu-title {
+  width: 205px;
+  margin: 3px;
+  padding: 3px 6px;
+  color: #fff;
+  background-color: #888a85;
+  font-weight: bold;
+}
+
+.context-menu fieldset {
+  margin-bottom: 5px;
+}
+
+.context-menu fieldset ul {
+  margin: 0;
+}
+
+.context-menu ul {
+  margin: 3px 6px 10px 3px;
+  list-style: none;
+  padding: 3px;
+}
+
+.context-menu li {
+  margin: 3px;
+  padding: 0 0 1px 0;
+  background-repeat: no-repeat;
+  background-position: top left;
+  border-bottom: 1px solid #d3d7cf;
+  list-style: none;
+  overflow: hidden;
+}
+
+.context-menu li label {
+}
+
+.context-menu p {
+  margin: 0;
+}
+
+/**************************************************************************
+ * ui/generic/icons_view.xml.en
+ * ui/user/profile.xml.en
+ *************************************************************************/
+
+table.new-resource-thumb {
+  float: left;
+  width: 16em;
+  height: 6em;
+  margin-right: 0.7em;
+}
+
+table.new-resource-thumb p {
+  margin: 0px;
+  font-size: 0.95em;
+}
+
+/**************************************************************************
+ * ui/generic/browse_table.xml.en
+ * ui/website/edit_languages.xml.en
+ *************************************************************************/
+
+#browse-list {
+  border-spacing: 0px;
+}
+
+#browse-list thead th {
+  background-color: #d3d7cf;
+  border-color: #ddd #aaa #aaa #ddd;
+  border-style: solid;
+  border-width: 1px;
+  padding: 0 5px;
+  text-align: left;
+  font-size: 0.9em;
+}
+
+#browse-list thead th.checkbox {
+  padding: 6px 3px;
+}
+
+#browse-list thead th.checkbox input {
+  background-color: #d3d7cf;
+}
+
+#browse-list tbody td {
+  border-bottom: 1px solid #DDDDDD;
+  padding: 4px 5px;
+  vertical-align: top;
+}
+
+#browse-list tr.even{
+  background-color: #FFF;
+}
+
+#browse-list tr.odd:hover, #browse-list tr.even:hover {
+  background-color: #e0e0f0;
+}
+
+
+#browse-list tr.odd, #browse-list tr.odd input {
+  background-color: #f9f9f9;
+}
+
+#browse-list th a.sort{
+  float: left;
+  width: 9px;
+  height: 9px;
+}
+
+#browse-list th a.sort-up,
+#browse-list th a.sort-up-active,
+#browse-list th a.sort-down,
+#browse-list th a.sort-down-active {
+  background: transparent url(/ui/aruni/images/sprite_sort.png) no-repeat;
+}
+
+#browse-list th a.sort-down { background-position: -10px -10px; }
+#browse-list th a.sort-down-active { background-position: -10px -29px; }
+#browse-list th a.sort-up { background-position: -10px -48px; }
+#browse-list th a.sort-up-active { background-position: -10px -67px; }
+
+#browse-list td a {
+  text-decoration: none;
+}
+
+#browse-list td a:hover {
+  text-decoration: underline;
+}
+
+form#form-search div.block-widget-text,
+form#form-search div.block-widget-format,
+form#form-search div.block-widget-group,
+form#form-search div.block-widget-permission,
+form#form-search div.block-widget-search_path,
+form#form-search div.block-widget-search_format
+{
+  float: left;
+  margin-right: 0.5em;
+}
+
+form.autoform div.block-widget-search_path,
+form.autoform div.block-widget-search_path_depth
+{
+  float: left;
+  margin-right: 1em;
+}
+
+
+/**************************************************************************
+ * NUMERIC BATCH
+ **************************************************************************/
+
+p.batchcontrol {
+  margin-bottom: 5px;
+}
+
+.batch-pages {
+  margin: 5px 0 10px 0;
+  padding: 0;
+}
+
+.batch-pages li {
+  display: inline;
+}
+
+.batch-pages a {
+  width: 7px;
+  height: 5px;
+  margin: 0px;
+  padding: 3px 6px;
+  border: 1px solid #DDDDDD;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8em;
+}
+
+.batch-pages a:hover {
+  background-color: #EEEEEC;
+}
+
+.batch-pages a.current {
+  background-color: #EEEEEC;
+  font-weight: bold;
+}
+
+/**************************************************************************
+ * ui/folder/browse_search.xml.en
+ * ui/generic/browse_search.xml.en
+ * ui/html/addbase_browse_search.xml.en
+ *************************************************************************/
+
+fieldset.search table td {
+  vertical-align: bottom;
+}
+
+fieldset.search button {
+  margin-bottom: 0;
+}
+
+/**************************************************************************
+ * ui/website/search_table.xml.en
+ *************************************************************************/
+
+.results li {
+  margin: 3px 3px 6px;
+}
+
+.result-url, .result-type, .result-size {
+  font-size: 0.9em;
+}
+
+.result-url {
+  color: #008000;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#maintitle h1 {
+  margin: 0;
+  padding: 9px 0 0 0;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+dl.thumb {
+  float: left;
+  width: 8em;
+  height: 8em;
+  margin: 0;
+  padding: 5px;
+  text-align: center;
+}
+
+dl.thumb dt {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+dl.thumb dd {
+  margin: 0;
+  padding: 0;
+}
+
+
+/**************************************************************************
+ * Defined by resource_views.DBResource_Edit
+ * Used by views.build_menu
+ *************************************************************************/
+
+.nav-active {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * Defined for Javascript-based tabs (splitting a view in panels)
+ *************************************************************************/
+
+p.tabme {
+  border-bottom: 1px solid #3465A4;
+  padding: 0.5em 0;
+}
+p.tabme a {
+  text-decoration: none;
+  padding: 0.5em 1em;
+}
+p.tabme a.selected {
+  color: #fff;
+  background: #3465A4;
+}
+
+/**************************************************************************
+ * Versionning views
+ *************************************************************************/
+
+#differ span, #differ div {
+  font-family: monospace;
+  font-size: 1em;
+  white-space: pre;
+}
+
+#differ pre {
+  margin: 0;
+}
+
+#differ .rem, #git-stat .rem {
+  color: red;
+}
+
+#differ .add, #git-stat .add {
+  color: green;
+}
+
+#differ div {
+  background-color: #EDECE6;
+  border-color: #D9D8D1;
+  border-style: solid;
+  border-width: 1px 0;
+  font-weight: bold;
+  margin: 15px 0 4px 0;
+  padding: 4px 0 2px;
+}
+
+/**************************************************************************
+ * ui/file/externaledit.xml.en
+ *************************************************************************/
+
+#external-edit .unix, #external-edit .windows {
+  width: 440px;
+  min-height: 130px;
+}
+
+#external-edit .unix {
+  float: left;
+}
+
+
+/**************************************************************************
+ * NOT YET CLASSIFIED
+ *************************************************************************/
+
+.broken { color: red; }
+.number { text-align: right; }
+
+.autoform .title {
+  font-weight: bold;
+}
+
+.autoform .language {
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+.autoform .language.block {
+  margin: 0;
+  display: block;
+}
+.autoform .widget {
+  margin: 2px 0;
+}
+
+.autoform input[type=radio],
+.autoform input[type=checkbox] {
+  width: auto;
+}
+
+div.helpbox {
+  background-color: #f6f6ff;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  float: right;
+  margin: 7px;
+  padding: 7px;
+  width: 25em;
+}
+
+div.helpbox img.helpbox-icon {
+  float: left;
+}
+
+div.helpbox div.helpbox-text {
+  margin-left: 52px;
+}
+
+/* Password strength meter */
+span.testresult {
+  font-weight: bold;
+  margin-left: 1em;
+}
+
+span.shortPass {
+  color: red;
+}
+
+span.badPass {
+  color: red;
+}
+
+span.goodPass {
+  color: #ffac00;
+}
+
+span.strongPass {
+  color: green;
+}

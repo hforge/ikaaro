@@ -66,9 +66,9 @@
       </table>
       <br/>
       <div class="autoform-actions">
-        <button type="submit" class="button-ok"
+        <button type="submit" class="btn btn-primary"
           name="action" value="do_next_update" stl:if="not cls_errors">Update</button>
-        <button type="submit" class="button-ok"
+        <button type="submit" class="btn btn-primary"
           name="action" value="force_next_update" stl:if="cls_errors">Force update</button>
       </div>
     </form>

@@ -35,7 +35,7 @@
       <tr>
         <th></th>
         <td>
-          <button type="submit" class="button-ok">Change</button>
+          <button type="submit" class="btn btn-primary">Change</button>
         </td>
       </tr>
     </table>

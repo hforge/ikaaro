@@ -131,7 +131,7 @@ class ContactForm(AutoForm):
 
     access = True
     title = MSG(u'Contact')
-    actions = [Button(access=True, css='button-ok', title=MSG(u'Send'))]
+    actions = [Button(access=True, css='btn btn-primary', title=MSG(u'Send'))]
     query_schema = {'to': String,
                     'subject': Unicode,
                     'message_body': Unicode}
@@ -257,7 +257,7 @@ class UpdateDocs(AutoForm):
                    tip=MSG(u'"en", "fr", ...'))]
 
     actions = [
-        Button(access='is_admin', css='button-ok', title=MSG(u'Upload'))]
+        Button(access='is_admin', css='btn btn-primary', title=MSG(u'Upload'))]
 
 
     def _get_form(self, resource, context):

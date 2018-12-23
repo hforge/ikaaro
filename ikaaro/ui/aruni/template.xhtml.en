@@ -8,76 +8,64 @@
     <base href="${base_uri}" />
     <!-- Meta -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}"
-      content="${meta/content}" />
+    <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}" content="${meta/content}" />
     <!-- Canonical URL for search engines -->
     <link rel="canonical" href="${canonical_uri}" />
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" stl:repeat="style styles"
       href="${style}" />
     <!-- JavaScript -->
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
-      />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"/>
     <!-- Icon -->
     <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
   </head>
   <body>
   <div id="page">
-
-    <!-- Header -->
-    <div id="header">
-      <div id="links">
-        <a stl:repeat="link usermenu" href="${link/href}" id="${link/id}"
-          title="${link/title}">${link/title}</a>
+    <div class="container">
+      <!-- Header -->
+      <div id="header">
+        <div id="links">
+          <a stl:repeat="link usermenu" href="${link/href}" id="${link/id}" title="${link/title}">${link/title}</a>
+        </div>
+        <!-- Languages -->
+        <div class="languages">${languages}</div>
+        <!-- Menu -->
+        <ul stl:if="menu" id="menu">
+          <li stl:repeat="menu menu" class="${menu/class}">
+            <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
+               title="${menu/title}">${menu/title}</a>
+          </li>
+        </ul>
+        <!-- Logo -->
+        <a href="/" stl:if="logo_href" id="logo">
+          <img src="${logo_href}"/>
+        </a>
+        <div class="clear" />
       </div>
-      <!-- Languages & Searchbar -->
-      <table cellpadding="0" cellspacing="0" class="header-toolbar">
-        <tr>
-          <td class="languages">${languages}</td>
-          <td class="search">
-            <form action="/;browse_content" method="get">
-              <input name="text" class="search_box" type="text"
-                value="" size="15" />
-            </form>
-          </td>
-        </tr>
-      </table>
-      <!-- Menu -->
-      <ul stl:if="menu" id="menu">
-        <li stl:repeat="menu menu" class="${menu/class}">
-          <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
-             title="${menu/title}">${menu/title}</a>
-        </li>
-      </ul>
-      <!-- Logo -->
-      <a href="/" stl:if="logo_href" id="logo">
-        <img src="${logo_href}"/>
-      </a>
-      <div class="clear" />
-    </div>
 
-    <!-- Location & Views-->
-    ${breadcrumb}
-    ${tabs}
+      <!-- Location & Views-->
+      ${breadcrumb}
+      ${tabs}
 
-    <!-- Body -->
-    <div id="body">
-      <h1 stl:if="page_title">${page_title}</h1>
-      ${message}
-      <table cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-          <td id="content" valign="top">
+      <!-- Body -->
+      <div id="body">
+        <h1 stl:if="page_title">${page_title}</h1>
+        ${message}
+        <div class="row">
+          <div class="col-lg-10">
             ${body}
-          </td>
-          <td id="right" valign="top" stl:if="context_menus">
-            <stl:block stl:repeat="menu context_menus">${menu}</stl:block>
-          </td>
-        </tr>
-      </table>
-    </div>
+          </div>
+          <div class="col-lg-2">
+            <div stl:if="context_menus">
+              <stl:block stl:repeat="menu context_menus">${menu}</stl:block>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Footer -->
-    <div id="footer">${footer}</div>
+      <!-- Footer -->
+      <div id="footer">${footer}</div>
+    </div>
   </div>
   </body>
 </html>

@@ -20,7 +20,7 @@
       </ul>
     </fieldset>
     <p>
-      <button type="submit" class="button-ok">Update</button>
+      <button type="submit" class="btn btn-primary">Update</button>
     </p>
   </form>
 </div>

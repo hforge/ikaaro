@@ -34,7 +34,7 @@ class Button(STLTemplate):
     name = None
     # TODO rename to "content" in 0.75, add "title" attribute
     title = MSG(u"OK")
-    css = 'button-ok'
+    css = 'btn btn-primary'
     confirm = None
 
 
@@ -67,7 +67,7 @@ class Remove_Button(Button):
 
     access = 'is_allowed_to_remove'
     confirm = MSG(u'Are you sure you want to delete this?')
-    css = 'button-delete'
+    css = 'btn btn-danger'
     name = 'remove'
     title = MSG(u'Remove')
 
@@ -96,7 +96,7 @@ class Remove_BrowseButton(Remove_Button, BrowseButton):
 class RenameButton(BrowseButton):
 
     access = 'is_allowed_to_move'
-    css = 'button-rename'
+    css = 'btn btn-success'
     name = 'rename'
     title = MSG(u'Rename')
 
@@ -105,7 +105,7 @@ class RenameButton(BrowseButton):
 class CopyButton(BrowseButton):
 
     access = 'is_allowed_to_copy'
-    css = 'button-copy'
+    css = 'btn btn-primary'
     name = 'copy'
     title = MSG(u'Copy')
 
@@ -114,7 +114,7 @@ class CopyButton(BrowseButton):
 class CutButton(BrowseButton):
 
     access = 'is_allowed_to_move'
-    css = 'button-cut'
+    css = 'btn btn-primary'
     name = 'cut'
     title = MSG(u'Cut')
 
@@ -123,7 +123,7 @@ class CutButton(BrowseButton):
 class PasteButton(BrowseButton):
 
     access = 'is_allowed_to_move'
-    css = 'button-paste'
+    css = 'btn btn-primary'
     name = 'paste'
     title = MSG(u'Paste')
 
@@ -142,7 +142,7 @@ class AddButton(BrowseButton):
     access = 'is_allowed_to_edit'
     name = 'add'
     title = MSG(u'Add')
-    css = 'button-add'
+    css = 'btn btn-primary'
 
 
 
@@ -151,7 +151,6 @@ class ZipButton(BrowseButton):
     access = 'is_allowed_to_edit'
     name = 'zip'
     title = MSG(u'Zip')
-    css = 'button-zip'
 
 
 class SearchButton(BrowseButton):

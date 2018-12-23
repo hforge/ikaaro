@@ -270,7 +270,7 @@ class CSV_AddRow(RowForm):
 
     title = MSG(u'Add Row')
     icon = 'new.png'
-    actions = [Button(access=True, css='button-ok',
+    actions = [Button(access=True, css='btn btn-primary',
         title=MSG(u'Add'), show=True)]
 
 

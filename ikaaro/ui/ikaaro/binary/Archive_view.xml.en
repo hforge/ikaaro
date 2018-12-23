@@ -10,7 +10,7 @@
     <fieldset>
       <legend>Extract contents</legend>
       ${widget}
-      <button type="submit" class="button-ok">Ok</button>
+      <button type="submit" class="btn btn-primary">Ok</button>
       <br/>
       <input type="checkbox" id="update" name="update" value="1" />
       <label for="update">Overwrite files with the same name</label>

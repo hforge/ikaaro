@@ -43,7 +43,7 @@
     <div>
     </div>
     <p>
-      <button type="submit" class="button-ok">Ok</button>
+      <button type="submit" class="btn btn-primary">Ok</button>
     </p>
   </fieldset>
 

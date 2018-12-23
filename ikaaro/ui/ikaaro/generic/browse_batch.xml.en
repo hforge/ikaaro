@@ -4,20 +4,35 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <p class="batchcontrol">${msg}</p>
-  <ul class="batch-pages" stl:if="control">
-    <li stl:if="previous">
-      <a class="previous" href="${previous}" title="« Previous"
-        >« Previous</a>
-    </li>
-    <li stl:repeat="page pages">
-      <a stl:if="page/uri" href="${page/uri}" class="${page/css}"
-        >${page/number}</a>
-      <span stl:if="not page/uri" class="ellipsis">…</span>
-    </li>
-    <li stl:if="next">
-      <a class="next" href="${next}" title="Next »">Next »</a>
-    </li>
-  </ul>
+  <p stl:if="not control" class="batchmsg">
+    ${msg}
+  </p>
+  <div stl:if="control" class="batchcontrol">
+    <p class="batchmsg">
+      ${msg}
+    </p>
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link previous" href="${previous}" title="« Précédent" stl:if="previous">« Previous</a>
+        <a class="page-link disabled" title="« Précédent" stl:if="not previous">« Previous</a>
+      </li>
+      <stl:inline stl:repeat="page pages">
+        <li stl:if="page/uri" class="page-item ${page/css}">
+          <a href="${page/uri}" class="page-link">
+            ${page/number}
+          </a>
+        </li>
+        <li stl:if="not page/uri">
+          <span class="ellipsis">…</span>
+        </li>
+      </stl:inline>
+      <li class="page-item">
+        <a class="page-link next" href="${next}" title="Suivant »" stl:if="next">Next »</a>
+        <a class="page-link disabled" href="${next}" title="Suivant »" stl:if="not next">Next »</a>
+      </li>
+    </ul>
+  </div>
+  <div class="clearfix"/>
+  <br stl:if="control"/>
 
 </stl:block>

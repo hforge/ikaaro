@@ -5,8 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <ul class="nav nav-tabs" stl:if="tabs">
-    <li class="${tab/class}" stl:repeat="tab tabs">
-      <a href="${tab/name}">
+    <li class="nav-item" stl:repeat="tab tabs">
+      <a href="${tab/name}" class="nav-link ${tab/class}">
         ${tab/label}
       </a>
     </li>
