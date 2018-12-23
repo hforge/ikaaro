@@ -94,7 +94,7 @@ class ModelField_Inherited(ModelField_Base):
 
     class_id = 'model-field-inherited'
     class_title = MSG(u'Inherited field')
-    class_views = ['edit', 'commit_log']
+    class_views = ['edit']
 
 
 
@@ -114,7 +114,7 @@ class ModelField_Standard(ModelField_Base):
         return field(**field_kw)
 
     # Views
-    class_views = ['edit', 'commit_log']
+    class_views = ['edit']
     _fields = ModelField_Base._fields + ['field_type']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
     edit = AutoEdit(fields=_fields)
@@ -127,7 +127,7 @@ class Choice(DBResource):
     class_title = MSG(u'Choice')
 
     # Views
-    class_views = ['edit', 'commit_log']
+    class_views = ['edit']
     new_instance = AutoAdd(fields=['title'])
 
 
@@ -184,7 +184,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
         return SelectWidget
 
     # Views
-    class_views = ['browse_content', 'add_choice', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_choice', 'edit']
     browse_content = ModelField_Choices_Browse()
     add_choice = NewResource_Local(title=MSG(u'Add choice'))
 
@@ -245,7 +245,7 @@ class Model(OrderedFolder):
     title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'), required=True)
 
     # Views
-    class_views = ['browse_content', 'add_field', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_field', 'edit']
     browse_content = Model_Browse()
     new_instance = Model_NewInstance()
     add_field = NewResource_Local(title=MSG(u'Add field'))
@@ -339,7 +339,7 @@ class ConfigModels(Folder):
     config_group = 'content'
 
     # Views
-    class_views = ['browse_content', 'add_model', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_model', 'edit']
     browse_content = ConfigModels_Browse()
     add_model = NewResource_Local(title=MSG(u'Add model'))
 

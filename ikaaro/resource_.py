@@ -53,7 +53,6 @@ from resource_views import LoginView, LogoutView
 from resource_views import DBResource_GetFile, DBResource_GetImage
 from rest import Rest_Login, Rest_Schema, Rest_Query
 from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
-from revisions_views import DBResource_CommitLog, DBResource_Changes
 from update import class_version_to_date
 from utils import get_resource_by_uuid_query
 from widgets import CheckboxWidget
@@ -883,9 +882,6 @@ class DBResource(Resource):
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
     add_media = DBResource_AddMedia()
-    # Commit log
-    commit_log = DBResource_CommitLog()
-    changes = DBResource_Changes()
     # Links
     backlinks = DBResource_Backlinks()
     links = DBResource_Links()

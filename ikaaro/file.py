@@ -59,7 +59,7 @@ class File(DBResource):
     class_icon16 = '/ui/ikaaro/icons/16x16/file.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/file.png'
     class_views = ['view', 'edit', 'externaledit', 'remove', 'subscribe',
-                   'links', 'backlinks', 'commit_log']
+                   'links', 'backlinks']
 
     # Fields
     data = File_Field(required=True, class_handler=FileHandler)
@@ -127,7 +127,7 @@ class Image(File):
     class_icon16 = '/ui/ikaaro/icons/16x16/image.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/image.png'
     class_views = ['view', 'download', 'edit', 'externaledit', 'remove',
-                   'links', 'backlinks', 'commit_log']
+                   'links', 'backlinks']
     # Fields
     data = File_Field(required=True, class_handler=ImageHandler)
 

@@ -92,7 +92,7 @@ class MenuItem(OrderedFolder):
         return [MenuItem]
 
     # Views
-    class_views = ['edit', 'browse_content', 'add_menu', 'commit_log']
+    class_views = ['edit', 'browse_content', 'add_menu']
     _fields = ['title', 'path', 'target']
     new_instance = AutoAdd(fields=_fields)
     edit = AutoEdit(fields=_fields)
@@ -273,7 +273,7 @@ class ConfigMenu(MenuItem):
     config_group = 'webmaster'
 
     # Views
-    class_views = ['browse_content', 'add_menu', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_menu', 'edit']
 
 
     def get_menu_namespace(self, context, show_first_child=False, src=None):

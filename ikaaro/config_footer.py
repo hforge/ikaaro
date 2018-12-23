@@ -35,7 +35,7 @@ class Footer(WebPage):
     config_group = 'webmaster'
 
     # Views
-    class_views = ['edit', 'externaledit', 'commit_log']
+    class_views = ['edit', 'externaledit']
     edit = File_Edit(fields=['data'])
 
 

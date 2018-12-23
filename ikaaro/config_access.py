@@ -149,7 +149,7 @@ class AccessRule(DBResource):
     search_format = SearchFormat_Field(indexed=True, stored=True)
 
     # Views
-    class_views = ['edit', 'results', 'commit_log']
+    class_views = ['edit', 'results']
     _fields = ['group', 'permission', 'search_path', 'search_path_depth',
                'search_format']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
@@ -386,7 +386,7 @@ class ConfigAccess(Folder):
 
 
     # Views
-    class_views = ['browse_content', 'add_rule', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_rule', 'edit']
     browse_content = ConfigAccess_Browse()
     add_rule = NewResource_Local(title=MSG(u'Add rule'))
 

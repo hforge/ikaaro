@@ -129,7 +129,7 @@ class ConfigGroups(OrderedFolder):
     property_name = 'groups'
 
     # Views
-    class_views = ['browse_content', 'add_group', 'edit', 'commit_log']
+    class_views = ['browse_content', 'add_group', 'edit']
     browse_content = BrowseGroups()
     add_group = NewResource_Local(title=MSG(u'Add group'))
 

@@ -60,7 +60,7 @@ class Theme(Folder):
 
     # Views
     class_views = ['edit', 'browse_content', 'preview_content', 'links',
-                   'backlinks', 'commit_log']
+                   'backlinks']
 
     edit = AutoEdit(fields=['favicon', 'logo', 'banner', 'style', 'share'])
 

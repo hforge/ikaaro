@@ -63,7 +63,7 @@ class Text(File):
     class_title = MSG(u'Plain Text')
     class_icon16 = '/ui/ikaaro/icons/16x16/text.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'commit_log']
+    class_views = ['view', 'edit', 'externaledit']
     # Fields
     data = File_Field(required=True, class_handler=TextFile, widget=MultilineWidget)
 
@@ -270,7 +270,7 @@ class CSV(Text):
 
     class_id = 'text/comma-separated-values'
     class_title = MSG(u'Comma Separated Values')
-    class_views = ['view', 'add_row', 'edit', 'externaledit', 'commit_log']
+    class_views = ['view', 'add_row', 'edit', 'externaledit']
 
     # Fields
     data = File_Field(required=True, class_handler=CSVFile, widget=FileWidget)
