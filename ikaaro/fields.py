@@ -241,9 +241,22 @@ class Date_Field(Metadata_Field):
 
 
 class Datetime_Field(Metadata_Field):
+
     datatype = DateTime()
     widget = DatetimeWidget
     rest_type = 'datetime'
+
+    def get_value_title(self, resource, name, language=None, mode=None):
+        value = resource.get_value(name)
+        if not value:
+            return None
+        context = get_context()
+        # Time
+        if mode == 'time':
+            value = context.fix_tzinfo(value)
+            return format_time(value, language=language)
+        # Datetime
+        return context.format_datetime(value)
 
 
 
@@ -847,6 +860,7 @@ class UUID_Field(Char_Field):
 
 class CTime_Field(Datetime_Field):
 
+    title = MSG(u'Creation date')
     indexed = True
     stored = True
     readonly = True
@@ -855,6 +869,7 @@ class CTime_Field(Datetime_Field):
 
 class MTime_Field(Datetime_Field):
 
+    title = MSG(u'Modification date')
     indexed = True
     stored = True
     readonly = True
@@ -863,6 +878,7 @@ class MTime_Field(Datetime_Field):
 
 class LastAuthor_Field(Char_Field):
 
+    title = MSG(u'Last author')
     indexed = False
     stored = True
     readonly = True
