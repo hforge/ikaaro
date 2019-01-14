@@ -860,7 +860,11 @@ class Server(object):
                 log_info(msg, domain='itools.cron')
             # Save changes
             if not error:
-                database.save_changes()
+                try:
+                    database.save_changes()
+                except Exception:
+                    log_error('Cron error on save changes\n' + format_exc())
+                    context.root.alert_on_internal_server_error(context)
             # Message
             t1 = time()
             if not error:
