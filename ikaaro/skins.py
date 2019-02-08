@@ -218,54 +218,6 @@ class Skin(object):
         return ('/ui/ikaaro/favicon.ico', 'image/x-icon')
 
 
-    #######################################################################
-    # Authenticated user
-    #######################################################################
-    def get_usermenu(self, context):
-        """Return a dict {'name': ..., 'title': ..., 'home': ...}
-        """
-        here = context.resource
-        base_path = context.get_link(here)
-
-        # Case 1: Anonymous
-        user = context.user
-        if user is None:
-            return [{'href': '%s/;login' % base_path,
-                     'title': MSG(u'Sign in'),
-                     'id': 'links-menu-login'}]
-
-        # Case 2: Authenticated
-        usermenu = [
-            # Home
-            {'href': '/users/%s' % user.name,
-             'title': user.get_title(),
-             'id': 'links-menu-profile'},
-            # Logout
-            {'href': '%s/;logout' % base_path,
-             'title': MSG(u'Log out'),
-             'id': 'links-menu-logout'}]
-
-        # Add content
-        container = here
-        if isinstance(here, Folder) is False:
-            container = here.parent
-        view = container.get_view('new_resource')
-        if context.is_access_allowed(container, view):
-            usermenu.append({
-                'href': '%s/;new_resource' % context.get_link(container),
-                'title': MSG(u'Add content'),
-                'id': 'links-menu-new'})
-
-        # Configuration
-        config = here.get_resource('/config')
-        if context.root.is_allowed_to_view(user, config):
-            usermenu.append({
-                'href': '/config',
-                'title': MSG(u'Configuration'),
-                'id': 'links-menu-configuration'})
-
-        return usermenu
-
 
     #######################################################################
     # Body
@@ -395,10 +347,6 @@ class Skin(object):
             'favicon_type': favicon_type,
             # logo
             'logo_href': logo_href,
-            # Usermenu (the links at the top)
-            'usermenu': self.get_usermenu(context),
-            # menu
-            'menu': self.get_menu_namespace(context),
             # Location & Views
             'breadcrumb': breadcrumb_template,
             'tabs': tabs_template,
