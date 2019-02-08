@@ -208,7 +208,10 @@ class MenuItem(OrderedFolder):
             resource = self.get_resource(resource_path)
             ref2.path = context.get_link(resource)
             if view:
-                ref2.path += view
+                if ref2.path == '/':
+                    ref2 = view
+                else:
+                    ref2.path += view
 
             items.append({
                 'id': item_id,
