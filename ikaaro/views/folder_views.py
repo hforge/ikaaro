@@ -338,7 +338,7 @@ class Folder_BrowseContent(BrowseForm):
         return styles
 
 
-    depth = None
+    depth = 1
     base_classes = None
     def get_items_query(self, resource, context):
         # Search in subtree
