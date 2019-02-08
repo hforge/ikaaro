@@ -21,7 +21,7 @@ except ImportError:
     PILImage = None
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, proto_property
 from itools.database import AndQuery, NotQuery, PhraseQuery, OrQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
@@ -120,6 +120,7 @@ class Folder_NewResource(IconsView):
     access = 'is_allowed_to_add'
     title = MSG(u'Add resource')
     icon = 'new.png'
+    include_subclasses = True
 
 
     def GET(self, resource, context):
@@ -140,19 +141,34 @@ class Folder_NewResource(IconsView):
         return uri
 
 
+    @proto_property
+    def document_types(self):
+        return self.resource.get_document_types()
+
+
     def get_items(self, resource, context):
-        # 1. Static classes
-        document_types = []
-        for cls in resource.get_document_types():
-            if cls not in document_types:
-                document_types.append(cls)
+        # Load dynamic classes
+        database = context.database
+        list(database.get_dynamic_classes())
 
-        # 2. Add dynamic models
-        for cls in context.database.get_dynamic_classes():
-            document_types.append(cls)
+        # Case 1: do not include subclasses
+        document_types = self.document_types
+        if self.include_subclasses is False:
+            return document_types
 
-        # Ok
-        return document_types
+        # Case 2: include subclasses
+        root = context.root
+        user = context.user
+
+        document_types = tuple(document_types)
+        items = []
+        for cls in database.get_resource_classes():
+            class_id = cls.class_id
+            if class_id[0] != '-' and issubclass(cls, document_types):
+                if root.has_permission(user, 'add', resource, class_id):
+                    items.append(cls)
+
+        return items
 
 
     def get_namespace(self, resource, context):
