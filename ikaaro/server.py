@@ -660,9 +660,6 @@ class Server(object):
             return False
         if mode == 'request':
             raise NotImplementedError
-        elif mode == 'running':
-            kw = self.get_running_informations()
-            return not kw.get('read_only', False)
 
 
     #######################################################################
