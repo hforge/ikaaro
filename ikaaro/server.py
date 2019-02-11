@@ -438,6 +438,13 @@ class Server(object):
     #    log_info(message, domain='itools.web_access')
 
 
+    def get_database(self):
+        database = self.database
+        # Reopen so if we have one readonly request it will works
+        database.backend.catalog._db.reopen()
+        # Ok
+        return database
+
 
     def check_consistency(self, quick):
         log_info('Check database consistency')
