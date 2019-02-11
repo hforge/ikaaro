@@ -92,7 +92,7 @@ class CMSContext(prototype):
         # Get database
         server = get_server()
         self.server = server
-        self.database = server.database
+        self.database = server.get_database()
         # Root
         self.root = self.database.get_resource('/')
         # The request method
