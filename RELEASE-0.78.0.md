@@ -1,7 +1,23 @@
-##  ikaaro 0.78.0 - 2017/09/XX
+##  ikaaro 0.78.0 - 2019/02/08
+
+ikaaro 0.78.0 is a transitional version.
+We've:
+
+- We replaced the `libsoup` server by `gevent.WSGIServer` to simplify Python 3 migration.
+- The goal is to migrate itools/ikaaro to Python 3 and to use a simple WSGI server with asyncio.
+
+The purpose is to prepare future:
+
+ - Migration to python3
+ - Increase performances of database
+ - Possibility to add an SQL backend (posgres json for example ?)
+ - Allow to handle several requests at once on ikaaro webserver
+ - Simplify build of javascript web applications with ikaaro
+
+In 0.78 we'll try to make non breaking changes. (or small ones).
 
 ### Changes
-- The `GIT` database now use a bare repository
+
 - We replaced `libsoup` server by `gevent.WSGIServer`
 - Unused packages have been removed to simplify migration to python 3 (`itools.blog`, `itools.cc`, `itools.agenda`, `itools.comments`)
 - Static view `/ui/xxx` now use `context.get_template` so there's a cache (Now served files should be loadable via handlers - so with no errors)
@@ -33,10 +49,3 @@
 - `len(resource.get_names())` should be replace by `len(list(resource.get_names()))`
 - `Folder_View` view has been removed
 - `database.worktree` has been removed
-
-### Futur
-
-- We replaced the `libsoup` server by `gevent.WSGIServer` to simplify Python 3 migration.
-- The goal is to migrate itools/ikaaro to Python 3 and to use a simple WSGI server with asyncio.
-- In next version we'll move some packages from itools to ikaaro.
-- We'll remove many unused packages to simplify migration to Python 3
