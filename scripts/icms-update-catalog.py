@@ -19,6 +19,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from sys import exit
+from xapian import DatabaseLockError
 
 # Import from itools
 import itools
@@ -31,9 +32,12 @@ from ikaaro.server import Server, ask_confirmation
 def update_catalog(parser, options, target):
     # Check the server is not started, or started in read-only mode
     try:
-        server = Server(target, read_only=True, cache_size=options.cache_size)
+        server = Server(target, read_only=False, cache_size=options.cache_size)
     except LookupError:
         print('Error: {} instance do not exists'.format(target))
+        exit(1)
+    except DatabaseLockError:
+        print('Error: Database is already opened'.format(target))
         exit(1)
     # Ask
     message = 'Update the catalog (y/N)? '
