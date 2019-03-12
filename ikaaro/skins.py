@@ -60,7 +60,6 @@ class Skin(object):
             build_path = str(server.environment['build_path'])
             base_path = self.key.split('/ui/')[0]
             new_key = self.key.replace(base_path, build_path)
-            new_key = new_key.replace('/ui/', '/ui_dev/')
             if lfs.exists(new_key):
                 # Use local skin
                 return new_key
