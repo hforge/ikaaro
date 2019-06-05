@@ -619,8 +619,6 @@ class Server(object):
         # Language negotiation
         init_language_selector(select_language)
         # Say hello
-        address = address if address is not None else '*'
-        print 'Listen %s:%d' % (address, port)
         msg = 'Listing at port %s' % port
         log_info(msg)
         self.port = port
@@ -630,7 +628,7 @@ class Server(object):
         log_info(msg)
         self.port = port
         self.wsgi_server = WSGIServer(
-            ('', port), application,
+            (address, port), application,
             handler_class=ServerHandler,
             log=self.access_log)
         gevent_signal(SIGTERM, self.stop)
