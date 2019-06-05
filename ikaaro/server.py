@@ -474,9 +474,6 @@ class Server(object):
         address = self.config.get_value('listen-address').strip()
         if not address:
             raise ValueError, 'listen-address is missing from config.conf'
-        if address == '*':
-            address = None
-
         # Check port
         if self.port is None:
             raise ValueError('listen-port is missing from config.conf')
@@ -623,12 +620,15 @@ class Server(object):
         log_info(msg)
         self.port = port
         # Say hello
-        address = address if address is not None else '*'
         msg = 'Listen %s:%d' % (address, port)
+        print(msg)
+        # Serve
         log_info(msg)
+        if address == '*':
+            address = ''
         self.port = port
         self.wsgi_server = WSGIServer(
-            (address, port), application,
+            (address or '', port), application,
             handler_class=ServerHandler,
             log=self.access_log)
         gevent_signal(SIGTERM, self.stop)
