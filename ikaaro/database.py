@@ -170,8 +170,12 @@ class Database(RWDatabase):
         for path in self.resources_new2old:
             if context.set_mtime:
                 resource = root.get_resource(path)
-                resource.metadata.set_property('mtime', context.timestamp)
-                resource.metadata.set_property('last_author', userid)
+                handler = resource.metadata
+                if handler.dirty:
+                    # Save mtime, only if there's really changes
+                    # (if we reindex resource, no need to update mtime)
+                    handler.set_property('mtime', context.timestamp)
+                    handler.set_property('last_author', userid)
         # Remove from to_reindex if resource has been deleted
         to_reindex = to_reindex - set(docs_to_unindex)
         # 5. Index
