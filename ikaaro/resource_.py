@@ -456,7 +456,7 @@ class DBResource(Resource):
         """
         context = get_context()
         user = context.user
-        now = context.fix_tzinfo(datetime.now())
+        now = context.timestamp
         # UUID
         self.set_uuid()
         # Ctime
