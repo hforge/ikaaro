@@ -223,7 +223,8 @@ def get_root(database):
 def create_server(target, email, password, root,
                   backend='git', modules=None,
                   listen_port='8080', smtp_host='localhost',
-                  log_email=None, website_languages=None):
+                  log_email=None, website_languages=None,
+                  size_min=19500, size_max=20500):
     modules = modules or []
     # Get modules
     for module in modules:
@@ -251,7 +252,6 @@ def create_server(target, email, password, root,
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create database
-    size_min, size_max = 19500, 20500
     database = make_database(target, size_min, size_max, backend=backend)
     database.close()
     database = get_database(target, size_min, size_max, backend=backend)
