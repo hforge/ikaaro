@@ -18,9 +18,7 @@ function errorPrint(msg) {
 
 gulp.task('help', taskListing);
 gulp.task('default', taskListing);
-gulp.task('build-aruni', function(){
-
-
+gulp.task('build-aruni', function() {
   var pCSS = function () {
     return new Promise(function (resolve, reject) {
       var cssStream = gulp.src('css/scss/style.scss')
@@ -36,17 +34,15 @@ gulp.task('build-aruni', function(){
   };
 
   // Copy font awesome fonts
-   gulp.src('node_modules/font-awesome/fonts/*.*')
+  gulp.src('node_modules/font-awesome/fonts/*.*')
      .pipe(gulp.dest('./dist/fonts/'))
      .pipe(gulp.dest('../../ui/aruni/dist/fonts/'));
 
   // Run
-  pCSS().catch(function (error) {
+  return pCSS().catch(function (error) {
       errorPrint(error);
   });
-
-
 });
 
 
-gulp.task("build", ["build-aruni"]);
+gulp.task("build", gulp.series("build-aruni"));
