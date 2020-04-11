@@ -1,4 +1,4 @@
-gevent
+gevent==1.5
 guppy
 junitxml
 requests-toolbelt

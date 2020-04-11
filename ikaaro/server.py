@@ -43,7 +43,7 @@ from wsgiref.util import setup_testing_defaults
 
 # Import from gevent
 from gevent.pywsgi import WSGIServer, WSGIHandler
-from gevent import signal as gevent_signal
+from gevent.signal import signal as gevent_signal
 
 # Import from itools
 from itools.core import become_daemon, vmsize
@@ -612,6 +612,10 @@ class Server(object):
         self.close()
 
 
+    def stop_signal(self, signal, handler):
+        self.stop()
+
+
     def listen(self, address, port):
         # Language negotiation
         init_language_selector(select_language)
@@ -631,8 +635,8 @@ class Server(object):
             (address or '', port), application,
             handler_class=ServerHandler,
             log=self.access_log)
-        gevent_signal(SIGTERM, self.stop)
-        gevent_signal(SIGINT, self.stop)
+        gevent_signal(SIGTERM, self.stop_signal)
+        gevent_signal(SIGINT, self.stop_signal)
         if self.profile:
             runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
         else:
