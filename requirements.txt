@@ -4,5 +4,4 @@ gevent==1.5
 guppy
 junitxml
 jwcrypto==0.7.0
-requests-tool
-belt
+requests-toolbelt
