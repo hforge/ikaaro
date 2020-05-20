@@ -39,6 +39,7 @@ from signal import SIGINT, SIGTERM
 from requests import Request
 from socket import gaierror
 from tempfile import mkstemp
+from importlib import import_module
 from wsgiref.util import setup_testing_defaults
 
 # Import from gevent
@@ -63,9 +64,6 @@ from itools.web.context import select_language
 from itools.web import set_context, get_context
 from itools.web.dispatcher import URIDispatcher
 from itools.web.server import AccessLogger
-
-# Import from ikaaro
-from ikaaro.web.wsgi import application
 
 # Import from ikaaro.web
 from database import get_database
@@ -119,7 +117,7 @@ log-email = {log_email}
 # call to the cron job manager. If zero (the default) the cron job won't be
 # run at all.
 #
-cron-interval = 0
+cron-interval = 60
 
 # If the "session-timeout" variable is different from zero (the default), the
 # user will be automatically logged out after the specified number of minutes.
@@ -145,15 +143,18 @@ index-text = 1
 
 # The "accept-cors" variable defines whether the web server accept
 # cross origin requests or not.
-# To accept cross origin requests, set this option to 1 (default is 0)
+# To accept cross origin requests, set this option to 1 (default is 1)
 #
-accept-cors = 0
+accept-cors = 1
 
 # The size of images can be controlled by setting the following values.
 # (ie. max-width = 1280) (by default it is None, keeping original size).
 #
 max-width =
 max-height =
+
+# Allow to customize wsgi application
+wsgi_application = ikaaro.web.wsgi
 """)
 
 
@@ -456,7 +457,6 @@ class Server(object):
         if pid is not None:
             msg = '[%s] The Web Server is already running.' % self.target
             log_warning(msg)
-            print(msg)
             return False
         # Ok
         return True
@@ -625,12 +625,14 @@ class Server(object):
         self.port = port
         # Say hello
         msg = 'Listen %s:%d' % (address, port)
-        print(msg)
         # Serve
         log_info(msg)
         if address == '*':
             address = ''
         self.port = port
+        wsgi_module = self.config.get_value("wsgi_application")
+        wsgi_module = import_module(wsgi_module)
+        application = getattr(wsgi_module, "application")
         self.wsgi_server = WSGIServer(
             (address or '', port), application,
             handler_class=ServerHandler,
@@ -995,7 +997,7 @@ class ServerConfig(ConfigFile):
         'log-level': String(default='warning'),
         'log-email': Email(default=''),
         # Time events
-        'cron-interval': Integer(default=0),
+        'cron-interval': Integer(default=60),
         # Security
         'session-timeout': ExpireValue(default=timedelta(0)),
         # Tuning
@@ -1004,6 +1006,8 @@ class ServerConfig(ConfigFile):
         'index-text': Boolean(default=True),
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
+        'accept-cors': Integer(default=1),
+        'wsgi_application': String(default="ikaaro.web.wsgi"),
     }
 
 

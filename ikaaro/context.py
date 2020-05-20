@@ -20,8 +20,11 @@ from datetime import datetime, timedelta
 import json
 from hashlib import sha224
 from pytz import timezone
+import time
 from urllib import quote, unquote
 
+from jwcrypto.jwt import JWT, JWTExpired
+from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
 # Import from itools
 from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, is_prototype, local_tz
@@ -135,7 +138,8 @@ class CMSContext(prototype):
             self.view_name = None
 
         # Cookies
-        self.cookies = {}
+        session = self.environ["beaker.session"]
+        self.cookies = session.cookie
 
         # Media files (CSS, javascript)
         # Set the list of needed resources. The method we are going to
@@ -409,30 +413,16 @@ class CMSContext(prototype):
 
     def set_cookie(self, name, value, **kw):
         # Build cookie
-        self.cookies[name] = Cookie(name, value, **kw)
-        # Set in headers
-        self._clear_cookie()
-        for cookie in self.cookies.values():
-            cookie = SetCookieDataType.encode(cookie)
-            self._set_header('Set-Cookie', cookie)
+        self.cookies[name] = value
 
 
     def del_cookie(self, name):
         # Del cookie
-        self.cookies[name] = Cookie(name, '', max_age=0)
-        # Write all cookies
-        self._clear_cookie()
-        for cookie in self.cookies.values():
-            cookie = SetCookieDataType.encode(cookie)
-            self._set_header('Set-Cookie', cookie)
+        try:
+            del self.cookies[name]
+        except KeyError:
+            pass
 
-
-    def _clear_cookie(self):
-        l = []
-        for name, value in self.header_response:
-            if name != 'Set-Cookie':
-                l.append((name, value))
-        self.header_response = l
 
     #######################################################################
     # API / Forms
@@ -595,39 +585,72 @@ class CMSContext(prototype):
     # Login API
     #######################################################################
 
-    def login(self, user):
-        user_id = user.get_user_id()
-        user_token = user.get_auth_token()
-
-        # Make cookie
-        token = self._get_auth_token(user_token)
-        cookie = '%s:%s' % (user_id, token)
-        cookie = quote(encodestring(cookie))
-        self._set_auth_cookie(cookie)
-
+    def login(self, user, use_session=True):
         # Set the user
         self.user = user
+        if not use_session:
+            return
+        session = self.environ["beaker.session"]
+        if not session.get("user"):
+            session.invalidate()
+            session["user"] = str(user.name)
+
+
+    def get_JWT_default_claims(self):
+
+        now = int(time.time())
+        default_claims = {
+            'exp': now + 60 * 60,  # 1 hour
+            'nbf': now,  # Not before
+            'iat': now,  # issued at
+            'iss': 'ikaaro'
+        }
+        return default_claims
+
+
+    def get_JWT_user_claims(self, user):
+        return {
+            "email": user.get_login_name(),
+            "id": user.name,
+            "uuid": user.get_value("uuid")
+        }
+
+    def get_auth_JWT(self, token_string):
+        if not token_string:
+            return None
+        token_string = token_string.strip()
+        key = self.server.JWK_SECRET
+        try:
+            jwt = JWT(jwt=token_string, key=key, algs=["RS512"])
+        except (InvalidJWSSignature, InvalidJWSObject):
+            # Manage error msg
+            return
+        except JWTExpired:
+            return
+        return jwt
+
+
+    def generate_JWT(self, user):
+        key = self.server.JWK_SECRET
+        user_claims = self.get_JWT_user_claims(user)
+        default_claims = self.get_JWT_default_claims()
+        jwt = JWT(
+            header={"alg": "RS512"},
+            claims=user_claims,
+            default_claims=default_claims
+        )
+        jwt.make_signed_token(key)
+        return jwt
 
 
     def logout(self):
-        self.del_cookie('iauth')
         self.user = None
+        session = self.environ["beaker.session"]
+        session.delete()
 
 
     def _set_auth_cookie(self, cookie):
-        session_timeout = self.get_session_timeout()
-        expires = self.timestamp + session_timeout
-        # If never expires, set cookie's expire date in 365 days
-        # By default, if we don't give expires date,
-        # the cookie will expires at the end of the browser session
-        # (so when restarting the browser)
-        if not session_timeout:
-            expires += timedelta(days=365)
-        # Encode expires
-        expires = HTTPDate.encode(expires)
-        # Set cookie
-        self.set_cookie('iauth', cookie, path='/', expires=expires)
-
+        pass
 
 
     def get_session_timeout(self):
@@ -651,25 +674,25 @@ class CMSContext(prototype):
 
         # 1. Get credentials with username and token
         try:
-            username, token = self.get_authentication_credentials()
+            username = self.get_authentication_credentials()
         except ValueError as error:
             msg = "Authentication error : %s " % error.message
             log_warning(msg, domain='ikaaro.web')
             return
-
-        if not username or not token:
+        if not username:
             return
-
         # 2. Get the user
         user = self.root.get_user(username)
-        if not user:
-            return
+        self.user = user
 
-        # 3. Check the token
-        user_token = user.get_auth_token()
-        if token == self._get_auth_token(user_token):
-            self.user = user
 
+    def decode_bearer(self, bearer):
+        # Try to decode bearer token we may have a JWT
+        jwt = self.get_auth_JWT(bearer)
+        if jwt:
+            jwt_payload = json.loads(jwt.token.objects['payload'])
+            user = jwt_payload.get('id')
+            return user.encode("utf-8")
 
 
     def get_authentication_credentials(self):
@@ -677,25 +700,18 @@ class CMSContext(prototype):
 
         # Check for credential in headers
         auth_header = self.get_header('Authorization')
+        token = None
         if auth_header:
             # Parse the header credentials
-            auth_type, b64_credentials = auth_header
-        else:
-            # No Authorization header, get credentials in cookies
-            b64_credentials = self.get_cookie('iauth')
-
-        if not b64_credentials:
-            # No credentials found
+            auth_type, token = auth_header
+            if auth_type == "bearer":
+                return self.decode_bearer(token)
+        # No Authorization header, get credentials in cookies
+        token = token or self.get_cookie('beaker.session.id')
+        if not token:
             return None, None
-
-        # Try to return the decoded credentials
-        try:
-            credentials = decodestring(unquote(b64_credentials))
-        except Exception:
-            raise ValueError('bad credentials "%s"' % b64_credentials)
-
-        return credentials.split(':', 1)
-
+        session = self.environ["beaker.session"]
+        return session.get("user")
 
     #######################################################################
     # Tools API

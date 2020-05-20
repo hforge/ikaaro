@@ -16,6 +16,10 @@
 
 # Import from standard library
 from time import time
+import os
+
+# Import from beaker
+from beaker.middleware import SessionMiddleware
 
 # Import from itools
 from itools.log import log_error
@@ -51,3 +55,32 @@ def application(environ, start_response):
             status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
             yield context.entity
+
+
+cwd = os.getcwd()
+os.environ.setdefault("SESSIONS_FOLDER", os.path.join(cwd, "sessions"))
+SESSIONS_FOLDER = os.environ.get("SESSIONS_FOLDER")
+
+try:
+    os.makedirs(SESSIONS_FOLDER)
+except OSError:
+    pass
+
+SESSIONS_FOLDER = os.environ.get("SESSIONS_FOLDER")
+
+session_opts = {
+    'session.type': 'file',
+    'session.data_dir': SESSIONS_FOLDER,
+    'session.cookie_expires': False,
+    'session.cookie_path': "/",
+    'secure': True,
+    "session.data_serializer": "json",
+    "session.auto": True,
+}
+
+
+application = SessionMiddleware(application, session_opts)
+
+
+def get_wsgi_application():
+    return application

@@ -1,4 +1,8 @@
+Beaker==1.11.0
+cryptography==2.9.2
 gevent==1.5
 guppy
 junitxml
-requests-toolbelt
+jwcrypto==0.7.0
+requests-tool
+belt
