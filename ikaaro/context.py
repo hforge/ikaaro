@@ -685,6 +685,8 @@ class CMSContext(prototype):
             return
         # 2. Get the user
         user = self.root.get_user(username)
+        if not user:
+            return
         self.user = user
 
 
