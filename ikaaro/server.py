@@ -28,7 +28,7 @@ from time import strftime
 import inspect
 import json
 import pickle
-from os import fdopen, getpgid, getpid, kill, mkdir, remove
+from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
 from psutil import pid_exists
 import sys
@@ -41,6 +41,9 @@ from socket import gaierror
 from tempfile import mkstemp
 from importlib import import_module
 from wsgiref.util import setup_testing_defaults
+
+# Import from jwcrypto
+from jwcrypto.jwk import JWK
 
 # Import from gevent
 from gevent.pywsgi import WSGIServer, WSGIHandler
@@ -427,6 +430,39 @@ class Server(object):
         self.session_timeout = get_value('session-timeout')
         # Register routes
         self.register_dispatch_routes()
+        # Register JWT key
+        self.JWK_secret = self.get_JWT_key()
+
+
+    def get_JWT_key_path(self):
+        target = self.target
+        return path.join(target, "jwt_key.PEM")
+
+
+    def get_JWT_key(self):
+        key_path = self.get_JWT_key_path()
+        try:
+            with open(key_path, mode="r") as key_file:
+                lines = key_file.readlines()
+                key_pem_string = "".join(lines)
+                jwk = JWK.from_pem(key_pem_string)
+        except IOError as e:
+            # No pem file found generating one
+            jwk = self.generate_JWT_key()
+            self.save_JWT_key(jwk)
+        return jwk
+
+
+    def save_JWT_key(self, jwk):
+        key_path = self.get_JWT_key_path()
+        with open(key_path, mode="w") as key_file:
+            key_pem_string = jwk.export_to_pem(private_key=True, password=None)
+            key_file.write(key_pem_string)
+
+
+    def generate_JWT_key(self):
+        jwk = JWK(generate="RSA", size=4096)
+        return jwk
 
 
     #def log_access(self, host, request_line, status_code, body_length):
