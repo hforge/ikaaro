@@ -597,6 +597,7 @@ class CMSContext(prototype):
         if session and not session.get("user"):
             session.invalidate()
             session["user"] = str(user.name)
+            session.save()
 
 
     def get_JWT_default_claims(self):
