@@ -26,6 +26,9 @@ from itools.log import log_error
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
 
+from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
+from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
+
 
 def application(environ, start_response):
     from ikaaro.server import get_server
@@ -57,21 +60,18 @@ def application(environ, start_response):
             yield context.entity
 
 
-cwd = os.getcwd()
-os.environ.setdefault("SESSIONS_FOLDER", os.path.join(cwd, "sessions"))
-SESSIONS_FOLDER = os.environ.get("SESSIONS_FOLDER")
-
 try:
     os.makedirs(SESSIONS_FOLDER)
 except OSError:
     pass
 
 session_opts = {
-    'session.type': 'file',
-    'session.data_dir': SESSIONS_FOLDER,
-    'session.cookie_expires': False,
-    'session.cookie_path': "/",
-    'secure': True,
+    "session.type": SESSIONS_STORE_TYPE,
+    "session.data_dir": SESSIONS_FOLDER,
+    "session.cookie_expires": SESSION_EXPIRE,
+    "session.timeout": SESSION_TIMEOUT,
+    "session.cookie_path": "/",
+    "session.secure": True,
     "session.data_serializer": "json",
     "session.auto": False,
 }

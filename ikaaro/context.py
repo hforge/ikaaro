@@ -15,13 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
-from base64 import decodestring, encodestring
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 from hashlib import sha224
 from pytz import timezone
 import time
-from urllib import quote, unquote
 
 from jwcrypto.jwt import JWT, JWTExpired
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
@@ -30,7 +28,7 @@ from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, is_prototype, local_tz
 from itools.core import prototype
 from itools.database.ro import ro_database
-from itools.datatypes import String, HTTPDate
+from itools.datatypes import String
 from itools.fs import lfs
 from itools.i18n import has_language
 from itools.i18n import format_datetime, format_date, format_time
@@ -40,11 +38,12 @@ from itools.uri import normalize_path
 from itools.uri import decode_query, get_reference, Path, Reference
 from itools.web.context import get_form_value
 from itools.web import ERROR
-from itools.web.headers import get_type, Cookie, SetCookieDataType
+from itools.web.headers import get_type
 from itools.web.utils import NewJSONEncoder, fix_json, reason_phrases
 
 # Import from ikaaro
 from skins import skin_registry
+from constants import JWT_EXPIRE, JWT_ISSUER
 
 
 class CMSContext(prototype):
@@ -600,13 +599,12 @@ class CMSContext(prototype):
 
 
     def get_JWT_default_claims(self):
-
         now = int(time.time())
         default_claims = {
-            'exp': now + 60 * 60,  # 1 hour
+            'exp': now + JWT_EXPIRE,
             'nbf': now,  # Not before
             'iat': now,  # issued at
-            'iss': 'ikaaro'
+            'iss': JWT_ISSUER
         }
         return default_claims
 
@@ -655,10 +653,6 @@ class CMSContext(prototype):
 
     def _set_auth_cookie(self, cookie):
         pass
-
-
-    def get_session_timeout(self):
-        return self.server.session_timeout
 
 
     def _get_auth_token(self, user_token):
