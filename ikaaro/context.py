@@ -53,6 +53,7 @@ class CMSContext(prototype):
     body = {}
     commit = True
     content_type = None
+    session = None
     cookies = {}
     database = None
     entity = None
@@ -138,8 +139,8 @@ class CMSContext(prototype):
             self.view_name = None
 
         # Cookies
-        session = self.environ["beaker.session"]
-        self.cookies = session.cookie
+        self.session = self.environ.get("beaker.session")
+        self.cookies = getattr(self.session, "cookie", {})
 
         # Media files (CSS, javascript)
         # Set the list of needed resources. The method we are going to
@@ -152,8 +153,9 @@ class CMSContext(prototype):
         # Log user if user is given
         if user:
             self.login(user)
-        # The authenticated user
-        self.authenticate()
+        else:
+            # The authenticated user
+            self.authenticate()
         # Search
         self._context_user_search = self._user_search(self.user)
         # The Site Root
@@ -390,7 +392,7 @@ class CMSContext(prototype):
         value = None
         if name in self.cookies:
             # Case 1: the cookie was set in this request
-            value = self.cookies[name].value
+            value = self.cookies[name]
         else:
             # Case 2: read the cookie from the request
             cookies = self.get_header('cookie')
@@ -590,8 +592,8 @@ class CMSContext(prototype):
         self.user = user
         if not use_session:
             return
-        session = self.environ["beaker.session"]
-        if not session.get("user"):
+        session = self.session
+        if session and not session.get("user"):
             session.invalidate()
             session["user"] = str(user.name)
 
@@ -709,8 +711,10 @@ class CMSContext(prototype):
         # No Authorization header, get credentials in cookies
         token = token or self.get_cookie('beaker.session.id')
         if not token:
-            return None, None
-        session = self.environ["beaker.session"]
+            return None
+        session = self.session
+        if not session:
+            return None
         return session.get("user")
 
     #######################################################################
