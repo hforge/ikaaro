@@ -148,6 +148,7 @@ class Rest_Login(LoginView):
 class Rest_BaseView(BaseView):
     """Base class for other for the RESTful interface.
     """
+    use_cookies = False
 
 
     @proto_lazy_property

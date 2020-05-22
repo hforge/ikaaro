@@ -167,9 +167,10 @@ class CMSContext(prototype):
         self.set_header('Server', 'ikaaro.web')
 
 
-
     def on_request_end(self):
-        pass
+        if self.view and getattr(self.view, "use_cookies", True):
+            self.session.save()
+
 
 
     @proto_lazy_property

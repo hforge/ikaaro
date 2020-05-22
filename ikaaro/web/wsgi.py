@@ -75,7 +75,7 @@ session_opts = {
     'session.cookie_path': "/",
     'secure': True,
     "session.data_serializer": "json",
-    "session.auto": True,
+    "session.auto": False,
 }
 
 
