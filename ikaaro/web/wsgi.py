@@ -72,8 +72,10 @@ session_opts = {
     "session.timeout": SESSION_TIMEOUT,
     "session.cookie_path": "/",
     "session.secure": True,
+    "session.httponly": True,
     "session.data_serializer": "json",
     "session.auto": False,
+    "session.samesite": "Strict",
 }
 
 
