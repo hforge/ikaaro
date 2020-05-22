@@ -889,7 +889,6 @@ class Server(object):
             context=None, as_json=False, as_multipart=False, files=None, user=None, cookies=None):
         """Experimental method to do a request on the server"""
         from itools.web.router import RequestMethod
-        headers = []
         path_info = get_uri_path(path)
         q_string = path.split('?')[-1]
         # Build base environ
@@ -907,6 +906,7 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 json=body,
+                headers=headers
             )
             prepped = req.prepare()
         elif as_multipart:
@@ -914,7 +914,8 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 data=body,
-                files=files
+                files=files,
+                headers=headers
             )
             prepped = req.prepare()
         else:
@@ -922,6 +923,7 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 data=body,
+                headers=headers
             )
             prepped = req.prepare()
         # Build headers
