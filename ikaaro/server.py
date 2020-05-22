@@ -431,7 +431,7 @@ class Server(object):
         # Register routes
         self.register_dispatch_routes()
         # Register JWT key
-        self.JWK_secret = self.get_JWT_key()
+        self.JWK_SECRET = self.get_JWT_key()
 
 
     def get_JWT_key_path(self):

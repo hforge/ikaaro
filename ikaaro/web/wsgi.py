@@ -66,8 +66,6 @@ try:
 except OSError:
     pass
 
-SESSIONS_FOLDER = os.environ.get("SESSIONS_FOLDER")
-
 session_opts = {
     'session.type': 'file',
     'session.data_dir': SESSIONS_FOLDER,
