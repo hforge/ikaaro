@@ -648,8 +648,9 @@ class CMSContext(prototype):
 
     def logout(self):
         self.user = None
-        session = self.environ["beaker.session"]
-        session.delete()
+        session = self.session
+        if session:
+            session.delete()
 
 
     def _set_auth_cookie(self, cookie):
