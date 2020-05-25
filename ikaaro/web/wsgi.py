@@ -48,8 +48,8 @@ def application(environ, start_response):
             context.on_request_end()
         except HTTPError as e:
             RequestMethod.handle_client_error(e, context)
-        except StandardError:
-            log_error('Internal error', domain='itools.web')
+        except StandardError as e:
+            log_error(e, domain='itools.web')
             context.set_default_response(500)
         finally:
             headers =  context.header_response
