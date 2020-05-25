@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2017 Sylvain Taverne <taverne.sylvain@gmail.com>
+# Copyright (C) 2020 Mathieu Péquin <mat.pequin@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,9 +19,11 @@ import os
 
 
 cwd = os.getcwd()
+# Sessions
 SESSIONS_STORE_TYPE = os.environ.setdefault("SESSIONS_STORE_TYPE", "file")
 SESSIONS_FOLDER = os.environ.setdefault("SESSIONS_FOLDER", os.path.join(cwd, "sessions"))
 SESSION_TIMEOUT = int(os.environ.setdefault("SESSION_TIMEOUT", "172800"))
 SESSION_EXPIRE = int(os.environ.setdefault("SESSION_EXPIRE", "864000"))
+# JWT
 JWT_EXPIRE = int(os.environ.setdefault("JWT_EXPIRE", "172800"))
 JWT_ISSUER = os.environ.setdefault("JWT_ISSUER", "ikaaro")
