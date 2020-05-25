@@ -616,7 +616,6 @@ class CMSContext(prototype):
 
     def get_JWT_user_claims(self, user):
         return {
-            "email": user.get_login_name(),
             "id": user.name,
             "uuid": user.get_value("uuid")
         }
