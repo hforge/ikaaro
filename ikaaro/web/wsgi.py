@@ -25,6 +25,7 @@ from beaker.middleware import SessionMiddleware
 from itools.log import log_error
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
+from itools.web.exceptions import HTTPError
 
 from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
@@ -45,6 +46,8 @@ def application(environ, start_response):
             context.request_time = t1-t0
             # Callback at end of request
             context.on_request_end()
+        except HTTPError as e:
+            RequestMethod.handle_client_error(e, context)
         except StandardError:
             log_error('Internal error', domain='itools.web')
             context.set_default_response(500)

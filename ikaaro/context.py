@@ -40,6 +40,8 @@ from itools.web.context import get_form_value
 from itools.web import ERROR
 from itools.web.headers import get_type
 from itools.web.utils import NewJSONEncoder, fix_json, reason_phrases
+from itools.web.exceptions import InvalidJWTSignatureException
+from itools.web.exceptions import JWTExpiredException
 
 # Import from ikaaro
 from skins import skin_registry
@@ -149,6 +151,8 @@ class CMSContext(prototype):
         # attribute lets the interface to add those resources.
         self.styles = []
         self.scripts = []
+        # The Site Root
+        self.find_site_root()
         # Log user if user is given
         if user:
             self.login(user)
@@ -157,8 +161,6 @@ class CMSContext(prototype):
             self.authenticate()
         # Search
         self._context_user_search = self._user_search(self.user)
-        # The Site Root
-        self.find_site_root()
         self.site_root.before_traverse(self)  # Hook
         # Not a cron
         self.is_cron = False
@@ -625,9 +627,9 @@ class CMSContext(prototype):
             jwt = JWT(jwt=token_string, key=key, algs=["RS512"])
         except (InvalidJWSSignature, InvalidJWSObject):
             # Manage error msg
-            return
+            raise InvalidJWTSignatureException
         except JWTExpired:
-            return
+            raise JWTExpiredException
         return jwt
 
 
