@@ -655,19 +655,6 @@ class CMSContext(prototype):
             session.delete()
 
 
-    def _set_auth_cookie(self, cookie):
-        pass
-
-
-    def _get_auth_token(self, user_token):
-        # We use the header X-User-Agent or User-Agent
-        ua = self.get_header('X-User-Agent')
-        if not ua:
-            ua = self.get_header('User-Agent')
-        token = '%s:%s' % (user_token, ua)
-        return sha224(token).digest()
-
-
     def authenticate(self):
         """Checks the authentication credentials and sets the context user if all
         checks are ok.
@@ -708,8 +695,7 @@ class CMSContext(prototype):
         if auth_header:
             # Parse the header credentials
             auth_type, token = auth_header
-            if auth_type == "bearer":
-                return self.decode_bearer(token)
+            return self.decode_bearer(token)
         # No Authorization header, get credentials in cookies
         token = token or self.get_cookie('beaker.session.id')
         if not token:
