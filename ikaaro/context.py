@@ -397,7 +397,7 @@ class CMSContext(prototype):
             try:
                 value = self.cookies[name].value
             except AttributeError:
-                return self.cookies[name]
+                value = self.cookies[name]
         else:
             # Case 2: read the cookie from the request
             cookies = self.get_header('cookie')
