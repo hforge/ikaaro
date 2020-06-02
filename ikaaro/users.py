@@ -182,7 +182,7 @@ class User(Folder):
         return password_hashed == my_password.value
 
 
-    def _login(self, password, context):
+    def _login(self, password, context, use_session=True):
         # We call this method '_login' to avoid a name clash with the login
         # view.
 
@@ -194,7 +194,7 @@ class User(Folder):
                 u' if you want to get access again.')
         else:
             error = None
-            context.login(self)
+            context.login(self, use_session=use_session)
 
         # To activate this feature set the lastlog field
         lastlog = self.get_field('lastlog')

@@ -28,7 +28,7 @@ from time import strftime
 import inspect
 import json
 import pickle
-from os import fdopen, getpgid, getpid, kill, mkdir, remove
+from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
 from psutil import pid_exists
 import sys
@@ -39,7 +39,11 @@ from signal import SIGINT, SIGTERM
 from requests import Request
 from socket import gaierror
 from tempfile import mkstemp
+from importlib import import_module
 from wsgiref.util import setup_testing_defaults
+
+# Import from jwcrypto
+from jwcrypto.jwk import JWK
 
 # Import from gevent
 from gevent.pywsgi import WSGIServer, WSGIHandler
@@ -63,9 +67,6 @@ from itools.web.context import select_language
 from itools.web import set_context, get_context
 from itools.web.dispatcher import URIDispatcher
 from itools.web.server import AccessLogger
-
-# Import from ikaaro
-from ikaaro.web.wsgi import application
 
 # Import from ikaaro.web
 from database import get_database
@@ -119,7 +120,7 @@ log-email = {log_email}
 # call to the cron job manager. If zero (the default) the cron job won't be
 # run at all.
 #
-cron-interval = 0
+cron-interval = 60
 
 # If the "session-timeout" variable is different from zero (the default), the
 # user will be automatically logged out after the specified number of minutes.
@@ -145,15 +146,18 @@ index-text = 1
 
 # The "accept-cors" variable defines whether the web server accept
 # cross origin requests or not.
-# To accept cross origin requests, set this option to 1 (default is 0)
+# To accept cross origin requests, set this option to 1 (default is 1)
 #
-accept-cors = 0
+accept-cors = 1
 
 # The size of images can be controlled by setting the following values.
 # (ie. max-width = 1280) (by default it is None, keeping original size).
 #
 max-width =
 max-height =
+
+# Allow to customize wsgi application
+wsgi_application = ikaaro.web.wsgi
 """)
 
 
@@ -426,6 +430,39 @@ class Server(object):
         self.session_timeout = get_value('session-timeout')
         # Register routes
         self.register_dispatch_routes()
+        # Register JWT key
+        self.JWK_SECRET = self.get_JWT_key()
+
+
+    def get_JWT_key_path(self):
+        target = self.target
+        return path.join(target, "jwt_key.PEM")
+
+
+    def get_JWT_key(self):
+        key_path = self.get_JWT_key_path()
+        try:
+            with open(key_path, mode="r") as key_file:
+                lines = key_file.readlines()
+                key_pem_string = "".join(lines)
+                jwk = JWK.from_pem(key_pem_string)
+        except IOError as e:
+            # No pem file found generating one
+            jwk = self.generate_JWT_key()
+            self.save_JWT_key(jwk)
+        return jwk
+
+
+    def save_JWT_key(self, jwk):
+        key_path = self.get_JWT_key_path()
+        with open(key_path, mode="w") as key_file:
+            key_pem_string = jwk.export_to_pem(private_key=True, password=None)
+            key_file.write(key_pem_string)
+
+
+    def generate_JWT_key(self):
+        jwk = JWK(generate="RSA", size=4096)
+        return jwk
 
 
     #def log_access(self, host, request_line, status_code, body_length):
@@ -456,7 +493,6 @@ class Server(object):
         if pid is not None:
             msg = '[%s] The Web Server is already running.' % self.target
             log_warning(msg)
-            print(msg)
             return False
         # Ok
         return True
@@ -625,12 +661,14 @@ class Server(object):
         self.port = port
         # Say hello
         msg = 'Listen %s:%d' % (address, port)
-        print(msg)
         # Serve
         log_info(msg)
         if address == '*':
             address = ''
         self.port = port
+        wsgi_module = self.config.get_value("wsgi_application")
+        wsgi_module = import_module(wsgi_module)
+        application = getattr(wsgi_module, "application")
         self.wsgi_server = WSGIServer(
             (address or '', port), application,
             handler_class=ServerHandler,
@@ -887,7 +925,6 @@ class Server(object):
             context=None, as_json=False, as_multipart=False, files=None, user=None, cookies=None):
         """Experimental method to do a request on the server"""
         from itools.web.router import RequestMethod
-        headers = []
         path_info = get_uri_path(path)
         q_string = path.split('?')[-1]
         # Build base environ
@@ -905,6 +942,7 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 json=body,
+                headers=headers
             )
             prepped = req.prepare()
         elif as_multipart:
@@ -912,7 +950,8 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 data=body,
-                files=files
+                files=files,
+                headers=headers
             )
             prepped = req.prepare()
         else:
@@ -920,6 +959,7 @@ class Server(object):
                 method,
                 'http://localhost:8080{0}'.format(path),
                 data=body,
+                headers=headers
             )
             prepped = req.prepare()
         # Build headers
@@ -995,7 +1035,7 @@ class ServerConfig(ConfigFile):
         'log-level': String(default='warning'),
         'log-email': Email(default=''),
         # Time events
-        'cron-interval': Integer(default=0),
+        'cron-interval': Integer(default=60),
         # Security
         'session-timeout': ExpireValue(default=timedelta(0)),
         # Tuning
@@ -1004,6 +1044,8 @@ class ServerConfig(ConfigFile):
         'index-text': Boolean(default=True),
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
+        'accept-cors': Integer(default=1),
+        'wsgi_application': String(default="ikaaro.web.wsgi"),
     }
 
 

@@ -80,6 +80,7 @@ class Api_View(ItoolsView):
 
     response_schema = {}
     route = None
+    use_cookies = False
 
 
     @classmethod

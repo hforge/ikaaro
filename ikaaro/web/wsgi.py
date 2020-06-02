@@ -16,11 +16,19 @@
 
 # Import from standard library
 from time import time
+import os
+
+# Import from beaker
+from beaker.middleware import SessionMiddleware
 
 # Import from itools
 from itools.log import log_error
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
+from itools.web.exceptions import HTTPError
+
+from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
+from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
 
 
 def application(environ, start_response):
@@ -38,8 +46,10 @@ def application(environ, start_response):
             context.request_time = t1-t0
             # Callback at end of request
             context.on_request_end()
-        except StandardError:
-            log_error('Internal error', domain='itools.web')
+        except HTTPError as e:
+            RequestMethod.handle_client_error(e, context)
+        except StandardError as e:
+            log_error(e, domain='itools.web')
             context.set_default_response(500)
         finally:
             headers =  context.header_response
@@ -51,3 +61,29 @@ def application(environ, start_response):
             status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
             yield context.entity
+
+
+try:
+    os.makedirs(SESSIONS_FOLDER)
+except OSError:
+    pass
+
+session_opts = {
+    "session.type": SESSIONS_STORE_TYPE,
+    "session.data_dir": SESSIONS_FOLDER,
+    "session.cookie_expires": SESSION_EXPIRE,
+    "session.timeout": SESSION_TIMEOUT,
+    "session.cookie_path": "/",
+    "session.secure": True,
+    "session.httponly": True,
+    "session.data_serializer": "json",
+    "session.auto": False,
+    "session.samesite": "Strict",
+}
+
+
+application = SessionMiddleware(application, session_opts)
+
+
+def get_wsgi_application():
+    return application

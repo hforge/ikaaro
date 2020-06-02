@@ -77,7 +77,7 @@ class AutoAdd(AutoForm):
     def _resource_class(self):
         context = self.context
 
-        class_id = context.query['type']
+        class_id = context.query.get('type')
         if not class_id:
             return None
         return context.database.get_resource_class(class_id)
