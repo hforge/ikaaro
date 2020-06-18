@@ -90,7 +90,7 @@ modules = {modules}
 # These variables are required (i.e. there are not default values).  To
 # listen from any address write the value '*'.
 #
-listen-address = 127.0.0.1
+listen-address = {listen_address}
 listen-port = {listen_port}
 
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
@@ -222,7 +222,8 @@ def get_root(database):
 
 def create_server(target, email, password, root,
                   backend='git', modules=None,
-                  listen_port='8080', smtp_host='localhost',
+                  listen_port='8080', listen_address='127.0.0.1',
+                  smtp_host='localhost',
                   log_email=None, website_languages=None,
                   size_min=19500, size_max=20500):
     modules = modules or []
@@ -246,6 +247,7 @@ def create_server(target, email, password, root,
     config = template.format(
         modules=" ".join(modules),
         listen_port=listen_port or '8080',
+        listen_address=listen_address or '127.0.0.1',
         smtp_host=smtp_host or 'localhost',
         smtp_from=email,
         log_email=log_email)
