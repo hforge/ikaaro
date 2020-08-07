@@ -29,6 +29,7 @@ from itools.web.exceptions import HTTPError
 
 from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
+from ikaaro.constants import SESSION_DOMAIN
 
 
 def application(environ, start_response):
@@ -73,6 +74,7 @@ session_opts = {
     "session.data_dir": SESSIONS_FOLDER,
     "session.cookie_expires": SESSION_EXPIRE,
     "session.timeout": SESSION_TIMEOUT,
+    "session.cookie_domain": SESSION_DOMAIN,
     "session.cookie_path": "/",
     "session.secure": True,
     "session.httponly": True,
