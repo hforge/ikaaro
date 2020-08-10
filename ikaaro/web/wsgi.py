@@ -23,6 +23,7 @@ from beaker.middleware import SessionMiddleware
 
 # Import from itools
 from itools.log import log_error
+from itools.uri import Reference
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
 from itools.web.exceptions import HTTPError
@@ -53,10 +54,10 @@ def application(environ, start_response):
             log_error(e, domain='itools.web')
             context.set_default_response(500)
         finally:
-            headers =  context.header_response
+            headers = context.header_response
             if context.content_type:
                 headers.append(('Content-Type', context.content_type))
-            if context.entity:
+            if context.entity and not isinstance(context.entity, Reference):
                 headers.append(('Content-Length', str(len(context.entity))))
             status = context.status or 500
             status = '{0} {1}'.format(status, reason_phrases[status])
