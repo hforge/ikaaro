@@ -108,7 +108,7 @@ class Field(BaseField):
         return self.get_datatype().get_default()
 
 
-    widget_keys = ['title', 'endline', 'size', 'tip']
+    widget_keys = ['title', 'endline', 'size', 'tip', 'placeholder']
     def get_widget(self, name):
         kw = {}
         for key in self.widget_keys:

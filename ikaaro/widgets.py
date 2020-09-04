@@ -54,6 +54,7 @@ class Widget(CMSTemplate):
     maxlength = None
     size = None
     tip = None
+    placeholder = None
     type = 'text'
     focus = True # Focus on it if the first one displayed
     onsubmit = None
@@ -63,7 +64,7 @@ class Widget(CMSTemplate):
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" class="${css}"/>
+      maxlength="${maxlength}" size="${size}" class="${css}" placeholder="${placeholder}"/>
       <label class="language" for="${id}" stl:if="language"
       >${language}</label>""")
 
