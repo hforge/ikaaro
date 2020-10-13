@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from logging import getLogger
 from sys import exit
 from optparse import OptionParser
 
@@ -27,6 +28,7 @@ import itools
 # Import from ikaaro
 from ikaaro.server import stop_server
 
+log = getLogger("ikaaro")
 
 if __name__ == '__main__':
     # The command line parser
@@ -49,7 +51,7 @@ if __name__ == '__main__':
         try:
             stop_server(target)
         except LookupError:
-            print('Error: {} instance do not exists'.format(target))
+            log.error("Error: {} instance do not exists".format(target))
             exit(1)
     # Ok
     exit(0)

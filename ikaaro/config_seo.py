@@ -35,6 +35,7 @@ class SEO(DBResource):
     class_description = seo_description
     class_icon16 = '/ui/ikaaro/icons/16x16/search.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/search.png'
+    class_icon_css = 'fa-search-plus'
 
     # Fields
     google_site_verification = Char_Field(

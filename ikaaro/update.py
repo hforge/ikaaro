@@ -16,13 +16,15 @@
 
 # Import from standard library
 from datetime import datetime, timedelta
+from logging import getLogger
 from operator import itemgetter
-from traceback import print_exc
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery, RangeQuery
 from itools.gettext import MSG
 from itools.web import STLView, ERROR
+
+log = getLogger("ikaaro.update")
 
 
 ERROR_MSG = MSG(u'Inconsistent class_id "{class_id}", resource version is {resource_version} but cls_version is {cls_version} ({abspath})')
@@ -108,7 +110,6 @@ def run_next_update_method(context, force=False):
     """Update the database to the given versions.
     """
     database = context.database
-    log = open('{0}/log/update'.format(database.path), 'w')
     messages = []
 
     versions = find_versions_to_update(context, force)
@@ -125,7 +126,7 @@ def run_next_update_method(context, force=False):
     # Commit message (Do not override the mtime/author)
     git_message = u'Upgrade {0} to version {1}'.format(
         version['class_id'], version['class_version'])
-    print(git_message)
+    log.info(git_message)
     context.git_message = git_message
     context.set_mtime = False
     # Update
@@ -154,12 +155,10 @@ def run_next_update_method(context, force=False):
             if resource is not None:
                 # If resource has not been deleted by update method, we update class_version
                 resource.update(version['class_version'])
-        except Exception:
+        except Exception as e:
             line = 'ERROR: "{0}" - class_id: "{1}"\n'.format(
                 resource.abspath, resource.__class__.class_id)
-            log.write(line)
-            print_exc(file=log)
-            log.write('\n')
+            log.error(line, exc_info=True)
             # Add message
             messages.append(line)
             if force is False:
@@ -207,7 +206,7 @@ class UpdateInstanceView(STLView):
     title = MSG(u'Update instance')
     template = '/ui/ikaaro/update_instance.xml'
 
-    def get_namespace(self, resource, context):
+    def get_namespace(self, resource, context, query=None):
         return find_versions_to_update(context, force=True)
 
 

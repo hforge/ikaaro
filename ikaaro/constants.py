@@ -29,3 +29,6 @@ SESSION_SAMESITE = os.environ.setdefault("SESSION_SAMESITE", "Lax")
 # JWT
 JWT_EXPIRE = int(os.environ.setdefault("JWT_EXPIRE", "172800"))
 JWT_ISSUER = os.environ.setdefault("JWT_ISSUER", "ikaaro")
+
+# DEBUG
+DEBUG = bool(int(os.environ.get('DEBUG') or 0))

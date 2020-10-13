@@ -17,8 +17,8 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from logging import getLogger
 from os.path import basename, getmtime, isfile
-import traceback
 
 # Import from itools
 from itools.core import fixed_offset
@@ -38,6 +38,8 @@ from itools.xml import XMLParser
 from ikaaro.autoform import AutoForm
 from ikaaro.buttons import Button
 from ikaaro.utils import CMSTemplate
+
+log = getLogger("ikaaro.web")
 
 
 """This module contains some generic views used by different resources.
@@ -626,13 +628,10 @@ class IkaaroStaticView(StaticView):
             return self.get_from_template(resource, context)
         except NotModified:
             raise
-        except Exception:
+        except Exception as e:
             # Fallback if the handler cannot be loaded
             msg = 'WARNING: The file {0} contains errors'.format(context.path)
-            print('=='*10)
-            print(msg)
-            print(traceback.format_exc())
-            print('=='*10)
+            log.debug(msg, exc_info=True)
             return self.get_fallback(resource, context)
 
 

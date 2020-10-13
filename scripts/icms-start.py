@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from logging import getLogger
 from optparse import OptionParser
 from sys import exit
 from xapian import DatabaseLockError
@@ -27,6 +28,8 @@ from itools import __version__
 
 # Import from ikaaro
 from ikaaro.server import Server
+
+log = getLogger("ikaaro")
 
 if __name__ == '__main__':
     # The command line parser
@@ -68,10 +71,10 @@ if __name__ == '__main__':
                         profile_space=options.profile_space,
                         port=options.port)
     except LookupError:
-        print('Error: {} instance do not exists'.format(target))
+        log.error("Error: {} instance do not exists".format(target))
         exit(1)
     except DatabaseLockError:
-        print('Error: Database is already opened'.format(target))
+        log.error("Error: Database is already opened".format(target))
         exit(1)
     # Check server
     successfully_init = server.check_consistency(options.quick)
