@@ -257,7 +257,7 @@ class AutoAdd(AutoForm):
 
         value = form[name]
         if type(value) is dict:
-            for language, data in value.iteritems():
+            for language, data in value.items():
                 resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)

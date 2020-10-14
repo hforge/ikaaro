@@ -71,7 +71,7 @@ class Field(BaseField):
         old_value = self.get_value(resource, name, language)
         if value == old_value:
             # Check the new parameters are different from the old one
-            for p_key, p_value in kw.iteritems():
+            for p_key, p_value in kw.items():
                 if self.get_value(resource, p_key, language) != p_value:
                     break
             else:

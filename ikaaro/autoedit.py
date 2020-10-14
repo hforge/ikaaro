@@ -52,7 +52,7 @@ class EditLanguageMenu(ContextMenu):
     def _get_items(self):
         multilingual = False
         schema = self.view._get_schema(self.resource, self.context)
-        for key, datatype in schema.iteritems():
+        for key, datatype in schema.items():
             if getattr(datatype, 'multilingual', False):
                 multilingual = True
                 break
@@ -149,7 +149,7 @@ class AutoEdit(AutoForm):
         default = set()
         to_keep = set()
 
-        for key, datatype in schema.iteritems():
+        for key, datatype in schema.items():
             # Keep readonly and mandatory widgets
             if getattr(datatype, 'mandatory', False):
                 to_keep.add(key)
@@ -314,7 +314,7 @@ class AutoEdit(AutoForm):
             return False
         value = form[name]
         if type(value) is dict:
-            for language, data in value.iteritems():
+            for language, data in value.items():
                 resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)

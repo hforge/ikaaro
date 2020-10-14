@@ -91,7 +91,7 @@ class User_ConfirmRegistration(AutoForm):
         proxy = super(User_ConfirmRegistration, self)
         form = proxy._get_form(resource, context)
         if form['username'] == form['newpass']:
-            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+            raise FormError(messages.MSG_PASSWORD_EQUAL_TO_USERNAME)
         return form
 
 
@@ -325,11 +325,11 @@ class User_EditPassword(AutoForm):
 
         # Check username is different from password
         if form['username'] == form['newpass']:
-            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+            raise FormError(messages.MSG_PASSWORD_EQUAL_TO_USERNAME)
 
         # Check the new password matches
         if newpass != form['newpass2']:
-            raise FormError, ERROR(u"Passwords mismatch, please try again.")
+            raise FormError(ERROR(u"Passwords mismatch, please try again."))
 
         # Check old password
         if resource.name == context.user.name:
@@ -338,7 +338,7 @@ class User_EditPassword(AutoForm):
                 message = ERROR(
                     u"You mistyped your actual password, your account is"
                     u" not changed.")
-                raise FormError, message
+                raise FormError(message)
 
         # Ok
         return form
@@ -501,17 +501,17 @@ class Users_AddUser(AutoAdd):
         # Check the password is not equal to the username
         password = form['password'].strip()
         if form['email'] == password:
-            raise FormError, messages.MSG_PASSWORD_EQUAL_TO_USERNAME
+            raise FormError(messages.MSG_PASSWORD_EQUAL_TO_USERNAME)
 
         # Check whether the user already exists
         email = form['email'].strip()
         results = context.search(email=email)
         if len(results):
-            raise FormError, ERROR(u'The user is already here.')
+            raise FormError(ERROR(u'The user is already here.'))
 
         # Check the password is right
         if password != form['password2']:
-            raise FormError, messages.MSG_PASSWORD_MISMATCH
+            raise FormError(messages.MSG_PASSWORD_MISMATCH)
         if password == '':
             form['password'] = None
 

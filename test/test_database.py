@@ -208,7 +208,7 @@ class FreeTestCase(TestCase):
                 e = None
                 try:
                     root.set_value('mtime', time(10, 0))
-                except Exception, e:
+                except Exception as e:
                     pass
                 self.assertNotEqual(e, None)
 
