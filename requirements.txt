@@ -1,5 +1,5 @@
 Beaker==1.11.0
-cryptography==2.9.2
+cryptography==3.1.1
 gevent==1.5
 guppy
 junitxml
