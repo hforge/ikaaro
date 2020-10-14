@@ -208,8 +208,14 @@ class DBResource(Resource):
             abspath = path
         else:
             abspath = self.abspath.resolve2(path)
-
-        return self.database.get_resource(abspath, soft=soft)
+        try:
+            return self.database.get_resource(abspath, soft=soft)
+        except Exception as e:
+            log.error(
+                "Could not retrieve the resource {}".format(abspath),
+                exc_info=True
+            )
+            raise
 
 
     #######################################################################
