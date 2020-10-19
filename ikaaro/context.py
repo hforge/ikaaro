@@ -776,7 +776,7 @@ class CMSContext(prototype):
         # Translate the source message
         if message:
             text = message.gettext(**kw)
-            if is_prototype(message, ERROR):
+            if isinstance(message, ERROR):
                 goto = goto.replace(error=text)
             else:
                 goto = goto.replace(info=text)
