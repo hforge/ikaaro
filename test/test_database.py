@@ -24,6 +24,7 @@ from itools.database import AndQuery, PhraseQuery
 # Import from ikaaro
 from ikaaro.database import Database
 from ikaaro.folder import Folder
+from ikaaro.file import File
 from ikaaro.utils import get_base_path_query
 from ikaaro.text import Text
 
@@ -320,6 +321,21 @@ class FreeTestCase(TestCase):
                       'folder-to-copy-2.metadata', 'folder-to-copy-2/1.metadata',
                       'folder-to-copy-2/1/subchild.metadata', 'folder-to-copy-2/2.metadata',
                       ]))
+
+
+    def test_cache_error_on_move(self):
+        with Database('demo.hforge.org', 10, 20) as database:
+            l = []
+            with database.init_context() as context:
+                for i in range(0, 50):
+                    root = database.get_resource('/')
+                    name = 'test-cache-error-on-move-{0}'.format(i)
+                    container = root.make_resource(name, File)
+                    container.set_value('data', 'bytes')
+                    l.append(container)
+                    context.database.save_changes()
+                    container.parent.move_resource(name, name + 'newname')
+
 
 
 if __name__ == '__main__':
