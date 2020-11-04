@@ -17,7 +17,6 @@
 
 # Import from the Standard Library
 from base64 import b64encode, b64decode
-import json
 
 # Import from itools
 from itools.core import proto_lazy_property

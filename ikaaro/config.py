@@ -33,7 +33,6 @@ from ikaaro.views.folder_views import Folder_BrowseContent
 # Import from here
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
-from utils import get_base_path_query
 from views import IconsView
 
 
@@ -229,16 +228,3 @@ class Configuration(Folder):
     # Views
     view = IconsView()
     edit_languages = Config_EditLanguages()
-
-
-# Import core config modules
-import config_access
-import config_captcha
-import config_footer
-import config_groups
-import config_mail
-import config_menu
-import config_models
-import config_register
-import config_seo
-import config_theme

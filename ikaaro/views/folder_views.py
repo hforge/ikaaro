@@ -27,7 +27,6 @@ from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.handlers.utils import transmap
-from itools.html import stream_is_empty
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLView, get_context
 

@@ -232,7 +232,7 @@ class Boolean3(Enumerate):
 
     @staticmethod
     def decode(value):
-        if value is '':
+        if value == '':
             return None
         return bool(int(value))
 

@@ -37,7 +37,6 @@ from traceback import format_exc
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from signal import SIGINT, SIGTERM
 from requests import Request
-from socket import gaierror
 from tempfile import mkstemp
 from wsgiref.util import setup_testing_defaults
 

@@ -268,6 +268,7 @@ class Root(Folder):
         # A package based on itools
         cls = self.__class__
         if cls is not Root:
+            pkg = None
             exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
             config = Path(pkg.__path__[0]).resolve_name('setup.conf')
             config = ConfigFile(str(config))
@@ -575,7 +576,6 @@ class Root(Folder):
         It's move static files into database static
         """
         from itools.fs.lfs import lfs, LocalFolder
-        from itools.fs import lfs
         import os
         import shutil
         context = get_context()
