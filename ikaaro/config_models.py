@@ -24,7 +24,6 @@ from views.folder_views import Folder_BrowseContent
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from buttons import Remove_BrowseButton
-from config import Configuration
 from config_common import NewResource_Local
 from fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
 from fields import Select_Field, Text_Field, Textarea_Field

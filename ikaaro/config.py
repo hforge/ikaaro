@@ -19,16 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.database import OrQuery
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
-from itools.uri import Path
 from itools.web import STLView, INFO, ERROR
-from itools.database import PhraseQuery
 
 # Import from ikaaro
-from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
 from folder import Folder

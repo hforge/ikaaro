@@ -18,4 +18,7 @@ from views.folder_views import Folder_BrowseContent, GoToSpecificDocument
 from views.folder_views import Folder_PreviewContent, SearchTypes_Enumerate
 
 
+__all__ = ['Folder_BrowseContent', 'GoToSpecificDocument', 'Folder_PreviewContent', 'SearchTypes_Enumerate']
+
+
 print('[OBSOLETE] Imports from ikaaro.folder_views is obsolete. Use ikaaro.views instead')

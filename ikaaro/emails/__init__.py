@@ -16,3 +16,6 @@
 
 # Import from here
 from emails import register_email, send_email, emails_registry, Email
+
+
+__all__ = ['register_email', 'send_email', 'emails_registry', 'Email']

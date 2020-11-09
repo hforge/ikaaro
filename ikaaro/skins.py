@@ -31,7 +31,6 @@ from itools.stl import stl
 from itools.web import get_context, ERROR, INFO
 
 # Import from ikaaro
-from folder import Folder
 from views import get_view_scripts
 from skins_views import LanguagesTemplate, LocationTemplate, TabsTemplate
 

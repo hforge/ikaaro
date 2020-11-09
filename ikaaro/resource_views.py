@@ -28,7 +28,7 @@ from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import get_context
 from itools.web import BaseView, STLView, INFO, ERROR
-from itools.web import Conflict, NotFound, NotImplemented
+from itools.web import NotFound
 
 # Import from ikaaro
 from ikaaro.views.folder_views import Folder_BrowseContent

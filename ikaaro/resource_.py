@@ -41,8 +41,8 @@ from itools.web import ItoolsView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from enumerates import Groups_Datatype
-from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
+from fields import File_Field, HTMLFile_Field
+from fields import SelectAbspath_Field, UUID_Field
 from fields import CTime_Field, MTime_Field, LastAuthor_Field
 from fields import Title_Field, Description_Field, Subject_Field
 from popup import DBResource_AddImage, DBResource_AddLink

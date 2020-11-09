@@ -33,7 +33,7 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import RWDatabase, AndQuery, PhraseQuery
+from itools.database import RWDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -51,7 +51,6 @@ from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
-from utils import get_base_path_query
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView, NotAllowedView
 from root_views import UploadStatsView, UpdateDocs, UnavailableView

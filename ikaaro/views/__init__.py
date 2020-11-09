@@ -23,3 +23,11 @@ from base import IkaaroStaticView, CachedStaticView, get_view_scripts, get_view_
 from folder_views import SearchTypes_Enumerate, ZoomMenu, Folder_NewResource
 from folder_views import Folder_Rename, Folder_BrowseContent, Folder_PreviewContent
 from folder_views import Folder_Thumbnail, GoToSpecificDocument
+
+
+__all__ = ['AutoTable', 'CompositeView', 'MessageView', 'IconsView', 'Batch',
+           'BrowseForm', 'ContextMenu', 'IkaaroStaticView', 'CachedStaticView',
+           'get_view_scripts', 'get_view_styles', 'SearchTypes_Enumerate',
+           'ZoomMenu', 'Folder_NewResource', 'Folder_Rename',
+           'Folder_BrowseContent', 'Folder_PreviewContent', 'Folder_Thumbnail',
+           'GoToSpecificDocument']
