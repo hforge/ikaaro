@@ -24,6 +24,7 @@ from email.parser import HeaderParser
 from json import loads
 from io import BytesIO
 from datetime import timedelta
+from datetime import datetime
 from logging import getLogger
 import inspect
 import json
@@ -286,6 +287,25 @@ def set_server(the_server):
 
 
 class ServerHandler(WSGIHandler):
+
+    def format_request(self):
+        now = datetime.now().replace(microsecond=0)
+        length = self.response_length or '-'
+        if self.time_finish:
+            delta = '%.6f' % (self.time_finish - self.time_start)
+        else:
+            delta = '-'
+        client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
+        return '%s - - [%s] "%s" %s %s %s' % (
+            client_address or '-',
+            now,
+            self.requestline or '',
+            # Use the native string version of the status, saved so we don't have to
+            # decode. But fallback to the encoded 'status' in case of subclasses
+            # (Is that really necessary? At least there's no overhead.)
+            (self._orig_status or self.status or '000').split()[0],
+            length,
+            delta)
 
     def log_request(self):
         request_log = self.format_request()
