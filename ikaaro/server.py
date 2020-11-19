@@ -345,7 +345,7 @@ class ServerHandler(WSGIHandler):
             "network.bytes_written": response_length
         }
         if self.time_finish:
-            extra["duration"] = "%.6f" % (self.time_finish - self.time_start)
+            extra["duration"] = float("%.6f" % (self.time_finish - self.time_start))
         user = self.environ["beaker.session"].get("user")
         if user:
             extra["user.id"] = user
