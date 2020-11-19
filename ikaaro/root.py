@@ -75,6 +75,7 @@ add_codec('utf-8', 'utf_8')
 class CtrlView(BaseView):
 
     access = True
+    use_session = False
 
     def GET(self, resource, context):
         context.content_type = 'text/plain'
