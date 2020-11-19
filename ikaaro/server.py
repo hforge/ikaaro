@@ -314,6 +314,8 @@ class ServerHandler(WSGIHandler):
         request_headers = self.headers.dict
         request_headers.pop("cookie", None)
         request_headers.pop("authorization", None)
+        response_headers = dict(self.response_headers)
+        response_headers.pop("Set-cookie", None)
         method = self.command
         response_length = self.response_length
         query = self.environ.get('QUERY_STRING')
@@ -340,7 +342,7 @@ class ServerHandler(WSGIHandler):
             "http.useragent": request_headers.get("user-agent"),
             "http.referer": request_headers.get("referer"),
             "headers": request_headers,
-            "response_headers": dict(self.response_headers),
+            "response_headers": response_headers,
             "network.client.ip": self.environ.get("HTTP_X_FORWARDED_FOR", "127.0.0.1"),
             "network.bytes_written": response_length
         }
@@ -348,7 +350,8 @@ class ServerHandler(WSGIHandler):
             extra["duration"] = "%.6f" % (self.time_finish - self.time_start)
         user = self.environ["beaker.session"].get("user")
         if user:
-            extra["user.id"] = user
+            extra["usr.id"] = user
+            extra["usr.uuid"] = self.environ["beaker.session"].get("user_uuid")
         if 400 <= status < 500:
             log_access.warning(request_log, extra=extra, exc_info=True)
         elif status >= 500:
