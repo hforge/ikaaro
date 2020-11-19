@@ -445,7 +445,7 @@ class DBResource_AddLink(DBResource_AddBase):
         if mode == 'tiny_mce':
             from webpage import WebPage
             return WebPage
-        raise ValueError, 'Incorrect mode %s' % mode
+        raise ValueError('Incorrect mode %s' % mode)
 
 
 

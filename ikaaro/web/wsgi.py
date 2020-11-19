@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
+import traceback
+from logging import getLogger
 from time import time
 import os
 
@@ -22,7 +24,6 @@ import os
 from beaker.middleware import SessionMiddleware
 
 # Import from itools
-from itools.log import log_error
 from itools.uri import Reference
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
@@ -31,10 +32,13 @@ from itools.web.exceptions import HTTPError
 from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
 from ikaaro.constants import SESSION_DOMAIN, SESSION_SAMESITE
+from ikaaro.constants import SESSION_KEY
+from ikaaro.server import get_server
+
+log = getLogger("ikaaro.web")
 
 
 def application(environ, start_response):
-    from ikaaro.server import get_server
     t0 = time()
     server = get_server()
     with server.database.init_context(commit_at_exit=False) as context:
@@ -51,7 +55,8 @@ def application(environ, start_response):
         except HTTPError as e:
             RequestMethod.handle_client_error(e, context)
         except StandardError as e:
-            log_error(e, domain='itools.web')
+            tb = traceback.format_exc()
+            log.error("Internal error : {}".format(tb), exc_info=True)
             context.set_default_response(500)
         finally:
             headers = context.header_response
@@ -82,6 +87,7 @@ session_opts = {
     "session.data_serializer": "json",
     "session.auto": False,
     "session.samesite": SESSION_SAMESITE,
+    "session.key": SESSION_KEY,
 }
 
 

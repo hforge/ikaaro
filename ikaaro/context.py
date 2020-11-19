@@ -17,7 +17,7 @@
 # Import from standard library
 from datetime import datetime
 import json
-from hashlib import sha224
+from logging import getLogger
 from pytz import timezone
 import time
 
@@ -33,10 +33,10 @@ from itools.fs import lfs
 from itools.i18n import has_language
 from itools.i18n import format_datetime, format_date, format_time
 from itools.i18n import AcceptLanguageType, format_number
-from itools.log import log_warning
 from itools.uri import normalize_path
 from itools.uri import decode_query, get_reference, Path, Reference
 from itools.web.context import get_form_value
+from itools.web.entities import Entity
 from itools.web import ERROR
 from itools.web.headers import get_type
 from itools.web.utils import NewJSONEncoder, fix_json, reason_phrases
@@ -46,6 +46,9 @@ from itools.web.exceptions import JWTExpiredException
 # Import from ikaaro
 from skins import skin_registry
 from constants import JWT_EXPIRE, JWT_ISSUER
+from server import get_server
+
+log = getLogger("ikaaro.web")
 
 
 class CMSContext(prototype):
@@ -86,7 +89,6 @@ class CMSContext(prototype):
     #######################################################################
 
     def init_from_environ(self, environ, user=None):
-        from server import get_server
         # Set environ
         self.environ = environ
         path = environ.get('PATH_INFO')
@@ -113,7 +115,7 @@ class CMSContext(prototype):
             accept_language = ''
         try:
             self.accept_language = AcceptLanguageType.decode(accept_language)
-        except:
+        except Exception as e:
             # Cannot decode accept language
             pass
         # The URI as it was typed by the client
@@ -165,13 +167,11 @@ class CMSContext(prototype):
         # Not a cron
         self.is_cron = False
         # Set header
-        self.set_header('Server', 'ikaaro.web')
 
 
     def on_request_end(self):
         if self.view and getattr(self.view, "use_cookies", True):
             self.session.save()
-
 
 
     @proto_lazy_property
@@ -222,7 +222,7 @@ class CMSContext(prototype):
         handler = ro_database.get_handler(local_path, soft=True)
         if handler:
             if warning:
-                print warning
+                log.warning(warning)
             return handler
 
         # 4. Not an exact match: trigger language negotiation
@@ -241,9 +241,8 @@ class CMSContext(prototype):
         # 4.1 Get the best variant
         accept = self.accept_language
         language = accept.select_language(languages)
-        # Print Warning
         if warning:
-            print warning
+            log.warning(warning)
         # 4.2 By default use whatever variant
         # (XXX we need a way to define the default)
         if language is None:
@@ -262,7 +261,7 @@ class CMSContext(prototype):
 
     def get_headers(self):
         headers = []
-        for name, value in self.environ.iteritems():
+        for name, value in self.environ.items():
             if name.startswith('HTTP_'):
                 name = name.lower().replace('HTTP_', '')
                 name = '-'.join([x.capitalize() for x in name.split('-')])
@@ -282,9 +281,8 @@ class CMSContext(prototype):
             return datatype.get_default() or ''
         try:
             return datatype.decode(value) or ''
-        except ValueError:
-            log_warning('malformed header: %s: %s' % (name, value),
-                        domain='ikaaro.web')
+        except ValueError as e:
+            log.warning("malformed header: %s: %s" % (name, value), exc_info=True)
             return datatype.get_default()
 
 
@@ -309,6 +307,15 @@ class CMSContext(prototype):
         self.header_response = l
 
 
+    def remove_header(self, name):
+        update_headers = []
+        for key, value in self.header_response:
+            if key == name:
+                continue
+            update_headers.append((name, value))
+        self.header_response = update_headers
+
+
     def get_referrer(self):
         return self.get_header('referer')
 
@@ -324,7 +331,7 @@ class CMSContext(prototype):
         origin = self.get_header('Origin')
         self.set_header('Access-Control-Allow-Credentials', 'true')
         self.set_header('Access-Control-Allow-Origin', origin)
-        self.set_header('Access-Control-Allow-Headers', 'Authorization')
+        self.set_header('Access-Control-Allow-Headers', 'Authorization, Content-Type, Cookie')
 
     #######################################################################
     # Web response API
@@ -334,7 +341,7 @@ class CMSContext(prototype):
         if type(content_type) is not str:
             raise TypeError('expected string, got %s' % repr(content_type))
 
-        parameters = [ '; %s=%s' % x for x in kw.items() ]
+        parameters = ['; %s=%s' % x for x in kw.items()]
         parameters = ''.join(parameters)
         self.content_type = content_type + parameters
 
@@ -343,6 +350,7 @@ class CMSContext(prototype):
         if filename:
             disposition = '%s; filename="%s"' % (disposition, filename)
         self._set_header('Content-Disposition', disposition)
+        self._set_header('Access-Control-Expose-Headers', "Content-Disposition")
 
 
     def http_not_modified(self):
@@ -472,7 +480,7 @@ class CMSContext(prototype):
         response = self.get_header('content-type')
         try:
             content_type, type_parameters = response
-        except:
+        except Exception as e:
             content_type = response
         # Case 1: nothing
         length = int(self.environ.get('CONTENT_LENGTH', '0') or 0)
@@ -496,7 +504,6 @@ class CMSContext(prototype):
 
 
     def get_multipart_body(self, body):
-        from itools.web.entities import Entity
         content_type, type_parameters = self.get_header('content-type')
         boundary = type_parameters.get('boundary')
         boundary = '--%s' % boundary
@@ -667,8 +674,7 @@ class CMSContext(prototype):
         try:
             username = self.get_authentication_credentials()
         except ValueError as error:
-            msg = "Authentication error : %s " % error.message
-            log_warning(msg, domain='ikaaro.web')
+            log.warning("Authentication error : {} ".format(error.message), exc_info=True)
             return
         if not username:
             return
@@ -770,7 +776,7 @@ class CMSContext(prototype):
         # Translate the source message
         if message:
             text = message.gettext(**kw)
-            if is_prototype(message, ERROR):
+            if isinstance(message, ERROR):
                 goto = goto.replace(error=text)
             else:
                 goto = goto.replace(info=text)

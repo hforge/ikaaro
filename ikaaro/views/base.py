@@ -17,8 +17,8 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from logging import getLogger
 from os.path import basename, getmtime, isfile
-import traceback
 
 # Import from itools
 from itools.core import fixed_offset
@@ -38,6 +38,8 @@ from itools.xml import XMLParser
 from ikaaro.autoform import AutoForm
 from ikaaro.buttons import Button
 from ikaaro.utils import CMSTemplate
+
+log = getLogger("ikaaro.web")
 
 
 """This module contains some generic views used by different resources.
@@ -90,8 +92,7 @@ class CompositeView(STLView):
             view_schema = view.get_query_schema()
             for key in view_schema:
                 if key in schema:
-                    msg = 'query schema key "%s" defined twice'
-                    raise ValueError, msg % key
+                    raise ValueError("query schema key '{}' defined twice".format(key))
                 schema[key] = view_schema[key]
         return schema
 
@@ -129,8 +130,9 @@ class CompositeView(STLView):
         for view in self.allowed_subviews:
             view_method = getattr(view, action_name, None)
             if action_subview and view_method:
-                msg = 'method "%s" should not be defined in several subviews'
-                raise ValueError, msg % context.form_action
+                raise ValueError(
+                    "method '{}' should not be defined in several subviews".format(context.form_action)
+                )
             if view_method:
                 action_subview = view
 
@@ -434,12 +436,11 @@ class BrowseForm(STLView):
 
     def get_items(self, resource, context):
         name = 'get_items'
-        raise NotImplementedError, "the '%s' method is not defined" % name
+        raise NotImplementedError("the 'get_items' method is not defined")
 
 
     def sort_and_batch(self, resource, context, items):
-        name = 'sort_and_batch'
-        raise NotImplementedError, "the '%s' method is not defined" % name
+        raise NotImplementedError("the 'sort_and_batch' method is not defined")
 
 
     def get_item_value(self, resource, context, item, column):
@@ -447,7 +448,7 @@ class BrowseForm(STLView):
             return None
 
         # Default
-        raise ValueError, 'unexpected "%s"' % column
+        raise ValueError("unexpected '{}'".format(column))
 
 
     def get_table_actions(self, resource, context):
@@ -626,13 +627,10 @@ class IkaaroStaticView(StaticView):
             return self.get_from_template(resource, context)
         except NotModified:
             raise
-        except Exception:
+        except Exception as e:
             # Fallback if the handler cannot be loaded
             msg = 'WARNING: The file {0} contains errors'.format(context.path)
-            print('=='*10)
-            print(msg)
-            print(traceback.format_exc())
-            print('=='*10)
+            log.debug(msg, exc_info=True)
             return self.get_fallback(resource, context)
 
 

@@ -36,7 +36,6 @@ urlpatterns = [
     urlpattern('/devpanel/classid', ApiDevPanel_ClassidViewList),
     urlpattern('/devpanel/classid/{class_id}', ApiDevPanel_ClassidViewDetails),
     # Resource
-    urlpattern('/devpanel/resource/{uuid}', UUIDView),
     urlpattern('/devpanel/resource/{uuid}/json', ApiDevPanel_ResourceJSON),
     urlpattern('/devpanel/resource/{uuid}/raw', ApiDevPanel_ResourceRaw),
     urlpattern('/devpanel/resource/{uuid}/history', ApiDevPanel_ResourceHistory),

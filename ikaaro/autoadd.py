@@ -197,7 +197,7 @@ class AutoAdd(AutoForm):
         if not root.has_permission(context.user, 'add', container, class_id):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
-            raise FormError, msg.gettext(path=path)
+            raise FormError(msg.gettext(path=path))
 
         # Ok
         return container
@@ -228,17 +228,17 @@ class AutoAdd(AutoForm):
         # 2. The name
         name = self.get_new_resource_name(form)
         if not name:
-            raise FormError, messages.MSG_NAME_MISSING
+            raise FormError(messages.MSG_NAME_MISSING)
         try:
             name = checkid(name)
         except UnicodeEncodeError:
             name = None
         if name is None:
-            raise FormError, messages.MSG_BAD_NAME
+            raise FormError(messages.MSG_BAD_NAME)
 
         # Check the name is free
         if container.get_resource(name, soft=True) is not None:
-            raise FormError, messages.MSG_NAME_CLASH
+            raise FormError(messages.MSG_NAME_CLASH)
         form['name'] = name
 
         # Ok
@@ -257,7 +257,7 @@ class AutoAdd(AutoForm):
 
         value = form[name]
         if type(value) is dict:
-            for language, data in value.iteritems():
+            for language, data in value.items():
                 resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)

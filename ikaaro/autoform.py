@@ -173,7 +173,7 @@ class AutoForm(STLView):
             # onsubmit
             widget_onsubmit = getattr(widget, 'onsubmit', None)
             if widget_onsubmit is not None and onsubmit is not None:
-                raise ValueError, "2 widgets want to change onsubmit"
+                raise ValueError("2 widgets want to change onsubmit")
             onsubmit = widget_onsubmit
 
             # Get value

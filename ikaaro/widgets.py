@@ -281,8 +281,7 @@ class RadioWidget(Widget):
                  'selected': not yes_selected}]
 
         # Case 3: Error
-        err = 'datatype "%s" should be enumerate or boolean'
-        raise ValueError, err % self.name
+        raise ValueError("datatype '{}' should be enumerate or boolean".format(self.name))
 
 
 
@@ -320,7 +319,7 @@ class CheckboxWidget(Widget):
                      'selected': value in [True, 1, '1']}]
 
         # Case 3: Error
-        raise ValueError, 'expected boolean or enumerate datatype'
+        raise ValueError('expected boolean or enumerate datatype')
 
 
 
@@ -933,7 +932,7 @@ def get_default_widget(datatype):
     """Returns widget class from registry, TextWidget is default."""
     widget = widgets_registry.get(datatype, None)
     if widget is None:
-        for d, w in widgets_registry.iteritems():
+        for d, w in widgets_registry.items():
             if issubclass(datatype, d):
                 return w
     return widget or TextWidget

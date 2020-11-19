@@ -171,7 +171,7 @@ class DBResource_GetImage(DBResource_GetFile):
 class DBResource_Links(Folder_BrowseContent):
     """Links are the list of resources used by this resource."""
 
-    access = 'is_allowed_to_view'
+    access = 'is_admin'
     title = MSG(u"Links")
     icon = 'rename.png'
 

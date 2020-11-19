@@ -174,7 +174,7 @@ class Folder(DBResource):
             # Do not check referencial-integrity
             pass
         else:
-            raise ValueError,('Incorrect ref_action "{}"'.format(ref_action))
+            raise ValueError('Incorrect ref_action "{}"'.format(ref_action))
 
         # Events, remove
         path = str(resource.abspath)
@@ -201,7 +201,7 @@ class Folder(DBResource):
         from webpage import WebPage
 
         if type(name) is not str:
-            raise TypeError, 'expected string, got %s' % repr(name)
+            raise TypeError('expected string, got %s' % repr(name))
 
         # Web Pages are first class citizens
         if mimetype == 'text/html':
@@ -279,7 +279,7 @@ class Folder(DBResource):
                     folder = folder.make_resource(name, Folder)
                     folder.set_value('title', title, default_language)
                 elif not isinstance(subfolder, Folder):
-                    raise RuntimeError, MSG_NAME_CLASH
+                    raise RuntimeError(MSG_NAME_CLASH)
                 else:
                     folder = subfolder
 
@@ -305,7 +305,7 @@ class Folder(DBResource):
             if file:
                 if update is False:
                     msg = 'unexpected resource at {path}'
-                    raise RuntimeError, msg.format(path=path_str)
+                    raise RuntimeError(msg.format(path=path_str))
                 if mimetype == 'text/html':
                     body = tidy_html(body)
                     file_handler = file.get_handler(language)
@@ -427,13 +427,13 @@ class Folder(DBResource):
         aux = source.abspath
         if aux.get_prefix(abspath) == aux:
             message = 'cannot move a resource to a subdirectory of itself'
-            raise ConsistencyError, message
+            raise ConsistencyError(message)
 
         # Check compatibility
         if (check_if_authorized and (not target_parent.can_paste(source)
                 or not source.can_paste_into(target_parent))):
             message = 'resource type "%r" cannot be moved into type "%r"'
-            raise ConsistencyError, message % (source, target_parent)
+            raise ConsistencyError(message % (source, target_parent))
 
         # Events, remove
         database = self.database

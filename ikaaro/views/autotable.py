@@ -122,7 +122,7 @@ class AutoTable(Folder_BrowseContent):
     def get_query_schema(self):
         proxy = super(AutoTable, self)
         kw = {}
-        for key, value in proxy.get_query_schema().iteritems():
+        for key, value in proxy.get_query_schema().items():
             # Fix sort and batch if CompositeView with self.prefix
             if self.prefix:
                 if key in self.sort_by_key:

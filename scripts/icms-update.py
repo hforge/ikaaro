@@ -18,12 +18,12 @@
 
 # Import from the Standard Library
 from cProfile import runctx
+from logging import getLogger
 from optparse import OptionParser
 from sys import exit
 
 # Import from itools
 import itools
-from itools.core import is_prototype
 from itools.gettext import MSG
 
 # Import from ikaaro
@@ -31,20 +31,22 @@ from ikaaro.update import do_run_next_update_method
 from ikaaro.server import Server
 from ikaaro.server import get_pid
 
+log = getLogger("ikaaro.update")
+
 
 def update(parser, options, target):
     # Check the server is not started, or started in read-only mode
     pid = get_pid('%s/pid' % target)
     if pid is not None:
-        print('Cannot proceed, the server is running in read-write mode.')
+        log.error("Cannot proceed, the server is running in read-write mode.")
         return
     # Load server
     server = Server(target)
     # Build a fake context
     with server.database.init_context() as context:
-        print('STAGE 1: Find out the versions to upgrade (may take a while).')
+        log.info("STAGE 1: Find out the versions to upgrade (may take a while).")
         msgs = do_run_next_update_method(context, force=options.force)
-        print(u'\n'.join([x.gettext() if is_prototype(x, MSG) else x for x in msgs]))
+        log.info(u'\n'.join([x.gettext() if isinstance(x, MSG) else x for x in msgs]))
 
 
 

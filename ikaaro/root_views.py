@@ -265,7 +265,7 @@ class UpdateDocs(AutoForm):
         # Check the mimetype
         filename, mimetype, body = form['file']
         if mimetype not in ('application/x-tar', 'application/zip'):
-            raise FormError, MSG_UNEXPECTED_MIMETYPE.gettext(mimetype=mimetype)
+            raise FormError(MSG_UNEXPECTED_MIMETYPE.gettext(mimetype=mimetype))
 
         return form
 
@@ -296,7 +296,7 @@ class UpdateDocs(AutoForm):
                 target = XHTMLFile()
                 elem = get_element(source.events, 'div', **{'class': 'body'})
                 if not elem:
-                    print 'E', path
+                    print("E {}".format(path))
                     return None
                 elements = elem.get_content_elements()
                 elements = rewrite_uris(elements, rewrite)
@@ -311,7 +311,7 @@ class UpdateDocs(AutoForm):
                 return body
             # Unknown
             else:
-                print 'X', path, mimetype
+                print('X {} {}'.format(path, mimetype))
                 return body
 
         def postproc(file):

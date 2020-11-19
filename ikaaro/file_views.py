@@ -279,9 +279,9 @@ class Archive_View(STLView):
         target = form['target']
         target = resource.get_resource(target, soft=True)
         if target is None:
-            raise FormError, ERROR(u'Target does not exist.')
+            raise FormError(ERROR(u'Target does not exist.'))
         if isinstance(target, Folder) is False:
-            raise FormError, ERROR(u'Target must be a folder.')
+            raise FormError(ERROR(u'Target must be a folder.'))
 
         return form
 

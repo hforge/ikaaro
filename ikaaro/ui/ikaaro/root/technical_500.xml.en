@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<div xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <style type="text/css">
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font:small sans-serif; background-color:#fff; color:#000; }
+    body>div { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; }
+    h2 { margin-bottom:.8em; }
+    h3 { margin:1em 0 .5em 0; }
+    h4 { margin:0 0 .5em 0; font-weight: normal; }
+    code, pre { font-size: 100%; white-space: pre-wrap; }
+    table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; }
+    tbody td, tbody th { vertical-align:top; padding:2px 3px; }
+    thead th {
+      padding:1px 6px 1px 3px; background:#fefefe; text-align:left;
+      font-weight:normal; font-size:11px; border:1px solid #ddd;
+    }
+    tbody th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    table td.code pre { overflow:hidden; }
+    table.source th { color:#666; }
+    table.source td { font-family:monospace; white-space:pre; border-bottom:1px solid #eee; }
+    div.commands { margin-left: 40px; }
+    div.commands a { color:#555; text-decoration:none; }
+    #summary { background: #ffc; }
+    #explanation { background:#eee; }
+    #traceback { background:#eee; font-size: 16px }
+    #summary table { border:none; background:transparent; }
+    h2 span.commands { font-weight:normal; }
+    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }
+  </style>
+<div>
+  <div id="summary">
+    <h1>${exception_type} at ${path_info}</h1>
+    <pre class="exception_value">${exception_value}</pre>
+    <table class="meta">
+      <tr>
+        <th>Request Method:</th>
+        <td>${request_method}</td>
+      </tr>
+      <tr>
+        <th>Request URL:</th>
+        <td>${request_uri}</td>
+      </tr>
+      <tr>
+        <th>User ID</th>
+        <td>${user_id}</td>
+      </tr>
+      <tr>
+        <th>User UUID</th>
+        <td>${user_uuid}</td>
+      </tr>
+      <tr>
+        <th>User Email</th>
+        <td>${user_email}</td>
+      </tr>
+      <tr>
+        <th>Message</th>
+        <td>${message}</td>
+      </tr>
+      <tr>
+        <th>Resource abspath</th>
+        <td>${resource/abspath}</td>
+      </tr>
+      <tr>
+        <th>Resource class_id</th>
+        <td>${resource/class_id}</td>
+      </tr>
+      <tr>
+        <th>Resource version</th>
+        <td>${resource/version}</td>
+      </tr>
+      <tr stl:repeat="package packages_versions">
+        <th>${package/name} Version:</th>
+        <td>${package/version}</td>
+      </tr>
+      <tr>
+        <th>Exception Type:</th>
+        <td>${exception_type}</td>
+      </tr>
+      <tr>
+        <th>Exception Value:</th>
+        <td><pre>${exception_value}</pre></td>
+      </tr>
+      <tr>
+        <th>Exception Location:</th>
+        <td><span class="fname">${last_frame}</span></td>
+      </tr>
+      <tr>
+        <th>Python Executable:</th>
+        <td>${sys_executable}</td>
+      </tr>
+      <tr>
+        <th>Python Version:</th>
+        <td>${sys_version_info}</td>
+      </tr>
+      <tr>
+        <th>Python Path:</th>
+        <td><pre>${sys_path}</pre></td>
+      </tr>
+      <tr>
+        <th>Server time:</th>
+        <td>${server_time}</td>
+      </tr>
+      <tr>
+        <th>Request Headers :</th>
+        <td>
+          <div stl:repeat="header headers">
+            <span>${header/name}</span> : ${header/value}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Body :</th>
+        <td>
+          <div stl:repeat="form_value body">
+            <span>${form_value/name}</span> : ${form_value/value}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="traceback">
+    <h2>Traceback <span class="commands"></span>
+    </h2>
+    <pre style="color: #333;">
+      <code>
+${traceback}
+      </code>
+    </pre>
+  </div>
+    <div id="explanation">
+      <p>
+        You’re seeing this error because you have <code>DEBUG = True</code> in your
+        ikaaro env var . Change that to <code>False</code>, and ikaaro will
+        display a standard page     </p>
+    </div>
+</div>
+</div>

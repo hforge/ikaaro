@@ -179,7 +179,7 @@ class AccessRule(DBResource):
                 subquery = get_base_path_query(value, 0, depth)
             elif field.multiple:
                 err = "access rules don't yet support multiple fields"
-                raise NotImplementedError, err
+                raise NotImplementedError(err)
             else:
                 subquery = PhraseQuery(name, value)
 

@@ -28,22 +28,23 @@ from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from email.header import Header
 from json import dumps
+from logging import getLogger
 import sys
 import traceback
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import RWDatabase, AndQuery, PhraseQuery
+from itools.database import RWDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype
-from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
+from constants import DEBUG
 from config import Configuration
 from config_register import RegisterForm, TermsOfService_View
 from context import CMSContext
@@ -51,12 +52,12 @@ from fields import Char_Field
 from folder import Folder
 from resource_views import LoginView
 from skins import skin_registry
-from utils import get_base_path_query
 from root_views import PoweredBy, ContactForm
 from root_views import NotFoundView, ForbiddenView, NotAllowedView
 from root_views import UploadStatsView, UpdateDocs, UnavailableView
 from update import UpdateInstanceView
 
+log = getLogger("ikaaro")
 
 # itools source and target languages
 config = get_abspath('setup.conf')
@@ -117,7 +118,7 @@ class Root(Folder):
 
     def make_resource(self, name, cls, **kw):
         if name == 'ui':
-            raise ValueError, 'cannot add a resource with the name "ui"'
+            raise ValueError('cannot add a resource with the name "ui"')
         return super(Root, self).make_resource(name, cls, **kw)
 
 
@@ -136,9 +137,8 @@ class Root(Folder):
         user = self.get_resource(userid, soft=True)
         if user is None:
             username = userid.rsplit('/', 1)[-1]
-            log_warning('unkwnown user %s' % username, domain='ikaaro')
+            log.warning('unkwnown user {}'.format(username))
             return unicode(username)
-
         # Ok
         return user.get_title()
 
@@ -146,18 +146,87 @@ class Root(Folder):
     ########################################################################
     # Publish
     ########################################################################
-    def internal_server_error(self, context):
-        # Send email (TODO Move this to the itools.log system)
-        self.alert_on_internal_server_error(context)
 
-        # Ok
-        namespace = {'traceback': traceback.format_exc()}
-        handler = context.get_template('/ui/ikaaro/root/internal_server_error.xml')
+    def get_internal_error_template(self, context):
+        if not DEBUG:
+            return context.get_template('/ui/ikaaro/root/internal_server_error.xml')
+        return context.get_template('/ui/ikaaro/root/technical_500.xml')
+
+
+    def get_internal_error_namespace(self, context):
+        namespace = {
+            "message": MSG(u"Erreur de l'application"),
+        }
+        if not DEBUG:
+            return namespace
+        exc_type, exc_value, tb = sys.exc_info()
+        packages_versions = context.root.get_version_of_packages(context)
+        packages_versions = [
+            {
+                "name": k,
+                "version": v
+            } for k, v in packages_versions.items()
+        ]
+        user = context.user
+
+        str_tb = ''.join(traceback.format_exception(exc_type, exc_value, tb, None))
+        last_frame = traceback.format_tb(tb)[-1]
+        headers = context.get_headers()
+        headers = [
+            {
+                "name": k,
+                "value": v
+            } for k, v in headers
+        ]
+
+        body = context.get_form()
+        body = [
+            {
+                "name": k,
+                "value": v,
+            } for k, v in body.items()
+        ]
+        resource = context.resource
+        namespace["message"] = context.message
+        namespace["last_frame"] = last_frame
+        namespace["path_info"] = str(context.uri.path)
+        namespace["traceback"] = str_tb
+        namespace["request_method"] = context.method
+        namespace["request_uri"] = str(context.uri)
+        namespace["packages_versions"] = packages_versions
+        namespace["user_id"] = user.name if user else None
+        namespace["user_uuid"] = user.get_value("uuid") if user else None
+        namespace["user_email"] = user.get_value("email") if user else None
+        namespace["sys_path"] = "; ".join(sys.path)
+        namespace["sys_executable"] = sys.executable
+        namespace["exception_type"] = exc_type.__name__
+        namespace["exception_value"] = str(exc_value)
+        namespace["sys_version_info"] = '%d.%d.%d' % sys.version_info[0:3],
+        namespace["server_time"] = context.timestamp
+        namespace["headers"] = headers
+        namespace["body"] = body
+        namespace["resource"] = {
+                "class_id": resource.class_id if resource else None,
+                "version": resource.class_version if resource else None,
+                "abspath": resource.abspath if resource else None,
+            }
+        # Clear local tb vars to avoid cyclik stack
+        exc_type = exc_value = tb = None
+        return namespace
+
+
+    def internal_server_error(self, context):
+        self.alert_on_internal_server_error(context)
+        namespace = self.get_internal_error_namespace(context)
+        accept = context.get_header("accept")
+        accept_json = "application/json" in accept
+        if accept_json:
+            return context.return_json(namespace, status=500)
+        handler = self.get_internal_error_template(context)
         return stl(handler, namespace, mode='html')
 
 
     def alert_on_internal_server_error(self, context):
-        # TODO Move this to the itools.log system
         # Get email address
         email = context.server.config.get_value('log-email')
         # We send an email with the traceback
@@ -284,36 +353,16 @@ class Root(Folder):
 
     def get_version_of_packages(self, context):
         # Python, itools & ikaaro
-        packages = ['sys', 'itools', 'ikaaro']
+        packages = ['itools', 'ikaaro']
         config = context.server.config
         packages.extend(config.get_value('modules'))
-        # Try packages we frequently use
-        packages.extend([
-            'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
-            'xlrd', 'lpod'])
-        # Mapping from package to version attribute
-        package2version = {
-            'gio': 'pygio_version',
-            'xapian': 'version_string',
-            'PIL.Image': 'VERSION',
-            'reportlab': 'Version',
-            'sys': 'version_info',
-            'xlrd': '__VERSION__'}
 
         # Namespace
         versions = {}
         for name in packages:
-            attribute = package2version.get(name, '__version__')
-
-            # Exception: PIL
-            if name == 'PIL.Image':
-                name = 'PIL'
-                try:
-                    package = __import__('Image', fromlist=['PIL'])
-                except ImportError:
-                    continue
+            attribute = '__version__'
             # XXX Skip stuff like 'ikaaro.blog', etc.
-            elif '.' in name:
+            if '.' in name:
                 continue
             # Common case
             else:
@@ -321,7 +370,6 @@ class Root(Folder):
                     package = __import__(name)
                 except ImportError:
                     continue
-
             # Version
             try:
                 version = getattr(package, attribute)
@@ -334,12 +382,6 @@ class Root(Folder):
                     version = '.'.join([str(v) for v in version])
             # Ok
             versions[name] = version
-
-        # Insert first the platform
-        versions['os'] = {
-            'linux2': u'GNU/Linux',
-            'darwin': u'Mac OS X',
-            'win32': u'Windows'}.get(sys.platform, sys.platform)
         return versions
 
 
@@ -354,14 +396,14 @@ class Root(Folder):
         elif isinstance(subject, MSG):
             subject = subject.gettext()
         else:
-            raise TypeError, 'unexpected subject of type %s' % type(subject)
+            raise TypeError('unexpected subject of type %s' % type(subject))
 
         if len(subject.splitlines()) > 1:
-            raise ValueError, 'the subject cannot have more than one line'
+            raise ValueError('the subject cannot have more than one line')
         if text and not isinstance(text, unicode):
-            raise TypeError, 'the text must be a Unicode string'
+            raise TypeError('the text must be a Unicode string')
         if html and not isinstance(html, unicode):
-            raise TypeError, 'the html must be a Unicode string'
+            raise TypeError('the html must be a Unicode string')
 
         # 2. Local variables
         context = get_context()
@@ -548,7 +590,7 @@ class Root(Folder):
             return None
         if n > 1:
             error = 'There are %s users in the database identified as "%s"'
-            raise ValueError, error % (n, username)
+            raise ValueError(error % (n, username))
 
         # Get the user
         brain = results.get_documents()[0]
@@ -597,7 +639,7 @@ class Root(Folder):
                 continue
             if f.is_file(p) and not p.endswith('.metadata'):
                 new_path = p.replace(database_path, database_static_path)
-                print('Move {0} {1}'.format(p, new_path))
+                log.info("Move {0} {1}".format(p, new_path))
                 source = lfs._resolve_path(p)
                 target = lfs._resolve_path(new_path)
                 # Create folder
@@ -630,18 +672,3 @@ class Root(Folder):
     update_instance = UpdateInstanceView()
     update_docs = UpdateDocs()
     _ctrl = CtrlView()
-
-
-    #######################################################################
-    # Upgrade
-    #######################################################################
-#   def update_20120601(self):
-#       # Configuration
-#       title = {'en': u'Configuration'}
-#       self.make_resource('config', Configuration, title=title)
-
-#       # User groups
-#       users = self.get_resource('users')
-#       for p in self.get_property('admins'):
-#           user = users.get_resource(p.value)
-#           user.set_value('groups', '/config/groups/admins')

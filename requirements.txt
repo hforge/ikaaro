@@ -1,7 +1,7 @@
 Beaker==1.11.0
-cryptography==2.9.2
+cryptography==3.1.1
 gevent==1.5
 guppy
 junitxml
-jwcrypto==0.7.0
+jwcrypto==0.8
 requests-toolbelt

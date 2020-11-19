@@ -368,7 +368,7 @@ class Skin(object):
             if template:
                 return path, template
 
-        raise ValueError, 'XXX'
+        raise ValueError('XXX')
 
 
     def template(self, content):

@@ -55,8 +55,7 @@ class CMSTemplate(STLTemplate):
         # Get the template
         template = self.template
         if template is None:
-            msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self)
+            raise NotImplementedError("{} is missing the 'template' variable".format(repr(self)))
 
         # Case 1: a ready made list of events
         if type(template) is list:
@@ -70,7 +69,7 @@ class CMSTemplate(STLTemplate):
                 raise ValueError(msg.format(template))
             return handler.events
 
-        raise ValueError, 'bad value for the template attribute'
+        raise ValueError('bad value for the template attribute')
 
 
 
@@ -155,10 +154,10 @@ def process_name(name):
         except UnicodeError:
             pass
     else:
-        raise ValueError, name
+        raise ValueError(name)
 
     if checkid_name is None:
-        raise ValueError, name
+        raise ValueError(name)
 
     # Ok
     return checkid_name, title
@@ -175,7 +174,7 @@ def to_utf8(data):
         except UnicodeError:
             pass
 
-    raise UnicodeError, 'unable to find out encoding'
+    raise UnicodeError('unable to find out encoding')
 
 
 def tidy_html(body):
@@ -267,7 +266,7 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
 
     if max_depth is not None and max_depth < min_depth:
         err = 'maximum depth (%d) smaller than minimum depth (%d)'
-        raise ValueError, err % (max_depth, min_depth)
+        raise ValueError(err % (max_depth, min_depth))
 
     # Special case: everything
     if path == '/' and min_depth == 0 and max_depth is None:
