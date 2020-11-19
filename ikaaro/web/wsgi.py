@@ -32,6 +32,7 @@ from itools.web.exceptions import HTTPError
 from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
 from ikaaro.constants import SESSION_DOMAIN, SESSION_SAMESITE
+from ikaaro.constants import SESSION_KEY
 from ikaaro.server import get_server
 
 log = getLogger("ikaaro.web")
@@ -86,6 +87,7 @@ session_opts = {
     "session.data_serializer": "json",
     "session.auto": False,
     "session.samesite": SESSION_SAMESITE,
+    "session.key": SESSION_KEY,
 }
 
 
