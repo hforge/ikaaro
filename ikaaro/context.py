@@ -602,8 +602,6 @@ class CMSContext(prototype):
     def login(self, user, use_session=True):
         # Set the user
         self.user = user
-        if not use_session:
-            return
         session = self.session
         if session and not session.get("user"):
             session.invalidate()
