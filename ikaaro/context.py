@@ -684,6 +684,10 @@ class CMSContext(prototype):
         if not user:
             return
         self.user = user
+        session = self.session
+        if session and not session.get("user"):
+            session["user"] = str(user.name)
+            session["user_uuid"] = user.get_value("uuid")
 
 
     def decode_bearer(self, bearer):
