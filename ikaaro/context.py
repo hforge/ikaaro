@@ -46,6 +46,7 @@ from itools.web.exceptions import JWTExpiredException
 # Import from ikaaro
 from skins import skin_registry
 from constants import JWT_EXPIRE, JWT_ISSUER
+from constants import SESSION_KEY
 from server import get_server
 
 log = getLogger("ikaaro.web")
@@ -708,7 +709,7 @@ class CMSContext(prototype):
             auth_type, token = auth_header
             return self.decode_bearer(token)
         # No Authorization header, get credentials in cookies
-        token = token or self.get_cookie('beaker.session.id')
+        token = token or self.get_cookie(SESSION_KEY)
         if not token:
             return None
         session = self.session
