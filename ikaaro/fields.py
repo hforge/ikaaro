@@ -102,7 +102,7 @@ class Field(BaseField):
         return self.datatype(mandatory=self.required, **kw)
 
 
-    def get_default(self):
+    def get_default(self, language=None):
         if self.default is not None:
             return self.default
         return self.get_datatype().get_default()
@@ -169,7 +169,7 @@ class Metadata_Field(Field):
     def get_value(self, resource, name, language=None):
         property = resource.metadata.get_property(name, language=language)
         if not property:
-            return self.get_default()
+            return self.get_default(language=language)
 
         # Multiple
         if type(property) is list:
@@ -392,12 +392,12 @@ class Text_Field(Metadata_Field):
         return proxy.set_value(resource, name, value, language, **kw)
 
 
-    def get_default(self):
+    def get_default(self, language=None):
         if self.default is not None:
             if self.multilingual:
                 # Default value is multilingual too
                 if isinstance(self.default, MSG):
-                    return self.default.gettext()
+                    return self.default.gettext(language=language)
                 return self.default
             return self.default
         return self.get_datatype().get_default()
