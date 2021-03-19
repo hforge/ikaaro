@@ -20,18 +20,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import guess_extension, merge_dicts
+import json
+
+from itools.core import guess_extension, merge_dicts, is_prototype
 from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
-from itools.web import get_context
+from itools.web import get_context, NewJSONEncoder
 from itools.web import BaseView, STLView, INFO, ERROR
-from itools.web import Conflict, NotFound, NotImplemented
+from itools.web import NotFound
 
 # Import from ikaaro
 from ikaaro.views.folder_views import Folder_BrowseContent
+from ikaaro.fields import Boolean_Field, Field
 
 # Import from ikaaro
 from autoform import AutoForm
@@ -342,3 +345,91 @@ class LogoutView(BaseView):
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
+
+
+
+class AutoJSONResourceExport(AutoForm):
+
+    access = "is_admin"
+    title = MSG(u"Exporter au format JSON")
+
+    def _get_datatype(self, resource, context, name):
+        field = self.get_field(resource, name)
+        return field.get_datatype()
+
+
+    def _get_schema(self, resource, context):
+        schema = {}
+        # Add schema from the resource
+        for name in self.get_fields():
+            datatype = self._get_datatype(resource, context, name)
+            # Standard case
+            schema[name] = datatype
+
+        return schema
+
+    def get_schema(self, resource, context):
+        """Return reduced schema
+           i.e. schema without 'hidden by default' datatypes.
+        """
+        base_schema = self._get_schema(resource, context)
+        return base_schema
+
+
+    def _get_widget(self, resource, context, name):
+        field = self.get_field(resource, name)
+        widget = field.get_widget(name)
+        widget = widget(datatype=field.datatype)
+        return widget
+
+
+    def _get_widgets(self, resource, context):
+        widgets = []
+        for name in self.get_fields():
+            widget = self._get_widget(resource, context, name)
+            widget_css = widget.css or ''
+            widget.css = widget_css + ' form-control'
+            widgets.append(widget)
+        return widgets
+
+
+    def get_widgets(self, resource, context):
+        """Return reduced widgets
+           i.e. skip hide by default widgets.
+        """
+        base_widgets = self._get_widgets(resource, context)
+        return base_widgets
+
+    def get_fields(self):
+        resource = self.resource
+        json_export_allowed_fields = resource.get_exportable_fields()
+        for name, field in json_export_allowed_fields:
+            if not is_prototype(field, Field):
+                field = resource.get_field(name)
+            if not field:
+                continue
+            # Access control
+            if field.access('write', resource):
+                yield name
+
+
+    def get_field(self, resource, name):
+        resource_field = resource.get_field(name)
+        field = Boolean_Field(
+            title=MSG(u"Exporter le champs '{title}' ?").gettext(
+                title=resource_field.title
+            ),
+            default=True
+        )
+        return field
+
+
+    def action(self, resource, context, form):
+        fields = [key for key, value in form.items() if value]
+        json_export = resource.export_as_json(context, only_self=True, exported_fields=fields)
+        context.set_content_type("application/json")
+        file_name = u"config_export_{title}.json".format(
+            title=resource.get_title()
+        ).encode("utf-8")
+        context.set_content_disposition("attachment", file_name)
+        return json.dumps(json_export, cls=NewJSONEncoder)

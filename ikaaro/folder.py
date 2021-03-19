@@ -54,15 +54,22 @@ from utils import process_name, tidy_html, get_base_path_query
 
 class Folder(DBResource):
 
-    class_id = 'folder'
-    class_version = '20071215'
-    class_title = MSG(u'Folder')
-    class_description = MSG(u'Organize your files and documents with folders.')
-    class_icon16 = '/ui/ikaaro/icons/16x16/folder.png'
-    class_icon48 = '/ui/ikaaro/icons/48x48/folder.png'
-    class_views = ['view', 'browse_content', 'preview_content',
-                   'new_resource', 'edit', 'links', 'backlinks']
-
+    class_id = "folder"
+    class_version = "20071215"
+    class_title = MSG(u"Folder")
+    class_description = MSG(u"Organize your files and documents with folders.")
+    class_icon16 = "/ui/ikaaro/icons/16x16/folder.png"
+    class_icon48 = "/ui/ikaaro/icons/48x48/folder.png"
+    class_views = [
+        "view",
+        "browse_content",
+        "preview_content",
+        "new_resource",
+        "edit",
+        "links",
+        "backlinks",
+        "json_export",
+    ]
 
     #########################################################################
     # Gallery properties
@@ -223,6 +230,32 @@ class Folder(DBResource):
             kw['data'] = {language: body}
 
         return self.make_resource(name, cls, **kw)
+
+
+    json_export_excluded_children = []
+
+    def get_exportable_childs(self):
+        for child in self.traverse_resources():
+            if child == self:
+                continue
+            for exclude_pattern in self.json_export_excluded_children:
+                if fnmatch.fnmatch(str(child.abspath), exclude_pattern):
+                    break
+            else:
+                yield child
+
+    def export_as_json(self, context, only_self=False, exported_fields=None):
+        proxy = super(Folder, self)
+        json_namespace = proxy.export_as_json(
+            context, only_self=only_self, exported_fields=exported_fields
+        )
+        if only_self:
+            return json_namespace
+        items = []
+        for child in self.get_exportable_childs():
+            items.append(child.export_as_json(context))
+        json_namespace["items"] = items
+        return json_namespace
 
 
     def export_zip(self, paths):

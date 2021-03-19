@@ -41,12 +41,14 @@ from itools.web import ItoolsView, get_context
 from autoadd import AutoAdd
 from autoedit import AutoEdit
 from enumerates import Groups_Datatype
-from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
+from fields import File_Field, HTMLFile_Field
+from fields import SelectAbspath_Field, UUID_Field
 from fields import CTime_Field, MTime_Field, LastAuthor_Field
 from fields import Title_Field, Description_Field, Subject_Field
+from fields import URI_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
+from resource_views import AutoJSONResourceExport
 from resource_views import DBResource_Remove
 from resource_views import DBResource_Links, DBResource_Backlinks
 from resource_views import LoginView, LogoutView
@@ -872,12 +874,79 @@ class DBResource(Resource):
         return True
 
 
+    def get_multilingual_value(self, context, name):
+        kw = {}
+        languages = context.root.get_value('website_languages')
+        for lang in languages:
+            kw[lang] = self.get_value(name, language=lang)
+        return kw
+
+
+    json_export_excluded_fields_cls = [
+        URI_Field,
+        SelectAbspath_Field,
+        File_Field,
+        Share_Field
+    ]
+
+    json_export_excluded_fields_names = [
+        "subject",
+        "ctime",
+        "mtime",
+        "uuid",
+        "last_author",
+        "owner",
+        "share",
+        "share_exclude",
+        "share_interest",
+        "share_users",
+        "thumbnail",
+        "image",
+        "status"
+    ]
+
+    def get_exportable_fields(self):
+        for name, field in self.get_fields():
+            if is_prototype(field, tuple(self.json_export_excluded_fields_cls)):
+                continue
+            if name in self.json_export_excluded_fields_names:
+                continue
+            if name.startswith("searchable_"):
+                continue
+            yield name, field
+
+
+    def export_as_json(self, context, only_self=False, exported_fields=None):
+        json_namespace = {
+            "class_id": getattr(self, "class_id"),
+            "class_version": self.class_version,
+            "name": self.name,
+        }
+        fields = []
+        for name, field in self.get_exportable_fields():
+            if exported_fields and name not in exported_fields:
+                continue
+            field_kw = {
+                "name": name,
+                "multilingual": field.multilingual
+            }
+            if not field.multilingual:
+                field_kw["value"] = self.get_value(name)
+            else:
+                field_kw["value"] = self.get_multilingual_value(context, name)
+            fields.append(field_kw)
+        json_namespace["fields"] = fields
+        return json_namespace
+
+
+
     # Views
     new_instance = AutoAdd(fields=['title', 'location'])
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
     remove = DBResource_Remove()
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
+    json_export = AutoJSONResourceExport()
     # Login/Logout
     login = LoginView()
     logout = LogoutView()

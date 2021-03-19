@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 # Import from the Python Image Library
 try:
     from PIL import Image as PILImage
@@ -27,14 +29,14 @@ from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.handlers.utils import transmap
-from itools.html import stream_is_empty
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLView, get_context
+from itools.web import BaseView, STLView, get_context, NewJSONEncoder
 
 # Import from ikaaro
 from ikaaro.buttons import PasteButton
 from ikaaro.buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from ikaaro.buttons import ZipButton
+from ikaaro.buttons import ExportAsJSONButton
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.utils import generate_name, get_base_path_query
@@ -312,9 +314,14 @@ class Folder_BrowseContent(BrowseForm):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author'))]
     table_actions = [
-        Remove_BrowseButton, RenameButton,
-        CopyButton, CutButton, PasteButton,
-        ZipButton]
+        Remove_BrowseButton,
+        RenameButton,
+        CopyButton,
+        CutButton,
+        PasteButton,
+        ZipButton,
+        ExportAsJSONButton
+    ]
 
 
     def get_scripts(self, context):
@@ -718,6 +725,20 @@ class Folder_BrowseContent(BrowseForm):
         context.set_content_disposition('inline', filename)
         # Ok
         return data
+
+    def action_export_as_json(self, resource, context, form):
+        names = sorted(form['ids'], reverse=True)
+        json_export = []
+        for path in names:
+            child = resource.get_resource(path, soft=True)
+            if child is None:
+                continue
+            json_export.append(child.export_as_json(context))
+        context.set_content_type('application/json')
+        filename = 'export.json'
+        context.set_content_disposition('attachment', filename)
+        return json.dumps(json_export, cls=NewJSONEncoder)
+
 
 
 
