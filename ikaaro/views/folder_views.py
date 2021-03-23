@@ -728,16 +728,20 @@ class Folder_BrowseContent(BrowseForm):
 
     def action_export_as_json(self, resource, context, form):
         names = sorted(form['ids'], reverse=True)
-        json_export = []
+        json_namespace = {
+            "export_type": "child-export"
+        }
+        json_items = []
         for path in names:
             child = resource.get_resource(path, soft=True)
             if child is None:
                 continue
-            json_export.append(child.export_as_json(context))
+            json_items.append(child.export_as_json(context))
+        json_namespace["items"] = json_items
         context.set_content_type('application/json')
         filename = 'export.json'
         context.set_content_disposition('attachment', filename)
-        return json.dumps(json_export, cls=NewJSONEncoder)
+        return json.dumps(json_namespace, cls=NewJSONEncoder)
 
 
 

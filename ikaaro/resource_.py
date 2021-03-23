@@ -49,6 +49,7 @@ from fields import URI_Field
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from resource_views import AutoJSONResourceExport
+from resource_views import AutoJSONResourcesImport
 from resource_views import DBResource_Remove
 from resource_views import DBResource_Links, DBResource_Backlinks
 from resource_views import LoginView, LogoutView
@@ -915,6 +916,36 @@ class DBResource(Resource):
                 continue
             yield name, field
 
+    def update_metadata_from_dict(self, fields_dict):
+        allowed_fields = [name for name, _ in self.get_exportable_fields()]
+        for field in fields_dict:
+            field_name = field["name"]
+            if field_name not in allowed_fields:
+                continue
+            resource_field = self.get_field(field_name)
+            if not resource_field:
+                continue
+            datatype = resource_field.get_datatype()
+            field_value = field["value"]
+            is_unicode = is_prototype(datatype, Unicode)
+            if not field_value:
+                continue
+            field_multilingual = field["multilingual"]
+            if not field_multilingual:
+                if is_unicode:
+                    if type(field_value) is list:
+                        field_value = [x.decode("utf-8") for x in field_value]
+                    else:
+                        field_value = field_value.decode("utf-8")
+                self.set_value(field_name, field_value)
+                continue
+            for lang, lang_value in field_value.items():
+                if not lang_value:
+                    continue
+                if is_unicode:
+                    lang_value = lang_value.decode("utf-8")
+                self.set_value(field_name, lang_value, language=lang)
+
 
     def export_as_json(self, context, only_self=False, exported_fields=None):
         json_namespace = {
@@ -947,6 +978,7 @@ class DBResource(Resource):
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
     json_export = AutoJSONResourceExport()
+    json_import = AutoJSONResourcesImport()
     # Login/Logout
     login = LoginView()
     logout = LogoutView()

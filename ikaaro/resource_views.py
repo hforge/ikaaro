@@ -31,10 +31,15 @@ from itools.uri import get_reference, get_uri_path
 from itools.web import get_context, NewJSONEncoder
 from itools.web import BaseView, STLView, INFO, ERROR
 from itools.web import NotFound
+from itools.web.exceptions import FormError
+from itools.web.utils import fix_json
 
 # Import from ikaaro
 from ikaaro.views.folder_views import Folder_BrowseContent
 from ikaaro.fields import Boolean_Field, Field
+from ikaaro.buttons import Button
+from ikaaro.widgets import FileWidget
+from ikaaro.datatypes import FileDataType
 
 # Import from ikaaro
 from autoform import AutoForm
@@ -427,9 +432,55 @@ class AutoJSONResourceExport(AutoForm):
     def action(self, resource, context, form):
         fields = [key for key, value in form.items() if value]
         json_export = resource.export_as_json(context, only_self=True, exported_fields=fields)
+        json_export["export_type"] = "self-export"
         context.set_content_type("application/json")
         file_name = u"config_export_{title}.json".format(
             title=resource.get_title()
         ).encode("utf-8")
         context.set_content_disposition("attachment", file_name)
         return json.dumps(json_export, cls=NewJSONEncoder)
+
+
+class AutoJSONResourcesImport(AutoForm):
+
+    access = "is_admin"
+    title = MSG(u"Importer au format JSON")
+
+    schema = {
+        "file": FileDataType(mandatory=True),}
+    widgets = [
+        FileWidget("file")
+    ]
+
+    actions = [
+        Button(access='is_admin', css='btn btn-primary', title=MSG(u'Upload'))]
+
+
+    def _get_form(self, resource, context):
+        form = super(AutoJSONResourcesImport, self)._get_form(resource, context)
+        # Check the mimetype
+        filename, mimetype, body = form['file']
+        if mimetype != "application/json":
+            raise FormError()
+        return form
+
+
+    def action(self, resource, context, form):
+        filename, mimetype, json_raw = form["file"]
+        json_content = json.loads(json_raw)
+        json_content = fix_json(json_content)
+        export_type = json_content["export_type"]
+        if export_type == "child-export":
+            for json_item in json_content["items"]:
+                resource.import_children_as_json(context, json_item)
+        elif export_type == "self-export":
+            # Check that imported json is the right resource
+            if resource.class_id != json_content["class_id"]:
+                raise FormError(u"Le type de ressource que vous essayez d'importer ne"
+                                u"correspond pas au type de la ressource actuelle")
+            if resource.class_version != json_content["class_version"]:
+                raise FormError(u"La version de la ressource que vous essayez d'importer"
+                                u"ne correspond à la version de la ressource actuelle")
+            resource.update_metadata_from_dict(json_content["fields"])
+        return
+

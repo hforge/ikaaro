@@ -234,8 +234,9 @@ class Folder(DBResource):
 
     json_export_excluded_children = []
 
-    def get_exportable_childs(self):
-        for child in self.traverse_resources():
+    def get_exportable_children(self):
+        for name in self._get_names():
+            child = self.get_resource(name)
             if child == self:
                 continue
             for exclude_pattern in self.json_export_excluded_children:
@@ -252,10 +253,54 @@ class Folder(DBResource):
         if only_self:
             return json_namespace
         items = []
-        for child in self.get_exportable_childs():
+        for child in self.get_exportable_children():
             items.append(child.export_as_json(context))
         json_namespace["items"] = items
         return json_namespace
+
+
+    def get_importable_document_types(self, context):
+        include_subclasses = self.new_resource.include_subclasses
+        document_types = self.get_document_types()
+        root = context.root
+        user = context.user
+        database = context.database
+        if not include_subclasses:
+            return document_types
+        document_types = tuple(document_types)
+        items = []
+        for cls in database.get_resource_classes():
+            class_id = cls.class_id
+            if class_id[0] != '-' and issubclass(cls, document_types):
+                if root.has_permission(user, 'add', self, class_id):
+                    items.append(cls)
+        return items
+
+
+    def import_children_as_json(self, context, json_item):
+        database = context.database
+        document_types = self.get_importable_document_types(context)
+        item_class_id = json_item["class_id"]
+        item_class_version = json_item["class_version"]
+        item_cls = database.get_resource_class(item_class_id)
+        if item_cls not in document_types:
+            return
+        if item_class_version != item_cls.class_version:
+            return
+        # Check if child resource already exists
+        # We will be able to only modify and create sub child
+        item_name = json_item["name"]
+        child = self.get_resource(item_name, soft=True)
+        if not child:
+            child = self.make_resource(item_name, item_cls)
+        if not child:
+            return
+        child.update_metadata_from_dict(json_item["fields"])
+        # Save changes for reindex
+        database.save_changes()
+        for sub_child in json_item["items"]:
+            # Recursively create new child
+            child.import_children_as_json(context, sub_child)
 
 
     def export_zip(self, paths):
