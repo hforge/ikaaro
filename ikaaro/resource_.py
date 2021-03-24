@@ -916,7 +916,9 @@ class DBResource(Resource):
                 continue
             yield name, field
 
-    def update_metadata_from_dict(self, fields_dict):
+    def update_metadata_from_dict(self, fields_dict, dry_run=False):
+        if dry_run:
+            return
         allowed_fields = [name for name, _ in self.get_exportable_fields()]
         for field in fields_dict:
             field_name = field["name"]

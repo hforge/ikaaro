@@ -462,13 +462,23 @@ class AutoJSONResourcesImport(AutoForm):
         filename, mimetype, body = form['file']
         if mimetype != "application/json":
             raise FormError()
+        filename, mimetype, json_raw = form.pop("file")
+        json_content = json.loads(json_raw)
+        json_content = fix_json(json_content)
+        form["json_import"] = json_content
+        export_type = json_content["export_type"]
+        if export_type == "child-export":
+            for json_item in json_content["items"]:
+                resource.import_children_as_json(
+                    context,
+                    json_item,
+                    dry_run=True
+                )
         return form
 
 
     def action(self, resource, context, form):
-        filename, mimetype, json_raw = form["file"]
-        json_content = json.loads(json_raw)
-        json_content = fix_json(json_content)
+        json_content = form["json_import"]
         export_type = json_content["export_type"]
         if export_type == "child-export":
             for json_item in json_content["items"]:
@@ -476,11 +486,18 @@ class AutoJSONResourcesImport(AutoForm):
         elif export_type == "self-export":
             # Check that imported json is the right resource
             if resource.class_id != json_content["class_id"]:
-                raise FormError(u"Le type de ressource que vous essayez d'importer ne"
-                                u"correspond pas au type de la ressource actuelle")
+                raise FormError(
+                    ERROR(u"Le type de ressource que vous essayez d'importer ne "
+                          u"correspond pas au type de la ressource actuelle")
+                )
             if resource.class_version != json_content["class_version"]:
-                raise FormError(u"La version de la ressource que vous essayez d'importer"
-                                u"ne correspond à la version de la ressource actuelle")
+                raise FormError(
+                    ERROR(u"La version de la ressource que vous essayez d'importer "
+                          u"ne correspond pas à la version de la ressource actuelle")
+                )
             resource.update_metadata_from_dict(json_content["fields"])
-        return
+        return context.come_back(
+            MSG(u"Les ressources ont bien été importées"),
+            goto="."
+        )
 

@@ -35,7 +35,8 @@ from itools.database import AndQuery, PhraseQuery, NotQuery
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import BaseView, get_context, ERROR
+from itools.web.exceptions import FormError
 
 # Import from ikaaro
 from views.folder_views import Folder_BrowseContent, Folder_PreviewContent
@@ -233,11 +234,14 @@ class Folder(DBResource):
 
 
     json_export_excluded_children = []
+    json_export_excluded_children_cls = []
 
     def get_exportable_children(self):
         for name in self._get_names():
             child = self.get_resource(name)
             if child == self:
+                continue
+            if isinstance(child, tuple(self.json_export_excluded_children_cls)):
                 continue
             for exclude_pattern in self.json_export_excluded_children:
                 if fnmatch.fnmatch(str(child.abspath), exclude_pattern):
@@ -270,37 +274,59 @@ class Folder(DBResource):
         document_types = tuple(document_types)
         items = []
         for cls in database.get_resource_classes():
+            if issubclass(cls, tuple(self.json_export_excluded_children_cls)):
+                continue
             class_id = cls.class_id
             if class_id[0] != '-' and issubclass(cls, document_types):
                 if root.has_permission(user, 'add', self, class_id):
                     items.append(cls)
         return items
 
+    def create_imported_child(self, context, item_name, item_cls, item_class_version, dry_run=False):
+        child = self.get_resource(item_name, soft=True)
+        if not child:
+            document_types = self.get_importable_document_types(context)
+            if item_cls not in document_types:
+                raise FormError(
+                    ERROR(u"L'import d'une ressource de type {resource_type} "
+                          u"n'est pas autorisé au sein de la resource actuelle").gettext(
+                        resource_type=item_cls.class_title
+                    )
+                )
+            if item_class_version != item_cls.class_version:
+                raise FormError(
+                    ERROR(u"La version de la ressource que vous essayez d'importer "
+                          u"ne correspond pas à la version de la ressource actuelle")
+                )
+            if not dry_run:
+                child = self.make_resource(item_name, item_cls)
+        return child
+    
 
-    def import_children_as_json(self, context, json_item):
+    def import_children_as_json(self, context, json_item, dry_run=False):
         database = context.database
-        document_types = self.get_importable_document_types(context)
         item_class_id = json_item["class_id"]
         item_class_version = json_item["class_version"]
         item_cls = database.get_resource_class(item_class_id)
-        if item_cls not in document_types:
-            return
-        if item_class_version != item_cls.class_version:
-            return
         # Check if child resource already exists
         # We will be able to only modify and create sub child
         item_name = json_item["name"]
-        child = self.get_resource(item_name, soft=True)
-        if not child:
-            child = self.make_resource(item_name, item_cls)
+        child = self.create_imported_child(
+            context,
+            item_name,
+            item_cls,
+            item_class_version,
+            dry_run=dry_run
+        )
         if not child:
             return
-        child.update_metadata_from_dict(json_item["fields"])
-        # Save changes for reindex
-        database.save_changes()
+        child.update_metadata_from_dict(json_item["fields"], dry_run=dry_run)
+        if not dry_run:
+            # Save changes for reindex
+            database.save_changes()
         for sub_child in json_item["items"]:
             # Recursively create new child
-            child.import_children_as_json(context, sub_child)
+            child.import_children_as_json(context, sub_child, dry_run=dry_run)
 
 
     def export_zip(self, paths):
