@@ -476,7 +476,7 @@ class AutoJSONResourcesImport(AutoForm):
                 )
         return form
 
-
+    action_goto = "."
     def action(self, resource, context, form):
         json_content = form["json_import"]
         export_type = json_content["export_type"]
@@ -498,6 +498,6 @@ class AutoJSONResourcesImport(AutoForm):
             resource.update_metadata_from_dict(json_content["fields"])
         return context.come_back(
             MSG(u"Les ressources ont bien été importées"),
-            goto="."
+            goto=self.action_goto
         )
 
