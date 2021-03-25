@@ -736,6 +736,8 @@ class Folder_BrowseContent(BrowseForm):
             child = resource.get_resource(path, soft=True)
             if child is None:
                 continue
+            if isinstance(child, tuple(resource.json_export_excluded_children_cls)):
+                continue
             json_items.append(child.export_as_json(context))
         json_namespace["items"] = json_items
         context.set_content_type('application/json')

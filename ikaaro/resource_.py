@@ -26,6 +26,7 @@ from pickle import dumps
 from uuid import uuid4
 
 # Import from itools
+from ikaaro.datatypes import HTMLBody
 from itools.core import is_prototype, lazy
 from itools.database import MetadataProperty
 from itools.database import Resource, register_field
@@ -57,6 +58,8 @@ from resource_views import DBResource_GetFile, DBResource_GetImage
 from update import class_version_to_date
 from utils import get_resource_by_uuid_query
 from widgets import CheckboxWidget
+from widgets import RTEWidget
+
 
 log = getLogger("ikaaro")
 
@@ -909,6 +912,9 @@ class DBResource(Resource):
     def get_exportable_fields(self):
         for name, field in self.get_fields():
             if is_prototype(field, tuple(self.json_export_excluded_fields_cls)):
+                if is_prototype(field, File_Field):
+                    if is_prototype(field.get_widget(field.name), RTEWidget):
+                        yield name, field
                 continue
             if name in self.json_export_excluded_fields_names:
                 continue
@@ -944,6 +950,8 @@ class DBResource(Resource):
             for lang, lang_value in field_value.items():
                 if not lang_value:
                     continue
+                if is_prototype(datatype, HTMLBody):
+                    lang_value = datatype.decode(lang_value)
                 if is_unicode:
                     lang_value = lang_value.decode("utf-8")
                 self.set_value(field_name, lang_value, language=lang)
@@ -957,6 +965,7 @@ class DBResource(Resource):
         }
         fields = []
         for name, field in self.get_exportable_fields():
+            datatype = field.get_datatype()
             if exported_fields and name not in exported_fields:
                 continue
             field_kw = {
@@ -967,6 +976,9 @@ class DBResource(Resource):
                 field_kw["value"] = self.get_value(name)
             else:
                 field_kw["value"] = self.get_multilingual_value(context, name)
+                if is_prototype(datatype, HTMLBody):
+                    for k, v in field_kw["value"].items():
+                        field_kw["value"][k] = datatype.encode(v)
             fields.append(field_kw)
         json_namespace["fields"] = fields
         return json_namespace
