@@ -131,7 +131,7 @@ session-timeout = 0
 # The "database-readonly" variable, when set to 1 starts the database in
 # read-only mode, all write operations will fail.
 #
-database-size = 19500:20500
+database-size = {size_min}:{size_max}
 database-readonly = 0
 
 # The "index-text" variable defines whether the catalog must process full-text
@@ -247,6 +247,8 @@ def create_server(target, email, password, root,
         listen_address=listen_address or '127.0.0.1',
         smtp_host=smtp_host or 'localhost',
         smtp_from=email,
+        size_min=size_min,
+        size_max=size_max,
         log_email=log_email)
     open('%s/config.conf' % target, 'w').write(config)
 
