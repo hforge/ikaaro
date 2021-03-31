@@ -33,6 +33,7 @@ from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
 from ikaaro.constants import SESSION_DOMAIN, SESSION_SAMESITE
 from ikaaro.constants import SESSION_KEY
+from ikaaro.constants import SESSION_SECURE
 from ikaaro.server import get_server
 
 log = getLogger("ikaaro.web")
@@ -82,7 +83,7 @@ session_opts = {
     "session.timeout": SESSION_TIMEOUT,
     "session.cookie_domain": SESSION_DOMAIN,
     "session.cookie_path": "/",
-    "session.secure": True,
+    "session.secure": SESSION_SECURE,
     "session.httponly": True,
     "session.data_serializer": "json",
     "session.auto": False,

@@ -27,6 +27,7 @@ SESSION_EXPIRE = int(os.environ.setdefault("SESSION_EXPIRE", "864000"))
 SESSION_DOMAIN = os.environ.get("SESSION_DOMAIN", None)
 SESSION_SAMESITE = os.environ.setdefault("SESSION_SAMESITE", "Lax")
 SESSION_KEY = os.environ.setdefault("SESSION_KEY", "beaker.session.id")
+SESSION_SECURE = bool(int(os.environ.get("SESSION_SECURE") or 1))
 # JWT
 JWT_EXPIRE = int(os.environ.setdefault("JWT_EXPIRE", "172800"))
 JWT_ISSUER = os.environ.setdefault("JWT_ISSUER", "ikaaro")
