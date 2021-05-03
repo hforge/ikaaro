@@ -897,6 +897,7 @@ class DBResource(Resource):
         "subject",
         "ctime",
         "mtime",
+        "index",
         "uuid",
         "last_author",
         "owner",
@@ -911,14 +912,14 @@ class DBResource(Resource):
 
     def get_exportable_fields(self):
         for name, field in self.get_fields():
+            if name in self.json_export_excluded_fields_names:
+                continue
+            if name.startswith("searchable_"):
+                continue
             if is_prototype(field, tuple(self.json_export_excluded_fields_cls)):
                 if is_prototype(field, File_Field):
                     if is_prototype(field.get_widget(field.name), RTEWidget):
                         yield name, field
-                continue
-            if name in self.json_export_excluded_fields_names:
-                continue
-            if name.startswith("searchable_"):
                 continue
             yield name, field
 
