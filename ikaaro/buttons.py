@@ -158,3 +158,11 @@ class SearchButton(BrowseButton):
     access = 'is_allowed_to_view'
     name = 'search'
     title = MSG(u'Search')
+
+
+class ExportAsJSONButton(BrowseButton):
+
+    title = MSG(u"Exporter les ressources (JSON)")
+    css = "btn btn-primary"
+    access = "is_admin"
+    name = "export_as_json"
