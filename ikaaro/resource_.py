@@ -937,7 +937,7 @@ class DBResource(Resource):
             datatype = resource_field.get_datatype()
             field_value = field["value"]
             is_unicode = is_prototype(datatype, Unicode)
-            if not field_value:
+            if field_value is None:
                 continue
             field_multilingual = field["multilingual"]
             if not field_multilingual:
