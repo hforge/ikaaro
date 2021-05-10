@@ -946,6 +946,8 @@ class DBResource(Resource):
                         field_value = [x.decode("utf-8") for x in field_value]
                     else:
                         field_value = field_value.decode("utf-8")
+                else:
+                    field_value = datatype.decode(field_value)
                 self.set_value(field_name, field_value)
                 continue
             for lang, lang_value in field_value.items():
