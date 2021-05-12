@@ -474,6 +474,8 @@ class AutoJSONResourcesImport(AutoForm):
                     json_item,
                     dry_run=True
                 )
+        elif export_type == "self-export":
+            resource.update_metadata_from_dict(json_content["fields"], dry_run=True)
         return form
 
     action_goto = "."
