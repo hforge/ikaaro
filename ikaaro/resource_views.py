@@ -475,6 +475,17 @@ class AutoJSONResourcesImport(AutoForm):
                     dry_run=True
                 )
         elif export_type == "self-export":
+            # Check that imported json is the right resource
+            if resource.class_id != json_content["class_id"]:
+                raise FormError(
+                    ERROR(u"Le type de ressource que vous essayez d'importer ne "
+                          u"correspond pas au type de la ressource actuelle")
+                )
+            if resource.class_version != json_content["class_version"]:
+                raise FormError(
+                    ERROR(u"La version de la ressource que vous essayez d'importer "
+                          u"ne correspond pas à la version de la ressource actuelle")
+                )
             resource.update_metadata_from_dict(json_content["fields"], dry_run=True)
         return form
 
