@@ -870,13 +870,17 @@ class Server(object):
                 except Exception:
                     log_error('Cron error on save changes\n' + format_exc())
                     context.root.alert_on_internal_server_error(context)
-            # Message
+            # Log into cron.log
             t1 = time()
             if not error:
                 msg = '[OK] Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
             else:
                 msg = '[ERROR] Cron finished for {nb} resources in {s} seconds'.format(nb=nb, s=t1-t0)
             log_info(msg, domain='itools.cron')
+            # Log into access.log
+            now = strftime('%d/%b/%Y:%H:%M:%S %z')
+            message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
+            log_info(message % (now, t1-t0), domain='itools.web_access')
         # Again, and again
         return self.config.get_value('cron-interval')
 
