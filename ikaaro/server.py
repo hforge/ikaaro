@@ -858,7 +858,6 @@ class Server(object):
                 # Reindex resource without committing
                 values = resource.get_catalog_values()
                 catalog.index_document(values)
-                catalog.save_changes()
                 # Log
                 tcron1 = time()
                 msg = 'Done for %s in %s seconds' % (brain.abspath, tcron1-tcron0)
@@ -866,6 +865,7 @@ class Server(object):
             # Save changes
             if not error:
                 try:
+                    catalog.save_changes()
                     database.save_changes()
                 except Exception:
                     log_error('Cron error on save changes\n' + format_exc())
