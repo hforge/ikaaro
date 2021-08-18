@@ -20,10 +20,6 @@ from logging import getLogger
 from time import time
 import os
 
-# Gevent
-from gevent.monkey import patch_all
-patch_all()
-
 # Import from beaker
 from beaker.middleware import SessionMiddleware
 
@@ -49,8 +45,10 @@ def application(environ, start_response):
     method = environ.get('REQUEST_METHOD')
     path = environ.get("PATH_INFO")
     read_only_method = method in ("GET", "OPTIONS")
+    root = server.root
+    GET_writable_paths = root.get_GET_writable_paths()
     # READWRITE Specific GET methods
-    rw_path = any(s in path for s in (";confirm_registration", "api/discussions"))
+    rw_path = any(s in path for s in GET_writable_paths)
     read_only = read_only_method and not rw_path
     with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
         try:
