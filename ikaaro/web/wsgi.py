@@ -20,6 +20,10 @@ from logging import getLogger
 from time import time
 import os
 
+# Gevent
+from gevent.monkey import patch_all
+patch_all()
+
 # Import from beaker
 from beaker.middleware import SessionMiddleware
 
@@ -42,7 +46,13 @@ log = getLogger("ikaaro.web")
 def application(environ, start_response):
     t0 = time()
     server = get_server()
-    with server.database.init_context(commit_at_exit=False) as context:
+    method = environ.get('REQUEST_METHOD')
+    path = environ.get("PATH_INFO")
+    read_only_method = method in ("GET", "OPTIONS")
+    # READWRITE Specific GET methods
+    rw_path = any(s in path for s in (";confirm_registration", "api/discussions"))
+    read_only = read_only_method and not rw_path
+    with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
         try:
             # Init context from wsgi envrion
             context.init_from_environ(environ)

@@ -28,26 +28,47 @@ from itools.web import get_context, set_context
 
 
 DBSEM = BoundedSemaphore(1)
+ROSEM = BoundedSemaphore(100)
 
 
 class RODatabase(BaseRODatabase):
 
-    def init_context(self, user=None, username=None, email=None, commit_at_exit=True):
+    def init_context(
+            self,
+            user=None,
+            username=None,
+            email=None,
+            commit_at_exit=True,
+            read_only=True
+    ):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
         cls = root.context_cls if root else CMSContext
-        return ContextManager(cls, self)
+        return ContextManager(cls, self, read_only=read_only)
 
 
 
 class ContextManager(object):
 
-    def __init__(self, cls, database, user=None, username=None, email=None, commit_at_exit=True):
+    def __init__(
+            self,
+            cls,
+            database,
+            user=None,
+            username=None,
+            email=None,
+            commit_at_exit=True,
+            read_only=False
+    ):
         # Check if context is not already locked
         if get_context() != None:
             raise ValueError('Cannot acquire context. Already locked.')
         # Acquire lock on database
-        DBSEM.acquire()
+        self.read_only = read_only
+        if self.read_only:
+            ROSEM.acquire()
+        else:
+            DBSEM.acquire()
         from server import get_server
         self.context = cls()
         self.context.database = database
@@ -86,15 +107,17 @@ class ContextManager(object):
                     print(msg)
         except Exception:
             set_context(None)
-            DBSEM.release()
+            if self.read_only:
+                ROSEM.release()
+            else:
+                DBSEM.release()
             raise
         else:
             set_context(None)
-            DBSEM.release()
-
-
-
-
+            if self.read_only:
+                ROSEM.release()
+            else:
+                DBSEM.release()
 
 
 
@@ -102,14 +125,24 @@ class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def init_context(self, user=None, username=None, email=None, commit_at_exit=True):
+    def init_context(
+            self,
+            user=None,
+            username=None,
+            email=None,
+            commit_at_exit=True,
+            read_only=False
+    ):
         from ikaaro.context import CMSContext
         root = self.get_resource('/', soft=True)
         cls = root.context_cls if root else CMSContext
-        return ContextManager(cls,
+        return ContextManager(
+            cls,
             database=self, user=user,
             username=username, email=email,
-            commit_at_exit=commit_at_exit)
+            commit_at_exit=commit_at_exit,
+            read_only=read_only
+        )
 
 
     def close(self):
