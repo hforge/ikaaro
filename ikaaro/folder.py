@@ -24,6 +24,7 @@ import fnmatch
 from cStringIO import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
+import uuid
 
 # Import from itools
 from itools.core import is_prototype
@@ -104,17 +105,7 @@ class Folder(DBResource):
 
 
     def make_resource_name(self):
-        max_id = -1
-        for name in self.get_names():
-            # Mixing explicit and automatically generated names is allowed
-            try:
-                id = int(name)
-            except ValueError:
-                continue
-            if id > max_id:
-                max_id = id
-
-        return str(max_id + 1)
+        return uuid.uuid4().hex
 
 
     def make_resource(self, name, cls, soft=False, **kw):
