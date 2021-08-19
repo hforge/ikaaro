@@ -18,6 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from gevent.monkey import patch_all
+patch_all()
 from logging import getLogger
 from optparse import OptionParser
 from sys import exit

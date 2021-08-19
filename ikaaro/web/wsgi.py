@@ -42,7 +42,15 @@ log = getLogger("ikaaro.web")
 def application(environ, start_response):
     t0 = time()
     server = get_server()
-    with server.database.init_context(commit_at_exit=False) as context:
+    method = environ.get('REQUEST_METHOD')
+    path = environ.get("PATH_INFO")
+    read_only_method = method in ("GET", "OPTIONS")
+    root = server.root
+    GET_writable_paths = root.get_GET_writable_paths()
+    # READWRITE Specific GET methods
+    rw_path = any(s in path for s in GET_writable_paths)
+    read_only = read_only_method and not rw_path
+    with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
         try:
             # Init context from wsgi envrion
             context.init_from_environ(environ)

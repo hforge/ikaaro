@@ -126,6 +126,9 @@ class Root(Folder):
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
+    def get_GET_writable_paths(self):
+        return []
+
     def get_user_title(self, userid):
         if not userid:
             return None
