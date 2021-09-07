@@ -301,8 +301,8 @@ class ServerHandler(WSGIHandler):
     def format_request(self):
         now = strftime('%d/%b/%Y:%H:%M:%S %z')
         length = self.response_length or '-'
-        if self.time_finish:
-            delta = '%.6f' % (self.time_finish - self.time_start)
+        if self.environ.get('REQUEST_TIME'):
+            delta = '%.6f' % self.environ['REQUEST_TIME']
         else:
             delta = '-'
         client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
