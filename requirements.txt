@@ -3,5 +3,5 @@ cryptography==3.3.2
 gevent==21.8.0
 guppy
 junitxml
-jwcrypto==1.0
+jwcrypto==0.8 # Dropped py 2.7 support with 1.0
 requests-toolbelt
