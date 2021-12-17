@@ -245,7 +245,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
     def get_key_sorted_by_abspath(self):
         def key(item):
-            return int(item.name)
+            return item.name
         return key
 
 
