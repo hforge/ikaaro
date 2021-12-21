@@ -368,3 +368,31 @@ def close_fancybox(context, default=None):
     # Case 2: normal
     goto = context.get_form_value('referrer') or default
     return get_reference(goto) if type(goto) is str else goto
+
+
+def pad(in_str):
+    missing = int(os.getenv('_BS')) - len(in_str) % int(os.getenv('_BS'))
+    return in_str + missing * chr(missing)
+
+
+def unpad(in_str):
+    return in_str[:-ord(in_str[len(in_str) - 1:])]
+
+
+def encrypt(raw):
+    raw = pad(raw)
+    b_raw = raw.encode('utf8')
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(bytes(os.getenv('_KEY')), AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(b_raw))
+
+
+def decrypt(enc):
+    not_enc = enc
+    try:
+        enc = base64.b64decode(enc)
+        iv = enc[:16]
+        cipher = AES.new(bytes(os.getenv('_KEY')), AES.MODE_CBC, iv)
+        return unpad(cipher.decrypt(enc[16:]))
+    except (UnicodeDecodeError, ValueError, TypeError):
+        return not_enc

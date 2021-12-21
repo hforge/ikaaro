@@ -167,6 +167,7 @@ class Metadata_Field(Field):
 
 
     def get_value(self, resource, name, language=None):
+        # decrypt here all encrypted = true
         property = resource.metadata.get_property(name, language=language)
         if not property:
             return self.get_default(language=language)
@@ -184,6 +185,8 @@ class Metadata_Field(Field):
             kw['lang'] = language
         if kw:
             value = MetadataProperty(value, None, **kw)
+
+        # encrypt here all encrypted = true
 
         resource.metadata.set_property(name, value)
 
