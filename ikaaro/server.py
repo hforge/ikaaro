@@ -328,19 +328,22 @@ class Server(object):
     accept_cors = False
     dispatcher = URIDispatcher()
     wsgi_server = None
+    cron_statistics = {}
 
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False, port=None):
         set_server(self)
+        # Set target
         target = lfs.get_absolute_path(target)
         self.target = target
+        # Read only ?
         self.read_only = read_only
         # Set timestamp
         self.timestamp = str(int(time() / 2))
         # Load the config
-        config = get_config(target)
-        self.config = config
+        config = self.load_config()
+        # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
         # Find out the port to listen
@@ -429,6 +432,21 @@ class Server(object):
         self.register_dispatch_routes()
 
 
+    def load_config(self):
+        self.config = get_config(self.target)
+        return self.config
+
+
+    def set_cron_interval(self, interval, context):
+        # Save new value into config
+        self.config.set_value('cron-interval', interval)
+        self.config.save_state()
+        # Reload config
+        self.load_config()
+        # Relaunch cron if it was desactivated ?
+        if interval > 0 and not self.cron_statistics['started']:
+            self.launch_cron(context)
+
     #def log_access(self, host, request_line, status_code, body_length):
     #    if host:
     #        host = host.split(',', 1)[0].strip()
@@ -486,9 +504,9 @@ class Server(object):
         # Call method on root at start
         with self.database.init_context() as context:
             context.root.launch_at_start(context)
+            if not self.read_only:
+                self.launch_cron(context)
         # Listen & set context
-        if not self.read_only:
-            self.launch_cron()
         self.listen(address, self.port)
 
         # XXX The interpreter do not go here
@@ -497,11 +515,20 @@ class Server(object):
         return True
 
 
-    def launch_cron(self):
+    def launch_cron(self, context):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
+            # Statistics
+            next_start = context.timestamp + timedelta(seconds=interval)
+            self.cron_statistics = {'last_start': None,
+                                    'last_end': None,
+                                    'next_start': next_start,
+                                    'started': True}
+            # Launch
             cron(self.cron_manager, interval)
+        else:
+            self.cron_statistics['started'] = False
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
@@ -826,6 +853,7 @@ class Server(object):
         error = False
         # Build fake context
         with database.init_context() as context:
+            start_dtime = context.timestamp
             context.is_cron = True
             context.git_message = u'[CRON]'
             # Go
@@ -881,8 +909,20 @@ class Server(object):
             now = strftime('%d/%b/%Y:%H:%M:%S %z')
             message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
             log_info(message % (now, t1-t0), domain='itools.web_access')
+            end_dtime = context.timestamp
         # Again, and again
-        return self.config.get_value('cron-interval')
+        cron_interval = self.config.get_value('cron-interval')
+        # Cron statistics
+        if cron_interval:
+            next_start = context.timestamp + timedelta(seconds=cron_interval)
+        else:
+            next_start = None
+        self.cron_statistics = {'last_start': start_dtime,
+                                'last_end': end_dtime,
+                                'started': cron_interval > 0,
+                                'next_start': next_start}
+        # Ok
+        return cron_interval
 
 
 
