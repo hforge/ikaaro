@@ -17,9 +17,11 @@
 # Import from the Standard Library
 from copy import deepcopy
 from types import FunctionType
+from logging import getLogger
 
 # Import from itools
 from itools.core import freeze
+from itools.core import proto_lazy_property
 from itools.database import MetadataProperty
 from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
@@ -39,11 +41,14 @@ from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
 from links import get_abspath_links, update_abspath_links
 from utils import split_reference, get_secure_hash
+from utils import encrypt, decrypt
 from widgets import Widget, FileWidget, MultilineWidget, TextWidget
 from widgets import CheckboxWidget, RadioWidget, SelectWidget
 from widgets import BirthDateWidget, DateWidget, DatetimeWidget
 from widgets import PasswordWidget, ChoosePassword_Widget
 from widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
+
+log = getLogger("ikaaro")
 
 
 class Field(BaseField):
@@ -165,9 +170,8 @@ class Metadata_Field(Field):
     parameters_schema_default = None
     widget = Widget
 
-
     def get_value(self, resource, name, language=None):
-        # decrypt here all encrypted = true
+
         property = resource.metadata.get_property(name, language=language)
         if not property:
             return self.get_default(language=language)
@@ -177,16 +181,25 @@ class Metadata_Field(Field):
             return [ x.value for x in property ]
 
         # Simple
+        # decrypt here all encrypted = true
+        if getattr(self, 'encrypted', False):
+            log.info('{} will be decrypted '.format(name))
+            value = decrypt(property.value)
+            try:
+                value = value.decode('utf8')
+            except (UnicodeDecodeError, AttributeError):  # , UnicodeEncodeError
+                pass
+            return value
         return property.value
 
-
     def _set_value(self, resource, name, value, language=None, **kw):
+        if getattr(self, 'encrypted', False):
+            log.info('{} will be encrypted'.format(name))
+            value = encrypt(value).decode('unicode_escape')
         if language:
             kw['lang'] = language
         if kw:
             value = MetadataProperty(value, None, **kw)
-
-        # encrypt here all encrypted = true
 
         resource.metadata.set_property(name, value)
 

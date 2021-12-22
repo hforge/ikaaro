@@ -345,7 +345,6 @@ class DBResource(Resource):
         #    return self._values[cache_key]
         if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
             try:
-                log.info('retrieving value from brain')
                 value = self.get_value_from_brain(name, language)
             except Exception as e:
                 # FIXME Sometimes we cannot get value from brain
@@ -355,7 +354,6 @@ class DBResource(Resource):
                 log.warning(msg)
                 value = field.get_value(self, name, language)
         else:
-            log.info('retrieving value from space')
             value = field.get_value(self, name, language)
         #self._values[cache_key] = value
         return value

@@ -19,6 +19,11 @@
 # Import from the Standard Library
 from hashlib import sha1, sha256
 from random import sample
+import os
+import base64
+from Crypto.Cipher import AES
+from Crypto import Random
+from Crypto.PublicKey import RSA
 
 # Import from other modules
 try:
