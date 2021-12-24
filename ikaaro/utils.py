@@ -23,7 +23,6 @@ import os
 import base64
 from Crypto.Cipher import AES
 from Crypto import Random
-from Crypto.PublicKey import RSA
 
 # Import from other modules
 try:
@@ -375,17 +374,17 @@ def close_fancybox(context, default=None):
     return get_reference(goto) if type(goto) is str else goto
 
 
-def pad(in_str):
+def _pad(in_str):
     missing = int(os.getenv('_BS')) - len(in_str) % int(os.getenv('_BS'))
     return in_str + missing * chr(missing)
 
 
-def unpad(in_str):
+def _unpad(in_str):
     return in_str[:-ord(in_str[len(in_str) - 1:])]
 
 
 def encrypt(raw):
-    raw = pad(raw)
+    raw = _pad(raw)
     b_raw = raw.encode('utf8')
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(bytes(os.getenv('_KEY')), AES.MODE_CBC, iv)
@@ -396,8 +395,8 @@ def decrypt(enc):
     not_enc = enc
     try:
         enc = base64.b64decode(enc)
-        iv = enc[:16]
+        iv = enc[:AES.block_size]
         cipher = AES.new(bytes(os.getenv('_KEY')), AES.MODE_CBC, iv)
-        return unpad(cipher.decrypt(enc[16:]))
+        return _unpad(cipher.decrypt(enc[AES.block_size:]))
     except (UnicodeDecodeError, ValueError, TypeError):
         return not_enc

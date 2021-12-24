@@ -183,10 +183,14 @@ class Metadata_Field(Field):
         # Simple
         # decrypt here all encrypted = true
         if getattr(self, 'encrypted', False):
-            log.info('{} will be decrypted '.format(name))
+            prev_val = property.value
             value = decrypt(property.value)
+            log.info("new decryption from {} of type {} gives {} of type {}".format(prev_val, type(prev_val), value,
+                                                                                    type(value)))
             try:
+                # if isinstance(self.get_datatype(), Unicode):
                 value = value.decode('utf8')
+                log.info("data transformed in {} of type {}".format(value, type(value)))
             except (UnicodeDecodeError, AttributeError):  # , UnicodeEncodeError
                 pass
             return value
@@ -194,13 +198,19 @@ class Metadata_Field(Field):
 
     def _set_value(self, resource, name, value, language=None, **kw):
         if getattr(self, 'encrypted', False):
-            log.info('{} will be encrypted'.format(name))
-            value = encrypt(value).decode('unicode_escape')
+            prev_val = value
+            value = encrypt(value)
+            log.info("new encryption from {} of type {} gives {} of type {}".format(prev_val, type(prev_val), value,
+                                                                                    type(value)))
+            if isinstance(self.get_datatype(), Unicode):
+                value = value.decode('unicode_escape')
+            log.info("data transformed in {} of type {}".format(value, type(value)))
         if language:
             kw['lang'] = language
         if kw:
             value = MetadataProperty(value, None, **kw)
-
+        import ipdb
+        ipdb.set_trace()
         resource.metadata.set_property(name, value)
 
 
