@@ -35,6 +35,7 @@ import traceback
 # Import from itools
 from itools.core import get_abspath
 from itools.database import RWDatabase
+from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery, TextQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -587,7 +588,12 @@ class Root(Folder):
         """
         # Search the user by username (login name)
         database = self.database
-        results = database.search(parent_paths='/users', username=username)
+        context = get_context()
+        query = AndQuery(PhraseQuery('format', 'user'),
+                         PhraseQuery('username', username))
+        results = context.database.search(query)
+        # results = database.search(query)
+        # results = database.search(parent_paths='/users', username=username)
 
         n = len(results)
         if n == 0:

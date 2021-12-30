@@ -26,6 +26,7 @@ from itools.database import MetadataProperty
 from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
+from datetime import datetime, date
 from itools.datatypes import Enumerate, Integer, String, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
@@ -183,14 +184,9 @@ class Metadata_Field(Field):
         # Simple
         # decrypt here all encrypted = true
         if getattr(self, 'encrypted', False):
-            prev_val = property.value
             value = decrypt(property.value)
-            log.info("new decryption from {} of type {} gives {} of type {}".format(prev_val, type(prev_val), value,
-                                                                                    type(value)))
             try:
-                # if isinstance(self.get_datatype(), Unicode):
                 value = value.decode('utf8')
-                log.info("data transformed in {} of type {}".format(value, type(value)))
             except (UnicodeDecodeError, AttributeError):  # , UnicodeEncodeError
                 pass
             return value
@@ -198,19 +194,16 @@ class Metadata_Field(Field):
 
     def _set_value(self, resource, name, value, language=None, **kw):
         if getattr(self, 'encrypted', False):
-            prev_val = value
-            value = encrypt(value)
-            log.info("new encryption from {} of type {} gives {} of type {}".format(prev_val, type(prev_val), value,
-                                                                                    type(value)))
+            if isinstance(value, date):
+                value = encrypt(value.strftime(Date.format_date))
+            else:
+                value = encrypt(value)
             if isinstance(self.get_datatype(), Unicode):
                 value = value.decode('unicode_escape')
-            log.info("data transformed in {} of type {}".format(value, type(value)))
         if language:
             kw['lang'] = language
         if kw:
             value = MetadataProperty(value, None, **kw)
-        import ipdb
-        ipdb.set_trace()
         resource.metadata.set_property(name, value)
 
 
@@ -289,6 +282,7 @@ class Datetime_Field(Metadata_Field):
 class Email_Field(Metadata_Field):
     datatype = Email()
     size = 40
+    encrypted = True
 
 
 
