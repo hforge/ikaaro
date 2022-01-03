@@ -17,7 +17,6 @@
 # Import from the Standard Library
 from copy import deepcopy
 from types import FunctionType
-from logging import getLogger
 
 # Import from itools
 from itools.core import freeze
@@ -48,8 +47,6 @@ from widgets import CheckboxWidget, RadioWidget, SelectWidget
 from widgets import BirthDateWidget, DateWidget, DatetimeWidget
 from widgets import PasswordWidget, ChoosePassword_Widget
 from widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
-
-log = getLogger("ikaaro")
 
 
 class Field(BaseField):

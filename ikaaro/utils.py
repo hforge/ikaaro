@@ -374,6 +374,9 @@ def close_fancybox(context, default=None):
     return get_reference(goto) if type(goto) is str else goto
 
 
+# Encryption/Decryption functions
+
+
 def _pad(in_str):
     missing = int(os.getenv('_BS')) - len(in_str) % int(os.getenv('_BS'))
     return in_str + missing * chr(missing)
