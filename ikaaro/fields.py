@@ -182,10 +182,11 @@ class Metadata_Field(Field):
         # decrypt here all encrypted = true
         if getattr(self, 'encrypted', False):
             value = decrypt(property.value)
-            try:
-                value = value.decode('utf8')
-            except (UnicodeDecodeError, AttributeError):  # , UnicodeEncodeError
-                pass
+            if issubclass(self.get_datatype(), Unicode):
+                try:
+                    value = value.decode('utf8')
+                except (UnicodeDecodeError, AttributeError, UnicodeEncodeError):
+                    pass
             return value
         return property.value
 
@@ -195,7 +196,7 @@ class Metadata_Field(Field):
                 value = encrypt(value.strftime(Date.format_date))
             else:
                 value = encrypt(value)
-            if isinstance(self.get_datatype(), Unicode):
+            if issubclass(self.get_datatype(), Unicode):
                 value = value.decode('unicode_escape')
         if language:
             kw['lang'] = language
