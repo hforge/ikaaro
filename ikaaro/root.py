@@ -35,7 +35,6 @@ import traceback
 # Import from itools
 from itools.core import get_abspath
 from itools.database import RWDatabase
-from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery, TextQuery
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype

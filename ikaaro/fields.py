@@ -20,12 +20,10 @@ from types import FunctionType
 
 # Import from itools
 from itools.core import freeze
-from itools.core import proto_lazy_property
 from itools.database import MetadataProperty
 from itools.database import magic_from_buffer
 from itools.database import Field as BaseField
 from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
-from datetime import datetime, date
 from itools.datatypes import Enumerate, Integer, String, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
@@ -41,7 +39,6 @@ from datatypes import Password_Datatype, ChoosePassword_Datatype
 from datatypes import DaysOfWeek
 from links import get_abspath_links, update_abspath_links
 from utils import split_reference, get_secure_hash
-from utils import encrypt, decrypt
 from widgets import Widget, FileWidget, MultilineWidget, TextWidget
 from widgets import CheckboxWidget, RadioWidget, SelectWidget
 from widgets import BirthDateWidget, DateWidget, DatetimeWidget
@@ -176,8 +173,8 @@ class Metadata_Field(Field):
     parameters_schema_default = None
     widget = Widget
 
-    def get_value(self, resource, name, language=None):
 
+    def get_value(self, resource, name, language=None):
         property = resource.metadata.get_property(name, language=language)
         if not property:
             return self.get_default(language=language)
@@ -189,11 +186,13 @@ class Metadata_Field(Field):
         # Simple
         return property.value
 
+
     def _set_value(self, resource, name, value, language=None, **kw):
         if language:
             kw['lang'] = language
         if kw:
             value = MetadataProperty(value, None, **kw)
+
         resource.metadata.set_property(name, value)
 
 
