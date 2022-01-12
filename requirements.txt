@@ -5,4 +5,3 @@ guppy
 junitxml
 jwcrypto==0.8 # Dropped py 2.7 support with 1.0
 requests-toolbelt
-pycryptodome==3.9.9
