@@ -588,12 +588,7 @@ class Root(Folder):
         """
         # Search the user by username (login name)
         database = self.database
-        context = get_context()
-        query = AndQuery(PhraseQuery('format', 'user'),
-                         PhraseQuery('username', username))
-        results = context.database.search(query)
-        # results = database.search(query)
-        # results = database.search(parent_paths='/users', username=username)
+        results = database.search(parent_paths='/users', username=username)
 
         n = len(results)
         if n == 0:

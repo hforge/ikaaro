@@ -57,10 +57,11 @@ class Field(BaseField):
     multilingual = False
     required = False
     title = None
-    readonly = False # Means the field should not be editable by the user
+    readonly = False  # Means the field should not be editable by the user
     datatype = None
     widget = None
     obsolete = False
+    encrypted = False
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
@@ -92,7 +93,14 @@ class Field(BaseField):
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'is_valid']
+        'default',
+        'multiple',
+        'multilingual',
+        'indexed',
+        'stored',
+        'is_valid',
+        'encrypted',
+    ]
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
@@ -179,25 +187,9 @@ class Metadata_Field(Field):
             return [ x.value for x in property ]
 
         # Simple
-        # decrypt here all encrypted = true
-        if getattr(self, 'encrypted', False):
-            value = decrypt(property.value)
-            if issubclass(self.get_datatype(), Unicode):
-                try:
-                    value = value.decode('utf8')
-                except (UnicodeDecodeError, AttributeError, UnicodeEncodeError):
-                    pass
-            return value
         return property.value
 
     def _set_value(self, resource, name, value, language=None, **kw):
-        if getattr(self, 'encrypted', False):
-            if isinstance(value, date):
-                value = encrypt(value.strftime(Date.format_date))
-            else:
-                value = encrypt(value)
-            if issubclass(self.get_datatype(), Unicode):
-                value = value.decode('unicode_escape')
         if language:
             kw['lang'] = language
         if kw:
