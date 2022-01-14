@@ -97,6 +97,7 @@ class UserEmail_Field(Email_Field):
     stored = True
     required = True
     unique = True
+    encrypted = True
 
 
 class UserPassword_Field(Password_Field):
@@ -125,7 +126,7 @@ class User(Folder):
     user_timezone = Char_Field()
     user_state = UserState_Field()
     groups = UserGroups_Field()
-    username = Char_Field(indexed=True, stored=True) # Backwards compatibility
+    username = Char_Field(indexed=True, stored=True, encrypted=True) # Backwards compatibility
 
     # Remove some fields
     title = None

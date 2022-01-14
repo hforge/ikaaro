@@ -54,10 +54,11 @@ class Field(BaseField):
     multilingual = False
     required = False
     title = None
-    readonly = False # Means the field should not be editable by the user
+    readonly = False  # Means the field should not be editable by the user
     datatype = None
     widget = None
     obsolete = False
+    encrypted = False
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
@@ -89,7 +90,14 @@ class Field(BaseField):
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'is_valid']
+        'default',
+        'multiple',
+        'multilingual',
+        'indexed',
+        'stored',
+        'is_valid',
+        'encrypted',
+    ]
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
@@ -263,6 +271,7 @@ class Datetime_Field(Metadata_Field):
 class Email_Field(Metadata_Field):
     datatype = Email()
     size = 40
+    encrypted = True
 
 
 
