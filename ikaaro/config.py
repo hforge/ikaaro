@@ -31,10 +31,10 @@ from itools.database import PhraseQuery
 from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
-from folder import Folder
-from messages import MSG_CHANGES_SAVED
-from utils import get_base_path_query
-from views import IconsView
+from .folder import Folder
+from .messages import MSG_CHANGES_SAVED
+from .utils import get_base_path_query
+from .views import IconsView
 
 
 ###########################################################################

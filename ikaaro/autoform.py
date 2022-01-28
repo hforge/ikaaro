@@ -30,9 +30,9 @@ from itools.stl import stl
 from itools.web import STLView
 
 # Import from ikaaro
-from buttons import Button
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
+from .buttons import Button
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
 
 
 ###########################################################################

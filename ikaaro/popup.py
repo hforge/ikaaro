@@ -34,10 +34,10 @@ from itools.web import STLView, ERROR
 from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from ikaaro
-from buttons import AddButton
-from datatypes import FileDataType
-import messages
-from utils import reduce_string, make_stl_template
+from .buttons import AddButton
+from .datatypes import FileDataType
+from .import messages
+from .utils import reduce_string, make_stl_template
 
 
 class SelectElement(AddButton):
@@ -75,9 +75,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('name', MSG(u'Name')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author'))]
+        ('name', MSG('Name')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author'))]
 
     table_actions = [SelectElement]
 
@@ -85,7 +85,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     def get_folder_classes(self):
         if self.folder_classes:
             return self.folder_classes
-        from folder import Folder
+        from .folder import Folder
         return (Folder,)
 
 
@@ -112,7 +112,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             else:
                 url = None
             path = target.abspath.get_pathto(item.abspath)
-            return unicode(path), url
+            return str(path), url
         else:
             proxy = super(AddBase_BrowseContent, self)
             return proxy.get_item_value(resource, context, item, column)
@@ -213,7 +213,7 @@ class DBResource_AddBase(STLView):
 
 
     def get_start(self, resource):
-        from file import File
+        from .file import File
         if isinstance(resource, File):
             return resource.parent
         return resource
@@ -232,7 +232,7 @@ class DBResource_AddBase(STLView):
 
 
     def get_namespace(self, resource, context):
-        from folder import Folder
+        from .folder import Folder
 
         # For the breadcrumb
         start = self.get_start(resource)
@@ -353,7 +353,7 @@ class DBResource_AddBase(STLView):
         # Check it is of the expected type
         cls = context.database.get_resource_class(mimetype)
         if not self.can_upload(cls):
-            error = u'The given file is not of the expected type.'
+            error = 'The given file is not of the expected type.'
             context.message = ERROR(error)
             return
 
@@ -400,11 +400,11 @@ class DBResource_AddLink(DBResource_AddBase):
     action_add_resource_schema = merge_dicts(DBResource_AddBase.schema,
                                              title=Unicode(mandatory=True))
 
-    text_values = {'title': MSG(u'Insert link'),
-       'browse': MSG(u'Browse and link to a File from the workspace'),
-       'extern': MSG(u'Type the URL of an external resource'),
-       'insert': MSG(u'Create a new page and link to it:'),
-       'upload': MSG(u'Upload a file to the current folder and link to it:'),
+    text_values = {'title': MSG('Insert link'),
+       'browse': MSG('Browse and link to a File from the workspace'),
+       'extern': MSG('Type the URL of an external resource'),
+       'insert': MSG('Create a new page and link to it:'),
+       'upload': MSG('Upload a file to the current folder and link to it:'),
        'method': ';add_link'}
 
 
@@ -421,7 +421,7 @@ class DBResource_AddLink(DBResource_AddBase):
         name = checkid(form['title'])
         # Check name validity
         if name is None:
-            context.message = MSG(u"Invalid title.")
+            context.message = MSG("Invalid title.")
             return
         # Get the container
         root = context.root
@@ -443,7 +443,7 @@ class DBResource_AddLink(DBResource_AddBase):
         """Return the type of page to add corresponding to the mode
         """
         if mode == 'tiny_mce':
-            from webpage import WebPage
+            from .webpage import WebPage
             return WebPage
         raise ValueError('Incorrect mode %s' % mode)
 
@@ -454,11 +454,11 @@ class DBResource_AddImage(DBResource_AddBase):
     element_to_add = 'image'
     browse_content_class = AddImage_BrowseContent
 
-    text_values = {'title': MSG(u'Insert image'),
-       'browse': MSG(u'Browse and insert an Image from the workspace'),
+    text_values = {'title': MSG('Insert image'),
+       'browse': MSG('Browse and insert an Image from the workspace'),
        'extern': None,
        'insert': None,
-       'upload': MSG(u'Upload an image to the current folder and insert it:'),
+       'upload': MSG('Upload an image to the current folder and insert it:'),
        'method': ';add_image'}
 
 
@@ -484,11 +484,11 @@ class DBResource_AddMedia(DBResource_AddImage):
     element_to_add = 'media'
     browse_content_class = AddMedia_BrowseContent
 
-    text_values = {'title': MSG(u'Insert media'),
-       'browse': MSG(u'Browse and insert a Media from the workspace'),
-       'extern': MSG(u'Type the URL of an external media'),
+    text_values = {'title': MSG('Insert media'),
+       'browse': MSG('Browse and insert a Media from the workspace'),
+       'extern': MSG('Type the URL of an external media'),
        'insert': None,
-       'upload': MSG(u'Upload a media to the current folder and insert it:'),
+       'upload': MSG('Upload a media to the current folder and insert it:'),
        'method': ';add_media'}
 
 

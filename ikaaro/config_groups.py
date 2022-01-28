@@ -20,14 +20,14 @@ from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from buttons import BrowseButton, Remove_BrowseButton, RenameButton
-from config import Configuration
-from config_common import NewResource_Local
-from messages import MSG_CHANGES_SAVED
-from order import OrderedFolder, OrderedFolder_BrowseContent
-from resource_ import DBResource
-from users_views import BrowseUsers
+from .autoadd import AutoAdd
+from .buttons import BrowseButton, Remove_BrowseButton, RenameButton
+from .config import Configuration
+from .config_common import NewResource_Local
+from .messages import MSG_CHANGES_SAVED
+from .order import OrderedFolder, OrderedFolder_BrowseContent
+from .resource_ import DBResource
+from .users_views import BrowseUsers
 
 
 

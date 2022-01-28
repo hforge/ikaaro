@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from ikaaro
-from utils import split_reference
+from .utils import split_reference
 
 
 def update_abspath_links(self, resource, field_name, source, target, languages,

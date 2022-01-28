@@ -21,10 +21,10 @@ from itools.gettext import MSG
 from itools.handlers import TextFile
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import File_Field, TextFile_Field
-from folder import Folder
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import File_Field, TextFile_Field
+from .folder import Folder
 
 
 class Theme(Folder):

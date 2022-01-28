@@ -23,10 +23,10 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import Boolean_Field, Select_Field, Text_Field, Textarea_Field
-from resource_ import DBResource
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import Boolean_Field, Select_Field, Text_Field, Textarea_Field
+from .resource_ import DBResource
 
 
 

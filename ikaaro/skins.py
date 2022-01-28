@@ -31,14 +31,14 @@ from itools.stl import stl
 from itools.web import get_context, ERROR, INFO
 
 # Import from ikaaro
-from folder import Folder
-from views import get_view_scripts
-from skins_views import LanguagesTemplate, LocationTemplate, TabsTemplate
+from .folder import Folder
+from .views import get_view_scripts
+from .skins_views import LanguagesTemplate, LocationTemplate, TabsTemplate
 
 
 class Skin(object):
 
-    class_title = MSG(u'Skin')
+    class_title = MSG('Skin')
     class_icon16 = '/ui/ikaaro/icons/16x16/skin.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/skin.png'
 
@@ -79,10 +79,10 @@ class Skin(object):
         if not root.is_allowed_to_view(context.user, here):
             return ''
         elif root is here:
-            template = MSG(u"{view_title} - {root_title}")
+            template = MSG("{view_title} - {root_title}")
             here_title = None
         else:
-            template = MSG(u"{here_title} - {view_title} - {root_title}")
+            template = MSG("{here_title} - {view_title} - {root_title}")
             here_title = here.get_title()
 
         # The view

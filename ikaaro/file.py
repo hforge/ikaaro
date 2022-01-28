@@ -34,15 +34,15 @@ from itools.office import MSPowerPointX as MSPowerPointXFile
 from itools.web import get_context
 
 # Import from ikaaro
-from database import Database
-from fields import Char_Field, File_Field, Owner_Field
-from file_views import File_NewInstance, File_View
-from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
-from file_views import File_Download
-from file_views import Image_View, Video_View, Archive_View
-from file_views import Flash_View
-from resource_ import DBResource
-from resource_views import DBResource_GetImage
+from .database import Database
+from .fields import Char_Field, File_Field, Owner_Field
+from .file_views import File_NewInstance, File_View
+from .file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
+from .file_views import File_Download
+from .file_views import Image_View, Video_View, Archive_View
+from .file_views import Flash_View
+from .resource_ import DBResource
+from .resource_views import DBResource_GetImage
 
 
 
@@ -53,9 +53,9 @@ class File(DBResource):
 
     class_id = 'file'
     class_version = '20090122'
-    class_title = MSG(u'File')
+    class_title = MSG('File')
     class_description = MSG(
-        u'Upload office documents, images, media files, etc.')
+        'Upload office documents, images, media files, etc.')
     class_icon16 = '/ui/ikaaro/icons/16x16/file.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/file.png'
     class_views = ['view', 'edit', 'externaledit', 'remove', 'subscribe',
@@ -89,7 +89,7 @@ class File(DBResource):
     #######################################################################
     def to_text(self):
         data = self.get_value('data')
-        return data and data.to_text() or u''
+        return data and data.to_text() or ''
 
 
     def get_files_to_archive(self, content=False):

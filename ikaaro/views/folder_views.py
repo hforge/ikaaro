@@ -44,7 +44,7 @@ from ikaaro.widgets import SelectWidget, TextWidget
 from ikaaro import messages
 
 # Import from here
-from base import IconsView, BrowseForm, ContextMenu
+from .base import IconsView, BrowseForm, ContextMenu
 
 
 class SearchTypes_Enumerate(Enumerate):

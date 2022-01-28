@@ -20,7 +20,7 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from fields import Abspath_Field
+from .fields import Abspath_Field
 
 
 ###########################################################################

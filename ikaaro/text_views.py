@@ -27,18 +27,18 @@ from itools.handlers import TextFile
 from itools.web import STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm
-from buttons import Button, Remove_BrowseButton
-from fields import File_Field
-from file_views import File_Edit
-import messages
-from views import BrowseForm
-from widgets import EditAreaWidget, get_default_widget
+from .autoform import AutoForm
+from .buttons import Button, Remove_BrowseButton
+from .fields import File_Field
+from .file_views import File_Edit
+from . import messages
+from .views import BrowseForm
+from .widgets import EditAreaWidget, get_default_widget
 
 
 class Text_Edit(File_Edit):
 
-    title = MSG(u'Edit')
+    title = MSG('Edit')
     icon = 'edit.png'
 
     fields = ['title', 'data', 'file', 'description', 'subject', 'share']
@@ -77,7 +77,7 @@ class Text_Edit(File_Edit):
 class Text_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     icon = 'view.png'
     template = '/ui/ikaaro/text/view.xml'
 
@@ -103,7 +103,7 @@ class CSS_Edit(Text_Edit):
 class PO_Edit(STLView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
+    title = MSG('Edit')
     template = '/ui/ikaaro/PO_edit.xml'
     schema = {
         'msgctxt': Unicode,
@@ -129,9 +129,9 @@ class PO_Edit(STLView):
         # Msgid and msgstr
         if units:
             unit = units[index-1]
-            msgctxt = u'' if unit.context is None else ''.join(unit.context)
-            msgid = u''.join(unit.source)
-            msgstr = u''.join(unit.target)
+            msgctxt = '' if unit.context is None else ''.join(unit.context)
+            msgid = ''.join(unit.source)
+            msgstr = ''.join(unit.target)
         else:
             msgctxt = None
             msgid = None
@@ -169,7 +169,7 @@ class CSV_View(BrowseForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'
-    title = MSG(u'View')
+    title = MSG('View')
     schema = {
         'ids': Integer(mandatory=True, multiple=True),
     }
@@ -238,7 +238,7 @@ class CSV_View(BrowseForm):
         handler = resource.get_csv_handler()
         handler.del_rows(ids)
         # Ok
-        context.message = INFO(u'Row deleted.')
+        context.message = INFO('Row deleted.')
 
 
 
@@ -268,10 +268,10 @@ class RowForm(AutoForm):
 
 class CSV_AddRow(RowForm):
 
-    title = MSG(u'Add Row')
+    title = MSG('Add Row')
     icon = 'new.png'
     actions = [Button(access=True, css='btn btn-primary',
-        title=MSG(u'Add'), show=True)]
+        title=MSG('Add'), show=True)]
 
 
     def action(self, resource, context, form):
@@ -279,7 +279,7 @@ class CSV_AddRow(RowForm):
         handler = resource.get_csv_handler()
         row = handler.add_row(row)
         # Ok
-        message = INFO(u'New row added.')
+        message = INFO('New row added.')
         goto = ';edit_row?index=%s' % row.number
         return context.come_back(message, goto=goto)
 
@@ -287,7 +287,7 @@ class CSV_AddRow(RowForm):
 
 class CSV_EditRow(RowForm):
 
-    title = MSG(u'Edit row #{id}')
+    title = MSG('Edit row #{id}')
     query_schema = {
         'index': Integer,
     }

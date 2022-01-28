@@ -37,14 +37,14 @@ from itools.web import BaseView, FormError, STLView, INFO
 from itools.xml import get_element, TEXT
 
 # Import from ikaaro
-from autoform import AutoForm
-from buttons import Button
-from config_captcha import CaptchaDatatype, CaptchaWidget
-from datatypes import FileDataType
-from folder import Folder
-from messages import MSG_UNEXPECTED_MIMETYPE
-from widgets import FileWidget
-from widgets import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
+from .autoform import AutoForm
+from .buttons import Button
+from .config_captcha import CaptchaDatatype, CaptchaWidget
+from .datatypes import FileDataType
+from .folder import Folder
+from .messages import MSG_UNEXPECTED_MIMETYPE
+from .widgets import FileWidget
+from .widgets import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 
 
 class NotAllowedView(STLView):
@@ -130,8 +130,8 @@ class ContactOptions(Enumerate):
 class ContactForm(AutoForm):
 
     access = True
-    title = MSG(u'Contact')
-    actions = [Button(access=True, css='btn btn-primary', title=MSG(u'Send'))]
+    title = MSG('Contact')
+    actions = [Button(access=True, css='btn btn-primary', title=MSG('Send'))]
     query_schema = {'to': String,
                     'subject': Unicode,
                     'message_body': Unicode}
@@ -153,13 +153,13 @@ class ContactForm(AutoForm):
         if len(ContactOptions(resource=resource).get_options()) == 1:
             to = HiddenWidget('to')
         else:
-            to = SelectWidget('to', title=MSG(u'Recipient'))
+            to = SelectWidget('to', title=MSG('Recipient'))
 
         return [
             to,
-            TextWidget('from', title=MSG(u'Your email address'), size=40),
-            TextWidget('subject', title=MSG(u'Message subject'), size=40),
-            MultilineWidget('message_body', title=MSG(u'Message body'),
+            TextWidget('from', title=MSG('Your email address'), size=40),
+            TextWidget('subject', title=MSG('Message subject'), size=40),
+            MultilineWidget('message_body', title=MSG('Message body'),
                             rows=8, cols=50),
             CaptchaWidget('captcha')]
 
@@ -200,13 +200,13 @@ class ContactForm(AutoForm):
         root = resource.get_root()
         root.send_email(contact, subject, reply_to=reply_to, text=body)
         # Ok
-        context.message = INFO(u'Message sent.')
+        context.message = INFO('Message sent.')
 
 
 class PoweredBy(STLView):
 
     access = True
-    title = MSG(u'Powered by')
+    title = MSG('Powered by')
     template = '/ui/ikaaro/root/powered-by.xml'
 
 
@@ -225,10 +225,10 @@ class PoweredBy(STLView):
 
         if is_admin:
             package2title = {
-                'gio': u'pygobject',
-                'lpod': u'lpOD',
-                'sys': u'Python',
-                'os': MSG(u'Operating System')}
+                'gio': 'pygobject',
+                'lpod': 'lpOD',
+                'sys': 'Python',
+                'os': MSG('Operating System')}
             packages = [
                 {'name': package2title.get(x, x),
                  'version': y or MSG('no version found')}
@@ -236,7 +236,7 @@ class PoweredBy(STLView):
 
             location = (getuser(), gethostname(), context.server.target)
             namespace['packages'] = packages
-            namespace['location'] = u'%s@%s:%s' % location
+            namespace['location'] = '%s@%s:%s' % location
 
         # Ok
         return namespace
@@ -246,18 +246,18 @@ class PoweredBy(STLView):
 class UpdateDocs(AutoForm):
 
     access = 'is_admin'
-    title = MSG(u'Update docs')
+    title = MSG('Update docs')
 
     schema = {
         'file': FileDataType(mandatory=True),
         'language': String(mandatory=True, default='en')}
     widgets = [
         FileWidget('file'),
-        TextWidget('language', title=MSG(u'Language'),
-                   tip=MSG(u'"en", "fr", ...'))]
+        TextWidget('language', title=MSG('Language'),
+                   tip=MSG('"en", "fr", ...'))]
 
     actions = [
-        Button(access='is_admin', css='btn btn-primary', title=MSG(u'Upload'))]
+        Button(access='is_admin', css='btn btn-primary', title=MSG('Upload'))]
 
 
     def _get_form(self, resource, context):
@@ -296,7 +296,7 @@ class UpdateDocs(AutoForm):
                 target = XHTMLFile()
                 elem = get_element(source.events, 'div', **{'class': 'body'})
                 if not elem:
-                    print("E {}".format(path))
+                    print(("E {}".format(path)))
                     return None
                 elements = elem.get_content_elements()
                 elements = rewrite_uris(elements, rewrite)
@@ -311,7 +311,7 @@ class UpdateDocs(AutoForm):
                 return body
             # Unknown
             else:
-                print('X {} {}'.format(path, mimetype))
+                print(('X {} {}'.format(path, mimetype)))
                 return body
 
         def postproc(file):
@@ -325,11 +325,11 @@ class UpdateDocs(AutoForm):
             elem = get_element(events, 'h1')
             if elem:
                 title = [
-                    unicode(x[1], 'utf8')
+                    str(x[1], 'utf8')
                     for x in elem.get_content_elements() if x[0] == TEXT ]
-                if title[-1] == u'¶':
+                if title[-1] == '¶':
                     title.pop()
-                title = u''.join(title)
+                title = ''.join(title)
                 file.set_property('title', title, language)
                 handler.events = events[:elem.start] + events[elem.end+1:]
 
@@ -344,5 +344,5 @@ class UpdateDocs(AutoForm):
         docs.extract_archive(handler, language, filter, postproc, True)
 
         # Ok
-        message = MSG(u'Documentation updated.')
+        message = MSG('Documentation updated.')
         return context.come_back(message, goto='./docs')

@@ -29,13 +29,13 @@ from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import AutoForm
-from widgets import HiddenWidget, timestamp_widget
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from fields import Field
-import messages
-from views import ContextMenu
+from .autoform import AutoForm
+from .widgets import HiddenWidget, timestamp_widget
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .fields import Field
+from . import messages
+from .views import ContextMenu
 
 
 class EditLanguageMenu(ContextMenu):

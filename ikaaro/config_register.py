@@ -22,16 +22,16 @@ from itools.html import stream_is_empty
 from itools.web import STLView
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from autoform import AutoForm
-from config import Configuration
-from config_captcha import Captcha_Field
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from emails import send_email
-from fields import Boolean_Field, HTMLFile_Field
-from resource_ import DBResource
-from widgets import Widget
+from .autoedit import AutoEdit
+from .autoform import AutoForm
+from .config import Configuration
+from .config_captcha import Captcha_Field
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .emails import send_email
+from .fields import Boolean_Field, HTMLFile_Field
+from .resource_ import DBResource
+from .widgets import Widget
 
 
 class TermsOfService_View(STLView):

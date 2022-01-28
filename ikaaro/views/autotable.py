@@ -32,7 +32,7 @@ from ikaaro.fields import Field, Char_Field
 from ikaaro.utils import get_base_path_query
 
 # Import from here
-from folder_views import Folder_BrowseContent
+from .folder_views import Folder_BrowseContent
 
 
 class AutoTable(Folder_BrowseContent):

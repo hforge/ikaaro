@@ -26,16 +26,16 @@ from itools.web import get_context
 from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
-from autoadd import AutoAdd
-from autoedit import AutoEdit
-from buttons import Remove_BrowseButton
-from config import Configuration
-from config_common import NewResource_Local
-from enumerates import Groups_Datatype
-from fields import Select_Field
-from folder import Folder
-from resource_ import DBResource
-from utils import get_base_path_query
+from .autoadd import AutoAdd
+from .autoedit import AutoEdit
+from .buttons import Remove_BrowseButton
+from .config import Configuration
+from .config_common import NewResource_Local
+from .enumerates import Groups_Datatype
+from .fields import Select_Field
+from .folder import Folder
+from .resource_ import DBResource
+from .utils import get_base_path_query
 
 
 ###########################################################################

@@ -24,19 +24,19 @@ from itools.gettext import MSG
 from itools.web import ERROR, get_context
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from enumerates import UserGroups_Datatype
-from fields import Char_Field, Datetime_Field, Email_Field, File_Field
-from fields import Password_Field, SelectAbspath_Field, Select_Field, Text_Field
-from folder import Folder
-from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
-from users_views import User_ConfirmRegistration, User_EditAccount
-from users_views import User_EditPassword, User_EditPreferences, User_Profile
-from users_views import User_ResendConfirmation, User_ChangePasswordForgotten
-from users_views import Users_Browse, Users_AddUser
-from utils import get_secure_hash, generate_password
-from widgets import CheckboxWidget
+from .autoedit import AutoEdit
+from .config import Configuration
+from .enumerates import UserGroups_Datatype
+from .fields import Char_Field, Datetime_Field, Email_Field, File_Field
+from .fields import Password_Field, SelectAbspath_Field, Select_Field, Text_Field
+from .folder import Folder
+from .messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
+from .users_views import User_ConfirmRegistration, User_EditAccount
+from .users_views import User_EditPassword, User_EditPreferences, User_Profile
+from .users_views import User_ResendConfirmation, User_ChangePasswordForgotten
+from .users_views import Users_Browse, Users_AddUser
+from .utils import get_secure_hash, generate_password
+from .widgets import CheckboxWidget
 
 
 class Lastlog_Field(Datetime_Field):
@@ -51,7 +51,7 @@ class UserGroups_Field(SelectAbspath_Field):
     datatype = UserGroups_Datatype()
     indexed = True
     multiple = True
-    title = MSG(u'Groups')
+    title = MSG('Groups')
     widget = CheckboxWidget
 
 
@@ -65,7 +65,7 @@ class UserGroups_Field(SelectAbspath_Field):
 
 class Firstname_Field(Text_Field):
 
-    title = MSG(u'First Name')
+    title = MSG('First Name')
     multilingual = False
     indexed = True
     stored = True
@@ -73,7 +73,7 @@ class Firstname_Field(Text_Field):
 
 class Lastname_Field(Text_Field):
 
-    title = MSG(u'Last Name')
+    title = MSG('Last Name')
     multilingual = False
     indexed = True
     stored = True
@@ -85,14 +85,14 @@ class UserState_Field(Select_Field):
     parameters_schema = {'key': String()}
     default = 'active'
     options = [
-        {'name': 'active', 'value': MSG(u'Active')},
-        {'name': 'pending', 'value': MSG(u'Pending confirmation')},
-        {'name': 'inactive', 'value': MSG(u'Inactive')}]
+        {'name': 'active', 'value': MSG('Active')},
+        {'name': 'pending', 'value': MSG('Pending confirmation')},
+        {'name': 'inactive', 'value': MSG('Inactive')}]
 
 
 class UserEmail_Field(Email_Field):
 
-    title = MSG(u'E-mail Address')
+    title = MSG('E-mail Address')
     indexed = True
     stored = True
     required = True
@@ -110,7 +110,7 @@ class User(Folder):
 
     class_id = 'user'
     class_version = '20081217'
-    class_title = MSG(u'User')
+    class_title = MSG('User')
     class_icon_css = 'fa-user'
     class_views = ['profile', 'edit_account', 'edit_preferences',
                    'edit_password', 'edit_groups']
@@ -121,7 +121,7 @@ class User(Folder):
     lastname = Lastname_Field()
     email = UserEmail_Field()
     password = UserPassword_Field()
-    avatar = File_Field(title=MSG(u'Avatar'))
+    avatar = File_Field(title=MSG('Avatar'))
     user_language = Char_Field()
     user_timezone = Char_Field()
     user_state = UserState_Field()
@@ -191,8 +191,8 @@ class User(Folder):
             error = MSG_LOGIN_WRONG_NAME_OR_PASSWORD
         elif self.get_value('user_state') == 'inactive':
             error = ERROR(
-                u'Your account has been canceled, contact the administrator '
-                u' if you want to get access again.')
+                'Your account has been canceled, contact the administrator '
+                ' if you want to get access again.')
         else:
             error = None
             context.login(self, use_session=use_session)
@@ -257,7 +257,7 @@ class User(Folder):
     edit_preferences = User_EditPreferences()
     edit_password = User_EditPassword()
     edit_groups = AutoEdit(access='is_admin', fields=['groups'],
-                           title=MSG(u'Edit groups'))
+                           title=MSG('Edit groups'))
 
 
 
@@ -267,8 +267,8 @@ class User(Folder):
 class Users(Folder):
 
     class_id = 'users'
-    class_title = MSG(u'Users')
-    class_description = MSG(u'Manage users.')
+    class_title = MSG('Users')
+    class_description = MSG('Manage users.')
     class_icon_css = 'fa-user'
     class_views = ['browse_users', 'add_user', 'edit']
 

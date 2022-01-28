@@ -21,7 +21,7 @@ from datetime import date
 from base64 import decodestring, encodestring
 from datetime import timedelta
 from marshal import dumps, loads
-from urllib import quote, unquote
+from urllib.parse import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
@@ -175,7 +175,7 @@ class HTMLBody(XHTMLBody):
     def encode(value):
         if value is None:
             return ''
-        if type(value) is unicode:
+        if type(value) is str:
             return value.encode('utf-8')
         if not is_xml_stream(value):
             value = value.get_body().get_content_elements()
@@ -187,25 +187,25 @@ class HTMLBody(XHTMLBody):
 # Enumerates
 ###########################################################################
 days = {
-    0: MSG(u'Monday'),
-    1: MSG(u'Tuesday'),
-    2: MSG(u'Wednesday'),
-    3: MSG(u'Thursday'),
-    4: MSG(u'Friday'),
-    5: MSG(u'Saturday'),
-    6: MSG(u'Sunday')}
+    0: MSG('Monday'),
+    1: MSG('Tuesday'),
+    2: MSG('Wednesday'),
+    3: MSG('Thursday'),
+    4: MSG('Friday'),
+    5: MSG('Saturday'),
+    6: MSG('Sunday')}
 
 
 class DaysOfWeek(Enumerate):
 
     options = [
-        {'name':'1', 'value': MSG(u'Monday'), 'shortname': 'MO'},
-        {'name':'2', 'value': MSG(u'Tuesday'), 'shortname': 'TU'},
-        {'name':'3', 'value': MSG(u'Wednesday'), 'shortname': 'WE'},
-        {'name':'4', 'value': MSG(u'Thursday'), 'shortname': 'TH'},
-        {'name':'5', 'value': MSG(u'Friday'), 'shortname': 'FR'},
-        {'name':'6', 'value': MSG(u'Saturday'), 'shortname': 'SA'},
-        {'name':'7', 'value': MSG(u'Sunday'), 'shortname': 'SU'}]
+        {'name': '1', 'value': MSG('Monday'), 'shortname': 'MO'},
+        {'name': '2', 'value': MSG('Tuesday'), 'shortname': 'TU'},
+        {'name': '3', 'value': MSG('Wednesday'), 'shortname': 'WE'},
+        {'name': '4', 'value': MSG('Thursday'), 'shortname': 'TH'},
+        {'name': '5', 'value': MSG('Friday'), 'shortname': 'FR'},
+        {'name': '6', 'value': MSG('Saturday'), 'shortname': 'SA'},
+        {'name': '7', 'value': MSG('Sunday'), 'shortname': 'SU'}]
 
     @classmethod
     def get_shortname(cls, name):
@@ -226,9 +226,9 @@ class Boolean3(Enumerate):
     """ Boolean 3 states : Yes/No/Any useful on search form."""
     default = ''
     options = [
-        #{'name': '', 'value': u''},
-        {'name': '1', 'value': MSG(u'Yes')},
-        {'name': '0', 'value': MSG(u'No')}]
+        #{'name': '', 'value': ''},
+        {'name': '1', 'value': MSG('Yes')},
+        {'name': '0', 'value': MSG('No')}]
 
     @staticmethod
     def decode(value):
@@ -276,18 +276,18 @@ class Days(IntegerRange):
 class Months(Enumerate):
 
     options = [
-        {'name': '1', 'value': MSG(u'January')},
-        {'name': '2', 'value': MSG(u'February')},
-        {'name': '3', 'value': MSG(u'March')},
-        {'name': '4', 'value': MSG(u'April')},
-        {'name': '5', 'value': MSG(u'May')},
-        {'name': '6', 'value': MSG(u'June')},
-        {'name': '7', 'value': MSG(u'July')},
-        {'name': '8', 'value': MSG(u'August')},
-        {'name': '9', 'value': MSG(u'September')},
-        {'name': '10', 'value': MSG(u'October')},
-        {'name': '11', 'value': MSG(u'November')},
-        {'name': '12', 'value': MSG(u'December')}]
+        {'name': '1', 'value': MSG('January')},
+        {'name': '2', 'value': MSG('February')},
+        {'name': '3', 'value': MSG('March')},
+        {'name': '4', 'value': MSG('April')},
+        {'name': '5', 'value': MSG('May')},
+        {'name': '6', 'value': MSG('June')},
+        {'name': '7', 'value': MSG('July')},
+        {'name': '8', 'value': MSG('August')},
+        {'name': '9', 'value': MSG('September')},
+        {'name': '10', 'value': MSG('October')},
+        {'name': '11', 'value': MSG('November')},
+        {'name': '12', 'value': MSG('December')}]
 
 
 
@@ -297,5 +297,5 @@ class Years(Enumerate):
 
     @classmethod
     def get_options(cls):
-        return [ {'name': str(d), 'value': str(d)}
-                 for d in range(cls.start, date.today().year) ]
+        return [{'name': str(d), 'value': str(d)}
+                 for d in range(cls.start, date.today().year)]

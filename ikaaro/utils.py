@@ -126,7 +126,7 @@ u'Spanish'
 def reduce_string(title='', word_treshold=15, phrase_treshold=40):
     """Reduce words and string size.
     """
-    ellipsis = u'…' if type(title) is unicode else '…'
+    ellipsis = '…' if type(title) is str else '…'
     words = title.strip().split(' ')
     for i, word in enumerate(words):
         if len(word) > word_treshold:
@@ -148,7 +148,7 @@ encodings = ['utf-8', 'windows-1252', 'cp437']
 def process_name(name):
     for encoding in encodings:
         try:
-            title = unicode(name, encoding)
+            title = str(name, encoding)
             checkid_name = checkid(title, soft=False)
             break
         except UnicodeError:
@@ -170,7 +170,7 @@ encodings = ['utf-8', 'windows-1252', 'cp437']
 def to_utf8(data):
     for encoding in encodings:
         try:
-            return unicode(data, encoding).encode('utf-8')
+            return str(data, encoding).encode('utf-8')
         except UnicodeError:
             pass
 
@@ -303,7 +303,7 @@ def split_reference(ref):
     # XXX specific case for the menu
     # Be robust if the path is multilingual
     type_ref = type(ref)
-    if type_ref is unicode:
+    if type_ref is str:
         ref = Unicode.encode(ref)
     if type_ref is not Reference:
         ref = get_reference(ref)

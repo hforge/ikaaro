@@ -20,8 +20,8 @@ from itools.gettext import MSG
 from itools.stl import STLTemplate
 
 # Import from ikaaro
-from datatypes import CopyCookie
-from utils import make_stl_template
+from .datatypes import CopyCookie
+from .utils import make_stl_template
 
 
 class Button(STLTemplate):

@@ -23,16 +23,16 @@ from itools.gettext import MSG
 from itools.web import BaseView
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from database import Database
-from fields import HTMLFile_Field
-from file import File
+from .autoadd import AutoAdd
+from .database import Database
+from .fields import HTMLFile_Field
+from .file import File
 
 
 
 class WebPage_View(BaseView):
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     icon = 'view.png'
 
 
@@ -47,13 +47,13 @@ class WebPage_View(BaseView):
 class WebPage(File):
 
     class_id = 'webpage'
-    class_title = MSG(u'Web Page')
-    class_description = MSG(u'Create and publish a Web Page.')
+    class_title = MSG('Web Page')
+    class_description = MSG('Create and publish a Web Page.')
     class_icon16 = '/ui/ikaaro/icons/16x16/html.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/html.png'
 
 
-    data = HTMLFile_Field(title=MSG(u'Body'))
+    data = HTMLFile_Field(title=MSG('Body'))
 
 
     #######################################################################

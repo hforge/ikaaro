@@ -18,11 +18,13 @@
 from datetime import datetime
 import json
 from logging import getLogger
-from pytz import timezone
 import time
 
+#Import from packages
+from pytz import timezone
 from jwcrypto.jwt import JWT, JWTExpired
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
+
 # Import from itools
 from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, is_prototype, local_tz
@@ -44,10 +46,10 @@ from itools.web.exceptions import InvalidJWTSignatureException
 from itools.web.exceptions import JWTExpiredException
 
 # Import from ikaaro
-from skins import skin_registry
-from constants import JWT_EXPIRE, JWT_ISSUER
-from constants import SESSION_KEY
-from server import get_server
+from .skins import skin_registry
+from .constants import JWT_EXPIRE, JWT_ISSUER
+from .constants import SESSION_KEY
+from .server import get_server
 
 log = getLogger("ikaaro.web")
 

@@ -21,7 +21,7 @@
 
 # Import from the Standard Library
 import fnmatch
-from cStringIO import StringIO
+from io import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
 import uuid
@@ -40,17 +40,17 @@ from itools.web import BaseView, get_context, ERROR
 from itools.web.exceptions import FormError
 
 # Import from ikaaro
-from views.folder_views import Folder_BrowseContent, Folder_PreviewContent
-from views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
+from .views.folder_views import Folder_BrowseContent, Folder_PreviewContent
+from .views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from database import Database
-from datatypes import guess_mimetype
-from exceptions import ConsistencyError
-from messages import MSG_NAME_CLASH
-from resource_ import DBResource
-from utils import process_name, tidy_html, get_base_path_query
+from .autoedit import AutoEdit
+from .database import Database
+from .datatypes import guess_mimetype
+from .exceptions import ConsistencyError
+from .messages import MSG_NAME_CLASH
+from .resource_ import DBResource
+from .utils import process_name, tidy_html, get_base_path_query
 
 
 
@@ -58,8 +58,8 @@ class Folder(DBResource):
 
     class_id = "folder"
     class_version = "20071215"
-    class_title = MSG(u"Folder")
-    class_description = MSG(u"Organize your files and documents with folders.")
+    class_title = MSG("Folder")
+    class_description = MSG("Organize your files and documents with folders.")
     class_icon16 = "/ui/ikaaro/icons/16x16/folder.png"
     class_icon48 = "/ui/ikaaro/icons/48x48/folder.png"
     class_views = [
@@ -197,7 +197,7 @@ class Folder(DBResource):
     # API
     #######################################################################
     def _make_file(self, name, filename, mimetype, body, default_language):
-        from webpage import WebPage
+        from .webpage import WebPage
 
         if type(name) is not str:
             raise TypeError('expected string, got %s' % repr(name))

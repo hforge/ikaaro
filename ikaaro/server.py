@@ -66,11 +66,11 @@ from itools.web.dispatcher import URIDispatcher
 from itools.web.router import RequestMethod
 
 # Import from ikaaro.web
-from database import get_database
-from datatypes import ExpireValue
-from views import CachedStaticView
-from skins import skin_registry
-from views import IkaaroStaticView
+from .database import get_database
+from .datatypes import ExpireValue
+from .views import CachedStaticView
+from .skins import skin_registry
+from .views import IkaaroStaticView
 
 log_ikaaro = getLogger("ikaaro")
 log_access = getLogger("ikaaro.access")
@@ -860,7 +860,7 @@ class Server(object):
         # Build fake context
         with database.init_context() as context:
             context.is_cron = True
-            context.git_message = u'[CRON]'
+            context.git_message = '[CRON]'
             # Go
             t0 = time()
             catalog = database.catalog

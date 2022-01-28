@@ -59,9 +59,8 @@ class Api_DocView(STLView):
                   'methods': view.known_methods,
                   'description': view.__doc__}
             namespace['endpoints'].append(kw)
-            i +=1
+            i += 1
         return namespace
-
 
     def get_view_query_as_list(self, view, schema):
         l = []
@@ -74,14 +73,11 @@ class Api_DocView(STLView):
         return l
 
 
-
-
 class Api_View(ItoolsView):
 
     response_schema = {}
     route = None
     use_cookies = False
-
 
     @classmethod
     def get_route(cls):
@@ -89,7 +85,6 @@ class Api_View(ItoolsView):
         :return: The route associated to the class
         """
         return cls.route
-
 
     def get_resource(self, context):
         return context.resource

@@ -44,18 +44,18 @@ from itools.web import BaseView, get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
-from constants import DEBUG
-from config import Configuration
-from config_register import RegisterForm, TermsOfService_View
-from context import CMSContext
-from fields import Char_Field
-from folder import Folder
-from resource_views import LoginView
-from skins import skin_registry
-from root_views import PoweredBy, ContactForm
-from root_views import NotFoundView, ForbiddenView, NotAllowedView
-from root_views import UploadStatsView, UpdateDocs, UnavailableView
-from update import UpdateInstanceView
+from .constants import DEBUG
+from .config import Configuration
+from .config_register import RegisterForm, TermsOfService_View
+from .context import CMSContext
+from .fields import Char_Field
+from .folder import Folder
+from .resource_views import LoginView
+from .skins import skin_registry
+from .root_views import PoweredBy, ContactForm
+from .root_views import NotFoundView, ForbiddenView, NotAllowedView
+from .root_views import UploadStatsView, UpdateDocs, UnavailableView
+from .update import UpdateInstanceView
 
 log = getLogger("ikaaro")
 
@@ -93,7 +93,7 @@ class Root(Folder):
 
     class_id = 'iKaaro'
     class_version = '20180428'
-    class_title = MSG(u'iKaaro')
+    class_title = MSG('iKaaro')
     class_icon16 = '/ui/ikaaro/icons/16x16/root.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/root.png'
     class_skin = 'aruni'
@@ -110,7 +110,7 @@ class Root(Folder):
     def init_resource(self, email, password):
         super(Root, self).init_resource()
         # Configuration
-        title = {'en': u'Configuration'}
+        title = {'en': 'Configuration'}
         self.make_resource('config', Configuration, title=title)
         # First user
         user = self.make_user(email, password)
@@ -142,7 +142,7 @@ class Root(Folder):
         if user is None:
             username = userid.rsplit('/', 1)[-1]
             log.warning('unkwnown user {}'.format(username))
-            return unicode(username)
+            return str(username)
         # Ok
         return user.get_title()
 
@@ -159,7 +159,7 @@ class Root(Folder):
 
     def get_internal_error_namespace(self, context):
         namespace = {
-            "message": MSG(u"Erreur de l'application"),
+            "message": MSG("Erreur de l'application"),
         }
         if not DEBUG:
             return namespace
@@ -235,10 +235,10 @@ class Root(Folder):
         email = context.server.config.get_value('log-email')
         # We send an email with the traceback
         if email:
-            headers = u'\n'.join([u'%s => %s' % (x, y)
+            headers = '\n'.join(['%s => %s' % (x, y)
                                     for x, y in context.get_headers()])
-            subject = MSG(u'Internal server error').gettext()
-            text = u'%s\n\n%s\n\n%s' % (context.uri,
+            subject = MSG('Internal server error').gettext()
+            text = '%s\n\n%s\n\n%s' % (context.uri,
                                         traceback.format_exc(),
                                         headers)
             self.send_email(email, subject, text=text)
@@ -395,7 +395,7 @@ class Root(Folder):
                    html=None, encoding='utf-8', subject_with_host=True,
                    return_receipt=False, attachment=None):
         # 1. Check input data
-        if type(subject) is unicode:
+        if type(subject) is str:
             subject = subject.encode(encoding)
         elif isinstance(subject, MSG):
             subject = subject.gettext()
@@ -404,9 +404,9 @@ class Root(Folder):
 
         if len(subject.splitlines()) > 1:
             raise ValueError('the subject cannot have more than one line')
-        if text and not isinstance(text, unicode):
+        if text and not isinstance(text, str):
             raise TypeError('the text must be a Unicode string')
-        if html and not isinstance(html, unicode):
+        if html and not isinstance(html, str):
             raise TypeError('the html must be a Unicode string')
 
         # 2. Local variables
@@ -601,7 +601,7 @@ class Root(Folder):
         return self.get_user(brain.name)
 
 
-    update_20170106_title = MSG(u'Add uuid to all resources')
+    update_20170106_title = MSG('Add uuid to all resources')
     def update_20170106(self):
         i = 0
         context = get_context()
