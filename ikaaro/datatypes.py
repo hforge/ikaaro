@@ -18,7 +18,7 @@
 from datetime import date
 
 # Import from the Standard Library
-from base64 import decodestring, encodestring
+from base64 import decodebytes, encodebytes
 from datetime import timedelta
 from marshal import dumps, loads
 from urllib.parse import quote, unquote
@@ -80,12 +80,12 @@ class Password_Datatype(DataType):
 
     @staticmethod
     def decode(data):
-        return decodestring(unquote(data))
+        return decodebytes(unquote(data))
 
 
     @staticmethod
     def encode(value):
-        return quote(encodestring(value))
+        return quote(encodebytes(value))
 
 
 class ChoosePassword_Datatype(String):
@@ -232,7 +232,7 @@ class Boolean3(Enumerate):
 
     @staticmethod
     def decode(value):
-        if value is '':
+        if value == '':
             return None
         return bool(int(value))
 

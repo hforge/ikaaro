@@ -37,12 +37,12 @@ from .widgets import CheckboxWidget, RadioWidget, SelectWidget
 class FieldType_Field(Select_Field):
 
     options = [
-        {'name': 'boolean', 'value': MSG(u'Boolean')},
-        {'name': 'date', 'value': MSG(u'Date')},
-        {'name': 'email', 'value': MSG(u'Email')},
-        {'name': 'integer', 'value': MSG(u'Integer')},
-        {'name': 'text', 'value': MSG(u'Text')},
-        {'name': 'textarea', 'value': MSG(u'Textarea')}]
+        {'name': 'boolean', 'value': MSG('Boolean')},
+        {'name': 'date', 'value': MSG('Date')},
+        {'name': 'email', 'value': MSG('Email')},
+        {'name': 'integer', 'value': MSG('Integer')},
+        {'name': 'text', 'value': MSG('Text')},
+        {'name': 'textarea', 'value': MSG('Textarea')}]
 
     fields_map = {
         'boolean': Boolean_Field,
@@ -57,9 +57,9 @@ class FieldType_Field(Select_Field):
 class ModelField_Base(DBResource):
 
     # Fields
-    required = Boolean_Field(title=MSG(u'Required'))
-    multiple = Boolean_Field(title=MSG(u'Multiple'))
-    tip = Text_Field(title=MSG(u'Tip'))
+    required = Boolean_Field(title=MSG('Required'))
+    multiple = Boolean_Field(title=MSG('Multiple'))
+    tip = Text_Field(title=MSG('Tip'))
 
 
     def get_owner(self):
@@ -93,7 +93,7 @@ class ModelField_Base(DBResource):
 class ModelField_Inherited(ModelField_Base):
 
     class_id = 'model-field-inherited'
-    class_title = MSG(u'Inherited field')
+    class_title = MSG('Inherited field')
     class_views = ['edit']
 
 
@@ -101,10 +101,10 @@ class ModelField_Inherited(ModelField_Base):
 class ModelField_Standard(ModelField_Base):
 
     class_id = 'model-field-standard'
-    class_title = MSG(u'Standard field')
+    class_title = MSG('Standard field')
 
     # Fields
-    field_type = FieldType_Field(required=True, title=MSG(u'Field type'))
+    field_type = FieldType_Field(required=True, title=MSG('Field type'))
 
     # API
     def build_field(self):
@@ -124,7 +124,7 @@ class ModelField_Standard(ModelField_Base):
 class Choice(DBResource):
 
     class_id = 'model-field-choice'
-    class_title = MSG(u'Choice')
+    class_title = MSG('Choice')
 
     # Views
     class_views = ['edit']
@@ -140,28 +140,28 @@ class ModelField_Choices_Browse(OrderedFolder_BrowseContent):
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('abspath', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('format', MSG(u'Type')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('order', MSG(u'Order'))]
+        ('abspath', MSG('Path')),
+        ('title', MSG('Title')),
+        ('format', MSG('Type')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author')),
+        ('order', MSG('Order'))]
     table_actions = [Remove_BrowseButton]
 
 
 class ChoicesWidget_Field(Select_Field):
 
-    options = [{'name': 'radio-checkbox', 'value': u'Radio/Checkbox'},
-               {'name': 'select', 'value': u'Select'}]
+    options = [{'name': 'radio-checkbox', 'value': 'Radio/Checkbox'},
+               {'name': 'select', 'value': 'Select'}]
 
 
 class ModelField_Choices(OrderedFolder, ModelField_Base):
 
     class_id = 'model-field-choices'
-    class_title = MSG(u'Choices field')
+    class_title = MSG('Choices field')
 
     # Fields
-    choices_widget = ChoicesWidget_Field(title=MSG(u'Widget to use'),
+    choices_widget = ChoicesWidget_Field(title=MSG('Widget to use'),
                                          required=True)
 
     def get_document_types(self):
@@ -186,7 +186,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
     # Views
     class_views = ['browse_content', 'add_choice', 'edit']
     browse_content = ModelField_Choices_Browse()
-    add_choice = NewResource_Local(title=MSG(u'Add choice'))
+    add_choice = NewResource_Local(title=MSG('Add choice'))
 
     _fields = ModelField_Base._fields + ['choices_widget']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
@@ -225,12 +225,12 @@ class Model_Browse(OrderedFolder_BrowseContent):
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('abspath', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('format', MSG(u'Type')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('order', MSG(u'Order'))]
+        ('abspath', MSG('Path')),
+        ('title', MSG('Title')),
+        ('format', MSG('Type')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author')),
+        ('order', MSG('Order'))]
     table_actions = [Remove_BrowseButton]
 
 
@@ -238,17 +238,17 @@ class Model_Browse(OrderedFolder_BrowseContent):
 class Model(OrderedFolder):
 
     class_id = '-model'
-    class_title = MSG(u'Base model')
-    class_description = MSG(u'...')
+    class_title = MSG('Base model')
+    class_description = MSG('...')
 
     # Fields
-    title = Text_Field(indexed=True, stored=True, title=MSG(u'Title'), required=True)
+    title = Text_Field(indexed=True, stored=True, title=MSG('Title'), required=True)
 
     # Views
     class_views = ['browse_content', 'add_field', 'edit']
     browse_content = Model_Browse()
     new_instance = Model_NewInstance()
-    add_field = NewResource_Local(title=MSG(u'Add field'))
+    add_field = NewResource_Local(title=MSG('Add field'))
 
     # Order configuration
     allow_to_unorder_items = True
@@ -319,11 +319,11 @@ class ConfigModels_Browse(Folder_BrowseContent):
 
     table_columns = [
         ('checkbox', None),
-        ('abspath', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('base_class', MSG(u'Base class')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author'))]
+        ('abspath', MSG('Path')),
+        ('title', MSG('Title')),
+        ('base_class', MSG('Base class')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author'))]
     table_actions = [Remove_BrowseButton]
 
 
@@ -331,8 +331,8 @@ class ConfigModels_Browse(Folder_BrowseContent):
 class ConfigModels(Folder):
 
     class_id = 'config-models'
-    class_title = MSG(u'Content models')
-    class_description = MSG(u'Define new types of content resources.')
+    class_title = MSG('Content models')
+    class_description = MSG('Define new types of content resources.')
 
     # Configuration
     config_name = 'models'
@@ -341,7 +341,7 @@ class ConfigModels(Folder):
     # Views
     class_views = ['browse_content', 'add_model', 'edit']
     browse_content = ConfigModels_Browse()
-    add_model = NewResource_Local(title=MSG(u'Add model'))
+    add_model = NewResource_Local(title=MSG('Add model'))
 
     def get_document_types(self):
         return [Model]

@@ -466,7 +466,7 @@ class CMSContext(prototype):
 
 
     def get_form_keys(self):
-        return self.get_form().keys()
+        return list(self.get_form().keys())
 
 
     def get_form_body(self, body):
@@ -826,7 +826,7 @@ class CMSContext(prototype):
         return format_time(time, accept=self.accept_language)
 
 
-    def format_number(self, number, places=2, curr='', pos=u'', neg=u'-',
+    def format_number(self, number, places=2, curr='', pos='', neg='-',
             trailneg=u""):
         return format_number(number, places=places, curr=curr, pos=pos,
                 neg=neg, trailneg=trailneg, accept=self.accept_language)

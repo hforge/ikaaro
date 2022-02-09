@@ -30,15 +30,15 @@ from .folder import Folder
 class Theme(Folder):
 
     class_id = 'config-theme'
-    class_title = MSG(u'Theme')
-    class_description = MSG(u'Allow to customize ikaaro skin')
+    class_title = MSG('Theme')
+    class_description = MSG('Allow to customize ikaaro skin')
     class_icon_css = 'fa-star'
 
     # Fields
-    logo = File_Field(title=MSG(u'Logo'))
-    favicon = File_Field(title=MSG(u'Favicon'))
-    banner = File_Field(title=MSG(u'Banner'))
-    style = TextFile_Field(title=MSG(u'CSS Style'), class_handler=TextFile)
+    logo = File_Field(title=MSG('Logo'))
+    favicon = File_Field(title=MSG('Favicon'))
+    banner = File_Field(title=MSG('Banner'))
+    style = TextFile_Field(title=MSG('CSS Style'), class_handler=TextFile)
 
 
     def init_resource(self, **kw):

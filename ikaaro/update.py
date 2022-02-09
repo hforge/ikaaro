@@ -100,7 +100,7 @@ def find_versions_to_update(context, force=False):
                       'nb_resources': len(search)}
                 cls_to_update.append(kw)
     # Sort
-    cls_to_update.sort(key=itemgetter('class_version_date'))
+    cls_to_update = sorted(cls_to_update, key=itemgetter('class_version_date'))
     # Ok
     return {'cls_to_update': cls_to_update, 'cls_errors': cls_errors}
 

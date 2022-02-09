@@ -39,7 +39,7 @@ from .widgets import PathSelectorWidget
 
 class File_NewInstance(AutoAdd):
 
-    title = MSG(u'Upload File')
+    title = MSG('Upload File')
     fields = ['data', 'title', 'progressbar']
 
     progressbar = ProgressBar_Field
@@ -74,7 +74,7 @@ class File_NewInstance(AutoAdd):
 class File_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Download')
+    title = MSG('Download')
     icon = 'view.png'
     template = '/ui/ikaaro/file/download_form.xml'
 
@@ -104,7 +104,7 @@ class File_Edit(AutoEdit):
 class File_Download(DBResource_GetFile):
 
     field_name = 'data'
-    title = MSG(u'Download')
+    title = MSG('Download')
 
 
     def get_filename(self, handler, field_name, resource):
@@ -123,7 +123,7 @@ class File_Download(DBResource_GetFile):
 class File_ExternalEdit_View(STLView):
     access = 'is_allowed_to_edit'
     template = '/ui/ikaaro/file/externaledit.xml'
-    title = MSG(u'External Editor')
+    title = MSG('External Editor')
     icon = 'external.png'
 
 
@@ -190,7 +190,7 @@ class File_ExternalEdit(BaseView):
 class Image_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     template = '/ui/ikaaro/binary/Image_view.xml'
     styles = ['/ui/ikaaro/gallery/style.css']
 
@@ -238,7 +238,7 @@ class Image_View(STLView):
 class Video_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     template = '/ui/ikaaro/binary/Video_view.xml'
     scripts = ['/ui/ikaaro/js/jquery.media.js']
 
@@ -251,14 +251,14 @@ class Video_View(STLView):
 class Archive_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     template = '/ui/ikaaro/binary/Archive_view.xml'
 
     schema = {'target': PathDataType, 'update': Boolean}
 
     def get_namespace(self, resource, context):
         filename = resource.get_value('filename') or resource.get_title()
-        contents = [ process_name(x)[1] + u'\n'
+        contents = [ process_name(x)[1] + '\n'
                      for x in resource.get_value('data').get_contents() ]
         contents = ''.join(contents)
         # Extract archive
@@ -279,9 +279,9 @@ class Archive_View(STLView):
         target = form['target']
         target = resource.get_resource(target, soft=True)
         if target is None:
-            raise FormError(ERROR(u'Target does not exist.'))
+            raise FormError(ERROR('Target does not exist.'))
         if isinstance(target, Folder) is False:
-            raise FormError(ERROR(u'Target must be a folder.'))
+            raise FormError(ERROR('Target must be a folder.'))
 
         return form
 
@@ -290,7 +290,7 @@ class Archive_View(STLView):
         # Get the list of paths to extract
         handler = resource.get_value('data')
         paths = handler.get_contents()
-        paths.sort()
+        paths = sorted(paths)
 
         # Get the target resource
         target = form['target']
@@ -301,7 +301,7 @@ class Archive_View(STLView):
         target.extract_archive(handler, language, update=form['update'])
 
         # Ok
-        message = MSG(u'Files extracted')
+        message = MSG('Files extracted')
         goto = context.get_link(target)
         return context.come_back(message, goto=goto)
 
@@ -310,5 +310,5 @@ class Archive_View(STLView):
 class Flash_View(File_View):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG('View')
     template = '/ui/ikaaro/binary/Flash_view.xml'

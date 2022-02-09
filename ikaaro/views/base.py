@@ -192,7 +192,7 @@ class IconsView(STLView):
 
     access = 'is_allowed_to_view'
     template = '/ui/ikaaro/generic/icons_view.xml'
-    title = MSG(u'View')
+    title = MSG('View')
 
     def get_namespace(self, resource, context):
         """Example:
@@ -300,8 +300,8 @@ class Batch(CMSTemplate):
         # Add middle pages
         current_page = self.current_page
         nb_pages = self.nb_pages
-        middle_pages = range(max(current_page - 3, 2),
-                             min(current_page + 3, nb_pages-1) + 1)
+        middle_pages = list(range(max(current_page - 3, 2),
+                             min(current_page + 3, nb_pages-1) + 1))
 
         pages = [1] + middle_pages
         if nb_pages > 1:
@@ -396,7 +396,7 @@ class BrowseForm(STLView):
     def get_search_actions(self, resource, context):
         search_button = Button(access=True,
             resource=resource, context=context,
-            css='btn btn-primary', title=MSG(u'Search'))
+            css='btn btn-primary', title=MSG('Search'))
         return [search_button]
 
 
@@ -406,7 +406,7 @@ class BrowseForm(STLView):
             form_css=self.search_form_css,
             template=self.search_template,
             template_field=self.search_template_field,
-            title=MSG(u'Search'),
+            title=MSG('Search'),
             method='get',
             schema=self.search_schema,
             widgets=self.search_widgets,

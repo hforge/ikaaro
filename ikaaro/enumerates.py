@@ -70,8 +70,8 @@ class UserGroups_Datatype(DynamicEnumerate_Datatype):
 class Groups_Datatype(UserGroups_Datatype):
 
     special_groups = [
-        {'name': 'everybody', 'value': MSG(u'Everybody')},
-        {'name': 'authenticated', 'value': MSG(u'Authenticated')}]
+        {'name': 'everybody', 'value': MSG('Everybody')},
+        {'name': 'authenticated', 'value': MSG('Authenticated')}]
 
 
     def get_options(self):

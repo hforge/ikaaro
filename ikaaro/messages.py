@@ -63,7 +63,7 @@ MSG_RESOURCES_REMOVED = INFO('Resources removed: {resources}.')
 MSG_RESOURCES_REFERENCED = ERROR(
     'Action impossible (the resources are in use): {resources}.')
 
-MSG_RESOURCES_REFERENCED_HTML = ERROR(u"""
+MSG_RESOURCES_REFERENCED_HTML = ERROR("""
     Action impossible (the resources are in use):
     <stl:inline stl:repeat="resource resources">
         <a href="${resource/href}"
@@ -80,14 +80,14 @@ MSG_RESOURCES_NOT_REMOVED = ERROR('Resources not allowed to remove: '
 MSG_PASSWORD_MISMATCH = ERROR('The provided passwords do not match.')
 
 MSG_REGISTERED = ERROR(
-    u"You have already confirmed your registration. "
-    u"Try to log in or ask for a new password.")
+    "You have already confirmed your registration. "
+    "Try to log in or ask for a new password.")
 
 MSG_PASSWORD_EQUAL_TO_USERNAME = ERROR('Password cannot match the username.')
 
 MSG_NONE_SELECTED = ERROR('No resource selected.')
 
-MSG_NONE_ALLOWED = ERROR(u"No resource allowed.")
+MSG_NONE_ALLOWED = ERROR("No resource allowed.")
 
 MSG_NO_PASTE = ERROR('Nothing to paste.')
 

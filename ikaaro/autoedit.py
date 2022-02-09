@@ -40,7 +40,7 @@ from .views import ContextMenu
 
 class EditLanguageMenu(ContextMenu):
 
-    title = MSG(u'Configuration')
+    title = MSG('Configuration')
     template = '/ui/ikaaro/generic/edit_language_menu.xml'
     view = None
 
@@ -87,7 +87,7 @@ class EditLanguageMenu(ContextMenu):
 class AutoEdit(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
+    title = MSG('Edit')
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):

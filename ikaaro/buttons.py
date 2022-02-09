@@ -51,7 +51,7 @@ class Button(STLTemplate):
         confirm = cls.confirm
         if not confirm:
             return None
-        return u'return confirm("%s");' % confirm.gettext()
+        return 'return confirm("%s");' % confirm.gettext()
 
 
     @proto_lazy_property
@@ -66,10 +66,10 @@ class Button(STLTemplate):
 class Remove_Button(Button):
 
     access = 'is_allowed_to_remove'
-    confirm = MSG(u'Are you sure you want to delete this?')
+    confirm = MSG('Are you sure you want to delete this?')
     css = 'btn btn-danger'
     name = 'remove'
-    title = MSG(u'Remove')
+    title = MSG('Remove')
 
 
 ###########################################################################
@@ -89,7 +89,7 @@ class BrowseButton(Button):
 
 class Remove_BrowseButton(Remove_Button, BrowseButton):
 
-    confirm = MSG(u'Are you sure you want to delete the selection?')
+    confirm = MSG('Are you sure you want to delete the selection?')
 
 
 
@@ -98,7 +98,7 @@ class RenameButton(BrowseButton):
     access = 'is_allowed_to_move'
     css = 'btn btn-success'
     name = 'rename'
-    title = MSG(u'Rename')
+    title = MSG('Rename')
 
 
 
@@ -107,7 +107,7 @@ class CopyButton(BrowseButton):
     access = 'is_allowed_to_copy'
     css = 'btn btn-primary'
     name = 'copy'
-    title = MSG(u'Copy')
+    title = MSG('Copy')
 
 
 
@@ -116,7 +116,7 @@ class CutButton(BrowseButton):
     access = 'is_allowed_to_move'
     css = 'btn btn-primary'
     name = 'cut'
-    title = MSG(u'Cut')
+    title = MSG('Cut')
 
 
 
@@ -125,7 +125,7 @@ class PasteButton(BrowseButton):
     access = 'is_allowed_to_move'
     css = 'btn btn-primary'
     name = 'paste'
-    title = MSG(u'Paste')
+    title = MSG('Paste')
 
 
     @proto_lazy_property
@@ -141,7 +141,7 @@ class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'add'
-    title = MSG(u'Add')
+    title = MSG('Add')
     css = 'btn btn-primary'
 
 
@@ -150,19 +150,19 @@ class ZipButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'zip'
-    title = MSG(u'Zip')
+    title = MSG('Zip')
 
 
 class SearchButton(BrowseButton):
 
     access = 'is_allowed_to_view'
     name = 'search'
-    title = MSG(u'Search')
+    title = MSG('Search')
 
 
 class ExportAsJSONButton(BrowseButton):
 
-    title = MSG(u"Exporter les ressources (JSON)")
+    title = MSG("Exporter les ressources (JSON)")
     css = "btn btn-primary"
     access = "is_admin"
     name = "export_as_json"

@@ -26,11 +26,12 @@ from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
 
 # Import from ikaaro
-from file import File
-from folder import Folder
-from registry import register_document_type
-import text
-from webpage import WebPage
+from .file import File
+from .folder import Folder
+from .registry import register_document_type
+from . import text
+from .webpage import WebPage
+
 
 getLogger("ikaaro").addHandler(NullHandler())
 getLogger("ikaaro.web").addHandler(NullHandler())
@@ -56,7 +57,7 @@ __version__ = get_version()
 
 
 # Import required modules
-import users
+from . import users
 
 # Register the itools domain
 path = get_abspath('locale')

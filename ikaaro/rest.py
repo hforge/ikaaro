@@ -101,7 +101,7 @@ def field_to_json(resource, field_name):
         if prop is None:
             return None
         if type(prop) is dict:
-            prop = prop.values()
+            prop = list(prop.values())
         if type(prop) is list:
             return [ property_to_json(field, x) for x in prop ]
         return property_to_json(field, prop)

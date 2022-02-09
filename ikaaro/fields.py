@@ -198,7 +198,7 @@ class Metadata_Field(Field):
 
     def rest(self):
         rest = super(Metadata_Field, self).rest()
-        rest['parameters'] = self.parameters_schema.keys()
+        rest['parameters'] = list(self.parameters_schema.keys())
         return rest
 
 
@@ -860,7 +860,7 @@ class SelectDays_Field(Select_Field):
 
 class UUID_Field(Char_Field):
 
-    title = MSG(u'UUID')
+    title = MSG('UUID')
     indexed = True
     stored = True
     readonly = True
@@ -869,7 +869,7 @@ class UUID_Field(Char_Field):
 
 class CTime_Field(Datetime_Field):
 
-    title = MSG(u'Creation date')
+    title = MSG('Creation date')
     indexed = True
     stored = True
     readonly = True
@@ -878,7 +878,7 @@ class CTime_Field(Datetime_Field):
 
 class MTime_Field(Datetime_Field):
 
-    title = MSG(u'Modification date')
+    title = MSG('Modification date')
     indexed = True
     stored = True
     readonly = True
@@ -887,7 +887,7 @@ class MTime_Field(Datetime_Field):
 
 class LastAuthor_Field(Char_Field):
 
-    title = MSG(u'Last author')
+    title = MSG('Last author')
     indexed = False
     stored = True
     readonly = True
@@ -896,7 +896,7 @@ class LastAuthor_Field(Char_Field):
 
 class Title_Field(Text_Field):
 
-    title = MSG(u'Title')
+    title = MSG('Title')
     indexed = True
     stored = True
 
@@ -904,12 +904,12 @@ class Title_Field(Text_Field):
 
 class Description_Field(Textarea_Field):
 
-    title = MSG(u'Description')
+    title = MSG('Description')
     indexed = True
 
 
 
 class Subject_Field(Text_Field):
 
-    title = MSG(u'Keywords')
+    title = MSG('Keywords')
     indexde = True

@@ -121,7 +121,7 @@ class UUIDView(Api_View):
     access = True
     known_methods = ['DELETE']
 
-    path_query_schema = {'uuid': Char_Field(title=MSG(u'The uuid of a resource in DB'))}
+    path_query_schema = {'uuid': Char_Field(title=MSG('The uuid of a resource in DB'))}
 
     def get_resource(self, context):
         query = get_resource_by_uuid_query(
@@ -138,7 +138,7 @@ class UUIDView(Api_View):
                 # Forbidden (403)
                 raise Forbidden
             raise NotFound
-        return search.get_resources(size=1).next()
+        return next(search.get_resources(size=1))
 
 
     access_DELETE = 'is_allowed_to_remove'
@@ -155,7 +155,7 @@ class ApiDevPanel_ResourceJSON(UUIDView):
 
     access = 'is_admin'
     known_methods = ['GET', 'DELETE']
-    query_schema = {'pretty': Boolean_Field(title=MSG(u'Pretty ?'))}
+    query_schema = {'pretty': Boolean_Field(title=MSG('Pretty ?'))}
 
     def GET(self, root, context):
         resource = self.get_resource(context)
@@ -190,10 +190,10 @@ class ApiDevPanel_ResourceHistory(UUIDView):
     access = 'is_admin'
     known_methods = ['GET', 'DELETE']
     response_schema = {
-        'sha': Char_Field(title=MSG(u'SHA of the commit')),
+        'sha': Char_Field(title=MSG('SHA of the commit')),
         'author_date': Datetime_Field(title=MSG("Datetime of commit")),
-        'author_name': Char_Field(title=MSG(u"Commit's author name")),
-        'message_short': Char_Field(title=MSG(u"Commit's title"))
+        'author_name': Char_Field(title=MSG("Commit's author name")),
+        'message_short': Char_Field(title=MSG("Commit's title"))
     }
     def GET(self, root, context):
         resource = self.get_resource(context)
@@ -225,11 +225,11 @@ class ApiDevPanel_ClassidViewDetails(Api_View):
     access = 'is_admin'
 
     path_query_schema = {
-        'class_id': Char_Field(title=MSG(u'A class_id registered in DB'))
+        'class_id': Char_Field(title=MSG('A class_id registered in DB'))
     }
     response_schema = {
-        'class_title': Char_Field(title=MSG(u'The class_title of the resource cls')),
-        'class_id': Char_Field(title=MSG(u'The class_id of the resource cls'))
+        'class_title': Char_Field(title=MSG('The class_title of the resource cls')),
+        'class_id': Char_Field(title=MSG('The class_id of the resource cls'))
     }
 
 
@@ -260,8 +260,8 @@ class Api_LoginView(Api_View):
 
     access = True
     known_methods = ['POST']
-    schema = {'email': Email_Field(title=MSG(u'Username'), required=True),
-              'password': Password_Field(title=MSG(u'Password'), required=True)}
+    schema = {'email': Email_Field(title=MSG('Username'), required=True),
+              'password': Password_Field(title=MSG('Password'), required=True)}
 
     def POST(self, root, context):
         raise NotImplementedError
@@ -312,9 +312,9 @@ class ApiDevPanel_ServerView(Api_View):
     access = 'is_admin'
     known_methods = ['GET']
     response_schema = {
-        'timestamp': Char_Field(title=MSG(u"Server's start timestamp")),
-        'pid': Integer_Field(title=MSG(u"Server's PID")),
-        'port': Integer_Field(title=MSG(u"Server's port"))
+        'timestamp': Char_Field(title=MSG("Server's start timestamp")),
+        'pid': Integer_Field(title=MSG("Server's PID")),
+        'port': Integer_Field(title=MSG("Server's port"))
     }
 
     def GET(self, root, context):

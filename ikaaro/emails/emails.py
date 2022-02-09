@@ -90,69 +90,69 @@ class User_AskForConfirmation(User_Email):
     """
 
     class_id = 'user-ask-for-confirmation'
-    subject = MSG(u'Registration confirmation')
+    subject = MSG('Registration confirmation')
     text = MSG(
-        u'To confirm your identity, follow this link:\n'
-        u'\n'
-        u' {user}/;confirm_registration?username={userid}&key={userkey}')
+        'To confirm your identity, follow this link:\n'
+        '\n'
+        ' {user}/;confirm_registration?username={userid}&key={userkey}')
 
 
 
 class AddUser_SendNotification(User_Email):
 
     class_id = 'add-user-send-notification'
-    subject = MSG(u'Registration notification')
+    subject = MSG('Registration notification')
     text = MSG(
-        u'You have been registered to the "{host_title}" site:\n'
-        u'\n'
-        u' {host}/')
+        'You have been registered to the "{host_title}" site:\n'
+        '\n'
+        ' {host}/')
 
 
 
 class Register_AlreadyRegistered(User_Email):
 
     class_id = 'register-already-registered'
-    subject = MSG(u"Already registered")
+    subject = MSG("Already registered")
     text = MSG(
-        u'You already have an account:\n'
-        u'\n'
-        u' {host}/;login?loginname={userid}')
+        'You already have an account:\n'
+        '\n'
+        ' {host}/;login?loginname={userid}')
 
 
 
 class Register_SendConfirmation(User_Email):
 
     class_id = 'register-send-confirmation'
-    subject = MSG(u"Registration confirmed")
+    subject = MSG("Registration confirmed")
     text = MSG(
-        u'You have been registered to the "{host_title}" site:\n'
-        u'\n'
-        u' {host}/')
+        'You have been registered to the "{host_title}" site:\n'
+        '\n'
+        ' {host}/')
 
 
 
 class ForgottenPassword_AskForConfirmation(User_Email):
 
     class_id = 'forgotten-password-ask-for-confirmation'
-    subject = MSG(u"Choose a new password")
+    subject = MSG("Choose a new password")
     text = MSG(
-        u'To choose a new password, click the link:\n'
-        u'\n'
-        u' {user}/;change_password_forgotten?username={userid}&key={userkey}')
+        'To choose a new password, click the link:\n'
+        '\n'
+        ' {user}/;change_password_forgotten?username={userid}&key={userkey}')
 
 
 class SwitchState_Activate(User_Email):
 
     class_id = 'switch-state-activate'
-    subject = MSG(u'Your account has been re-activated')
-    text = MSG(u'Your account has been re-activated')
+    subject = MSG('Your account has been re-activated')
+    text = MSG('Your account has been re-activated')
 
 
 class SwitchState_Deactivate(User_Email):
 
     class_id = 'switch-state-deactivate'
-    subject = MSG(u'Your account has been canceled')
-    text = MSG(u'Your account has been canceled')
+    subject = MSG('Your account has been canceled')
+    text = MSG('Your account has been canceled')
 
 
 # Registry

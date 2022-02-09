@@ -745,7 +745,7 @@ class GetFolders(BaseView):
                         return ''
                     elif len(options) == 1 and options[0]['name'] == '':
                         return ''
-                    options.sort(key=itemgetter('value'))
+                    options = sorted(options, key=itemgetter('value'))
                     name = 'folder%s' % (int(key[-1])+1)
                     level = int(key[-1]) + 1
                     widget = FolderWidget(name, value='', level=level,
@@ -899,7 +899,7 @@ class FoldersEnumerate(DynamicEnumerate):
         # Si 1 option, elle est sélectionnée
         if len(options) == 1:
             options[0]['selected'] = True
-        options.sort(key=itemgetter('value'))
+        options = sorted(options, key=itemgetter('value'))
         return options
 
 

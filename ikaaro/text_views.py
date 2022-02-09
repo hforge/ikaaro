@@ -115,7 +115,7 @@ class PO_Edit(STLView):
         # Get the translation units (all but the header)
         handler = resource.get_po_handler()
         units = handler.get_units()
-        units.sort(key=lambda x: x.source)
+        units = sorted(units, key=lambda x: x.source)
         if units and ''.join(units[0].source) == '':
             units = units[1:]
 
@@ -193,7 +193,7 @@ class CSV_View(BrowseForm):
                 sort_by = int(sort_by)
             else:
                 sort_by = handler.columns.index(sort_by)
-            items.sort(key=itemgetter(sort_by), reverse=reverse)
+            items = sorted(items, key=itemgetter(sort_by), reverse=reverse)
 
         # Batch
         start = context.query['batch_start']

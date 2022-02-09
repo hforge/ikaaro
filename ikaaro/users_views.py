@@ -407,7 +407,7 @@ class BrowseUsers(BrowseForm):
                                               sort_by)[0].gettext()
             items = results.get_resources()
             items = list(items)
-            items.sort(key=lambda x: f(x), reverse=reverse)
+            items = sorted(items, key=lambda x: f(x), reverse=reverse)
             items = items[start:start+size]
             database = resource.database
             return [ database.get_resource(x.abspath) for x in items ]

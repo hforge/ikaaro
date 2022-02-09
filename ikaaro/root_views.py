@@ -122,7 +122,7 @@ class ContactOptions(Enumerate):
             title = user.get_title()
             options.append({'name': name, 'value': title,
                             'sort_value': title.lower()})
-        options.sort(key=lambda x: x['sort_value'])
+        options = sorted(options, key=lambda x: x['sort_value'])
         return options
 
 

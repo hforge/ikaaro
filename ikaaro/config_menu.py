@@ -39,11 +39,11 @@ from .widgets import PathSelectorWidget
 class Target_Field(Select_Field):
 
     default = '_top'
-    options = [{'name': '_top', 'value': MSG(u'Current page')},
-               {'name': '_blank', 'value': MSG(u'New page')}]
+    options = [{'name': '_top', 'value': MSG('Current page')},
+               {'name': '_blank', 'value': MSG('New page')}]
 
     required = True
-    title = MSG(u'Target')
+    title = MSG('Target')
     has_empty_option = False
 
 
@@ -53,12 +53,12 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
     search_widgets = None
     table_columns = [
         ('checkbox', None),
-        ('abspath', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('target', MSG(u'Target')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('order', MSG(u'Order'))]
+        ('abspath', MSG('Path')),
+        ('title', MSG('Title')),
+        ('target', MSG('Target')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author')),
+        ('order', MSG('Order'))]
     table_actions = [Remove_BrowseButton]
 
     def get_item_value(self, resource, context, item, column):
@@ -71,7 +71,7 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
 
 class AddMenu(NewResource_Local):
 
-    title = MSG(u'Add item')
+    title = MSG('Add item')
 
     def get_items(self, resource, context):
         return tuple(resource.get_document_types())
@@ -81,10 +81,10 @@ class AddMenu(NewResource_Local):
 class MenuItem(OrderedFolder):
 
     class_id = 'config-menu-item'
-    class_title = MSG(u'Menu')
+    class_title = MSG('Men')
 
     # Fields
-    path = URI_Field(required=True, title=MSG(u'Path'),
+    path = URI_Field(required=True, title=MSG('Path'),
                      widget=PathSelectorWidget)
     target = Target_Field()
 
@@ -255,8 +255,8 @@ class MenuItem(OrderedFolder):
 class ConfigMenu(MenuItem):
 
     class_id = 'config-menu'
-    class_title = MSG(u'Configuration Menu')
-    class_description = MSG(u'Edit the global menu.')
+    class_title = MSG('Configuration Menu')
+    class_description = MSG('Edit the global menu.')
     class_icon_css = 'fa-sitemap'
     class_views = ['browse_content', 'add_menu', 'edit']
 
@@ -268,7 +268,7 @@ class ConfigMenu(MenuItem):
         super(ConfigMenu, self).init_resource(**kw)
         # Menu
         order = []
-        menus = [('/', u'Home'), ('/;contact', u'Contact')]
+        menus = [('/', 'Home'), ('/;contact', 'Contact')]
         for path, title in menus:
             name = checkid(title)
             order.append(name)
@@ -286,14 +286,14 @@ class ConfigMenu(MenuItem):
         Where the list of items is the first level
         and item_dic = {'active': True or False,
                         'class': 'active' or 'in_path' or None,
-                        'description': MSG(u'About Python'),
+                        'description': MSG('About Python'),
                         'id': 'tab_python',
                         'in_path': True or False,
                         'items': [item_dic11, ..., item_dic1N] or None,
                         'name': 'python',
                         'path': '../python',
                         'target': '_top' or '_blank' or None,
-                        'title': MSG(u'Python')}
+                        'title': MSG('Python')}
 
         "items" contains the first level. Each item_dic contains in turn an
         'items' with its children.

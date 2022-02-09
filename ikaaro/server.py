@@ -215,7 +215,7 @@ def create_server(target, email, password, root,
                   listen_port='8080', smtp_host='localhost',
                   log_email=None, website_languages=None,
                   size_min=19500, size_max=20500):
-    from root import Root
+    from .root import Root
     modules = modules or []
     # Get modules
     for module in modules:
@@ -402,8 +402,9 @@ class Server(object):
             'accept-cors', type=Boolean, default=False)
 
         # Profile Memory
-        if profile_space is True:
-            import guppy.heapy.RM
+        # Package not compatible with python 3
+        # if profile_space is True:
+        #     import guppy.heapy.RM
 
         # The database
         if cache_size is None:

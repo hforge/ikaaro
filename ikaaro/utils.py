@@ -107,16 +107,16 @@ def get_parameters(prefix, **kw):
 ###########################################################################
 
 # Mark for translatios
-u'Basque'
-u'Catalan'
-u'English'
-u'French'
-u'German'
-u'Hungarian'
-u'Italian'
-u'Japanese'
-u'Portuguese'
-u'Spanish'
+'Basque'
+'Catalan'
+'English'
+'French'
+'German'
+'Hungarian'
+'Italian'
+'Japanese'
+'Portuguese'
+'Spanish'
 
 
 ###########################################################################

@@ -69,7 +69,7 @@ class ContextManager(object):
             ROSEM.acquire()
         else:
             DBSEM.acquire()
-        from server import get_server
+        from .server import get_server
         self.context = cls()
         self.context.database = database
         self.context.server = get_server()
@@ -84,7 +84,7 @@ class ContextManager(object):
             )
             search = database.search(query)
             if search:
-                user = search.get_resources(size=1).next()
+                user = next(search.get_resources(size=1))
         # Get user by username
         if username:
             user = self.context.root.get_user(username)
@@ -167,7 +167,7 @@ class Database(RWDatabase):
         # should this be done?
         old2new = [ (s, t) for s, t in self.resources_old2new.items()
                     if t and s != t ]
-        old2new.sort(key=lambda x: x[1])     # Sort by target
+        old2new = sorted(old2new, key=lambda x: x[1]) # Sort by target
         for source, target in old2new:
             target = Path(target)
             resource = root.get_resource(target)
@@ -194,7 +194,7 @@ class Database(RWDatabase):
 
         # 3. Documents to unindex (the update_links methods calls
         # 'change_resource' which may modify the resources_old2new dictionary)
-        docs_to_unindex = self.resources_old2new.keys()
+        docs_to_unindex = list(self.resources_old2new.keys())
         self.resources_old2new.clear()
 
         # 4. Update mtime/last_author
@@ -212,7 +212,7 @@ class Database(RWDatabase):
         # Remove from to_reindex if resource has been deleted
         to_reindex = to_reindex - set(docs_to_unindex)
         # 5. Index
-        docs_to_index = self.resources_new2old.keys()
+        docs_to_index = list(self.resources_new2old.keys())
         docs_to_index = set(docs_to_index) | to_reindex
         docs_to_unindex = list(set(docs_to_unindex) - docs_to_index)
         docs_to_index = list(docs_to_index)

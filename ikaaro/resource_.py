@@ -758,8 +758,7 @@ class DBResource(Resource):
                     continue
                 if version > obj_version and version <= cls_version:
                     versions.append(version)
-
-        versions.sort()
+        versions = sorted(versions)
         return versions
 
 

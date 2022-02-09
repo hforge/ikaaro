@@ -22,10 +22,10 @@
 from decimal import Decimal
 from email.charset import add_charset, add_codec, QP
 from email.mime.application import MIMEApplication
-from email.MIMEText import MIMEText
-from email.MIMEImage import MIMEImage
-from email.MIMEMultipart import MIMEMultipart
-from email.Utils import formatdate
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.utils import formatdate
 from email.header import Header
 from json import dumps
 from logging import getLogger
@@ -33,6 +33,7 @@ import sys
 import traceback
 
 # Import from itools
+from itools import pkg
 from itools.core import get_abspath
 from itools.database import RWDatabase
 from itools.gettext import MSG
