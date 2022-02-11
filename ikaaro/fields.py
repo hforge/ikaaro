@@ -655,7 +655,7 @@ class File_Field(Field):
         if type(value) is tuple:
             filename, mimetype, value = value
 
-        if type(value) is str:
+        if type(value) in [bytes, str]:
             cls = self.class_handler
             if cls is None:
                 mimetype = magic_from_buffer(value)
