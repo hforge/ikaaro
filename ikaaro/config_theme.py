@@ -51,11 +51,11 @@ class Theme(Folder):
         self.set_value('style', data)
         # Logo
         path = get_abspath('ui/ikaaro/themes/logo.png')
-        data = open(path).read()
+        data = open(path, "rb").read()
         self.set_value('logo', data)
         # Banner
         path = get_abspath('ui/ikaaro/themes/banner.jpg')
-        data = open(path).read()
+        data = open(path, "rb").read()
         self.set_value('banner', data)
 
     # Views
