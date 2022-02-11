@@ -203,8 +203,8 @@ algos = {
 def get_secure_hash(password, algo, salt=None):
     if salt is None:
         salt = generate_password()
-
-    return algos[algo](password + salt).digest(), salt
+    password_salt = (password + salt).encode("utf-8")
+    return algos[algo](password_salt).digest(), salt
 
 
 
