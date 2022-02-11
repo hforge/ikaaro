@@ -41,6 +41,7 @@ from requests import Request
 from tempfile import mkstemp
 from importlib import import_module
 from wsgiref.util import setup_testing_defaults
+import importlib
 
 # Import from jwcrypto
 from jwcrypto.jwk import JWK
@@ -473,7 +474,7 @@ class Server(object):
 
     def save_JWT_key(self, jwk):
         key_path = self.get_JWT_key_path()
-        with open(key_path, mode="w") as key_file:
+        with open(key_path, mode="wb") as key_file:
             key_pem_string = jwk.export_to_pem(private_key=True, password=None)
             key_file.write(key_pem_string)
 
@@ -830,9 +831,10 @@ class Server(object):
     def register_urlpatterns_from_package(self, package):
         urlpatterns = None
         try:
-            exec('from {} import urlpatterns'.format(package))
+            importlib.import_module(f"{package}.urlpatterns")
         except ImportError:
             return
+
         # Dispatch base routes from ikaaro
         for urlpattern_object in urlpatterns:
             for pattern, view in urlpattern_object.get_patterns():
