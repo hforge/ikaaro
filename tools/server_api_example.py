@@ -19,7 +19,7 @@ from pprint import pprint
 
 # Import from ikaaro
 from ikaaro.server import Server, create_server
-
+import shutil
 
 path = 'www.hforge.org'
 email = 'test@example.com'
@@ -27,6 +27,8 @@ password = 'password'
 root = None
 modules = []
 listen_port = 8081
+
+shutil.rmtree(path, ignore_errors=True)
 
 create_server(target=path, email=email, password=password, root=root,  modules=modules, listen_port=listen_port, backend="git")
 server = Server(path)

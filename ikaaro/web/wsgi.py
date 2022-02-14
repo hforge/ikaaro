@@ -76,7 +76,11 @@ def application(environ, start_response):
             status = context.status or 500
             status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
-            yield context.entity
+            data = context.entity
+            if isinstance(data, str):
+                yield data.encode("utf-8")
+            else:
+                yield data
 
 
 try:
