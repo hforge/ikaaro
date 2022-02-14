@@ -312,7 +312,7 @@ class ServerHandler(WSGIHandler):
         request_log = self.format_request()
         status = (self._orig_status or self.status or '000').split()[0]
         status = int(status)
-        request_headers = self.headers.dict
+        request_headers = dict(self.headers)
         request_headers.pop("cookie", None)
         request_headers.pop("authorization", None)
         response_headers = dict(self.response_headers)
