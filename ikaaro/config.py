@@ -132,7 +132,7 @@ class Config_EditLanguages(STLView):
         # Not active languages
         not_active = [
             x for x in get_languages() if x['code'] not in ws_languages]
-        not_active = sorted(not_active, key=lambda x, y: cmp(x['name'], y['name']))
+        not_active = sorted(not_active, key=lambda x: x["name"])
 
         # Ok
         return {
