@@ -80,7 +80,9 @@ class Password_Datatype(DataType):
 
     @staticmethod
     def decode(data):
-        return decodebytes(unquote(data))
+        data = unquote(data)
+        data = data.encode()
+        return decodebytes(data)
 
 
     @staticmethod

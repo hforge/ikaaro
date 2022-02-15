@@ -214,7 +214,7 @@ class PoweredBy(STLView):
         namespace = {}
         # Credits
         credits = get_abspath('CREDITS.txt')
-        lines = lfs.open(credits).readlines()
+        lines = lfs.open(credits, text=True).readlines()
         names = [ x[2:].strip() for x in lines if x.startswith('  ') ]
         namespace['hackers'] = names
 

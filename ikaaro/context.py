@@ -594,9 +594,13 @@ class CMSContext(prototype):
             # If the search is done by a CRON we don't
             # care about the default ACLs rules
             return self.database.search(query)
+
         if user is None:
-            return self._context_user_search.search(query, **kw)
-        return self._user_search(user).search(query, **kw)
+            _user_search = self._context_user_search
+        else:
+            _user_search = self._user_search(user)
+
+        return _user_search.search(query, **kw)
 
     #######################################################################
     # Login API
