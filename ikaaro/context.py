@@ -24,6 +24,8 @@ import time
 from pytz import timezone
 from jwcrypto.jwt import JWT, JWTExpired
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
+from requests_toolbelt import MultipartDecoder
+import cgi
 
 # Import from itools
 from itools.core import freeze, proto_lazy_property
@@ -499,7 +501,7 @@ class CMSContext(prototype):
             return self.get_json_body(body)
         elif content_type.startswith('multipart/'):
             # Case 3: multipart
-            return self.get_multipart_body(body)
+            return self.get_multipart_body_v2(body)
         elif content_type.startswith('application/'):
             return {'body': body}
         # Case 4: Not managed content type
@@ -543,6 +545,50 @@ class CMSContext(prototype):
                     else:
                         form[name] = [form[name], body]
         return form
+
+    def get_multipart_body_v2(self, body):
+        """
+        FORM return example :
+        {'cls_description': 'Importer des documents bureautiques, des images, des fichiers de média, etc.', 'referrer': 'http://127.0.0.1:8081/', 'data': ('test.txt', 'text/plain', 'test fichier\n\n'), 'title:fr': ''}
+        """
+
+        content_type = self.environ.get('CONTENT_TYPE')
+        decoder = MultipartDecoder(body, content_type)
+        form = {}
+        for part in decoder.parts:
+            content_disposition = part.headers[b"Content-Disposition"]
+            if type(content_disposition) is bytes:
+                content_disposition = content_disposition.decode()
+            value, header_parameters = cgi.parse_header(content_disposition)
+            try:
+                body = part.text
+            except:
+                # Image encoding
+                body = part.content
+                pass
+            name = header_parameters['name']
+            if 'filename' in header_parameters:
+                filename = header_parameters['filename']
+                if filename:
+                    if b'content-type' in part.headers:
+                        mimetype = part.headers[b'content-type']
+                        if type(mimetype) is bytes:
+                            mimetype = mimetype.decode()
+                    else:
+                        mimetype = 'text/plain'
+                    form[name] = filename, mimetype, body
+                else:
+                    form[name] = None
+            else:
+                if name not in form:
+                    form[name] = body
+                else:
+                    if isinstance(form[name], list):
+                        form[name].append(body)
+                    else:
+                        form[name] = [form[name], body]
+        return form
+
 
     #######################################################################
     # ACL API
