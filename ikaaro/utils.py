@@ -148,6 +148,9 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
 
 encodings = ['utf-8', 'windows-1252', 'cp437']
 def process_name(name):
+    if type(name) is str:
+        checkid_name = checkid(name, soft=False)
+        return checkid_name, name
     for encoding in encodings:
         try:
             title = str(name, encoding)
