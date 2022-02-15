@@ -16,9 +16,11 @@
 
 # Import from standard library
 from pprint import pprint
+import sys
 
 # Import from ikaaro
 from ikaaro.server import Server, create_server
+from ikaaro.root import Root
 import shutil
 
 path = 'www.hforge.org'
@@ -28,9 +30,20 @@ root = None
 modules = []
 listen_port = 8081
 
-shutil.rmtree(path, ignore_errors=True)
 
-create_server(target=path, email=email, password=password, root=root,  modules=modules, listen_port=listen_port, backend="git")
+if sys.argv[-1] == 'create':
+    shutil.rmtree(path, ignore_errors=True)
+    shutil.rmtree('sessions', ignore_errors=True)
+    create_server(
+        target=path,
+        email=email,
+        password=password,
+        root=root,
+        modules=modules,
+        listen_port=listen_port,
+        backend="git"
+    )
+
 server = Server(path)
 server.start(detach=False, loop=False)
 print('Launch reindexation')

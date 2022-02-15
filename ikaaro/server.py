@@ -461,9 +461,9 @@ class Server(object):
     def get_JWT_key(self):
         key_path = self.get_JWT_key_path()
         try:
-            with open(key_path, mode="r") as key_file:
+            with open(key_path, mode="rb") as key_file:
                 lines = key_file.readlines()
-                key_pem_string = "".join(lines)
+                key_pem_string = b"".join(lines)
                 jwk = JWK.from_pem(key_pem_string)
         except IOError as e:
             # No pem file found generating one
@@ -1009,7 +1009,6 @@ class Server(object):
                 'method': context.method,
                 'entity': response,
                 'context': context}
-
 
 
 

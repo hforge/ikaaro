@@ -234,7 +234,7 @@ class User(Folder):
             return firstname
         if lastname:
             return lastname
-        return self.get_login_name().decode('utf-8')
+        return self.get_login_name()
 
 
     login_name_property = 'email'

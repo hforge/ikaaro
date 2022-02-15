@@ -232,9 +232,9 @@ class Boolean3_Field(Metadata_Field):
 
 
 class Char_Field(Metadata_Field):
-    datatype = String()
+    datatype = Unicode()
     widget = TextWidget()
-    rest_type = 'bytes'
+    rest_type = 'bytes' # XXX
 
 
 class Color_Field(Metadata_Field):

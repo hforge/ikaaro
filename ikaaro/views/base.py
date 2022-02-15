@@ -255,7 +255,7 @@ class Batch(CMSTemplate):
 
         # Size > 0
         total = self.total
-        nb_pages = total / size
+        nb_pages = total // size
         if (total % size) > 0:
             nb_pages += 1
         return nb_pages
@@ -269,7 +269,7 @@ class Batch(CMSTemplate):
             return 1
 
         # Size > 0
-        return (self.start / size) + 1
+        return (self.start // size) + 1
 
 
     @proto_property
