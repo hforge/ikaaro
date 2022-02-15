@@ -435,7 +435,7 @@ class AutoJSONResourceExport(AutoForm):
         context.set_content_type("application/json")
         file_name = "config_export_{title}.json".format(
             title=resource.get_title()
-        ).encode("utf-8")
+        )
         context.set_content_disposition("attachment", file_name)
         return json.dumps(json_export, cls=NewJSONEncoder)
 
