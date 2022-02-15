@@ -126,6 +126,8 @@ def get_parameters(prefix, **kw):
 def reduce_string(title='', word_treshold=15, phrase_treshold=40):
     """Reduce words and string size.
     """
+    if isinstance(title, bytes):
+        title = title.decode("utf-8")
     ellipsis = '…' if type(title) is str else '…'
     words = title.strip().split(' ')
     for i, word in enumerate(words):
