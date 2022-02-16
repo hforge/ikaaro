@@ -17,25 +17,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#Import from Standrad
-from past.builtins import cmp
-
 # Import from itools
-from itools.database import OrQuery
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
-from itools.uri import Path
 from itools.web import STLView, INFO, ERROR
-from itools.database import PhraseQuery
 
-# Import from ikaaro
-from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
 from .folder import Folder
 from .messages import MSG_CHANGES_SAVED
-from .utils import get_base_path_query
 from .views import IconsView
 
 
@@ -234,13 +225,13 @@ class Configuration(Folder):
 
 
 # Import core config modules
-from . import config_access
-from . import config_captcha
-from . import config_footer
-from . import config_groups
-from . import config_mail
-from . import config_menu
-from . import config_models
-from . import config_register
-from . import config_seo
-from . import config_theme
+# from . import config_access
+# from . import config_captcha
+# from . import config_footer
+# from . import config_groups
+# from . import config_mail
+# from . import config_menu
+# from . import config_models
+# from . import config_register
+# from . import config_seo
+# from . import config_theme
