@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from cProfile import runctx
+#from cProfile import runctx
 from email.parser import HeaderParser
 from json import loads
 from io import BytesIO
@@ -225,9 +225,14 @@ def create_server(target, email, password, root,
     if root is None:
         root_class = Root
     else:
+        if root == "bepatient":
+            class_name = 'BP_Root'
+        else:
+            class_name = 'Root'
         modules.insert(0, root)
-        exec('import %s' % root)
-        exec('root_class = %s.Root' % root)
+        __import__(root)
+        mod = __import__('%s.root' % root, fromlist=[class_name])
+        root_class = getattr(mod, class_name)
     # Make folder
     try:
         mkdir(target)
@@ -276,9 +281,11 @@ def create_server(target, email, password, root,
 
 
 
+
 server = None
 def get_server():
     return server
+
 
 def set_server(the_server):
     global server
@@ -384,7 +391,9 @@ class Server(object):
         # Set timestamp
         self.timestamp = str(int(time() / 2))
         # Load the config
+        print("TARGET", target)
         config = get_config(target)
+
         self.config = config
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -674,7 +683,8 @@ class Server(object):
         gevent_signal(SIGTERM, self.stop_signal)
         gevent_signal(SIGINT, self.stop_signal)
         if self.profile:
-            runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
+            #runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
+            raise Exception("Error server.py Ikaaro - Python 3 circular import with CProfile")
         else:
             self.wsgi_server.serve_forever()
 

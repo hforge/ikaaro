@@ -225,13 +225,13 @@ class Configuration(Folder):
 
 
 # Import core config modules
-# from . import config_access
-# from . import config_captcha
-# from . import config_footer
-# from . import config_groups
-# from . import config_mail
-# from . import config_menu
-# from . import config_models
-# from . import config_register
-# from . import config_seo
-# from . import config_theme
+from . import config_access
+from . import config_captcha
+from . import config_footer
+from . import config_groups
+from . import config_mail
+from . import config_menu
+from . import config_models
+from . import config_register
+from . import config_seo
+from . import config_theme

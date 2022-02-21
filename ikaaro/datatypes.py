@@ -87,6 +87,8 @@ class Password_Datatype(DataType):
 
     @staticmethod
     def encode(value):
+        if type(value) is str:
+            value = value.encode("utf-8")
         return quote(encodebytes(value))
 
 
