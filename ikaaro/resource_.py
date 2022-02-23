@@ -1003,9 +1003,9 @@ class DBResource(Resource):
 ###########################################################################
 
 # Path related fields
-register_field('abspath', String(indexed=True, stored=True))
+register_field('abspath', Unicode(indexed=True, stored=True))
 register_field('abspath_depth', Integer(indexed=True, stored=True))
-register_field('parent_paths', String(multiple=True, indexed=True))
+register_field('parent_paths', Unicode(multiple=True, indexed=True))
 register_field('name', Unicode(stored=True, indexed=True))
 # Class related fields
 register_field('format', Unicode(indexed=True, stored=True))

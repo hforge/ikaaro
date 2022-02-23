@@ -735,7 +735,8 @@ class Server(object):
         tmp_file, tmp_path = mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')
         try:
-            file.write(message.as_string())
+            message = message.as_string()
+            file.write(message)
         finally:
             file.close()
 
@@ -841,7 +842,8 @@ class Server(object):
     def register_urlpatterns_from_package(self, package):
         urlpatterns = None
         try:
-            importlib.import_module(f"{package}.urlpatterns")
+            module_imported = __import__(f"{package}")
+            urlpatterns = module_imported.urls.urlpatterns
         except ImportError:
             return
 
