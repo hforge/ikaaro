@@ -973,7 +973,13 @@ class Server(object):
         for key, value in headers:
             environ['HTTP_%s' % key.upper().replace('-', '_')] = value
         # Set wsgi input body
-        environ['wsgi.input'] = BytesIO(prepped.body)
+        if prepped.body is not None:
+            if type(prepped.body) is str:
+                environ['wsgi.input'] = BytesIO(prepped.body.encode("utf-8"))
+            else:
+                environ['wsgi.input'] = BytesIO(prepped.body)
+        else:
+            environ['wsgi.input'] = BytesIO()
         # Set content length
         if prepped.body:
             environ['CONTENT_LENGTH'] = len(prepped.body)

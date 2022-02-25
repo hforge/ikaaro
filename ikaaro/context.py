@@ -329,7 +329,15 @@ class CMSContext(prototype):
         if self.method in ('GET', 'HEAD'):
             return self.uri.query
         # XXX What parameters with the fields defined in the query?
-        return self.body
+        new_data = {}
+        for key, val in self.body.items():
+            if type(val) is bytes:
+                val = val.decode()
+            if type(key) is bytes:
+                key = key.decode()
+
+            new_data[key] = val
+        return new_data
 
 
     def accept_cors(self):
@@ -747,7 +755,7 @@ class CMSContext(prototype):
         if jwt:
             jwt_payload = json.loads(jwt.token.objects['payload'])
             user = jwt_payload.get('id')
-            return user.encode("utf-8")
+            return user
 
 
     def get_authentication_credentials(self):
