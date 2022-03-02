@@ -26,6 +26,7 @@ from ikaaro.database import Database
 from ikaaro.folder import Folder
 from ikaaro.utils import get_base_path_query
 from ikaaro.text import Text
+import ikaaro.root
 
 
 class FreeTestCase(TestCase):
@@ -38,20 +39,20 @@ class FreeTestCase(TestCase):
                 # Create 1 resource
                 container = root.make_resource('test-create-texts', Folder)
                 resource = container.make_resource(None, Text)
-                self.assertEqual(str(resource.abspath), '/test-create-texts/0')
+                path = str(resource.abspath)
                 metadata = resource.metadata
                 self.assertEqual(metadata.format, 'text')
                 database.save_changes()
                 # Check if resource exists
-                resource = root.get_resource('/test-create-texts/0')
-                self.assertEqual(resource.name, '0')
-                search = database.search(abspath='/test-create-texts/0')
+                resource = root.get_resource(path)
+                self.assertEqual(len(resource.name), 32)
+                search = database.search(abspath=path)
                 self.assertEqual(len(search), 1)
                 # Del resource
-                root.del_resource('/test-create-texts/0')
+                root.del_resource(path)
                 database.save_changes()
                 # Check if has been removed
-                resource = root.get_resource('/test-create-texts/0', soft=True)
+                resource = root.get_resource(path, soft=True)
                 self.assertEqual(resource, None)
                 search = database.search(abspath='/test-create-texts/1')
                 self.assertEqual(len(search), 0)
