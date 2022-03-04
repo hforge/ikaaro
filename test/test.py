@@ -30,11 +30,17 @@ from ikaaro.server import create_server
 # Import tests
 import test_database
 import test_metadata
+import test_query
 import test_server
 from junitxml import JUnitXmlResult
 
 
-test_modules = [test_metadata, test_server, test_database]
+test_modules = [
+    test_database,
+    test_metadata,
+    test_query,
+    test_server,
+]
 
 
 loader = TestLoader()

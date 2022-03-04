@@ -579,7 +579,7 @@ class DBResource(Resource):
         n = len(abspath)
         values['abspath_depth'] = n
         if n:
-            values['parent_paths'] = [ str(abspath[:i]).encode() for i in range(n) ]
+            values['parent_paths'] = [ str(abspath[:i]) for i in range(n) ]
         values['name'] = self.name
         # Class related fields
         values['format'] = self.metadata.format
@@ -1003,16 +1003,16 @@ class DBResource(Resource):
 ###########################################################################
 
 # Path related fields
-register_field('abspath', Unicode(indexed=True, stored=True))
+register_field('abspath', String(indexed=True, stored=True))
 register_field('abspath_depth', Integer(indexed=True, stored=True))
-register_field('parent_paths', Unicode(multiple=True, indexed=True))
-register_field('name', Unicode(stored=True, indexed=True))
+register_field('parent_paths', String(multiple=True, indexed=True))
+register_field('name', String(stored=True, indexed=True))
 # Class related fields
-register_field('format', Unicode(indexed=True, stored=True))
-register_field('base_classes', Unicode(multiple=True, indexed=True))
+register_field('format', String(indexed=True, stored=True))
+register_field('base_classes', String(multiple=True, indexed=True))
 register_field('class_version', Date(indexed=True, stored=True))
 # Referential integrity
-register_field('links', Unicode(multiple=True, indexed=True))
+register_field('links', String(multiple=True, indexed=True))
 register_field('onchange_reindex', String(multiple=True, indexed=True))
 # Full text search
 register_field('text', Unicode(indexed=True))

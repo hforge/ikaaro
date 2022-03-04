@@ -31,11 +31,10 @@ import ikaaro.root
 
 class FreeTestCase(TestCase):
 
-
     def test_create_text(self):
         with Database('demo.hforge.org', 19500, 20500) as database:
             with database.init_context():
-                root = root = database.get_resource('/')
+                root = database.get_resource('/')
                 # Create 1 resource
                 container = root.make_resource('test-create-texts', Folder)
                 resource = container.make_resource(None, Text)
@@ -115,7 +114,7 @@ class FreeTestCase(TestCase):
     def test_multilingual_search(self):
         with Database('demo.hforge.org', 19500, 20500) as database:
             with database.init_context():
-                root = root = database.get_resource('/')
+                root = database.get_resource('/')
                 container = root.make_resource('test-multilingual', Folder)
                 # Create N resources
                 for i in range(0, 20):
