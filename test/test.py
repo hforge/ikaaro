@@ -32,6 +32,7 @@ import test_database
 import test_metadata
 import test_query
 import test_server
+import test_xapian_search
 from junitxml import JUnitXmlResult
 
 
@@ -40,6 +41,7 @@ test_modules = [
     test_metadata,
     test_query,
     test_server,
+    test_xapian_search,
 ]
 
 
