@@ -52,6 +52,7 @@ from .skins import skin_registry
 from .constants import JWT_EXPIRE, JWT_ISSUER
 from .constants import SESSION_KEY
 from .server import get_server
+from .utils import dict_of_bytes_to_string
 
 log = getLogger("ikaaro.web")
 
@@ -329,14 +330,7 @@ class CMSContext(prototype):
         if self.method in ('GET', 'HEAD'):
             return self.uri.query
         # XXX What parameters with the fields defined in the query?
-        new_data = {}
-        for key, val in self.body.items():
-            if type(val) is bytes:
-                val = val.decode()
-            if type(key) is bytes:
-                key = key.decode()
-
-            new_data[key] = val
+        new_data = dict_of_bytes_to_string(self.body)
         return new_data
 
 

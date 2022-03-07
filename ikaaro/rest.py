@@ -24,6 +24,7 @@ from itools.web import BaseView
 
 # Import from ikaaro
 from .fields import Metadata_Field, File_Field
+from .utils import dict_of_bytes_to_string
 
 ###########################################################################
 # Utility functions
@@ -132,7 +133,8 @@ class Rest_BaseView(BaseView):
         """Utility method that loads the json from the request entity. Used
         by POST and PUT request methods.
         """
-        return self.context.body
+        new_data = dict_of_bytes_to_string(self.context.body)
+        return new_data
 
 
     def created(self, resource):

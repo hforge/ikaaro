@@ -373,3 +373,32 @@ def close_fancybox(context, default=None):
     # Case 2: normal
     goto = context.get_form_value('referrer') or default
     return get_reference(goto) if type(goto) is str else goto
+
+
+def dict_of_bytes_to_string(old_dict):
+    """
+    Convert dict bytes key value to string
+    Used in form conversion
+    """
+    from typing import Dict
+    new_dict = {}
+    for key, value in old_dict.items():
+        if type(key) is bytes:
+            key = key.decode("utf-8")
+        if type(value) is bytes:
+            value = value.decode("utf-8")
+        elif type(value) is list:
+            tmp_list = []
+            for element in value:
+                if isinstance(element, Dict):
+                    element = dict_of_bytes_to_string(element)
+                elif type(element) is bytes:
+                    element = element.decode("utf-8")
+                tmp_list.append(element)
+            value = tmp_list
+        elif isinstance(value, Dict):
+            value = dict_of_bytes_to_string(value)
+
+        new_dict[key] = value
+
+    return new_dict
