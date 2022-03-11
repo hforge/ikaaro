@@ -5,4 +5,3 @@ junitxml==0.7
 jwcrypto==1.0
 psutil==5.9.0
 requests-toolbelt==0.9.1
-git+https://github.com/bepatient-fr/itools.git@feature/python3#egg=itools
