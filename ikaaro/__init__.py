@@ -26,6 +26,8 @@ from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
 
 # Import from ikaaro
+# Add class to register
+from .root import Root
 from .file import File
 from .folder import Folder
 from .registry import register_document_type

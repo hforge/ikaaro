@@ -179,7 +179,7 @@ def load_modules(config):
     modules = config.get_value('modules')
     for name in modules:
         name = name.strip()
-        exec('import %s' % name)
+        __import__(name)
 
 
 
@@ -630,7 +630,10 @@ class Server(object):
 
     def is_running(self):
         pid = self.get_pid()
-        return pid_exists(pid)
+        if pid:
+            return pid_exists(pid)
+        else:
+            return False
 
 
     def __enter__(self):
