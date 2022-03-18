@@ -315,6 +315,16 @@ class ServerHandler(WSGIHandler):
             length,
             delta)
 
+    def dict_bytes_to_str(self, data: dict):
+        new_response_headers = {}
+        for key,value in data.items():
+            if type(key) is bytes:
+                key = key.decode("utf-8")
+            if type(value) is bytes:
+                value = value.decode("utf-8")
+            new_response_headers[key] = value
+        return new_response_headers
+
     def log_request(self):
         request_log = self.format_request()
         status = (self._orig_status or self.status or '000').split()[0]
@@ -322,7 +332,7 @@ class ServerHandler(WSGIHandler):
         request_headers = dict(self.headers)
         request_headers.pop("cookie", None)
         request_headers.pop("authorization", None)
-        response_headers = dict(self.response_headers)
+        response_headers = self.dict_bytes_to_str(dict(self.response_headers))
         response_headers.pop("Set-cookie", None)
         method = self.command
         response_length = self.response_length
