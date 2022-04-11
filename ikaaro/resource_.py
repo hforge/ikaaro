@@ -933,9 +933,10 @@ class DBResource(Resource):
             if not field_multilingual:
                 if is_unicode:
                     if type(field_value) is list:
-                        field_value = [x.decode("utf-8") for x in field_value]
+                        field_value = [x.decode("utf-8") if isinstance(x, bytes) else x for x in field_value]
                     else:
-                        field_value = field_value.decode("utf-8")
+                        if isinstance(field_value, bytes):
+                            field_value = field_value.decode("utf-8")
                 else:
                     field_value = datatype.decode(field_value)
                 self.set_value(field_name, field_value)
@@ -946,7 +947,8 @@ class DBResource(Resource):
                 if is_prototype(datatype, HTMLBody):
                     lang_value = datatype.decode(lang_value)
                 if is_unicode:
-                    lang_value = lang_value.decode("utf-8")
+                    if isinstance(lang_value, bytes):
+                        lang_value = lang_value.decode("utf-8")
                 self.set_value(field_name, lang_value, language=lang)
 
 

@@ -381,7 +381,7 @@ class SelectAbspath_Field(Select_Field):
 class Text_Field(Metadata_Field):
 
     rest_type = 'text'
-    datatype = String()
+    datatype = Unicode()
     multilingual = True
     parameters_schema = {'lang': String} # useful only when multilingual
     widget = TextWidget()
