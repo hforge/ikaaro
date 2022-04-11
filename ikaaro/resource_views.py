@@ -463,7 +463,6 @@ class AutoJSONResourcesImport(AutoForm):
             raise FormError()
         filename, mimetype, json_raw = form.pop("file")
         json_content = json.loads(json_raw)
-        json_content = fix_json(json_content)
         form["json_import"] = json_content
         export_type = json_content["export_type"]
         if export_type == "child-export":
