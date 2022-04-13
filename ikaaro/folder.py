@@ -99,7 +99,11 @@ class Folder(DBResource):
     def traverse_resources(self):
         yield self
         for name in self._get_names():
-            resource = self.get_resource(name)
+            try:
+                resource = self.get_resource(name)
+            except StopIteration:
+                # Log the resource abspath
+                continue
             for x in resource.traverse_resources():
                 yield x
 
