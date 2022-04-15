@@ -81,7 +81,7 @@ class AddMenu(NewResource_Local):
 class MenuItem(OrderedFolder):
 
     class_id = 'config-menu-item'
-    class_title = MSG('Men')
+    class_title = MSG('Menu')
 
     # Fields
     path = URI_Field(required=True, title=MSG('Path'),
