@@ -21,6 +21,7 @@
 
 # Import from the Standard Library
 import fnmatch
+from logging import getLogger
 from io import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
@@ -52,7 +53,7 @@ from .messages import MSG_NAME_CLASH
 from .resource_ import DBResource
 from .utils import process_name, tidy_html, get_base_path_query
 
-
+log = getLogger("ikaaro")
 
 class Folder(DBResource):
 
@@ -103,6 +104,7 @@ class Folder(DBResource):
                 resource = self.get_resource(name)
             except StopIteration:
                 # Log the resource abspath
+                log.error("The resource can't be read - {} {}".format(name, self.abspath))
                 continue
             for x in resource.traverse_resources():
                 yield x
