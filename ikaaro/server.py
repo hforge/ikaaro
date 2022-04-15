@@ -225,14 +225,9 @@ def create_server(target, email, password, root,
     if root is None:
         root_class = Root
     else:
-        if root == "bepatient":
-            class_name = 'BP_Root'
-        else:
-            class_name = 'Root'
         modules.insert(0, root)
-        __import__(root)
-        mod = __import__('%s.root' % root, fromlist=[class_name])
-        root_class = getattr(mod, class_name)
+        mod = __import__(root)
+        root_class = getattr(mod, 'Root')
     # Make folder
     try:
         mkdir(target)
