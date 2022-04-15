@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
+from logging import getLogger, NullHandler
 from sys import stderr
 
 # Import from itools
@@ -25,12 +26,20 @@ from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
 
 # Import from ikaaro
-from file import File
-from folder import Folder
-from registry import register_document_type
-from root import Root
-import text
-from webpage import WebPage
+# Add class to register
+from .root import Root
+from .file import File
+from .folder import Folder
+from .registry import register_document_type
+from . import text
+from .webpage import WebPage
+
+
+getLogger("ikaaro").addHandler(NullHandler())
+getLogger("ikaaro.web").addHandler(NullHandler())
+getLogger("ikaaro.update").addHandler(NullHandler())
+getLogger("ikaaro.access").addHandler(NullHandler())
+getLogger("ikaaro.cron").addHandler(NullHandler())
 
 
 # Check for required software
@@ -50,7 +59,7 @@ __version__ = get_version()
 
 
 # Import required modules
-import users
+from . import users
 
 # Register the itools domain
 path = get_abspath('locale')
@@ -60,6 +69,3 @@ register_domain('ikaaro', path)
 register_document_type(WebPage)
 register_document_type(Folder)
 register_document_type(File)
-
-# Silent pyflakes
-Root

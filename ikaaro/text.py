@@ -32,14 +32,14 @@ from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
-from database import Database
-from fields import File_Field
-from file import File
-from file_views import File_Edit
-from text_views import Text_Edit, Text_View, PO_Edit
-from text_views import CSV_View, CSV_AddRow, CSV_EditRow
-from text_views import CSS_Edit
-from widgets import FileWidget, MultilineWidget
+from .database import Database
+from .fields import File_Field
+from .file import File
+from .file_views import File_Edit
+from .text_views import Text_Edit, Text_View, PO_Edit
+from .text_views import CSV_View, CSV_AddRow, CSV_EditRow
+from .text_views import CSS_Edit
+from .widgets import FileWidget, MultilineWidget
 
 css_uri_expr = compile(r"url\((.*)\)")
 def css_get_reference(uri):
@@ -60,7 +60,7 @@ def css_get_reference(uri):
 class Text(File):
 
     class_id = 'text'
-    class_title = MSG(u'Plain Text')
+    class_title = MSG('Plain Text')
     class_icon16 = '/ui/ikaaro/icons/16x16/text.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit']
@@ -81,7 +81,7 @@ class Text(File):
 class PO(Text):
 
     class_id = 'text/x-gettext-translation'
-    class_title = MSG(u'Message Catalog')
+    class_title = MSG('Message Catalog')
     class_icon16 = '/ui/ikaaro/icons/16x16/po.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/po.png'
 
@@ -99,7 +99,7 @@ class PO(Text):
 class CSS(Text):
 
     class_id = 'text/css'
-    class_title = MSG(u'CSS')
+    class_title = MSG('CSS')
     class_icon16 = '/ui/ikaaro/icons/16x16/css.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/css.png'
 
@@ -231,7 +231,7 @@ class CSS(Text):
 class Python(Text):
 
     class_id = 'text/x-python'
-    class_title = MSG(u'Python')
+    class_title = MSG('Python')
     class_icon16 = '/ui/ikaaro/icons/16x16/python.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/python.png'
     # Fields
@@ -242,7 +242,7 @@ class Python(Text):
 class JS(Text):
 
     class_id = 'application/x-javascript'
-    class_title = MSG(u'Javascript')
+    class_title = MSG('Javascript')
     class_icon16 = '/ui/ikaaro/icons/16x16/js.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/js.png'
 
@@ -251,7 +251,7 @@ class JS(Text):
 class XML(Text):
 
     class_id = 'text/xml'
-    class_title = MSG(u'XML File')
+    class_title = MSG('XML File')
     # Fields
     data = File_Field(required=True, class_handler=XMLFile)
 
@@ -260,7 +260,7 @@ class XML(Text):
 class HTML(Text):
 
     class_id = 'text/html'
-    class_title = MSG(u'HTML File')
+    class_title = MSG('HTML File')
     # Fields
     data = File_Field(required=True, class_handler=HTMLFile)
 
@@ -269,7 +269,7 @@ class HTML(Text):
 class CSV(Text):
 
     class_id = 'text/comma-separated-values'
-    class_title = MSG(u'Comma Separated Values')
+    class_title = MSG('Comma Separated Values')
     class_views = ['view', 'add_row', 'edit', 'externaledit']
 
     # Fields

@@ -17,41 +17,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 # Import from itools
-from itools.database import OrQuery
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
-from itools.uri import Path
 from itools.web import STLView, INFO, ERROR
-from itools.database import PhraseQuery
 
-# Import from ikaaro
-from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
-from folder import Folder
-from messages import MSG_CHANGES_SAVED
-from utils import get_base_path_query
-from views import IconsView
+from .folder import Folder
+from .messages import MSG_CHANGES_SAVED
+from .views import IconsView
 
 
 ###########################################################################
 # Views
 ###########################################################################
 GROUPS = [
-    ('access', MSG(u'Users, Access Control & Security')),
-    ('webmaster', MSG(u'Webmaster tools')),
-    ('content', MSG(u'Content')),
-    ('other', MSG(u'Other')),
+    ('access', MSG('Users, Access Control & Security')),
+    ('webmaster', MSG('Webmaster tools')),
+    ('content', MSG('Content')),
+    ('other', MSG('Other')),
     ]
 
 
 class Configuration_View(STLView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Configuration')
+    title = MSG('Configuration')
     template = '/ui/ikaaro/website/config.xml'
 
     def get_namespace(self, resource, context):
@@ -98,15 +91,15 @@ class Configuration_View(STLView):
             if resource.get_resource(name, soft=True) is None:
                 resource.make_resource(name, module)
 
-        context.message = MSG(u'New modules initialized.')
+        context.message = MSG('New modules initialized.')
 
 
 
 class Config_EditLanguages(STLView):
 
     access = 'is_admin'
-    title = MSG(u'Languages')
-    description = MSG(u'Define the Web Site languages.')
+    title = MSG('Languages')
+    description = MSG('Define the Web Site languages.')
     icon = 'languages.png'
     template = '/ui/ikaaro/website/edit_languages.xml'
     schema = {'codes': String(multiple=True, mandatory=True)}
@@ -129,8 +122,8 @@ class Config_EditLanguages(STLView):
 
         # Not active languages
         not_active = [
-            x for x in get_languages() if x['code'] not in ws_languages ]
-        not_active.sort(lambda x, y: cmp(x['name'], y['name']))
+            x for x in get_languages() if x['code'] not in ws_languages]
+        not_active = sorted(not_active, key=lambda x: x["name"])
 
         # Ok
         return {
@@ -146,7 +139,7 @@ class Config_EditLanguages(STLView):
         # This action requires only one language to be selected
         codes = form['codes']
         if len(codes) != 1:
-            message = ERROR(u'You must select one and only one language.')
+            message = ERROR('You must select one and only one language.')
             context.message = message
             return
         default = codes[0]
@@ -168,7 +161,7 @@ class Config_EditLanguages(STLView):
         languages = resource.get_value('website_languages')
         default = languages[0]
         if default in codes:
-            message = ERROR(u'You can not remove the default language.')
+            message = ERROR('You can not remove the default language.')
             context.message = message
             return
 
@@ -176,7 +169,7 @@ class Config_EditLanguages(STLView):
         languages = [ x for x in languages if x not in codes ]
         resource.set_property('website_languages', languages)
         # Ok
-        context.message = INFO(u'Languages removed.')
+        context.message = INFO('Languages removed.')
 
 
     #######################################################################
@@ -192,7 +185,7 @@ class Config_EditLanguages(STLView):
         ws_languages.append(form['code'])
         resource.set_property('website_languages', ws_languages)
         # Ok
-        context.message = INFO(u'Language added.')
+        context.message = INFO('Language added.')
 
 
 
@@ -202,7 +195,7 @@ class Config_EditLanguages(STLView):
 class Configuration(Folder):
 
     class_id = 'configuration'
-    class_title = MSG(u'Configuration')
+    class_title = MSG('Configuration')
     class_views = ['view', 'edit_languages']
     class_icon_css = 'fa-cogs'
 
@@ -232,13 +225,13 @@ class Configuration(Folder):
 
 
 # Import core config modules
-import config_access
-import config_captcha
-import config_footer
-import config_groups
-import config_mail
-import config_menu
-import config_models
-import config_register
-import config_seo
-import config_theme
+from . import config_access
+from . import config_captcha
+from . import config_footer
+from . import config_groups
+from . import config_mail
+from . import config_menu
+from . import config_models
+from . import config_register
+from . import config_seo
+from . import config_theme

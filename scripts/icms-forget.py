@@ -55,7 +55,7 @@ def info(parser, target):
     deltas = [ y for (x, y) in get_commits(target) ]
     total = len(deltas)
     if total == 0:
-        print 'There is nothing to forget.'
+        print('There is nothing to forget.')
         return
 
     # Count
@@ -75,7 +75,7 @@ def info(parser, target):
     for delta, x in cum:
         partial += x
         per = (partial * 100) / total
-        print msg.format(delta, delta_w, partial, partial_w, per)
+        print(msg.format(delta, delta_w, partial, partial_w, per))
 
 
 
@@ -83,18 +83,18 @@ def forget(parser, target, options):
     # Find out the commit to start from
     commits = get_commits(target)
     if len(commits) == 0:
-        print 'There is nothing to forget.'
+        print('There is nothing to forget.')
         return
 
     if options.commits is not None:
         if len(commits) > options.commits:
             since = commits[options.commits][0]
         else:
-            print 'There is nothing to forget'
+            print('There is nothing to forget')
             return
     else:
         if commits[len(commits) - 1][1] <= options.days:
-            print 'There is nothing to forget.'
+            print('There is nothing to forget.')
             return
         for commit in commits:
             since, delta = commit
@@ -104,11 +104,11 @@ def forget(parser, target, options):
     # Check the server is not running
     pid = get_pid('%s/pid' % target)
     if pid is not None:
-        print 'The server is running. Stop it before running this command.'
+        print('The server is running. Stop it before running this command.')
         return
 
     # Export to new database
-    print '* Make new branch with shorter history (may take a while)'
+    print('* Make new branch with shorter history (may take a while)')
     cwd = '%s/database' % target
     command = (
         'git fast-export --no-data --progress=1000 %s.. | '
@@ -128,7 +128,7 @@ def forget(parser, target, options):
         exit()
 
     # Backup old branch and deploy new one
-    print '* Deploy new branch and backup old branch'
+    print('* Deploy new branch and backup old branch')
     now = datetime.now().strftime('%Y%m%d%H%M')
     command = ['git', 'branch', '-m', 'master', now]
     get_pipe(command, cwd=cwd)
@@ -138,7 +138,7 @@ def forget(parser, target, options):
     get_pipe(command, cwd=cwd)
 
     # Ok
-    print 'Done. Backup branch is %s' % now
+    print('Done. Backup branch is %s' % now)
 
 
 

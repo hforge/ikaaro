@@ -22,16 +22,16 @@ from itools.html import stream_is_empty
 from itools.web import STLView
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from autoform import AutoForm
-from config import Configuration
-from config_captcha import Captcha_Field
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from emails import send_email
-from fields import Boolean_Field, HTMLFile_Field
-from resource_ import DBResource
-from widgets import Widget
+from .autoedit import AutoEdit
+from .autoform import AutoForm
+from .config import Configuration
+from .config_captcha import Captcha_Field
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .emails import send_email
+from .fields import Boolean_Field, HTMLFile_Field
+from .resource_ import DBResource
+from .widgets import Widget
 
 
 class TermsOfService_View(STLView):
@@ -48,7 +48,7 @@ class TermsOfService_View(STLView):
 class TermsOfService_Widget(Widget):
 
     template = '/ui/ikaaro/register_terms_of_service.xml'
-    title = MSG(u'Terms of Service')
+    title = MSG('Terms of Service')
     inline = True
 
 
@@ -56,7 +56,7 @@ class TermsOfService_Widget(Widget):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    title = MSG(u'Create an account')
+    title = MSG('Create an account')
 
     form_id = 'register-form'
     fields = ['firstname', 'lastname', 'email', 'captcha', 'tos']
@@ -154,7 +154,7 @@ class RegisterForm(AutoForm):
             email_id = 'user-ask-for-confirmation'
         else:
             # User already registered
-            user = results.get_resources().next()
+            user = next(results.get_resources())
             email_id = 'register-already-registered'
 
         # 2. Send email
@@ -162,9 +162,9 @@ class RegisterForm(AutoForm):
 
         # 3. Show message
         message = MSG(
-            u'<div id="registration-end-msg">'
-            u'An email has been sent to you, to finish the registration '
-            u'process follow the instructions detailed in it.</div>')
+            '<div id="registration-end-msg">'
+            'An email has been sent to you, to finish the registration '
+            'process follow the instructions detailed in it.</div>')
         return message.gettext().encode('utf-8')
 
 
@@ -172,8 +172,8 @@ class RegisterForm(AutoForm):
 class ConfigRegister(DBResource):
 
     class_id = 'config-register'
-    class_title = MSG(u'User registration')
-    class_description = MSG(u'Configuration of the user registration process.')
+    class_title = MSG('User registration')
+    class_description = MSG('Configuration of the user registration process.')
     class_icon_css = 'fa-user-plus'
     class_views = ['edit']
 
@@ -183,7 +183,7 @@ class ConfigRegister(DBResource):
 
     # Fields
     is_open = Boolean_Field(default=False,
-                            title=MSG(u'Users can register by themselves'))
+                            title=MSG('Users can register by themselves'))
     tos = HTMLFile_Field(title=MSG(u"Terms of service"))
 
     # Views

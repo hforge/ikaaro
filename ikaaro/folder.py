@@ -21,9 +21,11 @@
 
 # Import from the Standard Library
 import fnmatch
-from cStringIO import StringIO
+from logging import getLogger
+from io import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
+import uuid
 
 # Import from itools
 from itools.core import is_prototype
@@ -35,34 +37,42 @@ from itools.database import AndQuery, PhraseQuery, NotQuery
 from itools.html import XHTMLFile
 from itools.i18n import guess_language
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import BaseView, get_context, ERROR
+from itools.web.exceptions import FormError
 
 # Import from ikaaro
-from views.folder_views import Folder_BrowseContent, Folder_PreviewContent
-from views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
+from .views.folder_views import Folder_BrowseContent, Folder_PreviewContent
+from .views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from database import Database
-from datatypes import guess_mimetype
-from exceptions import ConsistencyError
-from messages import MSG_NAME_CLASH
-from resource_ import DBResource
-from utils import process_name, tidy_html, get_base_path_query
+from .autoedit import AutoEdit
+from .database import Database
+from .datatypes import guess_mimetype
+from .exceptions import ConsistencyError
+from .messages import MSG_NAME_CLASH
+from .resource_ import DBResource
+from .utils import process_name, tidy_html, get_base_path_query
 
-
+log = getLogger("ikaaro")
 
 class Folder(DBResource):
 
-    class_id = 'folder'
-    class_version = '20071215'
-    class_title = MSG(u'Folder')
-    class_description = MSG(u'Organize your files and documents with folders.')
-    class_icon16 = '/ui/ikaaro/icons/16x16/folder.png'
-    class_icon48 = '/ui/ikaaro/icons/48x48/folder.png'
-    class_views = ['view', 'browse_content', 'preview_content',
-                   'new_resource', 'edit', 'links', 'backlinks']
-
+    class_id = "folder"
+    class_version = "20071215"
+    class_title = MSG("Folder")
+    class_description = MSG("Organize your files and documents with folders.")
+    class_icon16 = "/ui/ikaaro/icons/16x16/folder.png"
+    class_icon48 = "/ui/ikaaro/icons/48x48/folder.png"
+    class_views = [
+        "view",
+        "browse_content",
+        "preview_content",
+        "new_resource",
+        "edit",
+        "links",
+        "backlinks",
+        "json_export",
+    ]
 
     #########################################################################
     # Gallery properties
@@ -90,23 +100,18 @@ class Folder(DBResource):
     def traverse_resources(self):
         yield self
         for name in self._get_names():
-            resource = self.get_resource(name)
+            try:
+                resource = self.get_resource(name)
+            except StopIteration:
+                # Log the resource abspath
+                log.error("The resource can't be read - {} {}".format(name, self.abspath))
+                continue
             for x in resource.traverse_resources():
                 yield x
 
 
     def make_resource_name(self):
-        max_id = -1
-        for name in self.get_names():
-            # Mixing explicit and automatically generated names is allowed
-            try:
-                id = int(name)
-            except ValueError:
-                continue
-            if id > max_id:
-                max_id = id
-
-        return str(max_id + 1)
+        return uuid.uuid4().hex
 
 
     def make_resource(self, name, cls, soft=False, **kw):
@@ -174,7 +179,7 @@ class Folder(DBResource):
             # Do not check referencial-integrity
             pass
         else:
-            raise ValueError,('Incorrect ref_action "{}"'.format(ref_action))
+            raise ValueError('Incorrect ref_action "{}"'.format(ref_action))
 
         # Events, remove
         path = str(resource.abspath)
@@ -198,10 +203,10 @@ class Folder(DBResource):
     # API
     #######################################################################
     def _make_file(self, name, filename, mimetype, body, default_language):
-        from webpage import WebPage
+        from .webpage import WebPage
 
         if type(name) is not str:
-            raise TypeError, 'expected string, got %s' % repr(name)
+            raise TypeError('expected string, got %s' % repr(name))
 
         # Web Pages are first class citizens
         if mimetype == 'text/html':
@@ -223,6 +228,102 @@ class Folder(DBResource):
             kw['data'] = {language: body}
 
         return self.make_resource(name, cls, **kw)
+
+
+    json_export_excluded_children = []
+    json_export_excluded_children_cls = []
+
+    def get_exportable_children(self):
+        for name in self._get_names():
+            child = self.get_resource(name)
+            if child == self:
+                continue
+            if isinstance(child, tuple(self.json_export_excluded_children_cls)):
+                continue
+            for exclude_pattern in self.json_export_excluded_children:
+                if fnmatch.fnmatch(str(child.abspath), exclude_pattern):
+                    break
+            else:
+                yield child
+
+    def export_as_json(self, context, only_self=False, exported_fields=None):
+        proxy = super(Folder, self)
+        json_namespace = proxy.export_as_json(
+            context, only_self=only_self, exported_fields=exported_fields
+        )
+        if only_self:
+            return json_namespace
+        items = []
+        for child in self.get_exportable_children():
+            items.append(child.export_as_json(context))
+        json_namespace["items"] = items
+        return json_namespace
+
+
+    def get_importable_document_types(self, context):
+        include_subclasses = self.new_resource.include_subclasses
+        document_types = self.get_document_types()
+        root = context.root
+        user = context.user
+        database = context.database
+        if not include_subclasses:
+            return document_types
+        document_types = tuple(document_types)
+        items = []
+        for cls in database.get_resource_classes():
+            if issubclass(cls, tuple(self.json_export_excluded_children_cls)):
+                continue
+            class_id = cls.class_id
+            if class_id[0] != '-' and issubclass(cls, document_types):
+                if root.has_permission(user, 'add', self, class_id):
+                    items.append(cls)
+        return items
+
+    def create_imported_child(self, context, item_name, item_cls, item_class_version, dry_run=False):
+        child = self.get_resource(item_name, soft=True)
+        if not child:
+            document_types = self.get_importable_document_types(context)
+            if item_cls not in document_types:
+                raise FormError(
+                    ERROR("L'import d'une ressource de type {resource_type} "
+                          "n'est pas autorisé au sein de la resource actuelle").gettext(
+                        resource_type=item_cls.class_title
+                    )
+                )
+            if item_class_version != item_cls.class_version:
+                raise FormError(
+                    ERROR("La version de la ressource que vous essayez d'importer "
+                          "ne correspond pas à la version de la ressource actuelle")
+                )
+            if not dry_run:
+                child = self.make_resource(item_name, item_cls)
+        return child
+    
+
+    def import_children_as_json(self, context, json_item, dry_run=False):
+        database = context.database
+        item_class_id = json_item["class_id"]
+        item_class_version = json_item["class_version"]
+        item_cls = database.get_resource_class(item_class_id)
+        # Check if child resource already exists
+        # We will be able to only modify and create sub child
+        item_name = json_item["name"]
+        child = self.create_imported_child(
+            context,
+            item_name,
+            item_cls,
+            item_class_version,
+            dry_run=dry_run
+        )
+        if not child:
+            return
+        child.update_metadata_from_dict(json_item["fields"], dry_run=dry_run)
+        if not dry_run:
+            # Save changes for reindex
+            database.save_changes()
+        for sub_child in json_item["items"]:
+            # Recursively create new child
+            child.import_children_as_json(context, sub_child, dry_run=dry_run)
 
 
     def export_zip(self, paths):
@@ -279,7 +380,7 @@ class Folder(DBResource):
                     folder = folder.make_resource(name, Folder)
                     folder.set_value('title', title, default_language)
                 elif not isinstance(subfolder, Folder):
-                    raise RuntimeError, MSG_NAME_CLASH
+                    raise RuntimeError(MSG_NAME_CLASH)
                 else:
                     folder = subfolder
 
@@ -296,7 +397,7 @@ class Folder(DBResource):
             # 4. The body
             body = handler.get_file(path_str)
             if filter:
-                body = filter(path_str, mimetype, body)
+                body = list(filter(path_str, mimetype, body))
                 if body is None:
                     continue
 
@@ -305,7 +406,7 @@ class Folder(DBResource):
             if file:
                 if update is False:
                     msg = 'unexpected resource at {path}'
-                    raise RuntimeError, msg.format(path=path_str)
+                    raise RuntimeError(msg.format(path=path_str))
                 if mimetype == 'text/html':
                     body = tidy_html(body)
                     file_handler = file.get_handler(language)
@@ -373,7 +474,7 @@ class Folder(DBResource):
         if (check_if_authorized and
                 (not target_parent.can_paste(source)
                  or not source.can_paste_into(target_parent))):
-            message = u'resource type "{0}" cannot be copied into type "{1}"'
+            message = 'resource type "{0}" cannot be copied into type "{1}"'
             message = message.format(source.class_title.gettext(),
                                      target_parent.class_title.gettext())
             raise ConsistencyError(message)
@@ -427,13 +528,13 @@ class Folder(DBResource):
         aux = source.abspath
         if aux.get_prefix(abspath) == aux:
             message = 'cannot move a resource to a subdirectory of itself'
-            raise ConsistencyError, message
+            raise ConsistencyError(message)
 
         # Check compatibility
         if (check_if_authorized and (not target_parent.can_paste(source)
                 or not source.can_paste_into(target_parent))):
             message = 'resource type "%r" cannot be moved into type "%r"'
-            raise ConsistencyError, message % (source, target_parent)
+            raise ConsistencyError(message % (source, target_parent))
 
         # Events, remove
         database = self.database

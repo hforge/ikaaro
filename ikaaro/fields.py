@@ -34,16 +34,16 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
-from datatypes import Password_Datatype, ChoosePassword_Datatype
-from datatypes import DaysOfWeek
-from links import get_abspath_links, update_abspath_links
-from utils import split_reference, get_secure_hash
-from widgets import Widget, FileWidget, MultilineWidget, TextWidget
-from widgets import CheckboxWidget, RadioWidget, SelectWidget
-from widgets import BirthDateWidget, DateWidget, DatetimeWidget
-from widgets import PasswordWidget, ChoosePassword_Widget
-from widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
+from .datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
+from .datatypes import Password_Datatype, ChoosePassword_Datatype
+from .datatypes import DaysOfWeek
+from .links import get_abspath_links, update_abspath_links
+from .utils import split_reference, get_secure_hash
+from .widgets import Widget, FileWidget, MultilineWidget, TextWidget
+from .widgets import CheckboxWidget, RadioWidget, SelectWidget
+from .widgets import BirthDateWidget, DateWidget, DatetimeWidget
+from .widgets import PasswordWidget, ChoosePassword_Widget
+from .widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
 
 
 class Field(BaseField):
@@ -54,10 +54,11 @@ class Field(BaseField):
     multilingual = False
     required = False
     title = None
-    readonly = False # Means the field should not be editable by the user
+    readonly = False  # Means the field should not be editable by the user
     datatype = None
     widget = None
     obsolete = False
+    encrypted = False
 
     def get_value(self, resource, name, language=None):
         raise NotImplementedError
@@ -71,7 +72,7 @@ class Field(BaseField):
         old_value = self.get_value(resource, name, language)
         if value == old_value:
             # Check the new parameters are different from the old one
-            for p_key, p_value in kw.iteritems():
+            for p_key, p_value in kw.items():
                 if self.get_value(resource, p_key, language) != p_value:
                     break
             else:
@@ -89,7 +90,14 @@ class Field(BaseField):
 
     # XXX For backwards compatibility
     datatype_keys = [
-        'default', 'multiple', 'multilingual', 'indexed', 'stored', 'is_valid']
+        'default',
+        'multiple',
+        'multilingual',
+        'indexed',
+        'stored',
+        'is_valid',
+        'encrypted',
+    ]
     def get_datatype(self):
         kw = {}
         for key in self.datatype_keys:
@@ -102,13 +110,13 @@ class Field(BaseField):
         return self.datatype(mandatory=self.required, **kw)
 
 
-    def get_default(self):
+    def get_default(self, language=None):
         if self.default is not None:
             return self.default
         return self.get_datatype().get_default()
 
 
-    widget_keys = ['title', 'endline', 'size', 'tip']
+    widget_keys = ['title', 'endline', 'size', 'tip', 'placeholder']
     def get_widget(self, name):
         kw = {}
         for key in self.widget_keys:
@@ -169,7 +177,7 @@ class Metadata_Field(Field):
     def get_value(self, resource, name, language=None):
         property = resource.metadata.get_property(name, language=language)
         if not property:
-            return self.get_default()
+            return self.get_default(language=language)
 
         # Multiple
         if type(property) is list:
@@ -190,7 +198,7 @@ class Metadata_Field(Field):
 
     def rest(self):
         rest = super(Metadata_Field, self).rest()
-        rest['parameters'] = self.parameters_schema.keys()
+        rest['parameters'] = list(self.parameters_schema.keys())
         return rest
 
 
@@ -224,9 +232,9 @@ class Boolean3_Field(Metadata_Field):
 
 
 class Char_Field(Metadata_Field):
-    datatype = String()
+    datatype = Unicode()
     widget = TextWidget()
-    rest_type = 'bytes'
+    rest_type = 'bytes' # XXX
 
 
 class Color_Field(Metadata_Field):
@@ -263,6 +271,7 @@ class Datetime_Field(Metadata_Field):
 class Email_Field(Metadata_Field):
     datatype = Email()
     size = 40
+    encrypted = True
 
 
 
@@ -392,12 +401,12 @@ class Text_Field(Metadata_Field):
         return proxy.set_value(resource, name, value, language, **kw)
 
 
-    def get_default(self):
+    def get_default(self, language=None):
         if self.default is not None:
             if self.multilingual:
                 # Default value is multilingual too
                 if isinstance(self.default, MSG):
-                    return self.default.gettext()
+                    return self.default.gettext(language=language)
                 return self.default
             return self.default
         return self.get_datatype().get_default()
@@ -646,7 +655,7 @@ class File_Field(Field):
         if type(value) is tuple:
             filename, mimetype, value = value
 
-        if type(value) is str:
+        if type(value) in [bytes, str]:
             cls = self.class_handler
             if cls is None:
                 mimetype = magic_from_buffer(value)
@@ -851,7 +860,7 @@ class SelectDays_Field(Select_Field):
 
 class UUID_Field(Char_Field):
 
-    title = MSG(u'UUID')
+    title = MSG('UUID')
     indexed = True
     stored = True
     readonly = True
@@ -860,7 +869,7 @@ class UUID_Field(Char_Field):
 
 class CTime_Field(Datetime_Field):
 
-    title = MSG(u'Creation date')
+    title = MSG('Creation date')
     indexed = True
     stored = True
     readonly = True
@@ -869,7 +878,7 @@ class CTime_Field(Datetime_Field):
 
 class MTime_Field(Datetime_Field):
 
-    title = MSG(u'Modification date')
+    title = MSG('Modification date')
     indexed = True
     stored = True
     readonly = True
@@ -878,7 +887,7 @@ class MTime_Field(Datetime_Field):
 
 class LastAuthor_Field(Char_Field):
 
-    title = MSG(u'Last author')
+    title = MSG('Last author')
     indexed = False
     stored = True
     readonly = True
@@ -887,7 +896,7 @@ class LastAuthor_Field(Char_Field):
 
 class Title_Field(Text_Field):
 
-    title = MSG(u'Title')
+    title = MSG('Title')
     indexed = True
     stored = True
 
@@ -895,12 +904,12 @@ class Title_Field(Text_Field):
 
 class Description_Field(Textarea_Field):
 
-    title = MSG(u'Description')
+    title = MSG('Description')
     indexed = True
 
 
 
 class Subject_Field(Text_Field):
 
-    title = MSG(u'Keywords')
+    title = MSG('Keywords')
     indexde = True

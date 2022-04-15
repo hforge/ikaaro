@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from views.folder_views import Folder_BrowseContent, GoToSpecificDocument
-from views.folder_views import Folder_PreviewContent, SearchTypes_Enumerate
+from .views.folder_views import Folder_BrowseContent, GoToSpecificDocument
+from .views.folder_views import Folder_PreviewContent, SearchTypes_Enumerate
 
 
 print('[OBSOLETE] Imports from ikaaro.folder_views is obsolete. Use ikaaro.views instead')

@@ -16,10 +16,10 @@
 
 
 # TODO Move this exception to itools
-class ParserError(StandardError):
+class ParserError(Exception):
     pass
 
 
 # TODO Move this exception to itools
-class ConsistencyError(StandardError):
+class ConsistencyError(Exception):
     pass

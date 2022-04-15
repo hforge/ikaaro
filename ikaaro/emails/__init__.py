@@ -15,4 +15,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from here
-from emails import register_email, send_email, emails_registry, Email
+from .emails import register_email, send_email, emails_registry, Email

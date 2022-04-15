@@ -15,19 +15,42 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
+import traceback
+from logging import getLogger
 from time import time
+import os
+
+# Import from beaker
+from beaker.middleware import SessionMiddleware
 
 # Import from itools
-from itools.log import log_error
+from itools.uri import Reference
 from itools.web.router import RequestMethod
 from itools.web.utils import reason_phrases
+from itools.web.exceptions import HTTPError
+
+from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
+from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
+from ikaaro.constants import SESSION_DOMAIN, SESSION_SAMESITE
+from ikaaro.constants import SESSION_KEY
+from ikaaro.constants import SESSION_SECURE
+from ikaaro.server import get_server
+
+log = getLogger("ikaaro.web")
 
 
 def application(environ, start_response):
-    from ikaaro.server import get_server
     t0 = time()
     server = get_server()
-    with server.database.init_context(commit_at_exit=False) as context:
+    method = environ.get('REQUEST_METHOD')
+    path = environ.get("PATH_INFO")
+    read_only_method = method in ("GET", "OPTIONS")
+    root = server.root
+    GET_writable_paths = root.get_GET_writable_paths()
+    # READWRITE Specific GET methods
+    rw_path = any(s in path for s in GET_writable_paths)
+    read_only = read_only_method and not rw_path
+    with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
         try:
             # Init context from wsgi envrion
             context.init_from_environ(environ)
@@ -38,16 +61,51 @@ def application(environ, start_response):
             context.request_time = t1-t0
             # Callback at end of request
             context.on_request_end()
-        except StandardError:
-            log_error('Internal error', domain='itools.web')
+        except HTTPError as e:
+            RequestMethod.handle_client_error(e, context)
+        except Exception as e:
+            tb = traceback.format_exc()
+            log.error("Internal error : {}".format(tb), exc_info=True)
             context.set_default_response(500)
         finally:
-            headers =  context.header_response
+            headers = context.header_response
             if context.content_type:
                 headers.append(('Content-Type', context.content_type))
-            if context.entity:
+            if context.entity and not isinstance(context.entity, Reference):
                 headers.append(('Content-Length', str(len(context.entity))))
             status = context.status or 500
             status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
-            yield context.entity
+            data = context.entity
+            if isinstance(data, str):
+                yield data.encode("utf-8")
+            else:
+                yield data
+
+
+try:
+    os.makedirs(SESSIONS_FOLDER)
+except OSError:
+    pass
+
+session_opts = {
+    "session.type": SESSIONS_STORE_TYPE,
+    "session.data_dir": SESSIONS_FOLDER,
+    "session.cookie_expires": SESSION_EXPIRE,
+    "session.timeout": SESSION_TIMEOUT,
+    "session.cookie_domain": SESSION_DOMAIN,
+    "session.cookie_path": "/",
+    "session.secure": SESSION_SECURE,
+    "session.httponly": True,
+    "session.data_serializer": "json",
+    "session.auto": False,
+    "session.samesite": SESSION_SAMESITE,
+    "session.key": SESSION_KEY,
+}
+
+
+application = SessionMiddleware(application, session_opts)
+
+
+def get_wsgi_application():
+    return application

@@ -30,11 +30,19 @@ from ikaaro.server import create_server
 # Import tests
 import test_database
 import test_metadata
+import test_query
 import test_server
+import test_xapian_search
 from junitxml import JUnitXmlResult
 
 
-test_modules = [test_metadata, test_server, test_database]
+test_modules = [
+    test_database,
+    test_metadata,
+    test_query,
+    test_server,
+    test_xapian_search,
+]
 
 
 loader = TestLoader()
@@ -61,7 +69,7 @@ if __name__ == '__main__':
     elif options.mode == 'junitxml':
         path = get_abspath('./junit.xml')
         print('Result is here: %s' % path)
-        f = file(path, 'wb')
+        f = open(path, 'wb')
         result = JUnitXmlResult(f)
         result.startTestRun()
         ret = suite.run(result)

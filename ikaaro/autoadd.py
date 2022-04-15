@@ -22,13 +22,13 @@ from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
-from autoform import AutoForm
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from buttons import Button
-from fields import Field
-import messages
-from widgets import HiddenWidget, ReadOnlyWidget
+from .autoform import AutoForm
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .buttons import Button
+from .fields import Field
+from . import messages
+from .widgets import HiddenWidget, ReadOnlyWidget
 
 
 
@@ -37,7 +37,7 @@ class AutoAdd(AutoForm):
 
     access = 'is_allowed_to_add'
 
-    actions = [Button(access=True, css='btn btn-primary', title=MSG(u'Add'))]
+    actions = [Button(access=True, css='btn btn-primary', title=MSG('Add'))]
     action_goto = None
     goto_view = None
     goto_parent_view = None # DEPRECATED -> use action_goto
@@ -77,7 +77,7 @@ class AutoAdd(AutoForm):
     def _resource_class(self):
         context = self.context
 
-        class_id = context.query['type']
+        class_id = context.query.get('type')
         if not class_id:
             return None
         return context.database.get_resource_class(class_id)
@@ -90,10 +90,10 @@ class AutoAdd(AutoForm):
         cls = self._resource_class
         if cls:
             class_title = cls.class_title.gettext()
-            title = MSG(u'Add {class_title}')
+            title = MSG('Add {class_title}')
             return title.gettext(class_title=class_title)
 
-        return MSG(u'Add resource').gettext()
+        return MSG('Add resource').gettext()
 
 
     def _get_datatype(self, resource, context, name):
@@ -162,11 +162,11 @@ class AutoAdd(AutoForm):
             # View cls_description
             value = getattr(self, name, None)
             if value is not None:
-                return value.gettext() if value else u''
+                return value.gettext() if value else ''
             # Resource cls_description
             cls = self._resource_class
             value = cls.class_description
-            return value.gettext() if value else u''
+            return value.gettext() if value else ''
         elif name == 'referrer':
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()
@@ -177,7 +177,7 @@ class AutoAdd(AutoForm):
 
         if getattr(datatype, 'multilingual', False):
             for language in resource.get_edit_languages(context):
-                value.setdefault(language, u'')
+                value.setdefault(language, '')
 
         return value
 
@@ -196,8 +196,8 @@ class AutoAdd(AutoForm):
         root = context.root
         if not root.has_permission(context.user, 'add', container, class_id):
             path = '/' if path == '.' else '/%s/' % path
-            msg = ERROR(u'Adding resources to {path} is not allowed.')
-            raise FormError, msg.gettext(path=path)
+            msg = ERROR('Adding resources to {path} is not allowed.')
+            raise FormError(msg.gettext(path=path))
 
         # Ok
         return container
@@ -228,17 +228,17 @@ class AutoAdd(AutoForm):
         # 2. The name
         name = self.get_new_resource_name(form)
         if not name:
-            raise FormError, messages.MSG_NAME_MISSING
+            raise FormError(messages.MSG_NAME_MISSING)
         try:
             name = checkid(name)
         except UnicodeEncodeError:
             name = None
         if name is None:
-            raise FormError, messages.MSG_BAD_NAME
+            raise FormError(messages.MSG_BAD_NAME)
 
         # Check the name is free
         if container.get_resource(name, soft=True) is not None:
-            raise FormError, messages.MSG_NAME_CLASH
+            raise FormError(messages.MSG_NAME_CLASH)
         form['name'] = name
 
         # Ok
@@ -257,7 +257,7 @@ class AutoAdd(AutoForm):
 
         value = form[name]
         if type(value) is dict:
-            for language, data in value.iteritems():
+            for language, data in value.items():
                 resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)

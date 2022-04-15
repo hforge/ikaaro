@@ -25,7 +25,7 @@ from itools.i18n import get_language_name
 from itools.uri import decode_query
 
 # Import from ikaaro
-from utils import CMSTemplate, reduce_string
+from .utils import CMSTemplate, reduce_string
 
 
 

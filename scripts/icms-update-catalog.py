@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from logging import getLogger
 from optparse import OptionParser
 from sys import exit
 from xapian import DatabaseLockError
@@ -27,6 +28,7 @@ import itools
 # Import from ikaaro
 from ikaaro.server import Server, ask_confirmation
 
+log = getLogger("ikaaro")
 
 
 def update_catalog(parser, options, target):
@@ -34,10 +36,10 @@ def update_catalog(parser, options, target):
     try:
         server = Server(target, read_only=False, cache_size=options.cache_size)
     except LookupError:
-        print('Error: {} instance do not exists'.format(target))
+        log.error("Error: {} instance do not exists".format(target))
         exit(1)
     except DatabaseLockError:
-        print('Error: Database is already opened'.format(target))
+        log.error("Error: Database is already opened".format(target))
         exit(1)
     # Ask
     message = 'Update the catalog (y/N)? '

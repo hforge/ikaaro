@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 # Import from the Python Image Library
 try:
     from PIL import Image as PILImage
@@ -27,14 +29,14 @@ from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.handlers.utils import transmap
-from itools.html import stream_is_empty
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLView, get_context
+from itools.web import BaseView, STLView, get_context, NewJSONEncoder
 
 # Import from ikaaro
 from ikaaro.buttons import PasteButton
 from ikaaro.buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from ikaaro.buttons import ZipButton
+from ikaaro.buttons import ExportAsJSONButton
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.utils import generate_name, get_base_path_query
@@ -42,7 +44,7 @@ from ikaaro.widgets import SelectWidget, TextWidget
 from ikaaro import messages
 
 # Import from here
-from base import IconsView, BrowseForm, ContextMenu
+from .base import IconsView, BrowseForm, ContextMenu
 
 
 class SearchTypes_Enumerate(Enumerate):
@@ -69,7 +71,7 @@ class SearchTypes_Enumerate(Enumerate):
         for title, type in formats.items():
             type = ','.join(type)
             types.append({'name': type, 'value': title})
-        types.sort(key=lambda x: x['value'].lower())
+        types = sorted(types, key=lambda x: x['value'].lower())
 
         return types
 
@@ -83,7 +85,7 @@ class SearchTypes_Enumerate(Enumerate):
 
 class ZoomMenu(ContextMenu):
 
-    title = MSG(u'Zoom')
+    title = MSG('Zoom')
 
     def get_items(self):
         uri = self.context.uri
@@ -105,10 +107,10 @@ class ZoomMenu(ContextMenu):
         next_size = str(next_size)
         previous_size = str(previous_size)
         return [
-            {'title': MSG(u'Zoom In'),
+            {'title': MSG('Zoom In'),
              'src': '/ui/ikaaro/icons/16x16/zoom_in.png',
              'href': uri.replace(size=next_size)},
-            {'title': MSG(u'Zoom Out'),
+            {'title': MSG('Zoom Out'),
              'src': '/ui/ikaaro/icons/16x16/zoom_out.png',
              'href': uri.replace(size=previous_size)}
         ]
@@ -118,7 +120,7 @@ class ZoomMenu(ContextMenu):
 class Folder_NewResource(IconsView):
 
     access = 'is_allowed_to_add'
-    title = MSG(u'Add resource')
+    title = MSG('Add resource')
     icon = 'new.png'
     include_subclasses = True
 
@@ -186,7 +188,7 @@ class Folder_NewResource(IconsView):
 class Folder_Rename(STLView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Rename resources')
+    title = MSG('Rename resources')
     template = '/ui/ikaaro/folder/rename.xml'
     query_schema = {
         'ids': String(multiple=True)}
@@ -208,8 +210,7 @@ class Folder_Rename(STLView):
             if r_to_rename and root.is_allowed_to_move(user, r_to_rename):
                 paths.append(x)
         # Build the namespace
-        paths.sort()
-        paths.reverse()
+        paths = sorted(paths, reverse=True)
         items = []
         for path in paths:
             if '/' in path:
@@ -233,8 +234,7 @@ class Folder_Rename(STLView):
         if len(new_names) > len(set(new_names)):
             context.message = messages.MSG_NAME_CLASH
             return
-        paths.sort()
-        paths.reverse()
+        paths = sorted(paths, reverse=True)
         # Clean the copy cookie if needed
         cut, cp_paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         renamed = []
@@ -286,7 +286,7 @@ class Folder_Rename(STLView):
 class Folder_BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Browse Content')
+    title = MSG('Browse Content')
     context_menus = []
     query_schema = merge_dicts(BrowseForm.query_schema,
         sort_by=String(default='mtime'),
@@ -296,8 +296,8 @@ class Folder_BrowseContent(BrowseForm):
 
     # Search Form
     search_widgets = [
-        TextWidget('text', title=MSG(u'Text')),
-        SelectWidget('format', title=MSG(u'Type'))]
+        TextWidget('text', title=MSG('Text')),
+        SelectWidget('format', title=MSG('Type'))]
     search_schema = {
         'text': Unicode,
         'format': SearchTypes_Enumerate}
@@ -306,15 +306,20 @@ class Folder_BrowseContent(BrowseForm):
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('abspath', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('format', MSG(u'Type')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author'))]
+        ('abspath', MSG('Path')),
+        ('title', MSG('Title')),
+        ('format', MSG('Type')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author'))]
     table_actions = [
-        Remove_BrowseButton, RenameButton,
-        CopyButton, CutButton, PasteButton,
-        ZipButton]
+        Remove_BrowseButton,
+        RenameButton,
+        CopyButton,
+        CutButton,
+        PasteButton,
+        ZipButton,
+        ExportAsJSONButton
+    ]
 
 
     def get_scripts(self, context):
@@ -410,7 +415,7 @@ class Folder_BrowseContent(BrowseForm):
         def key(item):
             value = getattr(item, field)
             if not value:
-                return u''
+                return ''
             return value.lower().translate(transmap)
         return key
 
@@ -466,7 +471,7 @@ class Folder_BrowseContent(BrowseForm):
         # Case 1: Custom but slower sort algorithm
         if get_key:
             items = results.get_documents()
-            items.sort(key=get_key(), reverse=reverse)
+            items = sorted(items, key=get_key(), reverse=reverse)
             if size:
                 items = items[start:start+size]
             elif start:
@@ -539,8 +544,7 @@ class Folder_BrowseContent(BrowseForm):
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
-        ids.sort()
-        ids.reverse()
+        ids = sorted(ids, reverse=True)
         for name in ids:
             child = resource.get_resource(name, soft=True)
             if child and root.is_allowed_to_remove(user, child):
@@ -719,11 +723,31 @@ class Folder_BrowseContent(BrowseForm):
         # Ok
         return data
 
+    def action_export_as_json(self, resource, context, form):
+        names = sorted(form['ids'], reverse=True)
+        json_namespace = {
+            "export_type": "child-export"
+        }
+        json_items = []
+        for path in names:
+            child = resource.get_resource(path, soft=True)
+            if child is None:
+                continue
+            if isinstance(child, tuple(resource.json_export_excluded_children_cls)):
+                continue
+            json_items.append(child.export_as_json(context))
+        json_namespace["items"] = json_items
+        context.set_content_type('application/json')
+        filename = 'export.json'
+        context.set_content_disposition('attachment', filename)
+        return json.dumps(json_namespace, cls=NewJSONEncoder)
+
+
 
 
 class Folder_PreviewContent(Folder_BrowseContent):
 
-    title = MSG(u'Preview Content')
+    title = MSG('Preview Content')
     styles = ['/ui/ikaaro/gallery/style.css']
 
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
@@ -878,7 +902,7 @@ class Folder_Thumbnail(BaseView):
 class GoToSpecificDocument(BaseView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Front Page')
+    title = MSG('Front Page')
     icon = 'view.png'
     specific_document = 'FrontPage'
     specific_view = None

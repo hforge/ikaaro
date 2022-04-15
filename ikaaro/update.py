@@ -16,16 +16,18 @@
 
 # Import from standard library
 from datetime import datetime, timedelta
+from logging import getLogger
 from operator import itemgetter
-from traceback import print_exc
 
 # Import from itools
 from itools.database import AndQuery, PhraseQuery, RangeQuery
 from itools.gettext import MSG
 from itools.web import STLView, ERROR
 
+log = getLogger("ikaaro.update")
 
-ERROR_MSG = MSG(u'Inconsistent class_id "{class_id}", resource version is {resource_version} but cls_version is {cls_version} ({abspath})')
+
+ERROR_MSG = MSG('Inconsistent class_id "{class_id}", resource version is {resource_version} but cls_version is {cls_version} ({abspath})')
 
 
 def class_version_to_date(version):
@@ -47,7 +49,7 @@ def find_versions_to_update(context, force=False):
             RangeQuery('class_version', class_version_tomorrow, None))
         search = database.search(query)
         if search:
-            resource = search.get_resources().next()
+            resource = next(search.get_resources())
             kw = {'class_id': resource.class_id,
                   'class_title': resource.class_title,
                   'abspath': str(resource.abspath),
@@ -86,7 +88,7 @@ def find_versions_to_update(context, force=False):
                     continue
                 classes_and_versions.append(class_and_version)
                 update_title_name = 'update_{0}_title'.format(version)
-                update_title = getattr(cls, update_title_name, MSG(u'Unknow'))
+                update_title = getattr(cls, update_title_name, MSG('Unknow'))
                 if isinstance(update_title, MSG):
                     update_title = update_title.gettext()
                 kw = {'class_id': cls.class_id,
@@ -98,7 +100,7 @@ def find_versions_to_update(context, force=False):
                       'nb_resources': len(search)}
                 cls_to_update.append(kw)
     # Sort
-    cls_to_update.sort(key=itemgetter('class_version_date'))
+    cls_to_update = sorted(cls_to_update, key=itemgetter('class_version_date'))
     # Ok
     return {'cls_to_update': cls_to_update, 'cls_errors': cls_errors}
 
@@ -108,7 +110,6 @@ def run_next_update_method(context, force=False):
     """Update the database to the given versions.
     """
     database = context.database
-    log = open('{0}/log/update'.format(database.path), 'w')
     messages = []
 
     versions = find_versions_to_update(context, force)
@@ -123,9 +124,9 @@ def run_next_update_method(context, force=False):
         RangeQuery('class_version', None, class_version_yesterday))
     search = context.database.search(query)
     # Commit message (Do not override the mtime/author)
-    git_message = u'Upgrade {0} to version {1}'.format(
+    git_message = 'Upgrade {0} to version {1}'.format(
         version['class_id'], version['class_version'])
-    print(git_message)
+    log.info(git_message)
     context.git_message = git_message
     context.set_mtime = False
     # Update
@@ -154,12 +155,10 @@ def run_next_update_method(context, force=False):
             if resource is not None:
                 # If resource has not been deleted by update method, we update class_version
                 resource.update(version['class_version'])
-        except Exception:
+        except Exception as e:
             line = 'ERROR: "{0}" - class_id: "{1}"\n'.format(
                 resource.abspath, resource.__class__.class_id)
-            log.write(line)
-            print_exc(file=log)
-            log.write('\n')
+            log.error(line, exc_info=True)
             # Add message
             messages.append(line)
             if force is False:
@@ -186,17 +185,17 @@ def do_run_next_update_method(context, force=False):
         msgs = [MSG(ERROR_MSG.gettext(**error)) for error in versions['cls_errors']]
         return msgs
     if not versions['cls_to_update']:
-        return [MSG(u'Nothing to update')]
+        return [MSG('Nothing to update')]
     while versions['cls_to_update']:
         messages = run_next_update_method(context, force)
         if messages:
             # Abort changes
             context.database.abort_changes()
-            error = ERROR(u'Error during update method. See logs.')
+            error = ERROR('Error during update method. See logs.')
             messages.insert(0, error)
             return messages
         versions = find_versions_to_update(context, force)
-    return [MSG(u'Updated method has been launched')]
+    return [MSG('Updated method has been launched')]
 
 
 
@@ -204,10 +203,10 @@ def do_run_next_update_method(context, force=False):
 class UpdateInstanceView(STLView):
 
     access = 'is_admin'
-    title = MSG(u'Update instance')
+    title = MSG('Update instance')
     template = '/ui/ikaaro/update_instance.xml'
 
-    def get_namespace(self, resource, context):
+    def get_namespace(self, resource, context, query=None):
         return find_versions_to_update(context, force=True)
 
 

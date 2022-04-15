@@ -21,10 +21,12 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from logging import getLogger
 from pickle import dumps
 from uuid import uuid4
 
 # Import from itools
+from ikaaro.datatypes import HTMLBody
 from itools.core import is_prototype, lazy
 from itools.database import MetadataProperty
 from itools.database import Resource, register_field
@@ -33,30 +35,24 @@ from itools.datatypes import DateTime, Date, Decimal
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
-from itools.log import log_warning
 from itools.uri import Path
 from itools.web import ItoolsView, get_context
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from autoedit import AutoEdit
-from enumerates import Groups_Datatype
-from fields import Char_Field, Datetime_Field, File_Field, HTMLFile_Field
-from fields import SelectAbspath_Field, Text_Field, Textarea_Field, UUID_Field
-from fields import CTime_Field, MTime_Field, LastAuthor_Field
-from fields import Title_Field, Description_Field, Subject_Field
-from popup import DBResource_AddImage, DBResource_AddLink
-from popup import DBResource_AddMedia
-from resource_views import DBResource_Remove
-from resource_views import DBResource_Links, DBResource_Backlinks
-from resource_views import LoginView, LogoutView
-from resource_views import DBResource_GetFile, DBResource_GetImage
-from rest import Rest_Login, Rest_Schema, Rest_Query
-from rest import Rest_Create, Rest_Read, Rest_Update, Rest_Delete
-from update import class_version_to_date
-from utils import get_resource_by_uuid_query
-from widgets import CheckboxWidget
+from .autoadd import AutoAdd
+from .autoedit import AutoEdit
+from .enumerates import Groups_Datatype
+from .fields import File_Field, HTMLFile_Field, SelectAbspath_Field, UUID_Field, CTime_Field, MTime_Field, LastAuthor_Field,\
+    Title_Field, Description_Field, Subject_Field, URI_Field
+from .popup import DBResource_AddImage, DBResource_AddLink, DBResource_AddMedia
+from .resource_views import AutoJSONResourceExport, AutoJSONResourcesImport, DBResource_Remove, DBResource_Links, \
+    DBResource_Backlinks, LoginView, LogoutView, DBResource_GetFile, DBResource_GetImage
+from .update import class_version_to_date
+from .utils import get_resource_by_uuid_query
+from .widgets import CheckboxWidget, RTEWidget
 
+
+log = getLogger("ikaaro")
 
 
 class Share_Field(SelectAbspath_Field):
@@ -209,8 +205,14 @@ class DBResource(Resource):
             abspath = path
         else:
             abspath = self.abspath.resolve2(path)
-
-        return self.database.get_resource(abspath, soft=soft)
+        try:
+            return self.database.get_resource(abspath, soft=soft)
+        except Exception as e:
+            log.error(
+                "Could not retrieve the resource {}".format(abspath),
+                exc_info=True
+            )
+            raise
 
 
     #######################################################################
@@ -230,7 +232,7 @@ class DBResource(Resource):
         # Return resource
         if not search:
             return None
-        return search.get_resources(size=1).next()
+        return next(search.get_resources(size=1))
 
 
     def make_resource_name(self):
@@ -319,14 +321,14 @@ class DBResource(Resource):
         field = self.get_field(name)
         if field is None:
             msg = 'field {name} is not defined on {class_id}'
-            log_warning(msg.format(name=name, class_id=self.class_id))
+            log.warning(msg.format(name=name, class_id=self.class_id))
             return None
         # Check context
         self.check_if_context_exists()
         # Check if field is obsolete
         if field.obsolete:
             msg = 'field {name} is obsolete on {class_id}'
-            log_warning(msg.format(name=name, class_id=self.class_id))
+            log.warning(msg.format(name=name, class_id=self.class_id))
         # TODO: Use decorator for cache
         # TODO: Reactivate when ready
         #cache_key = (name, language)
@@ -335,12 +337,12 @@ class DBResource(Resource):
         if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
             try:
                 value = self.get_value_from_brain(name, language)
-            except Exception:
+            except Exception as e:
                 # FIXME Sometimes we cannot get value from brain
                 # We're tying to debug this problem
                 msg = 'Warning: cannot get value from brain {0} {1}'
                 msg = msg.format(self.abspath, name)
-                print(msg)
+                log.warning(msg)
                 value = field.get_value(self, name, language)
         else:
             value = field.get_value(self, name, language)
@@ -414,7 +416,7 @@ class DBResource(Resource):
         # 1. Check it is an html-file field
         field = self.get_field(name)
         if not is_prototype(field, HTMLFile_Field):
-            raise ValueError, 'expected html-file field'
+            raise ValueError('expected html-file field')
 
         # 2. Get the handler
         handler = field.get_value(self, name, language)
@@ -424,7 +426,7 @@ class DBResource(Resource):
         # 3. Get the body
         body = handler.get_body()
         if not body:
-            raise ValueError, 'html file does not have a body'
+            raise ValueError('html file does not have a body')
         return body.get_content_elements()
 
 
@@ -477,7 +479,7 @@ class DBResource(Resource):
         for name, value in kw.items():
             field = self.get_field(name)
             if field is None:
-                raise ValueError, 'undefined field "%s"' % name
+                raise ValueError('undefined field "%s"' % name)
             if type(value) is dict:
                 for lang in value:
                     field._set_value(self, name, value[lang], lang)
@@ -594,9 +596,8 @@ class DBResource(Resource):
         if server and server.index_text:
             try:
                 values['text'] = self.to_text()
-            except Exception:
-                log = 'Indexation failed: %s' % abspath
-                log_warning(log, domain='ikaaro')
+            except Exception as e:
+                log.error("Indexation failed: {}".format(abspath), exc_info=True)
         # Time events for the CRON
         reminder, payload = self.next_time_event()
         values['next_time_event'] = reminder
@@ -757,8 +758,7 @@ class DBResource(Resource):
                     continue
                 if version > obj_version and version <= cls_version:
                     versions.append(version)
-
-        versions.sort()
+        versions = sorted(versions)
         return versions
 
 
@@ -832,7 +832,7 @@ class DBResource(Resource):
         if title:
             return title
         # Fallback to the resource's name
-        return unicode(self.name)
+        return str(self.name)
 
 
     def get_edit_languages(self, context):
@@ -868,12 +868,126 @@ class DBResource(Resource):
         return True
 
 
+    def get_multilingual_value(self, context, name):
+        kw = {}
+        languages = context.root.get_value('website_languages')
+        for lang in languages:
+            kw[lang] = self.get_value(name, language=lang)
+        return kw
+
+
+    json_export_excluded_fields_cls = [
+        URI_Field,
+        SelectAbspath_Field,
+        File_Field,
+        Share_Field
+    ]
+
+    json_export_excluded_fields_names = [
+        "subject",
+        "ctime",
+        "mtime",
+        "index",
+        "uuid",
+        "last_author",
+        "owner",
+        "share",
+        "share_exclude",
+        "share_interest",
+        "share_users",
+        "thumbnail",
+        "image",
+        "status"
+    ]
+
+    def get_exportable_fields(self):
+        for name, field in self.get_fields():
+            if name in self.json_export_excluded_fields_names:
+                continue
+            if name.startswith("searchable_"):
+                continue
+            if is_prototype(field, tuple(self.json_export_excluded_fields_cls)):
+                if is_prototype(field, File_Field):
+                    if is_prototype(field.get_widget(field.name), RTEWidget):
+                        yield name, field
+                continue
+            yield name, field
+
+    def update_metadata_from_dict(self, fields_dict, dry_run=False):
+        if dry_run:
+            return
+        allowed_fields = [name for name, _ in self.get_exportable_fields()]
+        for field in fields_dict:
+            field_name = field["name"]
+            if field_name not in allowed_fields:
+                continue
+            resource_field = self.get_field(field_name)
+            if not resource_field:
+                continue
+            datatype = resource_field.get_datatype()
+            field_value = field["value"]
+            is_unicode = is_prototype(datatype, Unicode)
+            if field_value is None:
+                continue
+            field_multilingual = field["multilingual"]
+            if not field_multilingual:
+                if is_unicode:
+                    if type(field_value) is list:
+                        field_value = [x.decode("utf-8") if isinstance(x, bytes) else x for x in field_value]
+                    else:
+                        if isinstance(field_value, bytes):
+                            field_value = field_value.decode("utf-8")
+                else:
+                    field_value = datatype.decode(field_value)
+                self.set_value(field_name, field_value)
+                continue
+            for lang, lang_value in field_value.items():
+                if not lang_value:
+                    continue
+                if is_prototype(datatype, HTMLBody):
+                    lang_value = datatype.decode(lang_value)
+                if is_unicode:
+                    if isinstance(lang_value, bytes):
+                        lang_value = lang_value.decode("utf-8")
+                self.set_value(field_name, lang_value, language=lang)
+
+
+    def export_as_json(self, context, only_self=False, exported_fields=None):
+        json_namespace = {
+            "class_id": getattr(self, "class_id"),
+            "class_version": self.class_version,
+            "name": self.name,
+        }
+        fields = []
+        for name, field in self.get_exportable_fields():
+            datatype = field.get_datatype()
+            if exported_fields and name not in exported_fields:
+                continue
+            field_kw = {
+                "name": name,
+                "multilingual": field.multilingual
+            }
+            if not field.multilingual:
+                field_kw["value"] = self.get_value(name)
+            else:
+                field_kw["value"] = self.get_multilingual_value(context, name)
+                if is_prototype(datatype, HTMLBody):
+                    for k, v in field_kw["value"].items():
+                        field_kw["value"][k] = datatype.encode(v)
+            fields.append(field_kw)
+        json_namespace["fields"] = fields
+        return json_namespace
+
+
+
     # Views
     new_instance = AutoAdd(fields=['title', 'location'])
     edit = AutoEdit(fields=['title', 'description', 'subject', 'share'])
     remove = DBResource_Remove()
     get_file = DBResource_GetFile()
     get_image = DBResource_GetImage()
+    json_export = AutoJSONResourceExport()
+    json_import = AutoJSONResourcesImport()
     # Login/Logout
     login = LoginView()
     logout = LogoutView()
@@ -884,14 +998,6 @@ class DBResource(Resource):
     # Links
     backlinks = DBResource_Backlinks()
     links = DBResource_Links()
-    # Rest (web services)
-    rest_login = Rest_Login()
-    rest_query = Rest_Query()
-    rest_create = Rest_Create()
-    rest_read = Rest_Read()
-    rest_update = Rest_Update()
-    rest_delete = Rest_Delete()
-    rest_schema = Rest_Schema()
 
 
 ###########################################################################

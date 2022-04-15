@@ -29,18 +29,18 @@ from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import AutoForm
-from widgets import HiddenWidget, timestamp_widget
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from fields import Field
-import messages
-from views import ContextMenu
+from .autoform import AutoForm
+from .widgets import HiddenWidget, timestamp_widget
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .fields import Field
+from . import messages
+from .views import ContextMenu
 
 
 class EditLanguageMenu(ContextMenu):
 
-    title = MSG(u'Configuration')
+    title = MSG('Configuration')
     template = '/ui/ikaaro/generic/edit_language_menu.xml'
     view = None
 
@@ -52,7 +52,7 @@ class EditLanguageMenu(ContextMenu):
     def _get_items(self):
         multilingual = False
         schema = self.view._get_schema(self.resource, self.context)
-        for key, datatype in schema.iteritems():
+        for key, datatype in schema.items():
             if getattr(datatype, 'multilingual', False):
                 multilingual = True
                 break
@@ -87,7 +87,7 @@ class EditLanguageMenu(ContextMenu):
 class AutoEdit(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
+    title = MSG('Edit')
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):
@@ -149,7 +149,7 @@ class AutoEdit(AutoForm):
         default = set()
         to_keep = set()
 
-        for key, datatype in schema.iteritems():
+        for key, datatype in schema.items():
             # Keep readonly and mandatory widgets
             if getattr(datatype, 'mandatory', False):
                 to_keep.add(key)
@@ -314,7 +314,7 @@ class AutoEdit(AutoForm):
             return False
         value = form[name]
         if type(value) is dict:
-            for language, data in value.iteritems():
+            for language, data in value.items():
                 resource.set_value(name, data, language=language)
         else:
             resource.set_value(name, value)

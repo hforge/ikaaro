@@ -2,9 +2,9 @@
 var gulp = require("gulp"),
     colors = require('ansi-colors'),
     log = require('fancy-log'),
-    sass = require('gulp-sass');
-    concat = require('gulp-concat'),
-    taskListing = require('gulp-task-listing');
+    concat = require('gulp-concat');
+    sass = require('gulp-sass')(require('sass'));
+
 
 
 function errorPrint(msg) {
@@ -16,8 +16,6 @@ function errorPrint(msg) {
  * Tasks
  ***********/
 
-gulp.task('help', taskListing);
-gulp.task('default', taskListing);
 gulp.task('build-aruni', function() {
   var pCSS = function () {
     return new Promise(function (resolve, reject) {

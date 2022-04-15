@@ -16,10 +16,10 @@
 
 
 # Import from here
-from autotable import AutoTable
-from base import CompositeView, MessageView, IconsView
-from base import Batch, BrowseForm, ContextMenu
-from base import IkaaroStaticView, CachedStaticView, get_view_scripts, get_view_styles
-from folder_views import SearchTypes_Enumerate, ZoomMenu, Folder_NewResource
-from folder_views import Folder_Rename, Folder_BrowseContent, Folder_PreviewContent
-from folder_views import Folder_Thumbnail, GoToSpecificDocument
+from .autotable import AutoTable
+from .base import CompositeView, MessageView, IconsView
+from .base import Batch, BrowseForm, ContextMenu
+from .base import IkaaroStaticView, CachedStaticView, get_view_scripts, get_view_styles
+from .folder_views import SearchTypes_Enumerate, ZoomMenu, Folder_NewResource
+from .folder_views import Folder_Rename, Folder_BrowseContent, Folder_PreviewContent
+from .folder_views import Folder_Thumbnail, GoToSpecificDocument

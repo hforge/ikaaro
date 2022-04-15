@@ -51,7 +51,7 @@ class LoadTestCase(TestCase):
 
     def test_title(self):
         value = self.metadata.get_property('title', language='fr').value
-        self.assertEqual(type(value), unicode)
+        self.assertEqual(type(value), str)
         self.assertEqual(value, u'bonjour')
 
 
@@ -84,7 +84,7 @@ class NewTestCase(TestCase):
 
     def test_title(self):
         value = self.metadata.get_property('title', language='en').value
-        self.assertEqual(type(value), unicode)
+        self.assertEqual(type(value), str)
         self.assertEqual(value, u'Hello World')
 
 

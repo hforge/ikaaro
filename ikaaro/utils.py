@@ -55,8 +55,7 @@ class CMSTemplate(STLTemplate):
         # Get the template
         template = self.template
         if template is None:
-            msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self)
+            raise NotImplementedError("{} is missing the 'template' variable".format(repr(self)))
 
         # Case 1: a ready made list of events
         if type(template) is list:
@@ -70,7 +69,7 @@ class CMSTemplate(STLTemplate):
                 raise ValueError(msg.format(template))
             return handler.events
 
-        raise ValueError, 'bad value for the template attribute'
+        raise ValueError('bad value for the template attribute')
 
 
 
@@ -108,16 +107,16 @@ def get_parameters(prefix, **kw):
 ###########################################################################
 
 # Mark for translatios
-u'Basque'
-u'Catalan'
-u'English'
-u'French'
-u'German'
-u'Hungarian'
-u'Italian'
-u'Japanese'
-u'Portuguese'
-u'Spanish'
+'Basque'
+'Catalan'
+'English'
+'French'
+'German'
+'Hungarian'
+'Italian'
+'Japanese'
+'Portuguese'
+'Spanish'
 
 
 ###########################################################################
@@ -127,7 +126,9 @@ u'Spanish'
 def reduce_string(title='', word_treshold=15, phrase_treshold=40):
     """Reduce words and string size.
     """
-    ellipsis = u'…' if type(title) is unicode else '…'
+    if isinstance(title, bytes):
+        title = title.decode("utf-8")
+    ellipsis = '…' if type(title) is str else '…'
     words = title.strip().split(' ')
     for i, word in enumerate(words):
         if len(word) > word_treshold:
@@ -147,18 +148,21 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
 
 encodings = ['utf-8', 'windows-1252', 'cp437']
 def process_name(name):
+    if type(name) is str:
+        checkid_name = checkid(name, soft=False)
+        return checkid_name, name
     for encoding in encodings:
         try:
-            title = unicode(name, encoding)
+            title = str(name, encoding)
             checkid_name = checkid(title, soft=False)
             break
         except UnicodeError:
             pass
     else:
-        raise ValueError, name
+        raise ValueError(name)
 
     if checkid_name is None:
-        raise ValueError, name
+        raise ValueError(name)
 
     # Ok
     return checkid_name, title
@@ -171,11 +175,11 @@ encodings = ['utf-8', 'windows-1252', 'cp437']
 def to_utf8(data):
     for encoding in encodings:
         try:
-            return unicode(data, encoding).encode('utf-8')
+            return str(data, encoding).encode('utf-8')
         except UnicodeError:
             pass
 
-    raise UnicodeError, 'unable to find out encoding'
+    raise UnicodeError('unable to find out encoding')
 
 
 def tidy_html(body):
@@ -204,8 +208,8 @@ algos = {
 def get_secure_hash(password, algo, salt=None):
     if salt is None:
         salt = generate_password()
-
-    return algos[algo](password + salt).digest(), salt
+    password_salt = (password + salt).encode("utf-8")
+    return algos[algo](password_salt).digest(), salt
 
 
 
@@ -267,7 +271,7 @@ def get_base_path_query(path, min_depth=1, max_depth=None):
 
     if max_depth is not None and max_depth < min_depth:
         err = 'maximum depth (%d) smaller than minimum depth (%d)'
-        raise ValueError, err % (max_depth, min_depth)
+        raise ValueError(err % (max_depth, min_depth))
 
     # Special case: everything
     if path == '/' and min_depth == 0 and max_depth is None:
@@ -304,7 +308,7 @@ def split_reference(ref):
     # XXX specific case for the menu
     # Be robust if the path is multilingual
     type_ref = type(ref)
-    if type_ref is unicode:
+    if type_ref is str:
         ref = Unicode.encode(ref)
     if type_ref is not Reference:
         ref = get_reference(ref)
@@ -369,3 +373,32 @@ def close_fancybox(context, default=None):
     # Case 2: normal
     goto = context.get_form_value('referrer') or default
     return get_reference(goto) if type(goto) is str else goto
+
+
+def dict_of_bytes_to_string(old_dict):
+    """
+    Convert dict bytes key value to string
+    Used in form conversion
+    """
+    from typing import Dict
+    new_dict = {}
+    for key, value in old_dict.items():
+        if type(key) is bytes:
+            key = key.decode("utf-8")
+        if type(value) is bytes:
+            value = value.decode("utf-8")
+        elif type(value) is list:
+            tmp_list = []
+            for element in value:
+                if isinstance(element, Dict):
+                    element = dict_of_bytes_to_string(element)
+                elif type(element) is bytes:
+                    element = element.decode("utf-8")
+                tmp_list.append(element)
+            value = tmp_list
+        elif isinstance(value, Dict):
+            value = dict_of_bytes_to_string(value)
+
+        new_dict[key] = value
+
+    return new_dict
