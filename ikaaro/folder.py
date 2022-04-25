@@ -21,7 +21,8 @@
 
 # Import from the Standard Library
 import fnmatch
-from cStringIO import StringIO
+from logging import getLogger
+from io import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
 import uuid
@@ -40,26 +41,26 @@ from itools.web import BaseView, get_context, ERROR
 from itools.web.exceptions import FormError
 
 # Import from ikaaro
-from views.folder_views import Folder_BrowseContent, Folder_PreviewContent
-from views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
+from .views.folder_views import Folder_BrowseContent, Folder_PreviewContent
+from .views.folder_views import Folder_Rename, Folder_NewResource, Folder_Thumbnail
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from database import Database
-from datatypes import guess_mimetype
-from exceptions import ConsistencyError
-from messages import MSG_NAME_CLASH
-from resource_ import DBResource
-from utils import process_name, tidy_html, get_base_path_query
+from .autoedit import AutoEdit
+from .database import Database
+from .datatypes import guess_mimetype
+from .exceptions import ConsistencyError
+from .messages import MSG_NAME_CLASH
+from .resource_ import DBResource
+from .utils import process_name, tidy_html, get_base_path_query
 
-
+log = getLogger("ikaaro")
 
 class Folder(DBResource):
 
     class_id = "folder"
     class_version = "20071215"
-    class_title = MSG(u"Folder")
-    class_description = MSG(u"Organize your files and documents with folders.")
+    class_title = MSG("Folder")
+    class_description = MSG("Organize your files and documents with folders.")
     class_icon16 = "/ui/ikaaro/icons/16x16/folder.png"
     class_icon48 = "/ui/ikaaro/icons/48x48/folder.png"
     class_views = [
@@ -99,7 +100,12 @@ class Folder(DBResource):
     def traverse_resources(self):
         yield self
         for name in self._get_names():
-            resource = self.get_resource(name)
+            try:
+                resource = self.get_resource(name)
+            except StopIteration:
+                # Log the resource abspath
+                log.error("The resource can't be read - {} {}".format(name, self.abspath))
+                continue
             for x in resource.traverse_resources():
                 yield x
 
@@ -197,7 +203,7 @@ class Folder(DBResource):
     # API
     #######################################################################
     def _make_file(self, name, filename, mimetype, body, default_language):
-        from webpage import WebPage
+        from .webpage import WebPage
 
         if type(name) is not str:
             raise TypeError('expected string, got %s' % repr(name))
@@ -279,15 +285,15 @@ class Folder(DBResource):
             document_types = self.get_importable_document_types(context)
             if item_cls not in document_types:
                 raise FormError(
-                    ERROR(u"L'import d'une ressource de type {resource_type} "
-                          u"n'est pas autorisé au sein de la resource actuelle").gettext(
+                    ERROR("L'import d'une ressource de type {resource_type} "
+                          "n'est pas autorisé au sein de la resource actuelle").gettext(
                         resource_type=item_cls.class_title
                     )
                 )
             if item_class_version != item_cls.class_version:
                 raise FormError(
-                    ERROR(u"La version de la ressource que vous essayez d'importer "
-                          u"ne correspond pas à la version de la ressource actuelle")
+                    ERROR("La version de la ressource que vous essayez d'importer "
+                          "ne correspond pas à la version de la ressource actuelle")
                 )
             if not dry_run:
                 child = self.make_resource(item_name, item_cls)
@@ -391,7 +397,7 @@ class Folder(DBResource):
             # 4. The body
             body = handler.get_file(path_str)
             if filter:
-                body = filter(path_str, mimetype, body)
+                body = list(filter(path_str, mimetype, body))
                 if body is None:
                     continue
 
@@ -468,7 +474,7 @@ class Folder(DBResource):
         if (check_if_authorized and
                 (not target_parent.can_paste(source)
                  or not source.can_paste_into(target_parent))):
-            message = u'resource type "{0}" cannot be copied into type "{1}"'
+            message = 'resource type "{0}" cannot be copied into type "{1}"'
             message = message.format(source.class_title.gettext(),
                                      target_parent.class_title.gettext())
             raise ConsistencyError(message)

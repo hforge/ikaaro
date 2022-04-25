@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from ikaaro
-from database import Database
+from .database import Database
 
 
 def register_document_type(resource_class, container_cls_id='folder'):

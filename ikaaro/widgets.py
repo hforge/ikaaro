@@ -24,7 +24,7 @@ from datetime import datetime
 from operator import itemgetter
 from os.path import basename
 from random import randint
-from urllib import quote
+from urllib.parse import quote
 
 # Import from itools
 from itools.core import freeze, get_abspath
@@ -39,9 +39,9 @@ from itools.stl import stl
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
-from datatypes import Password_Datatype
-from datatypes import Days, Months, Years
-from utils import CMSTemplate, make_stl_template
+from .datatypes import Password_Datatype
+from .datatypes import Days, Months, Years
+from .utils import CMSTemplate, make_stl_template
 
 
 
@@ -97,8 +97,8 @@ class HiddenWidget(Widget):
 
 class FileWidget(Widget):
 
-    title = MSG(u'File')
-    download_file_title = MSG(u'Download')
+    title = MSG('File')
+    download_file_title = MSG('Download')
 
     template = make_stl_template("""
     <input type="file" id="${id}" name="${name}" maxlength="${maxlength}"
@@ -158,7 +158,7 @@ class ChoosePassword_Widget(Widget):
     """Include a js password strength meter.
     """
 
-    title = MSG(u'Password')
+    title = MSG('Password')
 
     template = make_stl_template("""
     <input type="password" id="${id}" name="${name}" maxlength="${maxlength}"
@@ -245,8 +245,8 @@ class RadioWidget(Widget):
     </stl:block>""")
 
     oneline = False
-    label_true = MSG(u'Yes')
-    label_false = MSG(u'No')
+    label_true = MSG('Yes')
+    label_false = MSG('No')
 
     def options(self):
         datatype = self.datatype
@@ -296,7 +296,7 @@ class CheckboxWidget(Widget):
     </stl:block>""")
 
     oneline = False
-    label = MSG(u'Yes')
+    label = MSG('Yes')
 
 
     def options(self):
@@ -392,7 +392,7 @@ class DateWidget(Widget):
     format = '%Y-%m-%d'
     size = 10
     show_time = False
-    tip = MSG(u'Click on button "..." to choose a date (Format: "yyyy-mm-dd").')
+    tip = MSG('Click on button "..." to choose a date (Format: "yyyy-mm-dd").')
 
     @proto_lazy_property
     def scripts(self):
@@ -458,7 +458,7 @@ class DatetimeWidget(DateWidget):
 
         try:
             value = self.datatype.decode(value)
-        except StandardError:
+        except Exception:
             # XXX Heuristic here
             from itools.web import get_context
             context = get_context()
@@ -494,7 +494,7 @@ class DatetimeWidget(DateWidget):
 class PathSelectorWidget(TextWidget):
 
     action = 'add_link'
-    tip = MSG(u'Click on button "..." to select a file.')
+    tip = MSG('Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
@@ -512,7 +512,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     action = 'add_image'
     width = 128
     height = 128
-    tip = MSG(u'Click on button "..." to select a file.')
+    tip = MSG('Click on button "..." to select a file.')
 
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
@@ -538,7 +538,7 @@ class BirthDateWidget(Widget):
         context = get_context()
         name = '%s_%s' % (self.name, widget_name)
         value = context.get_form_value(name)
-        if value is None and context.query.has_key(name):
+        if value is None and name in context.query:
             value = context.query.get(name)
         return SelectWidget(name=name, datatype=datatype, value=value,
                             has_empty_option=False).render()
@@ -745,7 +745,7 @@ class GetFolders(BaseView):
                         return ''
                     elif len(options) == 1 and options[0]['name'] == '':
                         return ''
-                    options.sort(key=itemgetter('value'))
+                    options = sorted(options, key=itemgetter('value'))
                     name = 'folder%s' % (int(key[-1])+1)
                     level = int(key[-1]) + 1
                     widget = FolderWidget(name, value='', level=level,
@@ -899,7 +899,7 @@ class FoldersEnumerate(DynamicEnumerate):
         # Si 1 option, elle est sélectionnée
         if len(options) == 1:
             options[0]['selected'] = True
-        options.sort(key=itemgetter('value'))
+        options = sorted(options, key=itemgetter('value'))
         return options
 
 
@@ -907,14 +907,14 @@ class FoldersEnumerate(DynamicEnumerate):
 ###########################################################################
 # Common widgets to reuse
 ###########################################################################
-title_widget = TextWidget('title', title=MSG(u'Title'))
+title_widget = TextWidget('title', title=MSG('Title'))
 description_widget = MultilineWidget('description',
-                                     title=MSG(u'Description'), rows=8)
-subject_widget = TextWidget('subject', title=MSG(u'Keywords'),
-                            tip=MSG(u'Separated by comma'))
+                                     title=MSG('Description'), rows=8)
+subject_widget = TextWidget('subject', title=MSG('Keywords'),
+                            tip=MSG('Separated by comma'))
 timestamp_widget = HiddenWidget('timestamp')
-file_widget = FileWidget('file', title=MSG(u'Replace file'))
-editarea_widget = EditAreaWidget('data', title=MSG(u'Body'))
+file_widget = FileWidget('file', title=MSG('Replace file'))
+editarea_widget = EditAreaWidget('data', title=MSG('Body'))
 
 
 

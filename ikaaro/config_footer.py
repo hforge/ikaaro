@@ -18,16 +18,16 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
-from config import Configuration
-from file_views import File_Edit
-from webpage import WebPage
+from .config import Configuration
+from .file_views import File_Edit
+from .webpage import WebPage
 
 
 class Footer(WebPage):
 
     class_id = 'config-footer'
-    class_title = MSG(u'Footer')
-    class_description = MSG(u'Define the site footer.')
+    class_title = MSG('Footer')
+    class_description = MSG('Define the site footer.')
     class_icon_css = 'fa-sort-down'
     class_views = ['edit', 'externaledit']
 

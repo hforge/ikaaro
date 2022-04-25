@@ -42,18 +42,18 @@ from ikaaro.widgets import FileWidget
 from ikaaro.datatypes import FileDataType
 
 # Import from ikaaro
-from autoform import AutoForm
-from buttons import Remove_Button
-from emails import send_email
-from exceptions import ConsistencyError
-from messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
+from .autoform import AutoForm
+from .buttons import Remove_Button
+from .emails import send_email
+from .exceptions import ConsistencyError
+from .messages import MSG_LOGIN_WRONG_NAME_OR_PASSWORD
 
 
 
 class DBResource_Remove(AutoForm):
 
     access = 'is_allowed_to_remove'
-    title = MSG(u'Remove')
+    title = MSG('Remove')
 
     actions = [Remove_Button]
 
@@ -64,13 +64,12 @@ class DBResource_Remove(AutoForm):
             container.del_resource(resource.name)
         except ConsistencyError:
             err = (
-                u'Referenced resource cannot be removed, check the'
-                u' <a href=";backlinks">backlinks</a>.')
+                'Referenced resource cannot be removed, check the <a href=";backlinks">backlinks</a>.')
             context.message = ERROR(err, format='html')
             return
 
         # Ok
-        message = MSG(u'Resource removed')
+        message = MSG('Resource removed')
         return context.come_back(message, goto=str(container.abspath))
 
 
@@ -180,7 +179,7 @@ class DBResource_Links(Folder_BrowseContent):
     """Links are the list of resources used by this resource."""
 
     access = 'is_admin'
-    title = MSG(u"Links")
+    title = MSG("Links")
     icon = 'rename.png'
 
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
@@ -211,7 +210,7 @@ class DBResource_Backlinks(DBResource_Links):
     consider it is "orphan".
     """
 
-    title = MSG(u"Backlinks")
+    title = MSG("Backlinks")
 
     def get_items(self, resource, context):
         return context.search(links=str(resource.abspath))
@@ -224,7 +223,7 @@ class DBResource_Backlinks(DBResource_Links):
 class LoginView(STLView):
 
     access = True
-    title = MSG(u'Login')
+    title = MSG('Login')
     template = '/ui/ikaaro/base/login.xml'
     meta = [('robots', 'noindex, follow', None)]
 
@@ -238,7 +237,7 @@ class LoginView(STLView):
 
     def GET(self, resource, context):
         if context.user:
-            msg = MSG(u'You are already connected')
+            msg = MSG('You are already connected')
             goto = str(context.user.abspath)
             return context.come_back(msg, goto)
         return super(LoginView, self).GET(resource, context)
@@ -319,7 +318,7 @@ class LoginView(STLView):
         # Check if user account is completed
         for name, field in user.get_fields():
             if field.required and user.get_value(name) is None:
-                msg = MSG(u'You must complete your account informations')
+                msg = MSG('You must complete your account informations')
                 goto = '/users/%s/;edit_account' % user.name
                 return context.come_back(msg, goto)
 
@@ -334,7 +333,7 @@ class LoginView(STLView):
             else:
                 goto = referrer
 
-        return context.come_back(INFO(u"Welcome!"), goto)
+        return context.come_back(INFO("Welcome!"), goto)
 
 
 
@@ -348,7 +347,7 @@ class LogoutView(BaseView):
     def GET(self, resource, context):
         context.logout()
 
-        message = INFO(u'You Are Now Logged out.')
+        message = INFO('You Are Now Logged out.')
         return context.come_back(message, goto='./')
 
 
@@ -356,7 +355,7 @@ class LogoutView(BaseView):
 class AutoJSONResourceExport(AutoForm):
 
     access = "is_admin"
-    title = MSG(u"Exporter au format JSON")
+    title = MSG("Exporter au format JSON")
 
     def _get_datatype(self, resource, context, name):
         field = self.get_field(resource, name)
@@ -421,7 +420,7 @@ class AutoJSONResourceExport(AutoForm):
     def get_field(self, resource, name):
         resource_field = resource.get_field(name)
         field = Boolean_Field(
-            title=MSG(u"Exporter le champs '{title}' ?").gettext(
+            title=MSG("Exporter le champs '{title}' ?").gettext(
                 title=resource_field.title
             ),
             default=True
@@ -434,9 +433,9 @@ class AutoJSONResourceExport(AutoForm):
         json_export = resource.export_as_json(context, only_self=True, exported_fields=fields)
         json_export["export_type"] = "self-export"
         context.set_content_type("application/json")
-        file_name = u"config_export_{title}.json".format(
+        file_name = "config_export_{title}.json".format(
             title=resource.get_title()
-        ).encode("utf-8")
+        )
         context.set_content_disposition("attachment", file_name)
         return json.dumps(json_export, cls=NewJSONEncoder)
 
@@ -444,7 +443,7 @@ class AutoJSONResourceExport(AutoForm):
 class AutoJSONResourcesImport(AutoForm):
 
     access = "is_admin"
-    title = MSG(u"Importer au format JSON")
+    title = MSG("Importer au format JSON")
 
     schema = {
         "file": FileDataType(mandatory=True),}
@@ -453,7 +452,7 @@ class AutoJSONResourcesImport(AutoForm):
     ]
 
     actions = [
-        Button(access='is_admin', css='btn btn-primary', title=MSG(u'Upload'))]
+        Button(access='is_admin', css='btn btn-primary', title=MSG('Upload'))]
 
 
     def _get_form(self, resource, context):
@@ -464,7 +463,6 @@ class AutoJSONResourcesImport(AutoForm):
             raise FormError()
         filename, mimetype, json_raw = form.pop("file")
         json_content = json.loads(json_raw)
-        json_content = fix_json(json_content)
         form["json_import"] = json_content
         export_type = json_content["export_type"]
         if export_type == "child-export":
@@ -478,13 +476,13 @@ class AutoJSONResourcesImport(AutoForm):
             # Check that imported json is the right resource
             if resource.class_id != json_content["class_id"]:
                 raise FormError(
-                    ERROR(u"Le type de ressource que vous essayez d'importer ne "
-                          u"correspond pas au type de la ressource actuelle")
+                    ERROR("Le type de ressource que vous essayez d'importer ne "
+                          "correspond pas au type de la ressource actuelle")
                 )
             if resource.class_version != json_content["class_version"]:
                 raise FormError(
-                    ERROR(u"La version de la ressource que vous essayez d'importer "
-                          u"ne correspond pas à la version de la ressource actuelle")
+                    ERROR("La version de la ressource que vous essayez d'importer "
+                          "ne correspond pas à la version de la ressource actuelle")
                 )
             resource.update_metadata_from_dict(json_content["fields"], dry_run=True)
         return form
@@ -500,17 +498,17 @@ class AutoJSONResourcesImport(AutoForm):
             # Check that imported json is the right resource
             if resource.class_id != json_content["class_id"]:
                 raise FormError(
-                    ERROR(u"Le type de ressource que vous essayez d'importer ne "
-                          u"correspond pas au type de la ressource actuelle")
+                    ERROR("Le type de ressource que vous essayez d'importer ne "
+                          "correspond pas au type de la ressource actuelle")
                 )
             if resource.class_version != json_content["class_version"]:
                 raise FormError(
-                    ERROR(u"La version de la ressource que vous essayez d'importer "
-                          u"ne correspond pas à la version de la ressource actuelle")
+                    ERROR("La version de la ressource que vous essayez d'importer "
+                          "ne correspond pas à la version de la ressource actuelle")
                 )
             resource.update_metadata_from_dict(json_content["fields"])
         return context.come_back(
-            MSG(u"Les ressources ont bien été importées"),
+            MSG("Les ressources ont bien été importées"),
             goto=self.action_goto
         )
 

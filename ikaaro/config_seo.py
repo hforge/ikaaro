@@ -18,20 +18,20 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import Char_Field
-from resource_ import DBResource
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import Char_Field
+from .resource_ import DBResource
 
 
 seo_description = MSG(
-    u'Optimize your website for better ranking in search engine results.')
+    'Optimize your website for better ranking in search engine results.')
 
 
 class SEO(DBResource):
 
     class_id = 'config-seo'
-    class_title = MSG(u'Search Engine Optimization')
+    class_title = MSG('Search Engine Optimization')
     class_description = seo_description
     class_icon16 = '/ui/ikaaro/icons/16x16/search.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/search.png'
@@ -39,16 +39,16 @@ class SEO(DBResource):
 
     # Fields
     google_site_verification = Char_Field(
-        title=MSG(u'Google site verification key'))
+        title=MSG('Google site verification key'))
     yahoo_site_verification = Char_Field(
-        title=MSG(u'Yahoo site verification key'))
+        title=MSG('Yahoo site verification key'))
     bing_site_verification = Char_Field(
-        title=MSG(u'Bing site verification key'))
+        title=MSG('Bing site verification key'))
 
 
     # Views
     class_views = ['edit']
-    edit = AutoEdit(title=MSG(u'Search engine optimization'),
+    edit = AutoEdit(title=MSG('Search engine optimization'),
                     description=seo_description,
                     fields=['google_site_verification',
                             'yahoo_site_verification',

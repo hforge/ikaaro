@@ -21,24 +21,24 @@ from itools.gettext import MSG
 from itools.handlers import TextFile
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import File_Field, TextFile_Field
-from folder import Folder
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import File_Field, TextFile_Field
+from .folder import Folder
 
 
 class Theme(Folder):
 
     class_id = 'config-theme'
-    class_title = MSG(u'Theme')
-    class_description = MSG(u'Allow to customize ikaaro skin')
+    class_title = MSG('Theme')
+    class_description = MSG('Allow to customize ikaaro skin')
     class_icon_css = 'fa-star'
 
     # Fields
-    logo = File_Field(title=MSG(u'Logo'))
-    favicon = File_Field(title=MSG(u'Favicon'))
-    banner = File_Field(title=MSG(u'Banner'))
-    style = TextFile_Field(title=MSG(u'CSS Style'), class_handler=TextFile)
+    logo = File_Field(title=MSG('Logo'))
+    favicon = File_Field(title=MSG('Favicon'))
+    banner = File_Field(title=MSG('Banner'))
+    style = TextFile_Field(title=MSG('CSS Style'), class_handler=TextFile)
 
 
     def init_resource(self, **kw):
@@ -51,11 +51,11 @@ class Theme(Folder):
         self.set_value('style', data)
         # Logo
         path = get_abspath('ui/ikaaro/themes/logo.png')
-        data = open(path).read()
+        data = open(path, "rb").read()
         self.set_value('logo', data)
         # Banner
         path = get_abspath('ui/ikaaro/themes/banner.jpg')
-        data = open(path).read()
+        data = open(path, "rb").read()
         self.set_value('banner', data)
 
     # Views

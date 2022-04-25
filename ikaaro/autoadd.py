@@ -22,13 +22,13 @@ from itools.handlers import checkid
 from itools.web import get_context, ERROR, FormError
 
 # Import from ikaaro
-from autoform import AutoForm
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from buttons import Button
-from fields import Field
-import messages
-from widgets import HiddenWidget, ReadOnlyWidget
+from .autoform import AutoForm
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .buttons import Button
+from .fields import Field
+from . import messages
+from .widgets import HiddenWidget, ReadOnlyWidget
 
 
 
@@ -37,7 +37,7 @@ class AutoAdd(AutoForm):
 
     access = 'is_allowed_to_add'
 
-    actions = [Button(access=True, css='btn btn-primary', title=MSG(u'Add'))]
+    actions = [Button(access=True, css='btn btn-primary', title=MSG('Add'))]
     action_goto = None
     goto_view = None
     goto_parent_view = None # DEPRECATED -> use action_goto
@@ -90,10 +90,10 @@ class AutoAdd(AutoForm):
         cls = self._resource_class
         if cls:
             class_title = cls.class_title.gettext()
-            title = MSG(u'Add {class_title}')
+            title = MSG('Add {class_title}')
             return title.gettext(class_title=class_title)
 
-        return MSG(u'Add resource').gettext()
+        return MSG('Add resource').gettext()
 
 
     def _get_datatype(self, resource, context, name):
@@ -162,11 +162,11 @@ class AutoAdd(AutoForm):
             # View cls_description
             value = getattr(self, name, None)
             if value is not None:
-                return value.gettext() if value else u''
+                return value.gettext() if value else ''
             # Resource cls_description
             cls = self._resource_class
             value = cls.class_description
-            return value.gettext() if value else u''
+            return value.gettext() if value else ''
         elif name == 'referrer':
             referrer = context.query.get('referrer')
             return referrer or context.get_referrer()
@@ -177,7 +177,7 @@ class AutoAdd(AutoForm):
 
         if getattr(datatype, 'multilingual', False):
             for language in resource.get_edit_languages(context):
-                value.setdefault(language, u'')
+                value.setdefault(language, '')
 
         return value
 
@@ -196,7 +196,7 @@ class AutoAdd(AutoForm):
         root = context.root
         if not root.has_permission(context.user, 'add', container, class_id):
             path = '/' if path == '.' else '/%s/' % path
-            msg = ERROR(u'Adding resources to {path} is not allowed.')
+            msg = ERROR('Adding resources to {path} is not allowed.')
             raise FormError(msg.gettext(path=path))
 
         # Ok

@@ -30,9 +30,9 @@ from itools.stl import stl
 from itools.web import STLView
 
 # Import from ikaaro
-from buttons import Button
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
+from .buttons import Button
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
 
 
 ###########################################################################
@@ -46,8 +46,8 @@ class AutoForm(STLView):
 
     Widgets is a list:
 
-      [TextWidget('firstname', title=MSG(u'Firstname')),
-       TextWidget('lastname', title=MSG(u'Lastname'))]
+      [TextWidget('firstname', title=MSG('Firstname')),
+       TextWidget('lastname', title=MSG('Lastname'))]
     """
 
     template = '/ui/ikaaro/auto_form.xml'
@@ -58,7 +58,7 @@ class AutoForm(STLView):
     widgets = []
     description = None
     method = 'post'
-    actions = [Button(access=True, css='btn btn-success', title=MSG(u'Save'))]
+    actions = [Button(access=True, css='btn btn-success', title=MSG('Save'))]
 
     def get_widgets(self, resource, context):
         return self.widgets

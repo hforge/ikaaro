@@ -29,18 +29,18 @@ from itools.uri import Reference
 from itools.web import get_context
 
 # Import from ikaaro
-from autoform import AutoForm
-from widgets import HiddenWidget, timestamp_widget
-from datatypes import BirthDate
-from datatypes import Days, Months, Years
-from fields import Field
-import messages
-from views import ContextMenu
+from .autoform import AutoForm
+from .widgets import HiddenWidget, timestamp_widget
+from .datatypes import BirthDate
+from .datatypes import Days, Months, Years
+from .fields import Field
+from . import messages
+from .views import ContextMenu
 
 
 class EditLanguageMenu(ContextMenu):
 
-    title = MSG(u'Configuration')
+    title = MSG('Configuration')
     template = '/ui/ikaaro/generic/edit_language_menu.xml'
     view = None
 
@@ -87,7 +87,7 @@ class EditLanguageMenu(ContextMenu):
 class AutoEdit(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
+    title = MSG('Edit')
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):

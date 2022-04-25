@@ -23,10 +23,10 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import Boolean_Field, Select_Field, Text_Field, Textarea_Field
-from resource_ import DBResource
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import Boolean_Field, Select_Field, Text_Field, Textarea_Field
+from .resource_ import DBResource
 
 
 
@@ -46,17 +46,17 @@ class ContactsOptions(Enumerate):
                 user_title = user_email
             options.append({'name': user.name, 'value': user_title,
                             'sort_value': user_title.lower()})
-        options.sort(key=itemgetter('sort_value'))
+        options = sorted(options, key=itemgetter('sort_value'))
         return options
 
 
 
-mail_description = MSG(u'Configure the website email options')
+mail_description = MSG('Configure the website email options')
 
 
 class ConfigMail_Edit(AutoEdit):
 
-    title = MSG(u'Email options')
+    title = MSG('Email options')
     description = mail_description
     fields = ['emails_from_addr', 'emails_reply_to', 'emails_signature',
               'contacts']
@@ -66,18 +66,18 @@ class ConfigMail_Edit(AutoEdit):
 class ConfigMail(DBResource):
 
     class_id = 'config-mail'
-    class_title = MSG(u'Email options')
+    class_title = MSG('Email options')
     class_description = mail_description
     class_icon_css = 'fa-envelope'
     class_views = ['edit']
 
     # Fields
     contacts = Select_Field(multiple=True, datatype=ContactsOptions,
-                            title=MSG(u'Select the contact accounts'),
+                            title=MSG('Select the contact accounts'),
                             has_empty_option=False)
-    emails_from_addr = Text_Field(title=MSG(u'From header'))
-    emails_reply_to = Boolean_Field(title=MSG(u'Reply to'), default=True)
-    emails_signature = Textarea_Field(title=MSG(u'Signature'))
+    emails_from_addr = Text_Field(title=MSG('From header'))
+    emails_reply_to = Boolean_Field(title=MSG('Reply to'), default=True)
+    emails_signature = Textarea_Field(title=MSG('Signature'))
 
     # Views
     edit = ConfigMail_Edit()

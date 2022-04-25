@@ -26,16 +26,16 @@ from itools.web import get_context
 from ikaaro.views.folder_views import Folder_BrowseContent
 
 # Import from here
-from autoadd import AutoAdd
-from autoedit import AutoEdit
-from buttons import Remove_BrowseButton
-from config import Configuration
-from config_common import NewResource_Local
-from enumerates import Groups_Datatype
-from fields import Select_Field
-from folder import Folder
-from resource_ import DBResource
-from utils import get_base_path_query
+from .autoadd import AutoAdd
+from .autoedit import AutoEdit
+from .buttons import Remove_BrowseButton
+from .config import Configuration
+from .config_common import NewResource_Local
+from .enumerates import Groups_Datatype
+from .fields import Select_Field
+from .folder import Folder
+from .resource_ import DBResource
+from .utils import get_base_path_query
 
 
 ###########################################################################
@@ -52,7 +52,7 @@ class Path_Datatype(Enumerate):
             title = '/' if not path else ('%s/' % path)
             items.append({'name': path, 'value': title, 'selected': False})
 
-        items.sort(key=lambda x: x['value'])
+        items = sorted(items, key=lambda x: x['value'])
         return items
 
 
@@ -60,41 +60,41 @@ class Path_Field(Select_Field):
 
     datatype = Path_Datatype()
     has_empty_option = False
-    title = MSG(u'Path')
+    title = MSG('Path')
 
 
 
 class PathDepth_Field(Select_Field):
 
-    title = MSG(u'Depth')
+    title = MSG('Depth')
     default = '0'
     multiple = False
     has_empty_option = False
     endline = True
 
     options = [
-        {'name': '0', 'value': u'0'},
-        {'name': '1', 'value': u'1'},
-        {'name': '2', 'value': u'2'},
-        {'name': '3', 'value': u'3'},
-        {'name': '4', 'value': u'4'},
-        {'name': '5', 'value': u'5'},
-        {'name': '*', 'value': MSG(u'No limit')}]
+        {'name': '0', 'value': '0'},
+        {'name': '1', 'value': '1'},
+        {'name': '2', 'value': '2'},
+        {'name': '3', 'value': '3'},
+        {'name': '4', 'value': '4'},
+        {'name': '5', 'value': '5'},
+        {'name': '*', 'value': MSG('No limit')}]
 
 
 
 class Permission_Datatype(Enumerate):
 
     options = [
-        {'name': 'view', 'value': MSG(u'View')},
-        {'name': 'edit', 'value': MSG(u'Remove and modify')},
-        {'name': 'share', 'value': MSG(u'Share')},
-        {'name': 'add', 'value': MSG(u'Add')}]
+        {'name': 'view', 'value': MSG('View')},
+        {'name': 'edit', 'value': MSG('Remove and modify')},
+        {'name': 'share', 'value': MSG('Share')},
+        {'name': 'add', 'value': MSG('Add')}]
 
 
 class Permissions_Field(Select_Field):
 
-    title = MSG(u'Permission')
+    title = MSG('Permission')
     datatype = Permission_Datatype()
 
 
@@ -110,14 +110,13 @@ class SearchFormat_Datatype(Enumerate):
 
         options = [ {'name': class_id, 'value': cls.class_title.gettext()}
                     for class_id, cls in options.items() ]
-
-        options.sort(key=lambda x: x['value'])
+        options = sorted(options, key=lambda x: x['value'])
         return options
 
 
 class SearchFormat_Field(Select_Field):
 
-    title = MSG(u'Resource type')
+    title = MSG('Resource type')
     datatype = SearchFormat_Datatype()
 
 
@@ -127,7 +126,7 @@ class SearchFormat_Field(Select_Field):
 ###########################################################################
 class AccessRule_Results(Folder_BrowseContent):
 
-    title = MSG(u'View results')
+    title = MSG('View results')
     search_schema = {}
     search_widgets = []
 
@@ -138,10 +137,10 @@ class AccessRule_Results(Folder_BrowseContent):
 class AccessRule(DBResource):
 
     class_id = 'config-access-rule'
-    class_title = MSG(u'Access rule')
+    class_title = MSG('Access rule')
 
     # Fields
-    group = Select_Field(required=True, title=MSG(u'User group'),
+    group = Select_Field(required=True, title=MSG('User group'),
                          datatype=Groups_Datatype(), indexed=True, stored=True)
     permission = Permissions_Field(required=True, indexed=True, stored=True)
     search_path = Path_Field(indexed=True, stored=True)
@@ -234,7 +233,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
     def table_columns(self):
         columns = [
             ('checkbox', None),
-            ('abspath', MSG(u'Num.'))]
+            ('abspath', MSG('Num.'))]
         for name, field in self._search_fields:
             columns.append((name, field.title))
 
@@ -288,8 +287,8 @@ class ConfigAccess(Folder):
 
     class_id = 'config-access'
     class_version = '20110606'
-    class_title = MSG(u'Access Control')
-    class_description = MSG(u'Choose the security policy.')
+    class_title = MSG('Access Control')
+    class_description = MSG('Choose the security policy.')
     class_icon_css = 'fa-user-plus'
 
     # Configuration
@@ -388,7 +387,7 @@ class ConfigAccess(Folder):
     # Views
     class_views = ['browse_content', 'add_rule', 'edit']
     browse_content = ConfigAccess_Browse()
-    add_rule = NewResource_Local(title=MSG(u'Add rule'))
+    add_rule = NewResource_Local(title=MSG('Add rule'))
 
 
 

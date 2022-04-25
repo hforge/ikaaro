@@ -22,12 +22,12 @@ from itools.gettext import MSG
 from itools.web import INFO, get_context
 
 # Import from ikaaro
-from views.folder_views import Folder_BrowseContent
+from .views.folder_views import Folder_BrowseContent
 
 # Import from ikaaro
-from buttons import BrowseButton
-from fields import URI_Field
-from folder import Folder
+from .buttons import BrowseButton
+from .fields import URI_Field
+from .folder import Folder
 
 
 
@@ -35,7 +35,7 @@ class OrderUpButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_up'
-    title = MSG(u'Order up')
+    title = MSG('Order up')
 
 
 
@@ -43,7 +43,7 @@ class OrderDownButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_down'
-    title = MSG(u'Order down')
+    title = MSG('Order down')
 
 
 
@@ -51,7 +51,7 @@ class OrderTopButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_top'
-    title = MSG(u'Order top')
+    title = MSG('Order top')
 
 
 
@@ -59,21 +59,21 @@ class OrderBottomButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_bottom'
-    title = MSG(u'Order bottom')
+    title = MSG('Order bottom')
 
 
 class OrderButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'add_to_ordered'
-    title = MSG(u'Add to ordered list')
+    title = MSG('Add to ordered list')
 
 
 class UnOrderButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'remove_from_ordered'
-    title = MSG(u'Remove from ordered list')
+    title = MSG('Remove from ordered list')
 
 
 
@@ -86,7 +86,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
         default=Boolean(default=False))
 
     table_columns = (Folder_BrowseContent.table_columns +
-                     [('order', MSG(u'Order'))])
+                     [('order', MSG('Order'))])
 
     def get_table_actions(self, resource, context):
         proxy = super(OrderedFolder_BrowseContent, self)
@@ -127,7 +127,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
             ordered_ids = list(resource.get_ordered_values())
             if item.name in ordered_ids:
                 return ordered_ids.index(item.name) + 1
-            return MSG(u'Not ordered')
+            return MSG('Not ordered')
 
         proxy = super(OrderedFolder_BrowseContent, self)
         return proxy.get_item_value(resource, context, item, column)
@@ -147,37 +147,37 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         resource.order_up(ids)
-        context.message = INFO(u'Resources ordered up.')
+        context.message = INFO('Resources ordered up.')
 
 
     def action_order_down(self, resource, context, form):
         ids = form['ids']
         resource.order_down(ids)
-        context.message = INFO(u'Resources ordered down.')
+        context.message = INFO('Resources ordered down.')
 
 
     def action_order_top(self, resource, context, form):
         ids = form['ids']
         resource.order_top(ids)
-        context.message = INFO(u'Resources ordered on top.')
+        context.message = INFO('Resources ordered on top.')
 
 
     def action_order_bottom(self, resource, context, form):
         ids = form['ids']
         resource.order_bottom(ids)
-        context.message = INFO(u'Resources ordered on bottom.')
+        context.message = INFO('Resources ordered on bottom.')
 
 
     def action_add_to_ordered(self, resource, context, form):
         ids = form['ids']
         resource.order_add(ids)
-        context.message = INFO(u'Resources ordered on bottom.')
+        context.message = INFO('Resources ordered on bottom.')
 
 
     def action_remove_from_ordered(self, resource, context, form):
         ids = form['ids']
         resource.order_remove(ids)
-        context.message = INFO(u'Resources unordered.')
+        context.message = INFO('Resources unordered.')
 
 
 
@@ -187,11 +187,11 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
 
 class OrderedFolder(Folder):
 
-    class_title = MSG(u'Ordered Folder')
+    class_title = MSG('Ordered Folder')
     class_views = ['browse_content']
 
     # Fields
-    order = URI_Field(title=MSG(u'Order'), multiple=True)
+    order = URI_Field(title=MSG('Order'), multiple=True)
 
     allow_to_unorder_items = False
 

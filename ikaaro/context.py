@@ -18,11 +18,15 @@
 from datetime import datetime
 import json
 from logging import getLogger
-from pytz import timezone
 import time
 
+#Import from packages
+from pytz import timezone
 from jwcrypto.jwt import JWT, JWTExpired
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
+from requests_toolbelt import MultipartDecoder
+import cgi
+
 # Import from itools
 from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, is_prototype, local_tz
@@ -44,10 +48,11 @@ from itools.web.exceptions import InvalidJWTSignatureException
 from itools.web.exceptions import JWTExpiredException
 
 # Import from ikaaro
-from skins import skin_registry
-from constants import JWT_EXPIRE, JWT_ISSUER
-from constants import SESSION_KEY
-from server import get_server
+from .skins import skin_registry
+from .constants import JWT_EXPIRE, JWT_ISSUER
+from .constants import SESSION_KEY
+from .server import get_server
+from .utils import dict_of_bytes_to_string
 
 log = getLogger("ikaaro.web")
 
@@ -325,7 +330,8 @@ class CMSContext(prototype):
         if self.method in ('GET', 'HEAD'):
             return self.uri.query
         # XXX What parameters with the fields defined in the query?
-        return self.body
+        new_data = dict_of_bytes_to_string(self.body)
+        return new_data
 
 
     def accept_cors(self):
@@ -464,7 +470,7 @@ class CMSContext(prototype):
 
 
     def get_form_keys(self):
-        return self.get_form().keys()
+        return list(self.get_form().keys())
 
 
     def get_form_body(self, body):
@@ -497,7 +503,7 @@ class CMSContext(prototype):
             return self.get_json_body(body)
         elif content_type.startswith('multipart/'):
             # Case 3: multipart
-            return self.get_multipart_body(body)
+            return self.get_multipart_body_v2(body)
         elif content_type.startswith('application/'):
             return {'body': body}
         # Case 4: Not managed content type
@@ -541,6 +547,50 @@ class CMSContext(prototype):
                     else:
                         form[name] = [form[name], body]
         return form
+
+    def get_multipart_body_v2(self, body):
+        """
+        FORM return example :
+        {'cls_description': 'Importer des documents bureautiques, des images, des fichiers de média, etc.', 'referrer': 'http://127.0.0.1:8081/', 'data': ('test.txt', 'text/plain', 'test fichier\n\n'), 'title:fr': ''}
+        """
+
+        content_type = self.environ.get('CONTENT_TYPE')
+        decoder = MultipartDecoder(body, content_type)
+        form = {}
+        for part in decoder.parts:
+            content_disposition = part.headers[b"Content-Disposition"]
+            if type(content_disposition) is bytes:
+                content_disposition = content_disposition.decode()
+            value, header_parameters = cgi.parse_header(content_disposition)
+            try:
+                body = part.text
+            except:
+                # Image encoding
+                body = part.content
+                pass
+            name = header_parameters['name']
+            if 'filename' in header_parameters:
+                filename = header_parameters['filename']
+                if filename:
+                    if b'content-type' in part.headers:
+                        mimetype = part.headers[b'content-type']
+                        if type(mimetype) is bytes:
+                            mimetype = mimetype.decode()
+                    else:
+                        mimetype = 'text/plain'
+                    form[name] = filename, mimetype, body
+                else:
+                    form[name] = None
+            else:
+                if name not in form:
+                    form[name] = body
+                else:
+                    if isinstance(form[name], list):
+                        form[name].append(body)
+                    else:
+                        form[name] = [form[name], body]
+        return form
+
 
     #######################################################################
     # ACL API
@@ -592,9 +642,13 @@ class CMSContext(prototype):
             # If the search is done by a CRON we don't
             # care about the default ACLs rules
             return self.database.search(query)
+
         if user is None:
-            return self._context_user_search.search(query, **kw)
-        return self._user_search(user).search(query, **kw)
+            _user_search = self._context_user_search
+        else:
+            _user_search = self._user_search(user)
+
+        return _user_search.search(query, **kw)
 
     #######################################################################
     # Login API
@@ -695,7 +749,7 @@ class CMSContext(prototype):
         if jwt:
             jwt_payload = json.loads(jwt.token.objects['payload'])
             user = jwt_payload.get('id')
-            return user.encode("utf-8")
+            return user
 
 
     def get_authentication_credentials(self):
@@ -824,7 +878,7 @@ class CMSContext(prototype):
         return format_time(time, accept=self.accept_language)
 
 
-    def format_number(self, number, places=2, curr='', pos=u'', neg=u'-',
+    def format_number(self, number, places=2, curr='', pos='', neg='-',
             trailneg=u""):
         return format_number(number, places=places, curr=curr, pos=pos,
                 neg=neg, trailneg=trailneg, accept=self.accept_language)

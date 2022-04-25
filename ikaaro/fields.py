@@ -34,16 +34,16 @@ from itools.web import get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
-from datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
-from datatypes import Password_Datatype, ChoosePassword_Datatype
-from datatypes import DaysOfWeek
-from links import get_abspath_links, update_abspath_links
-from utils import split_reference, get_secure_hash
-from widgets import Widget, FileWidget, MultilineWidget, TextWidget
-from widgets import CheckboxWidget, RadioWidget, SelectWidget
-from widgets import BirthDateWidget, DateWidget, DatetimeWidget
-from widgets import PasswordWidget, ChoosePassword_Widget
-from widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
+from .datatypes import Boolean3, BirthDate, HexadecimalColor, HTMLBody
+from .datatypes import Password_Datatype, ChoosePassword_Datatype
+from .datatypes import DaysOfWeek
+from .links import get_abspath_links, update_abspath_links
+from .utils import split_reference, get_secure_hash
+from .widgets import Widget, FileWidget, MultilineWidget, TextWidget
+from .widgets import CheckboxWidget, RadioWidget, SelectWidget
+from .widgets import BirthDateWidget, DateWidget, DatetimeWidget
+from .widgets import PasswordWidget, ChoosePassword_Widget
+from .widgets import ColorPickerWidget, ProgressBarWidget, RTEWidget
 
 
 class Field(BaseField):
@@ -198,7 +198,7 @@ class Metadata_Field(Field):
 
     def rest(self):
         rest = super(Metadata_Field, self).rest()
-        rest['parameters'] = self.parameters_schema.keys()
+        rest['parameters'] = list(self.parameters_schema.keys())
         return rest
 
 
@@ -232,9 +232,9 @@ class Boolean3_Field(Metadata_Field):
 
 
 class Char_Field(Metadata_Field):
-    datatype = String()
+    datatype = Unicode()
     widget = TextWidget()
-    rest_type = 'bytes'
+    rest_type = 'bytes' # XXX
 
 
 class Color_Field(Metadata_Field):
@@ -655,7 +655,7 @@ class File_Field(Field):
         if type(value) is tuple:
             filename, mimetype, value = value
 
-        if type(value) is str:
+        if type(value) in [bytes, str]:
             cls = self.class_handler
             if cls is None:
                 mimetype = magic_from_buffer(value)
@@ -860,7 +860,7 @@ class SelectDays_Field(Select_Field):
 
 class UUID_Field(Char_Field):
 
-    title = MSG(u'UUID')
+    title = MSG('UUID')
     indexed = True
     stored = True
     readonly = True
@@ -869,7 +869,7 @@ class UUID_Field(Char_Field):
 
 class CTime_Field(Datetime_Field):
 
-    title = MSG(u'Creation date')
+    title = MSG('Creation date')
     indexed = True
     stored = True
     readonly = True
@@ -878,7 +878,7 @@ class CTime_Field(Datetime_Field):
 
 class MTime_Field(Datetime_Field):
 
-    title = MSG(u'Modification date')
+    title = MSG('Modification date')
     indexed = True
     stored = True
     readonly = True
@@ -887,7 +887,7 @@ class MTime_Field(Datetime_Field):
 
 class LastAuthor_Field(Char_Field):
 
-    title = MSG(u'Last author')
+    title = MSG('Last author')
     indexed = False
     stored = True
     readonly = True
@@ -896,7 +896,7 @@ class LastAuthor_Field(Char_Field):
 
 class Title_Field(Text_Field):
 
-    title = MSG(u'Title')
+    title = MSG('Title')
     indexed = True
     stored = True
 
@@ -904,12 +904,12 @@ class Title_Field(Text_Field):
 
 class Description_Field(Textarea_Field):
 
-    title = MSG(u'Description')
+    title = MSG('Description')
     indexed = True
 
 
 
 class Subject_Field(Text_Field):
 
-    title = MSG(u'Keywords')
+    title = MSG('Keywords')
     indexde = True

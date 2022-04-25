@@ -20,14 +20,14 @@ from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from buttons import BrowseButton, Remove_BrowseButton, RenameButton
-from config import Configuration
-from config_common import NewResource_Local
-from messages import MSG_CHANGES_SAVED
-from order import OrderedFolder, OrderedFolder_BrowseContent
-from resource_ import DBResource
-from users_views import BrowseUsers
+from .autoadd import AutoAdd
+from .buttons import BrowseButton, Remove_BrowseButton, RenameButton
+from .config import Configuration
+from .config_common import NewResource_Local
+from .messages import MSG_CHANGES_SAVED
+from .order import OrderedFolder, OrderedFolder_BrowseContent
+from .resource_ import DBResource
+from .users_views import BrowseUsers
 
 
 
@@ -36,7 +36,7 @@ class Group_BrowseUsers(BrowseUsers):
     schema = {'ids': String(multiple=True)}
 
     table_actions = [
-        BrowseButton(access='is_admin', title=MSG(u'Update'))]
+        BrowseButton(access='is_admin', title=MSG('Update'))]
 
 
     @proto_lazy_property
@@ -72,8 +72,8 @@ class Group_BrowseUsers(BrowseUsers):
 class Group(DBResource):
 
     class_id = 'config-group'
-    class_title = MSG(u'User Group')
-    class_description = MSG(u'...')
+    class_title = MSG('User Group')
+    class_description = MSG('...')
 
     # Views
     class_views = ['browse_users', 'edit']
@@ -85,19 +85,19 @@ class Group(DBResource):
 class BrowseGroups(OrderedFolder_BrowseContent):
 
     access = 'is_admin'
-    title = MSG(u'Browse groups')
+    title = MSG('Browse groups')
 
     search_schema = {}
     search_widgets = []
 
     table_columns = [
         ('checkbox', None),
-        ('abspath', MSG(u'Name')),
-        ('title', MSG(u'Title')),
-        ('members', MSG(u'Members')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('order', MSG(u'Order'))]
+        ('abspath', MSG('Name')),
+        ('title', MSG('Title')),
+        ('members', MSG('Members')),
+        ('mtime', MSG('Last Modified')),
+        ('last_author', MSG('Last Author')),
+        ('order', MSG('Order'))]
     table_actions = [Remove_BrowseButton, RenameButton]
 
     @proto_lazy_property
@@ -119,8 +119,8 @@ class BrowseGroups(OrderedFolder_BrowseContent):
 class ConfigGroups(OrderedFolder):
 
     class_id = 'config-groups'
-    class_title = MSG(u'User Groups')
-    class_description = MSG(u'Manage user groups.')
+    class_title = MSG('User Groups')
+    class_description = MSG('Manage user groups.')
     class_icon_css = 'fa-users'
     class_views = ['browse_content', 'add_group', 'edit']
 
@@ -130,9 +130,9 @@ class ConfigGroups(OrderedFolder):
     property_name = 'groups'
 
     default_groups = [
-        ('admins', {'en': u'Admins'}),
-        ('reviewers', {'en': u'Reviewers'}),
-        ('members', {'en': u'Members'})]
+        ('admins', {'en': 'Admins'}),
+        ('reviewers', {'en': 'Reviewers'}),
+        ('members', {'en': 'Members'})]
 
 
     def init_resource(self, **kw):
@@ -148,7 +148,7 @@ class ConfigGroups(OrderedFolder):
 
     # Views
     browse_content = BrowseGroups()
-    add_group = NewResource_Local(title=MSG(u'Add group'))
+    add_group = NewResource_Local(title=MSG('Add group'))
 
 
 Configuration.register_module(ConfigGroups)

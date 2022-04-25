@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
-import urllib, urllib2
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
 
 # Import from itools
 from itools.core import proto_lazy_property
@@ -24,13 +24,13 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from autoedit import AutoEdit
-from config import Configuration
-from fields import Field, Select_Field, Text_Field
-from folder import Folder
-from resource_ import DBResource
-from utils import make_stl_template
-from widgets import TextWidget, RadioWidget, Widget
+from .autoedit import AutoEdit
+from .config import Configuration
+from .fields import Field, Select_Field, Text_Field
+from .folder import Folder
+from .resource_ import DBResource
+from .utils import make_stl_template
+from .widgets import TextWidget, RadioWidget, Widget
 
 
 class CaptchaFieldML(Text_Field):
@@ -43,7 +43,7 @@ class CaptchaFieldML(Text_Field):
 
 class RecaptchaWidget(Widget):
 
-    title = MSG(u"Please enter the words below")
+    title = MSG("Please enter the words below")
     public_key = None
 
     template = make_stl_template(
@@ -85,23 +85,23 @@ class RecaptchaDatatype(String):
         recaptcha_response_field = context.get_form_value(
             'recaptcha_response_field', type=String)
         # Test if captcha value is valid
-        params = urllib.urlencode ({
+        params = urllib.parse.urlencode({
                 'privatekey': cls.private_key,
-                'remoteip' :  remote_ip,
+                'remoteip':  remote_ip,
                 'challenge':  recaptcha_challenge_field,
-                'response' :  recaptcha_response_field,
+                'response':  recaptcha_response_field,
                 })
-        request = urllib2.Request (
-            url = "http://api-verify.recaptcha.net/verify",
-            data = params,
-            headers = {
+        request = urllib.request.Request(
+            url="http://api-verify.recaptcha.net/verify",
+            data=params,
+            headers={
                 "Content-type": "application/x-www-form-urlencoded",
                 "User-agent": "reCAPTCHA Python"
                 }
             )
-        httpresp = urllib2.urlopen (request)
-        return_values = httpresp.read ().splitlines ();
-        httpresp.close();
+        httpresp = urllib.request.urlopen(request)
+        return_values = httpresp.read().splitlines()
+        httpresp.close()
         context.recaptcha_return_code = return_code = return_values[0]
         return return_code == 'true'
 
@@ -110,12 +110,12 @@ class RecaptchaDatatype(String):
 class Captcha_Recaptcha(DBResource):
 
     class_id = 'config-captcha-recaptcha'
-    class_title = MSG(u'Recaptcha')
+    class_title = MSG('Recaptcha')
     class_views = ['edit']
 
     # Fields
-    public_key = CaptchaFieldML(title=MSG(u"Recaptcha public key"))
-    private_key = CaptchaFieldML(title=MSG(u"Recaptcha private key"))
+    public_key = CaptchaFieldML(title=MSG("Recaptcha public key"))
+    private_key = CaptchaFieldML(title=MSG("Recaptcha private key"))
 
     # Views
     edit = AutoEdit(fields=['public_key', 'private_key'])
@@ -145,7 +145,7 @@ class QuestionCaptchaDatatype(Unicode):
 
 class QuestionCaptchaWidget(TextWidget):
 
-    title = MSG(u"Please answer the question below:")
+    title = MSG("Please answer the question below:")
 
     question = None
     template = make_stl_template("""
@@ -159,12 +159,12 @@ class QuestionCaptchaWidget(TextWidget):
 class Captcha_Question(DBResource):
 
     class_id = 'config-captcha-question'
-    class_title = MSG(u'Captcha question')
+    class_title = MSG('Captcha question')
     class_views = ['edit']
 
     # Fields
-    question = CaptchaFieldML(default=u'2 + 3', title=MSG(u"Question"))
-    answer = CaptchaFieldML(default=u'5', title=MSG(u"Answer"))
+    question = CaptchaFieldML(default='2 + 3', title=MSG("Question"))
+    answer = CaptchaFieldML(default='5', title=MSG("Answer"))
 
     # Views
     edit = AutoEdit(fields=['question', 'answer'])
@@ -248,27 +248,27 @@ class CaptchaType(Enumerate):
     default = 'question'
 
     options = [
-        {'name': 'question', 'value': MSG(u'Question captcha')},
-        {'name': 'recaptcha', 'value': MSG(u'Recaptcha')}]
+        {'name': 'question', 'value': MSG('Question captcha')},
+        {'name': 'recaptcha', 'value': MSG('Recaptcha')}]
 
 
 
 class Captcha(Folder):
 
     class_id = 'config-captcha'
-    class_title = MSG(u'Captcha')
-    class_description = MSG(u'Feature to protect from spammers')
+    class_title = MSG('Captcha')
+    class_description = MSG('Feature to protect from spammers')
     class_icon48 = '/ui/ikaaro/icons/48x48/captcha.png'
     class_icon_css = 'fa-user-secret'
 
     # Fields
     captcha_type = Select_Field(
-        required=True, title=MSG(u"Captcha type"), datatype=CaptchaType,
+        required=True, title=MSG("Captcha type"), datatype=CaptchaType,
         widget = Select_CaptchaWidget(has_empty_option=False))
 
     # Views
     class_views = ['edit']
-    edit = AutoEdit(title=MSG(u'Edit captcha'), fields=['captcha_type'])
+    edit = AutoEdit(title=MSG('Edit captcha'), fields=['captcha_type'])
 
     # Configuration
     config_name = 'captcha'

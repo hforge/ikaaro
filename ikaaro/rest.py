@@ -23,7 +23,8 @@ from itools.core import proto_lazy_property
 from itools.web import BaseView
 
 # Import from ikaaro
-from fields import Metadata_Field, File_Field
+from .fields import Metadata_Field, File_Field
+from .utils import dict_of_bytes_to_string
 
 ###########################################################################
 # Utility functions
@@ -35,7 +36,7 @@ def fix_json(obj):
     TODO Use a custom JSONDecoder instead.
     """
     obj_type = type(obj)
-    if obj_type is unicode:
+    if obj_type is str:
         return obj.encode('utf-8')
     if obj_type is list:
         return [ fix_json(x) for x in obj ]
@@ -101,7 +102,7 @@ def field_to_json(resource, field_name):
         if prop is None:
             return None
         if type(prop) is dict:
-            prop = prop.values()
+            prop = list(prop.values())
         if type(prop) is list:
             return [ property_to_json(field, x) for x in prop ]
         return property_to_json(field, prop)
@@ -132,7 +133,8 @@ class Rest_BaseView(BaseView):
         """Utility method that loads the json from the request entity. Used
         by POST and PUT request methods.
         """
-        return self.context.body
+        new_data = dict_of_bytes_to_string(self.context.body)
+        return new_data
 
 
     def created(self, resource):

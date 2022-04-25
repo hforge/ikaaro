@@ -32,7 +32,7 @@ from ikaaro.fields import Field, Char_Field
 from ikaaro.utils import get_base_path_query
 
 # Import from here
-from folder_views import Folder_BrowseContent
+from .folder_views import Folder_BrowseContent
 
 
 class AutoTable(Folder_BrowseContent):
@@ -56,7 +56,7 @@ class AutoTable(Folder_BrowseContent):
 
     # Empty table
     empty_table_template = '/ui/ikaaro/views/autotable/empty_table_template.xml'
-    empty_table_msg = MSG(u'No items in the list')
+    empty_table_msg = MSG('No items in the list')
 
     # Table id / css
     search_form_id = 'form-search'
@@ -78,8 +78,8 @@ class AutoTable(Folder_BrowseContent):
         batch_size=Integer(default=50))
 
     # Base table fields
-    name = Char_Field(title=MSG(u'Name'))
-    class_title = Char_Field(title=MSG(u'Type'))
+    name = Char_Field(title=MSG('Name'))
+    class_title = Char_Field(title=MSG('Type'))
 
 
     @proto_property
@@ -171,7 +171,7 @@ class AutoTable(Folder_BrowseContent):
                 continue
 
             if name == 'name':
-                columns.append((name, MSG(u'ID')))
+                columns.append((name, MSG('ID')))
             else:
                 field = self.get_field(name)
                 if field:
@@ -459,7 +459,7 @@ class AutoTable(Folder_BrowseContent):
         if self.action_remove_goto:
             message = context.message
             if type(message) is list:
-                message = MSG(u'\n'.join([x.gettext() for x in message]))
+                message = MSG('\n'.join([x.gettext() for x in message]))
             return context.come_back(message, goto=self.action_remove_goto)
         # Ok
         return ret

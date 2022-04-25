@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
@@ -46,7 +46,7 @@ def update(parser, options, target):
     with server.database.init_context() as context:
         log.info("STAGE 1: Find out the versions to upgrade (may take a while).")
         msgs = do_run_next_update_method(context, force=options.force)
-        log.info(u'\n'.join([x.gettext() if isinstance(x, MSG) else x for x in msgs]))
+        log.info('\n'.join([x.gettext() if isinstance(x, MSG) else x for x in msgs]))
 
 
 

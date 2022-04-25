@@ -30,24 +30,24 @@ from itools.web import BaseView, FormError, STLView, INFO, ERROR
 from pytz import common_timezones
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from autoedit import AutoEdit
-from autoform import AutoForm
-from buttons import Button, BrowseButton
-from datatypes import ChoosePassword_Datatype
-from emails import send_email
-from fields import Password_Field, ChoosePassword_Field
-import messages
-from views import BrowseForm
-from widgets import HiddenWidget, ReadOnlyWidget, TextWidget
-from widgets import PasswordWidget, ChoosePassword_Widget
+from .autoadd import AutoAdd
+from .autoedit import AutoEdit
+from .autoform import AutoForm
+from .buttons import Button, BrowseButton
+from .datatypes import ChoosePassword_Datatype
+from .emails import send_email
+from .fields import Password_Field, ChoosePassword_Field
+from . import messages
+from .views import BrowseForm
+from .widgets import HiddenWidget, ReadOnlyWidget, TextWidget
+from .widgets import PasswordWidget, ChoosePassword_Widget
 
 
 class User_ConfirmRegistration(AutoForm):
 
     access = True
-    title = MSG(u'Choose your password')
-    description = MSG(u'To activate your account, please type a password.')
+    title = MSG('Choose your password')
+    description = MSG('To activate your account, please type a password.')
 
     schema = freeze({
         'key': String(mandatory=True),
@@ -56,9 +56,9 @@ class User_ConfirmRegistration(AutoForm):
         'newpass2': String(mandatory=True)})
     widgets = freeze([
         HiddenWidget('key'),
-        ReadOnlyWidget('username', title=MSG(u'Username')),
+        ReadOnlyWidget('username', title=MSG('Username')),
         ChoosePassword_Widget('newpass', userid='username'),
-        PasswordWidget('newpass2', title=MSG(u'Repeat password'))])
+        PasswordWidget('newpass2', title=MSG('Repeat password'))])
 
 
     def get_value(self, resource, context, name, datatype):
@@ -99,7 +99,7 @@ class User_ConfirmRegistration(AutoForm):
         # Check register key
         key = resource.get_property('user_state').get_parameter('key')
         if not key:
-            context.message = MSG(u'User is not pending')
+            context.message = MSG('User is not pending')
             return
 
         if form['key'] != key:
@@ -125,14 +125,14 @@ class User_ConfirmRegistration(AutoForm):
                    user=resource)
 
         # Ok
-        message = INFO(u'Operation successful! Welcome.')
+        message = INFO('Operation successful! Welcome.')
         return context.come_back(message, goto='./')
 
 
 
 class User_ChangePasswordForgotten(User_ConfirmRegistration):
 
-    description = MSG(u'Please choose a new password for your account')
+    description = MSG('Please choose a new password for your account')
 
 
 
@@ -144,7 +144,7 @@ class User_ResendConfirmation(BaseView):
         # Already confirmed
         user_state = resource.get_value('user_state')
         if user_state != 'pending':
-            msg = MSG(u'User has already confirmed his registration!')
+            msg = MSG('User has already confirmed his registration!')
             return context.come_back(msg)
 
         # Resend confirmation
@@ -152,7 +152,7 @@ class User_ResendConfirmation(BaseView):
         email = resource.get_value('email')
         send_email('user-ask-for-confirmation', context, email, user=resource)
         # Ok
-        msg = MSG(u'Confirmation sent!')
+        msg = MSG('Confirmation sent!')
         return context.come_back(msg)
 
 
@@ -160,8 +160,8 @@ class User_ResendConfirmation(BaseView):
 class User_Profile(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Profile')
-    description = MSG(u"User's profile page.")
+    title = MSG('Profile')
+    description = MSG("User's profile page.")
     icon = 'action_home.png'
     template = '/ui/ikaaro/user/profile.xml'
 
@@ -197,8 +197,8 @@ class User_Profile(STLView):
 class User_EditAccount(AutoEdit):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Account')
-    description = MSG(u'Edit your name and email address.')
+    title = MSG('Edit Account')
+    description = MSG('Edit your name and email address.')
     icon = 'card.png'
 
 
@@ -217,8 +217,8 @@ class User_EditAccount(AutoEdit):
                 results = context.database.search(query)
                 if len(results):
                     error = (
-                        u'There is another user with the "{value}" {name},'
-                        u' please choose another one.')
+                        'There is another user with the "{value}" {name},'
+                        ' please choose another one.')
                     context.message = ERROR(error, name=name, value=new_value)
                     return True
 
@@ -230,8 +230,8 @@ class User_EditAccount(AutoEdit):
 class User_EditPreferences(STLView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Preferences')
-    description = MSG(u'Set your preferred language and timezone.')
+    title = MSG('Edit Preferences')
+    description = MSG('Set your preferred language and timezone.')
     icon = 'preferences.png'
     template = '/ui/ikaaro/user/edit_preferences.xml'
     schema = {
@@ -280,8 +280,8 @@ class User_EditPreferences(STLView):
 class User_EditPassword(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Password')
-    description = MSG(u'Change your password.')
+    title = MSG('Edit Password')
+    description = MSG('Change your password.')
     icon = 'lock.png'
 
     schema = freeze({
@@ -291,8 +291,8 @@ class User_EditPassword(AutoForm):
     widgets = [
         HiddenWidget('username'),
         ChoosePassword_Widget('newpass', userid='username',
-                              title=MSG(u'New password')),
-        PasswordWidget('newpass2', title=MSG(u'Confirm'))]
+                              title=MSG('New password')),
+        PasswordWidget('newpass2', title=MSG('Confirm'))]
 
 
     def get_schema(self, resource, context):
@@ -304,7 +304,7 @@ class User_EditPassword(AutoForm):
     def get_widgets(self, resource, context):
         if resource.name != context.user.name:
             return self.widgets
-        title = MSG(u'Type your current password')
+        title = MSG('Type your current password')
         return self.widgets + [PasswordWidget('password', title=title)]
 
 
@@ -329,15 +329,15 @@ class User_EditPassword(AutoForm):
 
         # Check the new password matches
         if newpass != form['newpass2']:
-            raise FormError(ERROR(u"Passwords mismatch, please try again."))
+            raise FormError(ERROR("Passwords mismatch, please try again."))
 
         # Check old password
         if resource.name == context.user.name:
             password = form['password']
             if not resource.authenticate(password):
                 message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
+                    "You mistyped your actual password, your account is"
+                    " not changed.")
                 raise FormError(message)
 
         # Ok
@@ -364,9 +364,9 @@ class User_EditPassword(AutoForm):
 class BrowseUsers(BrowseForm):
 
     access = 'is_admin'
-    title = MSG(u'Browse Members')
+    title = MSG('Browse Members')
     icon = 'userfolder.png'
-    description = MSG(u'See the users.')
+    description = MSG('See the users.')
 
     schema = {'ids': String(multiple=True, mandatory=True)}
 
@@ -376,7 +376,7 @@ class BrowseUsers(BrowseForm):
 
 
     search_schema = {'search_term': Unicode}
-    search_widgets = [TextWidget('search_term', title=MSG(u'Search'))]
+    search_widgets = [TextWidget('search_term', title=MSG('Search'))]
 
     def get_items(self, resource, context):
         # Build the Query
@@ -407,7 +407,7 @@ class BrowseUsers(BrowseForm):
                                               sort_by)[0].gettext()
             items = results.get_resources()
             items = list(items)
-            items.sort(key=lambda x: f(x), reverse=reverse)
+            items = sorted(items, key=lambda x: f(x), reverse=reverse)
             items = items[start:start+size]
             database = resource.database
             return [ database.get_resource(x.abspath) for x in items ]
@@ -419,11 +419,11 @@ class BrowseUsers(BrowseForm):
 
     table_columns = [
         ('checkbox', None),
-        ('name', MSG(u'User ID')),
-        ('email', MSG(u'Login')),
-        ('firstname', MSG(u'First Name')),
-        ('lastname', MSG(u'Last Name')),
-        ('account_state', MSG(u'State'))]
+        ('name', MSG('User ID')),
+        ('email', MSG('Login')),
+        ('firstname', MSG('First Name')),
+        ('lastname', MSG('Last Name')),
+        ('account_state', MSG('State'))]
 
 
     def get_item_value(self, resource, context, item, column):
@@ -434,7 +434,7 @@ class BrowseUsers(BrowseForm):
         elif column == 'account_state':
             if item.get_value('user_state') == 'pending':
                 href = '/users/%s/;resend_confirmation' % item.name
-                return MSG(u'Resend Confirmation'), href
+                return MSG('Resend Confirmation'), href
 
             return item.get_value_title('user_state'), None
 
@@ -446,14 +446,14 @@ class Users_Browse(BrowseUsers):
 
     table_actions = [
         BrowseButton(access='is_admin', name='switch_state',
-                     title=MSG(u'Switch state'))]
+                     title=MSG('Switch state'))]
 
 
     def action_switch_state(self, resource, context, form):
         # Verify if after this operation, all is ok
         usernames = form['ids']
         if context.user.name in usernames:
-            context.message = ERROR(u'You cannot change your state yourself.')
+            context.message = ERROR('You cannot change your state yourself.')
             return
 
         database = resource.database
@@ -478,16 +478,16 @@ class Users_Browse(BrowseUsers):
 class Users_AddUser(AutoAdd):
 
     access = 'is_admin'
-    title = MSG(u'Add New Member')
+    title = MSG('Add New Member')
     icon = 'card.png'
-    description = MSG(u'Grant access to a new user.')
+    description = MSG('Grant access to a new user.')
 
     fields = ['email', 'password', 'password2', 'groups']
 
-    password = ChoosePassword_Field(title=MSG(u'Password'), userid='email')
-    password.tip = MSG(u'If no password is given an email will be sent to the'
-                       u' user, asking him to choose his password.')
-    password2 = Password_Field(title=MSG(u'Repeat password'), datatype=String)
+    password = ChoosePassword_Field(title=MSG('Password'), userid='email')
+    password.tip = MSG('If no password is given an email will be sent to the'
+                       ' user, asking him to choose his password.')
+    password2 = Password_Field(title=MSG('Repeat password'), datatype=String)
 
 
     @proto_lazy_property
@@ -507,7 +507,7 @@ class Users_AddUser(AutoAdd):
         email = form['email'].strip()
         results = context.search(email=email)
         if len(results):
-            raise FormError(ERROR(u'The user is already here.'))
+            raise FormError(ERROR('The user is already here.'))
 
         # Check the password is right
         if password != form['password2']:
@@ -520,9 +520,9 @@ class Users_AddUser(AutoAdd):
 
     actions = [
         Button(access='is_admin', css='btn btn-primary',
-               title=MSG(u'Add and view')),
+               title=MSG('Add and view')),
         Button(access='is_admin', css='btn btn-primary', name='add_and_return',
-               title=MSG(u'Add and return'))]
+               title=MSG('Add and return'))]
 
 
     def get_container(self, resource, context, form):
@@ -555,4 +555,4 @@ class Users_AddUser(AutoAdd):
         if child is None:
             return
 
-        context.message = INFO(u'User added.')
+        context.message = INFO('User added.')

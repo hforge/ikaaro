@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from cProfile import runctx
+#from cProfile import runctx
 from email.parser import HeaderParser
 from json import loads
 from io import BytesIO
@@ -41,6 +41,7 @@ from requests import Request
 from tempfile import mkstemp
 from importlib import import_module
 from wsgiref.util import setup_testing_defaults
+import importlib
 
 # Import from jwcrypto
 from jwcrypto.jwk import JWK
@@ -66,11 +67,11 @@ from itools.web.dispatcher import URIDispatcher
 from itools.web.router import RequestMethod
 
 # Import from ikaaro.web
-from database import get_database
-from datatypes import ExpireValue
-from views import CachedStaticView
-from skins import skin_registry
-from views import IkaaroStaticView
+from .database import get_database
+from .datatypes import ExpireValue
+from .views import CachedStaticView
+from .skins import skin_registry
+from .views import IkaaroStaticView
 
 log_ikaaro = getLogger("ikaaro")
 log_access = getLogger("ikaaro.access")
@@ -178,7 +179,7 @@ def load_modules(config):
     modules = config.get_value('modules')
     for name in modules:
         name = name.strip()
-        exec('import %s' % name)
+        __import__(name)
 
 
 
@@ -215,7 +216,7 @@ def create_server(target, email, password, root,
                   listen_port='8080', smtp_host='localhost',
                   log_email=None, website_languages=None,
                   size_min=19500, size_max=20500):
-    from root import Root
+    from .root import Root
     modules = modules or []
     # Get modules
     for module in modules:
@@ -225,8 +226,8 @@ def create_server(target, email, password, root,
         root_class = Root
     else:
         modules.insert(0, root)
-        exec('import %s' % root)
-        exec('root_class = %s.Root' % root)
+        mod = __import__(root)
+        root_class = getattr(mod, 'Root')
     # Make folder
     try:
         mkdir(target)
@@ -275,9 +276,11 @@ def create_server(target, email, password, root,
 
 
 
+
 server = None
 def get_server():
     return server
+
 
 def set_server(the_server):
     global server
@@ -307,14 +310,24 @@ class ServerHandler(WSGIHandler):
             length,
             delta)
 
+    def dict_bytes_to_str(self, data: dict):
+        new_response_headers = {}
+        for key,value in data.items():
+            if type(key) is bytes:
+                key = key.decode("utf-8")
+            if type(value) is bytes:
+                value = value.decode("utf-8")
+            new_response_headers[key] = value
+        return new_response_headers
+
     def log_request(self):
         request_log = self.format_request()
         status = (self._orig_status or self.status or '000').split()[0]
         status = int(status)
-        request_headers = self.headers.dict
+        request_headers = dict(self.headers)
         request_headers.pop("cookie", None)
         request_headers.pop("authorization", None)
-        response_headers = dict(self.response_headers)
+        response_headers = self.dict_bytes_to_str(dict(self.response_headers))
         response_headers.pop("Set-cookie", None)
         method = self.command
         response_length = self.response_length
@@ -383,7 +396,9 @@ class Server(object):
         # Set timestamp
         self.timestamp = str(int(time() / 2))
         # Load the config
+        print("TARGET", target)
         config = get_config(target)
+
         self.config = config
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -402,8 +417,9 @@ class Server(object):
             'accept-cors', type=Boolean, default=False)
 
         # Profile Memory
-        if profile_space is True:
-            import guppy.heapy.RM
+        # Package not compatible with python 3
+        # if profile_space is True:
+        #     import guppy.heapy.RM
 
         # The database
         if cache_size is None:
@@ -459,9 +475,9 @@ class Server(object):
     def get_JWT_key(self):
         key_path = self.get_JWT_key_path()
         try:
-            with open(key_path, mode="r") as key_file:
+            with open(key_path, mode="rb") as key_file:
                 lines = key_file.readlines()
-                key_pem_string = "".join(lines)
+                key_pem_string = b"".join(lines)
                 jwk = JWK.from_pem(key_pem_string)
         except IOError as e:
             # No pem file found generating one
@@ -472,7 +488,7 @@ class Server(object):
 
     def save_JWT_key(self, jwk):
         key_path = self.get_JWT_key_path()
-        with open(key_path, mode="w") as key_file:
+        with open(key_path, mode="wb") as key_file:
             key_pem_string = jwk.export_to_pem(private_key=True, password=None)
             key_file.write(key_pem_string)
 
@@ -619,7 +635,10 @@ class Server(object):
 
     def is_running(self):
         pid = self.get_pid()
-        return pid_exists(pid)
+        if pid:
+            return pid_exists(pid)
+        else:
+            return False
 
 
     def __enter__(self):
@@ -672,7 +691,8 @@ class Server(object):
         gevent_signal(SIGTERM, self.stop_signal)
         gevent_signal(SIGINT, self.stop_signal)
         if self.profile:
-            runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
+            #runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
+            raise Exception("Error server.py Ikaaro - Python 3 circular import with CProfile")
         else:
             self.wsgi_server.serve_forever()
 
@@ -723,7 +743,8 @@ class Server(object):
         tmp_file, tmp_path = mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')
         try:
-            file.write(message.as_string())
+            message = message.as_string()
+            file.write(message)
         finally:
             file.close()
 
@@ -829,9 +850,11 @@ class Server(object):
     def register_urlpatterns_from_package(self, package):
         urlpatterns = None
         try:
-            exec('from {} import urlpatterns'.format(package))
+            module_imported = __import__(f"{package}")
+            urlpatterns = module_imported.urls.urlpatterns
         except ImportError:
             return
+
         # Dispatch base routes from ikaaro
         for urlpattern_object in urlpatterns:
             for pattern, view in urlpattern_object.get_patterns():
@@ -860,7 +883,7 @@ class Server(object):
         # Build fake context
         with database.init_context() as context:
             context.is_cron = True
-            context.git_message = u'[CRON]'
+            context.git_message = '[CRON]'
             # Go
             t0 = time()
             catalog = database.catalog
@@ -958,7 +981,13 @@ class Server(object):
         for key, value in headers:
             environ['HTTP_%s' % key.upper().replace('-', '_')] = value
         # Set wsgi input body
-        environ['wsgi.input'] = BytesIO(prepped.body)
+        if prepped.body is not None:
+            if type(prepped.body) is str:
+                environ['wsgi.input'] = BytesIO(prepped.body.encode("utf-8"))
+            else:
+                environ['wsgi.input'] = BytesIO(prepped.body)
+        else:
+            environ['wsgi.input'] = BytesIO()
         # Set content length
         if prepped.body:
             environ['CONTENT_LENGTH'] = len(prepped.body)
@@ -1006,7 +1035,6 @@ class Server(object):
                 'method': context.method,
                 'entity': response,
                 'context': context}
-
 
 
 

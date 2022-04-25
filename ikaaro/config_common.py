@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from ikaaro
-from views.folder_views import Folder_NewResource
+from .views.folder_views import Folder_NewResource
 
 
 print('[OBSOLETE] NewResource_Local has been renamed Folder_NewResource')

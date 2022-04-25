@@ -39,26 +39,17 @@ from itools.uri import Path
 from itools.web import ItoolsView, get_context
 
 # Import from ikaaro
-from autoadd import AutoAdd
-from autoedit import AutoEdit
-from enumerates import Groups_Datatype
-from fields import File_Field, HTMLFile_Field
-from fields import SelectAbspath_Field, UUID_Field
-from fields import CTime_Field, MTime_Field, LastAuthor_Field
-from fields import Title_Field, Description_Field, Subject_Field
-from fields import URI_Field
-from popup import DBResource_AddImage, DBResource_AddLink
-from popup import DBResource_AddMedia
-from resource_views import AutoJSONResourceExport
-from resource_views import AutoJSONResourcesImport
-from resource_views import DBResource_Remove
-from resource_views import DBResource_Links, DBResource_Backlinks
-from resource_views import LoginView, LogoutView
-from resource_views import DBResource_GetFile, DBResource_GetImage
-from update import class_version_to_date
-from utils import get_resource_by_uuid_query
-from widgets import CheckboxWidget
-from widgets import RTEWidget
+from .autoadd import AutoAdd
+from .autoedit import AutoEdit
+from .enumerates import Groups_Datatype
+from .fields import File_Field, HTMLFile_Field, SelectAbspath_Field, UUID_Field, CTime_Field, MTime_Field, LastAuthor_Field,\
+    Title_Field, Description_Field, Subject_Field, URI_Field
+from .popup import DBResource_AddImage, DBResource_AddLink, DBResource_AddMedia
+from .resource_views import AutoJSONResourceExport, AutoJSONResourcesImport, DBResource_Remove, DBResource_Links, \
+    DBResource_Backlinks, LoginView, LogoutView, DBResource_GetFile, DBResource_GetImage
+from .update import class_version_to_date
+from .utils import get_resource_by_uuid_query
+from .widgets import CheckboxWidget, RTEWidget
 
 
 log = getLogger("ikaaro")
@@ -241,7 +232,7 @@ class DBResource(Resource):
         # Return resource
         if not search:
             return None
-        return search.get_resources(size=1).next()
+        return next(search.get_resources(size=1))
 
 
     def make_resource_name(self):
@@ -767,8 +758,7 @@ class DBResource(Resource):
                     continue
                 if version > obj_version and version <= cls_version:
                     versions.append(version)
-
-        versions.sort()
+        versions = sorted(versions)
         return versions
 
 
@@ -842,7 +832,7 @@ class DBResource(Resource):
         if title:
             return title
         # Fallback to the resource's name
-        return unicode(self.name)
+        return str(self.name)
 
 
     def get_edit_languages(self, context):
@@ -943,9 +933,10 @@ class DBResource(Resource):
             if not field_multilingual:
                 if is_unicode:
                     if type(field_value) is list:
-                        field_value = [x.decode("utf-8") for x in field_value]
+                        field_value = [x.decode("utf-8") if isinstance(x, bytes) else x for x in field_value]
                     else:
-                        field_value = field_value.decode("utf-8")
+                        if isinstance(field_value, bytes):
+                            field_value = field_value.decode("utf-8")
                 else:
                     field_value = datatype.decode(field_value)
                 self.set_value(field_name, field_value)
@@ -956,7 +947,8 @@ class DBResource(Resource):
                 if is_prototype(datatype, HTMLBody):
                     lang_value = datatype.decode(lang_value)
                 if is_unicode:
-                    lang_value = lang_value.decode("utf-8")
+                    if isinstance(lang_value, bytes):
+                        lang_value = lang_value.decode("utf-8")
                 self.set_value(field_name, lang_value, language=lang)
 
 
