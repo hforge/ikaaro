@@ -68,19 +68,18 @@ def application(environ, start_response):
             log.error("Internal error : {}".format(tb), exc_info=True)
             context.set_default_response(500)
         finally:
+            data = context.entity
+            if isinstance(data, str):
+                data = data.encode("utf-8")
             headers = context.header_response
             if context.content_type:
                 headers.append(('Content-Type', context.content_type))
-            if context.entity and not isinstance(context.entity, Reference):
-                headers.append(('Content-Length', str(len(context.entity))))
+            if data and not isinstance(data, Reference):
+                headers.append(('Content-Length', str(len(data))))
             status = context.status or 500
             status = '{0} {1}'.format(status, reason_phrases[status])
             start_response(str(status), headers)
-            data = context.entity
-            if isinstance(data, str):
-                yield data.encode("utf-8")
-            else:
-                yield data
+            yield data
 
 
 try:
