@@ -55,8 +55,11 @@ for name, import_path, reason in [
 
 
 # The version
-__version__ = get_version()
-
+__version__ = "0.80.2"
+__version_info__ = tuple(
+    int(num) if num.isdigit() else num
+    for num in __version__.replace("-", ".", 1).split(".")
+)
 
 # Import required modules
 from . import users
