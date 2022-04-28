@@ -22,7 +22,7 @@ from logging import getLogger, NullHandler
 from sys import stderr
 
 # Import from itools
-from itools.core import get_abspath, get_version
+from itools.core import get_abspath
 from itools.gettext import register_domain
 
 # Import from ikaaro
