@@ -797,7 +797,7 @@ class Server(object):
             # 3. Send message
             try:
                 message = spool.open(name).read()
-                headers = HeaderParser().parsestr(message)
+                headers = HeaderParser().parse(message)
                 subject = headers['subject']
                 from_addr = headers['from']
                 to_addr = headers['to']
