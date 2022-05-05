@@ -20,7 +20,7 @@
 
 # Import from the Standard Library
 #from cProfile import runctx
-from email.parser import HeaderParser
+from email.parser import BytesHeaderParser
 from json import loads
 from io import BytesIO
 from datetime import timedelta
@@ -796,8 +796,8 @@ class Server(object):
 
             # 3. Send message
             try:
-                message = spool.open(name, mode="r", text=True).read()
-                headers = HeaderParser().parsestr(message)
+                message = spool.open(name).read()
+                headers = BytesHeaderParser().parsebytes(message)
                 subject = headers['subject']
                 from_addr = headers['from']
                 to_addr = headers['to']
