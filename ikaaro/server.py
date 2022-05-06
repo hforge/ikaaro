@@ -310,13 +310,15 @@ class ServerHandler(WSGIHandler):
             length,
             delta)
 
-    def dict_bytes_to_str(self, data: dict):
+    def headers_bytes_to_str(self, data: dict):
+        # WSGI encodes in latin-1
+        # https://github.com/gevent/gevent/blob/master/src/gevent/pywsgi.py#L859=
         new_response_headers = {}
         for key,value in data.items():
             if type(key) is bytes:
-                key = key.decode("utf-8")
+                key = key.decode("latin-1")
             if type(value) is bytes:
-                value = value.decode("utf-8")
+                value = value.decode("latin-1")
             new_response_headers[key] = value
         return new_response_headers
 
@@ -327,7 +329,7 @@ class ServerHandler(WSGIHandler):
         request_headers = dict(self.headers)
         request_headers.pop("cookie", None)
         request_headers.pop("authorization", None)
-        response_headers = self.dict_bytes_to_str(dict(self.response_headers))
+        response_headers = self.headers_bytes_to_str(dict(self.response_headers))
         response_headers.pop("Set-cookie", None)
         method = self.command
         response_length = self.response_length
