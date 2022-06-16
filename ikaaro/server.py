@@ -21,6 +21,7 @@
 # Import from the Standard Library
 #from cProfile import runctx
 from email.parser import BytesHeaderParser
+import fcntl
 from json import loads
 from io import BytesIO
 from datetime import timedelta
@@ -788,7 +789,10 @@ class Server(object):
                 smtp = SMTP(smtp_host)
             except Exception as e:
                 self.smtp_log_error()
-                spool.move(name, 'failed/%s' % name)
+                try:
+                    spool.move(name, 'failed/%s' % name)
+                except FileNotFoundError:
+                    continue
                 return 60 if get_names() else False
             log_ikaaro.info("CONNECTED to {}".format(smtp_host))
 
@@ -798,7 +802,17 @@ class Server(object):
 
             # 3. Send message
             try:
-                message = spool.open(name).read()
+                try:
+                    message_file = spool.open(name)
+                except FileNotFoundError:
+                    continue
+                try:
+                    fcntl.flock(message_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    message_file.close()
+                    continue
+                message = message_file.read()
+                message_file.close()
                 headers = BytesHeaderParser().parsebytes(message)
                 subject = headers['subject']
                 from_addr = headers['from']
