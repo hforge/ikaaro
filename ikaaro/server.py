@@ -22,6 +22,7 @@
 #from cProfile import runctx
 from email.parser import BytesHeaderParser
 import fcntl
+from gevent.lock import BoundedSemaphore
 from json import loads
 from io import BytesIO
 from datetime import timedelta
@@ -77,6 +78,18 @@ from .views import IkaaroStaticView
 log_ikaaro = getLogger("ikaaro")
 log_access = getLogger("ikaaro.access")
 log_cron = getLogger("ikaaro.cron")
+
+SMTP_SEND_SEM = BoundedSemaphore(1)
+
+
+class SMTPSendManager(object):
+
+    def __enter__(self):
+        SMTP_SEND_SEM.acquire()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        SMTP_SEND_SEM.release()
+
 
 template = (
 """# The "modules" variable lists the Python modules or packages that will be
@@ -762,82 +775,83 @@ class Server(object):
 
 
     def _smtp_send(self):
-        nb_max_mails_to_send = 2
-        spool = lfs.open(self.spool)
+        with SMTP_SEND_SEM():
+            nb_max_mails_to_send = 2
+            spool = lfs.open(self.spool)
 
-        def get_names():
-            # Find out emails to send
-            locks = set()
-            names = set()
-            for name in spool.get_names():
-                if name == 'failed':
-                    # Skip "failed" special directory
-                    continue
-                if name[-5:] == '.lock':
-                    locks.add(name[:-5])
-                else:
-                    names.add(name)
-            names.difference_update(locks)
-            return names
+            def get_names():
+                # Find out emails to send
+                locks = set()
+                names = set()
+                for name in spool.get_names():
+                    if name == 'failed':
+                        # Skip "failed" special directory
+                        continue
+                    if name[-5:] == '.lock':
+                        locks.add(name[:-5])
+                    else:
+                        names.add(name)
+                names.difference_update(locks)
+                return names
 
-        # Send emails
-        names = get_names()
-        smtp_host = self.smtp_host
-        for name in list(names)[:nb_max_mails_to_send]:
-            # 1. Open connection
-            try:
-                smtp = SMTP(smtp_host)
-            except Exception as e:
-                self.smtp_log_error()
+            # Send emails
+            names = get_names()
+            smtp_host = self.smtp_host
+            for name in list(names)[:nb_max_mails_to_send]:
+                # 1. Open connection
                 try:
-                    spool.move(name, 'failed/%s' % name)
-                except FileNotFoundError:
-                    continue
-                return 60 if get_names() else False
-            log_ikaaro.info("CONNECTED to {}".format(smtp_host))
+                    smtp = SMTP(smtp_host)
+                except Exception as e:
+                    self.smtp_log_error()
+                    try:
+                        spool.move(name, 'failed/%s' % name)
+                    except FileNotFoundError:
+                        continue
+                    return 60 if get_names() else False
+                log_ikaaro.info("CONNECTED to {}".format(smtp_host))
 
-            # 2. Login
-            if self.smtp_login and self.smtp_password:
-                smtp.login(self.smtp_login, self.smtp_password)
+                # 2. Login
+                if self.smtp_login and self.smtp_password:
+                    smtp.login(self.smtp_login, self.smtp_password)
 
-            # 3. Send message
-            try:
+                # 3. Send message
                 try:
-                    message_file = spool.open(name)
-                except FileNotFoundError:
-                    continue
-                try:
-                    fcntl.flock(message_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                except BlockingIOError:
+                    try:
+                        message_file = spool.open(name)
+                    except FileNotFoundError:
+                        continue
+                    try:
+                        fcntl.flock(message_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    except BlockingIOError:
+                        message_file.close()
+                        continue
+                    message = message_file.read()
                     message_file.close()
-                    continue
-                message = message_file.read()
-                message_file.close()
-                headers = BytesHeaderParser().parsebytes(message)
-                subject = headers['subject']
-                from_addr = headers['from']
-                to_addr = headers['to']
-                smtp.sendmail(from_addr, to_addr, message)
-                # Remove
-                spool.remove(name)
-                # Log
-                log_ikaaro.info("Email '{}' sent from '{}' to '{}'".format(subject, from_addr, to_addr))
-            except SMTPRecipientsRefused:
-                # The recipient addresses has been refused
-                self.smtp_log_error()
-                spool.move(name, 'failed/%s' % name)
-            except SMTPResponseException as excp:
-                # The SMTP server returns an error code
-                self.smtp_log_error()
-                spool.move(name, 'failed/%s_%s' % (excp.smtp_code, name))
-            except Exception:
-                self.smtp_log_error()
+                    headers = BytesHeaderParser().parsebytes(message)
+                    subject = headers['subject']
+                    from_addr = headers['from']
+                    to_addr = headers['to']
+                    smtp.sendmail(from_addr, to_addr, message)
+                    # Remove
+                    spool.remove(name)
+                    # Log
+                    log_ikaaro.info("Email '{}' sent from '{}' to '{}'".format(subject, from_addr, to_addr))
+                except SMTPRecipientsRefused:
+                    # The recipient addresses has been refused
+                    self.smtp_log_error()
+                    spool.move(name, 'failed/%s' % name)
+                except SMTPResponseException as excp:
+                    # The SMTP server returns an error code
+                    self.smtp_log_error()
+                    spool.move(name, 'failed/%s_%s' % (excp.smtp_code, name))
+                except Exception:
+                    self.smtp_log_error()
 
-            # 4. Close connection
-            smtp.quit()
+                # 4. Close connection
+                smtp.quit()
 
-        # Is there something left?
-        return 60 if get_names() else False
+            # Is there something left?
+            return 60 if get_names() else False
 
 
     def smtp_log_error(self):
