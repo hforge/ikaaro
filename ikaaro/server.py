@@ -86,6 +86,7 @@ class SMTPSendManager(object):
 
     def __enter__(self):
         SMTP_SEND_SEM.acquire()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         SMTP_SEND_SEM.release()
@@ -775,7 +776,7 @@ class Server(object):
 
 
     def _smtp_send(self):
-        with SMTP_SEND_SEM():
+        with SMTPSendManager():
             nb_max_mails_to_send = 2
             spool = lfs.open(self.spool)
 
