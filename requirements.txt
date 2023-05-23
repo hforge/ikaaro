@@ -1,4 +1,5 @@
-gevent==1.5
+gevent==20.9.0
+greenlet==0.4.17
 guppy
 junitxml
 requests-toolbelt
