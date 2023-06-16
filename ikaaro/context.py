@@ -598,15 +598,15 @@ class CMSContext(prototype):
     def login(self, user):
         user_id = user.get_user_id()
         user_token = user.get_auth_token()
-
         # Make cookie
         token = self._get_auth_token(user_token)
         cookie = '%s:%s' % (user_id, token)
         cookie = quote(encodestring(cookie))
         self._set_auth_cookie(cookie)
-
         # Set the user
         self.user = user
+        # Ok
+        return cookie
 
 
     def logout(self):
