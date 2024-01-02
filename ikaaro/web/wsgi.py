@@ -59,6 +59,7 @@ def application(environ, start_response):
             t1 = time()
             # Compute request time
             context.request_time = t1-t0
+            environ['REQUEST_TIME'] = t1-t0
             # Callback at end of request
             context.on_request_end()
         except HTTPError as e:

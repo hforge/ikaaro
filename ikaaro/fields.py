@@ -27,10 +27,12 @@ from itools.datatypes import Boolean, Decimal, Date, DateTime, Email
 from itools.datatypes import Enumerate, Integer, String, Unicode, URI
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
+from itools.i18n import format_time
 from itools.html import XHTMLFile, xhtml_uri
 from itools.stl import rewrite_uris
 from itools.uri import Reference, get_reference
 from itools.web import get_context
+from itools.web.context import select_language
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro

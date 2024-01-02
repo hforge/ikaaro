@@ -32,7 +32,6 @@ from itools.web import get_context, NewJSONEncoder
 from itools.web import BaseView, STLView, INFO, ERROR
 from itools.web import NotFound
 from itools.web.exceptions import FormError
-from itools.web.utils import fix_json
 
 # Import from ikaaro
 from ikaaro.views.folder_views import Folder_BrowseContent

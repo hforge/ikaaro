@@ -76,7 +76,7 @@ if __name__ == '__main__':
         log.error("Error: {} instance do not exists".format(target))
         exit(1)
     except DatabaseLockError:
-        log.error("Error: Database is already opened".format(target))
+        log.error('Error: Database {} is already opened'.format(target))
         exit(1)
     # Check server
     successfully_init = server.check_consistency(options.quick)

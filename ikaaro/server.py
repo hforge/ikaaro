@@ -35,7 +35,7 @@ from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
 from psutil import pid_exists
 import sys
-from time import time
+from time import strftime, time
 from traceback import format_exc
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from signal import SIGINT, SIGTERM
@@ -43,7 +43,6 @@ from requests import Request
 from tempfile import mkstemp
 from importlib import import_module
 from wsgiref.util import setup_testing_defaults
-import importlib
 
 # Import from jwcrypto
 from jwcrypto.jwk import JWK
@@ -59,11 +58,9 @@ from itools.database import make_database, get_register_fields
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import lfs
 from itools.handlers import ConfigFile
-from itools.i18n import init_language_selector
 from itools.loop import cron
 from itools.uri import get_reference, get_uri_path, Path
 from itools.uri import decode_query
-from itools.web.context import select_language
 from itools.web import set_context, get_context
 from itools.web.dispatcher import URIDispatcher
 from itools.web.router import RequestMethod
@@ -105,7 +102,7 @@ modules = {modules}
 # These variables are required (i.e. there are not default values).  To
 # listen from any address write the value '*'.
 #
-listen-address = 127.0.0.1
+listen-address = {listen_address}
 listen-port = {listen_port}
 
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
@@ -149,7 +146,7 @@ session-timeout = 0
 # The "database-readonly" variable, when set to 1 starts the database in
 # read-only mode, all write operations will fail.
 #
-database-size = 19500:20500
+database-size = {size_min}:{size_max}
 database-readonly = 0
 
 # The "index-text" variable defines whether the catalog must process full-text
@@ -228,7 +225,8 @@ def get_root(database):
 
 def create_server(target, email, password, root,
                   backend='git', modules=None,
-                  listen_port='8080', smtp_host='localhost',
+                  listen_port='8080', listen_address='127.0.0.1',
+                  smtp_host='localhost',
                   log_email=None, website_languages=None,
                   size_min=19500, size_max=20500):
     from .root import Root
@@ -253,8 +251,11 @@ def create_server(target, email, password, root,
     config = template.format(
         modules=" ".join(modules),
         listen_port=listen_port or '8080',
+        listen_address=listen_address or '127.0.0.1',
         smtp_host=smtp_host or 'localhost',
         smtp_from=email,
+        size_min=size_min,
+        size_max=size_max,
         log_email=log_email)
     open('%s/config.conf' % target, 'w').write(config)
 
@@ -309,8 +310,8 @@ class ServerHandler(WSGIHandler):
     def format_request(self):
         now = datetime.now().replace(microsecond=0)
         length = self.response_length or '-'
-        if self.time_finish:
-            delta = '%.6f' % (self.time_finish - self.time_start)
+        if self.environ.get('REQUEST_TIME'):
+            delta = '%.6f' % self.environ['REQUEST_TIME']
         else:
             delta = '-'
         client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
@@ -402,21 +403,22 @@ class Server(object):
     accept_cors = False
     dispatcher = URIDispatcher()
     wsgi_server = None
+    cron_statistics = {}
 
 
     def __init__(self, target, read_only=False, cache_size=None,
                  profile_space=False, port=None):
         set_server(self)
+        # Set target
         target = lfs.get_absolute_path(target)
         self.target = target
+        # Read only ?
         self.read_only = read_only
         # Set timestamp
         self.timestamp = str(int(time() / 2))
         # Load the config
-        print("TARGET", target)
-        config = get_config(target)
-
-        self.config = config
+        config = self.load_config()
+        # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
         # Find out the port to listen
@@ -513,6 +515,20 @@ class Server(object):
     def generate_JWT_key(self):
         jwk = JWK(generate="RSA", size=4096)
         return jwk
+    def load_config(self):
+        self.config = get_config(self.target)
+        return self.config
+
+
+    def set_cron_interval(self, interval, context):
+        # Save new value into config
+        self.config.set_value('cron-interval', interval)
+        self.config.save_state()
+        # Reload config
+        self.load_config()
+        # Relaunch cron if it was desactivated ?
+        if interval > 0 and not self.cron_statistics['started']:
+            self.launch_cron(context)
 
 
     def get_database(self):
@@ -559,9 +575,9 @@ class Server(object):
         # Call method on root at start
         with self.database.init_context() as context:
             context.root.launch_at_start(context)
+            if not self.read_only:
+                self.launch_cron(context)
         # Listen & set context
-        if not self.read_only:
-            self.launch_cron()
         self.listen(address, self.port)
 
         # XXX The interpreter do not go here
@@ -570,11 +586,20 @@ class Server(object):
         return True
 
 
-    def launch_cron(self):
+    def launch_cron(self, context):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
+            # Statistics
+            next_start = context.timestamp + timedelta(seconds=interval)
+            self.cron_statistics = {'last_start': None,
+                                    'last_end': None,
+                                    'next_start': next_start,
+                                    'started': True}
+            # Launch
             cron(self.cron_manager, interval)
+        else:
+            self.cron_statistics['started'] = False
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
@@ -686,8 +711,6 @@ class Server(object):
 
 
     def listen(self, address, port):
-        # Language negotiation
-        init_language_selector(select_language)
         # Say hello
         log_ikaaro.info("Listing at port {}".format(port))
         self.port = port
@@ -913,6 +936,7 @@ class Server(object):
         error = False
         # Build fake context
         with database.init_context() as context:
+            start_dtime = context.timestamp
             context.is_cron = True
             context.git_message = '[CRON]'
             # Go
@@ -944,25 +968,41 @@ class Server(object):
                 # Reindex resource without committing
                 values = resource.get_catalog_values()
                 catalog.index_document(values)
-                catalog.save_changes()
                 # Log
                 tcron1 = time()
                 log_cron.info("Done for {} in {} seconds".format(brain.abspath, tcron1-tcron0))
             # Save changes
             if not error:
                 try:
+                    catalog.save_changes()
                     database.save_changes()
                 except Exception as e:
                     log_cron.error("Cron error on save changes\n{}".format(format_exc()), exc_info=True)
                     context.root.alert_on_internal_server_error(context)
-            # Message
+            # Log into cron.log
             t1 = time()
             if not error:
                 log_cron.info("[OK] Cron finished for {nb} resources in {s} seconds".format(nb=nb, s=t1-t0))
             else:
                 log_cron.error("[ERROR] Cron finished for {nb} resources in {s} seconds".format(nb=nb, s=t1-t0))
+            # Log into access.log
+            now = strftime('%d/%b/%Y:%H:%M:%S %z')
+            message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
+            log_ikaaro.info(message % (now, t1-t0), domain='itools.web_access')
+            end_dtime = context.timestamp
         # Again, and again
-        return self.config.get_value('cron-interval')
+        cron_interval = self.config.get_value('cron-interval')
+        # Cron statistics
+        if cron_interval:
+            next_start = context.timestamp + timedelta(seconds=cron_interval)
+        else:
+            next_start = None
+        self.cron_statistics = {'last_start': start_dtime,
+                                'last_end': end_dtime,
+                                'started': cron_interval > 0,
+                                'next_start': next_start}
+        # Ok
+        return cron_interval
 
 
 

@@ -91,7 +91,6 @@ class AutoEdit(AutoForm):
 
     fields = ['title', 'description', 'subject']
     def get_fields(self):
-        context = self.context
         resource = self.resource
 
         for name in self.fields:

@@ -39,7 +39,7 @@ def update_catalog(parser, options, target):
         log.error("Error: {} instance do not exists".format(target))
         exit(1)
     except DatabaseLockError:
-        log.error("Error: Database is already opened".format(target))
+        log.error('Error: Database {} is already opened'.format(target))
         exit(1)
     # Ask
     message = 'Update the catalog (y/N)? '

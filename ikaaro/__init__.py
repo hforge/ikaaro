@@ -41,6 +41,18 @@ getLogger("ikaaro.update").addHandler(NullHandler())
 getLogger("ikaaro.access").addHandler(NullHandler())
 getLogger("ikaaro.cron").addHandler(NullHandler())
 
+# Import core config modules
+import config_access
+import config_captcha
+import config_footer
+import config_groups
+import config_mail
+import config_menu
+import config_models
+import config_register
+import config_seo
+import config_theme
+
 
 # Check for required software
 for name, import_path, reason in [
@@ -72,3 +84,9 @@ register_domain('ikaaro', path)
 register_document_type(WebPage)
 register_document_type(Folder)
 register_document_type(File)
+
+# Silent pyflakes
+Root, text, users,
+config_access, config_captcha, config_footer, config_groups,
+config_mail, config_menu, config_models, config_register,
+config_seo, config_theme,

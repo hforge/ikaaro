@@ -17,12 +17,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 # Import from itools
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.web import STLView, INFO, ERROR
-
 
 # Import from here
 from .folder import Folder
@@ -222,16 +222,3 @@ class Configuration(Folder):
     # Views
     view = IconsView()
     edit_languages = Config_EditLanguages()
-
-
-# Import core config modules
-from . import config_access
-from . import config_captcha
-from . import config_footer
-from . import config_groups
-from . import config_mail
-from . import config_menu
-from . import config_models
-from . import config_register
-from . import config_seo
-from . import config_theme
