@@ -199,11 +199,11 @@ class Image_View(STLView):
         'size': String(default='800x600')}
 
     sizes = [
-        ('640x480', u"small"),
-        ('800x600', u"medium"),
-        ('1024x768', u"large"),
-        ('1280x1024', u"huge"),
-        ('original', u"original")]
+        ('640x480', "small"),
+        ('800x600', "medium"),
+        ('1024x768', "large"),
+        ('1280x1024', "huge"),
+        ('original', "original")]
 
 
     def get_namespace(self, resource, context):

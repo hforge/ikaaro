@@ -52,7 +52,7 @@ class LoadTestCase(TestCase):
     def test_title(self):
         value = self.metadata.get_property('title', language='fr').value
         self.assertEqual(type(value), str)
-        self.assertEqual(value, u'bonjour')
+        self.assertEqual(value, 'bonjour')
 
 
 
@@ -60,7 +60,7 @@ class NewTestCase(TestCase):
 
     def setUp(self):
         metadata = Metadata(cls=WebPage)
-        title = MetadataProperty(u'Hello World', lang='en')
+        title = MetadataProperty('Hello World', lang='en')
         metadata.set_property('title', title)
         self.metadata = metadata
         # Sandbox
@@ -85,7 +85,7 @@ class NewTestCase(TestCase):
     def test_title(self):
         value = self.metadata.get_property('title', language='en').value
         self.assertEqual(type(value), str)
-        self.assertEqual(value, u'Hello World')
+        self.assertEqual(value, 'Hello World')
 
 
     def test_save(self):

@@ -57,7 +57,7 @@ log = getLogger("ikaaro")
 
 class Share_Field(SelectAbspath_Field):
 
-    title = MSG(u'Share')
+    title = MSG('Share')
     datatype = Groups_Datatype()
     widget = CheckboxWidget
     multiple = True

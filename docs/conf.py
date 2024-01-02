@@ -42,8 +42,8 @@ unused_docs = ['developers']
 master_doc = 'index'
 
 # General information about the project.
-project = u'ikaaro'
-copyright = u'2010, J. David Ibáñez'
+project = 'ikaaro'
+copyright = '2010, J. David Ibáñez'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -180,8 +180,8 @@ htmlhelp_basename = 'ikaarodoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'ikaaro.tex', u'ikaaro Documentation',
-   u'J. David Ibáñez', 'manual'),
+  ('index', 'ikaaro.tex', 'ikaaro Documentation',
+   'J. David Ibáñez', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +213,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ikaaro', u'ikaaro Documentation',
-     [u'J. David Ibáñez'], 1)
+    ('index', 'ikaaro', 'ikaaro Documentation',
+     ['J. David Ibáñez'], 1)
 ]
 
 

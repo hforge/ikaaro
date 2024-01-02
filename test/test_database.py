@@ -119,7 +119,7 @@ class FreeTestCase(TestCase):
                 container = root.make_resource('test-multilingual', Folder)
                 # Create N resources
                 for i in range(0, 20):
-                    kw =  {'title':   {'fr': u'Bonjour', 'en': u'Hello'}}
+                    kw =  {'title':   {'fr': 'Bonjour', 'en': 'Hello'}}
                     container.make_resource(str(i), Text, **kw)
                 database.save_changes()
                 # Check if resource exists
@@ -131,28 +131,28 @@ class FreeTestCase(TestCase):
                 # Check if resource exists
                 query = AndQuery(
                     PhraseQuery('format', 'text'),
-                    PhraseQuery('title', u'Hello'),
+                    PhraseQuery('title', 'Hello'),
                     get_base_path_query('/test-multilingual'),
                     )
                 search = database.search(query)
                 self.assertEqual(len(search), 20)
                 query = AndQuery(
                     PhraseQuery('format', 'text'),
-                    PhraseQuery('title_en', u'Hello'),
+                    PhraseQuery('title_en', 'Hello'),
                     get_base_path_query('/test-multilingual'),
                     )
                 search = database.search(query)
                 self.assertEqual(len(search), 20)
                 query = AndQuery(
                     PhraseQuery('format', 'text'),
-                    PhraseQuery('title_fr', u'Bonjour'),
+                    PhraseQuery('title_fr', 'Bonjour'),
                     get_base_path_query('/test-multilingual'),
                     )
                 search = database.search(query)
                 self.assertEqual(len(search), 20)
                 query = AndQuery(
                     PhraseQuery('format', 'text'),
-                    PhraseQuery('title_es', u'Hola'),
+                    PhraseQuery('title_es', 'Hola'),
                     get_base_path_query('/test-multilingual'),
                     )
                 search = database.search(query)
@@ -164,7 +164,7 @@ class FreeTestCase(TestCase):
     def test_move_file(self):
         with Database('demo.hforge.org', 19500, 20500) as database:
             with database.init_context():
-                kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
+                kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'},
                        'data': 'this is text'}
                 root = database.get_resource('/')
                 container = root.make_resource('test-move', Folder)
@@ -190,7 +190,7 @@ class FreeTestCase(TestCase):
         with Database('demo.hforge.org', 19500, 20500) as database:
             with database.init_context():
                 root = database.get_resource('/')
-                kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'}}
+                kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'}}
                 container = root.make_resource('folder1', Folder, **kw)
                 child = container.make_resource('child', Folder)
                 child.make_resource('hello_child.txt', Text)
@@ -226,7 +226,7 @@ class FreeTestCase(TestCase):
         with Database('demo.hforge.org', 19500, 20500) as database:
             with database.init_context():
                 root = database.get_resource('/')
-                kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
+                kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'},
                        'data': 'this is text'}
                 r1 = root.make_resource(None, Text, **kw)
                 self.assertEqual(str(r1.abspath), f'/{r1.name}')
@@ -249,7 +249,7 @@ class FreeTestCase(TestCase):
             with database.init_context():
                 root = database.get_resource('/')
                 container = root.make_resource('folder-test-close-transaction', Folder)
-                kw =  {'title': {'fr': u'Bonjour', 'en': u'Hello'},
+                kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'},
                        'data': 'this is text'}
                 resource = container.make_resource(None, Text, **kw)
                 self.assertEqual(str(resource.abspath), f'/folder-test-close-transaction/{resource.name}')

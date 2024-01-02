@@ -184,16 +184,16 @@ class ServerTestCase(TestCase):
         with Server('demo.hforge.org') as server:
             with server.database.init_context():
                 server.dispatcher.add('/test/json-action', TestJsonAction_View)
-                body = {'action': 'set_root_title', 'title': u'Sylvain'}
+                body = {'action': 'set_root_title', 'title': 'Sylvain'}
                 retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
                 self.assertEqual(retour['status'], 200)
                 self.assertEqual(retour['entity']['success'], True)
-                self.assertEqual(server.root.get_value('title', language='fr'), u'Sylvain')
-                body = {'action': 'set_root_title', 'title': u'Zidane'}
+                self.assertEqual(server.root.get_value('title', language='fr'), 'Sylvain')
+                body = {'action': 'set_root_title', 'title': 'Zidane'}
                 retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
                 self.assertEqual(retour['status'], 200)
                 self.assertEqual(retour['entity']['success'], True)
-                self.assertEqual(server.root.get_value('title', language='fr'), u'Zidane')
+                self.assertEqual(server.root.get_value('title', language='fr'), 'Zidane')
 
 
     def test_catalog_access(self):

@@ -879,6 +879,6 @@ class CMSContext(prototype):
 
 
     def format_number(self, number, places=2, curr='', pos='', neg='-',
-            trailneg=u""):
+            trailneg=""):
         return format_number(number, places=places, curr=curr, pos=pos,
                 neg=neg, trailneg=trailneg, accept=self.accept_language)

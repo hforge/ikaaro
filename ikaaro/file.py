@@ -332,7 +332,7 @@ class PDF(File):
 
 class RTF(File):
     class_id = 'text/rtf'
-    class_title = MSG(u"RTF")
+    class_title = MSG("RTF")
     class_description = MSG('RTF Document')
     class_icon16 = '/ui/ikaaro/icons/16x16/text.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/text.png'
@@ -385,7 +385,7 @@ class Archive(File):
 
 class ZipArchive(Archive):
     class_id = 'application/zip'
-    class_title = MSG(u"Zip")
+    class_title = MSG("Zip")
     class_description = MSG('Zip Archive')
     class_icon16 = '/ui/ikaaro/icons/16x16/zip.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/zip.png'
@@ -396,7 +396,7 @@ class ZipArchive(Archive):
 
 class TarArchive(Archive):
     class_id = 'application/x-tar'
-    class_title = MSG(u"Tar")
+    class_title = MSG("Tar")
     class_description = MSG('Tar Archive')
     class_icon16 = '/ui/ikaaro/icons/16x16/tar.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/tar.png'
@@ -407,7 +407,7 @@ class TarArchive(Archive):
 
 class Gzip(File):
     class_id = 'application/x-gzip'
-    class_title = MSG(u"Gzip")
+    class_title = MSG("Gzip")
     class_description = MSG('Gzip Compressed')
     class_icon16 = '/ui/ikaaro/icons/16x16/gzip.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/gzip.png'
@@ -418,7 +418,7 @@ class Gzip(File):
 
 class Bzip2(File):
     class_id = 'application/x-bzip2'
-    class_title = MSG(u"Bzip2")
+    class_title = MSG("Bzip2")
     class_description = MSG('Bzip2 Compressed')
     class_icon16 = '/ui/ikaaro/icons/16x16/bzip.png'
     class_icon48 = '/ui/ikaaro/icons/48x48/bzip.png'

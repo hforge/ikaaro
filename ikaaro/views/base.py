@@ -222,8 +222,8 @@ class Batch(CMSTemplate):
     """
 
     template = '/ui/ikaaro/generic/browse_batch.xml'
-    batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
-    batch_msg2 = MSG(u"There are {n} items.")
+    batch_msg1 = MSG("There is 1 item.") # FIXME Use plural forms
+    batch_msg2 = MSG("There are {n} items.")
 
 
     @proto_lazy_property

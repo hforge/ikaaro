@@ -33,7 +33,7 @@ class Button(STLTemplate):
     # TODO rename to "value" in 0.75
     name = None
     # TODO rename to "content" in 0.75, add "title" attribute
-    title = MSG(u"OK")
+    title = MSG("OK")
     css = 'btn btn-primary'
     confirm = None
 

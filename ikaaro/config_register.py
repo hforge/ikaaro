@@ -184,7 +184,7 @@ class ConfigRegister(DBResource):
     # Fields
     is_open = Boolean_Field(default=False,
                             title=MSG('Users can register by themselves'))
-    tos = HTMLFile_Field(title=MSG(u"Terms of service"))
+    tos = HTMLFile_Field(title=MSG("Terms of service"))
 
     # Views
     edit = AutoEdit(title=class_title, fields=['is_open', 'tos'])
