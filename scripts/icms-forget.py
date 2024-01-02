@@ -123,7 +123,7 @@ def forget(parser, target, options):
     # Verify the step before was fine
     try:
         get_pipe(['git', 'log', '-n', '0', 'new'], cwd=cwd)
-    except EnvironmentError:
+    except OSError:
         print_exc()
         exit()
 

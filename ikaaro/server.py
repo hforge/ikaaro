@@ -198,7 +198,7 @@ def load_modules(config):
 def get_pid(target):
     try:
         pid = open(target).read()
-    except IOError:
+    except OSError:
         return None
 
     pid = int(pid)
@@ -498,7 +498,7 @@ class Server(object):
                 lines = key_file.readlines()
                 key_pem_string = b"".join(lines)
                 jwk = JWK.from_pem(key_pem_string)
-        except IOError as e:
+        except OSError:
             # No pem file found generating one
             jwk = self.generate_JWT_key()
             self.save_JWT_key(jwk)
@@ -632,7 +632,7 @@ class Server(object):
                 # Index the document
                 try:
                     catalog.index_document(values)
-                except Exception as e:
+                except Exception:
                     if as_test:
                         error_detected = True
                         log_ikaaro.error("Error, Abspath of the resource: {}".format(str(obj.abspath)))
@@ -737,25 +737,6 @@ class Server(object):
             self.wsgi_server.serve_forever()
 
 
-    #def save_running_informations(self):
-    #    # Save server running informations
-    #    kw = {'pid': getpid(),
-    #          'target': self.target,
-    #          'read_only': self.read_only}
-    #    data = pickle.dumps(kw)
-    #    with open(self.target + '/running', 'w') as output_file:
-    #        output_file.write(data)
-
-
-    #def get_running_informations(self):
-    #    try:
-    #        with open(self.target + '/running', 'r') as output_file:
-    #            data = output_file.read()
-    #            return pickle.loads(data)
-    #    except IOError:
-    #        return None
-
-
     def is_running_in_rw_mode(self, mode='running'):
         # FIXME
         is_running = self.is_running()
@@ -825,7 +806,7 @@ class Server(object):
                 # 1. Open connection
                 try:
                     smtp = SMTP(smtp_host)
-                except Exception as e:
+                except Exception:
                     self.smtp_log_error()
                     try:
                         spool.move(name, 'failed/%s' % name)
@@ -956,7 +937,7 @@ class Server(object):
                 resource = database.get_resource(brain.abspath)
                 try:
                     resource.time_event(payload)
-                except Exception as e:
+                except Exception:
                     # Log error
                     log_cron.error("Cron error\n{}".format(format_exc()), exc_info=True)
                     context.root.alert_on_internal_server_error(context)
@@ -976,7 +957,7 @@ class Server(object):
                 try:
                     catalog.save_changes()
                     database.save_changes()
-                except Exception as e:
+                except Exception:
                     log_cron.error("Cron error on save changes\n{}".format(format_exc()), exc_info=True)
                     context.root.alert_on_internal_server_error(context)
             # Log into cron.log

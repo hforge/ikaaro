@@ -279,10 +279,8 @@ class ApiDevPanel_Log(Api_View):
     def GET(self, root, context):
         context.set_content_type('text/plain')
         try:
-            source = '{t}/log/{s}'.format(
-                t=context.server.target, s=self.source_name)
-            log_file = open(source, 'r')
-        except IOError:
+            log_file = open(f'{context.server.target}/log/{self.source_name}', 'r')
+        except OSError:
             return ''
         context.set_content_type('text/plain')
         data = log_file.read()
