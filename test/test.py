@@ -33,7 +33,6 @@ import test_metadata
 import test_query
 import test_server
 import test_xapian_search
-from junitxml import JUnitXmlResult
 
 
 test_modules = [
@@ -66,13 +65,5 @@ if __name__ == '__main__':
         suite.addTest(loader.loadTestsFromModule(module))
     if options.mode == 'standard':
         ret = TextTestRunner(verbosity=1).run(suite)
-    elif options.mode == 'junitxml':
-        path = get_abspath('./junit.xml')
-        print('Result is here: %s' % path)
-        f = open(path, 'wb')
-        result = JUnitXmlResult(f)
-        result.startTestRun()
-        ret = suite.run(result)
-        result.stopTestRun()
     exit_code = not ret.wasSuccessful()
     exit(exit_code)
