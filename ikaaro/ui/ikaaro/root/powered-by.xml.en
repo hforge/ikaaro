@@ -9,9 +9,6 @@
 
 <fieldset style="float: right" stl:if="is_admin">
   <legend>Installed software</legend>
-  <p>
-  <tt>${location}</tt>
-  </p>
   <table id="browse-list">
     <thead>
       <tr class="odd">
@@ -78,7 +75,7 @@ along with this program.  If not, see
 <h2>Credits</h2>
 <table style="float: left">
   <tr>
-    <th align="right" valign="top">Coders</th>
+    <th style="text-align: right; vertical-align: top">Coders</th>
     <td>
       <stl:block stl:repeat="name hackers">${name}<br/></stl:block>
     </td>
@@ -86,8 +83,8 @@ along with this program.  If not, see
 </table>
 <table>
   <tr>
-    <th align="right" valign="top">Translators</th>
-    <td align="left" valign="top">
+    <th style="text-align: right; vertical-align: top">Translators</th>
+    <td style="text-align: left; vertical-align: top">
       Hervé Cauwelier (French)<br/>
       Nicolas Deram (French)<br/>
       Paolo Dina (Italian)<br/>

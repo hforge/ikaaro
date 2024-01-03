@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -17,10 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 from optparse import OptionParser
 import sys
-from sys import exit
 
 # Import from itools
 import itools
@@ -33,8 +30,7 @@ from ikaaro.utils import generate_password
 def init(parser, options, target):
     # Get the email address for the init user
     if options.email is None:
-        sys.stdout.write("Type your email address: ")
-        email = sys.stdin.readline().strip()
+        email = input("Type your email address: ").strip()
     else:
         email = options.email
 
@@ -102,4 +98,4 @@ if __name__ == '__main__':
     else:
         init(parser, options, target)
     # Ok
-    exit(0)
+    sys.exit(0)

@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2006-2007 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
@@ -17,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
 from logging import getLogger, NullHandler
 from sys import stderr
 
@@ -26,20 +24,12 @@ from itools.core import get_abspath
 from itools.gettext import register_domain
 
 # Import from ikaaro
-# Add class to register
 from .root import Root
 from .file import File
 from .folder import Folder
 from .registry import register_document_type
 from . import text
 from .webpage import WebPage
-
-
-getLogger("ikaaro").addHandler(NullHandler())
-getLogger("ikaaro.web").addHandler(NullHandler())
-getLogger("ikaaro.update").addHandler(NullHandler())
-getLogger("ikaaro.access").addHandler(NullHandler())
-getLogger("ikaaro.cron").addHandler(NullHandler())
 
 # Import core config modules
 from . import config_access
@@ -53,18 +43,23 @@ from . import config_register
 from . import config_seo
 from . import config_theme
 
+# Import required modules
+from . import users
+
+
+getLogger("ikaaro").addHandler(NullHandler())
+getLogger("ikaaro.web").addHandler(NullHandler())
+getLogger("ikaaro.update").addHandler(NullHandler())
+getLogger("ikaaro.access").addHandler(NullHandler())
+getLogger("ikaaro.cron").addHandler(NullHandler())
+
 
 # Check for required software
-for name, import_path, reason in [
-        ("poppler", "itools.pdf.pdftotext", "PDF indexation"),
-        ("wv2", "itools.office.doctotext", "DOC indexation"),
-        ("xlrd", "xlrd", "XLS indexation")]:
-    try:
-        __import__(import_path)
-    except ImportError:
-        stderr.write('%s: You need to install "%s" and reinstall itools.\n' % (
-            reason, name))
-
+try:
+    import itools.office.doctotext
+    assert itools.office.doctotext # Silence pyflakes
+except ImportError:
+    print('DOC indexation: You need to install wv2 and reinstall itools.', file=stderr)
 
 # The version
 __version__ = "0.80.10"
@@ -72,9 +67,6 @@ __version_info__ = tuple(
     int(num) if num.isdigit() else num
     for num in __version__.replace("-", ".", 1).split(".")
 )
-
-# Import required modules
-from . import users
 
 # Register the itools domain
 path = get_abspath('locale')

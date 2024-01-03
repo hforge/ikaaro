@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2015 Nicolas Deram <nicolas@agicia.com>
 #
@@ -15,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 from datetime import datetime
 from logging import getLogger
 from os.path import basename, getmtime, isfile
@@ -435,7 +433,6 @@ class BrowseForm(STLView):
 
 
     def get_items(self, resource, context):
-        name = 'get_items'
         raise NotImplementedError("the 'get_items' method is not defined")
 
 
@@ -627,7 +624,7 @@ class IkaaroStaticView(StaticView):
             return self.get_from_template(resource, context)
         except NotModified:
             raise
-        except Exception as e:
+        except Exception:
             # Fallback if the handler cannot be loaded
             msg = 'WARNING: The file {0} contains errors'.format(context.path)
             log.debug(msg, exc_info=True)

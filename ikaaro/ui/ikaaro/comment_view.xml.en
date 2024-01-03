@@ -9,7 +9,7 @@
     <td>
       <span class="comment-user">${user}</span>
       <span class="comment-datetime">${datetime}</span></td>
-    <td align="right">
+    <td style="text-align: right">
       <a name="c${number}"/>
       <span class="comment-number"><a href="#c${number}">Comment ${number}</a></span>
       <span class="comment-reply">[<a href="#new_comment"

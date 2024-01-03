@@ -17,13 +17,13 @@
           <a href="http://download.hforge.org/restedit/restedit-last.tar.gz">restedit</a>
         </li>
         <li>
-          Unpack the tarball <tt>restedit-last.tar.gz</tt>
+          Unpack the tarball <code>restedit-last.tar.gz</code>
         </li>
         <li>
-          Copy the <tt>restedit.py</tt> script somewhere
+          Copy the <code>restedit.py</code> script somewhere
         </li>
         <li>
-          Configure your browser so it uses the <tt>restedit.py</tt> script to
+          Configure your browser so it uses the <code>restedit.py</code> script to
           open web pages with the <em>application/x-restedit</em> mimetype
         </li>
       </ol>
@@ -42,7 +42,7 @@
           </a>
         </li>
         <li>
-          Configure your browser so it uses the <tt>restedit.py</tt> script to
+          Configure your browser so it uses the <code>restedit.py</code> script to
           open web pages with the <em>application/x-restedit</em> mimetype
         </li>
       </ol>
