@@ -22,10 +22,10 @@ Requirements
 
 Software    Version  Used by            Home
 ----------  -------  -----------------  -------------------------------------
-Python          2.6  ikaaro             http://www.python.org/
-itools       0.75.0  ikaaro             http://www.hforge.org/itools
+Python          2.6  ikaaro             https://www.python.org/
+itools       0.75.0  ikaaro             https://github.com/hforge/itools
 utidylib             ikaaro (optional)  http://utidylib.berlios.de/
-guppy         0.1.8  Memory profiling   http://guppy-pe.sourceforge.net/
+guppy         0.1.8  Memory profiling   https://guppy-pe.sourceforge.net/
 
 Check the itools requirements.
 
@@ -51,21 +51,6 @@ Documentation
 =============
 
 The documentation is distributed as a separate package, ikaaro-docs.
-The PDF file can be downloaded from http://www.hforge.org/ikaaro
-
-
-Resources
-=============
-
-Home
-http://www.hforge.org/ikaaro
-
-Mailing list
-http://www.hforge.org/community/
-http://archives.hforge.org/index.cgi?list=itools
-
-Bug Tracker
-http://bugs.hforge.org
 
 
 Copyright
