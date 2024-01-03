@@ -42,16 +42,16 @@ getLogger("ikaaro.access").addHandler(NullHandler())
 getLogger("ikaaro.cron").addHandler(NullHandler())
 
 # Import core config modules
-import config_access
-import config_captcha
-import config_footer
-import config_groups
-import config_mail
-import config_menu
-import config_models
-import config_register
-import config_seo
-import config_theme
+from . import config_access
+from . import config_captcha
+from . import config_footer
+from . import config_groups
+from . import config_mail
+from . import config_menu
+from . import config_models
+from . import config_register
+from . import config_seo
+from . import config_theme
 
 
 # Check for required software
