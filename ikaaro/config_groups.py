@@ -23,11 +23,11 @@ from itools.gettext import MSG
 from .autoadd import AutoAdd
 from .buttons import BrowseButton, Remove_BrowseButton, RenameButton
 from .config import Configuration
-from .config_common import NewResource_Local
 from .messages import MSG_CHANGES_SAVED
 from .order import OrderedFolder, OrderedFolder_BrowseContent
 from .resource_ import DBResource
 from .users_views import BrowseUsers
+from .views.folder_views import Folder_NewResource
 
 
 
@@ -148,7 +148,7 @@ class ConfigGroups(OrderedFolder):
 
     # Views
     browse_content = BrowseGroups()
-    add_group = NewResource_Local(title=MSG('Add group'))
+    add_group = Folder_NewResource(title=MSG('Add group'))
 
 
 Configuration.register_module(ConfigGroups)

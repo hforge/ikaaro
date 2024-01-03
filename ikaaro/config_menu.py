@@ -27,11 +27,11 @@ from itools.uri import Path
 from .autoadd import AutoAdd
 from .autoedit import AutoEdit
 from .config import Configuration
-from .config_common import NewResource_Local
 from .buttons import Remove_BrowseButton
 from .fields import Select_Field, URI_Field
 from .order import OrderedFolder, OrderedFolder_BrowseContent
 from .utils import split_reference
+from .views.folder_views import Folder_NewResource
 from .widgets import PathSelectorWidget
 
 
@@ -69,7 +69,7 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
         return proxy.get_item_value(resource, context, item, column)
 
 
-class AddMenu(NewResource_Local):
+class AddMenu(Folder_NewResource):
 
     title = MSG('Add item')
 

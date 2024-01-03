@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -30,12 +29,12 @@ from .autoadd import AutoAdd
 from .autoedit import AutoEdit
 from .buttons import Remove_BrowseButton
 from .config import Configuration
-from .config_common import NewResource_Local
 from .enumerates import Groups_Datatype
 from .fields import Select_Field
 from .folder import Folder
 from .resource_ import DBResource
 from .utils import get_base_path_query
+from .views.folder_views import Folder_NewResource
 
 
 ###########################################################################
@@ -387,7 +386,7 @@ class ConfigAccess(Folder):
     # Views
     class_views = ['browse_content', 'add_rule', 'edit']
     browse_content = ConfigAccess_Browse()
-    add_rule = NewResource_Local(title=MSG('Add rule'))
+    add_rule = Folder_NewResource(title=MSG('Add rule'))
 
 
 

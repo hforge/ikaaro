@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,12 +23,12 @@ from .views.folder_views import Folder_BrowseContent
 from .autoadd import AutoAdd
 from .autoedit import AutoEdit
 from .buttons import Remove_BrowseButton
-from .config_common import NewResource_Local
 from .fields import Boolean_Field, Date_Field, Email_Field, Integer_Field
 from .fields import Select_Field, Text_Field, Textarea_Field
 from .folder import Folder
 from .order import OrderedFolder, OrderedFolder_BrowseContent
 from .resource_ import DBResource
+from .views.folder_views import Folder_NewResource
 from .widgets import CheckboxWidget, RadioWidget, SelectWidget
 
 
@@ -185,7 +184,7 @@ class ModelField_Choices(OrderedFolder, ModelField_Base):
     # Views
     class_views = ['browse_content', 'add_choice', 'edit']
     browse_content = ModelField_Choices_Browse()
-    add_choice = NewResource_Local(title=MSG('Add choice'))
+    add_choice = Folder_NewResource(title=MSG('Add choice'))
 
     _fields = ModelField_Base._fields + ['choices_widget']
     new_instance = AutoAdd(fields=_fields, automatic_resource_name=True)
@@ -247,7 +246,7 @@ class Model(OrderedFolder):
     class_views = ['browse_content', 'add_field', 'edit']
     browse_content = Model_Browse()
     new_instance = Model_NewInstance()
-    add_field = NewResource_Local(title=MSG('Add field'))
+    add_field = Folder_NewResource(title=MSG('Add field'))
 
     # Order configuration
     allow_to_unorder_items = True
@@ -340,7 +339,7 @@ class ConfigModels(Folder):
     # Views
     class_views = ['browse_content', 'add_model', 'edit']
     browse_content = ConfigModels_Browse()
-    add_model = NewResource_Local(title=MSG('Add model'))
+    add_model = Folder_NewResource(title=MSG('Add model'))
 
     def get_document_types(self):
         return [Model]
