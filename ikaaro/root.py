@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -18,22 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 from decimal import Decimal
 from email.charset import add_charset, add_codec, QP
+from email.header import Header
 from email.mime.application import MIMEApplication
-from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.utils import formatdate
-from email.header import Header
 from json import dumps
 from logging import getLogger
 import sys
 import traceback
 
 # Import from itools
-from itools import pkg
 from itools.core import get_abspath
 from itools.database import RWDatabase
 from itools.gettext import MSG

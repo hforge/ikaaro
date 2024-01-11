@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2007-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
@@ -16,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 from hashlib import sha1, sha256
 from random import sample
 
@@ -44,7 +42,6 @@ from itools.xml import XMLParser
 
 def make_stl_template(data):
     return list(XMLParser(data, stl_namespaces))
-
 
 
 class CMSTemplate(STLTemplate):

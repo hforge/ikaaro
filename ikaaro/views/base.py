@@ -176,11 +176,8 @@ class MessageView(STLView):
     def get_namespace(self, resource, context):
         message = self.message
         message = message.gettext()
-        message = message.encode('utf-8')
         message = XMLParser(message)
         return {'message': message}
-
-
 
 
 class IconsView(STLView):
