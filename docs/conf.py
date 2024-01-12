@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # ikaaro documentation build configuration file, created by
 # sphinx-quickstart on Fri Nov 19 19:31:17 2010.

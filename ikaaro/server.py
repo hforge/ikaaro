@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -79,7 +78,7 @@ log_cron = getLogger("ikaaro.cron")
 SMTP_SEND_SEM = BoundedSemaphore(1)
 
 
-class SMTPSendManager(object):
+class SMTPSendManager:
 
     def __enter__(self):
         SMTP_SEND_SEM.acquire()
@@ -315,7 +314,7 @@ class ServerHandler(WSGIHandler):
         else:
             delta = '-'
         client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
-        return '%s - - [%s] "%s" %s %s %s' % (
+        return '{} - - [{}] "{}" {} {} {}'.format(
             client_address or '-',
             now,
             self.requestline or '',
@@ -392,7 +391,7 @@ class ServerHandler(WSGIHandler):
 
 
 
-class Server(object):
+class Server:
 
     timestamp = None
     port = None
@@ -459,7 +458,7 @@ class Server(object):
         root_file_path = inspect.getfile(root.__class__)
         environement_path = str(get_reference(root_file_path).resolve('environment.json'))
         if lfs.exists(environement_path):
-            with open(environement_path, 'r') as f:
+            with open(environement_path) as f:
                 data = f.read()
                 self.environment = json.loads(data)
         # Useful the current uploads stats
@@ -879,7 +878,7 @@ class Server(object):
             self.dispatcher.add('/ui/%s/{name:any}' % name, view)
             mount_path = f'/ui/cached/{ts}/{name}'
             view = CachedStaticView(local_path=skin_key, mount_path=mount_path)
-            self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
+            self.dispatcher.add('/ui/cached/{}/{}/{{name:any}}'.format(ts, name), view)
 
 
     def register_urlpatterns_from_package(self, package):

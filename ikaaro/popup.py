@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -114,12 +113,12 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             path = target.abspath.get_pathto(item.abspath)
             return str(path), url
         else:
-            proxy = super(AddBase_BrowseContent, self)
+            proxy = super()
             return proxy.get_item_value(resource, context, item, column)
 
 
     def get_items(self, resource, context):
-        proxy = super(AddBase_BrowseContent, self)
+        proxy = super()
         return proxy.get_items(self.target, context)
 
 
@@ -148,7 +147,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
         if column == 'checkbox':
             if self.is_folder(item):
                 return None
-            proxy = super(AddImage_BrowseContent, self)
+            proxy = super()
             return proxy.get_item_value(resource, context, item, column)
         elif column == 'icon':
             if self.is_folder(item):
@@ -164,7 +163,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                     path_to_icon = path_to_resource.resolve(path_to_icon)
             return path_to_icon
         else:
-            proxy = super(AddImage_BrowseContent, self)
+            proxy = super()
             return proxy.get_item_value(resource, context, item, column)
 
 
@@ -473,7 +472,7 @@ class DBResource_AddImage(DBResource_AddBase):
         mode = context.get_form_value('mode')
         if mode == 'tiny_mce':
             return '/;download'
-        proxy = super(DBResource_AddImage, self)
+        proxy = super()
         return proxy.get_resource_action(context)
 
 

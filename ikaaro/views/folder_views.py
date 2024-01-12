@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -131,7 +130,7 @@ class Folder_NewResource(IconsView):
         if len(items) == 1:
             return self.get_url(items[0].class_id, context)
 
-        return super(Folder_NewResource, self).GET(resource, context)
+        return super().GET(resource, context)
 
 
     def get_url(self, class_id, context):
@@ -758,7 +757,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_query_schema(self):
         # Define a huge batch limit, and the image size parameter
-        schema = super(Folder_PreviewContent, self).get_query_schema()
+        schema = super().get_query_schema()
         return merge_dicts(schema,
                            batch_size=Integer(default=0),
                            size=Integer(default=128),

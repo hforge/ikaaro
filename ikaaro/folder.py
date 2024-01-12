@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2007 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
@@ -106,8 +105,7 @@ class Folder(DBResource):
                 # Log the resource abspath
                 log.error(f"The resource can't be read - {name} {self.abspath}")
                 continue
-            for x in resource.traverse_resources():
-                yield x
+            yield from resource.traverse_resources()
 
 
     def make_resource_name(self):
@@ -247,7 +245,7 @@ class Folder(DBResource):
                 yield child
 
     def export_as_json(self, context, only_self=False, exported_fields=None):
-        proxy = super(Folder, self)
+        proxy = super()
         json_namespace = proxy.export_as_json(
             context, only_self=only_self, exported_fields=exported_fields
         )
@@ -605,7 +603,7 @@ class Folder(DBResource):
                     return view
 
         # Default
-        return super(Folder, self).get_view(name, query)
+        return super().get_view(name, query)
 
 
     # Views

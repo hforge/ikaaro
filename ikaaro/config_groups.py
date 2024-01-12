@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -50,7 +49,7 @@ class Group_BrowseUsers(BrowseUsers):
             groups = user.get_value(self._property_name)
             return item.name, str(resource.abspath) in groups
 
-        proxy = super(Group_BrowseUsers, self)
+        proxy = super()
         return proxy.get_item_value(resource, context, item, column)
 
 
@@ -111,7 +110,7 @@ class BrowseGroups(OrderedFolder_BrowseContent):
             results = context.search(format='user', **kw)
             return len(results)
 
-        proxy = super(BrowseGroups, self)
+        proxy = super()
         return proxy.get_item_value(resource, context, item, column)
 
 
@@ -136,7 +135,7 @@ class ConfigGroups(OrderedFolder):
 
 
     def init_resource(self, **kw):
-        super(ConfigGroups, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Add default groups
         for name, title in self.default_groups:
             self.make_resource(name, Group, title=title)

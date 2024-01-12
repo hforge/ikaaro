@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -172,7 +171,7 @@ class AutoAdd(AutoForm):
             return referrer or context.get_referrer()
         value = context.query.get(name)
         if value is None:
-            proxy = super(AutoAdd, self)
+            proxy = super()
             return proxy.get_value(resource, context, name, datatype)
 
         if getattr(datatype, 'multilingual', False):
@@ -219,7 +218,7 @@ class AutoAdd(AutoForm):
 
 
     def _get_form(self, resource, context):
-        form = super(AutoAdd, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
 
         # 1. The container
         container = self.get_container(resource, context, form)

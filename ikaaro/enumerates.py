@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Sylvain Taverne <sylvain@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -75,5 +74,5 @@ class Groups_Datatype(UserGroups_Datatype):
 
 
     def get_options(self):
-        options = super(Groups_Datatype, self).get_options()
+        options = super().get_options()
         return self.special_groups + options

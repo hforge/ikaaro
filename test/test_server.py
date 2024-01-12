@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2017 Alexandre Bonny <alexandre.bonny@protonmail.com>
 #
 # This program is free software: you can redistribute it and/or modify

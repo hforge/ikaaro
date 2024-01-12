@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2007 Henry Obein <henry@itaapy.com>
 # Copyright (C) 2007-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007-2008 Nicolas Deram <nicolas@itaapy.com>
@@ -97,7 +96,7 @@ class AutoForm(STLView):
     # Hack for datatypes
     #########################
     def _get_form(self, resource, context):
-        form = super(AutoForm, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
         # Combine date & time
         for name, value in form.items():
             if type(value) is date:
@@ -118,7 +117,7 @@ class AutoForm(STLView):
 
 
     def get_schema(self, resource, context):
-        schema = super(AutoForm, self).get_schema(resource, context)
+        schema = super().get_schema(resource, context)
         # Hack for some Datatypes
         for name, datatype in schema.items():
             # Special case: datetime
@@ -145,7 +144,7 @@ class AutoForm(STLView):
 
 
     def get_namespace(self, resource, context):
-        namespace = super(AutoForm, self).get_namespace(resource, context)
+        namespace = super().get_namespace(resource, context)
 
         # Local Variables
         template = context.get_template(self.template_field)

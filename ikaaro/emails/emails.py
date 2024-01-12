@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -69,7 +68,7 @@ class User_Email(Email):
 
     user = None
     def get_text_namespace(self, context):
-        namespace = super(User_Email, self).get_text_namespace(context)
+        namespace = super().get_text_namespace(context)
         # User specific information
         user = self.user
         if user:

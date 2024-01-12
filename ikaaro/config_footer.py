@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -44,7 +43,7 @@ class Footer(WebPage):
         </body>
         </html>
         """
-        super(Footer, self).init_resource(data={'en': body}, **kw)
+        super().init_resource(data={'en': body}, **kw)
 
 
     # Views

@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2008 Nicolas Deram <nicolas@itaapy.com>
@@ -50,7 +49,7 @@ class Text_Edit(File_Edit):
             if data is None:
                 return ''
             return data.to_str()
-        proxy = super(Text_Edit, self)
+        proxy = super()
         return proxy.get_value(resource, context, name, datatype)
 
 
@@ -70,7 +69,7 @@ class Text_Edit(File_Edit):
             context.database.change_resource(resource)
             return False
 
-        return super(Text_Edit, self).set_value(resource, context, name, form)
+        return super().set_value(resource, context, name, form)
 
 
 

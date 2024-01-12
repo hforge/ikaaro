@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007 Henry Obein <henry@itaapy.com>
 # Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
@@ -261,7 +260,7 @@ class UpdateDocs(AutoForm):
 
 
     def _get_form(self, resource, context):
-        form = super(UpdateDocs, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
         # Check the mimetype
         filename, mimetype, body = form['file']
         if mimetype not in ('application/x-tar', 'application/zip'):

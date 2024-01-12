@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Henry Obein <henry@itaapy.com>
@@ -67,7 +66,7 @@ class User_ConfirmRegistration(AutoForm):
         if name == 'username':
             return resource.get_login_name()
 
-        proxy = super(User_ConfirmRegistration, self)
+        proxy = super()
         return proxy.get_value(resource, context, name, datatype)
 
 
@@ -83,12 +82,12 @@ class User_ConfirmRegistration(AutoForm):
             goto =f'/;login?username={username}'
             return context.come_back(messages.MSG_BAD_KEY, goto=goto)
 
-        proxy = super(User_ConfirmRegistration, self)
+        proxy = super()
         return proxy.get_namespace(resource, context)
 
 
     def _get_form(self, resource, context):
-        proxy = super(User_ConfirmRegistration, self)
+        proxy = super()
         form = proxy._get_form(resource, context)
         if form['username'] == form['newpass']:
             raise FormError(messages.MSG_PASSWORD_EQUAL_TO_USERNAME)
@@ -222,7 +221,7 @@ class User_EditAccount(AutoEdit):
                     context.message = ERROR(error, name=name, value=new_value)
                     return True
 
-        proxy = super(User_EditAccount, self)
+        proxy = super()
         return proxy.set_value(resource, context, name, form)
 
 
@@ -312,12 +311,12 @@ class User_EditPassword(AutoForm):
         if name == 'username':
             return resource.get_login_name()
 
-        proxy = super(User_EditPassword, self)
+        proxy = super()
         return proxy.get_value(resource, context, name, datatype)
 
 
     def _get_form(self, resource, context):
-        form = super(User_EditPassword, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
 
         # Strip password
         newpass = form['newpass'].strip()
@@ -371,7 +370,7 @@ class BrowseUsers(BrowseForm):
     schema = {'ids': String(multiple=True, mandatory=True)}
 
     def get_query_schema(self):
-        schema = super(BrowseUsers, self).get_query_schema()
+        schema = super().get_query_schema()
         return merge_dicts(schema, sort_by=String(default='email'))
 
 
@@ -496,7 +495,7 @@ class Users_AddUser(AutoAdd):
 
 
     def _get_form(self, resource, context):
-        form = super(Users_AddUser, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
 
         # Check the password is not equal to the username
         password = form['password'].strip()
@@ -533,7 +532,7 @@ class Users_AddUser(AutoAdd):
 
 
     def make_new_resource(self, resource, context, form):
-        proxy = super(Users_AddUser, self)
+        proxy = super()
         child = proxy.make_new_resource(resource, context, form)
 
         # Send email to the new user

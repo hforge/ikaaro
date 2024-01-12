@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -48,7 +47,7 @@ class RODatabase(BaseRODatabase):
 
 
 
-class ContextManager(object):
+class ContextManager:
 
     def __init__(
             self,
@@ -147,7 +146,7 @@ class Database(RWDatabase):
 
     def close(self):
         # Close
-        proxy = super(Database, self)
+        proxy = super()
         return proxy.close()
 
 

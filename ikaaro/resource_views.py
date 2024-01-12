@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -190,7 +189,7 @@ class DBResource_Links(Folder_BrowseContent):
     table_actions = []
 
     def get_table_columns(self, resource, context):
-        proxy = super(DBResource_Links, self)
+        proxy = super()
         cols = proxy.get_table_columns(resource, context)
         return [ x for x in cols if x[0] != 'checkbox' ]
 
@@ -239,25 +238,25 @@ class LoginView(STLView):
             msg = MSG('You are already connected')
             goto = str(context.user.abspath)
             return context.come_back(msg, goto)
-        return super(LoginView, self).GET(resource, context)
+        return super().GET(resource, context)
 
 
     def POST(self, resource, context):
         if context.status == 401:
             # Don't submit login with data from another form
             return self.GET
-        return super(LoginView, self).POST(resource, context)
+        return super().POST(resource, context)
 
 
     def get_value(self, resource, context, name, datatype):
         if name == 'loginname':
             return context.query['loginname']
-        proxy = super(LoginView, self)
+        proxy = super()
         return proxy.get_value(resource, context, name, datatype)
 
 
     def get_namespace(self, resource, context):
-        namespace = super(LoginView, self).get_namespace(resource, context)
+        namespace = super().get_namespace(resource, context)
         namespace['no_password'] = context.query['no_password']
         # Register
         user = context.user
@@ -453,7 +452,7 @@ class AutoJSONResourcesImport(AutoForm):
 
 
     def _get_form(self, resource, context):
-        form = super(AutoJSONResourcesImport, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
         # Check the mimetype
         filename, mimetype, body = form['file']
         if mimetype != "application/json":

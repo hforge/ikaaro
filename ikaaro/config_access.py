@@ -270,7 +270,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
 
             return title, path
 
-        proxy = super(ConfigAccess_Browse, self)
+        proxy = super()
         value = proxy.get_item_value(resource, context, item, column)
 
         if column == 'group':
@@ -310,7 +310,7 @@ class ConfigAccess(Folder):
         ('/config/groups/reviewers', 'share', _everything)]
 
     def init_resource(self, **kw):
-        super(ConfigAccess, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Access rules
         rules = self.default_rules
         for group, permission, kw in rules:

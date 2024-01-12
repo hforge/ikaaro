@@ -106,7 +106,7 @@ class Root(Folder):
 
 
     def init_resource(self, email, password):
-        super(Root, self).init_resource()
+        super().init_resource()
         # Configuration
         title = {'en': 'Configuration'}
         self.make_resource('config', Configuration, title=title)
@@ -118,7 +118,7 @@ class Root(Folder):
     def make_resource(self, name, cls, **kw):
         if name == 'ui':
             raise ValueError('cannot add a resource with the name "ui"')
-        return super(Root, self).make_resource(name, cls, **kw)
+        return super().make_resource(name, cls, **kw)
 
 
     ########################################################################

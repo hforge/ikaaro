@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -199,7 +198,7 @@ class Metadata_Field(Field):
 
 
     def rest(self):
-        rest = super(Metadata_Field, self).rest()
+        rest = super().rest()
         rest['parameters'] = list(self.parameters_schema.keys())
         return rest
 
@@ -224,7 +223,7 @@ class Boolean3_Field(Metadata_Field):
     widget_keys = Metadata_Field.widget_keys + ['label']
 
     def get_value(self, resource, name, language=None):
-        value = super(Boolean3_Field, self).get_value(resource, name, language)
+        value = super().get_value(resource, name, language)
         if value is True:
             return '1'
         elif value is False:
@@ -306,7 +305,7 @@ class Password_Field(Metadata_Field):
             kw['date'] = get_context().timestamp
 
         # super
-        proxy = super(Password_Field, self)
+        proxy = super()
         return proxy.set_value(resource, name, value, language, **kw)
 
 
@@ -341,7 +340,7 @@ class Select_Field(Metadata_Field):
 
 
     def rest(self):
-        rest = super(Select_Field, self).rest()
+        rest = super().rest()
         datatype = self.get_datatype()
         rest['choices'] = [ x['name'] for x in datatype.get_options() ]
         return rest
@@ -399,7 +398,7 @@ class Text_Field(Metadata_Field):
                 self.set_value(resource, name, lang_value, language=lang, **kw)
             return True
         # Ok
-        proxy = super(Text_Field, self)
+        proxy = super()
         return proxy.set_value(resource, name, value, language, **kw)
 
 
@@ -696,7 +695,7 @@ class HTMLFile_Field(File_Field):
             handler.set_body(value)
             return handler
 
-        return super(HTMLFile_Field, self)._get_handler_from_value(value)
+        return super()._get_handler_from_value(value)
 
 
     def get_links(self, links, resource, field_name, languages):

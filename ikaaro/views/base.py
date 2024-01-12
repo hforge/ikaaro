@@ -357,7 +357,7 @@ class BrowseForm(STLView):
 
 
     def get_query_schema(self):
-        proxy = super(BrowseForm, self)
+        proxy = super()
         return merge_dicts(proxy.get_query_schema(), self.search_schema)
 
 
@@ -672,7 +672,7 @@ class IkaaroStaticView(StaticView):
         # FIXME Check we set the encoding for text files
         mimetype = get_mimetype(basename(path))
         # Get data
-        with open(path, 'r') as f:
+        with open(path) as f:
             data = f.read()
         # Response
         context.status = 200
@@ -685,7 +685,7 @@ class IkaaroStaticView(StaticView):
 class CachedStaticView(IkaaroStaticView):
 
     def GET(self, query, context):
-        proxy = super(CachedStaticView, self)
+        proxy = super()
         data = proxy.GET(query, context)
         if context.status == 200:
             context.set_header('Cache-Control', 'max-age=315360000')

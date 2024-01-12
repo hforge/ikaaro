@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007 Henry Obein <henry@itaapy.com>
 # Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
@@ -201,7 +200,7 @@ class Configuration(Folder):
 
 
     def init_resource(self, **kw):
-        super(Configuration, self).init_resource(**kw)
+        super().init_resource(**kw)
         for name, module in self._modules.items():
             self.make_resource(name, module, soft=True)
 

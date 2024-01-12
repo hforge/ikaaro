@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -45,7 +44,7 @@ class File_NewInstance(AutoAdd):
     progressbar = ProgressBar_Field
 
     def get_new_resource_name(self, form):
-        name = super(File_NewInstance, self).get_new_resource_name(form)
+        name = super().get_new_resource_name(form)
         if name:
             return name
 
@@ -95,7 +94,7 @@ class File_Edit(AutoEdit):
     fields = ['title', 'data', 'description', 'subject', 'share']
 
     def get_field(self, resource, name):
-        field = super(File_Edit, self).get_field(resource, name)
+        field = super().get_field(resource, name)
         if name == 'data':
             return field(required=False)
         return field
@@ -116,7 +115,7 @@ class File_Download(DBResource_GetFile):
         if '/' in mimetype:
             return mimetype
 
-        return super(File_Download, self).get_content_type(handler)
+        return super().get_content_type(handler)
 
 
 
@@ -272,7 +271,7 @@ class Archive_View(STLView):
 
 
     def _get_form(self, resource, context):
-        form = super(Archive_View, self)._get_form(resource, context)
+        form = super()._get_form(resource, context)
 
         # Get the target resource
         target = form['target']

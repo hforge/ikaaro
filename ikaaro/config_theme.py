@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2010 Henry Obein <henry@itaapy.com>
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
@@ -42,7 +41,7 @@ class Theme(Folder):
 
 
     def init_resource(self, **kw):
-        super(Theme, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Access
         self.set_value('share', 'everybody')
         # CSS file

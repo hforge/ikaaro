@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Sylvain Taverne <sylvain@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -89,7 +88,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
                      [('order', MSG('Order'))])
 
     def get_table_actions(self, resource, context):
-        proxy = super(OrderedFolder_BrowseContent, self)
+        proxy = super()
         buttons = proxy.get_table_actions(resource, context)
 
         buttons = list(buttons)
@@ -102,7 +101,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
 
 
     def get_search_query(self, resource, context):
-        proxy = super(OrderedFolder_BrowseContent, self)
+        proxy = super()
         query = proxy.get_search_query(resource, context)
         if resource.base_classes:
             query.append(PhraseQuery('base_classes', resource.base_classes))
@@ -129,7 +128,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
                 return ordered_ids.index(item.name) + 1
             return MSG('Not ordered')
 
-        proxy = super(OrderedFolder_BrowseContent, self)
+        proxy = super()
         return proxy.get_item_value(resource, context, item, column)
 
 
@@ -140,7 +139,7 @@ class OrderedFolder_BrowseContent(Folder_BrowseContent):
         # Remove from ordered list
         resource.order_remove(form['ids'])
         # Super
-        proxy = super(OrderedFolder_BrowseContent, self)
+        proxy = super()
         return proxy.action_remove(resource, context, form)
 
 
@@ -197,7 +196,7 @@ class OrderedFolder(Folder):
 
 
     def make_resource(self, name, cls, **kw):
-        resource = super(OrderedFolder, self).make_resource(name, cls, **kw)
+        resource = super().make_resource(name, cls, **kw)
         if self.can_be_ordered(cls):
             order = self.get_value('order')
             order = order + [resource.name]

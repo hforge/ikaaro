@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2017 Taverne Sylvain <taverne.sylvain@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -279,7 +278,7 @@ class ApiDevPanel_Log(Api_View):
     def GET(self, root, context):
         context.set_content_type('text/plain')
         try:
-            log_file = open(f'{context.server.target}/log/{self.source_name}', 'r')
+            log_file = open(f'{context.server.target}/log/{self.source_name}')
         except OSError:
             return ''
         context.set_content_type('text/plain')

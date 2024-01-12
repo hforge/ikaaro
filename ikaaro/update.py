@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2018 Sylvain Taverne <taverne.sylvain@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -155,7 +154,7 @@ def run_next_update_method(context, force=False):
                 # If resource has not been deleted by update method, we update class_version
                 resource.update(version['class_version'])
         except Exception as e:
-            line = 'ERROR: "{0}" - class_id: "{1}"\n'.format(
+            line = 'ERROR: "{}" - class_id: "{}"\n'.format(
                 resource.abspath, resource.__class__.class_id)
             log.error(line, exc_info=True)
             # Add message

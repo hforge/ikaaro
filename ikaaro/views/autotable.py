@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2018 Sylvain Taverne <taverne.sylvain@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -120,7 +119,7 @@ class AutoTable(Folder_BrowseContent):
 
 
     def get_query_schema(self):
-        proxy = super(AutoTable, self)
+        proxy = super()
         kw = {}
         for key, value in proxy.get_query_schema().items():
             # Fix sort and batch if CompositeView with self.prefix
@@ -453,7 +452,7 @@ class AutoTable(Folder_BrowseContent):
 
     action_remove_goto = None
     def action_remove(self, resource, context, form):
-        proxy = super(AutoTable, self)
+        proxy = super()
         ret = proxy.action_remove(resource, context, form)
         # action_remove_goto
         if self.action_remove_goto:

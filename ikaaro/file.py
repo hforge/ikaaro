@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2005-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2006-2008 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
@@ -148,7 +147,7 @@ class Image(File):
 
 
     def init_resource(self, **kw):
-        super(Image, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Resize image at max size
         max_width = self.get_max_width()
         max_height = self.get_max_height()

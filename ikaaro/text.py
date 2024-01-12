@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2006-2007 Hervé Cauwelier <herve@itaapy.com>
 # Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2008 Nicolas Deram <nicolas@itaapy.com>
@@ -105,7 +104,7 @@ class CSS(Text):
 
 
     def get_links(self):
-        links = super(CSS, self).get_links()
+        links = super().get_links()
         base = self.abspath
         data = self.to_text().encode('utf-8')
 
@@ -135,7 +134,7 @@ class CSS(Text):
 
 
     def update_links(self,  source, target):
-        super(CSS, self).update_links(source, target)
+        super().update_links(source, target)
         resources_new2old = get_context().database.resources_new2old
         base = str(self.abspath)
         old_base = resources_new2old.get(base, base)
@@ -183,7 +182,7 @@ class CSS(Text):
 
 
     def update_incoming_links(self, source):
-        super(CSS, self).update_incoming_links(source)
+        super().update_incoming_links(source)
         target = self.abspath
         resources_old2new = get_context().database.resources_old2new
 

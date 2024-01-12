@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -276,7 +275,7 @@ class Captcha(Folder):
 
 
     def init_resource(self, **kw):
-        super(Captcha, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Init several captcha
         self.make_resource('question', Captcha_Question)
         self.make_resource('recaptcha', Captcha_Recaptcha)

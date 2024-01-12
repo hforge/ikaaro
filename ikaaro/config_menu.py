@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2010 Henry Obein <henry@itaapy.com>
 # Copyright (C) 2011 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
@@ -65,7 +64,7 @@ class MenuItem_Browse(OrderedFolder_BrowseContent):
         if column == 'title':
             return item.get_title(), item.get_value('path')
 
-        proxy = super(MenuItem_Browse, self)
+        proxy = super()
         return proxy.get_item_value(resource, context, item, column)
 
 
@@ -264,7 +263,7 @@ class ConfigMenu(MenuItem):
     config_group = 'webmaster'
 
     def init_resource(self, **kw):
-        super(ConfigMenu, self).init_resource(**kw)
+        super().init_resource(**kw)
         # Menu
         order = []
         menus = [('/', 'Home'), ('/;contact', 'Contact')]

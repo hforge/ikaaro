@@ -65,7 +65,7 @@ class ModelField_Base(DBResource):
 
 
     def set_value(self, name, value, language=None):
-        proxy = super(ModelField_Base, self)
+        proxy = super()
         has_changed = proxy.set_value(name, value, language)
         if has_changed:
             class_id = str(self.parent.abspath)
@@ -200,7 +200,7 @@ class Model_NewInstance(AutoAdd):
     fields = ['title']
 
     def make_new_resource(self, resource, context, form):
-        proxy = super(Model_NewInstance, self)
+        proxy = super()
         child = proxy.make_new_resource(resource, context, form)
         if child is None:
             return
@@ -299,7 +299,7 @@ class Model(OrderedFolder):
 
 
     def set_value(self, name, value, language=None):
-        has_changed = super(Model, self).set_value(name, value, language)
+        has_changed = super().set_value(name, value, language)
         if has_changed:
             class_id = str(self.abspath)
             self.database._resources_registry.pop(class_id, None)
