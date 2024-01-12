@@ -54,7 +54,7 @@ def update_resource(resource, changes):
         # The value
         field = resource.get_field(name)
         if field is None:
-            raise ValueError("undefined field '%s'" % name)
+            raise ValueError(f"undefined field '{name}'")
         if not field.access('write', resource):
             continue # XXX raise an error? log a message?
         if issubclass(field, File_Field):

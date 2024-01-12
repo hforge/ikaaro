@@ -48,7 +48,7 @@ class Path_Datatype(Enumerate):
         items = []
         for doc in context.search(base_classes='folder').get_documents():
             path = Path(doc.abspath)
-            title = '/' if not path else ('%s/' % path)
+            title = '/' if not path else (f'{path}/')
             items.append({'name': path, 'value': title, 'selected': False})
 
         items = sorted(items, key=lambda x: x['value'])
@@ -165,7 +165,7 @@ class AccessRule(DBResource):
         # Query
         query = AndQuery()
         for name in names:
-            field_name = 'search_%s' % name
+            field_name = f'search_{name}'
             field = self.get_field(field_name)
             value = field.get_value(self, field_name)
             if not value:
@@ -266,7 +266,7 @@ class ConfigAccess_Browse(Folder_BrowseContent):
             if depth == '0':
                 title = path
             else:
-                title = '%s (%s)' % (path, depth)
+                title = f'{path} ({depth})'
 
             return title, path
 
@@ -317,7 +317,7 @@ class ConfigAccess(Folder):
             rule = self.make_resource(None, AccessRule, group=group)
             rule.set_value('permission', permission)
             for key in kw:
-                rule.set_value('search_%s' % key, kw[key])
+                rule.set_value(f'search_{key}', kw[key])
 
 
     # API

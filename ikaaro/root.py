@@ -133,13 +133,13 @@ class Root(Folder):
 
         # Userid (abspath) or username
         if userid[0] != '/':
-            userid = '/users/%s' % userid
+            userid = f'/users/{userid}'
 
         # Get user
         user = self.get_resource(userid, soft=True)
         if user is None:
             username = userid.rsplit('/', 1)[-1]
-            log.warning('unkwnown user {}'.format(username))
+            log.warning(f'unkwnown user {username}')
             return str(username)
         # Ok
         return user.get_title()
@@ -233,12 +233,10 @@ class Root(Folder):
         email = context.server.config.get_value('log-email')
         # We send an email with the traceback
         if email:
-            headers = '\n'.join(['%s => %s' % (x, y)
+            headers = '\n'.join([f'{x} => {y}'
                                     for x, y in context.get_headers()])
             subject = MSG('Internal server error').gettext()
-            text = '%s\n\n%s\n\n%s' % (context.uri,
-                                        traceback.format_exc(),
-                                        headers)
+            text = f'{context.uri}\n\n{traceback.format_exc()}\n\n{headers}'
             self.send_email(email, subject, text=text)
 
 
@@ -340,7 +338,7 @@ class Root(Folder):
         cls = self.__class__
         if cls is not Root:
             pkg = None
-            exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
+            exec(f"import {cls.__module__.split('.', 1)[0]} as pkg")
             config = Path(pkg.__path__[0]).resolve_name('setup.conf')
             config = ConfigFile(str(config))
             source = config.get_value('source_language', default=source)
@@ -399,7 +397,7 @@ class Root(Folder):
         elif isinstance(subject, MSG):
             subject = subject.gettext()
         else:
-            raise TypeError('unexpected subject of type %s' % type(subject))
+            raise TypeError(f'unexpected subject of type {type(subject)}')
 
         if len(subject.splitlines()) > 1:
             raise ValueError('the subject cannot have more than one line')
@@ -428,12 +426,12 @@ class Root(Folder):
         # 5. To
         if isinstance(to_addr, tuple):
             real_name, address = to_addr
-            to_addr = '%s <%s>' % (Header(real_name, encoding), address)
+            to_addr = f'{Header(real_name, encoding)} <{address}>'
         message['To'] = to_addr
 
         # 6. Subject
         if subject_with_host is True and context.uri:
-            subject = '[%s] %s' % (context.uri.authority, subject)
+            subject = f'[{context.uri.authority}] {subject}'
         message['Subject'] = Header(subject, encoding)
 
         # 7. Reply-To
@@ -444,7 +442,7 @@ class Root(Folder):
             if user:
                 user_title = Header(user.get_title(), encoding)
                 user_email = user.get_value('email')
-                message['Reply-To'] = '%s <%s>' % (user_title, user_email)
+                message['Reply-To'] = f'{user_title} <{user_email}>'
 
         # Return Receipt
         if return_receipt and reply_to:
@@ -456,8 +454,8 @@ class Root(Folder):
         if signature:
             signature = signature.strip()
             if not signature.startswith('--'):
-                signature = '-- \n%s' % signature
-            text += '\n\n%s' % signature
+                signature = f'-- \n{signature}'
+            text += f'\n\n{signature}'
 
         # Create MIMEText
         if html:
@@ -577,7 +575,7 @@ class Root(Folder):
 
 
     def get_user(self, name):
-        return self.get_resource('users/%s' % name, soft=True)
+        return self.get_resource(f'users/{name}', soft=True)
 
 
     def get_user_from_login(self, username):
@@ -641,7 +639,7 @@ class Root(Folder):
                 continue
             if f.is_file(p) and not p.endswith('.metadata'):
                 new_path = p.replace(database_path, database_static_path)
-                log.info("Move {0} {1}".format(p, new_path))
+                log.info(f"Move {p} {new_path}")
                 source = lfs._resolve_path(p)
                 target = lfs._resolve_path(new_path)
                 # Create folder

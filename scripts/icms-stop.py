@@ -33,7 +33,7 @@ log = getLogger("ikaaro")
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog TARGET [TARGET]*'
-    version = 'itools %s' % itools.__version__
+    version = f'itools {itools.__version__}'
     description = ('Stops the web server that is publishing the TARGET'
                    ' ikaaro instance (if it is running). Accepts'
                    ' several TARGETs at once, to stop several servers.')
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         try:
             stop_server(target)
         except LookupError:
-            log.error("Error: {} instance do not exists".format(target))
+            log.error(f"Error: {target} instance do not exists")
             exit(1)
     # Ok
     exit(0)

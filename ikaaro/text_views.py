@@ -213,7 +213,7 @@ class CSV_View(BrowseForm):
             return item.number, False
         elif column == 'index':
             index = item.number
-            return index, ';edit_row?index=%s' % index
+            return index, f';edit_row?index={index}'
         elif column == 'row_css':
             return ''
 
@@ -280,7 +280,7 @@ class CSV_AddRow(RowForm):
         row = handler.add_row(row)
         # Ok
         message = INFO('New row added.')
-        goto = ';edit_row?index=%s' % row.number
+        goto = f';edit_row?index={row.number}'
         return context.come_back(message, goto=goto)
 
 

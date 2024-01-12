@@ -63,7 +63,7 @@ class Configuration_View(STLView):
                 'icon': resource.get_method_icon(view, size='48x48'),
                 'title': view.title,
                 'description': view.description,
-                'url': ';%s' % name})
+                'url': f';{name}'})
 
         # Plugins (persistent)
         for name in resource._modules:

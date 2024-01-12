@@ -51,7 +51,7 @@ class Button(STLTemplate):
         confirm = cls.confirm
         if not confirm:
             return None
-        return 'return confirm("%s");' % confirm.gettext()
+        return f'return confirm("{confirm.gettext()}");'
 
 
     @proto_lazy_property

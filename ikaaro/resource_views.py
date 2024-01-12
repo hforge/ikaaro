@@ -115,8 +115,8 @@ class DBResource_GetFile(BaseView):
         extension = guess_extension(mimetype)
         language = self.context.get_query_value('language') or ''
         if language:
-            language = '.%s' % language
-        return '%s.%s%s%s' % (resource.name, field_name, language, extension)
+            language = f'.{language}'
+        return f'{resource.name}.{field_name}{language}{extension}'
 
 
     def GET(self, resource, context):
@@ -167,7 +167,7 @@ class DBResource_GetImage(DBResource_GetFile):
             format = 'png'
 
         # Headers
-        context.set_content_type('image/%s' % format)
+        context.set_content_type(f'image/{format}')
 
         # Ok
         return data
@@ -318,7 +318,7 @@ class LoginView(STLView):
         for name, field in user.get_fields():
             if field.required and user.get_value(name) is None:
                 msg = MSG('You must complete your account informations')
-                goto = '/users/%s/;edit_account' % user.name
+                goto = f'/users/{user.name}/;edit_account'
                 return context.come_back(msg, goto)
 
         # Come back
@@ -432,9 +432,7 @@ class AutoJSONResourceExport(AutoForm):
         json_export = resource.export_as_json(context, only_self=True, exported_fields=fields)
         json_export["export_type"] = "self-export"
         context.set_content_type("application/json")
-        file_name = "config_export_{title}.json".format(
-            title=resource.get_title()
-        )
+        file_name = f"config_export_{resource.get_title()}.json"
         context.set_content_disposition("attachment", file_name)
         return json.dumps(json_export, cls=NewJSONEncoder)
 

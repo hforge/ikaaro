@@ -66,7 +66,7 @@ def application(environ, start_response):
             RequestMethod.handle_client_error(e, context)
         except Exception as e:
             tb = traceback.format_exc()
-            log.error("Internal error : {}".format(tb), exc_info=True)
+            log.error(f"Internal error : {tb}", exc_info=True)
             context.set_default_response(500)
         finally:
             data = context.entity
@@ -78,7 +78,7 @@ def application(environ, start_response):
             if data and not isinstance(data, Reference):
                 headers.append(('Content-Length', str(len(data))))
             status = context.status or 500
-            status = '{0} {1}'.format(status, reason_phrases[status])
+            status = f'{status} {reason_phrases[status]}'
             start_response(str(status), headers)
             yield data
 

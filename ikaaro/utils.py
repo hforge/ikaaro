@@ -52,7 +52,7 @@ class CMSTemplate(STLTemplate):
         # Get the template
         template = self.template
         if template is None:
-            raise NotImplementedError("{} is missing the 'template' variable".format(repr(self)))
+            raise NotImplementedError(f"{repr(self)} is missing the 'template' variable")
 
         # Case 1: a ready made list of events
         if type(template) is list:
@@ -92,7 +92,7 @@ def get_parameters(prefix, **kw):
     # Get the parameters
     parameters = {}
     for key, value in kw.items():
-        parameters[key] = get_parameter('%s_%s' % (prefix, key),
+        parameters[key] = get_parameter(f'{prefix}_{key}',
                                         default=value)
 
     return parameters
@@ -228,7 +228,7 @@ def generate_name(name, used, suffix='_'):
     basename = items[0]
     extent = ''
     if len(items) > 1:
-        extent = '.%s' % items[1]
+        extent = f'.{items[1]}'
 
     # 1st time called
     if suffix not in basename:
@@ -238,7 +238,7 @@ def generate_name(name, used, suffix='_'):
         try:
             index = int(index) + 1
         except ValueError:
-            basename = '%s%s%s' % (basename, suffix, index)
+            basename = f'{basename}{suffix}{index}'
             index = 0
 
     name = ''.join([basename, suffix, str(index), extent])

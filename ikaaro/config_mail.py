@@ -41,7 +41,7 @@ class ContactsOptions(Enumerate):
             user_title = user.get_title()
             user_email = user.get_value('email')
             if user_title != user_email:
-                user_title = '%s <%s>' % (user_title, user_email)
+                user_title = f'{user_title} <{user_email}>'
             else:
                 user_title = user_email
             options.append({'name': user.name, 'value': user_title,

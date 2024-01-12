@@ -178,12 +178,12 @@ class AutoEdit(AutoForm):
 
             # Special case: datetime
             if issubclass(datatype, DateTime):
-                schema['%s_time' % name] = Time
+                schema[f'{name}_time'] = Time
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
-                schema['%s_day' % name] = Days
-                schema['%s_month' % name] = Months
-                schema['%s_year' % name] = Years
+                schema[f'{name}_day'] = Days
+                schema[f'{name}_month'] = Months
+                schema[f'{name}_year'] = Years
 
             # Standard case
             schema[name] = datatype
@@ -348,6 +348,6 @@ class AutoEdit(AutoForm):
                 path = str(context.uri.path)
                 if ('/;' not in path and '/?' not in path
                         and not path.endswith('/')):
-                    goto = '%s/%s' % (resource.name, goto)
+                    goto = f'{resource.name}/{goto}'
             return context.come_back(self.action_msg, goto=goto)
         context.message = self.action_msg

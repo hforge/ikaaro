@@ -87,7 +87,7 @@ def find_versions_to_update(context, force=False):
                     # So update method should be done one time
                     continue
                 classes_and_versions.append(class_and_version)
-                update_title_name = 'update_{0}_title'.format(version)
+                update_title_name = f'update_{version}_title'
                 update_title = getattr(cls, update_title_name, MSG('Unknow'))
                 if isinstance(update_title, MSG):
                     update_title = update_title.gettext()
@@ -124,8 +124,7 @@ def run_next_update_method(context, force=False):
         RangeQuery('class_version', None, class_version_yesterday))
     search = context.database.search(query)
     # Commit message (Do not override the mtime/author)
-    git_message = 'Upgrade {0} to version {1}'.format(
-        version['class_id'], version['class_version'])
+    git_message = f"Upgrade {version['class_id']} to version {version['class_version']}"
     log.info(git_message)
     context.git_message = git_message
     context.set_mtime = False

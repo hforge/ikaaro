@@ -36,7 +36,7 @@ log = getLogger("ikaaro")
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
-    version = 'itools %s' % __version__
+    version = f'itools {__version__}'
     description = (
         'Starts a web server that publishes the TARGET ikaaro instance to the '
         'world.')
@@ -73,10 +73,10 @@ if __name__ == '__main__':
                         profile_space=options.profile_space,
                         port=options.port)
     except LookupError:
-        log.error("Error: {} instance do not exists".format(target))
+        log.error(f"Error: {target} instance do not exists")
         exit(1)
     except DatabaseLockError:
-        log.error('Error: Database {} is already opened'.format(target))
+        log.error(f'Error: Database {target} is already opened')
         exit(1)
     # Check server
     successfully_init = server.check_consistency(options.quick)

@@ -336,7 +336,7 @@ class FreeTestCase(TestCase):
             with database.init_context() as context:
                 for i in range(0, 50):
                     root = database.get_resource('/')
-                    name = 'test-cache-error-on-move-{0}'.format(i)
+                    name = f'test-cache-error-on-move-{i}'
                     container = root.make_resource(name, File)
                     container.set_value('data', 'bytes')
                     l.append(container)

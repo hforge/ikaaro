@@ -128,12 +128,12 @@ class AutoAdd(AutoForm):
                 continue
             # Special case: datetime
             elif issubclass(datatype, DateTime):
-                schema['%s_time' % name] = Time
+                schema[f'{name}_time'] = Time
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
-                schema['%s_day' % name] = Days
-                schema['%s_month' % name] = Months
-                schema['%s_year' % name] = Years
+                schema[f'{name}_day'] = Days
+                schema[f'{name}_month'] = Months
+                schema[f'{name}_year'] = Years
 
             # Standard case
             schema[name] = datatype
@@ -195,7 +195,7 @@ class AutoAdd(AutoForm):
         class_id = context.query['type']
         root = context.root
         if not root.has_permission(context.user, 'add', container, class_id):
-            path = '/' if path == '.' else '/%s/' % path
+            path = '/' if path == '.' else f'/{path}/'
             msg = ERROR('Adding resources to {path} is not allowed.')
             raise FormError(msg.gettext(path=path))
 
@@ -305,13 +305,13 @@ class AutoAdd(AutoForm):
                 path = str(context.uri.path)
                 if ('/;' not in path and '/?' not in path
                         and not path.endswith('/')):
-                    goto = '%s/%s' % (resource.name, goto)
+                    goto = f'{resource.name}/{goto}'
             return context.come_back(self.msg_new_resource, goto=goto)
         # goto_parent_view # Deprecated : To replace by action_goto
         goto = str(child.abspath)
         if self.goto_parent_view:
-            goto = './;%s' % self.goto_parent_view
+            goto = f'./;{self.goto_parent_view}'
         # goto_view (from Child)
         elif self.goto_view:
-            goto = '%s/;%s' % (child.abspath, self.goto_view)
+            goto = f'{child.abspath}/;{self.goto_view}'
         return context.come_back(self.msg_new_resource, goto=goto)

@@ -191,7 +191,7 @@ class ContactForm(AutoForm):
         body = form['message_body'].strip()
 
         # Find out the "to" address
-        contact = resource.get_resource('/users/%s' % contact)
+        contact = resource.get_resource(f'/users/{contact}')
         contact_title = contact.get_title()
         contact = contact.get_value('email')
         if contact_title != contact:
@@ -285,9 +285,9 @@ class UpdateDocs(AutoForm):
             name = ref.path.get_name()
             name, extension, langage = FileName.decode(name)
             if extension in ('png', 'pdf'):
-                name = '%s/;download' % name
+                name = f'{name}/;download'
             ref.path[-1] = name
-            return '../%s' % ref
+            return f'../{ref}'
 
         def filter(path, mimetype, body):
             # HTML
@@ -296,7 +296,7 @@ class UpdateDocs(AutoForm):
                 target = XHTMLFile()
                 elem = get_element(source.events, 'div', **{'class': 'body'})
                 if not elem:
-                    print(("E {}".format(path)))
+                    print(f"E {path}")
                     return None
                 elements = elem.get_content_elements()
                 elements = rewrite_uris(elements, rewrite)
@@ -311,7 +311,7 @@ class UpdateDocs(AutoForm):
                 return body
             # Unknown
             else:
-                print(('X {} {}'.format(path, mimetype)))
+                print(f'X {path} {mimetype}')
                 return body
 
         def postproc(file):

@@ -108,14 +108,14 @@ class RegisterForm(AutoForm):
             # Special case: datetime
             if issubclass(datatype, DateTime):
                 schema[name] = Date
-                schema['%s_time' % name] = Time
+                schema[f'{name}_time'] = Time
                 continue
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
                 schema[name] = BirthDate
-                schema['%s_day' % name] = Days
-                schema['%s_month' % name] = Months
-                schema['%s_year' % name] = Years
+                schema[f'{name}_day'] = Days
+                schema[f'{name}_month'] = Months
+                schema[f'{name}_year'] = Years
 
         return schema
 

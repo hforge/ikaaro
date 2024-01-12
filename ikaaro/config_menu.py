@@ -137,7 +137,7 @@ class MenuItem(OrderedFolder):
         here = context.resource
         here_abspath = here.abspath
         here_view_name = url[-1]
-        here_abspath_and_view = '%s/%s' % (here_abspath, here_view_name)
+        here_abspath_and_view = f'{here_abspath}/{here_view_name}'
         items = []
 
         for resource in self.get_resources_in_order():
@@ -151,7 +151,7 @@ class MenuItem(OrderedFolder):
             # Case 1: External link
             if ref.scheme:
                 items.append({
-                    'id': 'menu_%s' % resource.name,
+                    'id': f'menu_{resource.name}',
                     'path': str(ref),
                     'real_path': None,
                     'title': title,
@@ -168,7 +168,7 @@ class MenuItem(OrderedFolder):
             subtabs = resource.get_menu_namespace_level(context, url,
                                                         use_first_child)
             resource = self.get_resource(path, soft=True)
-            item_id = 'menu_%s' % resource.name
+            item_id = f'menu_{resource.name}'
 
             # Use first child by default we use the resource itself
             resource_path = path
@@ -186,11 +186,10 @@ class MenuItem(OrderedFolder):
             # add default view
             if view:
                 resource_method = view[2:]
-                item_id += '_%s' % resource_method
+                item_id += f'_{resource_method}'
             else:
                 resource_method = resource.get_default_view_name()
-            resource_abspath_and_view = '%s/;%s' % (resource.abspath,
-                                                    resource_method)
+            resource_abspath_and_view = f'{resource.abspath}/;{resource_method}'
             if here_abspath_and_view == resource_abspath_and_view:
                 active = True
             else:
@@ -309,7 +308,7 @@ class ConfigMenu(MenuItem):
         url = list(context.uri.path)
         if not url or url[-1][0] != ';':
             method = resource.get_default_view_name()
-            url.append(';%s' % method)
+            url.append(f';{method}')
 
         # Get the menu
         menu = self

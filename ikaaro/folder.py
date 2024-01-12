@@ -104,7 +104,7 @@ class Folder(DBResource):
                 resource = self.get_resource(name)
             except StopIteration:
                 # Log the resource abspath
-                log.error("The resource can't be read - {} {}".format(name, self.abspath))
+                log.error(f"The resource can't be read - {name} {self.abspath}")
                 continue
             for x in resource.traverse_resources():
                 yield x
@@ -135,7 +135,7 @@ class Folder(DBResource):
 
         # Make the metadata
         metadata = Metadata(cls=cls)
-        self.handler.set_handler('%s.metadata' % name, metadata)
+        self.handler.set_handler(f'{name}.metadata', metadata)
         metadata.set_property('mtime', get_context().timestamp)
         # Initialize
         resource = self.get_resource(name)
@@ -179,7 +179,7 @@ class Folder(DBResource):
             # Do not check referencial-integrity
             pass
         else:
-            raise ValueError('Incorrect ref_action "{}"'.format(ref_action))
+            raise ValueError(f'Incorrect ref_action "{ref_action}"')
 
         # Events, remove
         path = str(resource.abspath)
@@ -206,7 +206,7 @@ class Folder(DBResource):
         from .webpage import WebPage
 
         if type(name) is not str:
-            raise TypeError('expected string, got %s' % repr(name))
+            raise TypeError(f'expected string, got {repr(name)}')
 
         # Web Pages are first class citizens
         if mimetype == 'text/html':
@@ -481,8 +481,8 @@ class Folder(DBResource):
 
         # Copy the metadata
         folder = self.handler
-        folder.copy_handler('%s.metadata' % source_path,
-                            '%s.metadata' % target_path)
+        folder.copy_handler(f'{source_path}.metadata',
+                            f'{target_path}.metadata')
 
         # Copy the content
         database = self.database
@@ -546,8 +546,8 @@ class Folder(DBResource):
 
         # Move the metadata
         folder = self.handler
-        folder.move_handler('%s.metadata' % source_path,
-                            '%s.metadata' % target_path)
+        folder.move_handler(f'{source_path}.metadata',
+                            f'{target_path}.metadata')
         # Move the content
         new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):

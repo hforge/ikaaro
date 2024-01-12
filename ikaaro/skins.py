@@ -107,8 +107,8 @@ class Skin(object):
         styles = ['/ui/aruni/dist/style.css']
 
         # Skin
-        if isfile('%s/style.css' % self.key):
-            styles.append('%s/style.css' % self.base_path)
+        if isfile(f'{self.key}/style.css'):
+            styles.append(f'{self.base_path}/style.css')
 
         # View
         get_styles = getattr(context.view, 'get_styles', None)
@@ -133,8 +133,8 @@ class Skin(object):
             '/ui/ikaaro/javascript.js']
 
         # This skin's JavaScript
-        if isfile('%s/javascript.js' % self.key):
-            scripts.append('%s/javascript.js' % self.base_path)
+        if isfile(f'{self.key}/javascript.js'):
+            scripts.append(f'{self.base_path}/javascript.js')
 
         # View
         for script in get_view_scripts(context.view, context):
@@ -208,7 +208,7 @@ class Skin(object):
             return favicon_href, favicon_type
 
         # Case 2: from the skin
-        favicon = '%s/favicon.ico' % self.base_path
+        favicon = f'{self.base_path}/favicon.ico'
         if context.get_template(favicon):
             return (favicon, 'image/x-icon')
 
@@ -360,7 +360,7 @@ class Skin(object):
 
     def get_template(self, context):
         paths = [
-            '%s/template.xhtml' % self.base_path,
+            f'{self.base_path}/template.xhtml',
             '/ui/aruni/template.xhtml']
         for path in paths:
             template = context.get_template(path)
@@ -409,13 +409,13 @@ skin_registry = {}
 def register_skin(name, skin):
     if isinstance(skin, str):
         skin = Skin(skin)
-    skin.base_path = '/ui/%s' % name
+    skin.base_path = f'/ui/{name}'
     skin_registry[name] = skin
 
 
 # Register the built-in skins
 ui_path = get_abspath('ui')
-register_skin('ikaaro', '%s/ikaaro' % ui_path)
-register_skin('aruni', '%s/aruni' % ui_path)
-register_skin('popup', '%s/popup' % ui_path)
-register_skin('fancybox', FancyboxSkin('%s/fancybox' % ui_path))
+register_skin('ikaaro', f'{ui_path}/ikaaro')
+register_skin('aruni', f'{ui_path}/aruni')
+register_skin('popup', f'{ui_path}/popup')
+register_skin('fancybox', FancyboxSkin(f'{ui_path}/fancybox'))

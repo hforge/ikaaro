@@ -90,7 +90,7 @@ class CompositeView(STLView):
             view_schema = view.get_query_schema()
             for key in view_schema:
                 if key in schema:
-                    raise ValueError("query schema key '{}' defined twice".format(key))
+                    raise ValueError(f"query schema key '{key}' defined twice")
                 schema[key] = view_schema[key]
         return schema
 
@@ -113,7 +113,7 @@ class CompositeView(STLView):
         method_name = context.form_action
         for view in self.allowed_subviews:
             if getattr(view, method_name, None):
-                schema = getattr(view, '%s_schema' % method_name, None)
+                schema = getattr(view, f'{method_name}_schema', None)
                 if schema is not None:
                     return schema
                 return view.get_schema(resource, context)
@@ -129,7 +129,7 @@ class CompositeView(STLView):
             view_method = getattr(view, action_name, None)
             if action_subview and view_method:
                 raise ValueError(
-                    "method '{}' should not be defined in several subviews".format(context.form_action)
+                    f"method '{context.form_action}' should not be defined in several subviews"
                 )
             if view_method:
                 action_subview = view
@@ -442,7 +442,7 @@ class BrowseForm(STLView):
             return None
 
         # Default
-        raise ValueError("unexpected '{}'".format(column))
+        raise ValueError(f"unexpected '{column}'")
 
 
     def get_table_actions(self, resource, context):
@@ -471,7 +471,7 @@ class BrowseForm(STLView):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'css': 'thead-%s' % name.replace('_', '-'),
+                    'css': f"thead-{name.replace('_', '-')}",
                     'href': None,
                     'sortable': False})
             else:
@@ -485,7 +485,7 @@ class BrowseForm(STLView):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'css': 'thead-%s' % name.replace('_', '-'),
+                    'css': f"thead-{name.replace('_', '-')}",
                     'sortable': True,
                     'href': context.uri.path,
                     'href_up': base_href.replace(reverse=0),
@@ -623,7 +623,7 @@ class IkaaroStaticView(StaticView):
             raise
         except Exception:
             # Fallback if the handler cannot be loaded
-            msg = 'WARNING: The file {0} contains errors'.format(context.path)
+            msg = f'WARNING: The file {context.path} contains errors'
             log.debug(msg, exc_info=True)
             return self.get_fallback(resource, context)
 
@@ -632,7 +632,7 @@ class IkaaroStaticView(StaticView):
         # FIXME Check we set the encoding for text files
         path = str(context.path)
         ts = context.server.timestamp
-        path = path.replace('/cached/%s' % ts, '')
+        path = path.replace(f'/cached/{ts}', '')
         template = context.get_template(path)
         # 404 Not Found
         if not template:
@@ -656,7 +656,7 @@ class IkaaroStaticView(StaticView):
     def get_fallback(self, resource, context):
         n = len(Path(self.mount_path))
         path = Path(context.path)[n:]
-        path = '%s%s' % (self.local_path, path)
+        path = f'{self.local_path}{path}'
         # 404 Not Found
         if not isfile(path):
             return context.set_default_response(404)

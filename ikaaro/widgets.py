@@ -173,7 +173,7 @@ class ChoosePassword_Widget(Widget):
     def scripts(self):
         context = get_context()
         handler = context.get_template('/ui/ikaaro/js/password_strength_plugin.js')
-        return ['/ui/ikaaro/js/%s' % basename(handler.key)]
+        return [f'/ui/ikaaro/js/{basename(handler.key)}']
 
     # Password meter configuration
     userid = None
@@ -281,7 +281,7 @@ class RadioWidget(Widget):
                  'selected': not yes_selected}]
 
         # Case 3: Error
-        raise ValueError("datatype '{}' should be enumerate or boolean".format(self.name))
+        raise ValueError(f"datatype '{self.name}' should be enumerate or boolean")
 
 
 
@@ -368,7 +368,7 @@ def get_dynDateTime_scripts():
     language = accept.select_language(languages)
     if language is None:
         language = 'en'
-    scripts.append('/ui/ikaaro/js_calendar/lang/calendar-%s.js' % language)
+    scripts.append(f'/ui/ikaaro/js_calendar/lang/calendar-{language}.js')
     return scripts
 
 
@@ -463,7 +463,7 @@ class DatetimeWidget(DateWidget):
             from itools.web import get_context
             context = get_context()
             return (context.get_form_value(self.name),
-                    context.get_form_value('%s_time' % self.name))
+                    context.get_form_value(f'{self.name}_time'))
 
         if type(value) is datetime:
             value_date = value.date()
@@ -536,7 +536,7 @@ class BirthDateWidget(Widget):
 
     def get_widget(self, widget_name, datatype, value=None):
         context = get_context()
-        name = '%s_%s' % (self.name, widget_name)
+        name = f'{self.name}_{widget_name}'
         value = context.get_form_value(name)
         if value is None and name in context.query:
             value = context.query.get(name)
@@ -746,7 +746,7 @@ class GetFolders(BaseView):
                     elif len(options) == 1 and options[0]['name'] == '':
                         return ''
                     options = sorted(options, key=itemgetter('value'))
-                    name = 'folder%s' % (int(key[-1])+1)
+                    name = f'folder{int(key[-1]) + 1}'
                     level = int(key[-1]) + 1
                     widget = FolderWidget(name, value='', level=level,
                                           lower=(level+1),
@@ -798,7 +798,7 @@ class FoldersWidget(Widget):
         """
         if self.folder is None:
             return None
-        name = 'folder%s' % x
+        name = f'folder{x}'
         folder_path = self.folder.abspath
         value = quote(str(folder_path[:x+1]))
 

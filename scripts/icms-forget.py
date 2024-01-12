@@ -35,7 +35,7 @@ def get_commits(target):
 
         [(<commit hash>, <days since today>), ...]
     """
-    cwd = '%s/database' % target
+    cwd = f'{target}/database'
     command = ['git', 'log', '--pretty=format:%H %at']
     data = get_pipe(command, cwd=cwd)
     today = date.today()
@@ -102,14 +102,14 @@ def forget(parser, target, options):
                 break
 
     # Check the server is not running
-    pid = get_pid('%s/pid' % target)
+    pid = get_pid(f'{target}/pid')
     if pid is not None:
         print('The server is running. Stop it before running this command.')
         return
 
     # Export to new database
     print('* Make new branch with shorter history (may take a while)')
-    cwd = '%s/database' % target
+    cwd = f'{target}/database'
     command = (
         'git fast-export --no-data --progress=1000 %s.. | '
         'sed "s|refs/heads/master|refs/heads/new|" | '
@@ -138,14 +138,14 @@ def forget(parser, target, options):
     get_pipe(command, cwd=cwd)
 
     # Ok
-    print('Done. Backup branch is %s' % now)
+    print(f'Done. Backup branch is {now}')
 
 
 
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
-    version = 'itools %s' % __version__
+    version = f'itools {__version__}'
     description = (
         'Forgets the old history from the Git archive, reducing disk space '
         'and improving performance.  If no options are giving, it will show '

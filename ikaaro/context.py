@@ -132,9 +132,9 @@ class CMSContext(prototype):
             xff = xff.split(',', 1)[0].strip()
         src_host = xff or environ.get('HTTP_HOST')
         if query:
-            uri = '%s://%s%s?%s' % (src_scheme, src_host, path, query)
+            uri = f'{src_scheme}://{src_host}{path}?{query}'
         else:
-            uri = '%s://%s%s' % (src_scheme, src_host, path)
+            uri = f'{src_scheme}://{src_host}{path}'
         self.uri = get_reference(uri)
 
         # Split the path into path and method ("a/b/c/;view")
@@ -253,7 +253,7 @@ class CMSContext(prototype):
         # (XXX we need a way to define the default)
         if language is None:
             language = languages[0]
-        local_path = '%s.%s' % (local_path, language)
+        local_path = f'{local_path}.{language}'
         return ro_database.get_handler(local_path, soft=True)
 
 
@@ -288,7 +288,7 @@ class CMSContext(prototype):
         try:
             return datatype.decode(value) or ''
         except ValueError as e:
-            log.warning("malformed header: %s: %s" % (name, value), exc_info=True)
+            log.warning(f"malformed header: {name}: {value}", exc_info=True)
             return datatype.get_default()
 
 
@@ -346,7 +346,7 @@ class CMSContext(prototype):
 
     def set_content_type(self, content_type, **kw):
         if type(content_type) is not str:
-            raise TypeError('expected string, got %s' % repr(content_type))
+            raise TypeError(f'expected string, got {repr(content_type)}')
 
         parameters = ['; %s=%s' % x for x in kw.items()]
         parameters = ''.join(parameters)
@@ -355,7 +355,7 @@ class CMSContext(prototype):
 
     def set_content_disposition(self, disposition, filename=None):
         if filename:
-            disposition = '%s; filename="%s"' % (disposition, filename)
+            disposition = f'{disposition}; filename="{filename}"'
         self._set_header('Content-Disposition', disposition)
         self._set_header('Access-Control-Expose-Headers', "Content-Disposition")
 
@@ -368,7 +368,7 @@ class CMSContext(prototype):
     def set_default_response(self, status):
         # Build response
         self.status = status
-        self.entity = '{0} {1}'.format(status, reason_phrases[status])
+        self.entity = f'{status} {reason_phrases[status]}'
         self.set_content_type('text/plain')
         # Set response
         self.set_response_from_context()
@@ -507,13 +507,13 @@ class CMSContext(prototype):
         elif content_type.startswith('application/'):
             return {'body': body}
         # Case 4: Not managed content type
-        raise ValueError('Invalid content type "{0}"'.format(content_type))
+        raise ValueError(f'Invalid content type "{content_type}"')
 
 
     def get_multipart_body(self, body):
         content_type, type_parameters = self.get_header('content-type')
         boundary = type_parameters.get('boundary')
-        boundary = '--%s' % boundary
+        boundary = f'--{boundary}'
         form = {}
         for part in body.split(boundary)[1:-1]:
             # Parse the entity
@@ -606,7 +606,7 @@ class CMSContext(prototype):
         # Get the access control definition (default to False)
         if view is None:
             return False
-        access = getattr(view, 'access_%s' % self.method, view.access)
+        access = getattr(view, f'access_{self.method}', view.access)
 
         # Private (False) or Public (True)
         if type(access) is bool:
@@ -614,12 +614,12 @@ class CMSContext(prototype):
 
         # Only booleans and strings are allowed
         if type(access) is not str:
-            raise TypeError('unexpected value "%s"' % access)
+            raise TypeError(f'unexpected value "{access}"')
 
         # Access Control through a method
         method = getattr(self.root, access, None)
         if method is None:
-            raise ValueError('access control "%s" not defined' % access)
+            raise ValueError(f'access control "{access}" not defined')
 
         return method(user, resource)
 
@@ -728,7 +728,7 @@ class CMSContext(prototype):
         try:
             username = self.get_authentication_credentials()
         except ValueError as error:
-            log.warning("Authentication error : {} ".format(error.message), exc_info=True)
+            log.warning(f"Authentication error : {error.message} ", exc_info=True)
             return
         if not username:
             return

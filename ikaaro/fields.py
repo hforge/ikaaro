@@ -592,9 +592,9 @@ class File_Field(Field):
     def _get_key(self, resource, name, language):
         base = resource.metadata.key[:-9]
         if language:
-            return '%s.%s.%s' % (base, name, language)
+            return f'{base}.{name}.{language}'
 
-        return '%s.%s' % (base, name)
+        return f'{base}.{name}'
 
 
     def get_value(self, resource, name, language=None):

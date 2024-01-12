@@ -211,7 +211,7 @@ def get_pid(target):
 
 def stop_server(target):
     log_ikaaro.info("Stoping server...")
-    pid = get_pid('%s/pid' % target)
+    pid = get_pid(f'{target}/pid')
     if pid:
         kill(pid, SIGTERM)
 
@@ -233,7 +233,7 @@ def create_server(target, email, password, root,
     modules = modules or []
     # Get modules
     for module in modules:
-        exec('import %s' % module)
+        exec(f'import {module}')
     # Load the root class
     if root is None:
         root_class = Root
@@ -257,7 +257,7 @@ def create_server(target, email, password, root,
         size_min=size_min,
         size_max=size_max,
         log_email=log_email)
-    open('%s/config.conf' % target, 'w').write(config)
+    open(f'{target}/config.conf', 'w').write(config)
 
     # Create database
     database = make_database(target, size_min, size_max, backend=backend)
@@ -265,8 +265,8 @@ def create_server(target, email, password, root,
     database = get_database(target, size_min, size_max, backend=backend)
 
     # Create the folder structure
-    mkdir('%s/log' % target)
-    mkdir('%s/spool' % target)
+    mkdir(f'{target}/log')
+    mkdir(f'{target}/spool')
 
     # Make the root
     with database.init_context() as context:
@@ -311,7 +311,7 @@ class ServerHandler(WSGIHandler):
         now = datetime.now().replace(microsecond=0)
         length = self.response_length or '-'
         if self.environ.get('REQUEST_TIME'):
-            delta = '%.6f' % self.environ['REQUEST_TIME']
+            delta = f"{self.environ['REQUEST_TIME']:.6f}"
         else:
             delta = '-'
         client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
@@ -360,9 +360,9 @@ class ServerHandler(WSGIHandler):
             xff = xff.split(',', 1)[0].strip()
         src_host = xff or self.environ.get('HTTP_HOST')
         if query:
-            uri = '%s://%s%s?%s' % (src_scheme, src_host, uri_path, query)
+            uri = f'{src_scheme}://{src_host}{uri_path}?{query}'
         else:
-            uri = '%s://%s%s' % (src_scheme, src_host, uri_path)
+            uri = f'{src_scheme}://{src_host}{uri_path}'
         uri = get_reference(uri)
         extra = {
             "http.method": method,
@@ -378,7 +378,7 @@ class ServerHandler(WSGIHandler):
             "network.bytes_written": response_length
         }
         if self.time_finish:
-            extra["duration"] = float("%.6f" % (self.time_finish - self.time_start))
+            extra["duration"] = float(f"{self.time_finish - self.time_start:.6f}")
         user = self.environ["beaker.session"].get("user")
         if user:
             extra["usr.id"] = user
@@ -467,7 +467,7 @@ class Server(object):
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
-        spool_failed = '%s/failed' % self.spool
+        spool_failed = f'{self.spool}/failed'
         if not lfs.exists(spool_failed):
             lfs.make_folder(spool_failed)
         # Configuration variables
@@ -543,19 +543,19 @@ class Server(object):
         log_ikaaro.info("Check database consistency")
         # Check the server is not running
         if self.read_only:
-            pid = get_pid('%s/pid_ro' % self.target)
+            pid = get_pid(f'{self.target}/pid_ro')
         else:
-            pid = get_pid('%s/pid' % self.target)
+            pid = get_pid(f'{self.target}/pid')
         if pid is not None:
-            log_ikaaro.error('[%s] The Web Server is already running.' % self.target)
+            log_ikaaro.error(f'[{self.target}] The Web Server is already running.')
             return False
         # Ok
         return True
 
 
     def start(self, detach=False, profile=False, loop=True):
-        log_ikaaro.info('Start database %s %s %s' % (detach, profile, loop))
-        self.profile = '{0}/log/profile'.format(self.target) if profile else None
+        log_ikaaro.info(f'Start database {detach} {profile} {loop}')
+        self.profile = f'{self.target}/log/profile' if profile else None
         # Daemon mode
         if detach:
             become_daemon()
@@ -605,12 +605,12 @@ class Server(object):
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
         # FIXME: should be moved into backend
         from itools.database.backends.catalog import make_catalog
-        log_ikaaro.info('reindex catalog %s %s %s' % (quiet, quick, as_test))
+        log_ikaaro.info(f'reindex catalog {quiet} {quick} {as_test}')
         if self.is_running_in_rw_mode():
             log_ikaaro.error("Cannot proceed, the server is running in read-write mode.")
             return
         # Create a temporary new catalog
-        catalog_path = '%s/catalog.new' % self.target
+        catalog_path = f'{self.target}/catalog.new'
         if lfs.exists(catalog_path):
             lfs.remove(catalog_path)
         catalog = make_catalog(catalog_path, get_register_fields())
@@ -621,11 +621,11 @@ class Server(object):
         doc_n = 0
         error_detected = False
         if as_test:
-            log = open('%s/log/update-catalog' % self.target, 'w').write
+            log = open(f'{self.target}/log/update-catalog', 'w').write
         with self.database.init_context() as context:
             for obj in root.traverse_resources():
                 if not quiet or doc_n % 10000 == 0:
-                    log_ikaaro.info('{0} {1}'.format(doc_n, obj.abspath))
+                    log_ikaaro.info(f'{doc_n} {obj.abspath}')
                 doc_n += 1
                 context.resource = obj
                 values = obj.get_catalog_values()
@@ -635,7 +635,7 @@ class Server(object):
                 except Exception:
                     if as_test:
                         error_detected = True
-                        log_ikaaro.error("Error, Abspath of the resource: {}".format(str(obj.abspath)))
+                        log_ikaaro.error(f"Error, Abspath of the resource: {str(obj.abspath)}")
                     else:
                         raise
                 # Free Memory
@@ -645,34 +645,34 @@ class Server(object):
         if not error_detected:
             if as_test:
                 # Delete the empty log file
-                remove('%s/log/update-catalog' % self.target)
+                remove(f'{self.target}/log/update-catalog')
 
             # Update / Report
             t1, v1 = time(), vmsize()
             v = (v1 - v0)/1024
-            log_ikaaro.info("[Update] Time: %.02f seconds. Memory: %s Kb" % (t1 - t0, v))
+            log_ikaaro.info(f"[Update] Time: {t1 - t0:.02f} seconds. Memory: {v} Kb")
             # Commit
             log_ikaaro.info("[Commit]")
             catalog.save_changes()
             catalog.close()
             # Commit / Replace
-            old_catalog_path = '%s/catalog' % self.target
+            old_catalog_path = f'{self.target}/catalog'
             if lfs.exists(old_catalog_path):
                 lfs.remove(old_catalog_path)
             lfs.move(catalog_path, old_catalog_path)
             # Commit / Report
             t2, v2 = time(), vmsize()
             v = (v2 - v1)/1024
-            log_ikaaro.info("Time: %.02f seconds. Memory: %s Kb" % (t2 - t1, v))
+            log_ikaaro.info(f"Time: {t2 - t1:.02f} seconds. Memory: {v} Kb")
             return True
         else:
             log_ikaaro.error("[Update] Error(s) detected, the new catalog was NOT saved")
-            log_ikaaro.info('[Update] You can find more infos in %r' % join(self.target, 'log/update-catalog'))
+            log_ikaaro.info(f"[Update] You can find more infos in {join(self.target, 'log/update-catalog')!r}")
             return False
 
 
     def get_pid(self):
-        return get_pid('%s/pid' % self.target)
+        return get_pid(f'{self.target}/pid')
 
 
     def is_running(self):
@@ -712,10 +712,10 @@ class Server(object):
 
     def listen(self, address, port):
         # Say hello
-        log_ikaaro.info("Listing at port {}".format(port))
+        log_ikaaro.info(f"Listing at port {port}")
         self.port = port
         # Serve
-        log_ikaaro.info("Listen {}:{}".format(address, port))
+        log_ikaaro.info(f"Listen {address}:{port}")
         if address == '*':
             address = ''
         self.port = port
@@ -809,11 +809,11 @@ class Server(object):
                 except Exception:
                     self.smtp_log_error()
                     try:
-                        spool.move(name, 'failed/%s' % name)
+                        spool.move(name, f'failed/{name}')
                     except FileNotFoundError:
                         continue
                     return 60 if get_names() else False
-                log_ikaaro.info("CONNECTED to {}".format(smtp_host))
+                log_ikaaro.info(f"CONNECTED to {smtp_host}")
 
                 # 2. Login
                 if self.smtp_login and self.smtp_password:
@@ -840,15 +840,15 @@ class Server(object):
                     # Remove
                     spool.remove(name)
                     # Log
-                    log_ikaaro.info("Email '{}' sent from '{}' to '{}'".format(subject, from_addr, to_addr))
+                    log_ikaaro.info(f"Email '{subject}' sent from '{from_addr}' to '{to_addr}'")
                 except SMTPRecipientsRefused:
                     # The recipient addresses has been refused
                     self.smtp_log_error()
-                    spool.move(name, 'failed/%s' % name)
+                    spool.move(name, f'failed/{name}')
                 except SMTPResponseException as excp:
                     # The SMTP server returns an error code
                     self.smtp_log_error()
-                    spool.move(name, 'failed/%s_%s' % (excp.smtp_code, name))
+                    spool.move(name, f'failed/{excp.smtp_code}_{name}')
                 except Exception:
                     self.smtp_log_error()
 
@@ -861,23 +861,23 @@ class Server(object):
 
     def smtp_log_error(self):
         details = format_exc()
-        log_ikaaro.error("Error sending email : {}".format(details), exc_info=True)
+        log_ikaaro.error(f"Error sending email : {details}", exc_info=True)
 
 
     def register_dispatch_routes(self):
         # Dispatch base routes from ikaaro
         self.register_urlpatterns_from_package('ikaaro.urls')
         for module in reversed(self.modules):
-            self.register_urlpatterns_from_package('{}.urls'.format(module))
+            self.register_urlpatterns_from_package(f'{module}.urls')
         # UI routes for skin
         ts = self.timestamp
         for name in skin_registry:
             skin = skin_registry[name]
-            mount_path = '/ui/%s' % name
+            mount_path = f'/ui/{name}'
             skin_key = skin.get_environment_key(self)
             view = IkaaroStaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/%s/{name:any}' % name, view)
-            mount_path = '/ui/cached/%s/%s' % (ts, name)
+            mount_path = f'/ui/cached/{ts}/{name}'
             view = CachedStaticView(local_path=skin_key, mount_path=mount_path)
             self.dispatcher.add('/ui/cached/%s/%s/{name:any}' % (ts, name), view)
 
@@ -928,7 +928,7 @@ class Server(object):
             if not search:
                 return self.config.get_value('cron-interval')
             nb = len(search)
-            log_cron.info("Cron launched for {nb} resources".format(nb=nb))
+            log_cron.info(f"Cron launched for {nb} resources")
             for brain in search.get_documents():
                 tcron0 = time()
                 payload = brain.next_time_event_payload
@@ -939,7 +939,7 @@ class Server(object):
                     resource.time_event(payload)
                 except Exception:
                     # Log error
-                    log_cron.error("Cron error\n{}".format(format_exc()), exc_info=True)
+                    log_cron.error(f"Cron error\n{format_exc()}", exc_info=True)
                     context.root.alert_on_internal_server_error(context)
                     # Abort changes
                     database.abort_changes()
@@ -951,21 +951,21 @@ class Server(object):
                 catalog.index_document(values)
                 # Log
                 tcron1 = time()
-                log_cron.info("Done for {} in {} seconds".format(brain.abspath, tcron1-tcron0))
+                log_cron.info(f"Done for {brain.abspath} in {tcron1 - tcron0} seconds")
             # Save changes
             if not error:
                 try:
                     catalog.save_changes()
                     database.save_changes()
                 except Exception:
-                    log_cron.error("Cron error on save changes\n{}".format(format_exc()), exc_info=True)
+                    log_cron.error(f"Cron error on save changes\n{format_exc()}", exc_info=True)
                     context.root.alert_on_internal_server_error(context)
             # Log into cron.log
             t1 = time()
             if not error:
-                log_cron.info("[OK] Cron finished for {nb} resources in {s} seconds".format(nb=nb, s=t1-t0))
+                log_cron.info(f"[OK] Cron finished for {nb} resources in {t1 - t0} seconds")
             else:
-                log_cron.error("[ERROR] Cron finished for {nb} resources in {s} seconds".format(nb=nb, s=t1-t0))
+                log_cron.error(f"[ERROR] Cron finished for {nb} resources in {t1 - t0} seconds")
             # Log into access.log
             now = strftime('%d/%b/%Y:%H:%M:%S %z')
             message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
@@ -1005,7 +1005,7 @@ class Server(object):
         if as_json:
             req = Request(
                 method,
-                'http://localhost:8080{0}'.format(path),
+                f'http://localhost:8080{path}',
                 json=body,
                 headers=headers
             )
@@ -1013,7 +1013,7 @@ class Server(object):
         elif as_multipart:
             req = Request(
                 method,
-                'http://localhost:8080{0}'.format(path),
+                f'http://localhost:8080{path}',
                 data=body,
                 files=files,
                 headers=headers
@@ -1022,7 +1022,7 @@ class Server(object):
         else:
             req = Request(
                 method,
-                'http://localhost:8080{0}'.format(path),
+                f'http://localhost:8080{path}',
                 data=body,
                 headers=headers
             )
@@ -1031,7 +1031,7 @@ class Server(object):
         headers = [(key.lower(), value) for key, value in prepped.headers.items()]
         headers.append(('User-Agent', 'Firefox'))
         for key, value in headers:
-            environ['HTTP_%s' % key.upper().replace('-', '_')] = value
+            environ[f"HTTP_{key.upper().replace('-', '_')}"] = value
         # Set wsgi input body
         if prepped.body is not None:
             if type(prepped.body) is str:
@@ -1075,7 +1075,7 @@ class Server(object):
             try:
                 response = loads(context.entity)
             except ValueError:
-                msg = 'Cannot load json {0}'.format(context.entity)
+                msg = f'Cannot load json {context.entity}'
                 raise ValueError(msg)
         else:
             response = context.entity
@@ -1120,4 +1120,4 @@ class ServerConfig(ConfigFile):
 
 
 def get_config(target):
-    return ServerConfig('{0}/config.conf'.format(target))
+    return ServerConfig(f'{target}/config.conf')

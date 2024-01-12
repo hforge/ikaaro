@@ -105,7 +105,7 @@ class LocationTemplate(CMSTemplate):
         # Complete the breadcrumb
         resource = root
         for name in context.uri.path:
-            path = path + ('%s/' % name)
+            path = path + f'{name}/'
             resource = resource.get_resource(name, soft=True)
             if resource is None:
                 break
@@ -167,7 +167,7 @@ class TabsTemplate(CMSTemplate):
 
             # Add the menu
             tabs.append({
-                'name': '%s/;%s' % (here_link, link),
+                'name': f'{here_link}/;{link}',
                 'label': view.get_title(context),
                 'active': active,
                 'class': 'active' if active else None})

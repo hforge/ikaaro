@@ -500,7 +500,7 @@ class Folder_BrowseContent(BrowseForm):
             if not path_to_icon:
                 return None
             if path_to_icon.startswith(';'):
-                path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
+                path_to_icon = Path(f'{item.name}/').resolve(path_to_icon)
             return path_to_icon
         elif column == 'abspath':
             # Name
@@ -570,7 +570,7 @@ class Folder_BrowseContent(BrowseForm):
                 view = item.get_view('backlinks')
                 if context.is_access_allowed(item, view):
                     items.append({'title': item.get_title(),
-                                  'href': '%s/;backlinks' % item.abspath})
+                                  'href': f'{item.abspath}/;backlinks'})
             msg = messages.MSG_RESOURCES_REFERENCED_HTML.gettext(resources=items)
             message.append(msg)
         if not_removed:
@@ -603,8 +603,8 @@ class Folder_BrowseContent(BrowseForm):
         # the rename_form to be called as a form action, hence with the POST
         # method, but it should be a GET method. Maybe it will be solved after
         # the needed folder browse overhaul.
-        ids_list = '&'.join([ 'ids=%s' % x for x in paths ])
-        uri = '%s/;rename?%s' % (context.get_link(resource), ids_list)
+        ids_list = '&'.join([ f'ids={x}' for x in paths ])
+        uri = f'{context.get_link(resource)}/;rename?{ids_list}'
         return get_reference(uri)
 
 
@@ -894,7 +894,7 @@ class Folder_Thumbnail(BaseView):
         # The folder thumbnail was cached in the folder handler
         # Accessible images depend on too many parameters
 
-        context.content_type = 'image/%s' % format
+        context.content_type = f'image/{format}'
         return data
 
 
@@ -919,9 +919,9 @@ class GoToSpecificDocument(BaseView):
     def GET(self, resource, context):
         specific_document = self.get_specific_document(resource, context)
         specific_view = self.get_specific_view(resource, context)
-        goto = '%s/%s' % (context.get_link(resource), specific_document)
+        goto = f'{context.get_link(resource)}/{specific_document}'
         if specific_view:
-            goto = '%s/;%s' % (goto, specific_view)
+            goto = f'{goto}/;{specific_view}'
         goto = get_reference(goto)
 
         # Keep the message

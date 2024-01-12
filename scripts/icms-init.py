@@ -52,11 +52,11 @@ def init(parser, options, target):
     print('*')
     print('* Welcome to ikaaro')
     print('* A user with administration rights has been created for you:')
-    print('*   username: %s' % email)
-    print('*   password: %s' % password)
+    print(f'*   username: {email}')
+    print(f'*   password: {password}')
     print('*')
     print('* To start the new instance type:')
-    print('*   icms-start.py %s' % target)
+    print(f'*   icms-start.py {target}')
     print('*')
 
 
@@ -64,7 +64,7 @@ def init(parser, options, target):
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
-    version = 'itools %s' % itools.__version__
+    version = f'itools {itools.__version__}'
     description = 'Creates a new instance of ikaaro with the name TARGET.'
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option('-e', '--email',

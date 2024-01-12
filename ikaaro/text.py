@@ -69,7 +69,7 @@ class Text(File):
 
 
     def get_content_type(self):
-        return '%s; charset=UTF-8' % super(Text, self).get_content_type()
+        return f'{super(Text, self).get_content_type()}; charset=UTF-8'
 
 
     # Views
@@ -171,7 +171,7 @@ class CSS(Text):
                 path = str(new_base.get_pathto(target)) + view
                 new_path = Reference('', '', path, reference.query.copy(),
                                      reference.fragment)
-                return "url('%s')" % new_path
+                return f"url('{new_path}')"
 
             return matchobj.group(0)
 
@@ -214,7 +214,7 @@ class CSS(Text):
             new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
 
             path = str(target.get_pathto(new_abs_path)) + view
-            return "url('%s')" % path
+            return f"url('{path}')"
 
         data = self.to_text().encode('utf-8')
         new_data = css_uri_expr.sub(my_func, data)

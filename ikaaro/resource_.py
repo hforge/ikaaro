@@ -110,7 +110,7 @@ class DBResource(Resource):
         if resource is None:
             return False
         if not isinstance(resource, DBResource):
-            error = "cannot compare DBResource and %s" % type(resource)
+            error = f"cannot compare DBResource and {type(resource)}"
             raise TypeError(error)
         return self.abspath == resource.abspath
 
@@ -209,7 +209,7 @@ class DBResource(Resource):
             return self.database.get_resource(abspath, soft=soft)
         except Exception as e:
             log.error(
-                "Could not retrieve the resource {}".format(abspath),
+                f"Could not retrieve the resource {abspath}",
                 exc_info=True
             )
             raise
@@ -371,9 +371,9 @@ class DBResource(Resource):
         self.check_if_context_exists()
         field = self.get_field(name)
         if field is None:
-            raise ValueError('Field %s do not exist' % name)
+            raise ValueError(f'Field {name} do not exist')
         if field.multilingual and language is None and not isinstance(value, MSG):
-            raise ValueError('Field %s is multilingual' % name)
+            raise ValueError(f'Field {name} is multilingual')
         # TODO: Use decorator for cache
         self.clear_cache(name, language)
         # Set value
@@ -479,7 +479,7 @@ class DBResource(Resource):
         for name, value in kw.items():
             field = self.get_field(name)
             if field is None:
-                raise ValueError('undefined field "%s"' % name)
+                raise ValueError(f'undefined field "{name}"')
             if type(value) is dict:
                 for lang in value:
                     field._set_value(self, name, value[lang], lang)
@@ -597,7 +597,7 @@ class DBResource(Resource):
             try:
                 values['text'] = self.to_text()
             except Exception as e:
-                log.error("Indexation failed: {}".format(abspath), exc_info=True)
+                log.error(f"Indexation failed: {abspath}", exc_info=True)
         # Time events for the CRON
         reminder, payload = self.next_time_event()
         values['next_time_event'] = reminder
@@ -648,12 +648,12 @@ class DBResource(Resource):
         for field_name in self.fields:
             field = self.get_field(field_name)
             if field and is_prototype(field, File_Field):
-                old = '%s.%s' % (self.name, field_name)
-                new = '%s.%s' % (new_name, field_name)
+                old = f'{self.name}.{field_name}'
+                new = f'{new_name}.{field_name}'
                 if field.multilingual:
                     for language in langs:
-                        aux.append(('%s.%s' % (old, language),
-                                    '%s.%s' % (new, language)))
+                        aux.append((f'{old}.{language}',
+                                    f'{new}.{language}'))
                 else:
                     aux.append((old, new))
 
@@ -768,7 +768,7 @@ class DBResource(Resource):
         :param version: The target version
         """
         # Action
-        getattr(self, 'update_%s' % version)()
+        getattr(self, f'update_{version}')()
         # If the action removes the resource, we are done
         metadata = self.metadata
         if metadata.key is None:
@@ -795,15 +795,15 @@ class DBResource(Resource):
     #######################################################################
     @classmethod
     def get_class_icon(cls, size=16):
-        return getattr(cls, 'class_icon%s' % size, None)
+        return getattr(cls, f'class_icon{size}', None)
 
 
     @classmethod
     def get_resource_icon(cls, size=16):
-        icon = getattr(cls, 'icon%s' % size, None)
+        icon = getattr(cls, f'icon{size}', None)
         if icon is None:
             return cls.get_class_icon(size)
-        return ';icon%s' % size
+        return f';icon{size}'
 
 
     def get_method_icon(self, view, size='16x16', **kw):
@@ -812,7 +812,7 @@ class DBResource(Resource):
             return None
         if callable(icon):
             icon = icon(self, **kw)
-        return '/ui/ikaaro/icons/%s/%s' % (size, icon)
+        return f'/ui/ikaaro/icons/{size}/{icon}'
 
 
     #######################################################################

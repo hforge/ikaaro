@@ -77,10 +77,10 @@ class User_ConfirmRegistration(AutoForm):
 
         key = resource.get_property('user_state').get_parameter('key')
         if key is None:
-            goto = '/;login?username=%s' % username
+            goto = f'/;login?username={username}'
             return context.come_back(messages.MSG_REGISTERED, goto=goto)
         elif context.get_form_value('key') != key:
-            goto ='/;login?username=%s' % username
+            goto =f'/;login?username={username}'
             return context.come_back(messages.MSG_BAD_KEY, goto=goto)
 
         proxy = super(User_ConfirmRegistration, self)
@@ -175,7 +175,7 @@ class User_Profile(STLView):
             view = resource.get_view(name)
             if view and context.is_access_allowed(resource, view):
                 items.append({
-                    'url': ';%s' % name,
+                    'url': f';{name}',
                     'title': view.title,
                     'description': getattr(view, 'description', None),
                     'icon': resource.get_method_icon(view, size='48x48')})
@@ -433,7 +433,7 @@ class BrowseUsers(BrowseForm):
             return item.name, str(item.abspath)
         elif column == 'account_state':
             if item.get_value('user_state') == 'pending':
-                href = '/users/%s/;resend_confirmation' % item.name
+                href = f'/users/{item.name}/;resend_confirmation'
                 return MSG('Resend Confirmation'), href
 
             return item.get_value_title('user_state'), None
@@ -458,7 +458,7 @@ class Users_Browse(BrowseUsers):
 
         database = resource.database
         for username in usernames:
-            user = database.get_resource('/users/%s' % username)
+            user = database.get_resource(f'/users/{username}')
             email = user.get_value('email')
             user_state = user.get_value('user_state')
             if user_state == 'active':

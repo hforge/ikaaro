@@ -49,7 +49,7 @@ class SelectElement(AddButton):
     @proto_property
     def onclick(cls):
         element = cls.element_to_add
-        return 'select_element("%s", $(this).attr("value"), "")' % element
+        return f'select_element("{element}", $(this).attr("value"), "")'
 
 
 
@@ -155,7 +155,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                 # icon
                 path_to_icon = item.get_resource_icon(48)
                 if path_to_icon.startswith(';'):
-                    path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
+                    path_to_icon = Path(f'{item.name}/').resolve(path_to_icon)
             else:
                 path = item.abspath
                 path_to_icon = ";thumb?width=48&height=48"
@@ -369,7 +369,7 @@ class DBResource_AddBase(STLView):
         path = child.abspath
         action = self.get_resource_action(context)
         if action:
-            path = '%s%s' % (path, action)
+            path = f'{path}{action}'
         # Return javascript
         scripts = self.get_scripts(context)
         context.add_script(*scripts)
@@ -377,14 +377,13 @@ class DBResource_AddBase(STLView):
 
 
     def get_javascript_return(self, context, path):
-        return """
+        return f"""
             <script type="text/javascript">
               <!--
-              %s
-              select_element('%s', '%s', '');
+              {self.get_additional_javascript(context)}
+              select_element('{self.element_to_add}', '{path}', '');
               //-->
-            </script>""" % (self.get_additional_javascript(context),
-                            self.element_to_add, path)
+            </script>"""
 
 
     def get_resource_action(self, context):
@@ -445,7 +444,7 @@ class DBResource_AddLink(DBResource_AddBase):
         if mode == 'tiny_mce':
             from .webpage import WebPage
             return WebPage
-        raise ValueError('Incorrect mode %s' % mode)
+        raise ValueError(f'Incorrect mode {mode}')
 
 
 

@@ -36,7 +36,7 @@ log = getLogger("ikaaro.update")
 
 def update(parser, options, target):
     # Check the server is not started, or started in read-only mode
-    pid = get_pid('%s/pid' % target)
+    pid = get_pid(f'{target}/pid')
     if pid is not None:
         log.error("Cannot proceed, the server is running in read-write mode.")
         return
@@ -53,7 +53,7 @@ def update(parser, options, target):
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
-    version = 'itools %s' % itools.__version__
+    version = f'itools {itools.__version__}'
     description = ('Updates the TARGET ikaaro instance (if needed). Use'
                    ' this command when upgrading to a new version of itools.')
     parser = OptionParser(usage, version=version, description=description)

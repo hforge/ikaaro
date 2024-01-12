@@ -101,7 +101,7 @@ class AutoForm(STLView):
         # Combine date & time
         for name, value in form.items():
             if type(value) is date:
-                value_time = form.get('%s_time' % name)
+                value_time = form.get(f'{name}_time')
                 if value_time is not None:
                     value = datetime.combine(value, value_time)
                     form[name] = context.fix_tzinfo(value)
@@ -109,9 +109,9 @@ class AutoForm(STLView):
         schema = self.get_schema(resource, context)
         for name, datatype in schema.items():
             if issubclass(datatype, BirthDate):
-                value_day = int(form.get('%s_day' % name))
-                value_month = int(form.get('%s_month' % name))
-                value_year = int(form.get('%s_year' % name))
+                value_day = int(form.get(f'{name}_day'))
+                value_month = int(form.get(f'{name}_month'))
+                value_year = int(form.get(f'{name}_year'))
                 if value_day and value_month and value_year:
                     form[name] = date(value_year, value_month, value_day)
         return form
@@ -123,12 +123,12 @@ class AutoForm(STLView):
         for name, datatype in schema.items():
             # Special case: datetime
             if issubclass(datatype, DateTime):
-                schema['%s_time' % name] = Time
+                schema[f'{name}_time'] = Time
             # Special case: birthdate
             elif issubclass(datatype, BirthDate):
-                schema['%s_day' % name] = Days
-                schema['%s_month' % name] = Months
-                schema['%s_year' % name] = Years
+                schema[f'{name}_day'] = Days
+                schema[f'{name}_month'] = Months
+                schema[f'{name}_year'] = Years
         return schema
 
 
@@ -184,11 +184,11 @@ class AutoForm(STLView):
             else:
                 value = field_ns['value']
                 if is_prototype(datatype, DateTime) and len(value) <= 10:
-                    value_time = namespace.get('%s_time' % widget.name,
+                    value_time = namespace.get(f'{widget.name}_time',
                                                {'value': None})
                     value_time = value_time['value']
                     if value_time:
-                        value += 'T%s' % value_time
+                        value += f'T{value_time}'
 
             # multilingual or monolingual
             field_ns['widgets'] = widgets_html = []
@@ -196,7 +196,7 @@ class AutoForm(STLView):
                 for language in languages:
                     language_title = get_language_msg(language)
                     lwidget = widget(
-                        name='%s:%s' % (widget_name, language),
+                        name=f'{widget_name}:{language}',
                         field_name=widget_name,
                         datatype=datatype,
                         value=value[language],

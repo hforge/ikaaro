@@ -36,10 +36,10 @@ def update_catalog(parser, options, target):
     try:
         server = Server(target, read_only=False, cache_size=options.cache_size)
     except LookupError:
-        log.error("Error: {} instance do not exists".format(target))
+        log.error(f"Error: {target} instance do not exists")
         exit(1)
     except DatabaseLockError:
-        log.error('Error: Database {} is already opened'.format(target))
+        log.error(f'Error: Database {target} is already opened')
         exit(1)
     # Ask
     message = 'Update the catalog (y/N)? '
@@ -57,7 +57,7 @@ def update_catalog(parser, options, target):
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
-    version = 'itools %s' % itools.__version__
+    version = f'itools {itools.__version__}'
     description = (
         'Rebuilds the catalog: first removes and creates a new empty one;'
         ' then traverses and indexes all resources in the database.')

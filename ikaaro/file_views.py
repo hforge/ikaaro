@@ -147,12 +147,12 @@ class File_ExternalEdit(BaseView):
         """
         uri = context.uri
         header = [
-            'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
-            'last-modified:%s' % HTTPDate.encode(resource.get_value('mtime')),
-            'content_type:%s' % resource.get_content_type(),
-            'title:%s' % resource.get_title().encode('utf-8'),
-            'include-Cookie:iauth="%s"' % context.get_cookie('iauth'),
-            'include-X-User-Agent:%s' % context.get_header('User-Agent')]
+            f'url:{uri.scheme}://{uri.authority}{uri.path[:-1]}',
+            f"last-modified:{HTTPDate.encode(resource.get_value('mtime'))}",
+            f'content_type:{resource.get_content_type()}',
+            f"title:{resource.get_title().encode('utf-8')}",
+            f"include-Cookie:iauth=\"{context.get_cookie('iauth')}\"",
+            f"include-X-User-Agent:{context.get_header('User-Agent')}"]
 
         # Try to guess the extension (optional)
         filename = resource.get_value('filename')
@@ -162,12 +162,12 @@ class File_ExternalEdit(BaseView):
                 extension = extension[1:]
                 if extension in resource.get_all_extensions():
                     # All OK
-                    header.append('extension:.%s' % extension)
+                    header.append(f'extension:.{extension}')
 
         # Authorization part
         auth = context.get_header('Authorization')
         if auth:
-            header.append('auth:%s' % auth)
+            header.append(f'auth:{auth}')
 
         # Add the "\n\n" and make the header
         header.append('\n')
@@ -181,8 +181,7 @@ class File_ExternalEdit(BaseView):
         #context.set_header('Last-Modified', rfc1123_date())
         context.set_header('Pragma', 'no-cache')
         context.content_type = 'application/x-restedit'
-        context.set_content_disposition('inline', '%s.restedit' %
-                                        resource.name)
+        context.set_content_disposition('inline', f'{resource.name}.restedit')
         return header + data
 
 
@@ -224,7 +223,7 @@ class Image_View(STLView):
                 width, height = size.split('x')
             except ValueError:
                 width = height = size
-            link = ';thumb?width=%s&height=%s' % (width, height)
+            link = f';thumb?width={width}&height={height}'
 
         # Real width and height (displayed for reference)
         image_width, image_height = resource.get_value('data').get_size()

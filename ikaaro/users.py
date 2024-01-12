@@ -230,7 +230,7 @@ class User(Folder):
         lastname = self.get_value('lastname')
         if firstname:
             if lastname:
-                return '%s %s' % (firstname, lastname)
+                return f'{firstname} {lastname}'
             return firstname
         if lastname:
             return lastname
