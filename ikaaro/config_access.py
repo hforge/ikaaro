@@ -322,7 +322,7 @@ class ConfigAccess(Folder):
 
     # API
     def _get_user_groups(self, user):
-        user_groups = set(['everybody'])
+        user_groups = {'everybody'}
         if user:
             user_groups.add('authenticated')
             user_groups.update(user.get_value('groups'))

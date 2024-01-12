@@ -330,7 +330,7 @@ class ServerHandler(WSGIHandler):
         # WSGI encodes in latin-1
         # https://github.com/gevent/gevent/blob/master/src/gevent/pywsgi.py#L859=
         new_response_headers = {}
-        for key,value in data.items():
+        for key, value in data.items():
             if type(key) is bytes:
                 key = key.decode("latin-1")
             if type(value) is bytes:

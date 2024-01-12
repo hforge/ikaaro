@@ -271,9 +271,9 @@ class UpdateDocs(AutoForm):
 
 
     def action(self, resource, context, form):
-        skip = set(['application/javascript', 'application/octet-stream',
-                    'text/css', 'text/plain'])
-        keep = set(['application/pdf', 'image/png'])
+        skip = {'application/javascript', 'application/octet-stream',
+                    'text/css', 'text/plain'}
+        keep = {'application/pdf', 'image/png'}
         language = form['language']
 
         def rewrite(value):

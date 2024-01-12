@@ -197,16 +197,16 @@ class FreeTestCase(TestCase):
                 container.make_resource('hello.txt', Text)
                 self.assertEqual(
                     database.added,
-                    set(['folder1.metadata', 'folder1/hello.txt.metadata',
-                         'folder1/child.metadata', 'folder1/child/hello_child.txt.metadata']))
+                    {'folder1.metadata', 'folder1/hello.txt.metadata',
+                         'folder1/child.metadata', 'folder1/child/hello_child.txt.metadata'})
                 root.move_resource('folder1', 'folder2')
                 self.assertEqual(root.get_resource('folder1', soft=True), None)
                 self.assertEqual(root.get_resource('folder2').name, 'folder2')
                 self.assertEqual(root.get_resource('folder2/hello.txt').abspath, '/folder2/hello.txt')
                 self.assertEqual(
                     database.added,
-                    set(['folder2.metadata', 'folder2/hello.txt.metadata',
-                         'folder2/child.metadata', 'folder2/child/hello_child.txt.metadata']))
+                    {'folder2.metadata', 'folder2/hello.txt.metadata',
+                         'folder2/child.metadata', 'folder2/child/hello_child.txt.metadata'})
                 database.close()
 
 
@@ -303,8 +303,8 @@ class FreeTestCase(TestCase):
                 root.del_resource('folder-to-remove')
                 self.assertEqual(
                     database.removed,
-                    set(['folder-to-remove.metadata', 'folder-to-remove/1.metadata',
-                         'folder-to-remove/2.metadata', 'folder-to-remove/3.metadata']))
+                    {'folder-to-remove.metadata', 'folder-to-remove/1.metadata',
+                         'folder-to-remove/2.metadata', 'folder-to-remove/3.metadata'})
                 self.assertEqual(root.get_resource('folder-to-remove', soft=True), None)
                 self.assertEqual(root.get_resource('folder-to-remove/1', soft=True), None)
                 self.assertEqual(root.get_resource('folder-to-remove/2', soft=True), None)
@@ -322,12 +322,12 @@ class FreeTestCase(TestCase):
                 root.copy_resource('folder-to-copy-1', 'folder-to-copy-2')
                 self.assertEqual(
                     database.added,
-                    set([
+                    {
                       'folder-to-copy-1.metadata', 'folder-to-copy-1/1.metadata',
                       'folder-to-copy-1/1/subchild.metadata', 'folder-to-copy-1/2.metadata',
                       'folder-to-copy-2.metadata', 'folder-to-copy-2/1.metadata',
                       'folder-to-copy-2/1/subchild.metadata', 'folder-to-copy-2/2.metadata',
-                      ]))
+                      })
 
 
     def test_cache_error_on_move(self):
