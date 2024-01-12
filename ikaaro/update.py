@@ -153,7 +153,7 @@ def run_next_update_method(context, force=False):
             if resource is not None:
                 # If resource has not been deleted by update method, we update class_version
                 resource.update(version['class_version'])
-        except Exception as e:
+        except Exception:
             line = 'ERROR: "{}" - class_id: "{}"\n'.format(
                 resource.abspath, resource.__class__.class_id)
             log.error(line, exc_info=True)

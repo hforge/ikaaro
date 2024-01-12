@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from itools.database import AndQuery, PhraseQuery
+from itools.database import PhraseQuery
 from ikaaro.database import Database
 
 

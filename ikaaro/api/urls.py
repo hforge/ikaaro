@@ -22,7 +22,7 @@ from .views import Api_LoginView
 from .views import ApiDevPanel_ResourceJSON, ApiDevPanel_ResourceRaw, ApiDevPanel_ResourceHistory
 from .views import ApiDevPanel_ClassidViewDetails, ApiDevPanel_ClassidViewList
 from .views import ApiDevPanel_Config, ApiDevPanel_Log
-from .views import ApiDevPanel_CatalogReindex, UUIDView
+from .views import ApiDevPanel_CatalogReindex
 from .views import ApiDevPanel_ServerView, ApiDevPanel_ServerStop
 
 

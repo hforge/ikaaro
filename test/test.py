@@ -14,13 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Import from the Standard Library
 from optparse import OptionParser
 from sys import exit
 from unittest import TestLoader, TestSuite, TextTestRunner
 
 # Import from itools
-from itools.core import get_abspath
 from itools.fs import lfs
 
 # Import from ikaaro

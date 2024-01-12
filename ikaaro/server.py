@@ -619,8 +619,6 @@ class Server:
         t0, v0 = time(), vmsize()
         doc_n = 0
         error_detected = False
-        if as_test:
-            log = open(f'{self.target}/log/update-catalog', 'w').write
         with self.database.init_context() as context:
             for obj in root.traverse_resources():
                 if not quiet or doc_n % 10000 == 0:

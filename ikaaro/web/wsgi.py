@@ -63,7 +63,7 @@ def application(environ, start_response):
             context.on_request_end()
         except HTTPError as e:
             RequestMethod.handle_client_error(e, context)
-        except Exception as e:
+        except Exception:
             tb = traceback.format_exc()
             log.error(f"Internal error : {tb}", exc_info=True)
             context.set_default_response(500)

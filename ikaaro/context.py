@@ -28,7 +28,7 @@ import cgi
 
 # Import from itools
 from itools.core import freeze, proto_lazy_property
-from itools.core import fixed_offset, is_prototype, local_tz
+from itools.core import fixed_offset, local_tz
 from itools.core import prototype
 from itools.database.ro import ro_database
 from itools.datatypes import String
@@ -120,7 +120,7 @@ class CMSContext(prototype):
             accept_language = ''
         try:
             self.accept_language = AcceptLanguageType.decode(accept_language)
-        except Exception as e:
+        except Exception:
             # Cannot decode accept language
             pass
         # The URI as it was typed by the client
@@ -286,7 +286,7 @@ class CMSContext(prototype):
             return datatype.get_default() or ''
         try:
             return datatype.decode(value) or ''
-        except ValueError as e:
+        except ValueError:
             log.warning(f"malformed header: {name}: {value}", exc_info=True)
             return datatype.get_default()
 
@@ -486,7 +486,7 @@ class CMSContext(prototype):
         response = self.get_header('content-type')
         try:
             content_type, type_parameters = response
-        except Exception as e:
+        except Exception:
             content_type = response
         # Case 1: nothing
         length = int(self.environ.get('CONTENT_LENGTH', '0') or 0)
@@ -692,7 +692,7 @@ class CMSContext(prototype):
             raise InvalidJWTSignatureException
         except JWTExpired:
             raise JWTExpiredException
-        except ValueError as e:
+        except ValueError:
             return
         return jwt
 

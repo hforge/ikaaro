@@ -1,8 +1,8 @@
-# Import from external
-from subprocess import run
 import shutil
-import pytest
+
+# Import from external
 from ikaaro.server import Server, create_server
+import pytest
 
 
 @pytest.fixture(scope='function')

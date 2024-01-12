@@ -206,7 +206,7 @@ class DBResource(Resource):
             abspath = self.abspath.resolve2(path)
         try:
             return self.database.get_resource(abspath, soft=soft)
-        except Exception as e:
+        except Exception:
             log.error(
                 f"Could not retrieve the resource {abspath}",
                 exc_info=True
@@ -336,7 +336,7 @@ class DBResource(Resource):
         if self._brain and field.stored and not is_prototype(field.datatype, Decimal):
             try:
                 value = self.get_value_from_brain(name, language)
-            except Exception as e:
+            except Exception:
                 # FIXME Sometimes we cannot get value from brain
                 # We're tying to debug this problem
                 msg = 'Warning: cannot get value from brain {0} {1}'
@@ -595,7 +595,7 @@ class DBResource(Resource):
         if server and server.index_text:
             try:
                 values['text'] = self.to_text()
-            except Exception as e:
+            except Exception:
                 log.error(f"Indexation failed: {abspath}", exc_info=True)
         # Time events for the CRON
         reminder, payload = self.next_time_event()

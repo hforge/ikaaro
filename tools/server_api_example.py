@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
-from pprint import pprint
 import sys
 
 # Import from ikaaro

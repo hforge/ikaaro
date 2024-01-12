@@ -35,7 +35,7 @@ class TestXapianSearch(TestCase):
             root.make_resource(f"users/{user.name}/toto", Text)
 
             container = root.make_resource('test-create-texts', Folder)
-            sub_container = container.make_resource(f'users', Folder)
+            sub_container = container.make_resource('users', Folder)
             sub_container_2 = sub_container.make_resource(user.name, UserHistoryFolder)
             sub_container_2.make_resource("device", Text)
             self.server.database.save_changes()
