@@ -966,7 +966,7 @@ class Server:
             # Log into access.log
             now = strftime('%d/%b/%Y:%H:%M:%S %z')
             message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
-            log_ikaaro.info(message % (now, t1-t0), domain='itools.web_access')
+            log_ikaaro.info(message % (now, t1-t0))
             end_dtime = context.timestamp
         # Again, and again
         cron_interval = self.config.get_value('cron-interval')
