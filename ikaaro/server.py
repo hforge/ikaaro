@@ -17,43 +17,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-#from cProfile import runctx
+from datetime import datetime, timedelta
 from email.parser import BytesHeaderParser
-import fcntl
-from gevent.lock import BoundedSemaphore
-from json import loads
+from importlib import import_module
 from io import BytesIO
-from datetime import timedelta
-from datetime import datetime
-from logging import getLogger
-import inspect
-import json
-import pickle
 from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
-from psutil import pid_exists
-import sys
+from signal import SIGINT, SIGTERM
+from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
+from tempfile import mkstemp
 from time import strftime, time
 from traceback import format_exc
-from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
-from signal import SIGINT, SIGTERM
-from requests import Request
-from tempfile import mkstemp
-from importlib import import_module
 from wsgiref.util import setup_testing_defaults
+import fcntl
+import inspect
+import json
+import logging
+import pickle
+import sys
 
-# Import from jwcrypto
-from jwcrypto.jwk import JWK
-
-# Import from gevent
+# Requirements
+from gevent.lock import BoundedSemaphore
 from gevent.pywsgi import WSGIServer, WSGIHandler
 from gevent.signal import signal as gevent_signal
+from jwcrypto.jwk import JWK
+from psutil import pid_exists
+from requests import Request
 
 # Import from itools
 from itools.core import become_daemon, vmsize
 from itools.database import Metadata, RangeQuery
 from itools.database import make_database, get_register_fields
+from itools.database.backends.catalog import make_catalog
 from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import lfs
 from itools.handlers import ConfigFile
@@ -71,9 +66,10 @@ from .views import CachedStaticView
 from .skins import skin_registry
 from .views import IkaaroStaticView
 
-log_ikaaro = getLogger("ikaaro")
-log_access = getLogger("ikaaro.access")
-log_cron = getLogger("ikaaro.cron")
+
+log_ikaaro = logging.getLogger("ikaaro")
+log_access = logging.getLogger("ikaaro.access")
+log_cron = logging.getLogger("ikaaro.cron")
 
 SMTP_SEND_SEM = BoundedSemaphore(1)
 
@@ -183,7 +179,6 @@ def ask_confirmation(message, confirm=False):
     return line == 'y'
 
 
-
 def load_modules(config):
     """Load Python packages and modules.
     """
@@ -191,7 +186,6 @@ def load_modules(config):
     for name in modules:
         name = name.strip()
         __import__(name)
-
 
 
 def get_pid(target):
@@ -290,8 +284,6 @@ def create_server(target, email, password, root,
     set_context(None)
 
 
-
-
 server = None
 def get_server():
     return server
@@ -309,21 +301,19 @@ class ServerHandler(WSGIHandler):
     def format_request(self):
         now = datetime.now().replace(microsecond=0)
         length = self.response_length or '-'
-        if self.environ.get('REQUEST_TIME'):
-            delta = f"{self.environ['REQUEST_TIME']:.6f}"
-        else:
-            delta = '-'
-        client_address = self.environ.get('HTTP_X_FORWARDED_FOR')
-        return '{} - - [{}] "{}" {} {} {}'.format(
-            client_address or '-',
-            now,
-            self.requestline or '',
-            # Use the native string version of the status, saved so we don't have to
-            # decode. But fallback to the encoded 'status' in case of subclasses
-            # (Is that really necessary? At least there's no overhead.)
-            (self._orig_status or self.status or '000').split()[0],
-            length,
-            delta)
+
+        request_time = self.environ.get('REQUEST_TIME')
+        delta = f"{request_time:.6f}" if request_time else '-'
+
+        address = self.environ.get('HTTP_X_FORWARDED_FOR') or '-'
+        request = self.requestline or ''
+
+        # (Is that really necessary? At least there's no overhead.)
+        # Use the native string version of the status, saved so we don't have to
+        # decode. But fallback to the encoded 'status' in case of subclasses
+        status = (self._orig_status or self.status or '000').split()[0]
+
+        return f'{address} - - [{now}] "{request}" {status} {length} {delta}'
 
     def headers_bytes_to_str(self, data: dict):
         # WSGI encodes in latin-1
@@ -390,7 +380,6 @@ class ServerHandler(WSGIHandler):
             log_access.info(request_log, extra=extra)
 
 
-
 class Server:
 
     timestamp = None
@@ -417,6 +406,10 @@ class Server:
         self.timestamp = str(int(time() / 2))
         # Load the config
         config = self.load_config()
+        log_level = config.get_value('log-level').upper()
+        log_ikaaro.setLevel(log_level)
+        log_access.setLevel(log_level)
+        log_cron.setLevel(log_level)
         # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -424,7 +417,7 @@ class Server:
         if port:
             self.port = int(port)
         else:
-            self.port = self.config.get_value('listen-port')
+            self.port = config.get_value('listen-port')
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
 
@@ -433,11 +426,6 @@ class Server:
         # Accept cors
         self.accept_cors = config.get_value(
             'accept-cors', type=Boolean, default=False)
-
-        # Profile Memory
-        # Package not compatible with python 3
-        # if profile_space is True:
-        #     import guppy.heapy.RM
 
         # The database
         if cache_size is None:
@@ -514,6 +502,8 @@ class Server:
     def generate_JWT_key(self):
         jwk = JWK(generate="RSA", size=4096)
         return jwk
+
+
     def load_config(self):
         self.config = get_config(self.target)
         return self.config
@@ -603,7 +593,6 @@ class Server:
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
         # FIXME: should be moved into backend
-        from itools.database.backends.catalog import make_catalog
         log_ikaaro.info(f'reindex catalog {quiet} {quick} {as_test}')
         if self.is_running_in_rw_mode():
             log_ikaaro.error("Cannot proceed, the server is running in read-write mode.")
@@ -719,16 +708,14 @@ class Server:
         wsgi_module = self.config.get_value("wsgi_application")
         wsgi_module = import_module(wsgi_module)
         application = getattr(wsgi_module, "application")
-        self.wsgi_server = WSGIServer(
-            (address or '', port),
-            application,
-            handler_class=ServerHandler,
-            log=log_access
+        listener = (address or '', port)
+        self.wsgi_server = WSGIServer(listener, application,
+                                      handler_class=ServerHandler,
+                                      log=log_access,
         )
         gevent_signal(SIGTERM, self.stop_signal)
         gevent_signal(SIGINT, self.stop_signal)
         if self.profile:
-            #runctx("self.wsgi_server.serve_forever()", globals(), locals(), self.profile)
             raise Exception("Error server.py Ikaaro - Python 3 circular import with CProfile")
         else:
             self.wsgi_server.serve_forever()
@@ -1070,7 +1057,7 @@ class Server:
         elif as_json and not str(context.status).startswith('3'):
             # Do not load json if 302 (url redirection)
             try:
-                response = loads(context.entity)
+                response = json.loads(context.entity)
             except ValueError:
                 msg = f'Cannot load json {context.entity}'
                 raise ValueError(msg)
