@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from logging import getLogger, NullHandler
 from sys import stderr
 
 # Import from itools
@@ -45,13 +44,6 @@ from . import config_theme
 
 # Import required modules
 from . import users
-
-
-getLogger("ikaaro").addHandler(NullHandler())
-getLogger("ikaaro.web").addHandler(NullHandler())
-getLogger("ikaaro.update").addHandler(NullHandler())
-getLogger("ikaaro.access").addHandler(NullHandler())
-getLogger("ikaaro.cron").addHandler(NullHandler())
 
 
 # Check for required software
