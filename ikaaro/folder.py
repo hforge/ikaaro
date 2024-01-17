@@ -108,8 +108,22 @@ class Folder(DBResource):
             yield from resource.traverse_resources()
 
 
+    # FIXME Breaking change
+    #def make_resource_name(self):
+    #   return uuid.uuid4().hex
+
     def make_resource_name(self):
-        return uuid.uuid4().hex
+        max_id = -1
+        for name in self.get_names():
+            # Mixing explicit and automatically generated names is allowed
+            try:
+                id = int(name)
+            except ValueError:
+                continue
+            if id > max_id:
+                max_id = id
+
+        return str(max_id + 1)
 
 
     def make_resource(self, name, cls, soft=False, **kw):
