@@ -16,12 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 from gevent.monkey import patch_all
 patch_all()
+
+# Import from the Standard Library
 from logging import getLogger
 from optparse import OptionParser
-from sys import exit
+import sys
+
 from xapian import DatabaseLockError
 
 # Import from itools
@@ -29,6 +31,7 @@ from itools import __version__
 
 # Import from ikaaro
 from ikaaro.server import Server
+
 
 log = getLogger("ikaaro")
 
@@ -64,24 +67,25 @@ if __name__ == '__main__':
     n_args = len(args)
     if n_args != 1 and n_args != 2:
         parser.error('Wrong number of arguments.')
-    # Get target
-    target = args[0]
+
     # Set-up the server
+    target = args[0]
     try:
         server = Server(target, read_only=options.read_only,
                         profile_space=options.profile_space,
                         port=options.port)
     except LookupError:
         log.error(f"Error: {target} instance do not exists")
-        exit(1)
+        sys.exit(1)
     except DatabaseLockError:
         log.error(f'Error: Database {target} is already opened')
-        exit(1)
+        sys.exit(1)
+
     # Check server
     successfully_init = server.check_consistency(options.quick)
     if not successfully_init:
-        exit(1)
+        sys.exit(1)
     # Start server
     server.start(detach=options.detach, profile=options.profile_time)
     # Ok
-    exit(0)
+    sys.exit(0)

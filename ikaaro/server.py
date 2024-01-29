@@ -33,6 +33,7 @@ import fcntl
 import inspect
 import json
 import logging
+import pathlib
 import pickle
 import sys
 
@@ -62,6 +63,7 @@ from itools.web.router import RequestMethod
 # Import from ikaaro.web
 from .database import get_database
 from .datatypes import ExpireValue
+from .log import config_logging
 from .views import CachedStaticView
 from .skins import skin_registry
 from .views import IkaaroStaticView
@@ -71,8 +73,8 @@ log_ikaaro = logging.getLogger("ikaaro")
 log_access = logging.getLogger("ikaaro.access")
 log_cron = logging.getLogger("ikaaro.cron")
 
-SMTP_SEND_SEM = BoundedSemaphore(1)
 
+SMTP_SEND_SEM = BoundedSemaphore(1)
 
 class SMTPSendManager:
 
@@ -406,10 +408,7 @@ class Server:
         self.timestamp = str(int(time() / 2))
         # Load the config
         config = self.load_config()
-        log_level = config.get_value('log-level').upper()
-        log_ikaaro.setLevel(log_level)
-        log_access.setLevel(log_level)
-        log_cron.setLevel(log_level)
+        self.log_level = config.get_value('log-level').upper()
         # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -543,9 +542,13 @@ class Server:
 
 
     def start(self, detach=False, profile=False, loop=True):
-        log_ikaaro.info(f'Start database {detach} {profile} {loop}')
-        self.profile = f'{self.target}/log/profile' if profile else None
+        target = pathlib.Path(self.target)
+        logdir = target / 'log'
+        self.profile = logdir / 'profile' if profile else None
+
         # Daemon mode
+        config_logging(logdir, self.log_level, detach)
+        log_ikaaro.info(f'Start database {detach} {profile} {loop}')
         if detach:
             become_daemon()
 
@@ -559,8 +562,7 @@ class Server:
 
         # Save PID
         pid = getpid()
-        with open(self.target + '/pid', 'w') as f:
-            f.write(str(pid))
+        (target / 'pid').write_text(str(pid))
         # Call method on root at start
         with self.database.init_context() as context:
             context.root.launch_at_start(context)

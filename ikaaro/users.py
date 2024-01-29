@@ -138,8 +138,7 @@ class User(Folder):
     # Indexing
     ########################################################################
     def get_catalog_values(self):
-        proxy = super()
-        values = proxy.get_catalog_values()
+        values = super().get_catalog_values()
         # email domain
         email = self.get_value('email')
         if email and '@' in email:
