@@ -35,6 +35,10 @@ def config_logging(logdir, loglevel, detach):
             'events': events_handler,
         },
         'loggers': {
+            'itools': {
+                'level': loglevel,
+                'handlers': ['events'],
+            },
             'ikaaro': {
                 'level': loglevel,
                 'handlers': ['events'],
