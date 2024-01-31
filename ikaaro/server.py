@@ -55,7 +55,6 @@ from itools.fs import lfs
 from itools.handlers import ConfigFile
 from itools.loop import cron
 from itools.uri import get_reference, get_uri_path, Path
-from itools.uri import decode_query
 from itools.web import set_context, get_context
 from itools.web.dispatcher import URIDispatcher
 from itools.web.router import RequestMethod
@@ -328,58 +327,6 @@ class ServerHandler(WSGIHandler):
                 value = value.decode("latin-1")
             new_response_headers[key] = value
         return new_response_headers
-
-    def log_request(self):
-        request_log = self.format_request()
-        status = (self._orig_status or self.status or '000').split()[0]
-        status = int(status)
-        request_headers = dict(self.headers)
-        request_headers.pop("cookie", None)
-        request_headers.pop("authorization", None)
-        response_headers = self.headers_bytes_to_str(dict(self.response_headers))
-        response_headers.pop("Set-cookie", None)
-        method = self.command
-        response_length = self.response_length
-        query = self.environ.get('QUERY_STRING')
-        decoded_query = decode_query(query)
-        uri_path = self.environ.get("PATH_INFO")
-        # The URI as it was typed by the client
-        xfp = self.environ.get('HTTP_X_FORWARDED_PROTO')
-        src_scheme = xfp or 'http'
-        xff = self.environ.get('HTTP_X-Forwarded-Host')
-        if xff:
-            xff = xff.split(',', 1)[0].strip()
-        src_host = xff or self.environ.get('HTTP_HOST')
-        if query:
-            uri = f'{src_scheme}://{src_host}{uri_path}?{query}'
-        else:
-            uri = f'{src_scheme}://{src_host}{uri_path}'
-        uri = get_reference(uri)
-        extra = {
-            "http.method": method,
-            "http.url_details.path": uri_path,
-            "http.url_details.queryString": decoded_query,
-            "http.url": str(uri),
-            "http.status_code": status,
-            "http.useragent": request_headers.get("user-agent"),
-            "http.referer": request_headers.get("referer"),
-            "headers": request_headers,
-            "response_headers": response_headers,
-            "network.client.ip": self.environ.get("HTTP_X_FORWARDED_FOR", "127.0.0.1"),
-            "network.bytes_written": response_length
-        }
-        if self.time_finish:
-            extra["duration"] = float(f"{self.time_finish - self.time_start:.6f}")
-        user = self.environ["beaker.session"].get("user")
-        if user:
-            extra["usr.id"] = user
-            extra["usr.uuid"] = self.environ["beaker.session"].get("user_uuid")
-        if 400 <= status < 500:
-            log_access.warning(request_log, extra=extra, exc_info=True)
-        elif status >= 500:
-            log_access.error(request_log, extra=extra, exc_info=True)
-        else:
-            log_access.info(request_log, extra=extra)
 
 
 class Server:
