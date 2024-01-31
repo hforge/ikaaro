@@ -55,12 +55,6 @@ if __name__ == '__main__':
     parser.add_option(
         '--quick', action="store_true", default=False,
         help="Do not check the database consistency.")
-    parser.add_option(
-        '--profile-time', action="store_true", default=False,
-        help="Write profile information tot the 'log/profile' file.")
-    parser.add_option(
-        '--profile-space', action="store_true", default=False,
-        help="Enable remote monitoring by guppy, http://guppy-pe.sf.net/")
 
     # Parse arguments
     options, args = parser.parse_args()
@@ -71,9 +65,8 @@ if __name__ == '__main__':
     # Set-up the server
     target = args[0]
     try:
-        server = Server(target, read_only=options.read_only,
-                        profile_space=options.profile_space,
-                        port=options.port)
+        server = Server(target, read_only=options.read_only, port=options.port,
+                        detach=options.detach)
     except LookupError:
         log.error(f"Error: {target} instance do not exists")
         sys.exit(1)
@@ -86,6 +79,6 @@ if __name__ == '__main__':
     if not successfully_init:
         sys.exit(1)
     # Start server
-    server.start(detach=options.detach, profile=options.profile_time)
+    server.start()
     # Ok
     sys.exit(0)

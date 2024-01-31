@@ -343,19 +343,23 @@ class Server:
     cron_statistics = {}
 
 
-    def __init__(self, target, read_only=False, cache_size=None,
-                 profile_space=False, port=None):
+    def __init__(self, target, read_only=False, cache_size=None, port=None, detach=False):
         set_server(self)
-        # Set target
-        target = lfs.get_absolute_path(target)
-        self.target = target
-        # Read only ?
-        self.read_only = read_only
-        # Set timestamp
+
+        # Set instance variables
         self.timestamp = str(int(time() / 2))
+        self.target = lfs.get_absolute_path(target)
+        self.read_only = read_only
+        self.detach = detach
+
         # Load the config
         config = self.load_config()
-        self.log_level = config.get_value('log-level').upper()
+
+        # Logging
+        log_level = config.get_value('log-level').upper()
+        logdir = pathlib.Path(self.target) / 'log'
+        config_logging(logdir, log_level, detach)
+
         # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -488,15 +492,12 @@ class Server:
         return True
 
 
-    def start(self, detach=False, profile=False, loop=True):
+    def start(self):
         target = pathlib.Path(self.target)
-        logdir = target / 'log'
-        self.profile = logdir / 'profile' if profile else None
 
         # Daemon mode
-        config_logging(logdir, self.log_level, detach)
-        log_ikaaro.info(f'Start database {detach} {profile} {loop}')
-        if detach:
+        if self.detach:
+            log_ikaaro.info('Daemonize..')
             become_daemon()
 
         # Find out the IP to listen to
@@ -646,14 +647,13 @@ class Server:
 
 
     def listen(self, address, port):
-        # Say hello
-        log_ikaaro.info(f"Listing at port {port}")
-        self.port = port
-        # Serve
         log_ikaaro.info(f"Listen {address}:{port}")
+
+        self.port = port
         if address == '*':
             address = ''
-        self.port = port
+
+        # Serve
         wsgi_module = self.config.get_value("wsgi_application")
         wsgi_module = import_module(wsgi_module)
         application = getattr(wsgi_module, "application")
@@ -664,10 +664,7 @@ class Server:
         )
         gevent_signal(SIGTERM, self.stop_signal)
         gevent_signal(SIGINT, self.stop_signal)
-        if self.profile:
-            raise Exception("Error server.py Ikaaro - Python 3 circular import with CProfile")
-        else:
-            self.wsgi_server.serve_forever()
+        self.wsgi_server.serve_forever()
 
 
     def is_running_in_rw_mode(self, mode='running'):

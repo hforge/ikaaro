@@ -35,18 +35,18 @@ def config_logging(logdir, loglevel, detach):
             'events': events_handler,
         },
         'loggers': {
-            'itools': {
-                'level': loglevel,
+            '': {
                 'handlers': ['events'],
-            },
-            'ikaaro': {
                 'level': loglevel,
-                'handlers': ['events'],
             },
             'ikaaro.access': {
-                'level': 'INFO',
                 'handlers': ['access'],
+                'level': 'INFO',
                 'propagate': False,
             },
+            # XXX We need to define the block below for logging to work, because the
+            # loggers were created earlier.
+            'itools': {},
+            'ikaaro': {},
         },
     })
