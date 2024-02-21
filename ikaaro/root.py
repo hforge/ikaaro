@@ -27,6 +27,7 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 from json import dumps
 from logging import getLogger
+import importlib
 import sys
 import traceback
 
@@ -337,8 +338,7 @@ class Root(Folder):
         # A package based on itools
         cls = self.__class__
         if cls is not Root:
-            pkg = None
-            exec(f"import {cls.__module__.split('.', 1)[0]} as pkg")
+            pkg = importlib.import_module(cls.__module__.split('.', 1)[0])
             config = Path(pkg.__path__[0]).resolve_name('setup.conf')
             config = ConfigFile(str(config))
             source = config.get_value('source_language', default=source)
