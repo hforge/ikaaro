@@ -34,7 +34,7 @@ def update_catalog(parser, options, target):
     # Check the server is not started, or started in read-only mode
     try:
         server = Server(target, read_only=False, cache_size=options.cache_size)
-    except LookupError:
+    except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
         exit(1)
     except DatabaseLockError:

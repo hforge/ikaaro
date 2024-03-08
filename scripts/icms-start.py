@@ -67,7 +67,7 @@ if __name__ == '__main__':
     try:
         server = Server(target, read_only=options.read_only, port=options.port,
                         detach=options.detach)
-    except LookupError:
+    except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
         sys.exit(1)
     except DatabaseLockError:
