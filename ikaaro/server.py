@@ -342,6 +342,7 @@ class Server:
     dispatcher = URIDispatcher()
     wsgi_server = None
     cron_statistics = {}
+    log_level = None
 
 
     def __init__(self, target, read_only=False, cache_size=None, port=None, detach=False):
@@ -352,15 +353,11 @@ class Server:
         self.target = lfs.get_absolute_path(target)
         self.read_only = read_only
         self.detach = detach
-
         # Load the config
         config = self.load_config()
-
         # Logging
         log_level = config.get_value('log-level').upper()
-        logdir = pathlib.Path(self.target) / 'log'
-        config_logging(logdir, log_level, detach)
-
+        self.set_log_level(log_level)
         # Load modules
         load_modules(config)
         self.modules = config.get_value('modules')
@@ -423,6 +420,11 @@ class Server:
         # Register JWT key
         self.JWK_SECRET = self.get_JWT_key()
 
+
+    def set_log_level(self, log_level):
+        logdir = pathlib.Path(self.target) / 'log'
+        config_logging(logdir, log_level, self.detach)
+        self.log_level = log_level
 
     def get_JWT_key_path(self):
         target = self.target
@@ -543,8 +545,16 @@ class Server:
 
 
     def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        # Daemon mode
+        if self.detach:
+            log_ikaaro.info('Daemonize..')
+            become_daemon()
         # FIXME: should be moved into backend
-        log_ikaaro.info(f'reindex catalog {quiet} {quick} {as_test}')
+        log_ikaaro.info('Reindex catalog')
+        # Set log level as INFO
+        log_level = self.log_level
+        self.set_log_level('INFO')
+        # Database is opend as RW ?
         if self.is_running_in_rw_mode():
             log_ikaaro.error("Cannot proceed, the server is running in read-write mode.")
             return
@@ -559,10 +569,15 @@ class Server:
         t0, v0 = time(), vmsize()
         doc_n = 0
         error_detected = False
+        nb_docs = self.database.get_nb_metadatas()
         with self.database.init_context() as context:
             for obj in root.traverse_resources():
-                if not quiet or doc_n % 10000 == 0:
-                    log_ikaaro.info(f'{doc_n} {obj.abspath}')
+                display_more_details = doc_n % 10000 == 0
+                if not quiet or display_more_details:
+                    log_ikaaro.info(f'{doc_n}/{nb_docs} - {obj.abspath}')
+                    if display_more_details:
+                        percent = int((doc_n / nb_docs) * 100)
+                        log_ikaaro.info(f'Progress reindex: {percent}%')
                 doc_n += 1
                 context.resource = obj
                 values = obj.get_catalog_values()
@@ -601,11 +616,15 @@ class Server:
             t2, v2 = time(), vmsize()
             v = (v2 - v1)/1024
             log_ikaaro.info(f"Time: {t2 - t1:.02f} seconds. Memory: {v} Kb")
-            return True
+            success = True
         else:
             log_ikaaro.error("[Update] Error(s) detected, the new catalog was NOT saved")
             log_ikaaro.info(f"[Update] You can find more infos in {join(self.target, 'log/update-catalog')!r}")
-            return False
+            success = False
+        # Come back to previous log level
+        self.set_log_level(log_level)
+        # Ok
+        return success
 
 
     def get_pid(self):
