@@ -419,7 +419,7 @@ class Root(Folder):
         from_addr = mail.get_value('emails_from_addr').strip()
         if from_addr:
             # FIXME Parse the address and use Header
-            message['From'] = from_addr.encode(encoding)
+            message['From'] = str(Header(from_addr, encoding))
         else:
             message['From'] = server.smtp_from
 

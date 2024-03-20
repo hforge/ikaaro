@@ -766,7 +766,9 @@ class Server:
                     subject = headers['subject']
                     from_addr = headers['from']
                     to_addr = headers['to']
-                    smtp.sendmail(from_addr, to_addr, message)
+                    if not subject or not from_addr or not to_addr:
+                        spool.move(name, f'failed/empty_{name}')
+                        continue
                     # Remove
                     spool.remove(name)
                     # Log
