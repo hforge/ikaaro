@@ -78,7 +78,6 @@ class CMSContext(prototype):
     query = {}
     request_time = 0
     resource = None
-    root = None
     scripts = []
     server = None
     set_mtime = True

@@ -251,7 +251,8 @@ def create_server(target, email, password, root,
         size_min=size_min,
         size_max=size_max,
         log_email=log_email)
-    open(f'{target}/config.conf', 'w').write(config)
+    with open(f'{target}/config.conf', 'w') as file:
+        file.write(config)
 
     # Create database
     database = make_database(target, size_min, size_max, backend=backend)

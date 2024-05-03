@@ -46,15 +46,18 @@ class Theme(Folder):
         self.set_value('share', 'everybody')
         # CSS file
         path = get_abspath('ui/ikaaro/themes/style.css')
-        data = open(path).read()
+        with open(path) as file:
+            data = file.read()
         self.set_value('style', data)
         # Logo
         path = get_abspath('ui/ikaaro/themes/logo.png')
-        data = open(path, "rb").read()
+        with open(path, "rb") as file:
+            data = file.read()
         self.set_value('logo', data)
         # Banner
         path = get_abspath('ui/ikaaro/themes/banner.jpg')
-        data = open(path, "rb").read()
+        with open(path, 'rb') as file:
+            data = file.read()
         self.set_value('banner', data)
 
     # Views
