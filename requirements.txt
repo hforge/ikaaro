@@ -1,5 +1,4 @@
-Beaker==1.12.1
-gevent==23.9.1
-jwcrypto==1.5.1
-psutil==5.9.7
-requests-toolbelt==1.0.0
+Beaker<1.14
+jwcrypto<1.6
+psutil<6
+requests-toolbelt<1.1
