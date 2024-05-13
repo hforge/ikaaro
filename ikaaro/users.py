@@ -125,7 +125,7 @@ class User(Folder):
     user_timezone = Char_Field()
     user_state = UserState_Field()
     groups = UserGroups_Field()
-    username = Char_Field(indexed=True, stored=True, encrypted=True) # Backwards compatibility
+    username = Char_Field(indexed=True, stored=True, encrypted=True, datatype=String)
 
     # Remove some fields
     title = None
