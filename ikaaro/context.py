@@ -41,7 +41,7 @@ from itools.uri import decode_query, get_reference, Path, Reference
 from itools.web.context import get_form_value
 from itools.web.entities import Entity
 from itools.web import ERROR
-from itools.web.headers import get_type
+from itools.web.headers import get_type, Cookie, SetCookieDataType
 from itools.web.utils import NewJSONEncoder, fix_json, reason_phrases
 from itools.web.exceptions import InvalidJWTSignatureException
 from itools.web.exceptions import JWTExpiredException
@@ -433,7 +433,10 @@ class CMSContext(prototype):
 
     def set_cookie(self, name, value, **kw):
         # Build cookie
-        self.cookies[name] = value
+        cookie = Cookie(name, value, **kw)
+        self.cookies[name] = cookie
+        set_cookie = SetCookieDataType.encode(cookie)
+        self._set_header('Set-Cookie', set_cookie)
 
 
     def del_cookie(self, name):
