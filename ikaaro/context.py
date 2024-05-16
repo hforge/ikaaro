@@ -49,7 +49,6 @@ from itools.web.exceptions import JWTExpiredException
 # Import from ikaaro
 from .skins import skin_registry
 from .constants import JWT_EXPIRE, JWT_ISSUER
-from .constants import SESSION_KEY
 from .server import get_server
 from .utils import dict_of_bytes_to_string
 
@@ -146,7 +145,7 @@ class CMSContext(prototype):
             self.view_name = None
 
         # Cookies
-        self.session = self.environ.get("beaker.session")
+        self.session = self.environ.get("beaker.session", {})
         self.cookies = getattr(self.session, "cookie", {})
 
         # Media files (CSS, javascript)
