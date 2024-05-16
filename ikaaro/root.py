@@ -273,12 +273,13 @@ class Root(Folder):
 
     def before_traverse(self, context, min=Decimal('0.000001'),
                         zero=Decimal('0.0')):
+
         # Set the language cookie if specified by the query.
         # NOTE We do it this way, instead of through a specific action,
         # to avoid redirections.
         language = context.get_form_value('language')
         if language is not None and language != '':
-            context.set_cookie('language', language)
+            context.session['language'] = language
 
         # The default language (give a minimum weight)
         accept = context.accept_language
@@ -289,10 +290,10 @@ class Root(Folder):
         user = context.user
         if user is not None:
             language = user.get_value('user_language')
-            if language is not None:
+            if language:
                 accept.set(language, 2.0)
         # Cookie (2.5)
-        language = context.get_cookie('language')
+        language = context.session.get('language')
         if language is not None and language != '':
             accept.set(language, 2.5)
 

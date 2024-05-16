@@ -18,12 +18,10 @@ from datetime import date
 # Import from the Standard Library
 from base64 import decodebytes, encodebytes
 from datetime import timedelta
-from marshal import dumps, loads
 from urllib.parse import quote, unquote
-from zlib import compress, decompress
 
 # Import from itools
-from itools.core import freeze, guess_type
+from itools.core import guess_type
 from itools.datatypes import DataType, Date, Enumerate, String
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -95,21 +93,6 @@ class ChoosePassword_Datatype(String):
     @staticmethod
     def is_valid(value):
         return len(value) >= 4
-
-
-
-class CopyCookie(DataType):
-
-    default = None, freeze([])
-
-    @staticmethod
-    def encode(value):
-        return quote(compress(dumps(value), 9))
-
-
-    @staticmethod
-    def decode(str):
-        return loads(decompress(unquote(str)))
 
 
 

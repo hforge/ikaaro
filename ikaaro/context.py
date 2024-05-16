@@ -758,19 +758,14 @@ class CMSContext(prototype):
 
         # Check for credential in headers
         auth_header = self.get_header('Authorization')
-        token = None
         if auth_header:
             # Parse the header credentials
             auth_type, token = auth_header
             return self.decode_bearer(token)
         # No Authorization header, get credentials in cookies
-        token = token or self.get_cookie(SESSION_KEY)
-        if not token:
+        if not self.session:
             return None
-        session = self.session
-        if not session:
-            return None
-        return session.get("user")
+        return self.session.get("user")
 
     #######################################################################
     # Tools API
@@ -879,7 +874,6 @@ class CMSContext(prototype):
         return format_time(time, accept=self.accept_language)
 
 
-    def format_number(self, number, places=2, curr='', pos='', neg='-',
-            trailneg=""):
+    def format_number(self, number, places=2, curr='', pos='', neg='-', trailneg=""):
         return format_number(number, places=places, curr=curr, pos=pos,
                 neg=neg, trailneg=trailneg, accept=self.accept_language)

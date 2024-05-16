@@ -36,7 +36,6 @@ from ikaaro.buttons import PasteButton
 from ikaaro.buttons import Remove_BrowseButton, RenameButton, CopyButton, CutButton
 from ikaaro.buttons import ZipButton
 from ikaaro.buttons import ExportAsJSONButton
-from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.utils import generate_name, get_base_path_query
 from ikaaro.widgets import SelectWidget, TextWidget
@@ -235,7 +234,7 @@ class Folder_Rename(STLView):
             return
         paths = sorted(paths, reverse=True)
         # Clean the copy cookie if needed
-        cut, cp_paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
+        cut, cp_paths = context.session.get('ikaaro_cp', (None, []))
         renamed = []
         referenced = []
         # Process input data
@@ -262,7 +261,7 @@ class Folder_Rename(STLView):
                 return
             # Clean cookie (FIXME Do not clean the cookie, update it)
             if cp_paths and str(abspath.resolve2(path)) in cp_paths:
-                context.del_cookie('ikaaro_cp')
+                context.session.pop('ikaaro_cp', None)
                 cp_paths = []
             # Rename
             try:
@@ -621,9 +620,7 @@ class Folder_BrowseContent(BrowseForm):
             return
 
         abspath = resource.abspath
-        cp = (False, [ str(abspath.resolve2(x)) for x in names ])
-        cp = CopyCookie.encode(cp)
-        context.set_cookie('ikaaro_cp', cp, path='/')
+        context.session['ikaaro_cp'] = (False, [str(abspath.resolve2(x)) for x in names])
         # Ok
         context.message = messages.MSG_COPIED
 
@@ -645,9 +642,7 @@ class Folder_BrowseContent(BrowseForm):
             return
 
         abspath = resource.abspath
-        cp = (True, [ str(abspath.resolve2(x)) for x in names ])
-        cp = CopyCookie.encode(cp)
-        context.set_cookie('ikaaro_cp', cp, path='/')
+        context.session['ikaaro_cp'] = (True, [str(abspath.resolve2(x)) for x in names])
 
         context.message = messages.MSG_CUT
 
@@ -655,7 +650,7 @@ class Folder_BrowseContent(BrowseForm):
     action_paste_schema = {}
     def action_paste(self, resource, context, form):
         # Check there is something to paste
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
+        cut, paths = context.session.get('ikaaro_cp', (None, []))
         if len(paths) == 0:
             context.message = messages.MSG_NO_PASTE
             return
@@ -698,7 +693,7 @@ class Folder_BrowseContent(BrowseForm):
 
         # Cut, clean cookie
         if cut is True:
-            context.del_cookie('ikaaro_cp')
+            context.session.pop('ikaaro_cp', None)
 
         message = []
         if pasted:

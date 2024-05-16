@@ -19,7 +19,6 @@ from itools.gettext import MSG
 from itools.stl import STLTemplate
 
 # Import from ikaaro
-from .datatypes import CopyCookie
 from .utils import make_stl_template
 
 
@@ -129,8 +128,8 @@ class PasteButton(BrowseButton):
 
     @proto_lazy_property
     def show(cls):
-        cut, paths = cls.context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-        if len(paths) == 0:
+        cut, cp_paths = cls.context.session.get('ikaaro_cp', (None, []))
+        if len(cp_paths) == 0:
             return False
         return super(BrowseButton, cls).show
 

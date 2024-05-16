@@ -921,7 +921,7 @@ class Server:
 
 
     def do_request(self, method='GET', path='/', headers=None, body='',
-            context=None, as_json=False, as_multipart=False, files=None, user=None, cookies=None):
+            context=None, as_json=False, as_multipart=False, files=None, user=None):
         """Experimental method to do a request on the server"""
         path_info = get_uri_path(path)
         q_string = path.split('?')[-1]
@@ -994,10 +994,6 @@ class Server:
         context.server = self
         # Init context from environ
         context.init_from_environ(environ, user)
-        # Cookies
-        if cookies:
-            for key, value in cookies.items():
-                context.set_cookie(key, value)
         # Do request
         RequestMethod.handle_request(context)
         # Transform result

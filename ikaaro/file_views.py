@@ -145,12 +145,13 @@ class File_ExternalEdit(BaseView):
         4- Everything is sent in utf-8
         """
         uri = context.uri
+        iauth = context.get_cookie('iauth')
         header = [
             f'url:{uri.scheme}://{uri.authority}{uri.path[:-1]}',
             f"last-modified:{HTTPDate.encode(resource.get_value('mtime'))}",
             f'content_type:{resource.get_content_type()}',
-            f"title:{resource.get_title().encode('utf-8')}",
-            f"include-Cookie:iauth=\"{context.get_cookie('iauth')}\"",
+            f"title:{resource.get_title()}",
+            f"include-Cookie:iauth=\"{iauth}\"",
             f"include-X-User-Agent:{context.get_header('User-Agent')}"]
 
         # Try to guess the extension (optional)
@@ -171,7 +172,7 @@ class File_ExternalEdit(BaseView):
         # Add the "\n\n" and make the header
         header.append('\n')
         header = '\n'.join(header)
-        data = resource.get_value('data').to_str()
+        data = resource.get_value('data').to_str().decode()
 
         # TODO known bug from ExternalEditor requires rfc1123_date()
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
