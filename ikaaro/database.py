@@ -26,8 +26,9 @@ from itools.uri import Path
 from itools.web import get_context, set_context
 
 
-DBSEM = BoundedSemaphore(1)
-ROSEM = BoundedSemaphore(100)
+NB_GREENLETS = 10
+DBSEM_RO = BoundedSemaphore(NB_GREENLETS)
+DBSEM_RW = BoundedSemaphore(1)
 
 
 class RODatabase(BaseRODatabase):
@@ -63,12 +64,17 @@ class ContextManager:
         if get_context() != None:
             raise ValueError('Cannot acquire context. Already locked.')
         # Acquire lock on database
-        self.read_only = read_only
-        if self.read_only:
-            ROSEM.acquire()
-        else:
-            DBSEM.acquire()
         from .server import get_server
+        self.read_only = read_only
+        if self.readonly:
+            DBSEM_RW.wait()
+            if DBSEM_RW.locked():
+                raise ValueError('DB RW should not be locked')
+            DBSEM_RO.acquire()
+        else:
+            DBSEM_RW.acquire()
+            for i in range(0, NB_GREENLETS):
+                DBSEM_RO.acquire()
         self.context = cls()
         self.context.database = database
         self.context.server = get_server()
@@ -106,17 +112,21 @@ class ContextManager:
                     print(msg)
         except Exception:
             set_context(None)
-            if self.read_only:
-                ROSEM.release()
+            if self.readonly:
+                DBSEM_RO.release()
             else:
-                DBSEM.release()
+                for i in range(0, NB_GREENLETS):
+                    DBSEM_RO.release()
+                DBSEM_RW.release()
             raise
         else:
             set_context(None)
-            if self.read_only:
-                ROSEM.release()
+            if self.readonly:
+                DBSEM_RO.release()
             else:
-                DBSEM.release()
+                for i in range(0, NB_GREENLETS):
+                    DBSEM_RO.release()
+                DBSEM_RW.release()
 
 
 
