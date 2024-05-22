@@ -66,7 +66,7 @@ class ContextManager:
         # Acquire lock on database
         from .server import get_server
         self.read_only = read_only
-        if self.readonly:
+        if self.read_only:
             DBSEM_RW.wait()
             if DBSEM_RW.locked():
                 raise ValueError('DB RW should not be locked')
@@ -112,7 +112,7 @@ class ContextManager:
                     print(msg)
         except Exception:
             set_context(None)
-            if self.readonly:
+            if self.read_only:
                 DBSEM_RO.release()
             else:
                 for i in range(0, NB_GREENLETS):
@@ -121,7 +121,7 @@ class ContextManager:
             raise
         else:
             set_context(None)
-            if self.readonly:
+            if self.read_only:
                 DBSEM_RO.release()
             else:
                 for i in range(0, NB_GREENLETS):
