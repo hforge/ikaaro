@@ -383,7 +383,7 @@ def dict_of_bytes_to_string(old_dict):
         if type(key) is bytes:
             key = key.decode("utf-8")
         if type(value) is bytes:
-            value = value.decode("utf-8")
+            value = value.decode("utf-8", errors="ignore")
         elif type(value) is list:
             tmp_list = []
             for element in value:
