@@ -640,7 +640,7 @@ class File_Field(Field):
 
         # FIXME This should remove the handler, the FileWidget should include
         # a checkbox to remove the handler
-        if value is None:
+        if value == '':
             return
 
         # Set handler
