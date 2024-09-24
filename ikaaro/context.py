@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from logging import getLogger
 import urllib.parse
@@ -32,7 +32,7 @@ from itools.core import freeze, proto_lazy_property
 from itools.core import fixed_offset, local_tz
 from itools.core import prototype
 from itools.database.ro import ro_database
-from itools.datatypes import String
+from itools.datatypes import String, HTTPDate
 from itools.fs import lfs
 from itools.i18n import has_language
 from itools.i18n import format_datetime, format_date, format_time
@@ -443,6 +443,12 @@ class CMSContext(prototype):
     def del_cookie(self, name):
         # Del cookie
         try:
+            # To delete a cookie you typically set the Set-Cookie
+            # header with the same cookie name but with an expiration date in the past.
+            expires = self.timestamp - timedelta(days=365)
+            expires = HTTPDate.encode(expires)
+            cookie = self.cookies[name]
+            self.set_cookie(name, cookie.value, path='/', expires=expires)
             del self.cookies[name]
         except KeyError:
             pass
