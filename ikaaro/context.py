@@ -18,13 +18,13 @@ from datetime import datetime
 import json
 from logging import getLogger
 import time
+from email.message import EmailMessage
 
 #Import from packages
 from pytz import timezone
 from jwcrypto.jwt import JWT, JWTExpired
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
 from requests_toolbelt import MultipartDecoder
-import cgi
 
 # Import from itools
 from itools.core import freeze, proto_lazy_property
@@ -561,7 +561,11 @@ class CMSContext(prototype):
             content_disposition = part.headers[b"Content-Disposition"]
             if type(content_disposition) is bytes:
                 content_disposition = content_disposition.decode()
-            value, header_parameters = cgi.parse_header(content_disposition)
+            # Create a Message object and set the Content-Disposition header
+            msg = EmailMessage()
+            msg['content-type'] = content_disposition
+            # Parse the header
+            value, header_parameters = msg.get_content_type(), msg['content-type'].params
             try:
                 body = part.text
             except:
