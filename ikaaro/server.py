@@ -920,8 +920,8 @@ class Server:
                 log_cron.error(f"[ERROR] Cron finished for {nb} resources in {t1 - t0} seconds")
             # Log into access.log
             now = strftime('%d/%b/%Y:%H:%M:%S %z')
-            message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f\n'
-            log_ikaaro.info(message % (now, t1-t0))
+            message = '127.0.0.1 - - [%s] "GET /cron HTTP/1.1" 200 1 %.3f'
+            log_access.info(message % (now, t1-t0))
             end_dtime = context.timestamp
         # Again, and again
         cron_interval = self.config.get_value('cron-interval')
