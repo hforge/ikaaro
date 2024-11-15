@@ -204,10 +204,7 @@ class Folder(DBResource):
 
     def _get_names(self):
         folder = self.handler
-        for x in folder.get_handler_names():
-            if x and x[-9:] == '.metadata':
-                yield x[:-9]
-
+        return (x[:-9] for x in folder.get_handler_names() if x and x.endswith('.metadata'))
 
 
     #######################################################################
