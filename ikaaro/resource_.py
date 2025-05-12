@@ -613,12 +613,12 @@ class DBResource(Resource):
 
 
     def get_base_classes(self):
-        l = []
+        lst = []
         for cls in self.__class__.__mro__:
             class_id = getattr(cls, 'class_id', None)
             if class_id:
-                l.append(class_id)
-        return l
+                lst.append(class_id)
+        return lst
 
     #######################################################################
     # Time events

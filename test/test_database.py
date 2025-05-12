@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import time
+#from datetime import time
 from unittest import TestCase, main
 
 # Import from itools
@@ -194,17 +194,19 @@ class FreeTestCase(TestCase):
                 child.make_resource('hello_child.txt', Text)
                 container.make_resource('hello.txt', Text)
                 self.assertEqual(
-                    database.added,
+                    set(database.added),
                     {'folder1.metadata', 'folder1/hello.txt.metadata',
-                         'folder1/child.metadata', 'folder1/child/hello_child.txt.metadata'})
+                     'folder1/child.metadata', 'folder1/child/hello_child.txt.metadata'}
+                )
                 root.move_resource('folder1', 'folder2')
                 self.assertEqual(root.get_resource('folder1', soft=True), None)
                 self.assertEqual(root.get_resource('folder2').name, 'folder2')
                 self.assertEqual(root.get_resource('folder2/hello.txt').abspath, '/folder2/hello.txt')
                 self.assertEqual(
-                    database.added,
+                    set(database.added),
                     {'folder2.metadata', 'folder2/hello.txt.metadata',
-                         'folder2/child.metadata', 'folder2/child/hello_child.txt.metadata'})
+                     'folder2/child.metadata', 'folder2/child/hello_child.txt.metadata'}
+                )
                 database.close()
 
 
@@ -319,28 +321,28 @@ class FreeTestCase(TestCase):
                 container.make_resource('2', Text)
                 root.copy_resource('folder-to-copy-1', 'folder-to-copy-2')
                 self.assertEqual(
-                    database.added,
+                    set(database.added),
                     {
-                      'folder-to-copy-1.metadata', 'folder-to-copy-1/1.metadata',
-                      'folder-to-copy-1/1/subchild.metadata', 'folder-to-copy-1/2.metadata',
-                      'folder-to-copy-2.metadata', 'folder-to-copy-2/1.metadata',
-                      'folder-to-copy-2/1/subchild.metadata', 'folder-to-copy-2/2.metadata',
-                      })
+                        'folder-to-copy-1.metadata', 'folder-to-copy-1/1.metadata',
+                        'folder-to-copy-1/1/subchild.metadata', 'folder-to-copy-1/2.metadata',
+                        'folder-to-copy-2.metadata', 'folder-to-copy-2/1.metadata',
+                        'folder-to-copy-2/1/subchild.metadata', 'folder-to-copy-2/2.metadata',
+                    }
+                )
 
 
     def test_cache_error_on_move(self):
         with Database('demo.hforge.org', 10, 20) as database:
-            l = []
+            lst = []
             with database.init_context() as context:
                 for i in range(0, 50):
                     root = database.get_resource('/')
                     name = f'test-cache-error-on-move-{i}'
                     container = root.make_resource(name, File)
                     container.set_value('data', 'bytes')
-                    l.append(container)
+                    lst.append(container)
                     context.database.save_changes()
                     container.parent.move_resource(name, name + 'newname')
-
 
 
 if __name__ == '__main__':

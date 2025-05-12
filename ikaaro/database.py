@@ -61,7 +61,7 @@ class ContextManager:
             read_only=False
     ):
         # Check if context is not already locked
-        if get_context() != None:
+        if get_context() is not None:
             raise ValueError('Cannot acquire context. Already locked.')
         # Acquire lock on database
         from .server import get_server
