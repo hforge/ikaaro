@@ -62,14 +62,15 @@ class Api_DocView(STLView):
         return namespace
 
     def get_view_query_as_list(self, view, schema):
-        l = []
+        lst = []
         for key, field in schema.items():
-            kw = {'name': key,
-                  'datatype': field.get_datatype(),
-                  'required': field.required,
-                  'title': field.title}
-            l.append(kw)
-        return l
+            lst.append({
+                'name': key,
+                'datatype': field.get_datatype(),
+                'required': field.required,
+                'title': field.title,
+            })
+        return lst
 
 
 class Api_View(ItoolsView):
@@ -208,12 +209,13 @@ class ApiDevPanel_ClassidViewList(Api_View):
     access = 'is_admin'
 
     def GET(self, root, context):
-        l = []
+        lst = []
         for cls in context.database.get_resource_classes():
-            kw = {'class_title': cls.class_title,
-                  'class_id': cls.class_id}
-            l.append(kw)
-        return self.return_json(l, context)
+            lst.append({
+                'class_title': cls.class_title,
+                'class_id': cls.class_id,
+            })
+        return self.return_json(lst, context)
 
 
 

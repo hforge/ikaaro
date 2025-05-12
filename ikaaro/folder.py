@@ -24,7 +24,6 @@ from logging import getLogger
 from io import StringIO
 from os.path import basename, dirname
 from zipfile import ZipFile
-import uuid
 
 # Import from itools
 from itools.core import is_prototype

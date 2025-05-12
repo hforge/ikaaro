@@ -297,17 +297,17 @@ class CMSContext(prototype):
 
     def _set_header(self, name, value):
         """ Set header without encoding """
-        l = []
+        lst = []
         added = False
         for key, old_value in self.header_response:
             if key == name and key != 'Set-Cookie':
-                l.append((name, value))
+                lst.append((name, value))
                 added = True
             else:
-                l.append((key, old_value))
+                lst.append((key, old_value))
         if not added:
-            l.append((name, value))
-        self.header_response = l
+            lst.append((name, value))
+        self.header_response = lst
 
 
     def remove_header(self, name):
@@ -565,10 +565,10 @@ class CMSContext(prototype):
             msg = EmailMessage()
             msg['content-type'] = content_disposition
             # Parse the header
-            value, header_parameters = msg.get_content_type(), msg['content-type'].params
+            header_parameters = msg['content-type'].params
             try:
                 body = part.text
-            except:
+            except Exception:
                 # Image encoding
                 body = part.content
                 pass

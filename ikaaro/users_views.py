@@ -402,8 +402,9 @@ class BrowseUsers(BrowseForm):
 
         # Slow
         if sort_by == 'account_state':
-            f = lambda x: self.get_item_value(resource, context, x,
-                                              sort_by)[0].gettext()
+            def f(x):
+                return self.get_item_value(resource, context, x, sort_by)[0].gettext()
+
             items = results.get_resources()
             items = list(items)
             items = sorted(items, key=lambda x: f(x), reverse=reverse)
