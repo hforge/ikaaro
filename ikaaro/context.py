@@ -662,9 +662,9 @@ class CMSContext(prototype):
         # Set the user
         self.user = user
         session = self.session
-        if session and not session.get("user"):
+        if session and session.get("user") != user.name:
             session.invalidate()
-            session["user"] = str(user.name)
+            session["user"] = user.name
             session["user_uuid"] = user.get_value("uuid")
 
 
@@ -742,8 +742,8 @@ class CMSContext(prototype):
             return
         self.user = user
         session = self.session
-        if session and not session.get("user"):
-            session["user"] = str(user.name)
+        if session and session.get("user") != user.name:
+            session["user"] = user.name
             session["user_uuid"] = user.get_value("uuid")
 
 
