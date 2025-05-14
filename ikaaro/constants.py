@@ -18,9 +18,11 @@ import os
 
 
 cwd = os.getcwd()
+cwd_sessions_folder = os.path.join(cwd, "sessions")
 # Sessions
-SESSIONS_STORE_TYPE = os.environ.setdefault("SESSIONS_STORE_TYPE", "file")
-SESSIONS_FOLDER = os.environ.setdefault("SESSIONS_FOLDER", os.path.join(cwd, "sessions"))
+SESSIONS_STORE_TYPE = os.environ.setdefault("SESSIONS_STORE_TYPE", "ext:database")
+SESSIONS_URL = os.environ.setdefault("SESSIONS_URL", f"sqlite:///{cwd_sessions_folder}/sessions.db")
+SESSIONS_FOLDER = os.environ.setdefault("SESSIONS_FOLDER", cwd_sessions_folder)
 SESSION_TIMEOUT = int(os.environ.setdefault("SESSION_TIMEOUT", "172800"))
 SESSION_EXPIRE = int(os.environ.setdefault("SESSION_EXPIRE", "864000"))
 SESSION_DOMAIN = os.environ.get("SESSION_DOMAIN", None)

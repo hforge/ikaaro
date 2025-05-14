@@ -31,7 +31,7 @@ from itools.web.exceptions import HTTPError
 from ikaaro.constants import SESSIONS_FOLDER, SESSIONS_STORE_TYPE
 from ikaaro.constants import SESSION_EXPIRE, SESSION_TIMEOUT
 from ikaaro.constants import SESSION_DOMAIN, SESSION_SAMESITE
-from ikaaro.constants import SESSION_KEY
+from ikaaro.constants import SESSION_KEY, SESSIONS_URL
 from ikaaro.constants import SESSION_SECURE
 from ikaaro.server import get_server
 
@@ -89,6 +89,7 @@ except OSError:
 
 session_opts = {
     "session.type": SESSIONS_STORE_TYPE,
+    "session.url": SESSIONS_URL,
     "session.data_dir": SESSIONS_FOLDER,
     "session.cookie_expires": SESSION_EXPIRE,
     "session.timeout": SESSION_TIMEOUT,

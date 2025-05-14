@@ -2,3 +2,4 @@ Beaker<1.14
 jwcrypto<1.6
 psutil<6
 requests-toolbelt<1.1
+SQLAlchemy
