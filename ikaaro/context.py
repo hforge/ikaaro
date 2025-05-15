@@ -17,6 +17,7 @@
 from datetime import datetime
 import json
 from logging import getLogger
+import urllib.parse
 import time
 from email.message import EmailMessage
 
@@ -352,6 +353,7 @@ class CMSContext(prototype):
 
     def set_content_disposition(self, disposition, filename=None):
         if filename:
+            filename = urllib.parse.quote(filename)
             disposition = f'{disposition}; filename="{filename}"'
         self._set_header('Content-Disposition', disposition)
         self._set_header('Access-Control-Expose-Headers', "Content-Disposition")
