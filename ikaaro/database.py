@@ -26,7 +26,7 @@ from itools.uri import Path
 from itools.web import get_context, set_context
 
 
-NB_GREENLETS = 10
+NB_GREENLETS = 1
 DBSEM_RO = BoundedSemaphore(NB_GREENLETS)
 DBSEM_RW = BoundedSemaphore(1)
 
