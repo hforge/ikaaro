@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gevent.monkey import patch_all
-patch_all()
-
 # Import from the Standard Library
 from logging import getLogger
 from optparse import OptionParser

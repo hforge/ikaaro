@@ -29,6 +29,7 @@ from tempfile import mkstemp
 from time import strftime, time
 from traceback import format_exc
 from wsgiref.util import setup_testing_defaults
+import asyncio
 import fcntl
 import inspect
 import json
@@ -38,12 +39,12 @@ import pickle
 import sys
 
 # Requirements
-from gevent.lock import BoundedSemaphore
-from gevent.pywsgi import WSGIServer, WSGIHandler
-from gevent.signal import signal as gevent_signal
 from jwcrypto.jwk import JWK
 from psutil import pid_exists
 from requests import Request
+from uvicorn.config import LOGGING_CONFIG
+from uvicorn.protocols.http.h11_impl import H11Protocol
+import uvicorn
 
 # Import from itools
 from itools.core import become_daemon, vmsize
@@ -73,15 +74,15 @@ log_access = logging.getLogger("ikaaro.access")
 log_cron = logging.getLogger("ikaaro.cron")
 
 
-SMTP_SEND_SEM = BoundedSemaphore(1)
+SMTP_SEND_SEM = asyncio.BoundedSemaphore(1)
 
 class SMTPSendManager:
 
-    def __enter__(self):
-        SMTP_SEND_SEM.acquire()
+    async def __aenter__(self):
+        await SMTP_SEND_SEM.acquire()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_value, traceback):
         SMTP_SEND_SEM.release()
 
 
@@ -163,8 +164,8 @@ accept-cors = 1
 max-width =
 max-height =
 
-# Allow to customize wsgi application
-wsgi_application = ikaaro.web.wsgi
+# Allow to customize asgi application
+asgi_application = ikaaro.web.asgi
 """)
 
 
@@ -217,7 +218,7 @@ def get_root(database):
 
 
 
-def create_server(target, email, password, root,
+async def create_server(target, email, password, root,
                   backend='git', modules=None,
                   listen_port='8080', listen_address='127.0.0.1',
                   smtp_host='localhost',
@@ -264,7 +265,7 @@ def create_server(target, email, password, root,
     mkdir(f'{target}/spool')
 
     # Make the root
-    with database.init_context() as context:
+    async with database.init_context() as context:
         metadata = Metadata(cls=root_class)
         database.set_handler('.metadata', metadata)
         root = root_class(abspath=Path('/'), database=database, metadata=metadata)
@@ -298,36 +299,37 @@ def set_server(the_server):
     server = the_server
 
 
-class ServerHandler(WSGIHandler):
+class CustomH11Protocol(H11Protocol):
+    """Custom protocol to handle access logging similar to original ServerHandler"""
 
-    def format_request(self):
-        now = datetime.now().replace(microsecond=0)
+    def log_access(self) -> None:
+        now = datetime.datetime.now().replace(microsecond=0)
         length = self.response_length or '-'
 
-        request_time = self.environ.get('REQUEST_TIME')
+        # Calculate request time delta if available
+        request_time = getattr(self, 'request_time', None)
         delta = f"{request_time:.6f}" if request_time else '-'
 
-        address = self.environ.get('HTTP_X_FORWARDED_FOR') or '-'
-        request = self.requestline or ''
+        # Get client address
+        address = self.scope.get('headers', {}).get(b'x-forwarded-for', b'-')
+        if isinstance(address, bytes):
+            address = address.decode('latin-1')
 
-        # (Is that really necessary? At least there's no overhead.)
-        # Use the native string version of the status, saved so we don't have to
-        # decode. But fallback to the encoded 'status' in case of subclasses
-        status = (self._orig_status or self.status or '000').split()[0]
+        # Get request line
+        method = self.scope['method']
+        path = self.scope['path']
+        request = f"{method} {path} HTTP/1.1"
 
-        return f'{address} - - [{now}] "{request}" {status} {length} {delta}'
+        # Get status code
+        status = getattr(self, 'status_code', '000')
 
-    def headers_bytes_to_str(self, data: dict):
-        # WSGI encodes in latin-1
-        # https://github.com/gevent/gevent/blob/master/src/gevent/pywsgi.py#L859=
-        new_response_headers = {}
-        for key, value in data.items():
-            if type(key) is bytes:
-                key = key.decode("latin-1")
-            if type(value) is bytes:
-                value = value.decode("latin-1")
-            new_response_headers[key] = value
-        return new_response_headers
+        log_access.info(f'{address} - - [{now}] "{request}" {status} {length} {delta}')
+
+    async def send_response(self) -> None:
+        # Store request time before sending response
+        self.request_time = asyncio.get_event_loop().time() - self.connect_time
+        await super().send_response()
+        self.log_access()
 
 
 class Server:
@@ -340,7 +342,7 @@ class Server:
     session_timeout = timedelta(0)
     accept_cors = False
     dispatcher = URIDispatcher()
-    wsgi_server = None
+    asgi_server = None
     cron_statistics = {}
     log_level = None
 
@@ -655,9 +657,9 @@ class Server:
 
     def stop(self, force=False):
         log_ikaaro.info("Stoping server...")
-        # Stop wsgi server
-        if self.wsgi_server:
-            self.wsgi_server.stop()
+        # Stop asgi server
+        if self.asgi_server:
+            self.asgi_server.should_exit = True
         # Close database
         self.close()
 
@@ -666,25 +668,43 @@ class Server:
         self.stop()
 
 
-    def listen(self, address, port):
+    async def listen(self, address: str, port: int):
         log_ikaaro.info(f"Listen {address}:{port}")
 
         self.port = port
         if address == '*':
-            address = ''
+            address = '0.0.0.0'
 
-        # Serve
-        wsgi_module = self.config.get_value("wsgi_application")
-        wsgi_module = import_module(wsgi_module)
-        application = getattr(wsgi_module, "application")
-        listener = (address or '', port)
-        self.wsgi_server = WSGIServer(listener, application,
-                                      handler_class=ServerHandler,
-                                      log=log_access,
+        # Import ASGI application
+        asgi_module = self.config.get_value("asgi_application")
+        asgi_module = import_module(asgi_module)
+        application = getattr(asgi_module, "application")
+
+        # Configure logging
+        logging_config = LOGGING_CONFIG.copy()
+        logging_config["loggers"]["uvicorn.access"] = {
+            "handlers": ["access"],
+            "level": "INFO",
+            "propagate": False
+        }
+
+        # Create server config
+        server_config = uvicorn.Config(
+            app=application,
+            host=address,
+            port=port,
+            http=CustomH11Protocol,
+            log_config=logging_config,
+            # Additional uvicorn config options can go here
         )
-        gevent_signal(SIGTERM, self.stop_signal)
-        gevent_signal(SIGINT, self.stop_signal)
-        self.wsgi_server.serve_forever()
+        self.asgi_server = Server(config=server_config)
+
+        # Setup signal handlers
+        loop = asyncio.get_running_loop()
+        loop.add_signal_handler(SIGTERM, self.stop_signal, SIGTERM, None)
+        loop.add_signal_handler(SIGINT, self.stop_signal, SIGINT, None)
+
+        await self.asgi_server.serve()
 
 
     def is_running_in_rw_mode(self, mode='running'):
@@ -729,8 +749,8 @@ class Server:
         self.flush_spool()
 
 
-    def _smtp_send(self):
-        with SMTPSendManager():
+    async def _smtp_send(self):
+        async with SMTPSendManager():
             nb_max_mails_to_send = 2
             spool = lfs.open(self.spool)
 
@@ -1063,7 +1083,7 @@ class ServerConfig(ConfigFile):
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
         'accept-cors': Integer(default=1),
-        'wsgi_application': String(default="ikaaro.web.wsgi"),
+        'asgi_application': String(default="ikaaro.web.asgi"),
     }
 
 

@@ -13,11 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
-from copy import deepcopy
-
-# Import from gevent
-from gevent.lock import BoundedSemaphore
+import asyncio
+import copy
 
 # Import from itools
 from itools.database import RWDatabase, RODatabase as BaseRODatabase
@@ -26,9 +23,9 @@ from itools.uri import Path
 from itools.web import get_context, set_context
 
 
-NB_GREENLETS = 1
-DBSEM_RO = BoundedSemaphore(NB_GREENLETS)
-DBSEM_RW = BoundedSemaphore(1)
+NB_READS = 1
+DBSEM_RO = asyncio.BoundedSemaphore(NB_READS)
+DBSEM_RW = asyncio.BoundedSemaphore(1)
 
 
 class RODatabase(BaseRODatabase):
@@ -63,68 +60,70 @@ class ContextManager:
         # Check if context is not already locked
         if get_context() is not None:
             raise ValueError('Cannot acquire context. Already locked.')
-        # Acquire lock on database
-        from .server import get_server
+
+        self.user = user
+        self.username = username
+        self.email = email
+        self.commit_at_exit = commit_at_exit
         self.read_only = read_only
+
+        # Create context
+        self.context = cls()
+        self.context.database = database
+
+
+    async def __aenter__(self):
+        from .server import get_server
+
+        # Acquire lock on database
         if self.read_only:
             DBSEM_RW.wait()
             if DBSEM_RW.locked():
                 raise ValueError('DB RW should not be locked')
-            DBSEM_RO.acquire()
+            await DBSEM_RO.acquire()
         else:
-            DBSEM_RW.acquire()
-            for i in range(0, NB_GREENLETS):
-                DBSEM_RO.acquire()
-        self.context = cls()
-        self.context.database = database
-        self.context.server = get_server()
-        self.commit_at_exit = commit_at_exit
+            await DBSEM_RW.acquire()
+            for _ in range(NB_READS):
+                await DBSEM_RO.acquire()
+
         # Set context
+        self.context.server = get_server()
         set_context(self.context)
-        # Get user by user
-        if email:
+
+        # Get user
+        if self.user:
+            user = self.user
+        elif self.username:
+            user = self.context.root.get_user(self.username)
+        elif self.email:
             query = AndQuery(
                 PhraseQuery('format', 'user'),
-                PhraseQuery('email', email),
+                PhraseQuery('email', self.email),
             )
-            search = database.search(query)
+            search = self.context.database.search(query)
             if search:
                 user = next(search.get_resources(size=1))
-        # Get user by username
-        if username:
-            user = self.context.root.get_user(username)
-        # Log user
+
+        # Log in
         if user:
             self.context.login(user)
 
-
-    def __enter__(self):
         return self.context
 
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    async def __aexit__(self, exc_type, exc_value, traceback):
         try:
             if self.commit_at_exit:
                 self.context.database.save_changes()
             else:
                 if self.context.database.has_changed:
-                    msg = 'Warning: Some changes have not been commited'
-                    print(msg)
-        except Exception:
+                    print('Warning: Some changes have not been commited')
+        finally:
             set_context(None)
             if self.read_only:
                 DBSEM_RO.release()
             else:
-                for i in range(0, NB_GREENLETS):
-                    DBSEM_RO.release()
-                DBSEM_RW.release()
-            raise
-        else:
-            set_context(None)
-            if self.read_only:
-                DBSEM_RO.release()
-            else:
-                for i in range(0, NB_GREENLETS):
+                for _ in range(NB_READS):
                     DBSEM_RO.release()
                 DBSEM_RW.release()
 
@@ -167,7 +166,7 @@ class Database(RWDatabase):
             raise ValueError('The contextual database is not coherent')
 
         # Update resources
-        for path in deepcopy(self.resources_new2old):
+        for path in copy.deepcopy(self.resources_new2old):
             resource = root.get_resource(path)
             resource.update_resource(context)
 

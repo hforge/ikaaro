@@ -13,11 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
-import traceback
 from logging import getLogger
 from time import time
 import os
+import traceback
 
 # Import from beaker
 from beaker.middleware import SessionMiddleware
