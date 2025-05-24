@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#from io import StringIO
+import io
+
+import pytest
+import requests
 
 # Import from itools
 from itools.database import PhraseQuery
@@ -41,7 +44,6 @@ class TestPlainText_View(ItoolsView):
     def GET(self, resource, context):
         context.set_content_type('text/plain')
         return 'hello world'
-
 
 
 class TestJson_View(ItoolsView):
@@ -83,12 +85,12 @@ def test_server_ctrl(server):
         assert retour['status'] == 200
 
 
-#def test_server_ctrl2(server):
-#    """ We should be able to do this kind of tests"""
-#    import requests
-#    server.start(loop=False)
-#    r = requests.get('http://localhost:8080/;_ctrl')
-#    self.assertEqual(r.status_code, 200)
+@pytest.mark.xfail
+def test_server_ctrl2(server):
+    """ We should be able to do this kind of tests"""
+    server.start(loop=False)
+    r = requests.get('http://localhost:8080/;_ctrl')
+    assert r.status_code == 200
 
 
 def test_server_up(server):
@@ -152,16 +154,17 @@ def test_action(server):
         assert retour['entity'] == {'text': 'hello sylvain'}
 
 
-#def test_upload_file(server):
-#    with server.database.init_context(username='0'):
-#        root = server.database.get_resource('/')
-#        data = 'file.txt', StringIO('hello world'), 'text/plain'
-#        body = {'title:en': u'My file', 'data': data}
-#        retour = server.do_request('POST', '/;new_resource?type=file', body=body, as_multipart=True)
-#        assert retour['status'] == 302
-#        new_r = root.get_resource('my-file')
-#        handler = new_r.get_value('data')
-#        assert handler.to_str() == 'hello world'
+@pytest.mark.xfail
+def test_upload_file(server):
+    with server.database.init_context(username='0'):
+        root = server.database.get_resource('/')
+        data = 'file.txt', io.StringIO('hello world'), 'text/plain'
+        body = {'title:en': u'My file', 'data': data}
+        retour = server.do_request('POST', '/;new_resource?type=file', body=body, as_multipart=True)
+        assert retour['status'] == 302
+        new_r = root.get_resource('my-file')
+        handler = new_r.get_value('data')
+        assert handler.to_str() == 'hello world'
 
 
 def test_commit(server):
@@ -187,11 +190,11 @@ def test_catalog_access(demo):
             search = context.search(query)
             assert len(search) == 0
 
-    #with Server(demo) as server:
-    #    with server.database.init_context(username='0') as context:
-    #        assert context.user is None
-    #        search = context.search(query)
-    #        self.assertNotEqual(len(search), 0)
+#   with Server(demo) as server:
+#       with server.database.init_context(username='0') as context:
+#           assert context.user is None
+#           search = context.search(query)
+#           assert len(search) > 0
 
 
 def test_server_login_test_server(demo):
@@ -201,11 +204,11 @@ def test_server_login_test_server(demo):
             retour = server.do_request('GET', '/test/401')
             assert retour['status'] == 401
 
-    #with Server(demo) as server:
-    #    with server.database.init_context(username='0') as context:
-    #        assert context.user.name == '0'
-    #        is_admin = context.root.is_admin(context.user, context.root)
-    #        assert is_admin == True
-    #        server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
-    #        retour = server.do_request('GET', '/test/unauthorized')
-    #        assert retour['status'] == 200
+    with Server(demo) as server:
+        with server.database.init_context(username='0') as context:
+            assert context.user.name == '0'
+            is_admin = context.root.is_admin(context.user, context.root)
+            assert is_admin is True
+            server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
+            retour = server.do_request('GET', '/test/unauthorized')
+            assert retour['status'] == 200
