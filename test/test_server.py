@@ -27,7 +27,7 @@ from itools.web.views import ItoolsView, BaseView
 from ikaaro.server import Server
 
 
-class TestHTML_View(ItoolsView):
+class HTML_View(ItoolsView):
 
     access = True
     known_methods = ['GET']
@@ -36,7 +36,7 @@ class TestHTML_View(ItoolsView):
         return 'hello world'
 
 
-class TestPlainText_View(ItoolsView):
+class PlainText_View(ItoolsView):
 
     access = True
     known_methods = ['GET']
@@ -46,7 +46,7 @@ class TestPlainText_View(ItoolsView):
         return 'hello world'
 
 
-class TestJson_View(ItoolsView):
+class Json_View(ItoolsView):
 
     access = True
     known_methods = ['GET']
@@ -58,7 +58,7 @@ class TestJson_View(ItoolsView):
 
 
 
-class TestJsonAction_View(BaseView):
+class JsonAction_View(BaseView):
 
     access = True
     known_methods = ['GET', 'POST']
@@ -114,14 +114,14 @@ def test_server_404(server):
 
 def test_server_unauthorized(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/unauthorized', TestPlainText_View(access=False))
+        server.dispatcher.add('/test/unauthorized', PlainText_View(access=False))
         retour = server.do_request('GET', '/test/unauthorized')
         assert retour['status'] == 401
 
 
 def test_html(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/html', TestHTML_View)
+        server.dispatcher.add('/test/html', HTML_View)
         retour = server.do_request('GET', '/test/html')
         assert retour['status'] == 200
         assert retour['context'].content_type == 'text/html; charset=UTF-8'
@@ -129,7 +129,7 @@ def test_html(server):
 
 def test_plain_text(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/text', TestPlainText_View)
+        server.dispatcher.add('/test/text', PlainText_View)
         retour = server.do_request('GET', '/test/text')
         assert retour['status'] == 200
         assert retour['entity'] == 'hello world'
@@ -137,7 +137,7 @@ def test_plain_text(server):
 
 def test_json(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/json', TestJson_View)
+        server.dispatcher.add('/test/json', Json_View)
         retour = server.do_request('GET', '/test/json?name=world', as_json=True)
         assert retour['status'] == 200
         assert retour['entity'] == {'text': 'hello world'}
@@ -145,7 +145,7 @@ def test_json(server):
 
 def test_action(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        server.dispatcher.add('/test/json-action', JsonAction_View)
         body = {'action': 'hello', 'name': 'world'}
         retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
         assert retour['entity'] == {'text': 'hello world'}
@@ -169,7 +169,7 @@ def test_upload_file(server):
 
 def test_commit(server):
     with server.database.init_context():
-        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        server.dispatcher.add('/test/json-action', JsonAction_View)
         body = {'action': 'set_root_title', 'title': 'Sylvain'}
         retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
         assert retour['status'] == 200
@@ -200,7 +200,7 @@ def test_catalog_access(demo):
 def test_server_login_test_server(demo):
     with Server(demo) as server:
         with server.database.init_context():
-            server.dispatcher.add('/test/401', TestPlainText_View(access='is_admin'))
+            server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
             retour = server.do_request('GET', '/test/401')
             assert retour['status'] == 401
 
@@ -209,6 +209,6 @@ def test_server_login_test_server(demo):
             assert context.user.name == '0'
             is_admin = context.root.is_admin(context.user, context.root)
             assert is_admin is True
-            server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
+            server.dispatcher.add('/test/unauthorized', PlainText_View(access='is_admin'))
             retour = server.do_request('GET', '/test/unauthorized')
             assert retour['status'] == 200

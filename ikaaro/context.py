@@ -13,8 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
-from datetime import datetime, timedelta
+import datetime
 import json
 from logging import getLogger
 import urllib.parse
@@ -180,7 +179,8 @@ class CMSContext(prototype):
 
     @proto_lazy_property
     def timestamp(self):
-        return datetime.utcnow().replace(tzinfo=fixed_offset(0))
+        now = datetime.datetime.now(datetime.UTC)
+        return now.replace(tzinfo=fixed_offset(0))
 
 
     #######################################################################
@@ -445,7 +445,7 @@ class CMSContext(prototype):
         try:
             # To delete a cookie you typically set the Set-Cookie
             # header with the same cookie name but with an expiration date in the past.
-            expires = self.timestamp - timedelta(days=365)
+            expires = self.timestamp - datetime.timedelta(days=365)
             expires = HTTPDate.encode(expires)
             cookie = self.cookies[name]
             self.set_cookie(name, cookie.value, path='/', expires=expires)
@@ -873,7 +873,6 @@ class CMSContext(prototype):
 
     def format_datetime(self, datetime, tz=None):
         datetime = self.fix_tzinfo(datetime, tz)
-        # Ok
         return format_datetime(datetime, accept=self.accept_language)
 
 
