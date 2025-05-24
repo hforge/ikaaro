@@ -13,9 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
 #from io import StringIO
-from unittest import TestCase, main
 
 # Import from itools
 from itools.database import PhraseQuery
@@ -78,153 +76,136 @@ class TestJsonAction_View(BaseView):
 
 
 
-class ServerTestCase(TestCase):
+def test_server_ctrl(server):
+    with server.database.init_context():
+        # Test /;ctrl view
+        retour = server.do_request('GET', '/;_ctrl')
+        assert retour['status'] == 200
 
 
-    def test_server_ctrl(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                # Test /;ctrl view
-                retour = server.do_request('GET', '/;_ctrl')
-                self.assertEqual(retour['status'], 200)
+#def test_server_ctrl2(server):
+#    """ We should be able to do this kind of tests"""
+#    import requests
+#    server.start(loop=False)
+#    r = requests.get('http://localhost:8080/;_ctrl')
+#    self.assertEqual(r.status_code, 200)
 
 
-    #def test_server_ctrl2(self):
-    #    """ We should be able to do this kind of tests"""
-    #    import requests
-    #    with Server('demo.hforge.org') as server:
-    #        server.start(loop=False)
-    #        r = requests.get('http://localhost:8080/;_ctrl')
-    #        self.assertEqual(r.status_code, 200)
+def test_server_up(server):
+    with server.database.init_context():
+        retour = server.do_request('GET', '/api/status', as_json=True)
+        assert retour['entity']['up'] is True
 
 
-    def test_server_up(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                retour = server.do_request('GET', '/api/status', as_json=True)
-                self.assertEqual(retour['entity']['up'], True)
+def test_server_404(server):
+    with server.database.init_context():
+        # Error 404 json
+        retour = server.do_request('GET', '/api/404', as_json=True)
+        assert retour['status'] == 404
+        assert retour['entity']['code'] == 404
+        assert retour['context'].content_type == 'application/json'
+        # Error 404 web
+        retour = server.do_request('GET', '/api/404', as_json=False)
+        assert retour['status'] == 404
+        assert retour['context'].content_type == 'text/html; charset=UTF-8'
 
 
-    def test_server_404(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                # Error 404 json
-                retour = server.do_request('GET', '/api/404', as_json=True)
-                self.assertEqual(retour['status'], 404)
-                self.assertEqual(retour['entity']['code'], 404)
-                self.assertEqual(retour['context'].content_type, 'application/json')
-                # Error 404 web
-                retour = server.do_request('GET', '/api/404', as_json=False)
-                self.assertEqual(retour['status'], 404)
-                self.assertEqual(retour['context'].content_type, 'text/html; charset=UTF-8')
+def test_server_unauthorized(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/unauthorized', TestPlainText_View(access=False))
+        retour = server.do_request('GET', '/test/unauthorized')
+        assert retour['status'] == 401
 
 
-    def test_server_unauthorized(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/unauthorized', TestPlainText_View(access=False))
-                retour = server.do_request('GET', '/test/unauthorized')
-                self.assertEqual(retour['status'], 401)
+def test_html(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/html', TestHTML_View)
+        retour = server.do_request('GET', '/test/html')
+        assert retour['status'] == 200
+        assert retour['context'].content_type == 'text/html; charset=UTF-8'
 
 
-    def test_html(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/html', TestHTML_View)
-                retour = server.do_request('GET', '/test/html')
-                self.assertEqual(retour['status'], 200)
-                self.assertEqual(retour['context'].content_type, 'text/html; charset=UTF-8')
+def test_plain_text(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/text', TestPlainText_View)
+        retour = server.do_request('GET', '/test/text')
+        assert retour['status'] == 200
+        assert retour['entity'] == 'hello world'
 
 
-    def test_plain_text(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/text', TestPlainText_View)
-                retour = server.do_request('GET', '/test/text')
-                self.assertEqual(retour['status'], 200)
-                self.assertEqual(retour['entity'], 'hello world')
+def test_json(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/json', TestJson_View)
+        retour = server.do_request('GET', '/test/json?name=world', as_json=True)
+        assert retour['status'] == 200
+        assert retour['entity'] == {'text': 'hello world'}
 
 
-    def test_json(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/json', TestJson_View)
-                retour = server.do_request('GET', '/test/json?name=world', as_json=True)
-                self.assertEqual(retour['status'], 200)
-                self.assertEqual(retour['entity'], {'text': 'hello world'})
+def test_action(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        body = {'action': 'hello', 'name': 'world'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        assert retour['entity'] == {'text': 'hello world'}
+        body = {'action': 'hello', 'name': 'sylvain'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        assert retour['entity'] == {'text': 'hello sylvain'}
 
 
-    def test_action(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/json-action', TestJsonAction_View)
-                body = {'action': 'hello', 'name': 'world'}
-                retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-                self.assertEqual(retour['entity'], {'text': 'hello world'})
-                body = {'action': 'hello', 'name': 'sylvain'}
-                retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-                self.assertEqual(retour['entity'], {'text': 'hello sylvain'})
+#def test_upload_file(server):
+#    with server.database.init_context(username='0'):
+#        root = server.database.get_resource('/')
+#        data = 'file.txt', StringIO('hello world'), 'text/plain'
+#        body = {'title:en': u'My file', 'data': data}
+#        retour = server.do_request('POST', '/;new_resource?type=file', body=body, as_multipart=True)
+#        assert retour['status'] == 302
+#        new_r = root.get_resource('my-file')
+#        handler = new_r.get_value('data')
+#        assert handler.to_str() == 'hello world'
 
 
-    #def test_upload_file(self):
-    #    with Server('demo.hforge.org') as server:
-    #        with server.database.init_context(username='0'):
-    #            root = server.database.get_resource('/')
-    #            data = 'file.txt', StringIO('hello world'), 'text/plain'
-    #            body = {'title:en': u'My file', 'data': data}
-    #            retour = server.do_request('POST', '/;new_resource?type=file', body=body, as_multipart=True)
-    #            self.assertEqual(retour['status'], 302)
-    #            new_r = root.get_resource('my-file')
-    #            handler = new_r.get_value('data')
-    #            self.assertEqual(handler.to_str(), 'hello world')
+def test_commit(server):
+    with server.database.init_context():
+        server.dispatcher.add('/test/json-action', TestJsonAction_View)
+        body = {'action': 'set_root_title', 'title': 'Sylvain'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        assert retour['status'] == 200
+        assert retour['entity']['success'] is True
+        assert server.root.get_value('title', language='fr') == 'Sylvain'
+        body = {'action': 'set_root_title', 'title': 'Zidane'}
+        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
+        assert retour['status'] == 200
+        assert retour['entity']['success'] is True
+        assert server.root.get_value('title', language='fr') == 'Zidane'
 
 
-    def test_commit(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/json-action', TestJsonAction_View)
-                body = {'action': 'set_root_title', 'title': 'Sylvain'}
-                retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-                self.assertEqual(retour['status'], 200)
-                self.assertEqual(retour['entity']['success'], True)
-                self.assertEqual(server.root.get_value('title', language='fr'), 'Sylvain')
-                body = {'action': 'set_root_title', 'title': 'Zidane'}
-                retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-                self.assertEqual(retour['status'], 200)
-                self.assertEqual(retour['entity']['success'], True)
-                self.assertEqual(server.root.get_value('title', language='fr'), 'Zidane')
+def test_catalog_access(demo):
+    query = PhraseQuery('format', 'user')
+    with Server(demo) as server:
+        with server.database.init_context() as context:
+            assert context.user is None
+            search = context.search(query)
+            assert len(search) == 0
+
+    #with Server(demo) as server:
+    #    with server.database.init_context(username='0') as context:
+    #        assert context.user is None
+    #        search = context.search(query)
+    #        self.assertNotEqual(len(search), 0)
 
 
-    def test_catalog_access(self):
-        query = PhraseQuery('format', 'user')
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context() as context:
-                self.assertEqual(context.user, None)
-                search = context.search(query)
-                self.assertEqual(len(search), 0)
-        #with Server('demo.hforge.org') as server:
-        #    with server.database.init_context(username='0') as context:
-        #        self.assertEqual(context.user, None)
-        #        search = context.search(query)
-        #        self.assertNotEqual(len(search), 0)
+def test_server_login_test_server(demo):
+    with Server(demo) as server:
+        with server.database.init_context():
+            server.dispatcher.add('/test/401', TestPlainText_View(access='is_admin'))
+            retour = server.do_request('GET', '/test/401')
+            assert retour['status'] == 401
 
-
-    def test_server_login_test_server(self):
-        with Server('demo.hforge.org') as server:
-            with server.database.init_context():
-                server.dispatcher.add('/test/401', TestPlainText_View(access='is_admin'))
-                retour = server.do_request('GET', '/test/401')
-                self.assertEqual(retour['status'], 401)
-        #with Server('demo.hforge.org') as server:
-        #    with server.database.init_context(username='0') as context:
-        #        self.assertEqual(context.user.name, '0')
-        #        is_admin = context.root.is_admin(context.user, context.root)
-        #        self.assertEqual(is_admin, True)
-        #        server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
-        #        retour = server.do_request('GET', '/test/unauthorized')
-        #        self.assertEqual(retour['status'], 200)
-
-
-
-if __name__ == '__main__':
-    main()
+    #with Server(demo) as server:
+    #    with server.database.init_context(username='0') as context:
+    #        assert context.user.name == '0'
+    #        is_admin = context.root.is_admin(context.user, context.root)
+    #        assert is_admin == True
+    #        server.dispatcher.add('/test/unauthorized', TestPlainText_View(access='is_admin'))
+    #        retour = server.do_request('GET', '/test/unauthorized')
+    #        assert retour['status'] == 200

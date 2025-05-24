@@ -13,8 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from unittest import TestCase, main
+import pytest
 
 # Import from itools
 from itools.database import Metadata, MetadataProperty
@@ -31,76 +30,41 @@ title;lang=fr:bonjur
 title;lang=fr:bonjour
 """
 
-
-class LoadTestCase(TestCase):
-
-    def setUp(self):
-        self.metadata = Metadata(string=metadata_str, cls=WebPage)
-
-
-    def test_format(self):
-        format = self.metadata.format
-        self.assertEqual(format, 'webpage')
+def test_metadata_load():
+    metadata = Metadata(string=metadata_str, cls=WebPage)
+    assert metadata.format == 'webpage'
+    assert metadata.version == '20090122'
+    title = metadata.get_property('title', language='fr').value
+    assert type(title) is str
+    assert title == 'bonjour'
 
 
-    def test_version(self):
-        value = self.metadata.version
-        self.assertEqual(value, '20090122')
+def test_metadata_new():
+    metadata = Metadata(cls=WebPage)
+    title = MetadataProperty('Hello World', lang='en')
+    metadata.set_property('title', title)
+    # Sandbox
+    lfs.make_folder('sandbox')
 
+    try:
+        assert metadata.format == WebPage.class_id
+        assert metadata.version == WebPage.class_version
+        title = metadata.get_property('title', language='en').value
+        assert type(title) is str
+        assert title == 'Hello World'
 
-    def test_title(self):
-        value = self.metadata.get_property('title', language='fr').value
-        self.assertEqual(type(value), str)
-        self.assertEqual(value, 'bonjour')
-
-
-
-class NewTestCase(TestCase):
-
-    def setUp(self):
-        metadata = Metadata(cls=WebPage)
-        title = MetadataProperty('Hello World', lang='en')
-        metadata.set_property('title', title)
-        self.metadata = metadata
-        # Sandbox
-        lfs.make_folder('sandbox')
-
-
-    def tearDown(self):
+        metadata.save_state_to('sandbox/metadata')
+        # TODO
+    finally:
         if lfs.exists('sandbox'):
             lfs.remove('sandbox')
 
 
-    def test_format(self):
-        format = self.metadata.format
-        self.assertEqual(format, WebPage.class_id)
 
-
-    def test_version(self):
-        value = self.metadata.version
-        self.assertEqual(value, WebPage.class_version)
-
-
-    def test_title(self):
-        value = self.metadata.get_property('title', language='en').value
-        self.assertEqual(type(value), str)
-        self.assertEqual(value, 'Hello World')
-
-
-    def test_save(self):
-        self.metadata.save_state_to('sandbox/metadata')
-        # TODO
-
-
-
-###########################################################################
-# Test extensible schema
-###########################################################################
 class OpenWebPage(WebPage):
 
     class_id = 'open-webpage'
     fields_soft = True
-
 
 
 good_metadata = """
@@ -121,19 +85,12 @@ free_title:au revoir
 """
 
 
+def test_free():
+    # Good
+    metadata = Metadata(string=good_metadata, cls=OpenWebPage)
+    prop = metadata.get_property('free_title')
+    assert prop[0].value == 'bye'
 
-class FreeTestCase(TestCase):
-
-    def test_good(self):
-        metadata = Metadata(string=good_metadata, cls=OpenWebPage)
-        prop = metadata.get_property('free_title')
-        self.assertEqual(prop[0].value, 'bye')
-
-
-    def test_bad(self):
-        self.assertRaises(ValueError, Metadata, string=bad_metadata, cls=WebPage)
-
-
-
-if __name__ == '__main__':
-    main()
+    # Bad
+    with pytest.raises(ValueError):
+        Metadata(string=bad_metadata, cls=WebPage)
