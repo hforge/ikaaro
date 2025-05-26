@@ -1,4 +1,4 @@
-Beaker<1.14
+itsdangerous  # Required by starlette.SessionMiddleware
 jwcrypto<1.6
 psutil<6
 requests-toolbelt<1.1

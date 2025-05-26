@@ -297,8 +297,8 @@ class ApiDevPanel_CatalogReindex(Api_View):
     access = 'is_admin'
     known_methods = ['POST']
 
-    def POST(self, root, context):
-        n = context.database.reindex_catalog(base_abspath='/')
+    async def POST(self, root, context):
+        n = await context.database.reindex_catalog(base_abspath='/')
         kw = {'n': n}
         return self.return_json(kw, context)
 

@@ -15,11 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
+import asyncio
 from cProfile import runctx
 from logging import getLogger
 from optparse import OptionParser
-from sys import exit
 
 # Import from itools
 import itools
@@ -33,7 +32,7 @@ from ikaaro.server import get_pid
 log = getLogger("ikaaro.update")
 
 
-def update(parser, options, target):
+async def update(parser, options, target):
     # Check the server is not started, or started in read-only mode
     pid = get_pid(f'{target}/pid')
     if pid is not None:
@@ -42,7 +41,7 @@ def update(parser, options, target):
     # Load server
     server = Server(target)
     # Build a fake context
-    with server.database.init_context() as context:
+    async with server.database.init_context() as context:
         log.info("STAGE 1: Find out the versions to upgrade (may take a while).")
         msgs = do_run_next_update_method(context, force=options.force)
         log.info('\n'.join([x.gettext() if isinstance(x, MSG) else x for x in msgs]))
@@ -75,6 +74,4 @@ if __name__ == '__main__':
         runctx("update(parser, options, target)", globals(), locals(),
                options.profile)
     else:
-        update(parser, options, target)
-    # Ok
-    exit(0)
+        asyncio.run(update(parser, options, target))

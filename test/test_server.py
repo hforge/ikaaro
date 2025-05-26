@@ -86,9 +86,9 @@ async def test_server_ctrl(server):
 
 
 @pytest.mark.xfail
-def test_server_ctrl2(server):
+async def test_server_ctrl2(server):
     """ We should be able to do this kind of tests"""
-    server.start(loop=False)
+    await server.start()
     r = requests.get('http://localhost:8080/;_ctrl')
     assert r.status_code == 200
 

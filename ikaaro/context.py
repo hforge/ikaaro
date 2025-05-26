@@ -90,6 +90,71 @@ class CMSContext(prototype):
     #######################################################################
     # WSGI environ
     #######################################################################
+    def init_from_request(self, request, environ):
+        # Set environ
+        self.environ = environ
+        path = environ.get('PATH_INFO')
+        self.path = path
+        self.header_response = []
+        self.content_type = None
+        self.status = None
+        # Get database
+        server = get_server()
+        self.server = server
+        self.database = server.get_database()
+        # Root
+        self.root = self.database.get_resource('/')
+        # The request method
+        self.method = environ.get('REQUEST_METHOD')
+        # Get body
+        self.body = self.get_body_from_environ()
+        # The query
+        query = environ.get('QUERY_STRING')
+        self.query = decode_query(query)
+        # Accept language
+        accept_language = self.environ.get('HTTP_ACCEPT_LANGUAGE', '')
+        if accept_language is None:
+            accept_language = ''
+        try:
+            self.accept_language = AcceptLanguageType.decode(accept_language)
+        except Exception:
+            # Cannot decode accept language
+            pass
+        # The URI as it was typed by the client
+        uri = str(request.url)
+        self.uri = get_reference(uri)
+
+        # Split the path into path and method ("a/b/c/;view")
+        path = path if type(path) is Path else Path(path)
+        name = path.get_name()
+        if name and name[0] == ';':
+            self.path = path[:-1]
+            self.view_name = name[1:]
+        else:
+            self.path = path
+            self.view_name = None
+
+        # Cookies
+        self.session = self.environ.get("beaker.session", {})
+        self.cookies = getattr(self.session, "cookie", {})
+
+        # Media files (CSS, javascript)
+        # Set the list of needed resources. The method we are going to
+        # call may need external resources to be rendered properly, for
+        # example it could need an style sheet or a javascript file to
+        # be included in the html head (which it can not control). This
+        # attribute lets the interface to add those resources.
+        self.styles = []
+        self.scripts = []
+        # The Site Root
+        self.find_site_root()
+        # The authenticated user
+        self.authenticate()
+        # Search
+        self._context_user_search = self._user_search(self.user)
+        self.site_root.before_traverse(self)  # Hook
+        # Not a cron
+        self.is_cron = False
 
     def init_from_environ(self, environ, user=None):
         # Set environ
@@ -169,12 +234,12 @@ class CMSContext(prototype):
         self.site_root.before_traverse(self)  # Hook
         # Not a cron
         self.is_cron = False
-        # Set header
 
 
     def on_request_end(self):
-        if self.view and getattr(self.view, "use_cookies", True):
-            self.session.save()
+        pass
+#       if self.view and getattr(self.view, "use_cookies", True):
+#           self.session.save()
 
 
     @proto_lazy_property
@@ -498,8 +563,7 @@ class CMSContext(prototype):
         except Exception:
             content_type = response
         # Case 1: nothing
-        length = int(self.environ.get('CONTENT_LENGTH', '0') or 0)
-        body = self.environ['wsgi.input'].read(length)
+        body = self.environ['wsgi.input']
         if not body:
             return {}
         # XXX

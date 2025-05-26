@@ -16,12 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from logging import getLogger
-from optparse import OptionParser
+import asyncio
+import logging
+import optparse
 import sys
 
-from xapian import DatabaseLockError
+# Requirements
+import xapian
 
 # Import from itools
 from itools import __version__
@@ -30,16 +31,17 @@ from itools import __version__
 from ikaaro.server import Server
 
 
-log = getLogger("ikaaro")
+log = logging.getLogger("ikaaro")
 
-if __name__ == '__main__':
+
+async def main():
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
     version = f'itools {__version__}'
     description = (
         'Starts a web server that publishes the TARGET ikaaro instance to the '
         'world.')
-    parser = OptionParser(usage, version=version, description=description)
+    parser = optparse.OptionParser(usage, version=version, description=description)
     parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
         sys.exit(1)
-    except DatabaseLockError:
+    except xapian.DatabaseLockError:
         log.error(f'Error: Database {target} is already opened')
         sys.exit(1)
 
@@ -76,6 +78,8 @@ if __name__ == '__main__':
     if not successfully_init:
         sys.exit(1)
     # Start server
-    server.start()
-    # Ok
-    sys.exit(0)
+    await server.start()
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

@@ -253,12 +253,7 @@ class Root(Folder):
     ########################################################################
     def launch_at_start(self, context):
         """Method called at instance start"""
-        pass
 
-
-    def launch_at_stop(self, context):
-        """Method called at instance stop"""
-        pass
 
     ########################################################################
     # API

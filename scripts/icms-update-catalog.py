@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
+import asyncio
 from logging import getLogger
 from optparse import OptionParser
 from sys import exit
@@ -47,10 +47,7 @@ def update_catalog(parser, options, target):
         return
 
     # Server reindex
-    server.reindex_catalog(
-        as_test=options.test,
-        quiet=options.quiet,
-        quick=options.quick)
+    await server.reindex_catalog(as_test=options.test, quiet=options.quiet, quick=options.quick)
 
 
 
@@ -92,6 +89,4 @@ if __name__ == '__main__':
         runctx("update_catalog(parser, options, target)", globals(), locals(),
                options.profile)
     else:
-        update_catalog(parser, options, target)
-    # Ok
-    exit(0)
+        asyncio.run(update_catalog(parser, options, target))

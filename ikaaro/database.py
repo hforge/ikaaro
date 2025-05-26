@@ -77,9 +77,9 @@ class ContextManager:
 
         # Acquire lock on database
         if self.read_only:
-            DBSEM_RW.wait()
-            if DBSEM_RW.locked():
-                raise ValueError('DB RW should not be locked')
+            async with DBSEM_RW:  # Wait for rw semaphore to be available
+                pass
+
             await DBSEM_RO.acquire()
         else:
             await DBSEM_RW.acquire()

@@ -20,7 +20,6 @@
 from datetime import datetime, timedelta
 from email.parser import BytesHeaderParser
 from importlib import import_module
-from io import BytesIO
 from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
 from signal import SIGINT, SIGTERM
@@ -464,7 +463,7 @@ class Server:
         return self.config
 
 
-    def set_cron_interval(self, interval, context):
+    async def set_cron_interval(self, interval, context):
         # Save new value into config
         self.config.set_value('cron-interval', interval)
         self.config.save_state()
@@ -497,7 +496,7 @@ class Server:
         return True
 
 
-    def start(self):
+    async def start(self):
         target = pathlib.Path(self.target)
 
         # Daemon mode
@@ -517,20 +516,15 @@ class Server:
         pid = getpid()
         (target / 'pid').write_text(str(pid))
         # Call method on root at start
-        with self.database.init_context() as context:
+        async with self.database.init_context() as context:
             context.root.launch_at_start(context)
             if not self.read_only:
-                self.launch_cron(context)
+                await self.launch_cron(context)
         # Listen & set context
-        self.listen(address, self.port)
-
-        # XXX The interpreter do not go here
-        #self.server.root.launch_at_stop(context)
-        ## Ok
-        return True
+        await self.listen(address, self.port)
 
 
-    def launch_cron(self, context):
+    async def launch_cron(self, context):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
@@ -546,7 +540,7 @@ class Server:
             self.cron_statistics['started'] = False
 
 
-    def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+    async def reindex_catalog(self, quiet=False, quick=False, as_test=False):
         # Daemon mode
         if self.detach:
             log_ikaaro.info('Daemonize..')
@@ -572,7 +566,7 @@ class Server:
         doc_n = 0
         error_detected = False
         nb_docs = self.database.get_nb_metadatas()
-        with self.database.init_context() as context:
+        async with self.database.init_context() as context:
             for obj in root.traverse_resources():
                 display_more_details = doc_n % 10000 == 0
                 if not quiet or display_more_details:
@@ -693,11 +687,11 @@ class Server:
             app=application,
             host=address,
             port=port,
-            http=CustomH11Protocol,
+            #http=CustomH11Protocol,
             log_config=logging_config,
             # Additional uvicorn config options can go here
         )
-        self.asgi_server = Server(config=server_config)
+        self.asgi_server = uvicorn.Server(config=server_config)
 
         # Setup signal handlers
         loop = asyncio.get_running_loop()
@@ -884,11 +878,11 @@ class Server:
     #######################################################################
     # Time events
     #######################################################################
-    def cron_manager(self):
+    async def cron_manager(self):
         database = self.database
         error = False
         # Build fake context
-        with database.init_context() as context:
+        async with database.init_context() as context:
             start_dtime = context.timestamp
             context.is_cron = True
             context.git_message = '[CRON]'
@@ -1007,11 +1001,11 @@ class Server:
         # Set wsgi input body
         if prepped.body is not None:
             if type(prepped.body) is str:
-                environ['wsgi.input'] = BytesIO(prepped.body.encode("utf-8"))
+                environ['wsgi.input'] = prepped.body.encode("utf-8")
             else:
-                environ['wsgi.input'] = BytesIO(prepped.body)
+                environ['wsgi.input'] = prepped.body
         else:
-            environ['wsgi.input'] = BytesIO()
+            environ['wsgi.input'] = b''
         # Set content length
         if prepped.body:
             environ['CONTENT_LENGTH'] = len(prepped.body)

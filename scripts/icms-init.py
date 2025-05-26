@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from optparse import OptionParser
-import sys
+import asyncio
+import cProfile
+import optparse
 
 # Import from itools
 import itools
@@ -27,7 +28,7 @@ from ikaaro.server import create_server
 from ikaaro.utils import generate_password
 
 
-def init(parser, options, target):
+async def init(parser, options, target):
     # Get the email address for the init user
     if options.email is None:
         email = input("Type your email address: ").strip()
@@ -43,7 +44,7 @@ def init(parser, options, target):
     root = options.root
     modules = options.modules.split()
     # Create server
-    create_server(target, email, password, root,
+    await create_server(target, email, password, root,
         modules=modules,
         listen_port=getattr(options, 'port'),
         smtp_host=getattr(options, 'smtp_host'),
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     usage = '%prog [OPTIONS] TARGET'
     version = f'itools {itools.__version__}'
     description = 'Creates a new instance of ikaaro with the name TARGET.'
-    parser = OptionParser(usage, version=version, description=description)
+    parser = optparse.OptionParser(usage, version=version, description=description)
     parser.add_option('-e', '--email',
                       help='e-mail address of the admin user')
     parser.add_option('-p', '--port', type='int',
@@ -92,10 +93,7 @@ if __name__ == '__main__':
 
     # Action!
     if options.profile is not None:
-        from cProfile import runctx
-        runctx("init(parser, options, target)", globals(), locals(),
-               options.profile)
+        cProfile.runctx("init(parser, options, target)", globals(), locals(),
+                        options.profile)
     else:
-        init(parser, options, target)
-    # Ok
-    sys.exit(0)
+        asyncio.run(init(parser, options, target))
