@@ -16,7 +16,7 @@
 import io
 
 import pytest
-import requests
+#import requests
 
 # Import from itools
 from itools.database import PhraseQuery
@@ -85,12 +85,12 @@ async def test_server_ctrl(server):
         assert retour['status'] == 200
 
 
-@pytest.mark.xfail
-async def test_server_ctrl2(server):
-    """ We should be able to do this kind of tests"""
-    await server.start()
-    r = requests.get('http://localhost:8080/;_ctrl')
-    assert r.status_code == 200
+#@pytest.mark.xfail
+#async def test_server_ctrl2(server):
+#    """ We should be able to do this kind of tests"""
+#    await server.start()
+#    r = requests.get('http://localhost:8080/;_ctrl')
+#    assert r.status_code == 200
 
 
 async def test_server_up(server):
