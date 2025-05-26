@@ -78,8 +78,8 @@ class JsonAction_View(BaseView):
 
 
 
-def test_server_ctrl(server):
-    with server.database.init_context():
+async def test_server_ctrl(server):
+    async with server.database.init_context():
         # Test /;ctrl view
         retour = server.do_request('GET', '/;_ctrl')
         assert retour['status'] == 200
@@ -93,14 +93,14 @@ def test_server_ctrl2(server):
     assert r.status_code == 200
 
 
-def test_server_up(server):
-    with server.database.init_context():
+async def test_server_up(server):
+    async with server.database.init_context():
         retour = server.do_request('GET', '/api/status', as_json=True)
         assert retour['entity']['up'] is True
 
 
-def test_server_404(server):
-    with server.database.init_context():
+async def test_server_404(server):
+    async with server.database.init_context():
         # Error 404 json
         retour = server.do_request('GET', '/api/404', as_json=True)
         assert retour['status'] == 404
@@ -112,39 +112,39 @@ def test_server_404(server):
         assert retour['context'].content_type == 'text/html; charset=UTF-8'
 
 
-def test_server_unauthorized(server):
-    with server.database.init_context():
+async def test_server_unauthorized(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/unauthorized', PlainText_View(access=False))
         retour = server.do_request('GET', '/test/unauthorized')
         assert retour['status'] == 401
 
 
-def test_html(server):
-    with server.database.init_context():
+async def test_html(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/html', HTML_View)
         retour = server.do_request('GET', '/test/html')
         assert retour['status'] == 200
         assert retour['context'].content_type == 'text/html; charset=UTF-8'
 
 
-def test_plain_text(server):
-    with server.database.init_context():
+async def test_plain_text(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/text', PlainText_View)
         retour = server.do_request('GET', '/test/text')
         assert retour['status'] == 200
         assert retour['entity'] == 'hello world'
 
 
-def test_json(server):
-    with server.database.init_context():
+async def test_json(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/json', Json_View)
         retour = server.do_request('GET', '/test/json?name=world', as_json=True)
         assert retour['status'] == 200
         assert retour['entity'] == {'text': 'hello world'}
 
 
-def test_action(server):
-    with server.database.init_context():
+async def test_action(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/json-action', JsonAction_View)
         body = {'action': 'hello', 'name': 'world'}
         retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
@@ -155,8 +155,8 @@ def test_action(server):
 
 
 @pytest.mark.xfail
-def test_upload_file(server):
-    with server.database.init_context(username='0'):
+async def test_upload_file(server):
+    async with server.database.init_context(username='0'):
         root = server.database.get_resource('/')
         data = 'file.txt', io.StringIO('hello world'), 'text/plain'
         body = {'title:en': u'My file', 'data': data}
@@ -167,8 +167,8 @@ def test_upload_file(server):
         assert handler.to_str() == 'hello world'
 
 
-def test_commit(server):
-    with server.database.init_context():
+async def test_commit(server):
+    async with server.database.init_context():
         server.dispatcher.add('/test/json-action', JsonAction_View)
         body = {'action': 'set_root_title', 'title': 'Sylvain'}
         retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
@@ -182,30 +182,30 @@ def test_commit(server):
         assert server.root.get_value('title', language='fr') == 'Zidane'
 
 
-def test_catalog_access(demo):
+async def test_catalog_access(demo):
     query = PhraseQuery('format', 'user')
     with Server(demo) as server:
-        with server.database.init_context() as context:
+        async with server.database.init_context() as context:
             assert context.user is None
             search = context.search(query)
             assert len(search) == 0
 
 #   with Server(demo) as server:
-#       with server.database.init_context(username='0') as context:
+#       async with server.database.init_context(username='0') as context:
 #           assert context.user is None
 #           search = context.search(query)
 #           assert len(search) > 0
 
 
-def test_server_login_test_server(demo):
+async def test_server_login_test_server(demo):
     with Server(demo) as server:
-        with server.database.init_context():
+        async with server.database.init_context():
             server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
             retour = server.do_request('GET', '/test/401')
             assert retour['status'] == 401
 
     with Server(demo) as server:
-        with server.database.init_context(username='0') as context:
+        async with server.database.init_context(username='0') as context:
             assert context.user.name == '0'
             is_admin = context.root.is_admin(context.user, context.root)
             assert is_admin is True

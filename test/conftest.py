@@ -15,13 +15,13 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 
 @pytest.fixture(scope='session')
-def demo():
+async def demo():
     path = str(BASE_DIR / 'demo.hforge.org')
     if lfs.exists(path):
         lfs.remove(path)
 
-    create_server(path, 'test@hforge.org', 'password', 'ikaaro',
-                  website_languages=['en', 'fr'])
+    await create_server(path, 'test@hforge.org', 'password', 'ikaaro',
+                        website_languages=['en', 'fr'])
 
     return path
 
@@ -33,26 +33,23 @@ def database(demo):
 
 
 @pytest.fixture
-def server(demo):
+async def server(demo):
     with Server(demo) as server:
         yield server
 
 
 @pytest.fixture
-def hforge_server():
+async def hforge_server():
     path = str(BASE_DIR / 'www.hforge.org')
     email = 'test@example.com'
     password = 'password'
     root = None
-    modules = None
+    modules = []
     listen_port = 8081
-
-    if modules is None:
-        modules = []
 
     shutil.rmtree(path, ignore_errors=True)
     shutil.rmtree('sessions', ignore_errors=True)
-    create_server(
+    await create_server(
         target=path,
         email=email,
         password=password,
@@ -61,5 +58,5 @@ def hforge_server():
         listen_port=listen_port,
         backend="git"
     )
-    server = Server(path)
-    return server
+    with Server(path) as server:
+        yield server

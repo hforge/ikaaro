@@ -10,14 +10,13 @@ class UserHistoryFolder(Folder):
     class_id = 'user-history'
 
 
-def test_user_search(hforge_server):
+async def test_user_search(hforge_server):
     server = hforge_server
-    with server.database as database:
-        database.init_context()
+    async with server.database.init_context():
         # Test /;ctrl view
         retour = server.do_request('GET', '/;_ctrl')
         assert retour['status'] == 200
-        root = database.get_resource('/')
+        root = server.database.get_resource('/')
         email = 'test-create-user@hforge.org'
         password = 'password'
         user = root.make_user(email, password)
@@ -32,5 +31,5 @@ def test_user_search(hforge_server):
             PhraseQuery("format", "user"),
             PhraseQuery("abspath", str(user.abspath))
         )
-        search = database.search(query)
+        search = server.database.search(query)
         assert len(search.get_documents()) == 1

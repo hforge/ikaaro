@@ -275,7 +275,7 @@ async def create_server(target, email, password, root,
         root.set_value('website_languages', website_languages)
         context.database.save_changes()
     # Re-init context with context cls
-    with database.init_context() as context:
+    async with database.init_context() as context:
         # Init root resource
         root.init_resource(email, password)
         # Set mtime

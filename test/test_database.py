@@ -29,8 +29,8 @@ from ikaaro.text import Text
 
 
 @pytest.mark.xfail
-def test_create_text(database):
-    with database.init_context():
+async def test_create_text(database):
+    async with database.init_context():
         root = database.get_resource('/')
         # Create 1 resource
         container = root.make_resource('test-create-texts', Folder)
@@ -55,8 +55,8 @@ def test_create_text(database):
 
 
 @pytest.mark.xfail
-def test_create_user(database):
-    with database.init_context():
+async def test_create_user(database):
+    async with database.init_context():
         root = database.get_resource('/')
         # Create a new user
         email = 'test-create-user@hforge.org'
@@ -77,8 +77,8 @@ def test_create_user(database):
 
 
 @pytest.mark.xfail
-def test_create_two_resources_at_root(database):
-    with database.init_context():
+async def test_create_two_resources_at_root(database):
+    async with database.init_context():
         root = database.get_resource('/')
         f1 = root.make_resource(None,  Folder)
         assert len(f1.name) == 32
@@ -88,8 +88,8 @@ def test_create_two_resources_at_root(database):
 
 
 @pytest.mark.xfail
-def test_create_two_resources_in_folder(database):
-    with database.init_context():
+async def test_create_two_resources_in_folder(database):
+    async with database.init_context():
         root = database.get_resource('/')
         container = root.make_resource('test-two-resources', Folder)
         assert root.get_resource('test-two-resources').name == 'test-two-resources'
@@ -108,8 +108,8 @@ def test_create_two_resources_in_folder(database):
         }
 
 
-def test_multilingual_search(database):
-    with database.init_context():
+async def test_multilingual_search(database):
+    async with database.init_context():
         root = database.get_resource('/')
         container = root.make_resource('test-multilingual', Folder)
         # Create N resources
@@ -158,8 +158,8 @@ def test_multilingual_search(database):
 
 
 @pytest.mark.xfail
-def test_move_file(database):
-    with database.init_context():
+async def test_move_file(database):
+    async with database.init_context():
         kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'}, 'data': 'this is text'}
         root = database.get_resource('/')
         container = root.make_resource('test-move', Folder)
@@ -181,8 +181,8 @@ def test_move_file(database):
         database.close()
 
 
-def test_move_folder(database):
-    with database.init_context():
+async def test_move_folder(database):
+    async with database.init_context():
         root = database.get_resource('/')
         kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'}}
         container = root.make_resource('folder1', Folder, **kw)
@@ -203,15 +203,15 @@ def test_move_folder(database):
 
 
 @pytest.mark.xfail
-def test_set_bad_value(database):
-    with database.init_context():
+async def test_set_bad_value(database):
+    async with database.init_context():
         root = database.get_resource('/')
         with pytest.raises(Exception):
             root.set_value('mtime', datetime.time(10, 0))
 
 
-def test_abort_transaction(database):
-    with database.init_context():
+async def test_abort_transaction(database):
+    async with database.init_context():
         root = database.get_resource('/')
         kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'},
                'data': 'this is text'}
@@ -228,12 +228,12 @@ def test_abort_transaction(database):
         database.close()
 
 
-def test_close_transaction(demo):
+async def test_close_transaction(demo):
     """
     Test if flush is done when we close database
     """
     with Database(demo, 19500, 20500) as database:
-        with database.init_context():
+        async with database.init_context():
             root = database.get_resource('/')
             container = root.make_resource('folder-test-close-transaction', Folder)
             kw =  {'title': {'fr': 'Bonjour', 'en': 'Hello'},
@@ -250,7 +250,7 @@ def test_close_transaction(demo):
             database.close()
 
     with Database(demo, 19500, 20500) as database:
-        with database.init_context():
+        async with database.init_context():
             query = AndQuery(
                 get_base_path_query('/folder-test-close-transaction'),
                 PhraseQuery('format', 'text'))
@@ -259,14 +259,14 @@ def test_close_transaction(demo):
             assert root.get_resource('/folder-test-close-transaction/1', soft=True) is None
 
 
-def test_root(database):
-    with database.init_context():
+async def test_root(database):
+    async with database.init_context():
         root = database.get_resource('/')
         assert root.metadata.format == 'iKaaro'
 
 
-def test_create_folders(database):
-    with database.init_context():
+async def test_create_folders(database):
+    async with database.init_context():
         root = database.get_resource('/')
         container = root.make_resource('folder-test-create-folders', Folder)
         container.make_resource('1', Text)
@@ -276,8 +276,8 @@ def test_create_folders(database):
         assert names == ['1', '2', '3']
 
 
-def test_remove_folder(database):
-    with database.init_context() as context:
+async def test_remove_folder(database):
+    async with database.init_context() as context:
         root = database.get_resource('/')
         container = root.make_resource('folder-to-remove', Folder)
         container.make_resource('1', Text)
@@ -295,8 +295,8 @@ def test_remove_folder(database):
         assert root.get_resource('folder-to-remove/3', soft=True) is None
 
 
-def test_copy_folder(database):
-    with database.init_context():
+async def test_copy_folder(database):
+    async with database.init_context():
         root = database.get_resource('/')
         container = root.make_resource('folder-to-copy-1', Folder)
         container_child = container.make_resource('1', Folder)
@@ -311,9 +311,9 @@ def test_copy_folder(database):
         }
 
 
-def test_cache_error_on_move(database):
-    lst = []
-    with database.init_context() as context:
+async def test_cache_error_on_move(database):
+    async with database.init_context() as context:
+        lst = []
         for i in range(0, 50):
             root = database.get_resource('/')
             name = f'test-cache-error-on-move-{i}'

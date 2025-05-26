@@ -2,9 +2,9 @@ from itools.database import PhraseQuery
 from ikaaro.database import Database
 
 
-def test_query(demo):
+async def test_query(demo):
     with Database(demo, 19500, 20500) as database:
-        with database.init_context():
+        async with database.init_context():
 #           root = database.get_resource('/')
             # Root
             search = database.search(PhraseQuery('abspath', '/'))

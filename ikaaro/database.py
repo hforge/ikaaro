@@ -103,6 +103,8 @@ class ContextManager:
             search = self.context.database.search(query)
             if search:
                 user = next(search.get_resources(size=1))
+        else:
+            user = None
 
         # Log in
         if user:
