@@ -57,6 +57,7 @@ log = getLogger("ikaaro.web")
 
 class CMSContext(prototype):
 
+    request = None  # Starlette's Request object
     accept_language = AcceptLanguageType.decode('')
     body = {}
     commit = True
@@ -91,6 +92,8 @@ class CMSContext(prototype):
     # WSGI environ
     #######################################################################
     def init_from_request(self, request, environ):
+        self.request = request
+
         # Set environ
         self.environ = environ
         path = environ.get('PATH_INFO')
@@ -107,7 +110,7 @@ class CMSContext(prototype):
         # The request method
         self.method = environ.get('REQUEST_METHOD')
         # Get body
-        self.body = self.get_body_from_environ()
+        self.body = self.get_body_from_request()
         # The query
         query = environ.get('QUERY_STRING')
         self.query = decode_query(query)
@@ -553,6 +556,25 @@ class CMSContext(prototype):
     def get_json_body(self, body):
         data = json.loads(body)
         return fix_json(data)
+
+
+    def get_body_from_request(self):
+        body = self.environ['wsgi.input']
+        if not body:
+            return {}
+
+        # Get content type
+        content_type = self.request.headers['content-type']
+        if content_type == 'application/x-www-form-urlencoded':
+            return self.get_form_body(body)
+        elif content_type == 'application/json':
+            return self.get_json_body(body)
+        elif content_type.startswith('multipart/'):
+            return self.get_multipart_body_v2(body)
+        elif content_type.startswith('application/'):
+            return {'body': body}
+
+        raise ValueError(f'Invalid content type "{content_type}"')
 
 
     def get_body_from_environ(self):

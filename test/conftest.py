@@ -1,6 +1,8 @@
 import pathlib
 import shutil
 
+# Requirements
+from starlette.testclient import TestClient
 import pytest
 
 # Import from itools
@@ -9,10 +11,14 @@ from itools.fs import lfs
 # Import from ikaaro
 from ikaaro.database import Database
 from ikaaro.server import Server, create_server
+from ikaaro.web import asgi
 
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 
+@pytest.fixture
+def client():
+    return TestClient(asgi.application)
 
 @pytest.fixture(scope='session')
 async def demo():

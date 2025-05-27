@@ -16,7 +16,6 @@
 import io
 
 import pytest
-#import requests
 
 # Import from itools
 from itools.database import PhraseQuery
@@ -78,11 +77,9 @@ class JsonAction_View(BaseView):
 
 
 
-async def test_server_ctrl(server):
-    async with server.database.init_context():
-        # Test /;ctrl view
-        retour = server.do_request('GET', '/;_ctrl')
-        assert retour['status'] == 200
+async def test_server_ctrl(client, server):
+    response = client.get('/;_ctrl')
+    assert response.status_code == 200
 
 
 #@pytest.mark.xfail
@@ -93,10 +90,9 @@ async def test_server_ctrl(server):
 #    assert r.status_code == 200
 
 
-async def test_server_up(server):
-    async with server.database.init_context():
-        retour = server.do_request('GET', '/api/status', as_json=True)
-        assert retour['entity']['up'] is True
+async def test_server_up(client, server):
+    response = client.get('/api/status')
+    assert response.json()['up'] is True
 
 
 async def test_server_404(server):
@@ -112,46 +108,45 @@ async def test_server_404(server):
         assert retour['context'].content_type == 'text/html; charset=UTF-8'
 
 
-async def test_server_unauthorized(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/unauthorized', PlainText_View(access=False))
-        retour = server.do_request('GET', '/test/unauthorized')
-        assert retour['status'] == 401
+async def test_server_unauthorized(client, server):
+    server.dispatcher.add('/test/unauthorized', PlainText_View(access=False))
+    response = client.get('/test/unauthorized')
+    assert response.status_code == 401
 
 
-async def test_html(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/html', HTML_View)
-        retour = server.do_request('GET', '/test/html')
-        assert retour['status'] == 200
-        assert retour['context'].content_type == 'text/html; charset=UTF-8'
+async def test_html(client, server):
+    server.dispatcher.add('/test/html', HTML_View)
+    response = client.get('/test/html')
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'text/html; charset=UTF-8'
 
 
-async def test_plain_text(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/text', PlainText_View)
-        retour = server.do_request('GET', '/test/text')
-        assert retour['status'] == 200
-        assert retour['entity'] == 'hello world'
+async def test_plain_text(client, server):
+    server.dispatcher.add('/test/text', PlainText_View)
+    response = client.get('/test/text')
+    assert response.status_code == 200
+    assert response.text == 'hello world'
 
 
-async def test_json(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/json', Json_View)
-        retour = server.do_request('GET', '/test/json?name=world', as_json=True)
-        assert retour['status'] == 200
-        assert retour['entity'] == {'text': 'hello world'}
+async def test_json(client, server):
+    server.dispatcher.add('/test/json', Json_View)
+    response = client.get('/test/json?name=world')
+    assert response.status_code == 200
+    assert response.json() == {'text': 'hello world'}
 
 
-async def test_action(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/json-action', JsonAction_View)
-        body = {'action': 'hello', 'name': 'world'}
-        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-        assert retour['entity'] == {'text': 'hello world'}
-        body = {'action': 'hello', 'name': 'sylvain'}
-        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-        assert retour['entity'] == {'text': 'hello sylvain'}
+async def test_action(client, server):
+    server.dispatcher.add('/test/json-action', JsonAction_View)
+    # Hello world
+    body = {'action': 'hello', 'name': 'world'}
+    response = client.post('/test/json-action', json=body)
+    assert response.status_code == 200
+    assert response.json() == {'text': 'hello world'}
+    # Hello sylvain
+    body = {'action': 'hello', 'name': 'sylvain'}
+    response = client.post('/test/json-action', json=body)
+    assert response.status_code == 200
+    assert response.json() == {'text': 'hello sylvain'}
 
 
 @pytest.mark.xfail
@@ -204,7 +199,6 @@ async def test_server_login_test_server(demo):
             retour = server.do_request('GET', '/test/401')
             assert retour['status'] == 401
 
-    with Server(demo) as server:
         async with server.database.init_context(username='0') as context:
             assert context.user.name == '0'
             is_admin = context.root.is_admin(context.user, context.root)
