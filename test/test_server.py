@@ -161,18 +161,25 @@ async def test_upload_file(server):
         assert handler.to_str() == 'hello world'
 
 
-async def test_commit(server):
+async def test_commit(client, server):
+    server.dispatcher.add('/test/json-action', JsonAction_View)
+
+    # Sylvain
+    body = {'action': 'set_root_title', 'title': 'Sylvain'}
+    response = client.post('/test/json-action', json=body)
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
+    assert response.json()['success'] is True
     async with server.database.init_context():
-        server.dispatcher.add('/test/json-action', JsonAction_View)
-        body = {'action': 'set_root_title', 'title': 'Sylvain'}
-        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-        assert retour['status'] == 200
-        assert retour['entity']['success'] is True
         assert server.root.get_value('title', language='fr') == 'Sylvain'
-        body = {'action': 'set_root_title', 'title': 'Zidane'}
-        retour = server.do_request('POST', '/test/json-action', body=body, as_json=True)
-        assert retour['status'] == 200
-        assert retour['entity']['success'] is True
+
+    # Zidane
+    body = {'action': 'set_root_title', 'title': 'Zidane'}
+    response = client.post('/test/json-action', json=body)
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
+    assert response.json()['success'] is True
+    async with server.database.init_context():
         assert server.root.get_value('title', language='fr') == 'Zidane'
 
 
@@ -191,12 +198,14 @@ async def test_catalog_access(demo):
 #           assert len(search) > 0
 
 
-async def test_server_login_test_server(server):
-    async with server.database.init_context():
-        server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
-        retour = server.do_request('GET', '/test/401')
-        assert retour['status'] == 401
+async def test_server_login_test_server(client, server):
+    server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
 
+    # Anonymous
+    response = client.get('/test/401')
+    assert response.status_code == 401
+
+    # Authenticated
     async with server.database.init_context(username='0') as context:
         assert context.user.name == '0'
         is_admin = context.root.is_admin(context.user, context.root)

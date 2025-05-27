@@ -22,7 +22,6 @@ log = logging.getLogger("ikaaro.web")
 class ASGIApplication:
     def __init__(self):
         self.server = None
-        self.session_middleware = None
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":

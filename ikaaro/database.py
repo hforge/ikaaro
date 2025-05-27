@@ -20,7 +20,7 @@ import copy
 from itools.database import RWDatabase, RODatabase as BaseRODatabase
 from itools.database import OrQuery, PhraseQuery, AndQuery
 from itools.uri import Path
-from itools.web import get_context, set_context
+from itools.web import get_context, set_context, reset_context
 
 
 NB_READS = 1
@@ -57,10 +57,6 @@ class ContextManager:
             commit_at_exit=True,
             read_only=False
     ):
-        # Check if context is not already locked
-        if get_context() is not None:
-            raise ValueError('Cannot acquire context. Already locked.')
-
         self.user = user
         self.username = username
         self.email = email
@@ -70,10 +66,15 @@ class ContextManager:
         # Create context
         self.context = cls()
         self.context.database = database
+        self.token = None  # Token to reset the context
 
 
     async def __aenter__(self):
         from .server import get_server
+
+        # Check if context is not already locked
+        if get_context() is not None:
+            raise ValueError('Cannot acquire context. Already locked.')
 
         # Acquire lock on database
         if self.read_only:
@@ -88,7 +89,7 @@ class ContextManager:
 
         # Set context
         self.context.server = get_server()
-        set_context(self.context)
+        self.token = set_context(self.context)
 
         # Get user
         if self.user:
@@ -121,7 +122,8 @@ class ContextManager:
                 if self.context.database.has_changed:
                     print('Warning: Some changes have not been commited')
         finally:
-            set_context(None)
+            reset_context(self.token)
+            self.token = None
             if self.read_only:
                 DBSEM_RO.release()
             else:

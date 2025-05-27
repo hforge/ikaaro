@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime, timedelta
+import datetime
 from email.parser import BytesHeaderParser
 from importlib import import_module
 from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
@@ -55,7 +55,7 @@ from itools.fs import lfs
 from itools.handlers import ConfigFile
 from itools.loop import cron
 from itools.uri import get_reference, get_uri_path, Path
-from itools.web import set_context, get_context
+from itools.web import get_context
 from itools.web.dispatcher import URIDispatcher
 from itools.web.router import RequestMethod
 
@@ -282,8 +282,6 @@ async def create_server(target, email, password, root,
         # Save changes
         database.save_changes('Initial commit')
         database.close()
-    # Empty context
-    set_context(None)
 
 
 server = None
@@ -338,7 +336,7 @@ class Server:
     environment = {}
     modules = []
     database = None
-    session_timeout = timedelta(0)
+    session_timeout = datetime.timedelta(0)
     accept_cors = False
     dispatcher = URIDispatcher()
     asgi_server = None
@@ -463,7 +461,7 @@ class Server:
         return self.config
 
 
-    async def set_cron_interval(self, interval, context):
+    async def set_cron_interval(self, interval):
         # Save new value into config
         self.config.set_value('cron-interval', interval)
         self.config.save_state()
@@ -471,7 +469,7 @@ class Server:
         self.load_config()
         # Relaunch cron if it was desactivated ?
         if interval > 0 and not self.cron_statistics['started']:
-            self.launch_cron(context)
+            self.launch_cron()
 
 
     def get_database(self):
@@ -515,21 +513,25 @@ class Server:
         # Save PID
         pid = getpid()
         (target / 'pid').write_text(str(pid))
+
         # Call method on root at start
         async with self.database.init_context() as context:
             context.root.launch_at_start(context)
-            if not self.read_only:
-                await self.launch_cron(context)
+
+        if not self.read_only:
+            await self.launch_cron()
+
         # Listen & set context
         await self.listen(address, self.port)
 
 
-    async def launch_cron(self, context):
+    async def launch_cron(self):
         # Set cron interval
         interval = self.config.get_value('cron-interval')
         if interval:
             # Statistics
-            next_start = context.timestamp + timedelta(seconds=interval)
+            now = datetime.datetime.now(datetime.UTC)
+            next_start = now + datetime.timedelta(seconds=interval)
             self.cron_statistics = {'last_start': None,
                                     'last_end': None,
                                     'next_start': next_start,
@@ -735,7 +737,7 @@ class Server:
 
 
     def flush_spool(self):
-        cron(self._smtp_send, timedelta(seconds=1))
+        cron(self._smtp_send, datetime.timedelta(seconds=1))
 
 
     def send_email(self, message):
@@ -941,7 +943,7 @@ class Server:
         cron_interval = self.config.get_value('cron-interval')
         # Cron statistics
         if cron_interval:
-            next_start = context.timestamp + timedelta(seconds=cron_interval)
+            next_start = context.timestamp + datetime.timedelta(seconds=cron_interval)
         else:
             next_start = None
         self.cron_statistics = {'last_start': start_dtime,
@@ -1069,7 +1071,7 @@ class ServerConfig(ConfigFile):
         # Time events
         'cron-interval': Integer(default=60),
         # Security
-        'session-timeout': ExpireValue(default=timedelta(0)),
+        'session-timeout': ExpireValue(default=datetime.timedelta(0)),
         # Tuning
         'database-size': String(default='19500:20500'),
         'database-readonly': Boolean(default=False),

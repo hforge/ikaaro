@@ -138,8 +138,8 @@ class CMSContext(prototype):
             self.view_name = None
 
         # Cookies
-        self.session = self.environ.get("beaker.session", {})
-        self.cookies = getattr(self.session, "cookie", {})
+        self.session = self.request.scope["session"]
+        self.cookies = self.request.session.get("cookie")
 
         # Media files (CSS, javascript)
         # Set the list of needed resources. The method we are going to
@@ -759,14 +759,13 @@ class CMSContext(prototype):
     # Login API
     #######################################################################
 
-    def login(self, user, use_session=True):
+    def login(self, user):
         # Set the user
         self.user = user
+        # Save to session
         session = self.session
-        if session:
-            session.invalidate()
-            session["user"] = user.name
-            session["user_uuid"] = user.get_value("uuid")
+        session["user"] = user.name
+        session["user_uuid"] = user.get_value("uuid")
 
 
     def get_JWT_default_claims(self):
@@ -818,9 +817,7 @@ class CMSContext(prototype):
 
     def logout(self):
         self.user = None
-        session = self.session
-        if session:
-            session.delete()
+        self.session.clear()
 
 
     def authenticate(self):
