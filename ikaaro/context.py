@@ -342,15 +342,22 @@ class CMSContext(prototype):
 
 
     def get_header(self, name):
-        name = name.lower()
-        datatype = get_type(name)
-        name = name.replace('-', '_')
-        if name == 'content_type':
-            value = self.environ.get('CONTENT_TYPE')
+        if self.request is None:
+            # XXX Remove this section when we remove Server.do_request
+            name = name.lower()
+            datatype = get_type(name)
+            name = name.replace('-', '_')
+            if name == 'content_type':
+                value = self.environ.get('CONTENT_TYPE')
+            else:
+                value = self.environ.get('HTTP_'+ name.upper())
         else:
-            value = self.environ.get('HTTP_'+ name.upper())
+            datatype = get_type(name.lower())
+            value = self.request.headers.get(name)
+
         if value is None:
             return datatype.get_default() or ''
+
         try:
             return datatype.decode(value) or ''
         except ValueError:

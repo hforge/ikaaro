@@ -95,17 +95,16 @@ async def test_server_up(client, server):
     assert response.json()['up'] is True
 
 
-async def test_server_404(server):
-    async with server.database.init_context():
-        # Error 404 json
-        retour = server.do_request('GET', '/api/404', as_json=True)
-        assert retour['status'] == 404
-        assert retour['entity']['code'] == 404
-        assert retour['context'].content_type == 'application/json'
-        # Error 404 web
-        retour = server.do_request('GET', '/api/404', as_json=False)
-        assert retour['status'] == 404
-        assert retour['context'].content_type == 'text/html; charset=UTF-8'
+async def test_server_404(client, server):
+    # JSON
+    response = client.get('/api/404', headers={"Accept": "application/json"})
+    assert response.status_code == 404
+    assert response.headers['content-type'] == 'application/json'
+    assert response.json()['code'] == 404
+    # HTML
+    response = client.get('/api/404')
+    assert response.status_code == 404
+    assert response.headers['content-type'] == 'text/html; charset=UTF-8'
 
 
 async def test_server_unauthorized(client, server):
@@ -192,17 +191,16 @@ async def test_catalog_access(demo):
 #           assert len(search) > 0
 
 
-async def test_server_login_test_server(demo):
-    with Server(demo) as server:
-        async with server.database.init_context():
-            server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
-            retour = server.do_request('GET', '/test/401')
-            assert retour['status'] == 401
+async def test_server_login_test_server(server):
+    async with server.database.init_context():
+        server.dispatcher.add('/test/401', PlainText_View(access='is_admin'))
+        retour = server.do_request('GET', '/test/401')
+        assert retour['status'] == 401
 
-        async with server.database.init_context(username='0') as context:
-            assert context.user.name == '0'
-            is_admin = context.root.is_admin(context.user, context.root)
-            assert is_admin is True
-            server.dispatcher.add('/test/unauthorized', PlainText_View(access='is_admin'))
-            retour = server.do_request('GET', '/test/unauthorized')
-            assert retour['status'] == 200
+    async with server.database.init_context(username='0') as context:
+        assert context.user.name == '0'
+        is_admin = context.root.is_admin(context.user, context.root)
+        assert is_admin is True
+        server.dispatcher.add('/test/unauthorized', PlainText_View(access='is_admin'))
+        retour = server.do_request('GET', '/test/unauthorized')
+        assert retour['status'] == 200
