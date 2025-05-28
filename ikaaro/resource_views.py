@@ -322,14 +322,14 @@ class LoginView(STLView):
 
         # Come back
         referrer = context.get_referrer()
-        if referrer is None:
-            goto = get_reference('./')
-        else:
+        if referrer:
             path = get_uri_path(referrer)
             if path.endswith(';login') or path.endswith(';register'):
                 goto = get_reference('./')
             else:
                 goto = referrer
+        else:
+            goto = get_reference('./')
 
         return context.come_back(INFO("Welcome!"), goto)
 

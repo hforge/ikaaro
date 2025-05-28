@@ -41,12 +41,10 @@ class ASGIApplication:
         async with self.server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
             try:
                 # Init context from ASGI scope
-                body = await request.body()
-                context.init_from_request(request, {
+                await context.init_from_request(request, {
                     'REQUEST_METHOD': scope['method'],
                     'PATH_INFO': scope['path'],
                     'QUERY_STRING': scope['query_string'].decode('ascii') if scope['query_string'] else '',
-                    'wsgi.input': body,
                 })
 
                 # Handle the request

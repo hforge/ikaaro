@@ -27,7 +27,6 @@ from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from tempfile import mkstemp
 from time import strftime, time
 from traceback import format_exc
-from wsgiref.util import setup_testing_defaults
 import asyncio
 import fcntl
 import inspect
@@ -40,7 +39,6 @@ import sys
 # Requirements
 from jwcrypto.jwk import JWK
 from psutil import pid_exists
-from requests import Request
 from uvicorn.config import LOGGING_CONFIG
 from uvicorn.protocols.http.h11_impl import H11Protocol
 import uvicorn
@@ -54,10 +52,8 @@ from itools.datatypes import Boolean, Email, Integer, String, Tokens
 from itools.fs import lfs
 from itools.handlers import ConfigFile
 from itools.loop import cron
-from itools.uri import get_reference, get_uri_path, Path
-from itools.web import get_context
+from itools.uri import get_reference, Path
 from itools.web.dispatcher import URIDispatcher
-from itools.web.router import RequestMethod
 
 # Import from ikaaro.web
 from .database import get_database
@@ -952,106 +948,6 @@ class Server:
                                 'next_start': next_start}
         # Ok
         return cron_interval
-
-
-
-    def do_request(self, method='GET', path='/', headers=None, body='',
-            context=None, as_json=False, as_multipart=False, files=None, user=None):
-        """Experimental method to do a request on the server"""
-        path_info = get_uri_path(path)
-        q_string = path.split('?')[-1]
-        # Build base environ
-        environ = {'PATH_INFO': path_info,
-                   'REQUEST_METHOD': method,
-                   'HTTP_X-Forwarded-Host': 'localhost/',
-                   'HTTP_X_FORWARDED_PROTO': 'http',
-                   'QUERY_STRING': q_string}
-        setup_testing_defaults(environ)
-        if files:
-            as_multipart = True
-        # Get request header / body
-        if as_json:
-            req = Request(
-                method,
-                f'http://localhost:8080{path}',
-                json=body,
-                headers=headers
-            )
-            prepped = req.prepare()
-        elif as_multipart:
-            req = Request(
-                method,
-                f'http://localhost:8080{path}',
-                data=body,
-                files=files,
-                headers=headers
-            )
-            prepped = req.prepare()
-        else:
-            req = Request(
-                method,
-                f'http://localhost:8080{path}',
-                data=body,
-                headers=headers
-            )
-            prepped = req.prepare()
-        # Build headers
-        headers = [(key.lower(), value) for key, value in prepped.headers.items()]
-        headers.append(('User-Agent', 'Firefox'))
-        for key, value in headers:
-            environ[f"HTTP_{key.upper().replace('-', '_')}"] = value
-        # Set wsgi input body
-        if prepped.body is not None:
-            if type(prepped.body) is str:
-                environ['wsgi.input'] = prepped.body.encode("utf-8")
-            else:
-                environ['wsgi.input'] = prepped.body
-        else:
-            environ['wsgi.input'] = b''
-        # Set content length
-        if prepped.body:
-            environ['CONTENT_LENGTH'] = len(prepped.body)
-        # Set accept
-        if as_json:
-            environ['CONTENT_TYPE'] = 'application/json'
-            environ['HTTP_ACCEPT'] = 'application/json'
-        elif as_multipart:
-            environ['CONTENT_TYPE'] = prepped.headers['Content-Type']
-        else:
-            environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-        # Get context
-        context = get_context()
-        # Log user
-        user = context.user or user
-        if user:
-            context.login(user)
-            context.user = user
-        context.server = self
-        # Init context from environ
-        context.init_from_environ(environ, user)
-        # Do request
-        RequestMethod.handle_request(context)
-        # Transform result
-        if context.entity is None:
-            response = None
-        elif as_json and not str(context.status).startswith('3'):
-            # Do not load json if 302 (url redirection)
-            try:
-                response = json.loads(context.entity)
-            except ValueError:
-                msg = f'Cannot load json {context.entity}'
-                raise ValueError(msg)
-        else:
-            response = context.entity
-        # Commit
-        if method == 'POST':
-            context.database.save_changes()
-        # Return result
-        return {'status': context.status,
-                'method': context.method,
-                'entity': response,
-                'context': context}
-
 
 
 class ServerConfig(ConfigFile):

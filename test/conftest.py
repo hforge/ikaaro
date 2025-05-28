@@ -45,6 +45,17 @@ async def server(demo):
 
 
 @pytest.fixture
+def auth(server):
+    client = TestClient(asgi.application)
+
+    data = {'loginname': 'test@hforge.org', 'password': 'password'}
+    client.post('/;login', data=data, follow_redirects=False)
+    client.cookies = dict(client.cookies)  # FIXME This line should not be needed
+
+    return client
+
+
+@pytest.fixture
 async def hforge_server():
     path = str(BASE_DIR / 'www.hforge.org')
     email = 'test@example.com'

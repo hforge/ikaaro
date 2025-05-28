@@ -18,13 +18,12 @@ import json
 from logging import getLogger
 import urllib.parse
 import time
-from email.message import EmailMessage
 
-#Import from packages
-from pytz import timezone
-from jwcrypto.jwt import JWT, JWTExpired
+# Import from packages
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
-from requests_toolbelt import MultipartDecoder
+from jwcrypto.jwt import JWT, JWTExpired
+from pytz import timezone
+from starlette.datastructures import UploadFile
 
 # Import from itools
 from itools.core import freeze, proto_lazy_property
@@ -91,7 +90,7 @@ class CMSContext(prototype):
     #######################################################################
     # WSGI environ
     #######################################################################
-    def init_from_request(self, request, environ):
+    async def init_from_request(self, request, environ):
         self.request = request
 
         # Set environ
@@ -110,7 +109,7 @@ class CMSContext(prototype):
         # The request method
         self.method = environ.get('REQUEST_METHOD')
         # Get body
-        self.body = self.get_body_from_request()
+        self.body = await self.get_body_from_request()
         # The query
         query = environ.get('QUERY_STRING')
         self.query = decode_query(query)
@@ -153,85 +152,6 @@ class CMSContext(prototype):
         self.find_site_root()
         # The authenticated user
         self.authenticate()
-        # Search
-        self._context_user_search = self._user_search(self.user)
-        self.site_root.before_traverse(self)  # Hook
-        # Not a cron
-        self.is_cron = False
-
-    def init_from_environ(self, environ, user=None):
-        # Set environ
-        self.environ = environ
-        path = environ.get('PATH_INFO')
-        self.path = path
-        self.header_response = []
-        self.content_type = None
-        self.status = None
-        # Get database
-        server = get_server()
-        self.server = server
-        self.database = server.get_database()
-        # Root
-        self.root = self.database.get_resource('/')
-        # The request method
-        self.method = environ.get('REQUEST_METHOD')
-        # Get body
-        self.body = self.get_body_from_environ()
-        # The query
-        query = environ.get('QUERY_STRING')
-        self.query = decode_query(query)
-        # Accept language
-        accept_language = self.environ.get('HTTP_ACCEPT_LANGUAGE', '')
-        if accept_language is None:
-            accept_language = ''
-        try:
-            self.accept_language = AcceptLanguageType.decode(accept_language)
-        except Exception:
-            # Cannot decode accept language
-            pass
-        # The URI as it was typed by the client
-        xfp = environ.get('HTTP_X_FORWARDED_PROTO')
-        src_scheme = xfp or 'http'
-        xff = environ.get('HTTP_X-Forwarded-Host')
-        if xff:
-            xff = xff.split(',', 1)[0].strip()
-        src_host = xff or environ.get('HTTP_HOST')
-        if query:
-            uri = f'{src_scheme}://{src_host}{path}?{query}'
-        else:
-            uri = f'{src_scheme}://{src_host}{path}'
-        self.uri = get_reference(uri)
-
-        # Split the path into path and method ("a/b/c/;view")
-        path = path if type(path) is Path else Path(path)
-        name = path.get_name()
-        if name and name[0] == ';':
-            self.path = path[:-1]
-            self.view_name = name[1:]
-        else:
-            self.path = path
-            self.view_name = None
-
-        # Cookies
-        self.session = self.environ.get("beaker.session", {})
-        self.cookies = getattr(self.session, "cookie", {})
-
-        # Media files (CSS, javascript)
-        # Set the list of needed resources. The method we are going to
-        # call may need external resources to be rendered properly, for
-        # example it could need an style sheet or a javascript file to
-        # be included in the html head (which it can not control). This
-        # attribute lets the interface to add those resources.
-        self.styles = []
-        self.scripts = []
-        # The Site Root
-        self.find_site_root()
-        # Log user if user is given
-        if user:
-            self.login(user)
-        else:
-            # The authenticated user
-            self.authenticate()
         # Search
         self._context_user_search = self._user_search(self.user)
         self.site_root.before_traverse(self)  # Hook
@@ -342,18 +262,8 @@ class CMSContext(prototype):
 
 
     def get_header(self, name):
-        if self.request is None:
-            # XXX Remove this section when we remove Server.do_request
-            name = name.lower()
-            datatype = get_type(name)
-            name = name.replace('-', '_')
-            if name == 'content_type':
-                value = self.environ.get('CONTENT_TYPE')
-            else:
-                value = self.environ.get('HTTP_'+ name.upper())
-        else:
-            datatype = get_type(name.lower())
-            value = self.request.headers.get(name)
+        datatype = get_type(name.lower())
+        value = self.request.headers.get(name)
 
         if value is None:
             return datatype.get_default() or ''
@@ -565,8 +475,8 @@ class CMSContext(prototype):
         return fix_json(data)
 
 
-    def get_body_from_request(self):
-        body = self.environ['wsgi.input']
+    async def get_body_from_request(self):
+        body = await self.request.body()
         if not body:
             return {}
 
@@ -577,37 +487,10 @@ class CMSContext(prototype):
         elif content_type == 'application/json':
             return self.get_json_body(body)
         elif content_type.startswith('multipart/'):
-            return self.get_multipart_body_v2(body)
+            return await self.get_multipart_body_v3(body)
         elif content_type.startswith('application/'):
             return {'body': body}
 
-        raise ValueError(f'Invalid content type "{content_type}"')
-
-
-    def get_body_from_environ(self):
-        # Get content type
-        response = self.get_header('content-type')
-        try:
-            content_type, type_parameters = response
-        except Exception:
-            content_type = response
-        # Case 1: nothing
-        body = self.environ['wsgi.input']
-        if not body:
-            return {}
-        # XXX
-        if content_type == 'application/x-www-form-urlencoded':
-            # Case 1: urlencoded
-            return self.get_form_body(body)
-        elif content_type == 'application/json':
-            # Case 2: json
-            return self.get_json_body(body)
-        elif content_type.startswith('multipart/'):
-            # Case 3: multipart
-            return self.get_multipart_body_v2(body)
-        elif content_type.startswith('application/'):
-            return {'body': body}
-        # Case 4: Not managed content type
         raise ValueError(f'Invalid content type "{content_type}"')
 
 
@@ -649,52 +532,64 @@ class CMSContext(prototype):
                         form[name] = [form[name], body]
         return form
 
-    def get_multipart_body_v2(self, body):
-        """
-        FORM return example :
-        {'cls_description': 'Importer des documents bureautiques, des images, des fichiers de média, etc.', 'referrer': 'http://127.0.0.1:8081/', 'data': ('test.txt', 'text/plain', 'test fichier\n\n'), 'title:fr': ''}
-        """
-
-        content_type = self.environ.get('CONTENT_TYPE')
-        decoder = MultipartDecoder(body, content_type)
+    async def get_multipart_body_v3(self, body):
+        form_data = await self.request.form()  # starlette.datastructures.FormData
         form = {}
-        for part in decoder.parts:
-            content_disposition = part.headers[b"Content-Disposition"]
-            if type(content_disposition) is bytes:
-                content_disposition = content_disposition.decode()
-            # Create a Message object and set the Content-Disposition header
-            msg = EmailMessage()
-            msg['content-type'] = content_disposition
-            # Parse the header
-            header_parameters = msg['content-type'].params
-            try:
-                body = part.text
-            except Exception:
-                # Image encoding
-                body = part.content
-                pass
-            name = header_parameters['name']
-            if 'filename' in header_parameters:
-                filename = header_parameters['filename']
-                if filename:
-                    if b'content-type' in part.headers:
-                        mimetype = part.headers[b'content-type']
-                        if type(mimetype) is bytes:
-                            mimetype = mimetype.decode()
-                    else:
-                        mimetype = 'text/plain'
-                    form[name] = filename, mimetype, body
-                else:
-                    form[name] = None
+        for key, value in form_data.items():
+            if type(value) is UploadFile:
+                data = await value.read()
+                form[key] = (value.filename, value.headers['content-type'], data)
             else:
-                if name not in form:
-                    form[name] = body
-                else:
-                    if isinstance(form[name], list):
-                        form[name].append(body)
-                    else:
-                        form[name] = [form[name], body]
+                form[key] = value
+
         return form
+
+#   def get_multipart_body_v2(self, body):
+#       """
+#       FORM return example :
+#       {'cls_description': 'Importer des documents bureautiques, des images, des fichiers de média, etc.', 'referrer': 'http://127.0.0.1:8081/', 'data': ('test.txt', 'text/plain', 'test fichier\n\n'), 'title:fr': ''}
+#       """
+
+#       content_type = self.environ.get('CONTENT_TYPE')
+#       decoder = MultipartDecoder(body, content_type)
+#       form = {}
+#       for part in decoder.parts:
+#           content_disposition = part.headers[b"Content-Disposition"]
+#           if type(content_disposition) is bytes:
+#               content_disposition = content_disposition.decode()
+#           # Create a Message object and set the Content-Disposition header
+#           msg = EmailMessage()
+#           msg['content-type'] = content_disposition
+#           # Parse the header
+#           header_parameters = msg['content-type'].params
+#           try:
+#               body = part.text
+#           except Exception:
+#               # Image encoding
+#               body = part.content
+#               pass
+#           name = header_parameters['name']
+#           if 'filename' in header_parameters:
+#               filename = header_parameters['filename']
+#               if filename:
+#                   if b'content-type' in part.headers:
+#                       mimetype = part.headers[b'content-type']
+#                       if type(mimetype) is bytes:
+#                           mimetype = mimetype.decode()
+#                   else:
+#                       mimetype = 'text/plain'
+#                   form[name] = filename, mimetype, body
+#               else:
+#                   form[name] = None
+#           else:
+#               if name not in form:
+#                   form[name] = body
+#               else:
+#                   if isinstance(form[name], list):
+#                       form[name].append(body)
+#                   else:
+#                       form[name] = [form[name], body]
+#       return form
 
 
     #######################################################################
@@ -863,6 +758,7 @@ class CMSContext(prototype):
             # Parse the header credentials
             auth_type, token = auth_header
             return self.decode_bearer(token)
+
         # No Authorization header, get credentials in cookies
         if not self.session:
             return None

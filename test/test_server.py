@@ -15,8 +15,6 @@
 
 import io
 
-import pytest
-
 # Import from itools
 from itools.database import PhraseQuery
 from itools.datatypes import String, Unicode
@@ -148,17 +146,19 @@ async def test_action(client, server):
     assert response.json() == {'text': 'hello sylvain'}
 
 
-@pytest.mark.xfail
-async def test_upload_file(server):
-    async with server.database.init_context(username='0'):
+async def test_upload_file(auth, server):
+    data = {'title:en': 'My file'}
+    text = 'hello world'.encode()
+    file = ("file.txt", io.BytesIO(text), "text/plain")
+    files = {"data": file}
+    response = auth.post('/;new_resource?type=file', data=data, files=files, follow_redirects=False)
+    assert response.status_code == 302
+
+    async with server.database.init_context():
         root = server.database.get_resource('/')
-        data = 'file.txt', io.StringIO('hello world'), 'text/plain'
-        body = {'title:en': u'My file', 'data': data}
-        retour = server.do_request('POST', '/;new_resource?type=file', body=body, as_multipart=True)
-        assert retour['status'] == 302
         new_r = root.get_resource('my-file')
         handler = new_r.get_value('data')
-        assert handler.to_str() == 'hello world'
+        assert handler.to_str() == text
 
 
 async def test_commit(client, server):
@@ -205,11 +205,14 @@ async def test_server_login_test_server(client, server):
     response = client.get('/test/401')
     assert response.status_code == 401
 
+    # Login
+    data = {'loginname': 'test@hforge.org', 'password': 'password'}
+    response = client.post('/;login', data=data, follow_redirects=False)
+    assert response.status_code == 302
+
+    # FIXME This line should not be needed
+    client.cookies = dict(client.cookies)
+
     # Authenticated
-    async with server.database.init_context(username='0') as context:
-        assert context.user.name == '0'
-        is_admin = context.root.is_admin(context.user, context.root)
-        assert is_admin is True
-        server.dispatcher.add('/test/unauthorized', PlainText_View(access='is_admin'))
-        retour = server.do_request('GET', '/test/unauthorized')
-        assert retour['status'] == 200
+    response = client.get('/test/401')
+    assert response.status_code == 200
