@@ -11,7 +11,7 @@ from itools.fs import lfs
 # Import from ikaaro
 from ikaaro.database import Database
 from ikaaro.server import Server, create_server
-from ikaaro.web import asgi
+from ikaaro import asgi
 
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent

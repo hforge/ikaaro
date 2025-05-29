@@ -160,7 +160,7 @@ max-width =
 max-height =
 
 # Allow to customize asgi application
-asgi_application = ikaaro.web.asgi
+asgi_application = ikaaro.asgi
 """)
 
 
@@ -975,7 +975,7 @@ class ServerConfig(ConfigFile):
         'max-width': Integer(default=None),
         'max-height': Integer(default=None),
         'accept-cors': Integer(default=1),
-        'asgi_application': String(default="ikaaro.web.asgi"),
+        'asgi_application': String(default="ikaaro.asgi"),
     }
 
 
