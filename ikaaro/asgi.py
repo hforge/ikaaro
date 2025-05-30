@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import os
 import time
@@ -8,16 +9,21 @@ from starlette.middleware import Middleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.applications import Starlette
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
 
 # itools/ikaaro
+from itools.database import RWDatabase
 from itools.uri import Reference
 from itools.web.exceptions import HTTPError
 from itools.web.router import RequestMethod
 from ikaaro import constants
 from ikaaro.server import get_server
 
+
+#
+# Ikaaro: bridge from Starlette to Ikaaro
+#
 
 log = logging.getLogger("ikaaro.web")
 
@@ -88,6 +94,32 @@ async def catch_all(request):
             return await prepare_response(context)
 
 
+#
+# Starlette routes
+#
+
+async def ctrl(request):
+    server = get_server()
+    async with server.database.init_context() as context:
+        resource = server.root
+        database = context.database
+        return JSONResponse({
+            'packages': resource.get_version_of_packages(context),
+            'read-only': not isinstance(database, RWDatabase),
+        })
+
+
+#
+# Starlette application
+#
+
+@contextlib.asynccontextmanager
+async def lifespan(app):
+    # TODO Launch the cron-like task here
+    print("Run at startup!")
+    yield
+    print("Run on shutdown!")
+
 middleware = [
     Middleware(
         TrustedHostMiddleware,
@@ -104,6 +136,8 @@ middleware = [
 ]
 
 routes = [
+    Route('/;_ctrl', ctrl),
     Route("/{path:path}", catch_all, methods=['GET', 'POST']),  # XXX PUT, PATCH?
 ]
-app = Starlette(middleware=middleware, routes=routes)
+
+app = Starlette(lifespan=lifespan, middleware=middleware, routes=routes)

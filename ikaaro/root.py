@@ -25,7 +25,6 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
-from json import dumps
 from logging import getLogger
 import importlib
 import sys
@@ -33,13 +32,12 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath
-from itools.database import RWDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import get_context
 from itools.xml import XMLParser, is_xml_stream
 
 # Import from ikaaro
@@ -68,19 +66,6 @@ itools_target_languages = config.get_value('target_languages')
 # Force email to send UTF-8 mails in plain text
 add_charset('utf-8', QP, None, 'utf-8')
 add_codec('utf-8', 'utf_8')
-
-
-
-class CtrlView(BaseView):
-
-    access = True
-
-    def GET(self, resource, context):
-        context.content_type = 'text/plain'
-        database = context.database
-        return dumps(
-            {'packages': resource.get_version_of_packages(context),
-             'read-only': not isinstance(database, RWDatabase)})
 
 
 
@@ -666,4 +651,3 @@ class Root(Folder):
     upload_stats = UploadStatsView()
     update_instance = UpdateInstanceView()
     update_docs = UpdateDocs()
-    _ctrl = CtrlView()
