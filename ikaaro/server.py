@@ -493,7 +493,7 @@ class Server:
     async def start(self):
         target = pathlib.Path(self.target)
 
-        # Daemon mode
+        # Daemon mode (XXX Remove: do with gunicorn/supervisor/etc)
         if self.detach:
             log_ikaaro.info('Daemonize..')
             become_daemon()
@@ -506,7 +506,7 @@ class Server:
         if self.port is None:
             raise ValueError('listen-port is missing from config.conf')
 
-        # Save PID
+        # Save PID (XXX Remove: do with gunicorn/supervisor/etc)
         pid = getpid()
         (target / 'pid').write_text(str(pid))
 
@@ -518,7 +518,43 @@ class Server:
             await self.launch_cron()
 
         # Listen & set context
-        await self.listen(address, self.port)
+        port = self.port
+        log_ikaaro.info(f"Listen {address}:{port}")
+
+        self.port = port
+        if address == '*':
+            address = '0.0.0.0'
+
+        # Import ASGI application
+        asgi_module = self.config.get_value("asgi_application")
+        asgi_module = import_module(asgi_module)
+        app = getattr(asgi_module, "app")
+
+        # Configure logging
+        logging_config = LOGGING_CONFIG.copy()
+        logging_config["loggers"]["uvicorn.access"] = {
+            "handlers": ["access"],
+            "level": "INFO",
+            "propagate": False
+        }
+
+        # Create server config
+        server_config = uvicorn.Config(
+            app=app,
+            host=address,
+            port=port,
+            #http=CustomH11Protocol,
+            log_config=logging_config,
+            # Additional uvicorn config options can go here
+        )
+        self.asgi_server = uvicorn.Server(config=server_config)
+
+        # Setup signal handlers
+        loop = asyncio.get_running_loop()
+        loop.add_signal_handler(SIGTERM, self.stop_signal, SIGTERM, None)
+        loop.add_signal_handler(SIGINT, self.stop_signal, SIGINT, None)
+
+        await self.asgi_server.serve()
 
 
     async def launch_cron(self):
@@ -660,45 +696,6 @@ class Server:
         self.stop()
 
 
-    async def listen(self, address: str, port: int):
-        log_ikaaro.info(f"Listen {address}:{port}")
-
-        self.port = port
-        if address == '*':
-            address = '0.0.0.0'
-
-        # Import ASGI application
-        asgi_module = self.config.get_value("asgi_application")
-        asgi_module = import_module(asgi_module)
-        application = getattr(asgi_module, "application")
-
-        # Configure logging
-        logging_config = LOGGING_CONFIG.copy()
-        logging_config["loggers"]["uvicorn.access"] = {
-            "handlers": ["access"],
-            "level": "INFO",
-            "propagate": False
-        }
-
-        # Create server config
-        server_config = uvicorn.Config(
-            app=application,
-            host=address,
-            port=port,
-            #http=CustomH11Protocol,
-            log_config=logging_config,
-            # Additional uvicorn config options can go here
-        )
-        self.asgi_server = uvicorn.Server(config=server_config)
-
-        # Setup signal handlers
-        loop = asyncio.get_running_loop()
-        loop.add_signal_handler(SIGTERM, self.stop_signal, SIGTERM, None)
-        loop.add_signal_handler(SIGINT, self.stop_signal, SIGINT, None)
-
-        await self.asgi_server.serve()
-
-
     def is_running_in_rw_mode(self, mode='running'):
         # FIXME
         is_running = self.is_running()
@@ -733,7 +730,7 @@ class Server:
 
 
     def flush_spool(self):
-        cron(self._smtp_send, datetime.timedelta(seconds=1))
+        cron(self._smtp_send, 1)
 
 
     def send_email(self, message):

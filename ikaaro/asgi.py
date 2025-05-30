@@ -3,133 +3,107 @@ import os
 import time
 import traceback
 
-from itools.uri import Reference
-from itools.web.router import RequestMethod
-from itools.web.exceptions import HTTPError
-from ikaaro.server import get_server
-
-from starlette.types import Scope, Receive, Send
-from starlette.requests import Request
-from starlette.responses import Response
+# Starlette
+from starlette.middleware import Middleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.applications import Starlette
+from starlette.responses import Response
+from starlette.routing import Route
 
+# itools/ikaaro
+from itools.uri import Reference
+from itools.web.exceptions import HTTPError
+from itools.web.router import RequestMethod
 from ikaaro import constants
+from ikaaro.server import get_server
 
 
 log = logging.getLogger("ikaaro.web")
 
-class ASGIApplication:
-    def __init__(self):
-        self.server = None
+async def prepare_response(context) -> Response:
+    """Convert context to ASGI response"""
+    data = context.entity
+    status_code = context.status or 500
+    headers = dict(context.header_response)
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope["type"] != "http":
-            raise NotImplementedError("Only HTTP requests are supported")
+    if context.content_type:
+        headers['content-type'] = context.content_type
 
-        t0 = time.time()
-        self.server = get_server()
-        request = Request(scope, receive)
-        method = request.method
-        path = request.url.path
-        read_only_method = method in ("GET", "OPTIONS")
-        root = self.server.root
-        GET_writable_paths = root.get_GET_writable_paths()
-        rw_path = any(s in path for s in GET_writable_paths)
-        read_only = read_only_method and not rw_path
+    if isinstance(data, Reference):
+        # Handle redirects or file references
+        return Response(status_code=status_code, headers=headers)
 
-        async with self.server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
-            try:
-                # Init context from ASGI scope
-                await context.init_from_request(request, {
-                    'REQUEST_METHOD': scope['method'],
-                    'PATH_INFO': scope['path'],
-                    'QUERY_STRING': scope['query_string'].decode('ascii') if scope['query_string'] else '',
-                })
+    if isinstance(data, str):
+        data = data.encode("utf-8")
 
-                # Handle the request
-                RequestMethod.handle_request(context)
+    if data:
+        headers['content-length'] = str(len(data))
 
-                t1 = time.time()
-                # Compute request time
-                context.request_time = t1 - t0
-                #scope['extensions']['request_time'] = t1 - t0
+    return Response(content=data, status_code=status_code, headers=headers)
 
-                # Callback at end of request
-                context.on_request_end()
+async def catch_all(request):
+    scope = request.scope
 
-                # Prepare response
-                response = await self.prepare_response(context)
-                await response(scope, receive, send)
+    t0 = time.time()
+    server = get_server()
+    method = request.method
+    path = request.url.path
+    read_only_method = method in ("GET", "OPTIONS")
+    root = server.root
+    GET_writable_paths = root.get_GET_writable_paths()
+    rw_path = any(s in path for s in GET_writable_paths)
+    read_only = read_only_method and not rw_path
 
-            except HTTPError as e:
-                RequestMethod.handle_client_error(e, context)
-                response = await self.prepare_response(context)
-                await response(scope, receive, send)
-            except Exception:
-                tb = traceback.format_exc()
-                log.error(f"Internal error: {tb}", exc_info=True)
-                context.set_default_response(500)
-                response = await self.prepare_response(context)
-                await response(scope, receive, send)
+    async with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
+        try:
+            # Init context from ASGI scope
+            await context.init_from_request(request, {
+                'REQUEST_METHOD': scope['method'],
+                'PATH_INFO': scope['path'],
+                'QUERY_STRING': scope['query_string'].decode('ascii') if scope['query_string'] else '',
+            })
 
-    async def prepare_response(self, context) -> Response:
-        """Convert context to ASGI response"""
-        data = context.entity
-        status_code = context.status or 500
-        headers = dict(context.header_response)
+            # Handle the request
+            RequestMethod.handle_request(context)
 
-        if context.content_type:
-            headers['content-type'] = context.content_type
+            t1 = time.time()
+            # Compute request time
+            context.request_time = t1 - t0
+            #scope['extensions']['request_time'] = t1 - t0
 
-        if isinstance(data, Reference):
-            # Handle redirects or file references
-            return Response(status_code=status_code, headers=headers)
+            # Callback at end of request
+            context.on_request_end()
 
-        if isinstance(data, str):
-            data = data.encode("utf-8")
+            # Prepare response
+            return await prepare_response(context)
 
-        if data:
-            headers['content-length'] = str(len(data))
+        except HTTPError as e:
+            RequestMethod.handle_client_error(e, context)
+            return await prepare_response(context)
+        except Exception:
+            tb = traceback.format_exc()
+            log.error(f"Internal error: {tb}", exc_info=True)
+            context.set_default_response(500)
+            return await prepare_response(context)
 
-        return Response(content=data, status_code=status_code, headers=headers)
 
-# Ensure sessions folder exists
-try:
-    os.makedirs(constants.SESSIONS_FOLDER, exist_ok=True)
-except OSError:
-    pass
+middleware = [
+    Middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=['*'],
+    ),
+    Middleware(
+        SessionMiddleware,
+        secret_key=os.getenv("SECRET_KEY", "default_secret_key"),
+        domain=constants.SESSION_DOMAIN,
+        https_only=constants.SESSION_SECURE,
+        max_age=constants.SESSION_EXPIRE,
+        same_site=constants.SESSION_SAMESITE,
+    ),
+]
 
-# Session configuration
-#session_opts = {
-#    "session_type": constants.SESSIONS_STORE_TYPE,
-#    "session_url": constants.SESSIONS_URL,
-#    "session_data_dir": constants.SESSIONS_FOLDER,
-#    "session_cookie_expires": constants.SESSION_EXPIRE,
-#    "session_timeout": constants.SESSION_TIMEOUT,
-#    "session_cookie_domain": constants.SESSION_DOMAIN,
-#    "session_cookie_path": "/",
-#    "session_secure": constants.SESSION_SECURE,
-#    "session_httponly": True,
-#    "session_data_serializer": "json",
-#    "session_auto": False,
-#    "session_samesite": constants.SESSION_SAMESITE,
-#    "session_key": constants.SESSION_KEY,
-#}
-
-# Create ASGI application
-app = ASGIApplication()
-
-# Wrap with Starlette's session middleware
-app = SessionMiddleware(app,
-    secret_key=os.getenv("SECRET_KEY", "default_secret_key"),
-    domain=constants.SESSION_DOMAIN,
-    https_only=constants.SESSION_SECURE,
-    max_age=constants.SESSION_EXPIRE,
-    same_site=constants.SESSION_SAMESITE,
-)
-
-# To automatically handle X-Forwarded headers
-app = TrustedHostMiddleware(app, allowed_hosts=["*"])
-
-application = app
+routes = [
+    Route("/{path:path}", catch_all, methods=['GET', 'POST']),  # XXX PUT, PATCH?
+]
+app = Starlette(middleware=middleware, routes=routes)

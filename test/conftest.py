@@ -18,7 +18,7 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 @pytest.fixture
 def client():
-    return TestClient(asgi.application)
+    return TestClient(asgi.app)
 
 @pytest.fixture(scope='session')
 async def demo():
@@ -46,7 +46,7 @@ async def server(demo):
 
 @pytest.fixture
 def auth(server):
-    client = TestClient(asgi.application)
+    client = TestClient(asgi.app)
 
     data = {'loginname': 'test@hforge.org', 'password': 'password'}
     client.post('/;login', data=data, follow_redirects=False)
