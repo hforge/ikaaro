@@ -34,7 +34,26 @@ from ikaaro.server import Server
 log = logging.getLogger("ikaaro")
 
 
-async def main():
+async def main(target, options):
+    # Set-up the server
+    try:
+        server = Server(target, read_only=options.read_only, port=options.port)
+    except (FileNotFoundError, LookupError):
+        log.error(f"Error: {target} instance do not exists")
+        sys.exit(1)
+    except xapian.DatabaseLockError:
+        log.error(f'Error: Database {target} is already opened')
+        sys.exit(1)
+
+    # Check server
+    successfully_init = server.check_consistency(options.quick)
+    if not successfully_init:
+        sys.exit(1)
+    # Start server
+    await server.start()
+
+
+if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
     version = f'itools {__version__}'
@@ -58,24 +77,5 @@ async def main():
     if n_args != 1 and n_args != 2:
         parser.error('Wrong number of arguments.')
 
-    # Set-up the server
     target = args[0]
-    try:
-        server = Server(target, read_only=options.read_only, port=options.port)
-    except (FileNotFoundError, LookupError):
-        log.error(f"Error: {target} instance do not exists")
-        sys.exit(1)
-    except xapian.DatabaseLockError:
-        log.error(f'Error: Database {target} is already opened')
-        sys.exit(1)
-
-    # Check server
-    successfully_init = server.check_consistency(options.quick)
-    if not successfully_init:
-        sys.exit(1)
-    # Start server
-    await server.start()
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(main(target, options))

@@ -157,12 +157,6 @@ class Database(RWDatabase):
         )
 
 
-    def close(self):
-        # Close
-        proxy = super()
-        return proxy.close()
-
-
     def _before_commit(self):
         root = self.get_resource('/')
         context = get_context()

@@ -49,34 +49,27 @@ async def prepare_response(context) -> Response:
     return Response(content=data, status_code=status_code, headers=headers)
 
 async def catch_all(request):
-    scope = request.scope
-
     t0 = time.time()
     server = get_server()
+
+    # read-only or read-write
     method = request.method
     path = request.url.path
     read_only_method = method in ("GET", "OPTIONS")
-    root = server.root
-    GET_writable_paths = root.get_GET_writable_paths()
+    GET_writable_paths = server.root.get_GET_writable_paths()
     rw_path = any(s in path for s in GET_writable_paths)
     read_only = read_only_method and not rw_path
 
     async with server.database.init_context(commit_at_exit=False, read_only=read_only) as context:
         try:
-            # Init context from ASGI scope
-            await context.init_from_request(request, {
-                'REQUEST_METHOD': scope['method'],
-                'PATH_INFO': scope['path'],
-                'QUERY_STRING': scope['query_string'].decode('ascii') if scope['query_string'] else '',
-            })
+            # Init context from Starlette's request
+            await context.init_from_request(request)
 
             # Handle the request
             RequestMethod.handle_request(context)
 
-            t1 = time.time()
             # Compute request time
-            context.request_time = t1 - t0
-            #scope['extensions']['request_time'] = t1 - t0
+            context.request_time = time.time() - t0
 
             # Callback at end of request
             context.on_request_end()

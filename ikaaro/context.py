@@ -65,7 +65,6 @@ class CMSContext(prototype):
     cookies = {}
     database = None
     entity = None
-    environ = {}
     form = {}
     form_error = None
     header_response = []
@@ -87,15 +86,11 @@ class CMSContext(prototype):
     user = None
     view = None
 
-    #######################################################################
-    # WSGI environ
-    #######################################################################
-    async def init_from_request(self, request, environ):
+    async def init_from_request(self, request):
         self.request = request
 
-        # Set environ
-        self.environ = environ
-        path = environ.get('PATH_INFO')
+        # Set context variables
+        path = request['path']
         self.path = path
         self.header_response = []
         self.content_type = None
@@ -107,21 +102,19 @@ class CMSContext(prototype):
         # Root
         self.root = self.database.get_resource('/')
         # The request method
-        self.method = environ.get('REQUEST_METHOD')
+        self.method = request.method
         # Get body
         self.body = await self.get_body_from_request()
         # The query
-        query = environ.get('QUERY_STRING')
-        self.query = decode_query(query)
+        self.query = request.query_params
+
         # Accept language
-        accept_language = self.environ.get('HTTP_ACCEPT_LANGUAGE', '')
-        if accept_language is None:
-            accept_language = ''
+        accept_language = request.headers.get('accept-language', '')
         try:
             self.accept_language = AcceptLanguageType.decode(accept_language)
         except Exception:
-            # Cannot decode accept language
             pass
+
         # The URI as it was typed by the client
         uri = str(request.url)
         self.uri = get_reference(uri)
@@ -253,11 +246,9 @@ class CMSContext(prototype):
 
     def get_headers(self):
         headers = []
-        for name, value in self.environ.items():
-            if name.startswith('HTTP_'):
-                name = name.lower().replace('HTTP_', '')
-                name = '-'.join([x.capitalize() for x in name.split('-')])
-                headers.append((name, value))
+        for name, value in self.request.headers.items():
+            name = '-'.join([x.capitalize() for x in name.split('-')])
+            headers.append((name, value))
         return headers
 
 

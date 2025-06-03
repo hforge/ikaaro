@@ -146,33 +146,19 @@ class Root(Folder):
         }
         if not DEBUG:
             return namespace
+
         exc_type, exc_value, tb = sys.exc_info()
         packages_versions = context.root.get_version_of_packages(context)
         packages_versions = [
-            {
-                "name": k,
-                "version": v
-            } for k, v in packages_versions.items()
+            {"name": k, "version": v} for k, v in packages_versions.items()
         ]
         user = context.user
 
         str_tb = ''.join(traceback.format_exception(exc_type, exc_value, tb, None))
         last_frame = traceback.format_tb(tb)[-1]
-        headers = context.get_headers()
-        headers = [
-            {
-                "name": k,
-                "value": v
-            } for k, v in headers
-        ]
 
         body = context.get_form()
-        body = [
-            {
-                "name": k,
-                "value": v,
-            } for k, v in body.items()
-        ]
+        body = [{"name": k, "value": v} for k, v in body.items()]
         resource = context.resource
         namespace["message"] = context.message
         namespace["last_frame"] = last_frame
@@ -190,7 +176,7 @@ class Root(Folder):
         namespace["exception_value"] = str(exc_value)
         namespace["sys_version_info"] = '%d.%d.%d' % sys.version_info[0:3],
         namespace["server_time"] = context.timestamp
-        namespace["headers"] = headers
+        namespace["headers"] = [{"name": k, "value": v} for k, v in context.get_headers()]
         namespace["body"] = body
         namespace["resource"] = {
                 "class_id": resource.class_id if resource else None,
@@ -218,8 +204,7 @@ class Root(Folder):
         email = context.server.config.get_value('log-email')
         # We send an email with the traceback
         if email:
-            headers = '\n'.join([f'{x} => {y}'
-                                    for x, y in context.get_headers()])
+            headers = '\n'.join([f'{x} => {y}' for x, y in context.get_headers()])
             subject = MSG('Internal server error').gettext()
             text = f'{context.uri}\n\n{traceback.format_exc()}\n\n{headers}'
             self.send_email(email, subject, text=text)
