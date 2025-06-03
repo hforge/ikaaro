@@ -20,7 +20,7 @@
 import datetime
 from email.parser import BytesHeaderParser
 from importlib import import_module
-from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
+from os import fdopen, getpgid, getpid, mkdir, remove, path
 from os.path import join
 from signal import SIGINT, SIGTERM
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
@@ -197,13 +197,6 @@ def get_pid(target):
     except OSError:
         return None
     return pid
-
-
-def stop_server(target):
-    log_ikaaro.info("Stoping server...")
-    pid = get_pid(f'{target}/pid')
-    if pid:
-        kill(pid, SIGTERM)
 
 
 def get_root(database):

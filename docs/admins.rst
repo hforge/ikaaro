@@ -83,8 +83,6 @@ create and manage instances:
 ------------------------------ -----------------------------------------------
 :file:`icms-start.py`          Starts the web server
 ------------------------------ -----------------------------------------------
-:file:`icms-stop.py`           Stops the web server
------------------------------- -----------------------------------------------
 :file:`icms-update.py`         Updates the instance (after a software upgrade)
 ------------------------------ -----------------------------------------------
 :file:`icms-update-catalog.py` Rebuilds the catalog
@@ -202,14 +200,6 @@ The :mod:`ikaaro` CMS can be started simply by the use of the
 By default the process remains attached to the console, to stop it just
 type ``Ctrl+C``.  It is stopped ``gracefully``, what means that pending
 requests will be handled and the proper responses sent to the clients.
-
-To detach from the console use the ``--detach`` option. Then, to stop the
-server started this way use the :file:`icms-stop.py` script::
-
-  $ icms-start.py --detach my_instance
-  ...
-  $ icms-stop.py my_instance
-  [my_instance] Web Server shutting down (gracefully)...
 
 With the Web server running, we can open our favourite browser and go to the
 ``http://localhost:8080`` URL, to reach the user interface (see figure).
