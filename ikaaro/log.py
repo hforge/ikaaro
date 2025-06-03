@@ -2,35 +2,20 @@ from logging.config import dictConfig
 import sys
 
 
-def config_logging(logdir, loglevel, detach):
-    if detach:
-        access_handler = {
-            'class': 'logging.FileHandler',
-            'filename': logdir / 'access.log',
-        }
-        events_handler = {
-            'class': 'logging.FileHandler',
-            'filename': logdir / 'events.log',
-            'formatter': 'default'
-        }
-        cron_handler = {
-            'class': 'logging.FileHandler',
-            'filename': logdir / 'cron.log',
-            'formatter': 'default'
-        }
-    else:
-        access_handler = {
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
-        }
-        events_handler = {
-            'class': 'logging.StreamHandler',
-            'stream': sys.stderr,
-        }
-        cron_handler = {
-            'class': 'logging.StreamHandler',
-            'stream': sys.stderr,
-        }
+def config_logging(logdir, loglevel):
+    access_handler = {
+        'class': 'logging.StreamHandler',
+        'stream': sys.stdout,
+    }
+    events_handler = {
+        'class': 'logging.StreamHandler',
+        'stream': sys.stderr,
+    }
+    cron_handler = {
+        'class': 'logging.StreamHandler',
+        'stream': sys.stderr,
+    }
+
     dictConfig({
         'version': 1,
         'formatters': {

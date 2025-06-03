@@ -33,8 +33,7 @@ log = getLogger("ikaaro")
 def update_catalog(parser, options, target):
     # Check the server is not started, or started in read-only mode
     try:
-        server = Server(target, read_only=False, cache_size=options.cache_size,
-            detach=options.detach)
+        server = Server(target, read_only=False, cache_size=options.cache_size)
     except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
         exit(1)
@@ -73,9 +72,6 @@ if __name__ == '__main__':
         help="do not check the database consistency.")
     parser.add_option('-t', '--test', action='store_true', default=False,
         help="a test mode, don't stop the indexation when an error occurs")
-    parser.add_option(
-        '-d', '--detach', action="store_true", default=False,
-        help="Detach from the console.")
 
     options, args = parser.parse_args()
     if len(args) != 1:
