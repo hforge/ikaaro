@@ -30,7 +30,7 @@ from ikaaro.server import Server, ask_confirmation
 log = getLogger("ikaaro")
 
 
-def update_catalog(parser, options, target):
+async def update_catalog(parser, options, target):
     # Check the server is not started, or started in read-only mode
     try:
         server = Server(target, read_only=False, cache_size=options.cache_size)
@@ -47,7 +47,6 @@ def update_catalog(parser, options, target):
 
     # Server reindex
     await server.reindex_catalog(as_test=options.test, quiet=options.quiet, quick=options.quick)
-
 
 
 if __name__ == '__main__':
