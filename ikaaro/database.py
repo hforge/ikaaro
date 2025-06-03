@@ -23,25 +23,17 @@ from itools.uri import Path
 from itools.web import get_context, set_context, reset_context
 
 
-NB_READS = 1
-DBSEM_RO = asyncio.BoundedSemaphore(NB_READS)
-DBSEM_RW = asyncio.BoundedSemaphore(1)
+rw_lock = asyncio.Lock()
+ro_lock = asyncio.Lock()
+active_ro = 0
 
 
 class RODatabase(BaseRODatabase):
 
-    def init_context(
-            self,
-            user=None,
-            username=None,
-            email=None,
-            commit_at_exit=True,
-            read_only=True
-    ):
-        from ikaaro.context import CMSContext
-        root = self.get_resource('/', soft=True)
-        cls = root.context_cls if root else CMSContext
-        return ContextManager(cls, self, read_only=read_only)
+    def init_context(self, user=None, username=None, email=None, commit_at_exit=True,
+                     read_only=True):
+
+        return ContextManager(self, read_only=read_only)
 
 
 
@@ -49,7 +41,6 @@ class ContextManager:
 
     def __init__(
             self,
-            cls,
             database,
             user=None,
             username=None,
@@ -57,37 +48,40 @@ class ContextManager:
             commit_at_exit=True,
             read_only=False
     ):
+
+        self.database = database
         self.user = user
         self.username = username
         self.email = email
         self.commit_at_exit = commit_at_exit
         self.read_only = read_only
 
-        # Create context
-        self.context = cls()
-        self.context.database = database
         self.token = None  # Token to reset the context
 
 
     async def __aenter__(self):
+        from .context import CMSContext
         from .server import get_server
 
-        # Check if context is not already locked
+        # Check if context is not already locked (in this async task)
         if get_context() is not None:
             raise ValueError('Cannot acquire context. Already locked.')
 
         # Acquire lock on database
+        global active_ro
         if self.read_only:
-            async with DBSEM_RW:  # Wait for rw semaphore to be available
-                pass
-
-            await DBSEM_RO.acquire()
+            async with ro_lock:
+                active_ro += 1
+                if active_ro == 1:
+                    await rw_lock.acquire()
         else:
-            await DBSEM_RW.acquire()
-            for _ in range(NB_READS):
-                await DBSEM_RO.acquire()
+            await rw_lock.acquire()
 
-        # Set context
+        # Build and set the context instance
+        root = self.database.get_resource('/', soft=True)
+        context_class = root.context_cls if root else CMSContext
+        self.context = context_class()
+        self.context.database = self.database
         self.context.server = get_server()
         self.token = set_context(self.context)
 
@@ -124,12 +118,14 @@ class ContextManager:
         finally:
             reset_context(self.token)
             self.token = None
+            global active_ro
             if self.read_only:
-                DBSEM_RO.release()
+                async with ro_lock:
+                    active_ro -= 1
+                    if active_ro == 0:
+                        rw_lock.release()
             else:
-                for _ in range(NB_READS):
-                    DBSEM_RO.release()
-                DBSEM_RW.release()
+                rw_lock.release()
 
 
 
@@ -137,24 +133,12 @@ class Database(RWDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def init_context(
-            self,
-            user=None,
-            username=None,
-            email=None,
-            commit_at_exit=True,
-            read_only=False
-    ):
-        from ikaaro.context import CMSContext
-        root = self.get_resource('/', soft=True)
-        cls = root.context_cls if root else CMSContext
-        return ContextManager(
-            cls,
-            database=self, user=user,
-            username=username, email=email,
-            commit_at_exit=commit_at_exit,
-            read_only=read_only
-        )
+    def init_context(self, user=None, username=None, email=None, commit_at_exit=True,
+                     read_only=False):
+
+        return ContextManager(self, read_only=read_only,
+                              user=user, username=username, email=email,
+                              commit_at_exit=commit_at_exit)
 
 
     def _before_commit(self):
