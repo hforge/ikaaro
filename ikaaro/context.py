@@ -131,7 +131,7 @@ class CMSContext(prototype):
 
         # Cookies
         self.session = self.request.scope["session"]
-        self.cookies = self.request.session.get("cookie")
+        self.cookies = self.request.session.get("cookie") or {}
 
         # Media files (CSS, javascript)
         # Set the list of needed resources. The method we are going to
