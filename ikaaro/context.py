@@ -473,9 +473,9 @@ class CMSContext(prototype):
 
         # Get content type
         content_type = self.request.headers['content-type']
-        if content_type == 'application/x-www-form-urlencoded':
+        if content_type.startswith('application/x-www-form-urlencoded'):
             return self.get_form_body(body)
-        elif content_type == 'application/json':
+        elif content_type.startswith('application/json'):
             return self.get_json_body(body)
         elif content_type.startswith('multipart/'):
             return await self.get_multipart_body_v3(body)
