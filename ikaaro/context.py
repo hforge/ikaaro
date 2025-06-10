@@ -253,7 +253,8 @@ class CMSContext(prototype):
 
 
     def get_header(self, name):
-        datatype = get_type(name.lower())
+        name = name.lower()
+        datatype = get_type(name)
         value = self.request.headers.get(name)
 
         if value is None:
@@ -764,7 +765,7 @@ class CMSContext(prototype):
 
 
     def get_remote_ip(self):
-        remote_ip = self.get_header('X_FORWARDED_FOR')
+        remote_ip = self.get_header('X-FORWARDED-FOR')
         return remote_ip.split(',', 1)[0].strip() if remote_ip else None
 
 
