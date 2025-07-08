@@ -12,6 +12,7 @@ The scripts included are:
   icms-forget.py
   icms-init.py
   icms-start.py
+  icms-stop.py
   icms-update.py
   icms-update-catalog.py
 
