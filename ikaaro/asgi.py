@@ -1,4 +1,5 @@
 import contextlib
+import datetime
 import logging
 import os
 import time
@@ -11,6 +12,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.applications import Starlette
 from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
+from uvicorn.protocols.utils import get_client_addr, get_path_with_query_string
 
 # itools/ikaaro
 from itools.database import RWDatabase
@@ -26,6 +28,7 @@ from ikaaro.server import get_server
 #
 
 log = logging.getLogger("ikaaro.web")
+log_access = logging.getLogger("ikaaro.access")
 
 async def prepare_response(context) -> Response:
     """Convert context to ASGI response"""
@@ -109,11 +112,49 @@ async def ctrl(request):
 @contextlib.asynccontextmanager
 async def lifespan(app):
     # TODO Launch the cron-like task here
-    print("Run at startup!")
+    # Run at startup
     yield
-    print("Run on shutdown!")
+    # Run on shutdown
+
+
+class TimingMiddleware:
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        start_time = time.time()
+
+        # Create a custom send function to capture timing
+        async def send_wrapper(message):
+            if message.get("type") == "http.response.start":
+                duration = time.time() - start_time
+                status = message.get("status", 0)
+
+                now = datetime.datetime.now().astimezone()
+                log_access.info(
+                    '%s - - [%s] "%s %s HTTP/%s" %s - %.3f',
+                    get_client_addr(scope),
+                    now.strftime('%d/%b/%Y:%H:%M:%S %z'),
+                    scope["method"],
+                    get_path_with_query_string(scope),
+                    scope["http_version"],
+                    status,
+                    duration,
+                )
+
+            await send(message)
+
+        await self.app(scope, receive, send_wrapper)
+
 
 middleware = [
+    Middleware(
+        TimingMiddleware,
+    ),
     Middleware(
         TrustedHostMiddleware,
         allowed_hosts=['*'],

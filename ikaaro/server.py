@@ -24,7 +24,6 @@ from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
 from os.path import join
 from signal import SIGINT, SIGTERM
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
-from tempfile import mkstemp
 from time import strftime, time
 from traceback import format_exc
 import asyncio
@@ -35,12 +34,11 @@ import logging
 import pathlib
 import pickle
 import sys
+import tempfile
 
 # Requirements
 from jwcrypto.jwk import JWK
 from psutil import pid_exists
-from uvicorn.config import LOGGING_CONFIG
-from uvicorn.protocols.http.h11_impl import H11Protocol
 import uvicorn
 
 # Import from itools
@@ -292,39 +290,6 @@ def set_server(the_server):
     server = the_server
 
 
-class CustomH11Protocol(H11Protocol):
-    """Custom protocol to handle access logging similar to original ServerHandler"""
-
-    def log_access(self) -> None:
-        now = datetime.datetime.now().replace(microsecond=0)
-        length = self.response_length or '-'
-
-        # Calculate request time delta if available
-        request_time = getattr(self, 'request_time', None)
-        delta = f"{request_time:.6f}" if request_time else '-'
-
-        # Get client address
-        address = self.scope.get('headers', {}).get(b'x-forwarded-for', b'-')
-        if isinstance(address, bytes):
-            address = address.decode('latin-1')
-
-        # Get request line
-        method = self.scope['method']
-        path = self.scope['path']
-        request = f"{method} {path} HTTP/1.1"
-
-        # Get status code
-        status = getattr(self, 'status_code', '000')
-
-        log_access.info(f'{address} - - [{now}] "{request}" {status} {length} {delta}')
-
-    async def send_response(self) -> None:
-        # Store request time before sending response
-        self.request_time = asyncio.get_event_loop().time() - self.connect_time
-        await super().send_response()
-        self.log_access()
-
-
 class Server:
 
     timestamp = None
@@ -524,22 +489,12 @@ class Server:
         asgi_module = import_module(asgi_module)
         app = getattr(asgi_module, "app")
 
-        # Configure logging
-        logging_config = LOGGING_CONFIG.copy()
-        logging_config["loggers"]["uvicorn.access"] = {
-            "handlers": ["access"],
-            "level": "INFO",
-            "propagate": False
-        }
-
         # Create server config
         server_config = uvicorn.Config(
             app=app,
             host=address,
             port=port,
-            #http=CustomH11Protocol,
-            log_config=logging_config,
-            # Additional uvicorn config options can go here
+            access_log=False,
         )
         self.asgi_server = uvicorn.Server(config=server_config)
 
@@ -710,7 +665,7 @@ class Server:
             raise ValueError('"smtp-host" is not set in config.conf')
 
         spool = lfs.resolve2(self.target, 'spool')
-        tmp_file, tmp_path = mkstemp(dir=spool)
+        tmp_file, tmp_path = tempfile.mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')
         try:
             message = message.as_string()
