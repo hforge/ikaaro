@@ -37,7 +37,7 @@ log = logging.getLogger("ikaaro")
 async def main(target, options):
     # Set-up the server
     try:
-        server = Server(target, read_only=options.read_only, port=options.port)
+        server = Server(target, read_only=options.read_only, port=options.port, detach=options.detach)
     except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
         sys.exit(1)
@@ -61,6 +61,9 @@ if __name__ == '__main__':
         'Starts a web server that publishes the TARGET ikaaro instance to the '
         'world.')
     parser = optparse.OptionParser(usage, version=version, description=description)
+    parser.add_option(
+        '-d', '--detach', action="store_true", default=False,
+        help="Detach from the console.")
     parser.add_option(
         '-r', '--read-only', action="store_true", default=False,
         help="Start the server in read-only mode.")

@@ -42,7 +42,7 @@ from psutil import pid_exists
 import uvicorn
 
 # Import from itools
-from itools.core import vmsize
+from itools.core import become_daemon, vmsize
 from itools.database import Metadata, RangeQuery
 from itools.database import make_database, get_register_fields
 from itools.database.backends.catalog import make_catalog
@@ -305,13 +305,14 @@ class Server:
     log_level = None
 
 
-    def __init__(self, target, read_only=False, cache_size=None, port=None):
+    def __init__(self, target, read_only=False, cache_size=None, port=None, detach=False):
         set_server(self)
 
         # Set instance variables
         self.timestamp = str(int(time() / 2))
         self.target = lfs.get_absolute_path(target)
         self.read_only = read_only
+        self.detach = detach
         # Load the config
         config = self.load_config()
         # Logging
@@ -382,7 +383,7 @@ class Server:
 
     def set_log_level(self, log_level):
         logdir = pathlib.Path(self.target) / 'log'
-        config_logging(logdir, log_level)
+        config_logging(logdir, log_level, self.detach)
         self.log_level = log_level
 
     def get_JWT_key_path(self):
@@ -457,6 +458,11 @@ class Server:
     async def start(self):
         target = pathlib.Path(self.target)
 
+        # Daemon mode (XXX Remove: do with gunicorn/supervisor/etc)
+        if self.detach:
+            log_ikaaro.info('Daemonize..')
+            become_daemon()
+
         # Find out the IP to listen to
         address = self.config.get_value('listen-address').strip()
         if not address:
@@ -524,6 +530,10 @@ class Server:
 
 
     async def reindex_catalog(self, quiet=False, quick=False, as_test=False):
+        # Daemon mode
+        if self.detach:
+            log_ikaaro.info('Daemonize..')
+            become_daemon()
         # FIXME: should be moved into backend
         log_ikaaro.info('Reindex catalog')
         # Set log level as INFO
