@@ -1,6 +1,7 @@
 itsdangerous  # Required by Starlette's SessionMiddleware
 jwcrypto<1.6
 psutil<6
+python-daemon
 python-multipart  # Required by Starlette for form parsing.
 starlette
 uvicorn

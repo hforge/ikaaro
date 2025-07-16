@@ -17,29 +17,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-from email.parser import BytesHeaderParser
-from importlib import import_module
-from os import fdopen, getpgid, getpid, kill, mkdir, remove, path
-from os.path import join
-from signal import SIGINT, SIGTERM
-from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
-from time import strftime, time
-from traceback import format_exc
 import asyncio
+import datetime
 import fcntl
 import inspect
 import json
 import logging
+import os
 import pathlib
 import pickle
+import smtplib
 import sys
 import tempfile
+from email.parser import BytesHeaderParser
+from signal import SIGINT, SIGTERM
+from time import strftime, time
+from traceback import format_exc
 
 # Requirements
-from jwcrypto.jwk import JWK
-from psutil import pid_exists
+import importlib
+import psutil
 import uvicorn
+from jwcrypto.jwk import JWK
 
 # Import from itools
 from itools.core import become_daemon, vmsize
@@ -191,17 +190,19 @@ def get_pid(target):
 
     pid = int(pid)
     try:
-        getpgid(pid)
+        os.getpgid(pid)
     except OSError:
         return None
     return pid
 
 
 def stop_server(target):
-    log_ikaaro.info("Stoping server...")
-    pid = get_pid(f'{target}/pid')
+    if type(target) is str:
+        target = pathlib.Path(target)
+
+    pid = get_pid(target / 'pid')
     if pid:
-        kill(pid, SIGTERM)
+        os.kill(pid, SIGTERM)
 
 
 def get_root(database):
@@ -231,7 +232,7 @@ async def create_server(target, email, password, root,
         root_class = getattr(mod, 'Root')
     # Make folder
     try:
-        mkdir(target)
+        os.mkdir(target)
     except OSError:
         raise ValueError('can not create the instance (check permissions)')
 
@@ -254,8 +255,8 @@ async def create_server(target, email, password, root,
     database = get_database(target, size_min, size_max, backend=backend)
 
     # Create the folder structure
-    mkdir(f'{target}/log')
-    mkdir(f'{target}/spool')
+    os.mkdir(f'{target}/log')
+    os.mkdir(f'{target}/spool')
 
     # Make the root
     async with database.init_context() as context:
@@ -310,7 +311,7 @@ class Server:
 
         # Set instance variables
         self.timestamp = str(int(time() / 2))
-        self.target = lfs.get_absolute_path(target)
+        self.target = pathlib.Path(lfs.get_absolute_path(str(target)))
         self.read_only = read_only
         self.detach = detach
         # Load the config
@@ -361,7 +362,7 @@ class Server:
         self.upload_stats = {}
 
         # Email service
-        self.spool = lfs.resolve2(self.target, 'spool')
+        self.spool = str(self.target / 'spool')
         spool_failed = f'{self.spool}/failed'
         if not lfs.exists(spool_failed):
             lfs.make_folder(spool_failed)
@@ -382,13 +383,12 @@ class Server:
 
 
     def set_log_level(self, log_level):
-        logdir = pathlib.Path(self.target) / 'log'
+        logdir = self.target / 'log'
         config_logging(logdir, log_level, self.detach)
         self.log_level = log_level
 
     def get_JWT_key_path(self):
-        target = self.target
-        return path.join(target, "jwt_key.PEM")
+        return str(self.target / "jwt_key.PEM")
 
 
     def get_JWT_key(self):
@@ -413,8 +413,7 @@ class Server:
 
 
     def generate_JWT_key(self):
-        jwk = JWK(generate="RSA", size=4096)
-        return jwk
+        return JWK(generate="RSA", size=4096)
 
 
     def load_config(self):
@@ -441,28 +440,7 @@ class Server:
         return database
 
 
-    def check_consistency(self, quick):
-        log_ikaaro.info("Check database consistency")
-        # Check the server is not running
-        if self.read_only:
-            pid = get_pid(f'{self.target}/pid_ro')
-        else:
-            pid = get_pid(f'{self.target}/pid')
-        if pid is not None:
-            log_ikaaro.error(f'[{self.target}] The Web Server is already running.')
-            return False
-        # Ok
-        return True
-
-
     async def start(self):
-        target = pathlib.Path(self.target)
-
-        # Daemon mode (XXX Remove: do with gunicorn/supervisor/etc)
-        if self.detach:
-            log_ikaaro.info('Daemonize..')
-            become_daemon()
-
         # Find out the IP to listen to
         address = self.config.get_value('listen-address').strip()
         if not address:
@@ -470,10 +448,6 @@ class Server:
         # Check port
         if self.port is None:
             raise ValueError('listen-port is missing from config.conf')
-
-        # Save PID (XXX Remove: do with gunicorn/supervisor/etc)
-        pid = getpid()
-        (target / 'pid').write_text(str(pid))
 
         # Call method on root at start
         async with self.database.init_context() as context:
@@ -492,7 +466,7 @@ class Server:
 
         # Import ASGI application
         asgi_module = self.config.get_value("asgi_application")
-        asgi_module = import_module(asgi_module)
+        asgi_module = importlib.import_module(asgi_module)
         app = getattr(asgi_module, "app")
 
         # Create server config
@@ -508,6 +482,12 @@ class Server:
         loop = asyncio.get_running_loop()
         loop.add_signal_handler(SIGTERM, self.stop_signal, SIGTERM, None)
         loop.add_signal_handler(SIGINT, self.stop_signal, SIGINT, None)
+
+        # Start
+        if not self.detach:
+            pid_path = self.target / 'pid'
+            pid = os.getpid()
+            pid_path.write_text(str(pid))
 
         await self.asgi_server.serve()
 
@@ -544,7 +524,7 @@ class Server:
             log_ikaaro.error("Cannot proceed, the server is running in read-write mode.")
             return
         # Create a temporary new catalog
-        catalog_path = f'{self.target}/catalog.new'
+        catalog_path = str(self.target / 'catalog.new')
         if lfs.exists(catalog_path):
             lfs.remove(catalog_path)
         catalog = make_catalog(catalog_path, get_register_fields())
@@ -582,7 +562,7 @@ class Server:
         if not error_detected:
             if as_test:
                 # Delete the empty log file
-                remove(f'{self.target}/log/update-catalog')
+                (self.target / 'log' / 'update-catalog').unlink(missing_ok=True)
 
             # Update / Report
             t1, v1 = time(), vmsize()
@@ -593,7 +573,7 @@ class Server:
             catalog.save_changes()
             catalog.close()
             # Commit / Replace
-            old_catalog_path = f'{self.target}/catalog'
+            old_catalog_path = str(self.target / 'catalog')
             if lfs.exists(old_catalog_path):
                 lfs.remove(old_catalog_path)
             lfs.move(catalog_path, old_catalog_path)
@@ -604,7 +584,7 @@ class Server:
             success = True
         else:
             log_ikaaro.error("[Update] Error(s) detected, the new catalog was NOT saved")
-            log_ikaaro.info(f"[Update] You can find more infos in {join(self.target, 'log/update-catalog')!r}")
+            log_ikaaro.info(f"[Update] You can find more infos in {self.target / 'log' / 'update-catalog'}")
             success = False
         # Come back to previous log level
         self.set_log_level(log_level)
@@ -613,13 +593,13 @@ class Server:
 
 
     def get_pid(self):
-        return get_pid(f'{self.target}/pid')
+        return get_pid(self.target / 'pid')
 
 
     def is_running(self):
         pid = self.get_pid()
         if pid:
-            return pid_exists(pid)
+            return psutil.pid_exists(pid)
         else:
             return False
 
@@ -645,6 +625,8 @@ class Server:
             self.asgi_server.should_exit = True
         # Close database
         self.close()
+        # Remove pid file
+        (self.target / 'pid').unlink(missing_ok=True)
 
 
     def stop_signal(self, signal, handler):
@@ -674,9 +656,9 @@ class Server:
         if not self.smtp_host:
             raise ValueError('"smtp-host" is not set in config.conf')
 
-        spool = lfs.resolve2(self.target, 'spool')
+        spool = self.target / 'spool'
         tmp_file, tmp_path = tempfile.mkstemp(dir=spool)
-        file = fdopen(tmp_file, 'w')
+        file = os.fdopen(tmp_file, 'w')
         try:
             message = message.as_string()
             file.write(message)
@@ -719,7 +701,7 @@ class Server:
             for name in list(names)[:nb_max_mails_to_send]:
                 # 1. Open connection
                 try:
-                    smtp = SMTP(smtp_host)
+                    smtp = smtplib.SMTP(smtp_host)
                 except Exception:
                     self.smtp_log_error()
                     try:
@@ -757,11 +739,11 @@ class Server:
                     spool.remove(name)
                     # Log
                     log_ikaaro.info(f"Email '{subject}' sent from '{from_addr}' to '{to_addr}'")
-                except SMTPRecipientsRefused:
+                except smtplib.SMTPRecipientsRefused:
                     # The recipient addresses has been refused
                     self.smtp_log_error()
                     spool.move(name, f'failed/{name}')
-                except SMTPResponseException as excp:
+                except smtplib.SMTPResponseException as excp:
                     # The SMTP server returns an error code
                     self.smtp_log_error()
                     spool.move(name, f'failed/{excp.smtp_code}_{name}')
@@ -932,4 +914,5 @@ class ServerConfig(ConfigFile):
 
 
 def get_config(target):
-    return ServerConfig(f'{target}/config.conf')
+    path = str(target / 'config.conf')
+    return ServerConfig(path)

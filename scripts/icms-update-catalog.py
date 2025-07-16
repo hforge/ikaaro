@@ -16,10 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-from logging import getLogger
-from optparse import OptionParser
-from sys import exit
-from xapian import DatabaseLockError
+import logging
+import optparse
+import sys
+
+# Requirements
+import xapian
 
 # Import from itools
 import itools
@@ -27,20 +29,20 @@ import itools
 # Import from ikaaro
 from ikaaro.server import Server, ask_confirmation
 
-log = getLogger("ikaaro")
+log = logging.getLogger("ikaaro")
 
 
-async def update_catalog(parser, options, target):
+async def update_catalog(target, options):
     # Check the server is not started, or started in read-only mode
     try:
-        server = Server(target, read_only=False, cache_size=options.cache_size,
-            detach=options.detach)
+        server = Server(target, read_only=False, cache_size=options.cache_size, detach=options.detach)
     except (FileNotFoundError, LookupError):
         log.error(f"Error: {target} instance do not exists")
-        exit(1)
-    except DatabaseLockError:
+        sys.exit(1)
+    except xapian.DatabaseLockError:
         log.error(f'Error: Database {target} is already opened')
-        exit(1)
+        sys.exit(1)
+
     # Ask
     message = 'Update the catalog (y/N)? '
     if ask_confirmation(message, options.confirm) is False:
@@ -57,12 +59,10 @@ if __name__ == '__main__':
     description = (
         'Rebuilds the catalog: first removes and creates a new empty one;'
         ' then traverses and indexes all resources in the database.')
-    parser = OptionParser(usage, version=version, description=description)
+    parser = optparse.OptionParser(usage, version=version, description=description)
     parser.add_option(
         '-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
-    parser.add_option('--profile',
-        help="print profile information to the given file")
     parser.add_option('--cache-size', default='400:600',
         help="define the size of the database cache (default 400:600)")
     parser.add_option('-q', '--quiet', action='store_true',
@@ -83,9 +83,4 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    if options.profile is not None:
-        from cProfile import runctx
-        runctx("update_catalog(parser, options, target)", globals(), locals(),
-               options.profile)
-    else:
-        asyncio.run(update_catalog(parser, options, target))
+    asyncio.run(update_catalog(target, options))

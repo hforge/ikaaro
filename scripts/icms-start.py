@@ -19,9 +19,14 @@
 import asyncio
 import logging
 import optparse
+import os
+import pathlib
 import sys
 
 # Requirements
+import daemon
+import daemon.pidfile
+import lockfile
 import xapian
 
 # Import from itools
@@ -45,13 +50,50 @@ async def main(target, options):
         log.error(f'Error: Database {target} is already opened')
         sys.exit(1)
 
-    # Check server
-    successfully_init = server.check_consistency(options.quick)
-    if not successfully_init:
-        sys.exit(1)
     # Start server
     await server.start()
 
+
+class SafePIDLockFile(daemon.pidfile.TimeoutPIDLockFile):
+    def release(self):
+        try:
+            super().release()
+        except lockfile.NotLocked:
+            pass  # Ignore if already unlocked
+
+def daemonize(target, options):
+    target = pathlib.Path(target)
+    pidfile_path = target / 'pid'
+
+    # Check if process is already running
+    if pidfile_path.exists():
+        try:
+            with open(pidfile_path) as f:
+                pid = int(f.read().strip())
+            # Check if process exists
+            os.kill(pid, 0)  # Doesn't kill, just checks
+            raise RuntimeError(f"Process already running with PID {pid}")
+        except (ValueError, ProcessLookupError):
+            # PID file exists but process is dead - clean up
+            pidfile_path.unlink()
+        except PermissionError:
+            raise RuntimeError("No permission to check running process")
+
+    # Set up daemon context
+    stdout = target / 'log' / 'ikaaro.out.log'
+    stderr = target / 'log' / 'ikaaro.err.log'
+    pidfile = SafePIDLockFile(pidfile_path)
+
+    context = daemon.DaemonContext(
+        pidfile=pidfile,
+        stdout=stdout.open('a+'),
+        stderr=stderr.open('a+'),
+        working_directory=os.getcwd(),
+        detach_process=True,
+    )
+
+    with context:
+        asyncio.run(main(target, options))
 
 if __name__ == '__main__':
     # The command line parser
@@ -81,4 +123,7 @@ if __name__ == '__main__':
         parser.error('Wrong number of arguments.')
 
     target = args[0]
-    asyncio.run(main(target, options))
+    if options.detach:
+        daemonize(target, options)
+    else:
+        asyncio.run(main(target, options))
