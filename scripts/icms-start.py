@@ -19,21 +19,16 @@
 import asyncio
 import logging
 import optparse
-import os
-import pathlib
 import sys
 
 # Requirements
-import daemon
-import daemon.pidfile
-import lockfile
 import xapian
 
 # Import from itools
 from itools import __version__
 
 # Import from ikaaro
-from ikaaro.server import Server
+from ikaaro.server import Server, daemonize
 
 
 log = logging.getLogger("ikaaro")
@@ -52,48 +47,6 @@ async def main(target, options):
 
     # Start server
     await server.start()
-
-
-class SafePIDLockFile(daemon.pidfile.TimeoutPIDLockFile):
-    def release(self):
-        try:
-            super().release()
-        except lockfile.NotLocked:
-            pass  # Ignore if already unlocked
-
-def daemonize(target, options):
-    target = pathlib.Path(target)
-    pidfile_path = target / 'pid'
-
-    # Check if process is already running
-    if pidfile_path.exists():
-        try:
-            with open(pidfile_path) as f:
-                pid = int(f.read().strip())
-            # Check if process exists
-            os.kill(pid, 0)  # Doesn't kill, just checks
-            raise RuntimeError(f"Process already running with PID {pid}")
-        except (ValueError, ProcessLookupError):
-            # PID file exists but process is dead - clean up
-            pidfile_path.unlink()
-        except PermissionError:
-            raise RuntimeError("No permission to check running process")
-
-    # Set up daemon context
-    stdout = target / 'log' / 'ikaaro.out.log'
-    stderr = target / 'log' / 'ikaaro.err.log'
-    pidfile = SafePIDLockFile(pidfile_path)
-
-    context = daemon.DaemonContext(
-        pidfile=pidfile,
-        stdout=stdout.open('a+'),
-        stderr=stderr.open('a+'),
-        working_directory=os.getcwd(),
-        detach_process=True,
-    )
-
-    with context:
-        asyncio.run(main(target, options))
 
 if __name__ == '__main__':
     # The command line parser
@@ -118,12 +71,12 @@ if __name__ == '__main__':
 
     # Parse arguments
     options, args = parser.parse_args()
-    n_args = len(args)
-    if n_args != 1 and n_args != 2:
+    if not (1 <= len(args) <= 2):
         parser.error('Wrong number of arguments.')
 
+    # Run
     target = args[0]
     if options.detach:
-        daemonize(target, options)
+        daemonize(main, target, options)
     else:
         asyncio.run(main(target, options))

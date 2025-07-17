@@ -20,6 +20,7 @@
 import asyncio
 import datetime
 import fcntl
+import importlib
 import inspect
 import json
 import logging
@@ -35,13 +36,15 @@ from time import strftime, time
 from traceback import format_exc
 
 # Requirements
-import importlib
+import daemon
+import daemon.pidfile
+import lockfile
 import psutil
 import uvicorn
 from jwcrypto.jwk import JWK
 
 # Import from itools
-from itools.core import become_daemon, vmsize
+from itools.core import vmsize
 from itools.database import Metadata, RangeQuery
 from itools.database import make_database, get_register_fields
 from itools.database.backends.catalog import make_catalog
@@ -171,6 +174,48 @@ def ask_confirmation(message, confirm=False):
     line = sys.stdin.readline()
     line = line.strip().lower()
     return line == 'y'
+
+
+class SafePIDLockFile(daemon.pidfile.TimeoutPIDLockFile):
+    def release(self):
+        try:
+            super().release()
+        except lockfile.NotLocked:
+            pass  # Ignore if already unlocked
+
+def daemonize(main, target, options):
+    target = pathlib.Path(target)
+    pidfile_path = target / 'pid'
+
+    # Check if process is already running
+    if pidfile_path.exists():
+        try:
+            with open(pidfile_path) as f:
+                pid = int(f.read().strip())
+            # Check if process exists
+            os.kill(pid, 0)  # Doesn't kill, just checks
+            raise RuntimeError(f"Process already running with PID {pid}")
+        except (ValueError, ProcessLookupError):
+            # PID file exists but process is dead - clean up
+            pidfile_path.unlink()
+        except PermissionError:
+            raise RuntimeError("No permission to check running process")
+
+    # Set up daemon context
+    stdout = target / 'log' / 'ikaaro.out.log'
+    stderr = target / 'log' / 'ikaaro.err.log'
+    pidfile = SafePIDLockFile(pidfile_path)
+
+    context = daemon.DaemonContext(
+        pidfile=pidfile,
+        stdout=stdout.open('a+'),
+        stderr=stderr.open('a+'),
+        working_directory=os.getcwd(),
+        detach_process=True,
+    )
+
+    with context:
+        asyncio.run(main(target, options))
 
 
 def load_modules(config):
@@ -510,10 +555,6 @@ class Server:
 
 
     async def reindex_catalog(self, quiet=False, quick=False, as_test=False):
-        # Daemon mode
-        if self.detach:
-            log_ikaaro.info('Daemonize..')
-            become_daemon()
         # FIXME: should be moved into backend
         log_ikaaro.info('Reindex catalog')
         # Set log level as INFO

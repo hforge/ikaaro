@@ -27,12 +27,12 @@ import xapian
 import itools
 
 # Import from ikaaro
-from ikaaro.server import Server, ask_confirmation
+from ikaaro.server import Server, ask_confirmation, daemonize
 
 log = logging.getLogger("ikaaro")
 
 
-async def update_catalog(target, options):
+async def main(target, options):
     # Check the server is not started, or started in read-only mode
     try:
         server = Server(target, read_only=False, cache_size=options.cache_size, detach=options.detach)
@@ -76,11 +76,14 @@ if __name__ == '__main__':
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
 
+    # Parse arguments
     options, args = parser.parse_args()
     if len(args) != 1:
         parser.error('incorrect number of arguments')
 
+    # Run
     target = args[0]
-
-    # Action!
-    asyncio.run(update_catalog(target, options))
+    if options.detach:
+        daemonize(main, target, options)
+    else:
+        asyncio.run(main(target, options))
