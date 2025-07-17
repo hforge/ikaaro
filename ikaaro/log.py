@@ -8,11 +8,6 @@ def config_logging(logdir, loglevel, detach):
             'class': 'logging.FileHandler',
             'filename': logdir / 'access.log',
         }
-        events_handler = {
-            'class': 'logging.FileHandler',
-            'filename': logdir / 'events.log',
-            'formatter': 'default'
-        }
         cron_handler = {
             'class': 'logging.FileHandler',
             'filename': logdir / 'cron.log',
@@ -23,14 +18,11 @@ def config_logging(logdir, loglevel, detach):
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
         }
-        events_handler = {
-            'class': 'logging.StreamHandler',
-            'stream': sys.stderr,
-        }
         cron_handler = {
             'class': 'logging.StreamHandler',
             'stream': sys.stderr,
         }
+
     dictConfig({
         'version': 1,
         'formatters': {
@@ -40,12 +32,15 @@ def config_logging(logdir, loglevel, detach):
         },
         'handlers': {
             'access': access_handler,
-            'events': events_handler,
             'cron': cron_handler,
+            'default': {
+                'class': 'logging.StreamHandler',
+                'stream': sys.stderr,
+            },
         },
         'loggers': {
             '': {
-                'handlers': ['events'],
+                'handlers': ['default'],
                 'level': loglevel,
             },
             'ikaaro.access': {
