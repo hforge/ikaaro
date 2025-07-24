@@ -13,30 +13,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
 from importlib import import_module
 
-# Import from itools
-from itools.core import prototype
 
 
-
-class URLPattern(prototype):
+class URLPattern:
     """Url pattern composed of the path pattern and the view."""
 
-    pattern = None
-    view = None
+    def __init__(self, pattern, view):
+        self.pattern = pattern
+        self.view = view
 
     def get_patterns(self):
         return [(self.pattern, self.view)]
 
 
-
-class SubPatterns(prototype):
+class SubPatterns:
     """Register a base path linked to an url file of url patterns."""
 
-    base_path = None
-    package = None
+    def __init__(self, base_path, package):
+        self.base_path = base_path
+        self.package = package
 
     def get_patterns(self):
         patterns = []
@@ -49,7 +46,6 @@ class SubPatterns(prototype):
             for pattern, view in pattern.get_patterns():
                 patterns.append((self.base_path + pattern, view))
         return patterns
-
 
 
 def urlpattern(pattern, view):

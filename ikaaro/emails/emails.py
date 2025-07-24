@@ -14,32 +14,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import prototype
 from itools.gettext import MSG
 
 
 ###########################################################################
 # Base classes
 ###########################################################################
-class Email(prototype):
+class Email:
 
-    subject = None
-    text = None
-
+    def __init__(self, subject=None, text=None, **kw):
+        self.subject = subject
+        self.text = text
+        for key, value in kw.items():
+            setattr(self, key, value)
 
     def get_text_namespace(self, context):
-        host_uri = str(context.uri.resolve('/'))[:-1]
-        namespace = {
-            'host': host_uri,
-            'host_title': context.root.get_title()}
-
-        return namespace
-
+        host = str(context.uri.resolve('/'))[:-1]
+        host_title = context.root.get_title()
+        return {'host': host, 'host_title': host_title}
 
     def get_text(self, context):
         namespace = self.get_text_namespace(context)
         return self.text.gettext(**namespace)
-
 
 
 # Registry
