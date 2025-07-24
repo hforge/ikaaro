@@ -14,10 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import functools
 import json
-from logging import getLogger
-import urllib.parse
+import logging
 import time
+import urllib.parse
 
 # Import from packages
 from jwcrypto.jws import InvalidJWSSignature, InvalidJWSObject
@@ -26,9 +27,8 @@ from pytz import timezone
 from starlette.datastructures import UploadFile
 
 # Import from itools
-from itools.core import freeze, proto_lazy_property
+from itools.core import freeze
 from itools.core import fixed_offset, local_tz
-from itools.core import prototype
 from itools.database.ro import ro_database
 from itools.datatypes import String, HTTPDate
 from itools.fs import lfs
@@ -51,10 +51,10 @@ from .constants import JWT_EXPIRE, JWT_ISSUER
 from .server import get_server
 from .utils import dict_of_bytes_to_string
 
-log = getLogger("ikaaro.web")
+log = logging.getLogger("ikaaro.web")
 
 
-class CMSContext(prototype):
+class CMSContext:
 
     request = None  # Starlette's Request object
     accept_language = AcceptLanguageType.decode('')
@@ -158,7 +158,7 @@ class CMSContext(prototype):
 #           self.session.save()
 
 
-    @proto_lazy_property
+    @functools.cached_property
     def timestamp(self):
         now = datetime.datetime.now(datetime.UTC)
         return now.replace(tzinfo=fixed_offset(0))
@@ -168,7 +168,7 @@ class CMSContext(prototype):
     # Root
     #######################################################################
 
-    @proto_lazy_property
+    @functools.cached_property
     def root(self):
         return self.database.get_resource('/')
 
@@ -624,7 +624,7 @@ class CMSContext(prototype):
         return self.database.search(query)
 
 
-    @proto_lazy_property
+    @functools.cached_property
     def _context_user_search(self):
         return self._user_search(self.user)
 
