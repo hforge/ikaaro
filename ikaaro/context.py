@@ -61,7 +61,7 @@ class CMSContext:
     body = {}
     commit = True
     content_type = None
-    session = None
+    session = {}
     cookies = {}
     database = None
     entity = None
