@@ -255,6 +255,8 @@ class CMSContext:
     def get_header(self, name):
         name = name.lower()
         datatype = get_type(name)
+        if not self.request:
+            return datatype.get_default() or ''
         value = self.request.headers.get(name)
 
         if value is None:
