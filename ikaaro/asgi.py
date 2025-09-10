@@ -12,7 +12,10 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.applications import Starlette
 from starlette.responses import Response, JSONResponse
 from starlette.routing import Route
+
+# Uvicorn
 from uvicorn.protocols.utils import get_client_addr, get_path_with_query_string
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 # itools/ikaaro
 from itools.database import RWDatabase
@@ -152,6 +155,10 @@ class TimingMiddleware:
 
 
 middleware = [
+    Middleware(
+      ProxyHeadersMiddleware,
+      trusted_hosts="*"
+    ),
     Middleware(
         TimingMiddleware,
     ),
