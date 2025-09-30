@@ -245,6 +245,8 @@ class CMSContext:
 
 
     def get_headers(self):
+        if not self.request:
+            return []
         headers = []
         for name, value in self.request.headers.items():
             name = '-'.join([x.capitalize() for x in name.split('-')])
