@@ -531,12 +531,20 @@ class CMSContext:
     async def get_multipart_body_v3(self, body):
         form_data = await self.request.form()  # starlette.datastructures.FormData
         form = {}
-        for key, value in form_data.items():
-            if type(value) is UploadFile:
-                data = await value.read()
-                form[key] = (value.filename, value.headers['content-type'], data)
+
+        for key in form_data.keys():
+            values = form_data.getlist(key)
+            if len(values) > 1:
+                form[key] = [v for v in values]  # ici ce sont des strings
+                continue
+            # One value
+            v = values[0]
+            if isinstance(v, UploadFile):
+                data = await v.read()
+                content_type = getattr(v, "content_type", None) or v.headers.get("content-type") or "application/octet-stream"
+                form[key] = (v.filename, content_type, data) if v.filename else None
             else:
-                form[key] = value
+                form[key] = v
 
         return form
 
