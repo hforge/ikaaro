@@ -59,6 +59,7 @@ class CMSContext:
     request = None  # Starlette's Request object
     accept_language = AcceptLanguageType.decode('')
     body = {}
+    raw_body_str = ''
     commit = True
     content_type = None
     session = {}
@@ -475,6 +476,7 @@ class CMSContext:
         body = await self.request.body()
         if not body:
             return {}
+        self.raw_body_str = body.decode('utf-8')
 
         # Get content type
         content_type = self.request.headers['content-type']
