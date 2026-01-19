@@ -476,13 +476,14 @@ class CMSContext:
         body = await self.request.body()
         if not body:
             return {}
-        self.raw_body_str = body.decode('utf-8')
 
         # Get content type
         content_type = self.request.headers['content-type']
         if content_type.startswith('application/x-www-form-urlencoded'):
+            self.raw_body_str = body.decode('utf-8')
             return self.get_form_body(body)
         elif content_type.startswith('application/json'):
+            self.raw_body_str = body.decode('utf-8')
             return self.get_json_body(body)
         elif content_type.startswith('multipart/'):
             return await self.get_multipart_body_v3(body)
