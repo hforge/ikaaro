@@ -731,8 +731,8 @@ class CMSContext:
         # 1. Get credentials with username and token
         try:
             username = self.get_authentication_credentials()
-        except ValueError as error:
-            log.warning(f"Authentication error : {error.message} ", exc_info=True)
+        except (ValueError, JWTExpiredException, InvalidJWTSignatureException) as error:
+            log.warning(f"Authentication error : {error} ", exc_info=True)
             return
         if not username:
             return
