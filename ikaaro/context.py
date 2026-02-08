@@ -473,7 +473,11 @@ class CMSContext:
 
 
     async def get_body_from_request(self):
-        body = await self.request.body()
+        try:
+            body = await self.request.body()
+        except RuntimeError:
+            # Stream already consumed (e.g. FastAPI UploadFile)
+            return {}
         if not body:
             return {}
 
